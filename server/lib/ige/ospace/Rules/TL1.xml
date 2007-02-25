@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+#
+#  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
+#
+#  This file is part of IGE - Outer Space.
+#
+#  IGE - Outer Space is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  IGE - Outer Space is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with IGE - Outer Space; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+-->
+<techtree>
+	<technology id="1000" symbol="GOVCENTER1" name="Government Center">
+		<discovery
+			researchMod="1.50"
+			level="1"
+			researchRequires="OUTPOST1-5"
+		/>
+		<structure
+			subtype="str25"
+			buildProd="960"
+			operEn="50"
+			operWorkers="2500"
+			maxHP="600"
+			moraleTrgt="+10"
+			govPwr="250000"
+			finishConstrHandler="finishStructGOVCENTER"
+			isMilitary="1"
+		/>
+		<preresearch>When the size of an empire grows, so grows the need for control and formal organization. Government Center is an absolute need for any larger nation.</preresearch>
+		<description>After the fall of the Empire, new nations emerge. Former governers, military commanders, local influential politicians, charismatic leaders - these are the people that rule single, isolated colonies. As the domain and influence grows, so grows the need for administration, for authority and respect. For every nation, goverment center looks different, as is the political system they maintain. Its local names vary - Parliament, Royal castle, Governor's house, Imperial council, Convent, but in the end, the results are the same. Huge complexes of administrative buildings, infinite number of bureaucrats and usually a place where executive power of the nation resides. Also, the destruction of the center is usually the same. Turmoil all over the terittory. Larger the nation, greater the danger of beaking it apart or splitting into many independent systems.</description>
+		<flavor>Seat of the former emperor was on a planet, whose name has long been forgotten(altough rebels dubbed it The Black Star). The exact location of the system likewise. While location is unknown, there are many legends of its size and complexity. One of them tells us, that the entire planetary mass has been transformed into one gigantic administrative and living complexes, that there were no other things on this planet. High-capacity transportation systems were sustaining every need of the planet, and this legend says that seven fully expanded earthlike planets were necessary to feed it. In exchange, the planet controlled virtually whole known universe. Soon after the open revolution began, rebels soon captured hyperspace-jump capable cruiser. Then, the legend says, they stacked the cruiser with planet class D-bombs and attempted a suicidal jump directly into the planetary mass(an act forbidden by every possible weapons treaty in existence). Protective hyperspace inhibitors did work correctly and the cruiser was unable to phase out into the the planet itself(being effectively trapped), but this did not save the planet. Rebels triggered the bombs and the resulting explosion ripped very fabric of hyperspace apart and sent massive shockwaves throughout the central system, wasting the planet and an entire defending fleet. Altough spectacular and teoretically possible, much more credible seems another version that tells us, that primary seat of power was simply cut from its food suplies through few terrorist attack using bio-weapons on those seven earthlike planets.</flavor>
+	</technology>
+	<technology id="1100" symbol="OUTPOST1" name="Outpost">
+		<starting/>
+		<discovery
+			researchMod="0.50"
+			level="1"
+		/>
+		<structure
+			subtype="str15"
+			buildProd="480"
+			unpackPop="3000"
+			operWorkers="2000"
+			prodBio="30"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			prodProd="8"
+			prodProdMod="0.0,0.0,0.0,1.0"
+			prodEn="35"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			maxHP="400"
+			scannerPwr="25"
+			storBio="1200"
+			storEn="360"
+			refuelMax="20"
+			refuelInc="2"
+			finishConstrHandler="finishStructOUTPOST"
+		/>
+		<preresearch>Designs of basic colonization unit providing all needs for a small amout of population, including manufacturing capabilities, mining and internal food production.</preresearch>
+		<description>A basic colonization unit widely used throughout the empire before the Fall. When colony ship lands, its converts itself into this self-sustained large complex of buildings. Outpost contains a small-scale nuclear powerplant. Altough effective and without any requirements, it cannot support the needs of whole colony. Also within the complex, there is a drilling machine to provide the outpost with minerals for construction. Food is grown in large internally heated environmentally independent domes. The last and for new colonies most important is an assembly workshop capable of producing basic buildings and spacecrafts. While useful and without any requirements, life in the outpost is unpleasant. It's many functions requires twice the number of people, that would produce the same things in specialized buildings.</description>
+		<flavor>While reliable and constant, quality and taste of hydroponic nutrition is revolting. Deserhea I, the minerally rich, albeit lifeless world has rebelled and join the opposition, just because the transport ship with normal food was delayed by two weeks.</flavor>
+	</technology>
+	<technology id="1101" symbol="FACTORY1" name="Factory">
+		<starting/>
+		<discovery
+			researchMod="0.50"
+			level="1"
+		/>
+		<structure
+			subtype="str30"
+			buildProd="240"
+			operEn="25"
+			operWorkers="500"
+			prodProd="10"
+			prodProdMod="0.0,1.0,0.0,0.0"
+			prodEnv="-3"
+			maxHP="200"
+		/>
+		<preresearch>Manufacturing facilities are among the most basic structures. Everything is created in them. They employ about a half of Outpost and are twice as productive.</preresearch>
+		<description>Factory, as the name suggests is the group of several huge halls that contain everything necessary to manufacture any product necessary. If you own raw materials. Giant cranes, assembly lines, smelting pots. All this produce great amount of pollution and waste. Toxic fumes from towering smoke-stacks cloud the sky and make air hard to breathe, if breathable at all. Underground waters are also being spoilt. Even when the halls are vacant and there is nothing to do, machines require maintainance and repairs. Energy and minerals are needed to support them. When these are short in supply, factories slowly deteoriate.</description>
+		<flavor>The most dreadful thing, I have ever seen is a planet reduced to a lifeless hulk by rows of factories and smoke-stacks that produce war-equipment. Sky changes its color to black and sun never comes up. This is all to common now. We shall change this!", anonymus rebel leader during his interrogation. Executed thereafter.</flavor>
+	</technology>
+	<technology id="1102" symbol="PWRPLANTOIL1" name="Oil Power Plant">
+		<starting/>
+		<discovery
+			researchMod="0.50"
+			level="1"
+		/>
+		<structure
+			subtype="str20"
+			buildProd="240"
+			operWorkers="500"
+			storEn="900"
+			prodEn="100"
+			prodEnMod="0.0,1.0,0.0,0.0"
+			prodEnv="-7"
+			maxHP="200"
+		/>
+		<preresearch>Large scale energy production is necessary for every industrial planet where sunshine is not abundant.</preresearch>
+		<description>A primitive, but effective way of producing energy. In times following the Fall, Oil powerplants were the most common of powerplants. Large-scale nuclear reactors were used much much later after that. These powerplants uses petroleum, gas or any similiar substance, that can be mined on the planet. No minerals mean no power here. Minerals are refined, cleaned and burned to power giant turbines that in turn generate electricity with up to 80% effectivity. These powerplants are cheap, easy to manufacture and very effective, but where solar power is available, it is used instead. This has only one reason - pollution. Altough only one or two plants are neccessary per planet, the impact on naturarakl balance is tremendous and very negative.</description>
+		<flavor>A ritual of walking the turbine blade is strictly forbidden, but still practiced in many powerplants in this region as the way of a punishment for moral and ethic crimes that are just desired to be kept within the place. There is a strange sense of honor among the workers in these dirty powerplants. Just when the turbine is starting after maintanance pauses, the offender is forced to jump from blade to blade to get to opposite emergency exit. Fatality rate of such stroll is enormous - up to 80%. Most linger too long on the blades and fall down. The rest estimate the jumps wrongly and slip during landing. --personnal diary Chief inspector Braegat, hand written record after visiting remote industrial planets in Zeta sector. He join the rebellion soon thereafter.</flavor>
+	</technology>
+	<technology id="1104" symbol="FARM1" name="Farm">
+		<starting/>
+		<discovery
+			researchMod="0.50"
+			level="1"
+		/>
+			<!--operEn="10"-->
+		<structure
+			subtype="str10"
+			buildProd="240"
+			operWorkers="500"
+			prodBio="100"
+			prodBioMod="1.0,0.0,0.0,0.0"
+			storBio="1200"
+			prodEnv="+10"
+			maxHP="200"
+		/>
+		<preresearch>Absolutely necessary structure on any living planet. Farm should produce food and improve local ecology slowly.</preresearch>
+		<description>Farms are perhaps the most common sites or constructions on any living planet. The actual appearance and function of the farms on any particular planet is slightly different. For earthlike planets, it is obvious... large fields with various crops. Mostly traditional, if genetically engineered, plants from the old Empire or new of new origin. Where possible, scientists try to adapt local plant life for needs of population. This method, while effective, leads sometimes to virulent diseases that are able to wipe entire systems before the infection is stopped - or dies out as it happens.</description>
+		<flavor>"Subterran farms on planet Sigil Beta used to produce very very special and rare fungi that causes long-lasting sensations of happiness and ecstacy and ... a deep uncousciousness. While first thought to be useless and preparations for imported plantlife began, the fungi became the greatest export article of the planet. After Sigils change of allegiance, rebels used this drug few times in combat sucessfully. The Empire responded by testing new anti planetary D-bombs on Sigil Beta. Also to a great success. Sigil was reduced to uninhabitable collection of asteroids, none larger than 500 km in diameter.", from 'The Rise and the Fall of the Empire' by Akian Zharn, historian.</flavor>
+	</technology>
+	<technology id="1106" symbol="RESCENTRE1" name="Research Laboratory">
+		<starting/>
+		<discovery
+			researchMod="0.50"
+			level="1"
+		/>
+		<structure
+			subtype="str40"
+			buildProd="240"
+			operEn="10"
+			operWorkers="500"
+			prodSci="10"
+			maxHP="200"
+		/>
+		<preresearch>Design of modern and  at least partially independent laboratories, that would allow for a research to continue in these times.</preresearch>
+		<description>Research bases are scientific compounds built all over the planet. These structures vary, depending on planetary conditions. On large earthlike planets, these bases are more theoretical, whereas on hostile or other alien planets, these bases concern themselves with local ecosystem or perhaps local artifacts and technology found there(quite frequent, when you consider the fact that allmost every planet was populated before the Fall). While new research is being constantly done, its roots and origins lie mostly within the boundaries of ancient technology of the past. It will take hundreds of years for humanity - or whatever follows humanity - to reach and finally surpass its past.</description>
+		<flavor>The Empire was very strict and single-minded when dealing with technology and science. All scientific research in areas such physics, engineering or construction was supervised by the Empire. Also, sudden disappearences of top scientists were quite common. Researcher left the lab and another morning, he was nowhere to be found and his laboratory was struck by fire. Such was life of the past. One could note, that more spiritual fields of study were left undisturbed, where they didn't interfere with doctrine, politics or so. While this was drawing to the end pre-Fall as brain studies were coming closer and closer to some important discoveries, this lack of insight was one of the roots of the rebellion.</flavor>
+	</technology>
+	<technology id="1107" symbol="COMSCAN1" name="Comm/Scan Center">
+		<discovery
+			researchMod="0.50"
+			level="1"
+			researchRequires="RESCENTRE1-3"
+		/>
+		<structure
+			subtype="str50"
+			buildProd="240"
+			operEn="25"
+			operWorkers="500"
+			scannerPwr="50"
+			maxHP="200"
+			isMilitary="1"
+			fleetSpeedBoost="0.88"
+		/>
+		<preresearch>Communication centre provides direct contact with other planets and also actively scans surrounding space for alien fleets. It also enables our navigators to select faster and safer fly path for ships departuring from or arriving to systems equippend with scanner.</preresearch>
+		<description>Outpost provides only a basic uplink and data exchange with other systems. It is often necessary to build Space Scanner facility. Greater scanning range and advanced communication centre. Space Scanner continually sweeps the sky and looks for any unidentified fleets, thus giving an early warning of incoming attacks, be it enemy fleet or just normal asteroids. It also scans for any actions that may take place on other planets in the system.</description>
+		<flavor>'Existence of invisible ships is an unconfirmed legend among Space Scanner operators. The fact is, that such technology has yet to appear. On the other hand, it has happened more than once, that an incoming fleet was marked as friendly and it was too late to cry when the fleet markings were visible to the naked eye as that usually meant the markings were seen on falling bombs and from uniforms of enemy soldiers. These accidents are caused either by technology sabotage or a faulty software. As enginners responsible for the latter are nowhere to be found, the error is bound to appear again and again.', Galaxy Times, star date 1023:20, short text on rear side of science news... </flavor>
+	</technology>
+	<technology id="1110" symbol="PWRPLANTSOL1" name="Solar Power Plant">
+		<discovery
+			researchMod="1.00"
+			level="1"
+			researchRequires="PWRPLANTOIL1-5"
+		/>
+		<structure
+			subtype="str20"
+			buildProd="240"
+			operWorkers="500"
+			storEn="3600"
+			prodEn="100"
+			prodEnMod="0.0,0.0,1.0,0.0"
+			maxHP="200"
+		/>
+		<preresearch>Solar powerplant will use the local star shine to generate energy by solar panels placed on the ground.</preresearch>
+		<description>Solar powerplant consists usually of one large Energy collector and hunderds of square kilometers of solar panes, that lie either on the ground or in some small height, supported by steel construction. It is evident, that solar panels are very fragile and prone to damage - especially bombing damage. Large energy collectors are used to cover energy comsumption during anomal sun activities, violent winds, cloudy skies and other disturbances. It would be possible for a plant to run at perhaps 180% effectivity during normal periods, but factories would turn silent, once the clouds move in.</description>
+		<flavor>Solar panels on some serve as home of small bug-like creatures that feed on electrical and thermal energy. They, in turn, clean the panels continuously and spare mechanics some work. While this was considered a myth, it is a proved reality.</flavor>
+	</technology>
+	<technology id="1112" symbol="SPACEPORT" name="Space Port">
+		<discovery
+			researchMod="1.00"
+			level="1"
+			researchRequires="SMALLHULL1-5"
+		/>
+		<structure
+			subtype="str50"
+			buildProd="480"
+			operEn="100"
+			operWorkers="500"
+			maxHP="200"
+			refuelMax="80"
+			refuelInc="2"
+			repairShip="0.01"
+			upgradeShip="3"
+			isMilitary="1"
+		/>
+		<preresearch>The old fashioned landing platform with some facilities for refueling ships.</preresearch>
+	</technology>
+	<technology id="1400" symbol="SMALLHULL1" name="Small Hull">
+		<discovery
+			researchMod="1.00 + 1.00"
+			level="1"
+			researchRequires="FACTORY1-3"
+		/>
+		<shiphull
+			buildProd="120"
+			storEn="384"
+			operEn="4"
+			maxHP="16"
+			slots="16"
+			weight="16"
+			maxWeight="48"
+			signature="2"
+			combatClass="0"
+		/>
+		<preresearch>This hull will be used to construct small ships. No more, no less.</preresearch>
+	</technology>
+	<technology id="1401" symbol="FTLENG1" name="FTL Engine">
+		<discovery
+			researchMod="1.00 + 1.00"
+			level="1"
+			researchRequires="SMALLHULL1-1"
+		/>
+		<shipequip
+			subtype="seq_eng"
+			buildProd="240"
+			storEn="96"
+			operEn="1"
+			slots="4"
+			weight="4"
+			engPwr="64"
+			signature="0"
+		/>
+		<preresearch>The most basics technology to move our ships around.</preresearch>
+	</technology>
+	<technology id="1402" symbol="SCOCKPIT1" name="Cockpit">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="1"
+			researchRequires="SMALLHULL1-1"
+		/>
+		<shipequip
+			subtype="seq_ctrl"
+			buildProd="120"
+			combatAtt="2"
+			combatDef="2"
+			missileDef="2"
+			maxHP="4"
+			slots="2"
+			weight="4"
+			scannerPwr="12"
+		/>
+		<preresearch>An irreplaceable part of the ship where pilot sits. And without the pilot the ship is just piece of scrap.</preresearch>
+	</technology>
+	<technology id="1403" symbol="SCANNERMOD1" name="Active Scanner Module">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="1"
+			researchRequires="COMSCAN1-3"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="60"
+			slots="1"
+			weight="1"
+			signature="+10"
+			scannerPwr="40"
+		/>
+		<preresearch>Small scanner suitable for small ships with very good range and bad impact on ships signature.</preresearch>
+	</technology>
+	<technology id="1404" symbol="SCANNERMOD2" name="Passive Scanner Module">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="1"
+			researchRequires="COMSCAN1-5"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="60"
+			slots="1"
+			signature="-1"
+			scannerPwr="25"
+		/>
+		<preresearch>Small scanner suitable for small ships good for stealth reconnaissance of the enemy, but limited in range.</preresearch>
+	</technology>
+	<technology id="1500" symbol="CANNON1" name="Cannon">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="1"
+			researchRequires="SMALLHULL1-3"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="1"
+			weight="4"
+			buildProd="240"
+			weaponDmgMin="2"
+			weaponDmgMax="4"
+			weaponAtt="8"
+			weaponClass="0"
+			weaponROF="1"
+			weaponIgnoreShield="0"
+		/>
+		<preresearch>Yes, old but still effective projectile weapon. We can use it until our scientists will discover something more effective.</preresearch>
+	</technology>
+	<technology id="1510" symbol="CONBOMB1" name="Conventional Bomb">
+		<discovery
+			researchMod="1.0 + 0.5 + 0.5"
+			level="1"
+			researchRequires="SMALLHULL1-5"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="2"
+			weight="7"
+			buildProd="480"
+			weaponDmgMin="60"
+			weaponDmgMax="180"
+			weaponAtt="4"
+			weaponClass="3"
+			weaponROF="0.2"
+			weaponIgnoreShield="0"
+		/>
+		<preresearch>Nothing extraordionary - falling big can filled with explosives used to demolish buldings from orbit. What else do you expect?</preresearch>
+	</technology>
+	<technology id="1511" symbol="ABOMB1" name="A-Bomb">
+		<discovery
+			researchMod="1.5 + 0.75 + 0.75 + 0.75"
+			level="1"
+			researchRequires="CONBOMB1-5"
+			researchReqSRes="SR_TL1A"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="2"
+			weight="7"
+			buildProd="960"
+			buildSRes="SR_TL1A"
+			weaponDmgMin="400"
+			weaponDmgMax="560"
+			weaponAtt="4"
+			weaponClass="3"
+			weaponROF="0.1"
+		/>
+		<preresearch>Atomic Bomb - dirty but very effective way of wiping out of the enemies out of the planet's surface.</preresearch>
+	</technology>
+	<technology id="1800" symbol="HOLIDAYS1" name="Holidays">
+		<discovery
+			researchMod="1.50"
+			level="1"
+			researchRequires="GOVCENTER1-1"
+		/>
+		<project
+			buildProd="240"
+			moraleTrgt="+4"
+			finishConstrHandler="finishProjectHOLIDAYS1"
+		/>
+		<preresearch>Sometimes people needs to relax. Morale of colonists usually rises after holidays.</preresearch>
+	</technology>
+	<technology id="1801" symbol="UPGRADESHIPS" name="Upgrade Ships">
+		<discovery
+			researchMod="1.50 + 0.75"
+			level="1"
+			researchRequires="SMALLHULL1-3"
+		/>
+		<project
+			buildProd="240"
+			prodProd="240"
+			finishConstrHandler="finishProjectUPGRADESHIPS"
+		/>
+		<preresearch>When ship design is marked as obsolete and design to upgrade to is selected, this project will allow our workers upgrade ships anywhere in the universe.</preresearch>
+	</technology>
+	<technology id="1802" symbol="DEEPSPACESCAN" name="Deep Space Scan">
+		<discovery
+			researchMod="1.50 + 0.75"
+			level="1"
+			researchRequires="COMSCAN1-1"
+		/>
+		<project
+			buildProd="240"
+			data="1.60"
+			finishConstrHandler="finishProjectDEEPSPACESCAN"
+		/>
+		<preresearch>When this project is finished, efficiency of our scanning equipment will be temporary improved.</preresearch>
+	</technology>
+	<technology id="1803" symbol="IDLETASK" name="Idle task">
+		<starting/>
+		<discovery
+			researchMod="0.01"
+			level="1"
+			maxImprovement="1"
+		/>
+		<project
+			buildProd="240"
+		/>
+		<preresearch>The factories that are idle helps other factories in your empire. It makes no sence to research this technology beyoud level 1 improvement.</preresearch>
+	</technology>
+	<technology id="1990" symbol="BIONICTL2" name="DNA Manipulation">
+		<discovery
+			researchMod="1.00 + 1.00 + 3.00"
+			finishResearchHandler="finishResTLAdvance"
+			level="1"
+			data="B"
+			recheckWhenTechLost="1"
+			researchRequires="RESCENTRE1-5"
+			researchDisables="HUMANTL2,ROBOTTL2"
+		/>
+		<preresearch>A theoretical research in the field of biology, which allows us to access advanced biology and biotechnology related technologies. Research in this field will raise our dependency on biomatter and lower our dependency on minerals eventually. When we improve this technology enough, we can advance to the next technological level.</preresearch>
+	</technology>
+	<technology id="1991" symbol="HUMANTL2" name="Human Brain Improvements">
+		<discovery
+			researchMod="1.00 + 1.00 + 3.00"
+			finishResearchHandler="finishResTLAdvance"
+			level="1"
+			data="H"
+			recheckWhenTechLost="1"
+			researchRequires="RESCENTRE1-5"
+			researchDisables="BIONICTL2,ROBOTTL2"
+		/>
+		<preresearch>A theoretical research of the human mind and thinking processes can lead to improvements in research and cooperation, which in turn will lead to access to the more advanced energy and research related technologies. Our dependencies on resources will remain on the same level as they are now. When we improve this technology enough, we can advance to the next technological level.</preresearch>
+	</technology>
+	<technology id="1992" symbol="ROBOTTL2" name="Advanced Robotics">
+		<discovery
+			researchMod="1.00 + 1.00 + 3.00"
+			finishResearchHandler="finishResTLAdvance"
+			level="1"
+			data="C"
+			recheckWhenTechLost="1"
+			researchRequires="RESCENTRE1-5"
+			researchDisables="HUMANTL2,BIONICTL2"
+		/>
+		<preresearch>A theoretical research in the field of robotics will allow us to access more advanced production and AI technologies in the future. Research in this field will raise our dependency on minerals and lower our dependency on biomatter eventually. When we improve this technology enough, we can advance to the next technological level.</preresearch>
+	</technology>
+</techtree>

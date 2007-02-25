@@ -1,0 +1,1421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+#
+#  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
+#
+#  This file is part of IGE - Outer Space.
+#
+#  IGE - Outer Space is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  IGE - Outer Space is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with IGE - Outer Space; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+-->
+<techtree>
+	<technology id="5000" symbol="TRAIN5" name="Pilot Academy">
+		<discovery
+			researchMod="1.0 + 0.5"
+			researchRequires="TRAIN4-5"
+			level="5"
+		/>
+		<structure
+			subtype="str90"
+			buildProd="1920"
+			operEn="50"
+			operWorkers="1000"
+			maxHP="600"
+			trainShipInc="0.02"
+			trainShipMax="3"
+			isMilitary="1"
+		/>
+		<preresearch>This advanced training facility is able to train our ship crews to the 3rd level.</preresearch>
+		<description>This advanced training facility is able to train our ship crews to the 3rd level. Only the best facility in the system is counted - it does not make sense to build multiple facilities in one system.</description>
+	</technology>
+	<technology id="5001" symbol="TRAIN5H" name="Virtual Battle Simulator">
+		<discovery
+			researchMod="(1.0 + 0.5) * 2"
+			researchRaces="H"
+			researchRequires="TRAIN5-5"
+			level="5"
+		/>
+		<structure
+			subtype="str90"
+			buildProd="2880"
+			operEn="100"
+			operWorkers="1000"
+			maxHP="400"
+			trainShipInc="0.03"
+			trainShipMax="7"
+			isMilitary="1"
+		/>
+		<preresearch>This ultimate training facility is able to train our ship crews to the 4th level.</preresearch>
+		<description>This ultimate training facility is able to train our ship crews to the 4th level. Only the best facility in the system is counted - it does not make sense to build multiple facilities in one system.</description>
+	</technology>
+	<technology id="5002" symbol="STARGATE5" name="Star Gate">
+		<discovery
+			researchMod="2.0"
+			researchRequires="STARGATE4-3"
+			level="5"
+		/>
+		<structure
+			subtype="str90"
+			buildProd="19200"
+			operEn="1000"
+			operWorkers="1000"
+			maxHP="200"
+			fleetSpeedBoost="3.2"
+			isMilitary="1"
+		/>
+		<preresearch>More advanced version of Star Gate technology that allows us to increase speed of fleets traveling between systems equipped with the stargates.</preresearch>
+		<description>More advanced version of Star Gate technology that allows us to increase speed of fleets traveling between systems equipped with the stargates.</description>
+	</technology>
+	<technology id="5003" symbol="STARGATE5A" name="High Power Star Gate">
+		<discovery
+			researchMod="2.0 * 2"
+			researchRequires="STARGATE5-5"
+			researchRaces="H"
+			level="5"
+		/>
+		<structure
+			subtype="str90"
+			buildProd="28800"
+			operEn="1500"
+			operWorkers="2000"
+			maxHP="100"
+			fleetSpeedBoost="4"
+			isMilitary="1"
+		/>
+		<preresearch>The ultimate version of Star Gate technology that allows us to increase speed of fleets traveling between systems equipped with the stargates.</preresearch>
+		<description>The ultimate version of Star Gate technology that allows us to increase speed of fleets traveling between systems equipped with the stargates.</description>
+	</technology>
+	<technology id="5004" symbol="HUMANFLAK5" name="Planetary Defense Installation">
+		<discovery
+			researchMod="1.7 + 0.75"
+			level="5"
+			researchRequires="FLAKBATTERY-5"
+			researchReqSRes="SR_TL5C"
+			researchDisables="STARBASE"
+			researchRaces="H"
+		/>
+		<structure
+			subtype="str50"
+			buildProd="5760"
+			buildSRes="SR_TL5C"
+			operWorkers="4000"
+			operEn="250"
+			scannerPwr="70"
+			maxHP="2000"
+			combatAtt="12"
+			structWeapons="15,15,15,0,1"
+			isMilitary="1"
+		/>
+		<preresearch>It has been discovered that the metal Wolframium can provide a vastly superior structure framework, giving a stronger building with a greater capacity.  We have found this should prove most useful for flak defenses.</preresearch>
+		<description>With a bit of engineering ingenuity and wise application of Wolframium we have constructed a ground based defense structure worthy of both fear and awe.  Containing a full fifteen of our best weapons for targetting each ship size, this military installation houses a total of forty-five weapons at our disposal should anyone threaten our solar system.  As well the onboard scanner has been uprated and nearly matches the power of the Enh. Comm/scan Center.  It should be noted, however, that these are tactical scanners and thus are not able to be used to aid ship navigation as the dedicated scanning facilities are.</description>
+	</technology>
+	<technology id="5005" symbol="PWRPLANTANTIMATTER5" name="Antimatter Reaction Facility">
+		<discovery
+			researchMod="1.50 + 0.75"
+			level="5"
+			researchRequires="PWRPLANT3D-5"
+			researchReqSRes="SR_TL5A"
+			researchDisables="SILICIUMSYNTH"
+			researchRaces="H"
+		/>
+		<structure
+			subtype="str20"
+			buildProd="3840"
+			buildSRes="SR_TL5A"
+			operWorkers="3500"
+			storEn="10800"
+			prodEn="1600"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			maxHP="1400"
+		/>
+		<preresearch>Antimatter can prove to solve one of our biggest problems ever; energy deficiency.</preresearch>
+		<description>This power plant is constructed around the purest form of energy possible, utilising the carefully controlled co-annihilation of antimatter with its mirror particle, we are able to power many strutures easily with a single installation.  Also included within the structure is a vast energy reserve, should the facility need to be shut down for whatever reason, offering plenty of energy to fuel other buildings until such time as the power plant can be reactivated.</description>
+	</technology>
+	<technology id="5006" symbol="PWRPLANTPLUTONIUM5" name="Thermonuclear Power Plant">
+		<discovery
+			researchMod="1.50 + 0.75"
+			level="5"
+			researchRequires="PWRPLANT3A-5"
+			researchReqSRes="SR_TL5B"
+			researchDisables="NUKEFTL"
+			researchRaces="C"
+		/>
+		<structure
+			subtype="str20"
+			buildProd="3840"
+			buildSRes="SR_TL5B"
+			operWorkers="3500"
+			storEn="8100"
+			prodEn="1200"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			maxHP="1400"
+		/>
+		<preresearch>To solve the uniquitous issue of energy depletion, we are resorting to a volatile radioisotope.</preresearch>
+		<description>With the newest facilities to meet the demands of the populous at large and the government comes the need to supply the needed power for these buildings to operate at acceptable levels.  Since the development of enhanced oil refinement and incindiary combustion, it has become clear that such advanced methods could simply not keep up.  Thus we have looked to a source of naturally occuring Plutonium deposits and found them to provide a significant output in a reactor.  Included in this design is also a considerable energy reservior to be used in the event of a plant shutdown.</description>
+	</technology>
+	<technology id="5007" symbol="BIOCOMPLEX" name="Generator Complex">
+		<discovery
+			researchMod="1.00 + 1.00"
+			level="5"
+			researchRequires="PWRPLANT3C-5"
+			researchReqSRes="SR_TL5C"
+			researchDisables="ECOCATALYST"
+			researchRaces="B"
+		/>
+		<structure
+			subtype="str01"
+			buildProd="3840"
+			buildSRes="SR_TL5C"
+			operWorkers="2000"
+			moraleTrgt="+8"
+			prodBio="300"
+			prodBioMod="0.6,0.0,0.6,0.3"
+			storBio="4800"
+			prodEn="500"
+			prodEnMod="0.6,0.0,0.6,0.3"
+			storEn="6000"
+			maxHP="800"
+			prodEnv="+16"
+			combatAtt="10"
+			structWeapons="4,2,1,0,1"
+			isMilitary="1"
+		/>
+		<preresearch>Utilising the inherent structural properties of Wolframium, we are able to assemble a fortified complex capable of supplying our most basic needs in virtually any situation.</preresearch>
+		<description>While our people are highly attuned to nature, sometimes there are problems that simply cannot be solved by even the most careful genetic authoring.  As such, we make use of a very rigid and extremely rare metal for this project.  Combining the attributes of solar collector energy production, and greenhouse farming techniques, we are able to consolidate these two processes into one seamless operation.  Excess production in both resources is used to feed a small bank of ground defenses including four anti-small, two anti-medium, and one anti-large weapon.  This symbol of efficiency provides the side benefit of keeping your citizens prideful in their advanced nation.</description>
+	</technology>
+	<technology id="5008" symbol="STARBASE" name="Starbase">
+		<discovery
+			researchMod="1.00 + 1.00"
+			level="5"
+			researchRequires="STARGATE5A-5"
+			researchReqSRes="SR_TL5C"
+			researchDisables="HUMANFLAK5"
+			researchRaces="H"
+		/>
+		<structure
+			subtype="str90"
+			buildProd="3840"
+			buildSRes="SR_TL5C"
+			operEn="1500"
+			operWorkers="2000"
+			fleetSpeedBoost="3.2"
+			refuelMax="80"
+			refuelInc="5"
+			repairShip="0.04"
+			upgradeShip="40"
+			scannerPwr="80"
+			maxHP="1200"
+			combatAtt="10"
+			structWeapons="6,4,2,0,1"
+			isMilitary="1"
+		/>
+		<preresearch>With the employment of Wolframium, our engineers can assemble a magnificent all-purpose fleet orbital facility.</preresearch>
+		<description>This facility of titanic proportions is the ultimate expression of centralised fleet maintenance facilities ever conceived.  The massive Wolframium reinforced frame is tethered to the ground with sturdy cables, aiding space elevetors to ferry crewmen between the station and the planet's surface.  Housed within the massive frame is a stargate to expedite interplanetary travel, located on the top of the structure.  In addition, the facilities for refuelling, repair, and even ship upgrading are installed in huge service bays along side of the gate entrance.  No station can be complete without the capacity for automated defense in the event of attack, as such, there are six anti-small, four anti-medium, and two anti-large weapons of our best designs installed on an array near the cable tethers on the bottom, giving them a wide firing arc without the risk of damaging docked ships by friendly fire.</description>
+	</technology>
+	<technology id="5400" symbol="BIONICCANNON5" name="Virus Injector">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="5"
+			researchRequires="BIONICCANNON4-3"
+			researchRaces="B"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="1"
+			weight="4"
+			buildProd="540"
+			weaponDmgMin="7"
+			weaponDmgMax="8"
+			weaponAtt="12"
+			weaponClass="0"
+			weaponROF="1"
+			weaponIgnoreShield="1"
+		/>
+		<preresearch>Perhaps damaging the ship itself may not be as efficient as we could be...</preresearch>
+		<description>Upon observing trial runs of the Spine Cannon and its successes in the field, the idea came across of, rather than destroying the ship, why not merely disable the crew onboard?  Previously abandoned bioengineering research had been reopened to develop what had once been a plaguesome creature; the virus.  Barely a lifeform, its function is simple, and thus was adapting the core architecture to this expanded role.  Existing cannons were easily retrofitted to store and launch a viral containment unit that had a piercing needle attached to the end, so that it may lodge into a ship's outer hull and inject the stored viruses into the host, where the infection then quickly spreads through the internal atmosphere and to the crew.  Some experimental anti-computer viruses are also included, but the success of these has been unreliable.</description>
+	</technology>
+	<technology id="5401" symbol="BIONICTURRET5" name="Virus Injector Turret">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="5"
+			researchRequires="BIONICCANNON5-5"
+			researchRaces="B"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="2"
+			weight="4"
+			buildProd="639"
+			weaponDmgMin="7"
+			weaponDmgMax="8"
+			weaponAtt="14"
+			weaponClass="0"
+			weaponROF="2"
+			weaponIgnoreShield="1"
+			minHull="1"
+		/>
+		<preresearch>Installing our virus infiltration technology into turret frameworks ought to be a simple task.</preresearch>
+		<description>With this we can ensure that all our ships are at their peak performance should any fighter swarm attempt an ambush.</description>
+	</technology>
+	<technology id="5402" symbol="BIONICROCKET5" name="Parasite Missile">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="5"
+			researchRequires="BIONICROCKET4-3"
+			researchRaces="B"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="1"
+			weight="5"
+			buildProd="803"
+			weaponDmgMin="22"
+			weaponDmgMax="37"
+			weaponAtt="8"
+			weaponClass="1"
+			weaponROF="0.5"
+			weaponIsMissile="1"
+			weaponIgnoreShield="1"
+		/>
+		<preresearch>Internal infiltration doesn't always need microscopic parasites...</preresearch>
+		<description>Playing on the concepts brought about by the A-P Spore Torpedo and the Virus Injector, research teams have developed not only a purely organic missile, but also an organism capable of surviving tremendous g-force changes as well as having the natural defenses needed to deal with inanimate machines.  The missile itself is inert and will simply pierce the outer skin of its target.  The parasites stored within would then escape, attenuated to certain types of equipment, will seek out and discreetly sabotage such systems aboard the struck vessel, causing shipwide trouble and discord amongst the crew as they try to find the saboteurs.</description>
+	</technology>
+	<technology id="5403" symbol="BIONICTORPEDO5" name="Devouring Worm Torpedo">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="5"
+			researchRequires="BIONICTORPEDO4-3"
+			researchRaces="B"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="2"
+			weight="6"
+			buildProd="1218"
+			weaponDmgMin="120"
+			weaponDmgMax="160"
+			weaponAtt="8"
+			weaponClass="2"
+			weaponROF="0.3"
+			weaponIsMissile="1"
+			weaponIgnoreShield="1"
+			minHull="1"
+		/>
+		<preresearch>We tried internal damage.  Now let us see what we can accomplish from the outside.</preresearch>
+		<description>Our largest example of specially engineered lifeforms is represented in this weapons system.  A breeding stock of teethed worms is used to grow these creatures that are specially adapted for surviving the vacuum of space, and for consuming common spaceship materials.  The worm's skin is lined with small cilia which aid in locomotion in the launch tube.  The worm however has poor senses and thus can only detect large craft, but once it does there is nothing to stop it from latching on to the hull and taking a healthy bite out the target.</description>
+	</technology>
+	<technology id="5404" symbol="BIONICPODA5" name="Barb Pod">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="5"
+			researchRequires="BIONICPODA4-3"
+			researchRaces="B"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="3"
+			weight="5"
+			buildProd="747"
+			weaponDmgMin="5"
+			weaponDmgMax="7"
+			weaponAtt="16"
+			weaponClass="0"
+			weaponROF="5"
+			weaponIgnoreShield="1"
+			minHull="2"
+		/>
+		<preresearch>Just a slight modification could provide a worthwhile boost in damage capacity.</preresearch>
+		<description>All we did here was make a small change to the growth processes for the quills that arm this pod, altering their final shape to include several sharp serrations and hooks, preventing any possible clean removal of the barb from the afflicted ship as well as providing additional damage infliction.  What was not anticipated was the increased rate of fire, but all the better, really.</description>
+	</technology>
+	<technology id="5405" symbol="BIONICBEAM5" name="Bile Launcher">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="5"
+			researchRequires="BIONICBEAM4-3"
+			researchRaces="B"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="2"
+			weight="6"
+			buildProd="650"
+			weaponDmgMin="71"
+			weaponDmgMax="140"
+			weaponAtt="7"
+			weaponClass="1"
+			weaponROF="0.2"
+			weaponIsMissile="1"
+			weaponIgnoreShield="1"
+			minHull="2"
+		/>
+		<preresearch>The Lichen Spreader was a good idea, but maybe we can streamline the internals somewhat...</preresearch>
+		<description>Using the same overall organs of the once experimental Lichen Spreader, the Bile Launcher operates without the need of base lichens for the ordnance.  Instead, internal ship waste is carried over to the bile system and chemically broken down and reassembled into a thick enzymatic compound capable of digesting almost anything.  As a result the final compound needs to be stored in a crop designed to secret a special coating that is inert to the stored liquid.  Using rapid muscular contraction around the crop, the bile is shunted into an esophagus where peristalsis accelerates the fluid to ideal firing velocity.</description>
+	</technology>
+	<technology id="5406" symbol="BIONICHOWITZER5" name="Emesis Projector">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="5"
+			researchRequires="BIONICHOWITZER4-3"
+			researchRaces="B"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="4"
+			weight="2"
+			buildProd="452"
+			weaponDmgMin="36"
+			weaponDmgMax="80"
+			weaponAtt="10"
+			weaponClass="2"
+			weaponROF="0.6"
+			weaponIsMissile="1"
+			weaponIgnoreShield="1"
+			maxInstallations="2"
+		/>
+		<preresearch>We simply cannot allow for any part of our defenses to fall behind the times.  Thus we offer you this.</preresearch>
+		<description>The now proven symbiote design has spurred another leap of improvement with regard to gunboat weaponry.  And as such we have a new symbiote, this time designed to consume any shipboard waste products, breaking down hazardous chemicals and chemically rebuilding them with internal gastric juices to create a highly corrosive slurry which the creature stores in a pressurized crop and can, upon command, launch the entire contents in a surprisingly accurate stream towards any sufficiently large target, thus dissolving much of the contact surface.</description>
+	</technology>
+	<technology id="5408" symbol="HUMANCANNON5" name="Particle Beam Cannon">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="5"
+			researchRequires="HUMANCANNON4-3"
+			researchRaces="H"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="1"
+			weight="4"
+			buildProd="510"
+			weaponDmgMin="2"
+			weaponDmgMax="3"
+			weaponAtt="13"
+			weaponClass="0"
+			weaponROF="4"
+			weaponIgnoreShield="0"
+		/>
+		<preresearch>Our cannon technology can now move up to firing beams of collimated matter.</preresearch>
+		<description>The Particle Beam Cannon, a loose extension of Maser/Laser technology, fires a beam of high energy accelerated plasma at six to ten kilometers per second, providing a devastating bolt of energy.  Waste plasma from a fusion reactor is first drawn into a small accumulator ring, which magnetically compresses and stores it.  When the cannon is fired, enough plasma to form a bolt is drawn into a larger ring which accelerates it to firing velocity and compresses it further, then feeds it a collimator after which it is discharged at the target.  To maximize hit chances against maneuverable targets, the cannon has an extremely fast refire rate, dividing the charge into four bolts fired in as many seconds before needing to recharge.  By this time the ship using it is usually out of position. Landing two or more of the four bolts can be crippling.</description>
+	</technology>
+	<technology id="5409" symbol="HUMANTURRET5" name="Particle Beam Turret">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="5"
+			researchRequires="HUMANCANNON5-5"
+			researchRaces="H"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="2"
+			weight="4"
+			buildProd="600"
+			weaponDmgMin="4"
+			weaponDmgMax="5"
+			weaponAtt="16"
+			weaponClass="0"
+			weaponROF="4"
+			weaponIgnoreShield="0"
+			minHull="1"
+		/>
+		<preresearch>Mounting a PBC on a rotating turret is a high priority.</preresearch>
+		<description>The new PBC is very powerful indeed, but the power and weight allowances afforded by an average turret housing provide room for even more power.  This turret system mounts a larger but otherwise identical PBC in a balanced, rotating armored housing.  Using the increased power available from the medium and large ships fielding it, the delivered energy is doubled while the fire rate remains the same.</description>
+	</technology>
+	<technology id="5410" symbol="HUMANROCKET5" name="C-A Plasma Bolter">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="5"
+			researchRequires="HUMANROCKET4-3"
+			researchRaces="H"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="1"
+			weight="5"
+			buildProd="786"
+			weaponDmgMin="25"
+			weaponDmgMax="43"
+			weaponAtt="10"
+			weaponClass="1"
+			weaponROF="0.5"
+			weaponIsMissile="1"
+			weaponIgnoreShield="0"
+		/>
+		<preresearch>More powerful plasma bolter through charge driver technology.</preresearch>
+		<description>The same science team responsible for the original Plasma Bolter has proposed an improvement to the system by incorporating charge driver technology, terming the new cannon system Charge-Accelerated.  By firing a charge into the plasma bolt just as it leaves the firing chamber, the bolt itself generates a FTL field which accelerates it along its current velocity vector.  The field is only capable of very small sublight acceleration due to the instabilities in the plasma and the limited charge, but the increase in kinetic energy, accuracy and the extra damage from the charge itself make the weapon system more effective, without significantly increasing weight or power requirements.</description>
+	</technology>
+	<technology id="5411" symbol="HUMANTORPEDO5" name="Adv. Charge Driver">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="5"
+			researchRequires="HUMANTORPEDO4-3"
+			researchRaces="H"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="2"
+			weight="6"
+			buildProd="1179"
+			weaponDmgMin="140"
+			weaponDmgMax="200"
+			weaponAtt="10"
+			weaponClass="2"
+			weaponROF="0.3"
+			weaponIsMissile="1"
+			weaponIgnoreShield="0"
+			minHull="1"
+		/>
+		<preresearch>Even the most insane of ideas can be improved upon.  Don't believe us?</preresearch>
+		<description>It was a sad day when news spread about the untimely death of the famed Charge Driver's designer.  The causes were reported to be natural in origin.  Colleagues held a private ceremony in his honour, and upon going through the deceased scientist's personal effects, they found a portable data cache with some personal notes.  These appeared to be other experiments, as well as comments on the Charge Driver delivery system.  It seems what he demonstrated was only the beginning of a weapon of mighty grandeur.  Immediately the research team set about analyzing the data and testing the theories within, eventually constructing a notably superior Charge Driver.</description>
+	</technology>
+	<technology id="5412" symbol="HUMANPODA5" name="Maser Pod">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="5"
+			researchRequires="HUMANPODA4-3"
+			researchRaces="H"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="3"
+			weight="5"
+			buildProd="680"
+			weaponDmgMin="6"
+			weaponDmgMax="7"
+			weaponAtt="16"
+			weaponClass="0"
+			weaponROF="5"
+			weaponIgnoreShield="0"
+			minHull="2"
+		/>
+		<preresearch>Along with the natural course of miniaturization, the previous generation of cannons becomes this generation of pod system.</preresearch>
+		<description>Similar to the Laser Pod in design and concept, this system packs far more punch per beam, providing devastating fighter defense, and a total firepower that even medium sized ships will turn their heads at.  The increased power has required a dedicated cooling system built into the pod itself, circulating coolant to its own heat sink on the back.  Although this is a design weakness that the Laser Pod did not have, most ships armed with multiple pods can use the arcs to ensure that nothing ever gets to the right angle to exploit it.</description>
+	</technology>
+	<technology id="5413" symbol="HUMANBEAM5" name="Plasma Beam Cannon">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="5"
+			researchRequires="HUMANBEAM4-3"
+			researchRaces="H"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="2"
+			weight="6"
+			buildProd="609"
+			weaponDmgMin="83"
+			weaponDmgMax="163"
+			weaponAtt="8"
+			weaponClass="1"
+			weaponROF="0.2"
+			weaponIsMissile="1"
+			weaponIgnoreShield="0"
+			minHull="2"
+		/>
+		<preresearch>A massive high density continuous beam, beyond the power of ions.</preresearch>
+		<description>This weapon is similar to the recently proposed particle beam technology, but it forgoes collimation in favor of continuous fire.  Gathering plasma into a set of eight large accumulator rings and highly compressing it, firing causes each ring to empty into the primary weapon ring in turn.  This accelerates the stream to twenty kilometers per second and sends it through the magnetic barrel.  As the rings deplete, the next takes over while the previous recharges, providing the capacity for an endless beam barring cooling requirements.  One must only concentrate this beam on the desired target, and watch it melt into scrap metal.  Like its predecessor, however, it is incapable of accurately tracking small ships.</description>
+	</technology>
+	<technology id="5414" symbol="HUMANHOWITZER5" name="Neutron Accelerator">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="5"
+			researchRequires="HUMANHOWITZER4-3"
+			researchRaces="H"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="4"
+			weight="2"
+			buildProd="420"
+			weaponDmgMin="43"
+			weaponDmgMax="96"
+			weaponAtt="11"
+			weaponClass="2"
+			weaponROF="0.6"
+			weaponIsMissile="1"
+			weaponIgnoreShield="0"
+			maxInstallations="2"
+		/>
+		<preresearch>To the winner go the spoils.  And to the realm of the unknown go the daring.</preresearch>
+		<description>You can only improve upon yourself so many times, is the mantra amid the research communities.  When it came time to commission a new howitzer system, there was surprisingly little enthusiasm.  Those who stepped up to the challenge were met with many pitfalls and obstacles that just seemed impervious to solution.  It wasn't until the idea of hearkening back to an older era was presented, that anyone even hoped to achieve this monstrous task.  Initially built from 'spare parts', the first system seemed no different than a particle beam package.  Yet the difference lies in the accelerator coils as well as the base particles.  Rather than ions or raw elemental atoms, the source material is comprised of simple singular neutrons.  The acceleration systems are a most unusual configuration.  Very powerful, they provide a tremendous thrust for the neutrons, focusing them into a beam barely wider than the particle itself, and computer simulations have shown the potential for FTL acceleration under certain conditions.  This has not yet been given a live field test - nobody is quite that brave.  It could slice a target like it was tender flesh, or could cause nuclear fission of the target's matter itself, or it could even backfire and rip open a pandimensional vortex at the heart of the ship firing it.  Who knows?</description>
+	</technology>
+	<technology id="5416" symbol="ROBOTCANNON5" name="Nanoblaster">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="5"
+			researchRequires="ROBOTCANNON4-3"
+			researchRaces="C"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="1"
+			weight="4"
+			buildProd="715"
+			weaponDmgMin="10"
+			weaponDmgMax="11"
+			weaponAtt="11"
+			weaponClass="0"
+			weaponROF="1"
+			weaponIgnoreShield="0"
+		/>
+		<preresearch>When simple annihilation is insufficient, one must use infiltration.</preresearch>
+		<description>A crowning achievement!  Herein is the most sophisticated small-scale warfare equipment ever devised.  This cannon design incorporated a tandem architecture; The first and primary role is a low power emissions system, generating a simple and harmless carrier wave in a straight path much the way a conventional laser would function.  This carrier wave transports a population of nanotechnology robots preprogrammed with heuristic interfacing software.  The purpose of this is to obtain control of the spacecraft or, failing that, cause internal damage by destabilizing critical systems such as the onboard powerplant or any hazardous weapons systems.  During development the immediate problem was brought to light: Energy shielding would completely block such a weak beam.  As well a thick hull skin would delay infiltration before any worthwhile result was achieved.  The second half of the Nanoblaster system is where these oversights are corrected.  The second emitter is a collimation of various EM and gravitational interference technologies to produce a cutting beam capable of piercing a hole in physical armour as well as weakening a local energy shield enough for the nanites to pass through.  Either way, a blow from this weapon can be most devastating to a fighter ship.</description>
+	</technology>
+	<technology id="5417" symbol="ROBOTTURRET5" name="Twin Nanoblaster Turret">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="5"
+			researchRequires="ROBOTCANNON5-5"
+			researchRaces="C"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="2"
+			weight="4"
+			buildProd="845"
+			weaponDmgMin="10"
+			weaponDmgMax="11"
+			weaponAtt="13"
+			weaponClass="0"
+			weaponROF="2"
+			weaponIgnoreShield="0"
+			minHull="1"
+		/>
+		<preresearch>Of course we should uprate our larger cruisers with this marvelous new take upon ship combat.</preresearch>
+		<description>Fairly straightforward as we introduce out nanoblaster architecture to our frontline assault turret.  This actually was quite a simple operation, despite the inherent complexity of the cannon design.</description>
+	</technology>
+	<technology id="5418" symbol="ROBOTPODC5" name="MGS Array">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="5"
+			researchRequires="ROBOTROCKET4-5"
+			researchRaces="C"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="5"
+			weight="14"
+			buildProd="1470"
+			weaponDmgMin="19"
+			weaponDmgMax="31"
+			weaponAtt="5"
+			weaponClass="1"
+			weaponROF="5"
+			weaponIsMissile="1"
+			weaponIgnoreShield="0"
+			minHull="2"
+		/>
+		<preresearch>To truly project our military power, we must have absolute superiority in firepower.</preresearch>
+		<description>This large array of smaller scale graviton beam cannons, fixed into a rotating pod, are able to concentrate massive total firepower on single or multiple targets simultaneously.  The bulky array and its support equipment limit deployment to large hulls only, but the firepower advantage gained makes the space used well worth it.</description>
+	</technology>
+	<technology id="5419" symbol="ROBOTTORPEDO5" name="Pulse Discharger">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="5"
+			researchRequires="ROBOTHOWITZER4-3"
+			researchRaces="C"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="2"
+			weight="6"
+			buildProd="1687"
+			weaponDmgMin="160"
+			weaponDmgMax="240"
+			weaponAtt="7"
+			weaponClass="2"
+			weaponROF="0.3"
+			weaponIsMissile="1"
+			weaponIgnoreShield="0"
+			minHull="2"
+		/>
+		<preresearch>It is time we unveil our long awaited torpedo experiment.</preresearch>
+		<description>Previously, we had pioneered the howitzer-class of weapons as an offense against larger ships while offering the flexibility of potential installation on any military craft.  While such was in development there was a sister project, closer adhering to the old torpedo standards.  However, rather than an archaic and hastily guided explosive package, this design consists of a large network of electromagnetic generators and field amplifiers phased in an array connected to a projection dish.  The resulting burst will arc across space, delivering a lethal blow to the targeted ship.  The arc is continuous, thereby allowing for direct charging and not risking loss of potential through travel time from firing to target impact.</description>
+	</technology>
+	<technology id="5420" symbol="ROBOTPODB5" name="Supernova Burst Pod">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="5"
+			researchRequires="ROBOTPODB4-3"
+			researchRaces="C"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="4"
+			weight="10"
+			buildProd="1560"
+			weaponDmgMin="3"
+			weaponDmgMax="4"
+			weaponAtt="2"
+			weaponClass="0"
+			weaponROF="20"
+			weaponIgnoreShield="0"
+			minHull="2"
+		/>
+		<preresearch>Researchers want to upgrade the Nova Burst system for increased damage and effectiveness.</preresearch>
+		<description>With the latest advances in cannon technology, it's become obvious that it's time to upgrade the Nova Burst... this new aptly named system is similar to the original, but the cannon power has been uprated.  Conceptually identical, the only major differences are the more robust and powerful components.</description>
+	</technology>
+	<technology id="5421" symbol="ROBOTBEAM5" name="Adv. Graviton Beam">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="5"
+			researchRequires="ROBOTBEAM4-3"
+			researchRaces="C"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="2"
+			weight="6"
+			buildProd="940"
+			weaponDmgMin="95"
+			weaponDmgMax="185"
+			weaponAtt="6"
+			weaponClass="1"
+			weaponROF="0.2"
+			weaponIsMissile="1"
+			weaponIgnoreShield="0"
+			minHull="2"
+		/>
+		<preresearch>Extended understanding of gravity mechanics allows for a more powerful beam weapon.</preresearch>
+		<description>This new version of the Graviton Beam is the final word in beam weaponry.  The muzzle focus has been redesigned to work with higher grade scanning equipment, focusing the beam at a single point on the targets hull, rather than just turning the beam towards it.  Depending on combat conditions, it is also capable of narrow lines of fire, or even spreading the beam across the entire target, matching the shape without wasting any energy.  The beam source itself is more powerful as well, making for an extremely deadly weapon.</description>
+		<flavor>A few asteroid miners were nearby when this weapon was tested.  They reported the formation of an event horizon for a few seconds during the test.  This was refuted by the science team in charge, who stated that the reflected light from and starlight behind the already dim asteroid was simply diffused to the point where it was not detectable without specialized equipment.</flavor>
+	</technology>
+	<technology id="5430" symbol="PLUTONIUMMORTAR5" name="Plutonium Mortar">
+		<discovery
+			researchMod="1.00 + 0.50 + 0.50"
+			level="5"
+			researchRequires="PLASMABOMB-5"
+			researchReqSRes="SR_TL5B"
+			researchDisables="BATTLETRACK"
+			researchRaces="H"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			buildProd="1676"
+			buildSRes="SR_TL5B"
+			slots="8"
+			weight="20"
+			weaponDmgMin="687"
+			weaponDmgMax="831"
+			weaponAtt="7"
+			weaponClass="0"
+			weaponROF="0.2"
+			weaponIgnoreShield="0"
+		/>
+		<preresearch>A theory is brought forth for your consideration.  Is it worth your time to investigate?</preresearch>
+		<description>Here we have an example of antiquated concepts enhanced with present-day technological advances.  Taking use of the radioactive and volatile nature of a recently discovered vein of plutonium, our own history shows us an obvious use in the way of nuclear reactions in order to bring about massive destruction from a single warhead.  But rather than planetary bombardment, the idea was brought forth to apply this to bothersome fighter craft which may sometimes evade even our most skilled pod and turret gunners.  The weapon itself is massive to the extreme, as the warhead must be assembled shortly before firing.  The amount of plutonium used in the warhead would cause an autonomous chain reaction if the warheads were pre-made and in storage and would undoubtly scuttle the very ship carrying them.  The manufacturing on demand also provides a very slow refire rate for this weapons.  Once assembled, the mortar charge is carefully loaded into the firing mechanism.  Little is invested on targetting subsystems as the resultant blast is sufficient to engulf multiple spacecraft simultaneously, destroying them.  Those that do somehow survive would surely have endured severe damage.</description>
+	</technology>
+	<technology id="5431" symbol="PLUTONIUMROCKET5" name="Suppression Missile Bank">
+		<discovery
+			researchMod="1.00 + 0.50 + 0.50"
+			level="5"
+			researchRequires="BIONICROCKET5-5"
+			researchReqSRes="SR_TL5B"
+			researchDisables="BIOBRIDGE"
+			researchRaces="B"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			buildProd="2400"
+			buildSRes="SR_TL5B"
+			slots="1"
+			weight="5"
+			weaponDmgMin="25"
+			weaponDmgMax="37"
+			weaponAtt="8"
+			weaponClass="1"
+			weaponROF="8.0"
+			weaponIgnoreShield="0"
+		/>
+		<preresearch>A recently discovered, biologically toxic metal just may be of use to us.</preresearch>
+		<description>Throughout our journey into living equipment, we have sloughed off the need for mundane metallurgy for solving our society's problems.  Even so, we can still find such materials beneficial to our cause.  In this case we have found a method of using a radioactive substance to complement our spaceborne navy.  Originally the concept was to use flakes of plutonium metal in a single missile, and use that to incite a radiation fallout inside the target vessel.  Testing with this design has failed to yield adequate results, so instead we looked back to simpler times amid histortical archives and found mentions of nuclear warfare.  This intrigued our current research team and quickly they gathered data on the substance at hand.  It was a short time before they managed to create a missile magazine.  Each individual missile is minute in comparison to our standard ship-to-ship missiles.  Even so, the firing magazine acts as a single targetting system for the set of eight missiles, guiding them all to a single target.  The missiles are designed to lodge into the target ship's hull, evenly spaced across the physical geometry, and to detonate in synchronised unison, devastating the entire outer hull of the ship.  Some tests have shown that a medium sized ship can be completely destroyed in short time this way.  However, they will have to deal with any energy shielding found.  This is a flaw we were not able to overcome.</description>
+	</technology>
+	<technology id="5432" symbol="ANTIMATTERBOMB5" name="Antimatter Bomb">
+		<discovery
+			researchMod="1.5 + 0.75 + 0.75 + 0.75"
+			level="5"
+			researchRequires="PLASMABOMB-5"
+			researchReqSRes="SR_TL5A"
+			researchDisables="CHROMIUMSYNTH"
+			researchRaces="C"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="4"
+			weight="14"
+			buildProd="1960"
+			buildSRes="SR_TL5A"
+			weaponDmgMin="1865"
+			weaponDmgMax="2688"
+			weaponAtt="6"
+			weaponClass="3"
+			weaponROF="0.1"
+			weaponIgnoreShield="0"
+			minHull="2"
+		/>
+		<preresearch>Antimatter bomb.  The best possible use for this hazardous substance.</preresearch>
+		<description>Behold nature's fury, leashed into a carefully designed containment and ejection mechanism.  With this, we are now able to obliterate entire planets in short order.  Even planet-wide shielding would pose a small hindrance when pitted against a weapon of such might.  Due to the precautions necessary for handling, the entire system and bomb complement can only be integrated into our largest battleships.</description>
+	</technology>
+	<technology id="5433" symbol="ETANKS5" name="Antimatter Fuel Pod">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="5"
+			researchRequires="ETANKS2-5"
+			researchReqSRes="SR_TL5A"
+			researchDisables="CARBONEUMSYNTH"
+			researchRaces="B"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="480"
+			buildSRes="SR_TL5A"
+			storEn="7680"
+			operEn="0"
+			slots="1"
+			weight="4"
+		/>
+		<preresearch>We have just found ourselves a new source of fuel.</preresearch>
+		<description>Further augmenting our ability to provide extended flight range comes the use of antimatter particles which, in a very delicate process, can be bombarded with its antiparticle to produce pure energy which can be fed into a starship's propulsion systems, thereby reducing the tax upon our conventional fuel reserves.  This should prove invaluable for missions heading far outside of friendly territory.</description>
+	</technology>
+	<technology id="5434" symbol="BATTLETRACK" name="Battle Tracker">
+		<discovery
+			researchMod="1.00 + 0.50 + 0.50"
+			level="5"
+			researchRequires="STEALTHMOD-5"
+			researchReqSRes="SR_TL5B"
+			researchDisables="PLUTONIUMMORTAR5"
+			researchRaces="H"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="960"
+			buildSRes="SR_TL5B"
+			slots="1"
+			weight="-8"
+			signature="-30"
+			missileDef="26"
+			combatAtt="16"
+			combatDef="21"
+			minHull="1"
+			maxInstallations="1"
+		/>
+		<preresearch>Some creative thinking can exploit Plutonium into providing some strange and wondrous effects useful on starships.</preresearch>
+		<description>Brought to you by a mysterious entity amongst the scientific community, this innocuous looking ship module provides numerous effects that encompass the entire ship it is installed upon.  Being powered by a pile of Plutonium dust, this black box amplifies the combat computers onboard the ship significantly, giving a very high increase to attack and defensive computations, including electronic countermeasures against guided weaponry.  Additionally, by accessing the ship's power grid at key points, in parallel to the central control systems, this module can virutally eliminate all scanner signature emitted by the craft under normal circumstances.  Lastly, the strangest effect of all (which the creators absolutely refuse to discuss the workings of), is that not only does the module have no mass of its own, but it actually reduces the ship's mass a slight degree.  A very strange invention indeed, and due to its highly complex nature, only one may be installed on any ship.</description>
+	</technology>
+	<technology id="5435" symbol="BUNKERMOD" name="Bunker Module">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="5"
+			researchRequires="COLONYMOD2-5"
+			researchReqSRes="SR_TL5C"
+			researchDisables="HUGEHULL5"
+			researchRaces="C"
+		/>
+		<shipequip
+			subtype="seq_struct"
+			buildProd="1440"
+			buildSRes="SR_TL5C"
+			operEn="10"
+			slots="12"
+			weight="30"
+			unpackStruct="BUNKER"
+			minHull="2"
+		/>
+		<preresearch>An innovative solution to limited fuel, by way of Wolframium.</preresearch>
+		<description>This large and bulky module contains a self-sufficient Bunker that can be deployed onto any planet owned by yourself or uninhabited.  A Bunker requires no outside energy, produces enough food for its workforce, serves the functions of space ship refuelling, as well as a proximity scanner as this structure is most likely to be found in sectors rife with combat.  Added to this are basic stargate functions to assist with calling in reinforcements as necessary.  There are no research nor construction facilities within a Bunker, though, so planetary development must stem from other resources.</description>
+	</technology>
+	<technology id="5465" symbol="LIVLARGEHULL5" name="Live Large Hull">
+		<discovery
+			researchMod="1.00 + 1.00"
+			level="5"
+			researchRequires="LIVMEDIUMHULL4-3"
+			researchRaces="B"
+		/>
+		<shiphull
+			buildProd="720"
+			storEn="3072"
+			operEn="6"
+			maxHP="512"
+			slots="96"
+			weight="72"
+			maxWeight="240"
+			signature="24"
+			combatClass="2"
+			autoRepairPerc="0.02"
+            minSignature="3"
+		/>
+		<preresearch>Our greatest achievement in living starships.  Unparalleled armour, ultimate in fuel efficiency and with the capacity for a grand array of weaponry.</preresearch>
+	</technology>
+	<technology id="5466" symbol="ADVLARGEHULL5" name="Advanced Large Hull">
+		<discovery
+			researchMod="1.00 + 1.00"
+			level="5"
+			researchRequires="ADVMEDIUMHULL4-3"
+			researchRaces="HC"
+		/>
+		<shiphull
+			buildProd="960"
+			storEn="3072"
+			operEn="8"
+			maxHP="384"
+			slots="80"
+			weight="88"
+			maxWeight="256"
+			signature="28"
+			combatClass="2"
+            minSignature="3"
+		/>
+		<preresearch>And so completes our development of hull technologies with designs worthy of our greatest flagships!</preresearch>
+	</technology>
+	<technology id="5467" symbol="LIVCOMDECK5" name="Living Command Deck">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="5"
+			researchRequires="LIVLARGEHULL5-3"
+			researchRaces="B"
+		/>
+		<shipequip
+			subtype="seq_ctrl"
+			buildProd="120"
+			combatAtt="7"
+			combatDef="7"
+			missileDef="7"
+			maxHP="44"
+			slots="8"
+			weight="16"
+			scannerPwr="56"
+			minHull="2"
+		/>
+		<preresearch>As before, our biotechnology gives us the ultimate control centre for our battleships.</preresearch>
+	</technology>
+	<technology id="5468" symbol="MLCOMDECK5" name="Mind-linked Command Deck">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="5"
+			researchRequires="ADVLARGEHULL5-3"
+			researchRaces="H"
+		/>
+		<shipequip
+			subtype="seq_ctrl"
+			buildProd="100"
+			combatAtt="8"
+			combatDef="8"
+			missileDef="8"
+			maxHP="40"
+			slots="8"
+			weight="16"
+			scannerPwr="60"
+			minHull="2"
+		/>
+		<preresearch>Here is where the height of our mental capacity is revealed, allowing all commanding officers direct mental connections to the ship through this module.</preresearch>
+	</technology>
+	<technology id="5469" symbol="COMPCOMDECK5" name="Computerised Command Deck">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="5"
+			researchRequires="ADVLARGEHULL5-3"
+			researchRaces="C"
+		/>
+		<shipequip
+			subtype="seq_ctrl"
+			buildProd="150"
+			combatAtt="8"
+			combatDef="6"
+			missileDef="6"
+			maxHP="56"
+			slots="8"
+			weight="16"
+			scannerPwr="52"
+			minHull="2"
+		/>
+		<preresearch>Furthering our optimised supercomputers, we now can install our targetting systems and armour layout upon the most deadly of warships.</preresearch>
+	</technology>
+	<technology id="5472" symbol="HUGEHULL5" name="Huge Hull">
+		<discovery
+			researchMod="1.00 + 1.00"
+			level="5"
+			researchRequires="COMPCOMDECK5-5"
+			researchReqSRes="SR_TL5C"
+			researchDisables="BUNKERMOD"
+			researchRaces="C"
+		/>
+		<shiphull
+			buildProd="2880"
+			buildSRes="SR_TL5C"
+			storEn="5984"
+			operEn="16"
+			maxHP="1024"
+			slots="192"
+			weight="176"
+			maxWeight="576"
+			signature="100"
+			combatClass="2"
+            minSignature="5"
+		/>
+		<preresearch>A massive undertaking, however, we are confident that our supremacy shall be realised to the rest of the galaxy with this, the pinnacle of robotics engineering.</preresearch>
+	</technology>
+	<technology id="5470" symbol="FTLENG5B" name="Long-range FTL Engine">
+		<discovery
+			researchMod="1.00 + 1.00"
+			level="5"
+			researchRequires="FTLENG3-3"
+			researchRaces="B"
+		/>
+		<shipequip
+			subtype="seq_eng"
+			buildProd="576"
+			storEn="384"
+			operEn="2"
+			slots="4"
+			weight="4"
+			engPwr="88"
+			signature="0"
+		/>
+		<preresearch>Research into better FTL propulsion provides for a fuel efficient engine, offering extended flight range with a moderate increase to speed.</preresearch>
+	</technology>
+	<technology id="5471" symbol="FTLENG5H" name="Discreet FTL Engine">
+		<discovery
+			researchMod="1.00 + 1.00"
+			level="5"
+			researchRequires="FTLENG3-3"
+			researchRaces="H"
+		/>
+		<shipequip
+			subtype="seq_eng"
+			buildProd="576"
+			storEn="768"
+			operEn="6"
+			slots="4"
+			weight="4"
+			engPwr="84"
+			signature="-1"
+		/>
+		<preresearch>An advancement upon standard FTL technology allows for a propulsion system that is somewhat faster, while providing some ability to mask ship signature.</preresearch>
+	</technology>
+	<technology id="5473" symbol="FTLENG5C" name="Augmented FTL Engine">
+		<discovery
+			researchMod="1.00 + 1.00"
+			level="5"
+			researchRequires="FTLENG3-3"
+			researchRaces="C"
+		/>
+		<shipequip
+			subtype="seq_eng"
+			buildProd="576"
+			storEn="768"
+			operEn="8"
+			slots="4"
+			weight="4"
+			engPwr="96"
+			signature="0"
+		/>
+		<preresearch>Further improvements in FTL research yield a faster propulsion engine, though with  greater fuel consumption.</preresearch>
+	</technology>
+	<technology id="5474" symbol="AMPSHIELD5" name="Amplified Shield">
+		<discovery
+			researchMod="1.00 + 0.50 + 0.50"
+			level="5"
+			researchRequires="ADVSHIELD4-3"
+			researchRaces="H"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="1280"
+			shieldPerc="0.80"
+            shieldRechargeFix="2"
+            shieldRechargePerc="0.02"
+			slots="2"
+			weight="8"
+			operEn="6"
+			minHull="1"
+			maxInstallations="1"
+		/>
+		<preresearch>Soon we shall be able to double the strength of our fighting ships with just a simple module upgrade.</preresearch>
+	</technology>
+	<technology id="5475" symbol="BIOBRIDGE" name="Biometric Controller">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="5"
+			researchRequires="LIVCOMDECK5-5"
+			researchReqSRes="SR_TL5B"
+			researchDisables="PLUTONIUMROCKET5"
+			researchRaces="B"
+		/>
+		<shipequip
+			subtype="seq_ctrl"
+			buildProd="120"
+			buildSRes="SR_TL5B"
+			combatAtt="8"
+			combatDef="8"
+			missileDef="8"
+			maxHP="160"
+			slots="6"
+			weight="12"
+			scannerPwr="80"
+			storEn="1536"
+			minHull="1"
+		/>
+		<preresearch>Evolution shall always conquer technology; living proof is here, in the form of a radiophilic insectoid control module suitable for medium and large vessels.</preresearch>
+		<description>Plutonium.  Notoriously unstable, and a well known biological hazard.  No longer.  Our top zoological engineers have managed to coax a strain of DNA extrapolated from relatively unimpressive ants into an immobile symbiant that actually is capable of feeding off Plutonium's alpha radiation, employing the particles into reinforcing its sturdy exoskeleton, which serves as the housing for the commanding officers of the ship.  Not only that, but the cerebral functions of the creature are remarkable, adding a valuable increase in combat accuracy and evasiveness.  Any excess radiation absorbed by the creature is stored in a sac as consumable energy that can be used by our FTL engines.</description>
+	</technology>
+	<technology id="5476" symbol="NUKEFTL" name="Fission FTL Drive">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="5"
+			researchRequires="FTLENG5C-5"
+			researchReqSRes="SR_TL5B"
+			researchDisables="PWRPLANTPLUTONIUM5"
+			researchRaces="C"
+		/>
+		<shipequip
+			subtype="seq_eng"
+			buildProd="1152"
+			buildSRes="SR_TL5B"
+			storEn="3840"
+			operEn="32"
+			slots="16"
+			weight="16"
+			engPwr="768"
+			signature="0"
+		/>
+		<preresearch>Large-scale propulsion with its own built-in thermonuclear powerplant.  A welcome addition to any menacing warcruiser.</preresearch>
+		<description>Three issues have been observed with advancing ship design.  Increased mass, decreased effective range, and increased cost of assembly.  Dug up from some newly opened mines far off near the Galactic Core, a solution has been provided.  Using the inherently radioactive nature of Plutonium, a reactor has been created to harness this power, and directly integrated to massive FTL thruster assembly, enough to replace four standard FTL engines with a single one of these units.  The direct-power feed has resulted in greater thrust in addition to a larger power reserve.  With this, even our most massive battleships shall have greater range for persuit and conquest available to them.</description>
+	</technology>
+	<technology id="5501" symbol="INERTFTL5" name="Inertial Drive">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="5"
+			researchRequires="FTLENG5H-5"
+			researchRaces="H"
+		/>
+		<shipequip
+			subtype="seq_eng"
+			buildProd="720"
+			storEn="540"
+			operEn="8"
+			slots="7"
+			weight="1"
+			engPwr="84"
+			signature="2"
+			maxInstallations="1"
+		/>
+		<preresearch>A rogue scientist has come to us proposing a radical departure from the standard ideas behind FTL drives.</preresearch>
+		<description>Utilizing a hyperspacial bubble surrounding the ship, we can reduce the apparent weight of the ship and propel it forward at the same time. Since each ship can only be contained within one bubble, you can only install one such of these drives.</description>
+	</technology>
+	<technology id="5502" symbol="ENGCOMPLEX" name="Engineering Complex">
+		<discovery
+			researchMod="1.0"
+			level="5"
+			researchRequires="RESCENTRE1-3"
+			researchRaces="H"
+		/>
+		<structure
+			subtype="str40"
+			buildProd="1440"
+			operEn="30"
+			operWorkers="2500"
+			prodSci="16"
+			prodProd="16"
+			prodProdMod="0.0,0.4,0.0,0.6"
+			maxHP="1200"
+		/>
+		<preresearch>As our research reaches the highest levels, we find ourselves often needing a balance between science and production.</preresearch>
+		<description>Specially trained engineers placed in the most advanced engineering research facilities allow us to build stuff!</description>
+	</technology>
+	<technology id="5503" symbol="BIONICFRAMEROCKET4" name="Leech Missile">
+		<discovery
+			researchMod="1.00 + 0.50 + 1.25"
+			level="5"
+			researchRequires="BIONICROCKET5-4"
+			researchRaces="B"
+		/>
+
+		<shipequip
+			subtype="seq_wpn"
+			buildProd="720"
+			slots="6"
+			weight="6"
+			weaponDmgMin="12"
+			weaponDmgMax="22"
+			weaponAtt="4"
+			weaponClass="1"
+			weaponROF="1.5"
+			weaponIsMissile="1"
+			weaponIgnoreShield="1"
+			maxHull="0"
+			weaponGoodForFlak="0"
+			maxInstallations="2"
+		/>
+		<preresearch>We need the ability to launch devastating barrages of missiles from a small hull. Our Synthesizers think they have just the right thing.</preresearch>
+		<description>The Leech Missle is a rapid-fire missile launcher that attacks medium and large hulls with considerable firepower. It has two principle drawbacks: It has a low to-hit chance, and it can only be installed on small hulls due to it virtually becoming the ship's frame.</description>
+	</technology>
+	<technology id="5504" symbol="MUTAGENDISP5" name="Advanced Mutagen Dispenser">
+		<discovery
+			researchMod="1.50 + 1.25"
+			level="5"
+			researchRequires="MUTAGENDISP-5"
+			researchReqSRes="SR_BIO1"
+			researchRaces="B"
+		/>
+		<structure
+			subtype="str99"
+			buildProd="2600"
+			buildSRes="SR_BIO1"
+			operWorkers="1500"
+			operEn="35"
+			maxHP="600"
+			prodEnv="+112"
+		/>
+		<preresearch>Our Mutagen Dispenser has been invaluable. Our bio-engineers are now interested in improving the technology.</preresearch>
+		<description>Using the latest in photo-organics, the improved Mutagen Dispenser emits a specially formulated mutagenic compound that reacts with sunlight. This in turn causes a catalyst effect, increasing the environmental conditions of the planet at a very rapid rate.</description>
+	</technology>
+	<technology id="5505" symbol="FTLSLUG5" name="Slug Drive">
+		<discovery
+			researchMod="1.00 + 0.50 + 1.00"
+			level="5"
+			researchRequires="FTLENG5C-5"
+			researchRaces="C"
+		/>
+		<shipequip
+			subtype="seq_eng"
+			buildProd="540"
+			storEn="440"
+			operEn="6"
+			slots="4"
+			weight="5"
+			engPwr="88"
+			combatAtt="3"
+			maxHP="12"
+			signature="2"
+			signatureDecloak="1.1"
+			maxInstallations="4"
+		/>
+		<preresearch>Military combat experts believe that a drive designed to push heavy hulls will be benificial to our military strategy.</preresearch>
+		<description>Sometimes speed is less important that shear power. The Slug Drive is a hugely powerful sublight drive that lets us bring our weapons to bear on enemies quickly. Due to it's massive size and power, it makes the ship harder to kill but easier to find.</description>
+	</technology>
+	<technology id="5506" symbol="FLAKMINEFIELD" name="Mine Field">
+		<discovery
+			researchMod="1.7 + 0.75"
+			level="2"
+			researchRequires="EMCANNON-3"
+			researchRaces="C"
+		/>
+		<structure
+			subtype="str50"
+			buildProd="3200"
+			operWorkers="1500"
+			operEn="15"
+			scannerPwr="20"
+			maxHP="400"
+			combatAtt="18"
+			structWeapons="6,8,10,0,0"
+			systemDef="4"
+			isMilitary="1"
+		/>
+		<preresearch>Mines present us with a problem: how do we adaquately deploy a mine field that completely covers a star system, protecting it from attack.</preresearch>
+		<description>Military powers have long desired to effectively mine a star system. The robotic mine field is just that: intelligent mines that track enemy vessles. The enemy must manuever to avoid these mines, or fall prey to their firepower.</description>
+	</technology>
+	<technology id="5800" symbol="PLCOND5" name="Planetary Condensation">
+		<discovery
+			researchMod="1.00"
+			level="5"
+			maxImprovement="1"
+			researchRequires="PLANETENG3-3"
+		/>
+		<project
+			buildProd="19200"
+			finishConstrHandler="finishProjectCondPl"
+			validateConstrHandler="validateProjectCondPl"
+			deployHandlerFunction="finishProjectCondPl"
+			deployHandlerValidator="validateProjectCondPl"
+		/>
+		<preresearch>This project will convert the Gas Giant type planet into Rock type planet.</preresearch>
+	</technology>
+	<technology id="5801" symbol="PLASSEMBL5" name="Planet Assembling">
+		<discovery
+			researchMod="1.00"
+			level="5"
+			maxImprovement="1"
+			researchRequires="PLANETENG3-3"
+		/>
+		<project
+			buildProd="19200"
+			finishConstrHandler="finishProjectAssemblePl"
+			validateConstrHandler="validateProjectAssemblePl"
+			deployHandlerFunction="finishProjectAssemblePl"
+			deployHandlerValidator="validateProjectAssemblePl"
+		/>
+		<preresearch>This project will convert the Asteroids into Desert type planet.</preresearch>
+	</technology>
+	<technology id="5802" symbol="SHIFTPL5A" name="Decrease Orbit Radius">
+		<discovery
+			researchMod="1.00"
+			level="5"
+			researchRequires="PLANETENG3-5"
+		/>
+		<project
+			buildProd="19200"
+			data="20"
+			finishConstrHandler="finishProjectShiftPlDown"
+			validateConstrHandler="validateProjectShiftPlDown"
+			deployHandlerFunction="finishProjectShiftPlDown"
+			deployHandlerValidator="validateProjectShiftPlDown"
+		/>
+		<preresearch>Move planet closer to the central star and increase it's energy abundance.</preresearch>
+	</technology>
+	<technology id="5803" symbol="SHIFTPL5B" name="Increase Orbit Radius">
+		<discovery
+			researchMod="1.00"
+			level="5"
+			researchRequires="PLANETENG3-5"
+		/>
+		<project
+			buildProd="19200"
+			data="20"
+			finishConstrHandler="finishProjectShiftPlUp"
+			validateConstrHandler="validateProjectShiftPlUp"
+			deployHandlerFunction="finishProjectShiftPlUp"
+			deployHandlerValidator="validateProjectShiftPlUp"
+		/>
+		<preresearch>Move planet away from the central star and decrease it's energy abundance.</preresearch>
+		<description>Move planet away from the central star and decrease it's energy abundance.</description>
+	</technology>
+	<technology id="5804" symbol="ASTEROIDMINING" name="Asteroid Mining">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="5"
+			researchRequires="PLANETENG3-4"
+			researchRaces="H"
+		/>
+		<project
+			buildProd="4800"
+			data="10"
+			finishConstrHandler="finishProjectAsteroidMining"
+			validateConstrHandler="validateProjectAssemblePl"
+		/>
+		<preresearch>A beautiful oportunity appears -- we can mine asteroids now!</preresearch>
+		<description>When this project is completed on asteroid, small amount of mineral abundance points will be transfered from target asteroid to the planet that builds this project.</description>
+	</technology>
+	<technology id="5805" symbol="ECOCATALYST" name="Ecosystem Catalyst">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="5"
+			researchRequires="TERRAFORM3-1"
+			researchRaces="B"
+			researchDisables="BIOCOMPLEX"
+			researchReqSRes="SR_TL5C"
+		/>
+		<project
+			buildProd="480"
+			buildSRes="SR_TL5C"
+			finishConstrHandler="finishProjectBioEnrich"
+			validateConstrHandler="validateProjectBioEnrich"
+		/>
+		<preresearch>This project maximize Environment of the planet, but beware of the side effects!</preresearch>
+		<description>This project maximize Environment of the planet, but beware of the side effects!</description>
+	</technology>
+	<technology id="5806" symbol="CHROMIUMSYNTH" name="Chromium Synthesis">
+		<discovery
+			researchMod="1.50 + 0.75"
+			level="5"
+			researchReqSRes="SR_TL5A,SR_TL3A"
+			researchDisables="ANTIMATTERBOMB5"
+			researchRaces="C"
+			maxImprovement="1"
+		/>
+		<project
+			buildProd="48000"
+			buildSRes="SR_TL5A"
+			data="3"
+			finishConstrHandler="finishProjectNF2"
+		/>
+		<preresearch>Antimatter is a very adaptable substance.</preresearch>
+		<description>By employing quark-recombination techniques, we can transmute Antimatter into several units of more useful Chromium.</description>
+	</technology>
+	<technology id="5807" symbol="SILICIUMSYNTH" name="Silicium Synthesis">
+		<discovery
+			researchMod="1.50 + 0.75"
+			level="5"
+			researchReqSRes="SR_TL5A,SR_TL3B"
+			researchDisables="PWRPLANTANTIMATTER5"
+			researchRaces="H"
+			maxImprovement="1"
+		/>
+		<project
+			buildProd="48000"
+			buildSRes="SR_TL5A"
+			data="4"
+			finishConstrHandler="finishProjectNF2"
+		/>
+		<preresearch>Antimatter is a very adaptable substance.</preresearch>
+		<description>By employing quark-recombination techniques, we can transmute Antimatter into several units of more useful Silicium.</description>
+	</technology>
+	<technology id="5808" symbol="CARBONEUMSYNTH" name="Carboneum Synthesis">
+		<discovery
+			researchMod="1.50 + 0.75"
+			level="5"
+			researchReqSRes="SR_TL5A,SR_TL3C"
+			researchDisables="ETANKS5"
+			researchRaces="B"
+			maxImprovement="1"
+		/>
+		<project
+			buildProd="48000"
+			buildSRes="SR_TL5A"
+			data="5"
+			finishConstrHandler="finishProjectNF2"
+		/>
+		<preresearch>Antimatter is a very adaptable substance.</preresearch>
+		<description>By employing quark-recombination techniques, we can transmute Antimatter into several units of more useful Carboneum.</description>
+	</technology>
+    <technology id="5990" symbol="BIONICTL6" name="Self Pollination">
+        <discovery
+            researchMod="1.00 + 1.00 + 3.00"
+            finishResearchHandler="finishResTLAdvance"
+            level="5"
+            data="B"
+            recheckWhenTechLost="1"
+            researchRequires="BIONICTL5-5"
+            researchRaces="B"
+            maxImprovement="3"
+        />
+        <preresearch>A theoretical research in the field of biology toward the ultimate goal: spore colonization of the galaxy.</preresearch>
+    </technology>
+    <technology id="5991" symbol="HUMANTL6" name="Mental Chameleonism">
+        <discovery
+            researchMod="1.00 + 1.00 + 3.00"
+            finishResearchHandler="finishResTLAdvance"
+            level="5"
+            data="H"
+            recheckWhenTechLost="1"
+            researchRequires="HUMANTL5-5"
+            researchRaces="H"
+            maxImprovement="3"
+        />
+        <preresearch>A theoretical research of the human mind and thinking processes that will raise our telepathic, telekentic, stealth, and innovative abilities.</preresearch>
+    </technology>
+    <technology id="5992" symbol="ROBOTTL6" name="High Energy Robotic Brains">
+        <discovery
+            researchMod="1.00 + 1.00 + 3.00"
+            finishResearchHandler="finishResTLAdvance"
+            level="5"
+            data="C"
+            recheckWhenTechLost="1"
+            researchRequires="ROBOTTL5-5"
+            researchRaces="C"
+            maxImprovement="3"
+        />
+        <preresearch>A theoretical research in the field of robotics that will allow us to power even more powerful systems than before.</preresearch>
+    </technology>
+</techtree>

@@ -1,0 +1,19 @@
+Research costs:
+
+Base:
+TL0 : 1 (starting techs + scanner)
+TL1 : 2
+TL2 : 4
+TL3 : 8
+TL4 : 16
+TL5 : 32
+TL6 : 64
+
+Modifiers:
+half technology (1.5, 2.5, ...) = new base = base + 50 %
+military technology = + 50 %
+ship technology = + 50 %
+ship hull/engine = + 50 % (total + 100% with ship technology bonus)
+theoretical research = + 100 %
+special resource involved = + 50 %
+increase TL research = + 300 % (total + 400% with theoretical research)

@@ -1,0 +1,1545 @@
+Change Log:
+
+[2007-02-12]
+- Fixed bug with ShipUtils that allowed for less than 0% values on Att and Def +% techs. [Random Chaos]
+- Modified how negative slot and weight units operate so that multiple techs on same ship are cummulative. [Random Chaos]
+- Modified Mine Field to fix overpowed issue. This fix is not final fix, but will allow mine field to not be overpowered until a proper mine control system can be enabled. [Random Chaos]
+- Modified Mass Reduction Module and Expansion Slots tech to include MaxImprovements tag. [Random Chaos]
+
+[2007-02-08]
+- Fixed bug in fix for display of ProblemsDlg.py on low HP structures. [Qark]
+- Fixed server side deteoration of low HP structures. [Qark]
+
+[2007-01-29]
+- When producing several tasks of the same type, only the last one
+  is reported now. [Qark]
+
+[2007-01-27]
+- Fixed max. morale problem with Holidays project. [Qark]
+- Fixed problem with TL 99 and RP pop support. [Qark]
+- Old messages are wiped every turn now. [Qark]
+
+[2007-01-26]
+- "Report Finalization" client option is now disabled by default. [Qark]
+
+[2007-01-25]
+- Fixed problem with removing unused mailboxes. [Qark]
+- Restore of msg database now drops unreferenced messages. [Qark]
+
+[2007-01-22]
+- Fixed galaxy auto restart. [Qark]
+- Fixed auto removal of unused mailboxes. [Qark]
+
+[2007-01-21]
+- Updated minimap update method so that computation time is reduced when only moving rectangle. [Random Chaos] (SF#1641061)
+- Added # of ships of design per fleet to fleet list column in FleetsAnalysisDlg.py [Random Chaos] (request by Cytheria)
+- Added access to FleetCommandDlg.py in FleetsAnalysisDlg.py by LMB-click [Random Chaos]
+- Fixed deploy handler issue selecting invalid designs in FleetCommandDlg.py 
+  **** This still needs to be fixed in \server\lib\ige\ospace\ShipUtils.py (see SVN comment)
+
+VERSION 0.5.60 R81
+
+[2007-01-21]
+- Fixed typo in AIEDENPlayer. [Qark]
+- Fixed order items in client's menu. [Qark]
+- Fixed typo in TL4 Terraforming Pod [Random Chaos]
+
+VERSION 0.5.60
+
+[2007-01-21]
+- Re-enable "Option" item in the client's menu. [Qark]
+- Added --restore= option for server. [Qark]
+
+[2007-01-15]
+- Enabled option server.mode in config file. [Qark]
+- delete design now handles strat. res. correctly. [Qark]
+- upgrade design now handles strat. res. correctly (but not optimaly). [Qark]
+- Fixed small bugs in MsgMngr, IPlayer, MetakitDatabase modules. [Qark]
+- Fixed fame problem with deploying colony as a pirate. [Qark]
+- Fixed problem with stealing techs as a pirate. [Qark]
+- Split mailbox name into tuple. [Qark]
+- Fixed font name in tech tree vizualizatoion tool. [Qark]
+- Fixed computation of best flak weapon. [Qark]
+
+[2007-01-14]
+- Added wormholes to MiniMap
+- Fixed EDEN diameter bug
+
+[2007-01-12]
+- Added config file "var/config.ini" to server. [Qark]
+- Enabled option vip.password in config file. [Qark]
+
+[2007-01-07]
+  Technologies:
+- Added Tech Level 6, additional techs in Tech Level 4 and 5 [Random Chaos] (SF#1557495)
+- Fixed Techtree to handle TL6
+- Added tech properties:
+      Ship techs: maxHull, combatAttPerc, combatDefPerc, missileDefPerc, signatureCloak (signature 0-100%), signatureDecloak (signature 100%+), damageAbsorb, addMP 
+      System fleet command: systemAtt, systemDef
+      Planetary shields: planetShield 
+      Project deployment: deployHandlerID, deployHandlerFunction, deployHandlerValidator
+  [Random Chaos] (SF#1555361, SF#1555641, SF#1557081)
+- Updated osclient.py to reference new techs [Random Chaos]
+
+  Wormholes:
+- Added identification of wormhole destination (starmap and system map) [Random Chaos] (SF#1555641)
+- Fixed bugs with wormhole movement (improper fleet removal from origin system) [Random Chaos]
+
+  Client:
+- Updated Split Fleet dialog to allow better sorting options [Random Chaos] (SF#1568322)
+- Updated minimap to be 1:1 aspect ratio to not squish galaxies [Random Chaos]
+- Updated main menu bar: Dropdown for Planets/Fleets to access Analysis dialogs [Random Chaos]
+- Fixed of width of Menu dropdown on main menu bar
+- Updated order of Menu dropdown on main menu bar to make Resign seperated from other commands (to prevent accidental clicks) [Random Chaos]
+
+  Pirate and EDEN:
+- Added new EDEN player structure and techs; changed galaxy initiation to use new structure [Random Chaos]
+- Added new Pirate player structures [Random Chaos]
+- Added additional AI routines for Pirate AI, including automatic tech grants [Random Chaos]
+- Added forced non-agression between EDEN and Pirate [Random Chaos] (SF#1449545)
+- Fixed CP cost of Pirate Colony Module [Random Chaos] (SF#1604467)
+
+  Server:
+- Added automatic restart of galaxies with 1 active player [Random Chaos] (SF#1555110)
+- Added support for galaxy descriptions during galaxy generation XML parsing [Random Chaos] (SF#1557548)
+
+[2006-09-19]
+- Minimum production change (all worlds with 1+ cp raw and 25+ moral will output 1 cp minimum) [Random Chaos] (SF#1555638)
+- Modified how ship equipment properties sum: 
+      +ATT, +DEF will not sum if equipment
+      Slots will properly utilize negative slot properties
+      Weight will properly utilize negative weight properties
+      Auto repair will select best repair tech (based on Fix or Perc for that ship class); fixed auto repair processing
+  [Random Chaos] (SF#1555369)
+- Modified wormholes so fleets don't automatically enter [Random Chaos] (SF#1555640)
+- Modified fleet signature to allow 0 ship signature, but 1 fleet signature minimum (previously 1 ship signature, no fleet limits) [Random Chaos] (SF#1556048)
+- Modified Military Power calculation to not weight anti-large weapons and anti-planet weapons so heavily [Random Chaos]
+
+[2006-09-14]
+- Added new EDEN technologies for players [Malxe]
+
+[2006-08-20]
+- Added Minimap [Anderuso]
+- Fixed position of Analysis menu in Empire Overview Dialog [Anderuso]
+- Fixed exception shown in Empire Overview Dialog after galaxy restart [Anderuso]
+- Fixed bug#1542964 - Galaxy Restarting [Anderuso]
+- Added enable/disable support to ActiveLabel [Anderuso]
+- Added new state to themes [Anderuso]
+- Added new menu item for Galaxy restart [Anderuso]
+- Fixed confirmation message for Galaxy restart [Anderuso]
+
+VERSION 0.5.59
+
+[2006-07-10]
+- All structure weapons are firing according to structure status.
+  [Anderuso] (SF#1492750)
+- Shield strength is calculated only from the most effective installed
+  shield. [Anderuso] (SF#1495842)
+- Added structures for TL3/4 strategic resources.
+  [Qark, based on idea/graphics from Melkor, Mental, Rubic]
+- Added new technology announcement for pirate. [Anderuso] (SF#1444945)
+
+[2006-05-24]
+- Mutagen Dispenser Pod now requires Mutagen strat. resource. [Qark]
+- Disabled "Population decreased" message. [Qark]
+
+[2006-05-16]
+- Outer Space Launcher is now standalone project. [Qark]
+
+VERSION 0.5.58
+
+[2006-05-14]
+- WIP version of OSLauncher. [Qark]
+- Increased food production of pirate base. [Qark] (SF#1460508)
+- Fixed info for repair ship feature. [Qark] (SF#1484726)
+- Pirate can deploy colony modules at no fame cost in system
+  he/she owns. [Qark] (SF#1484737)
+- F9 key forces client to send keep alive message to server. [Qark]
+- Pirate AI is now able to build Pirate Bases on all planets
+  in the system it occupies. [Qark]
+
+[2006-04-26]
+- Setup script for new client distribution. [Qark]
+
+[2006-04-13]
+- Fixes for osclient command line client. [Qark]
+
+VERSION 0.5.57
+
+[2006-03-22]
+- Fixed bug with upgrading ships design to 0 speed and leaving the
+  system at the same time. [Qark] (SF#1452133)
+
+[2006-03-21]
+- Testing galaxy has now pirate set up. [Qark]
+
+[2006-03-20]
+- Fixes for building RPMs. [Qark]
+- Tools for managing server does not need admin password. [Qark]
+
+[2006-03-07]
+- Made "Repair Ships" technology obsolete. [Qark] (SF#1444716)
+
+VERSION 0.5.56
+
+[2006-02-21]
+- Fixem problem with Construction dialog. [Qark/Anderuso] (SF#1424616)
+- Added IUniverse.createGalaxy method.
+
+[2006-02-11]
+- Greenhouse Farm's output is not so dependent on environment. [Qark]
+- Various build process related fixes. [Qark]
+
+VERSION 0.5.55
+
+[2006-02-05]
+- Fixed build system to use py2exe. [Qark]
+
+[2006-01-12]
+- Enabled TAB key in Login, ColorDefinition and Split Fleet dialogs. [lord-silk]
+- Unexplored systems are marked with [system]. [lord-silk]
+- Construction dialog display number of ships in build queues. [lord-silk]
+- Refactored StarMapWidget. [lord-silk]
+
+[2005-12-30]
+- Changed licensing to GPL.
+
+VERSION 0.5.54
+
+[2005-08-28]
+- Fixed bug when upgrading ships and more strategic resources are needed
+  for new design [Anderuso]
+
+[2005-05-07]
+- "Ecosystem Catalyst" now depend on "Terraforming" improvement 1. [Anderuso]
+
+[2005-05-01]
+- Fixed finishProjectAsteroidMining handler [Anderuso]
+- Changed AsteroidMining tech atributes [Anderuso]
+
+[2005-03-10]
+- New ship icons (credit goes to Thelios) [Anderuso]
+
+[2005-03-07]
+- added reset of grouping checkboxes in FleetSpleetDlg [Anderuso]
+
+[2005-03-03]
+- Fixed toggle production queue / planetary slot [Anderuso]
+
+[2005-03-01]
+- Added transparent drawing ETA time for ships in production queue [Anderuso]
+- Fixed NewTaskDlg for pirate player [Anderuso]
+
+[2005-02-06]
+- Added disabling Info button in NewTaskDlg and StarSystemDlg
+  when Constr button in MainGameDlg is disabled [Anderuso]
+- Fixed StructTaskDlg when used on non-owned planets [Anderuso]
+- Added enabled attribute to ButtonArray items [Anderuso]
+
+[2005-02-02]
+- Allowed using StructTaskDlg on non-owned planets [Anderuso]
+
+[2005-01-23]
+- Fixed upgrade building of non-possessed tech [Anderuso]
+- Fixed ship components filters setting [Anderuso]
+
+[2005-01-21]
+- Changed left/right click on building on planet slot [Anderuso]
+- Fixed showing mutagen dispenser in StructTaskDlg [Anderuso]
+- Fixed adding >1 structures with HSE [Anderuso]
+- Added showing misile weapon related tech attributes [Anderuso]
+
+VERSION 0.5.53
+
+[2005-01-18]
+- Disabled reporting min abundance for Gas giants. [Anderuso]
+
+[2005-01-11]
+- Fixed click on empty planetary slot used by stuct in queue. [Anderuso]
+
+[2005-01-10]
+- Added filtering to ship component selection dialog. [Anderuso]
+- Fixed HSE adding to prodQueue. [Anderuso]
+- Added galaxy restart by imperator. [Anderuso]
+- Added server console. [Anderuso]
+
+[2004-12-13]
+- Reset of game server does not locks database now.
+
+VERSION 0.5.52
+
+[2004-12-08]
+- Build number replaced by revision number.
+- Asteroid Mining technology no longer requires TL5 strategy resource.
+
+[2004-12-01]
+- Added TL5 technologies for TL5 resources. [Malxe]
+- Building an Pirate Base on already inhabited world does not reduce
+  fame now.
+
+VERSION 0.5.51
+
+[2004-11-29]
+- Fixed problem with Info button in New task dialogs. [Daniel]
+- Fixed problem with clicking on empty slot on planets that are owned by
+  someone else or by noone.
+- Optimized Metakit database backend.
+  *INCOMPATIBILE DATABASE FORMAT - DUMP/LOAD OF ALL DATABASES NEEDED *
+- Better way of deleting old messages.
+- Construction tasks not currently produced lost 2% of constructions points
+  each turn.
+
+[2004-10-28]
+- Pirate can steal 3 different tech improvemens per one conquered planet.
+
+[2004-10-21]
+- Pirate got real government power.
+- Training structures provides EXPs based on percentage of base experience
+  of each trained ship.
+
+[2004-10-20]
+- Updated Czech translation. [PK]
+- All weapons upto TL3 lost ignoreShield property.
+- Fixed abundand "low fuel" messages in Problems Dialog.
+
+[2004-10-14]
+- Fleet Analysis dialog added. [Anderuso]
+- Fixed bug with disappearing fleets.
+
+[2004-09-29]
+- Fixed tranfering hits issue in shot limit code.
+- Gravity Surge Mortars cannot be equipped by flak structures now.
+- VIP players can take over pirate account.
+- There is a warning dialog when no starting positions are available.
+- Updated Czech translation.
+- Fixed problem with closing window in Pygame.UI.
+- Fixed problem with first login (update database exception).
+
+VERSION 0.5.50
+
+[2004-09-13]
+- Cheaper colonization of planet with TL3 resources for pirates.
+- Cheaper Pirate Colony Module.
+- Pirates gets +1 fame each 1:00 turns.
+- Manipulating with construction queue updates strategy resources
+  correctly now.
+- Optimized ship scrapping.
+- TL4 armor is a bit cheaper now.
+
+[2004-09-09]
+- Fixed shots limit related bugs.
+
+[2004-09-05]
+- Flak structures uses best available weapons.
+- Shots limit penalty has been implemented.
+- Ship sorting respects number of ship of the particular design.
+
+[2004-09-02]
+- Changed sorting of ships in fleet.
+
+[2004-08-24]
+- Fixed bug in upgrade ships (blocked production).
+- Fixed bug in pirate colony module deployment.
+- Price (in fame) of pirate colony module deployment depends on
+  number of planets.
+- Fixed problems with game reset. [Anderuso and Qark]
+- Planet analysis tools. [Anderuso]
+
+[2004-08-20]
+- When ship design is upgraded, construction tasks are changed
+  from old design to new design and already completed CPs are reduced.
+
+VERSION 0.5.49
+
+[2004-08-10]
+- Added new TL4/5 weapon technologies. [Sindel]
+- Fixed issues with galaxy deletion process.
+- Implemented simple garbage collection.
+
+[2004-08-08]
+- New rules for pirate area and new icons to display pirate area
+  on the map.
+
+[2004-08-03]
+- Fixed bug in star map (pirate area).
+
+VERSION 0.5.48
+
+[2004-08-02]
+- Pirates captures only one improvement of tech (or new tech) per
+  captured planet.
+- Enslaved population replaced by fame for pirates. Fame is gained
+  when conqured planet is closer than 7.5 parsecs to the closes pirate colony.
+  Fame is lost when conquered planet is farther.
+- Pirate area is marked by red circle on the star map.
+
+[2004-07-31]
+- Fixed problem with voting bonuses.
+
+[2004-07-23]
+- Fixed problems with ROF lesser than 0.1 (retreating bombers).
+- Deployment script checks for modified and unversioned SVN files.
+
+[2004-07-22]
+- When taking over rebel faction, server makes sure, that home planet
+  contains at least one outpost and nothing else is touched.
+
+VERSION 0.5.47
+
+[2004-07-12]
+- Made "Ecosystem Initiation" technology obsolete.
+- Raised auto-terraforming chances for bionic.
+- Initial implementation of the new task selection dialog.
+- Added indication for slots avialable using Habitable Surface Expansion
+  technology.
+- Clicking on an empty slot invokes new construction selection dialog.
+  (improved version will follow soon)
+
+[2004-06-21]
+- TL3+ ship technologies fixes. [Sindel]
+
+[2004-06-07]
+- Fixed another bug for no soundcard scenario.
+
+VERSION 0.5.46
+
+[2004-06-03]
+- Fixed sorting issue in Research dialog.
+- Fixed sorting issues in Fleet Overview dialog.
+
+[2004-05-31]
+- Added sound options.
+- Added TL3+ weapons, armours, shields. [Sindel]
+
+[2004-05-30]
+- Damage caused by shot is halved for every level of difference between
+  weapon class and target class.
+- When fleet is out of fuel, it's ROF is reduced to 33%.
+- Fixed TL3+ ship control units requirements for minimal hull.
+
+VERSION 0.5.45
+
+[2004-05-22]
+- Fixed bug in updater. [Don Pedro]
+- Added TL3, 4, and 5 hulls and cockpits. [Sindel]
+- Added support for techs above (auto-repair, shields recharging).
+- Fixed bug in sorting messages by date.
+- Added TL2/3 techs for bionic.
+- Ancient techs give full info now. [Anderuso]
+
+VERSION 0.5.44
+
+[2004-05-19]
+- Improved exception handling dialog box.
+- Wait counter is reset when WAIT fleet command is deleted.
+- Any active command with destination is altered to MOVE command when
+  fleet is in space.
+- Fixed problem with contacts for arriving fleets.
+- Fixed unicode handling in login dialog.
+- New DB Backend.
+- Checking for minimal login/nick/password lenght added to New account dialog.
+- A non empty login must be specified to log into the game.
+
+[2004-04-22]
+- Database backend independent backup added.
+- New Star Gate icons on main map. [Sindel]
+
+VERSION 0.5.43
+
+[2004-04-18]
+- Added icons for Star Gates to the main map.
+- Enhanced Tech Info dialog.
+- Comm/Scann centers provide small speed boost for fleets.
+- Added message for damage from Star Gates.
+
+[2004-04-17]
+- Fixed ETA computations.
+- Removed split combat inactivity.
+- Implemented Star Gate damage when arriving to system with no
+  or malfunctioning Star Gate.
+
+[2004-04-13]
+- New database backend (to be used in 0.6).
+- Added few themes. [Random Chaos and Qark]
+- Find System dialog. [Anderuso]
+- Added new login screen backgroud. [kEiNEsorge]
+
+VERSION 0.5.42
+
+[2004-03-31]
+- Increased weight of missiles.
+- Decreased weight of bombs.
+- Theme fixes (severity colors). [Anderuso]
+- Implemented damage absorbtion for ships and structures.
+- Added new login screen backgroud. [kEiNEsorge]
+
+[2004-03-23]
+- Enabled diplomacy for pirates.
+- Increased production of Ti-Factories.
+- Star Gates now works even when in combat.
+
+[2004-03-13]
+- Pirates now steals projects too.
+- Pirates got new colony module.
+
+[2004-03-10]
+- Reduced energy consuption of star gates.
+- Added new star graphics. [kEiNEsorge]
+- Fixed very high scanner power used to scan when planet has been
+  conquered.
+- Added sponsor logo to the main game dialog.
+
+[2004-03-09]
+- Fixed "Deep space scan" project.
+
+[2004-03-07]
+- Fixed contacts issues.
+- Removed game id from login dialog.
+- Fixed problem with messages.
+
+VERSION 0.5.41
+
+[2004-03-06]
+- Integrated new scanner code. Removed old one.
+- Increased planet signature from 50 to 75.
+- Fixed stealing techs for pirates (it should work now).
+
+[2004-03-04]
+- Added system overview data into planet dialog. [Random Chaos]
+- Player highlight on map extended. [PeS]
+- Auto-login feature and modifications of login dialog. [PeS]
+- Started transition to standard logging facility in Python 2.3.
+- Refactored buoys code a bit, raised limit to 30 buoys/player.
+
+[2004-02-25]
+- Support for MacOS added. [Thanks, Krevnik]
+
+[2004-02-11]
+- Minimal signature for ships (small:1, medium:2, large:3).
+- Halved efficiency of stealth module.
+
+[2004-02-10]
+- Fixed ETA bug in Fleet Command dialog.
+- Corrected maxImprovement for some techs.
+
+[2004-02-09]
+- Fixed shown number of free slots in SystemMapWidget. [Anderuso]
+- Added Delete buoy button to StarSystemDlg. [Anderuso]
+- Modified recipients window in NewMessageDlg (sort, size, pos).  [Anderuso]
+- Added target indication to visible fleets (hide popup with Shift key). [Anderuso]
+- Added showing ETA to new fleet action.  [Anderuso]
+- Added default button to LoginDlg (to login press Enter).  [Anderuso]
+- Fixed system highlight problem.
+
+VERSION 0.5.40
+
+[2004-02-04]
+- Star Gates and support code added.
+- Player highlighting on map added. [Random Chaos]
+- Free slots on planets added. [Anderuso]
+- Minor server optimalizations.
+
+[2004-01-27]
+- splitFleet command fixed (it was causign ship data sharing).
+- Buoys fixes. [Anderuso]
+- Problem Dialog fixes. [Anderuso]
+
+[2004-01-25]
+- Fixed problems in Planet Overview and Problems dialogs (lost techs).
+- Moved few fleet messages into info category in Problems dialog.
+- Decreased negative environment effect for Factories and Oil Poweplants.
+
+VERSION 0.5.39
+
+[2004-01-20]
+- Buoys enhancements. [Anderuso]
+- Interface for replace building feature. [Anderuso]
+- Redirected fleet will not join if resulting fleet will have more
+  than 20 ships.
+- Fleets redirected to the system with the planets of the same player
+  switch off the scanner (scanner optimalization).
+
+[2004-01-15]
+- Hive fixed.
+
+[2004-01-14]
+- Combat code fixes.
+
+[2004-01-12]
+- Added few TL4/TL5 technologies.
+- Added support for training facilities.
+- Added support for planetary engineerign technologies.
+- Fixed bug with "client crashing" (error outside the main try..except).
+
+[2004-01-08]
+- Fixed buoys. [Anderuso]
+- Fixed Habitable Surface Expansion handling in Problems Dlg. [Anderuso]
+- Added TL3 -> TL4 and TL4 -> TL5 advancing technologies.
+- Added few TL4 technologies.
+
+[2004-01-02]
+- Fixed win32 build (problem with encodings).
+
+VERSION 0.5.38
+
+[2003-12-31]
+- Fixed Habitable Surface Expansion handling in Problems Dlg [Anderuso]
+- Added private buoys [Anderuso]
+- Move to first/last position for slot and task [Anderuso]
+- Change quantity of task [Anderuso]
+- Fixed government power computing bug [Anderuso]
+- Ported to Python 2.3 and Pygame 1.6
+
+[2003-12-22]
+- Integrated "Remember password" feature [Don Pedro]
+- Password stored in INI file is not plain text anymore
+
+[2003-12-21]
+- Ship support is now a real number (thus ships below 1000 CP are also
+  counted for the ship support)
+
+[2003-11-24]
+- changed working with configuration files [Anderuso]
+
+[2003-11-10]
+- Changed serverity of "Production queue is empty" message in ProblemsDlg
+  to CRI level.
+- Added "Idle Task" project.
+- Slightly changed fleet description pop-up in StarMapWidget [Anderuso]
+
+VERSION 0.5.37
+
+[2003-11-06]
+- Military pacts replaced by economics pacts.
+- Removed computation of indirect allies/enemies.
+
+[2003-11-02]
+- Fleet can be split while moving.
+
+VERSION 0.5.36
+
+[2003-11-01]
+- Fleet upgrade pool is added to the fleet support.
+- Upgraded ships are damaged. Damage is based on the relative
+  price of the upgrade.
+- Cap on upgrades in one system has been introdruced.
+
+[2003-10-29]
+- Fixed issue 14 (Exception in EmpireOverviewDlg) [Anderuso]
+
+[2003-10-24]
+- Remove limit of ship hitpoints while upgrading.
+
+[2003-10-23]
+- Raw unused production is transfered into empire bonus.
+- Galaxy leader and imperator gets small production bonuses.
+- Upgraded ship has up to 25% of maximal hit points after upgrade.
+
+[2003-10-13]
+- Added icons for builded ships [Anderuso]
+- Object cache now handles overflows correctly.
+
+[2003-10-12]
+- Fixed Wait command for fleets.
+- New structure of Message Manager.
+- Redirected fleets departures every 6th turn and join into bigger fleets.
+
+VERSION 0.5.35
+
+[2003-10-08]
+- Added server side support in construction task for demolishing strutures.
+- Fixed bug in FleetOverviewDlg [Anderuso]
+- Added speed grouping to FleetSplitDlg [Anderuso]
+- Added few technology icons. [Random Chaos]
+- Military structures are demolished on the conquered planet.
+
+[2003-10-05]
+- Fixed bugs for Pirates in client and server.
+
+[2003-10-04]
+- Pirates cannot capture planets, but enslaves the captured population.
+- Pirates steal ship techs from player when they conquer his/her planet.
+- Structures on the planets with population get never destroyed (except
+  for combat or executing delete structure command).
+- All military structures (red ones) are blown up when the planet is captured.
+
+VERSION 0.5.34
+
+[2003-10-01]
+- Changed ship reparing rules from fixed HP to percentage (like refueling).
+- Structure's output depends on the percentage of the most missing resouce.
+- Structure deteriorates only if at least one of the required resources
+  is not available completely.
+- Newly produced structures are marked as new and ther output is set to zero.
+
+[2003-09-30]
+- Fixed sorting bug in Listbox.
+- Buttons for structure manipulating are disabled for foreign planets.
+- Fixed default sorting of technologies in NewTaskDlg.
+
+[2003-09-29]
+- Fixed multiselection in Listbox [Anderuso]
+- Added Info button to NewTaskDlg [Anderuso]
+- Added sorting of technologies to NewTaskDlg [Anderuso]
+
+[2003-09-28]
+- New damage level in FleetSplitDlg [Anderuso]
+- New option in FleetsOverviewDlg (+ new default option in OptionsDlg) [Anderuso]
+
+VERSION 0.5.33
+
+[2003-09-22]
+- Enhanced Fleet Split Dialog. [Anderuso]
+- Multiple recipients for (private) messages. [Anderuso]
+
+[2003-09-18]
+- Fixed bug in creating new player and taking over AI player.
+
+[2003-09-14]
+- Removed dependency of bio producing facilities on energy.
+- Lowered price of "Enh. FTL Engines.
+- Added few technologies.
+- Fixed bug with duplicating ship design.
+
+[2003-09-10]
+- Updated Czech tranlation. [Tukak]
+
+[2003-09-09]
+- Fixed messages severity in Problems Dialog [Anderuso]
+
+[2003-09-04]
+- Added experimental support for pirate players.
+
+VERSION 0.5.32
+
+[2003-09-03]
+- Removed TLDEPS.DIA file.
+- Added new tech.
+- Fixed problem with display options switched on by default.
+- Fixed problems with fleets in outer space in Problems Dialog.
+
+[2003-09-01]
+- Fixed and enhanced FleetsOverviewDlg [Anderuso]
+
+VERSION 0.5.31
+
+[2003-08-30]
+- Enhanced Fleets Overview Dialog.
+- Ship redirections from the not owned system are now deleted. (issue 13)
+- Upgrade of the ship design is more expensive now.
+
+[2003-08-26]
+- Added simple FleetsOverviewDlg [Anderuso]
+
+[2003-08-25]
+- Fixed ToolTip drawing
+- Added Duplicate Design button to ConstructionDlg (issue 5) [Anderuso]
+- Fixed preserving column sorting in Listbox (issue 12) [Anderuso]
+
+VERSION 0.5.30
+
+[2003-08-24]
+- GUI redraw fixes.
+- Implemented asteroids.
+- Fixed bugs related to retreat from combat.
+
+[2003-08-22]
+- GUI speedup.
+
+[2003-08-21]
+- Fixed size of the star active area.
+- Fleet bug in ProblemsDlg fixed (issue 2 and 7) [Anderuso]
+
+VERSION 0.5.29
+
+[2003-08-20]
+- Fixed bug that disabled Research Dialog when there was a degrading
+  technology.
+- Fixed bug causing deploying all ships of one kind in the fleet at once.
+- Changed default scale of the main map.
+- Added notification that new client version is available.
+
+[2003-08-14]
+- Added new widget Check (beta). [Anderuso]
+- Added new configration option. [Anderuso]
+- Extended ProblemsDlg. [Anderuso]
+
+VERSION 0.5.28
+
+[2003-08-11]
+- Added several minimal hull requirements for some ship equipment.
+- Fixed code that allows to update ship designs breaking new rules.
+
+[2003-08-10]
+- New fleet created by split command will not fire for 3 turns.
+- Retreating (moving away) form system with combat in progress will
+  take 3 turns and retreating fleet will not fire.
+- Added few TL2/TL3 technologies (missiles, torpedoes, ECM, flak bateries)
+- Client now correctly manages imput focus.
+- Modified weapon parameters to balance A/D numbers change.
+
+VERSION 0.5.27
+
+[2003-08-04]
+- Fixed problem with Problem Locator window position.
+- Attack/Defence numbers of the ships are based on the ship's speed.
+- Added move to "TOP" button in the Research dialog.
+- Enhanced Empire Overview dialog.
+- To upgrade ship, ship must be in a system where it can refuel and
+  no combat must be in progress.
+- Research task can be set to the repeat mode. In this mode the task will
+  be improved until the maximal level of improvement is reached.
+
+[2003-07-31]
+- Improved Redirect Fleet command.
+
+[2003-07-17]
+- Added Empire Overview dialog. [Anderuso, Qark]
+
+VERSION 0.5.26
+
+[2003-07-16]
+- Added CP/RP efficiency bonus for empires with unused government power.
+- Added new graphics for TL3 factories. [Cytheria]
+
+[2003-06-04]
+- Workaround for Font.size bug in PugameUI.Fonts.getTextSize.
+- Upgraded PygameUI to Pygame 1.5.
+- Upgraded to Python 2.2.3.
+- Fixed update procedure to run only on Win32 OS.
+
+[2003-05-26]
+- Added new graphics.
+
+[2003-05-11]
+- Fixed known bugs in the Problem Locator.
+
+VERSION 0.5.25
+
+[2003-05-11]
+- Fixed rounding bug in refuelling.
+- Refactored code for fleet commands.
+- Removed limitation one building per ship for colony ships.
+- Added Problem Locator dialog. [Anderuso]
+- GUI Entry fixes. [Anderuso]
+- Report Finalization option added for contruction task.
+
+[2003-04-28]
+- Fixed "zero range display" bug in the map widget.
+- Changed order of commands for fleet redirection.
+- Added three TL3 technologies.
+
+[2003-04-16]
+- GUI ListBox bug fixes.
+- Added redirection indicator to the main map.
+
+VERSION 0.5.24
+
+[2003-04-15]
+- Initial implementation of fleet redirection.
+- Fixes of Text widget. [Anderuso]
+
+[2003-04-09]
+- Improved performance of the client.
+- Fixed bug in the Diplomacy Dialog.
+
+[2003-04-07]
+- Added few bonus technologies (QDev - *).
+- Fixed bugs in Planets Overview Dialog.
+
+VERSION 0.5.23
+
+[2003-04-02]
+- Added option dialog. [Anderuso]
+- GUI usability fixes. [Anderuso]
+- Improved Planets Overview Dialog.
+- Update of the client database is able to handle some problems.
+
+[2003-03-20]
+- Added new technologies.
+- Rebel with home planet under attack cannot be retaken by the human.
+
+[2003-03-18]
+- Fixed bug in elections messages.
+
+VERSION 0.5.22
+
+[2003-03-17]
+- GUI usability fixes. [Anderuso]
+- Fixed max HP bug in upgrading ships.
+- Optimized morale computation.
+- Optimized imperator elections.
+- Increased power of initial scan for new players.
+
+[2003-03-11]
+- Marked missing strings for translation. [Anderuso]
+- Updated Czech translation.
+- Added Ctrl-Left and Ctrl-Righ handling to text widget. [Anderuso]
+
+[2003-03-06]
+- Updated Czech translation. [Anderuso, Qark]
+- Fixed text area scrollbar in Message Dialog. [Anderuso]
+- Fixed bug in Construction dialog preventing medium+ equipment to be shown.
+
+VERSION 0.5.21
+
+[2003-03-03]
+- Doubled HP of all structures, doubled effectivity of anti-planet weapons.
+- Added some ship technologies.
+- Introduced minimum hull requirement for ship technologies.
+
+VERSION 0.5.20
+
+[2003-02-27]
+- Fixed bug in create account procedure.
+- Fixed bug in HTTP proxy server related code.
+
+VERSION 0.5.19
+
+[2003-02-26]
+- Server/client blocking communication is handled in the separate thread,
+  so the client should redraw correctly even when waiting for command to
+  be completed.
+- Server now remembers messages sent by a player.
+- Ship design upgrade can be canceled.
+- When ordering upgrade only constuction task with obsolete design
+  with 0 CP are removed.
+- When already upgrading A -> B and adding upgrade B -> C, upgrade of A
+  will be changed to C (cancelation of upgrade B -> C will not revert the
+  change made to A so A will still be A -> C).
+
+[2003-02-16]
+- Ship names are handled as unicode now.
+- Enhanced exception dialog.
+- Fixed possible exploit in rename system feature.
+
+VERSION 0.5.18
+
+[2003-02-10]
+- Added planets overview dialog.
+- Fleets radars are affected by EMR level from now on.
+
+[2003-02-09]
+- EMR seasons support added.
+- Fixed problems with ETC for construction tasks, enhanced New Task dialog.
+
+[2003-02-03]
+- Added generation of historical data. Can be used to generate animated maps
+  and graphs.
+
+VERSION 0.5.17
+
+[2003-01-29]
+- Added new technology for scanning - Deep Space Scan.
+- Added support for stopping time in the galaxy.
+- Updated technology tree.
+- Added few tech icons.
+- Living Quarters, Storage Facility and Inteligence Agency techs made obsolete.
+
+VERSION 0.5.16
+
+[2003-01-27]
+- Added ancient technologies for new players.
+- Added new background for login screen.
+- Added support for suspending time in the galaxy.
+- New procedure for generation of large (1500+ systems) galaxies.
+- Temporary fix to text widget (workaround for everlasting scrollbar problem).
+
+[2003-01-13]
+- Modified MessageManager to handle corruptet mailboxes.
+- Votes are reset after voting.
+
+VERSION 0.5.15
+
+[2003-01-13]
+- Implemented election of Galaxy Imperator.
+- Fixed bug in experience distribution in fleets.
+
+[2003-01-12]
+- Population get killed during the battle under any circumstances from now on.
+- Civilian ships get no experience from combat from now on.
+- Improved database transactions.
+
+[2003-01-06]
+- Added Space Port technology.
+
+[2003-01-05]
+- Added consistency checks to the server.
+- Modified Space Docks technology (increased maximum fuel for refueling).
+
+VERSION 0.5.14
+
+[2003-01-02]
+- Old refuelling system has been disabled.
+- Improved transactions handling.
+
+[2002-12-27]
+- Outpost bug fixed.
+
+[2002-12-12]
+- Enabled database transtactions on the server.
+- Ship upgrade consumes propper amount of strategy resources from now.
+- Obsolete design is not automatically deleted - must be deleted manualy.
+- Optimized ship upgrade algorithm.
+- Updated Czech tranlation.
+
+VERSION 0.5.13
+
+[2002-12-4]
+- Added "Show comleted" technologies button to the Research Dialog. Completed
+  technologies are hidden until this button is toggled.
+- Implemented ship upgrading rules.
+
+[2002-12-2]
+- [Probably] fixed bug in diplomacy which caused problem with 3+ players
+  attacking each other in the one system.
+
+VERSION 0.5.12
+
+[2002-12-1]
+- Fixed problems with effective contruction/research points in the system
+  dialog.
+- New player get a Space Docks on the starting planet now.
+- Renamed fleet/combat power to military power (MP).
+- Renamed science pts to research pts (RP).
+- Tuned population rules (no messages "No population support" when structure
+  is destroyed).
+- Updated Czech translation.
+
+[2002-11-28]
+- Changed slightly rules for maximal population.
+
+[2002-11-26]
+- Added packaging of the client source to the build process.
+- Changed planet maximal population rules. These rules renders Livinq Quarters
+  obsolete.
+- When sharing map with partner, partner now see refueling symbols.
+
+[2002-11-24]
+- Changed refuelling of the fleets.
+
+VERSION 0.5.11
+
+[2002-11-21]
+- Added refueling of the fleets based on the buildings (Space Docks,
+  Outposts). Added refuelling indicators on the main map.
+- Fixed bug which caused that only last building on the planet was
+  fired upon. Now building with least HP is fired upon.
+
+[2002-11-18]
+- Fixed bug for special AI structures.
+- Added code which checks all dependencies of the player's technologies
+  (removing technologies that failed this check).
+
+VERSION 0.5.10
+
+[2002-11-14]
+- Changed behaviour of the Message button highlighting.
+- Fixed bug which caused skipping fleets during ship design scrapping.
+
+[2002-11-13]
+- Added few other AI player types.
+- Implemented planet to space combat.
+
+[2002-11-11]
+- Fixed problem with too long name of the system.
+- From now on, system's name can be changed once a day.
+- Pact can be changed with AI Players from now [bug fixed].
+
+[2002-11-05]
+- Fixed problem in getScannerMap (fleet deleted by player).
+
+VERSION 0.5.9
+
+[2002-11-02]
+- Strategic resources are consumed when starting production [bug fixed].
+- Added few icons of structures and projects.
+- Enabled tech-level 3. Few TL3 technologies added.
+- Changed research points rules.
+- Player can lost technology from now on.
+
+VERSION 0.5.8
+
+[2002-10-31]
+- Added "Scrap" button to the fleet dialog which allows scrapping of
+  individual ships.
+- Changed scanner rules - slower degradation of the scanner's strenght.
+- Fixed scanner bug for fleets in flight.
+- Fixed "departuring" fleets with speed 0.
+- Fixed combat initiation related problem.
+
+VERSION 0.5.7
+
+[2002-10-22]
+- Fixed problem with the updater. Client reinstallation is recomended.
+
+VERSION 0.5.6
+
+
+[2002-10-20]
+- Optimized statistics collection algorithm.
+- Added new technologies (projects).
+- Fixed bug in the pacts code.
+
+VERSION 0.5.5
+
+[2002-10-16]
+- Fixed bug messing up strategic resources in technologies.
+- Changed TL2 food production facilities specification.
+- Optimized turn computing algorithm for better usage of the object cache.
+- Mailboxes are compressed only during 1 - 4 am of the local time.
+- EMR no longer affects energy abundance of the planets.
+
+[2002-10-09]
+- Fixed bug showing combat power 0 for military ships under some circumstances.
+
+VERSION 0.5.4
+
+[2002-10-01]
+- Added fleets to the system overwiev.
+- Small Linux related fixes in gui library.
+
+[2002-09-07]
+- Modified computation of the construction and science points. Morale and fleet
+  support modifiers are applied to the totals and rounded down.
+- Client shows effective and raw construction and science points correctly.
+- Fixed government centre code.
+- Added scrollbars and Home/End keys handling to the text areas.
+- Small changes in the technology tree.
+- Added support for "reference localization" feature (will speed up turn
+  computing in the future).
+
+[2002-09-04]
+- Construction points subtracted for ship support are always rounded down.
+- First 10 % of construction poinst needed for ship support are not counted.
+
+VERSION 0.5.3
+
+[2002-09-02]
+- Fixed ETC indicator for construction tasks.
+- Added Reset button for reseting pact conditions.
+- Ships need support in form of production points from now.
+- "Send to server" button in Exception Dialog works now.
+- Added Issue Manager to the server.
+
+VERSION 0.5.2
+
+[2002-08-29]
+- Colony ship related fixes.
+
+VERSION 0.5.1
+
+[2002-08-26]
+- Fixed bug in database backend which allows multiple copies of the same object
+  to be created -- swaping out of the object in use.
+- Updated Czech translation.
+
+VERSION 0.5.0
+
+[2002-08-26]
+- New rules for economy.
+- New galaxy generation rules.
+- New database backend.
+- Layed out complete technology tree.
+
+VERSION 0.4.11
+
+[2002-06-27]
+- Fixed bug in the translation of the event.
+- Fixed bug in the combat code.
+
+VERSION 0.4.10
+
+[2002-06-24]
+- Added production penalty for low morale [< 70].
+- Small tweaks in the map visualiazation code.
+- Added few confirmations dialogs.
+- Added support for hardware surfaces.
+- Added support for resulutions larger than 800x600.
+- [Finally] fixed bug causing problems with the scanner.
+
+VERSION 0.4.9
+
+[2002-06-20]
+- Rest of pacts implemented.
+- Bug in contact type determination fixed.
+- Retake AI Player code fixed.
+
+[2002-06-19]
+- Removed bug in scrapping ship designs - scrapping design also removes
+  tasks from the construction queues.
+- Player with less than four planets has timeout set to seven days (ordinal
+  player has 14 days).
+- "Permission to tank ships" pact implemented.
+- Database validation code improved.
+
+[2002-06-18]
+- Fixed problems with new diplomacy code.
+- Added databaze validation code.
+
+VERSION 0.4.8
+
+[2002-06-16]
+- Basic implementation of the final version of the diplomacy on the server.
+- Added posibility to scrap ships.
+- Added few technologies on TL2.
+- Fixed fatal bug in topographic index affecting mainly scanner code.
+- Improved generator of the galaxy.
+
+[2002-06-11]
+- Completely reworked scanner code (it consumes less memory now and
+  enables to play game from different computers without loosing a map).
+- Added alternative display of the fleet ranges (use SHIFT).
+
+[2002-06-06]
+- Combat power (fleet power) implemented and added to the statistics.
+- Added memory profiling code.
+- Fixed minor bugs in combat code.
+
+VERSION 0.4.7
+
+[2002-06-03]
+- Improved Fleet and Construction dialogs.
+- Fixed problems in constrution phase.
+- Modified signature computation for fleets - signatures are summed now.
+- Workaround for bug causing infinite loop in the battle phase.
+- Added notification in the construction phase that signalizes low storage
+  capacity.
+- Removed a bug in the text widget - numeric keyboard now works.
+
+[2002-06-01]
+- New (2.0) protocol data serialization (10 times faster).
+- Finished implementation of the ROF (Rate of Fire).
+- Old messages are removed on the server.
+
+VERSION 0.4.6
+
+[2002-05-29]
+- Enhanced Messages dialog and removed (now obsolete) Events dialog.
+- Added new projects - Recycle Minerals and Holidays (TL1) and Repair
+  Ships (TL2).
+- Nuclear Power Plant now ENABLES Nuclear Bomb (not disables).
+
+VERSION 0.4.5
+
+[2002-05-27]
+- Fixed bug in production phase of planets (negative ETC for some types of
+  the tasks).
+- Implemented EMR (affects scanners and energy abundace of planets).
+- Changed morale computation so it is simpler now.
+- Small changes in TL2 technologies.
+
+VERSION 0.4.4
+
+[2002-05-22]
+- Added "Refresh" button to the message dialog.
+- Added auto refresh of messages, when new message is send.
+- Speeded up retrieval of messages.
+- Added auto checking for new messages.
+- Fixed bug preventing "multicommands" to carry system messages.
+
+[2002-05-20]
+- Improved auto regulatin of a minimal resource pile.
+- Improved production rules. They are construction points oriented
+  from now.
+- Added automatic regulation of a required resource pile.
+
+VERSION 0.4.3
+
+[2002-05-19]
+- Space Docs turn handler implemented.
+- Enabled strategic resources.
+- Few TL2 technologies added.
+- Refactored research rules (research shall be a bit faster).
+
+VERSION 0.4.2
+
+[2002-05-16]
+- The basic messaging feature added.
+- Beta quality code for messaging in the server.
+- Alfa quality code for messaging in the client.
+- Game events are now delivered to the new messaging system.
+
+VERSION 0.4.1
+
+[2002-05-13]
+- Reverted stats to the old format.
+
+[2002-05-08]
+- UNICODE related bug in client (finaly) found and fixed.
+- Simplified research dialog.
+
+[2002-05-07]
+- All values in statistics are thousandth of the total sum for the column.
+- Improved task completion indicator.
+
+[2002-05-05]
+- Continued work on the new theme.
+- Construction and Diplomacy dialogs disabled until they have a use (you have
+  contacted somebody or researched ship related technologies)
+- Minor changes in diplomacy relations.
+
+[2002-05-03]
+- Fixed Research Center efficiency.
+- Fixed small problems with galaxy object getPublicInfo method.
+- Started work on new theme for OS. New theme is enabled from now.
+
+VERSION 0.4.0
+
+[2002-04-24]
+- Fleet splitting fixed.
+- Fixed bug in transitive technology disabling.
+
+[2002-04-23]
+- Overlayed object on the map can be selected using pop-up menu.
+- New alien fleet data.
+- Technologies research can depend on strategic resources.
+
+[2002-04-22]
+- Strategic resources generation system implemented.
+- Implemented ship construction and related changes.
+- Pop-up menu for Event dialog implemented.
+- Scanner map is deleted after client's update on the server.
+- Ship tank added to the cost of the ship. Newly produced ship has full tanks.
+- Removed ammo consuption - replaced by ROF [Rate of Fire].
+- Technology description moved to the client - faster updates and
+  lower bandwidth requirements.
+
+[2002-03-30]
+- Galaxy rotation.
+- New galaxy generation system.
+- New technology hangling code - it does not affect players.
+
+VERSION 0.3.11
+
+[2002-02-27]
+- Tweaked battle code a bit.
+- Morale penalty in battle is based on ration of caused damage and sum of
+  maximum hit points of buildings on planet.
+- Morale is now real number, but is displayed as an interger to a player.
+
+[2002-02-21]
+- When planets is under attack, most damaged building is attacked.
+
+VERSION 0.3.10
+
+[2002-02-20]
+- Changed surrender and revolt conditions.
+
+[2002-02-18]
+- Upgraded to Python 2.2.
+- Reduced unnecessary communication with server.
+
+[2002-02-14]
+- Fixed bug preventing displaying planet with environment equal to zero.
+
+[2002-02-12]
+- Technology data updated.
+- Added terraforming project and hydroponic farm.
+- Tuned ecology parameters a bit.
+- Player cannot resign game when time is stopped.
+
+VERSION 0.3.9
+
+[2002-02-11]
+- Fixed bug which allows to change target when fleet was not orbiting.
+- Galaxies have separate statistics.
+- Number of systems and planets added to statistics.
+- Enhanced research dialog.
+- New (cleaner) environment rules.
+- Planets can be degraded (earth -> marginal -> hostile -> desert -> rock).
+
+VERSION 0.3.8
+
+[2002-02-06]
+- Player can resign current game.
+- Fixed bug in star map - unknown players do not raises exception.
+
+[2002-02-04]
+- New system of assigning starting positions in the game.
+
+[2002-02-01]
+- Improved tech info dialog.
+- Upgraded to Pygame 1.4.
+- Fixed bugs in listbox.
+- Added server side implementation of resign player command.
+- Fixed bugs in "Ecosystem initiation" project.
+- Planets gives up to the winner of the battle even when it is not revolting.
+
+[2002-01-30]
+- Added technology info dialog accessible from research dialog or planet
+  overview dialog.
+- Morale is decreased when building is destroyed.
+
+[2002-01-29]
+- New images of planets.
+
+VERSION 0.3.7
+
+[2002-01-28]
+- Added tech-improvement dependecies to the tech tree.
+- Added planetary engineerign technologies.
+
+[2002-01-25]
+- Replaced font, added code which finds suitable font in Wxx/NT.
+- Implemented Nature object and Asteroid object.
+
+[2002-01-24]
+- Added system summary to the system overview.
+- Changed a bit graphical reprezentation of a system.
+- Modified automatic minimal storage regulation parameters.
+
+VERSION 0.3.6
+
+[2002-01-23]
+- Speeded up SPLIT FLEET command.
+- Implemented new algorithm for redistributing resources within a star system.
+- Implemented "Automatic Minimal Storage Regulation" feature.
+- Morale DOES affect game.
+
+[2002-01-22]
+- Temporary disabled population morale penalty.
+- Lowered limits for morale trends and revolt threshold.
+- Fixed bug in client's update procedure.
+- Planets can be conquered from now.
+
+VERSION 0.3.5
+
+[2002-01-21]
+- Enabled morale effects code for economy.
+- Added productivity bonus when morale is higher than 90.
+
+[2002-01-17]
+- Upgraded to Python 2.1.2.
+- Limited amount on information on star map when zoomed out to certain zoom.
+- Refactored morale computation.
+- Removed production limit for all technologies. Every technology is
+  produced as fast as possible.
+- Removed research limit for all technologies. Every technology is
+  researched as fast as possible.
+
+VERSION 0.3.4
+
+[2002-01-16]
+- Fixed bug in turn processing.
+- Basics of morale implemented. Morale DOES NOT affect game yet.
+
+VERSION 0.3.3
+
+[2002-01-15]
+- You can rename a system now. To rename a system, you have to own at least one
+  planet in a system, there must not be another commander in the system and
+  four days must pass from the last change.
+
+[2002-01-14]
+- Fleet no longer exists when it is disbanded due to insufficient fuel.
+- Attack command on a planet with no owner is ignored now.
+- Lost planets are not reported as under player's command from now.
+
+VERSION 0.3.2
+
+[2002-01-10]
+- Technology efficiency affects maximal hitpoints of structures.
+- Fixed small bug in ETC evaluation in research dialog.
+- Fixed bug in a scanner.
+- Added basic diplomacy (no pacts yet).
+- Added and improved some combat related messages.
+- Fighters and Bombers has very weak scanner.
+
+[2002-01-09]
+- Fixed bugs in client's update procedure.
+
+[2002-01-08]
+- Removed bug in Split fleet command.
+- Speeded up update of database a bit.
+- Generation of basic statistics implemented.
+
+VERSION 0.3.1
+
+[2002-01-07]
+- Server stores object on static map only 4 days, object is deleted and stored
+  on client only after this period.
+- Changed database update process and star map drawing to be more fault tolerant.
+- Scanner now provides information about ship types in fleets and structures on
+  planets.
+
+[2002-01-02]
+- When planet takes a hit, portion of population dies.
+
+VERSION 0.3.0
+
+[2002-01-01]
+- Added battle reports.
+- Added "Repairing" status indicator for structures.
+- More fault tolerant disbandFleet command (server bug).
+
+[2001-12-30]
+- Autonomous messages implemented (messages sent by a server).
+- Fixed cursor redraw bug in UI library.
+- Science points are no longer cumulated when there is no research project.
+
+[2001-12-29]
+- Constructed ships are assigned to idle fleets only now.
+- Limited signature of fleet to 100 (removed bug in scan phase).
+- Techs can be improved four times. New button "Improve" in research dialog.
+  Technology effectivity is 50, 75, 100, 125, and 150 % of original value
+  for corresponding improvement level.
+- Increased research costs.
+- Updated Pygame to version 1.3 (should be more stable), font rendering has
+  changed a bit because of this.
+- Change turn computation process so it should better isolate errors.
+  E.g. error in scan phase in one system does not affect other systems.
+
+[2001-12-17]
+- Tooltips in star map are able to handle overlayed objects.
+- Added fleet's range hint to star map. It behaves like tooltip.
+
+[2001-12-15]
+- Attack command do not raise exception when activated in other system from now.
+  (server bug)
+- Speeded up UI library a bit.
+- All executable files are packed now. It means faster updates.
+
+[2001-12-10]
+- Fixed few bugs in combat - it works now.
+- Planets now takes damage when fired upon.
+- Disabled surrender code in planet - a planet must be completely anihilated
+  before owner losts it. I'll enable it, when morale of colonies will be
+  implemented. [It was very easy to conquer a planet.]
+- Fixed small problem in fleet movement. Fleet no longer stays
+  0.0 parsecs away from it's target.
+- Fixed unaccessible technology description for extended techs like "Scout 12/R".
+
+VERSION 0.2.4
+
+[2001-12-09]
+- Implemented SPLIT command for fleets
+- Enabled WAIT and REPEAT FROM commands for fleets
+- Fleets now join, when in the same system and when are idle
+- Fleets have no longer "instant" move in horizontal and/or vertical direction
+- Small enhancements to the star map
+- Changed UI layout in fleet dialogs
+- Changed default look of listbox and button array
+- Partial support for i18n and partial translation of client to Czech
+  To enable insert this info config file:
+  [client]
+  language = cs
+
+[2001-12-07]
+- Added coordinates to the map
+- Mirrored Y axis ([0,0] is in the left bottom corner now)
+
+VERSION 0.2.3
+
+[2001-12-05]
+- HTTP proxy support (both update and client - server connection).
+  To enable insert this into config file (var/osci.ini)
+  [proxy]
+  http = http://host:port
+
+VERSION 0.2.2
+
+[2001-12-04]
+- Splitted map into static (systems + planets) and dynamic (rest) part.
+  Static map is saved. Dynamic map is recreated every turn.
+- Enriched informations about structures on planets. Added problem indicator.

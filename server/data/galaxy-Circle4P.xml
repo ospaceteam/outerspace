@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<universe>
+	<galaxy id="Circle4P" x="20.00" y="20.00">
+		<properties radius="20.00"/>
+		<system x="31.51" y="7.28">
+			<properties starClass="mM0" name="Stegr"/>
+			<planet>
+				<properties plType="D" plMin="63" plBio="8" plEn="85" plDiameter="9000" plSlots="9" plMaxSlots="13" plStratRes="0"/>
+			</planet>
+		</system>
+		<system x="24.33" y="5.55">
+			<properties starClass="mK1" name="Ethethous"/>
+			<planet>
+				<properties plType="H" plMin="161" plBio="17" plEn="103" plDiameter="14000" plSlots="10" plMaxSlots="21" plStratRes="0"/>
+			</planet>
+			<planet>
+				<properties plType="E" plMin="100" plBio="100" plEn="76" plDiameter="14000" plSlots="10" plMaxSlots="21" plStratRes="0"/>
+			</planet>
+			<planet>
+				<properties plType="D" plMin="158" plBio="9" plEn="28" plDiameter="12000" plSlots="13" plMaxSlots="18" plStratRes="0"/>
+			</planet>
+			<planet>
+				<properties plType="R" plMin="142" plBio="3" plEn="15" plDiameter="6000" plSlots="6" plMaxSlots="9" plStratRes="2"/>
+			</planet>
+		</system>
+		<system x="28.39" y="4.32">
+			<properties starClass="mF9" name="Cererd"/>
+			<planet>
+				<properties plType="M" plMin="141" plBio="39" plEn="57" plDiameter="12000" plSlots="9" plMaxSlots="18" plStratRes="0"/>
+			</planet>
+			<planet>
+				<properties plType="R" plMin="54" plBio="4" plEn="45" plDiameter="8000" plSlots="9" plMaxSlots="12" plStratRes="3"/>
+			</planet>
+			<planet>
+				<properties plType="G" plMin="80" plBio="0" plEn="28" plDiameter="80000" plSlots="0" plMaxSlots="120" plStratRes="0"/>
+			</planet>
+		</system>
+		<system x="25.74" y="4.75">
+			<properties starClass="mF1" name="Sousee"/>
+			<planet>
+				<properties plType="R" plMin="99" plBio="0" plEn="120" plDiameter="9000" plSlots="9" plMaxSlots="13" plStratRes="0"/>
+			</planet>
+			<planet>
+				<properties plType="H" plMin="110" plBio="24" plEn="101" plDiameter="12000" plSlots="9" plMaxSlots="18" plStratRes="0"/>
+			</planet>
+			<planet>
+				<properties plType="M" plMin="124" plBio="50" plEn="97" plDiameter="14000" plSlots="10" plMaxSlots="21" plStratRes="6"/>
+			</planet>
+			<planet>
+				<properties plType="D" plMin="97" plBio="11" plEn="83" plDiameter="11000" plSlots="12" plMaxSlots="16" plStratRes="0"/>
+			</planet>
+			<planet>
+				<properties plType="A" plMin="116" plBio="0" plEn="45" plDiameter="0" plSlots="0" plMaxSlots="0" plStratRes="0"/>
+			</planet>
+			<planet>
+				<properties plType="A" plMin="106" plBio="0" plEn="30" plDiameter="0" plSlots="0" plMaxSlots="0" plStratRes="0"/>
+			</planet>
+			<planet>
+				<properties plType="D" plMin="133" plBio="12" plEn="11" plDiameter="10000" plSlots="11" plMaxSlots="15" plStratRes="0"/>
+			</planet>
+			<planet>
+				<properties plType="A" plMin="34" plBio="0" plEn="9" plDiameter="0" plSlots="0" plMaxSlots="0" plStratRes="0"/>
+			</planet>
+		</system>
+		<system x="25.15" y="5.70">
+			<properties starClass="mF5" name="Dephace"/>
+			<planet>
+				<properties plType="D" plMin="76" plBio="12" plEn="105" plDiameter="10000" plSlots="11" plMaxSlots="15" plStratRes="0"/>
+			</planet>
+			<planet>
+				<properties plType="E" plMin="100" plBio="100" plEn="99" plDiameter="16000" plSlots="10" plMaxSlots="24" plStratRes="0"/>
+				<startingpoint/>
+			</planet>
+			<planet>
+				<properties plType="H" plMin="164" plBio="13" plEn="89" plDiameter="13000" plSlots="9" plMaxSlots="19" plStratRes="0"/>
+			</planet>
+			<planet>
+				<properties plType="A" plMin="79" plBio="0" plEn="48" plDiameter="0" plSlots="0" plMaxSlots="0" plStratRes="0"/>
+			</planet>
+			<planet>
+				<properties plType="G" plMin="149" plBio="0" plEn="44" plDiameter="70000" plSlots="0" plMaxSlots="105" plStratRes="0"/>
+			</planet>
+			<planet>
+				<properties plType="G" plMin="104" plBio="0" plEn="37" plDiameter="80000" plSlots="0" plMaxSlots="120" plStratRes="0"/>
+			</planet>
+		</system>
+		<system x="27.22" y="5.70">
+			<properties starClass="mK7" name="Thieele"/>
+			<planet>
+				<properties plType="H" plMin="168" plBio="17" plEn="120" plDiameter="16000" plSlots="12" plMaxSlots="24" plStratRes="0"/>
+			</planet>
+			<planet>
+				<properties plType="E" plMin="100" plBio="100" plEn="58" plDiameter="17000" plSlots="10" plMaxSlots="25" plStratRes="0"/>
+				<startingpoint/>
+			</planet>
+			<planet>
+				<properties plType="G" plMin="127" plBio="0" plEn="48" plDiameter="70000" plSlots="0" plMaxSlots="105" plStratRes="0"/>
+			</planet>
+			<planet>
+				<properties plType="G" plMin="82" plBio="0" plEn="31" plDiameter="90000" plSlots="0" plMaxSlots="135" plStratRes="0"/>
+			</planet>
+			<planet>
+				<properties plType="D" plMin="66" plBio="8" plEn="24" plDiameter="8000" plSlots="9" plMaxSlots="12" plStratRes="0"/>
+			</planet>
+		</system>
+		<system x="24.33" y="7.55">
+			<properties starClass="mF3" name="CXX"/>
+		</system>
+		<hole x="26.15" y="6.12">
+		    <properties name="H1" destination="H2"/>
+		</hole>
+		<hole x="30.65" y="7.02">
+		    <properties name="H2" destination="H3"/>
+		</hole>
+		<hole x="28.71" y="4.50">
+		    <properties name="H3" destination="H4"/>
+		</hole>
+		<hole x="23.84" y="6.01">
+		    <properties name="H4" destination="H1"/>
+		</hole>
+	</galaxy>
+</universe>

@@ -1,0 +1,3 @@
+recursive-include lib *
+prune *.svn
+prune *pyc

@@ -1,0 +1,862 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+#
+#  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
+#
+#  This file is part of IGE - Outer Space.
+#
+#  IGE - Outer Space is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  IGE - Outer Space is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with IGE - Outer Space; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+#  TL6 developed by Michael Ney
+#  Conventions:
+#    60xx - All/Multiple Trees
+#    61xx - Human
+#    62xx - Bio
+#    63xx - Cyborg
+#    6x0x & 6x1x - Ship equipment
+#    6x2x & 6x3x - Structures
+#    6x4x & 6x5x - Ship Hulls
+#    6x6x & 6x7x - Specialty techs & other techs
+#
+-->
+<techtree>
+	<technology id="6000" symbol="PLCONDPOD" name="Planetary Condensing Pod">
+		<discovery
+			researchMod="1.25"
+			level="6"
+			researchRequires="PLCOND5-1"
+			maxImprovement="1"
+		/>
+		<shipequip
+			subtype="seq_struct"
+			buildProd="38400"
+
+			storEn="960"
+			operEn="25"
+
+			slots="18"
+			weight="30"
+			
+			deployHandlerID="5800"
+			minHull="2"
+		/>
+		<preresearch>A pod version of the planet condensation project.</preresearch>
+	</technology>
+	<technology id="6001" symbol="PLASSEMBLPOD" name="Planetary Assembly Pod">
+		<discovery
+			researchMod="1.25"
+			level="6"
+			researchRequires="PLASSEMBL5-1"
+			maxImprovement="1"
+		/>
+		<shipequip
+			subtype="seq_struct"
+			buildProd="38400"
+
+			storEn="960"
+			operEn="25"
+
+			slots="18"
+			weight="30"
+			
+			deployHandlerID="5801"
+			minHull="2"
+		/>
+		<preresearch>A pod version of the planet assembly project.</preresearch>
+	</technology>
+	<technology id="6005" symbol="COLONYMOD6" name="Advanced Colony Module">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="6"
+			researchRequires="OUTPOST6-3"
+		/>
+		<shipequip
+			subtype="seq_struct"
+			buildProd="2160"
+
+			storEn="1920"
+			operEn="20"
+
+			slots="16"
+			weight="25"
+			unpackStruct="OUTPOST6"
+			minHull="1"
+		/>
+		<preresearch>Our old colony modules are getting outdated.</preresearch>
+	</technology>
+	<technology id="6025" symbol="OUTPOST6" name="Advanced Outpost">
+		<discovery
+			researchMod="1.0"
+			level="6"
+			researchRequires="OUTPOST1-5"
+		/>
+		<structure
+			subtype="str15"
+			buildProd="1080"
+			unpackPop="3500"
+			operWorkers="2500"
+			prodBio="60"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			prodProd="12"
+			prodProdMod="0.0,0.0,0.0,1.0"
+			prodEn="48"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			maxHP="600"
+			moraleTrgt="+8"
+			scannerPwr="35"
+			storBio="600"
+			storEn="180"
+			refuelMax="48"
+			refuelInc="2"
+			finishConstrHandler="finishStructOUTPOST"
+		/>
+		<preresearch>Our old early-tech outpost is getting outdated.</preresearch>
+		<description>An advanced colonization unit, this structure serves the needs of a high-technology empire.</description>
+	</technology>
+	<technology id="6100" symbol="ECM6" name="Active ECM">
+		<discovery
+			researchMod="1.00 + 0.50 + 1.00"
+			level="6"
+			researchRequires="ECM-5"
+			researchRaces="H"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="360"
+			slots="1"
+			weight="1"
+			missileDef="20"
+			signature="4"
+			minHull="1"
+			maxInstallations="1"
+		/>
+		<preresearch>Our scientists believe that by using an active scanning system and an advanced computer virus, our scientists believe we can develop a more effective ECM device.</preresearch>
+		<description>The new Active ECM comes equipped with the latest adaptive computer virus technology delivered through an active scanning beam directed at inbound missiles. Because this beam is always active, it increases our ship's signature. It, however, cannot help detect other vessels due to it's attenuation toward small objects.</description>
+	</technology>
+	<technology id="6101" symbol="HARDSHIELD6" name="Hard Shield">
+		<discovery
+			researchMod="1.00 + 0.50 + 1.00"
+			level="6"
+			researchRequires="AMPSHIELD5-5"
+			researchDisables="AMPSHIELD6"
+			researchRaces="H"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="1384"
+			slots="6"
+			weight="4"
+			hardShield="0.60"
+			signature="4"
+			operEn="6"
+			addMP="1000"
+			minHull="2"
+			maxInstallations="1"
+		/>
+		<preresearch>Our scientists tell us that we need a way to stop those shield penetrating bio weapons.</preresearch>
+		<description>By utilizing an adaptive shield matrix that automatically determines the threat potential of an incoming matter stream, we have managed to block 75% of all shield penetrating weapon damage.</description>
+	</technology>
+	<technology id="6102" symbol="AMPSHIELD6" name="Advanced Amplified Shield">
+		<discovery
+			researchMod="1.00 + 0.50 + 1.00"
+			level="6"
+			researchRequires="AMPSHIELD5-5"
+			researchDisables="HARDSHIELD6"
+			researchRaces="H"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="1480"
+			slots="2"
+			weight="8"
+			shieldPerc="1.05"
+			shieldRechargeFix="3"
+			shieldRechargePerc="0.02"
+			signatureDecloak="1.3"
+			operEn="10"
+			minHull="2"
+			maxInstallations="1"
+		/>
+		<preresearch>More power is always an absolute. By shunting drive plasma directly into the shields, we expect to increase their power.</preresearch>
+		<description>High energy shields come with their own headaches: they make it easier for enemies to find us. But, hey, we can absorb far more damage, so all is good!</description>
+	</technology>
+	<technology id="6103" symbol="AUTOREPAIR6" name="Advanced Auto Repair">
+		<discovery
+			researchMod="1.00 + 0.50 + 1.00"
+			level="6"
+			researchRequires="AUTOREPAIR4-5"
+			researchRaces="H"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="720"
+			autoRepairFix="3"
+			autoRepairMaxHP="0.75"
+			slots="6"
+			weight="4"
+			operEn="8"
+			minHull="1"
+			maxInstallations="1"
+		/>
+		<preresearch>We want to improve auto repair; the existing system is slow and inefficient.</preresearch>
+		<description>Our scientists have disappointed us. While the auto repair system is a significant improvement over our old system, it still is slow at repairing our ships.</description>
+	</technology>
+	<technology id="6104" symbol="BTTLSCAN6" name="Battle Scanner">
+		<discovery
+			researchMod="1.00 + 0.50 + 0.50"
+			level="6"
+			researchRequires="COMSCAN4-5"
+			researchRaces="H"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="960"
+			combatAttPerc="1.20"
+			combatDefPerc="1.20"
+			slots="3"
+			weight="1"
+			operEn="5"
+			addMP="250"
+			minHull="1"
+			maxInstallations="1"
+		/>
+		<preresearch>If we can lock onto our enemy ships before we fire, we should be able to greatly increase our chance to hit them.</preresearch>
+		<description>The Mark 3 Battle Scanner by TechGadgets Limited creates an active scanning system while in battle, rapidly detecting enemy positions allowing us to not only precisely target enemy ships, but to also avoid some of their incoming fire.</description>
+	</technology>
+	<technology id="6105" symbol="MASSREDUCT6" name="Mass Reduction Module">
+		<discovery
+			researchMod="1.00 + 0.50 + 1.25"
+			level="6"
+			researchRequires="INERTFTL5-5"
+			researchRaces="H"
+		        maxImprovement="1"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="2400"
+			slots="8"
+			weight="-8"
+			minHull="1"
+			maxInstallations="1"
+		/>
+		<preresearch>The same eccentric scientist that brought us the Inertial Drive has proposed the Mass Reduction Module technology. We don't think it can be done, but we're willing to investigate it.</preresearch>
+		<description>The man was a genius! Against constant dismissal by the established gizmo-wizards, he managed to make a system that reduces the mass of a ship!</description>
+	</technology>
+	<technology id="6120" symbol="COMMSCAN6" name="High Energy Comm/Scan Center">
+		<discovery
+			researchMod="1.00 + 0.50 + 0.25"
+			level="6"
+			researchRequires="COMSCAN4-3"
+			researchRaces="H"
+		/>
+		<structure
+			subtype="str50"
+			buildProd="1200"
+			operEn="175"
+			operWorkers="1750"
+			refuelMax="20"
+			refuelInc="1"
+			scannerPwr="120"
+			maxHP="1200"
+			isMilitary="1"
+			fleetSpeedBoost="1.60"
+			
+		/>
+		<preresearch>If we can detect our enemies at greater distance, we can defend with more ships.</preresearch>
+		<description>Hyperspace instabilities are created by passing vessels. Utilizing a high-energy etymologizer, we can predict the movements of these variations in hyperspace (even before a ship creates them), which allows us to detect fleets at great range. As a side effect, the ability to predict where hyperspace instabilities occur allow us to also predict the movement of interspacial bubbles. These bubbles act as hyperdimensional accelerators that can propel our ships to low-level stargate velocities. This base also comes equipped with fueling shuttles that maintain our ships stationed in orbit.</description>
+	</technology>
+	<technology id="6121" symbol="PLSHIELDH6" name="Advanced Planetary Shield">
+		<discovery
+			researchMod="1.25"
+			level="6"
+			researchRequires="PLSHIELDHC-3"
+			researchRaces="H"
+		/>
+		<structure
+			subtype="str50"
+			buildProd="2400"
+			operEn="250"
+			operWorkers="3000"
+			scannerPwr="20"
+			maxHP="750"
+			isMilitary="1"
+			planetShield="4200"
+			prodEnv="-7"
+		/>
+		<preresearch>Driving high energy plasma into our planetary sheilds should improve their effectiveness.</preresearch>
+		<description>Althought it slowly destroys our environment, the advanced planetary shields direct deployment of plasma energies into the upper atmosphere results in a significant increase in the defensive barriers around our planet. Each planet needs only one planetary sheild. Planetary shields are not penetratable by shield penetrating weapons. Becuase of how the technology works, this is not cummulative with the earlier generation of planetary shields.</description>
+	</technology>
+	<technology id="6140" symbol="METAHULL6" name="Metamorph Medium Hull">
+		<discovery
+			researchMod="1.00 + 0.50 + 0.75"
+			level="6"
+			researchRequires="ADVLARGEHULL5-5"
+			researchDisables="STEALTHHULL6"
+			researchRaces="H"
+		/>
+		<shiphull
+			buildProd="560"
+			storEn="768"
+			operEn="4"
+			maxHP="96"
+			slots="40"
+			weight="44"
+			maxWeight="128"
+			combatDef="10"
+			combatAtt="5"
+			signatureCloak="0.5"
+			signature="2"
+			minSignature="1"
+			combatClass="1"
+		/>
+		<preresearch>Our engineers believe we can create a ship that can mutate to look like ordinary space junk.</preresearch>
+		<description>This medium hull ship uses sophisticated nanotechnology to mutate from one shape to another. This results in it being able to hide it's weapons, and, at times, even itself, from sensors. A side effect is that it can bring weapons to bear on any quadrant quickly and easily by sliding them from one side of the ship to the other.</description>
+	</technology>
+	<technology id="6141" symbol="STEALTHHULL6" name="Stealth Hull">
+		<discovery
+			researchMod="1.00 + 0.50 + 0.35"
+			level="6"
+			researchRequires="ADVLARGEHULL5-5"
+			researchDisables="METAHULL6"
+			researchRaces="H"
+		/>
+		<shiphull
+			buildProd="160"
+			storEn="384"
+			operEn="4"
+			maxHP="96"
+			slots="16"
+			weight="8"
+			maxWeight="24"
+			signatureCloak="0.2"
+			minSignature="0"
+			signature="0"
+			combatAtt="-5"
+			combatDef="5"
+			scannerPwr="52"
+			combatClass="0"
+		/>
+		<preresearch>The ultimate stealth technology will allow us to penetrate enemy space without detection.</preresearch>
+		<description>This high powered small hull creates an active cloaking field around it, effectively reducing it's visibility to scanners by an astonishing 80%. Most weapons, therefore, miss it. To fire a weapon, however, the cloak is momentarily disrupted. Because the pilots are always worried that visbility will make them vunerable, their hesitantcy to fire means less shots hit.</description>
+	</technology>
+	<technology id="6160" symbol="FLEETCOMMAND" name="Fleet Command">
+		<discovery
+			researchMod="1.00 + 0.50 + 1.75"
+			level="6"
+			researchRequires="TRAIN5H-3"
+			researchReqSRes="SR_TL3B"
+			researchRaces="H"
+		/>
+		<structure
+			subtype="str50"
+			buildProd="19200"
+			buildSRes="SR_TL3B"
+			operEn="350"
+			operWorkers="3500"
+			maxHP="2400"
+			isMilitary="1"
+			systemAtt="20"
+			systemDef="10"
+			scannerPwr="50"
+			prodSci="10"
+			trainShipInc="0.03"
+			trainShipMax="7"
+		/>
+		<preresearch>Organizing and managing system-wide battles is considered one of the most complex activities of war. Generally such battles are managed from a flag ship, when present. But what if we developed a powerful planetary base from which to manage these battles?</preresearch>
+		<description>The Fleet Command, simply put, commands the fleet. Any battle in a system where the fleet command exists will be better coordinated, resulting in better coordination and tactics, reducing your enemy's effective attack strength while increasing your's.</description>
+	</technology>
+	<technology id="6200" symbol="SSCAN6" name="Spacial Scanner">
+		<discovery
+			researchMod="1.00 + 0.50 + 0.25"
+			level="6"
+			researchRequires="COMSCAN4-5"
+			researchRaces="B"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="220"
+			slots="1"
+			weight="1"
+			signature="4"
+			scannerPwr="78"
+		/>
+		<preresearch>By utilizing natural disruptions in the organic nature of space, our scientists believe that we can detect ships at greater distance.</preresearch>
+		<description>Organo-synthetic materials absorb the mitochondria emissions of the hyperspace manifold, allowing us to passively detect vessels at greater distance than the Enhanced Active Scanner.</description>
+	</technology>
+	<technology id="6201" symbol="FUELPOD6" name="High Energy Fuel Pods">
+		<discovery
+			researchMod="1.00 + 0.50 + 0.25"
+			level="6"
+			researchRequires="FTLENG5B-5"
+			researchDisables="FTLRCS6"
+			researchRaces="B"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="160"
+			storEn="1600"
+			operEn="0"
+			slots="1"
+			weight="4"
+		/>
+		<preresearch>Our spores must fly to the most distant planets!</preresearch>
+		<description>Utilizing the natural ability of metali-organics to store vast quantities of energy, we have greatly improved the storage of the ordinary fuel cell.</description>
+	</technology>
+	<technology id="6202" symbol="FTLRCS6" name="RCS Drive">
+		<discovery
+			researchMod="1.00 + 0.50 + 1.00"
+			level="6"
+			researchRequires="FTLENG5B-5"
+			researchDisables="FUELPOD6"
+			researchRaces="B"
+		/>
+		<shipequip
+			subtype="seq_eng"
+			buildProd="480"
+			storEn="384"
+			operEn="3"
+			slots="4"
+			weight="4"
+			engPwr="72"
+			combatDef="4"
+			missileDef="2"
+			combatAtt="1"
+			signature="1"
+			maxInstallations="2"			
+		/>
+		<preresearch>Quick movements will enable us to avoid some enemy shots.</preresearch>
+		<description>The Reaction Control System Drive, able to be mounted once each on the port and starboard sides, gives us increased agility in battle, decreasing the number of hits we take and making it slightly easier to aim our weapons.</description>
+	</technology>
+	<technology id="6203" symbol="BIONICROCKET6" name="Devouring Leech">
+		<discovery
+			researchMod="1.00 + 0.50 + 1.25"
+			level="6"
+			researchRequires="BIONICFRAMEROCKET4-5"
+			researchRaces="B"
+		/>
+
+		<shipequip
+			subtype="seq_wpn"
+			buildProd="800"
+			slots="4"
+			weight="8"
+			weaponDmgMin="15"
+			weaponDmgMax="25"
+			weaponAtt="8"
+			weaponClass="1"
+			weaponROF="2"
+			weaponIsMissile="1"
+			weaponIgnoreShield="1"
+			maxHull="0"
+			weaponGoodForFlak="0"
+			maxInstallations="2"
+		/>
+		<preresearch>With the advent of the Leech Missile, our small hulls are once again effective in combat. Now we want to improve this technology.</preresearch>
+		<description>The Devouring Leech fires a swarm of missiles, impacting medium and large hulls with massive firepower. The only drawback is that this basically becomes the ship's frame, thus requiring it to be mounted on a small hull.</description>
+	</technology>
+	<technology id="6204" symbol="SPORECOLONY" name="Spore Colony">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="6"
+			researchRequires="COLONYMOD6-3"
+			researchRaces="B"
+		/>
+		<shipequip
+			subtype="seq_struct"
+			buildProd="720"
+			operEn="20"
+			storEn="400"
+			slots="36"
+			weight="20"
+			unpackStruct="SPOREOUTPOST"
+			minHull="2"
+		/>
+		<preresearch>To colonize the deep ranges of space, we send forth our spores!</preresearch>
+		<description>Our spores, when landing on unclaimed planets, quickly take over the surface and begin building a new civilization!</description>
+	</technology>
+	<technology id="6205" symbol="ALIGNMENTPOD" name="Planetary Alignment Pod">
+		<discovery
+			researchMod="(1.00 + 0.50) * 1.5"
+			level="6"
+			researchRequires="TERRAFORMPOD-1"
+			researchReqSRes="SR_BIO1"
+			researchRaces="B"
+		/>
+		<shipequip
+			subtype="seq_struct"
+			buildProd="36000"
+			buildSRes="SR_BIO1"
+
+			storEn="960"
+			operEn="10"
+
+			slots="24"
+			weight="45"
+			
+			deployHandlerID="6205"
+			deployHandlerValidator="validateDeployTERRAFORMALIGNMENT6"
+			deployHandlerFunction="finishProjectTERRAFORMALIGNMENT6"
+			data="16"
+			minHull="2"
+		/>
+		<preresearch>With the optimal biological environment existing between 50 and 100 stellar energies, we need a fast way to reorbit planets.</preresearch>
+		<description>By placing organic-hyperspace linkages around a planet, we are able to quickly relocate a planet toward the optimal radius. A side effect of this is that the excrement of the organic-hyperspace linkages cause a significant improvement in the planet's environment.</description>
+	</technology>
+	<technology id="6220" symbol="BIOPOWER6" name="Advanced Bio Power Plant">
+		<discovery
+			researchMod="1.00 + 0.50 + 0.75"
+			level="6"
+			researchRequires="PWRPLANT3B-5"
+			researchRaces="B"
+		/>
+
+		<structure
+			subtype="str20"
+			buildProd="1440"
+			operWorkers="2500"
+			storEn="5400"
+			prodEn="500"
+			prodEnMod="1.0,0.0,0.0,0.0"
+			prodEnv="0"
+			maxHP="800"
+		/>
+		<preresearch>We look on in envy at the enemy races: cyborg and human. They have developed great power generators, from thermonuclear facilities to solar converters. We're stuck with the low tech bio power plant. We need an improvement.</preresearch>
+		<description>By adapting metali-organics into the bio power planet and upgrading the generation systems with the next generation of parenchyma chloroplasts, we have made a significant improvement in the efficiency and output of the structure.</description>
+	</technology>
+	<technology id="6221" symbol="BIOFARM6A" name="Subterranean Farm">
+		<discovery
+			researchMod="1.00 + 0.50 + 0.50"
+			level="6"
+			researchRequires="FARM2BIO-5"
+			researchDisables="BIOFARM6B"
+			researchRaces="B"
+		/>
+
+		<structure
+			subtype="str20"
+			buildProd="1440"
+			operWorkers="2500"
+			prodBio="500"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			storBio="6400"
+			prodEnv="+20"
+			maxHP="800"
+		/>
+		<preresearch>Our farms require a good environment, but so does our production. Perhaps if we moved some farming offworld?</preresearch>
+		<description>By generating an underground chamber designed to reflect the conditions of the surface of a Gaia planet, we can produce food quite efficiently.</description>
+	</technology>
+	<technology id="6222" symbol="BIOFARM6B" name="Gaia Farm">
+		<discovery
+			researchMod="1.00 + 0.50 + 0.50"
+			level="6"
+			researchRequires="FARM2BIO-5"
+			researchDisables="BIOFARM6A"
+			researchRaces="B"
+		/>
+
+		<structure
+			subtype="str20"
+			buildProd="1440"
+			operWorkers="2000"
+			prodBio="600"
+			prodBioMod="0.75,0.0,0.0,0.25"
+			storBio="4800"
+			prodEnv="+10"
+			maxHP="800"
+		/>
+		<preresearch>The agronaughts are demanding more space for their farms, but our worlds can only grow so big.</preresearch>
+		<description>A multi-tiered structure created using metamorphic-organics has allowed our crops to flourish. This combined with a new generation of organic food substrates for our citizens has significantly increased the output of our basic grenhouse farm.</description>
+	</technology>
+	<technology id="6241" symbol="SWARMHULL6" name="Swarm Small Hull">
+		<discovery
+			researchMod="1.00 + 0.50 + 0.35"
+			level="6"
+			researchRequires="LIVSMALLHULL3-5"
+			researchRaces="B"
+		/>
+		<shiphull
+			buildProd="40"
+			storEn="160"
+			operEn="4"
+			maxHP="10"
+			slots="10"
+			weight="2"
+			maxWeight="18"
+			minSignature="1"
+			signature="2"
+			combatClass="0"
+		/>
+		<preresearch>Our small hulls cost too much. Let's build a ship that is smaller, lighter, and much cheaper!</preresearch>
+		<description>The Swarm will never be the same. We can now build masses of small hulls with virtually no armor. The perfect ship to overwhelm the enemy.</description>
+	</technology>
+	<technology id="6301" symbol="NANOWEBARM6" name="Nanoweb Armor">
+		<discovery
+			researchMod="1.00 + 0.50 + 0.75"
+			level="6"
+			researchRequires="ARMOR4B-5"
+			researchReqSRes="SR_TL1B"
+			researchRaces="C"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="120"
+			buildSRes="SR_TL1B"
+			maxHP="32"
+			damageAbsorb="1"
+			slots="0"
+			weight="1"
+			maxInstallations="4"
+		/>
+		<preresearch>More armor means we can fight longer!</preresearch>
+		<description>Utilizing a titanium nanoweb armor, we can literally absorb a small amount of damage directed toward the ship. Because the armor constantly realigns itself, it provides a significant increase ship hull strength. Due to how this armor function, it is limited to four installations per ship and requires one unit of titanium per sheet to install.</description>
+	</technology>
+	<technology id="6302" symbol="BTTLTAG6" name="Psionic Beacon">
+		<discovery
+			researchMod="1.00 + 0.50 + 0.75"
+			level="6"
+			researchRequires="BTTLTAG4-5"
+			researchRaces="C"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="1440"
+			combatAttPerc="1.50"
+			slots="2"
+			weight="2"
+			operEn="8"
+			addMP="350"
+			maxInstallations="1"
+		/>
+		<preresearch>The Battle Tag technology worked by mobile probes dropping hyper-responders onto enemy ships, but the noise of battle make these sometimes hard to locate. Is there any way we can improve the clarity of the signal?</preresearch>
+		<description>Deployed through a direct fire laser targeting system, the Psionic Beacon is the result of hundreds of hours of research across a multitude of planets. Becuase the tracking signal is now broadcast directly to the cyborg brains of the weapon controllers, the signal clarity has greatly improved. This integration also reduces response time, significantly increasing our to-hit chances.</description>
+	</technology>
+	<technology id="6303" symbol="SLOTREDUCT6" name="Expansion Pods">
+		<discovery
+			researchMod="1.00 + 0.50 + 1.00"
+			level="6"
+			researchRequires="FTLSLUG5-5"
+			researchDisables="FTLSLUG6"
+			researchRaces="C"
+		        maxImprovement="1"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="800"
+			slots="-4"
+			weight="2"
+			minHull="1"
+			maxInstallations="2"
+		/>
+		<preresearch>Our crazy engineers think by slapping boxes onto the sides of our ships, we can mount more weapons. Why not?</preresearch>
+		<description>Boxes on the sides of ships? And people thought we were crazy until we showed it could be done. These pods, which can be added through straps, bolts, or duct tape give us a sizable increase in the number of weapons that we can mount, at only a small cost of weight.</description>
+	</technology>
+	<technology id="6304" symbol="FTLSLUG6" name="Devastator Drive">
+		<discovery
+			researchMod="1.00 + 0.50 + 1.00"
+			level="6"
+			researchRequires="FTLSLUG5-5"
+			researchDisables="SLOTREDUCT6"
+			researchRaces="C"
+		/>
+		<shipequip
+			subtype="seq_eng"
+			buildProd="600"
+			storEn="480"
+			operEn="8"
+			slots="4"
+			weight="5"
+			engPwr="96"
+			combatAtt="12"
+			maxHP="4"
+			signature="2"
+			signatureDecloak="1.1"
+			maxInstallations="2"
+		/>
+		<preresearch>If we can augment our drive to deliver increased firepower to our weapons, we can shoot down enemies faster.</preresearch>
+		<description>While not directly increasing rate of fire, the Devastator drive allows us to send more power to our cannons. In turn, these cannons create a larger bolt of energy, which makes even a grazing shot deadly to our enemies.</description>
+	</technology>
+	<technology id="6305" symbol="ROBOTTORPEDO6" name="Chaos Cannon">
+		<discovery
+			researchMod="1.00 + 0.50 + 1.25"
+			level="6"
+			researchRequires="ROBOTTORPEDO5-5"
+			researchRaces="C"
+		/>
+
+		<shipequip
+			subtype="seq_wpn"
+			buildProd="1200"
+			slots="8"
+			weight="8"
+			weaponDmgMin="38"
+			weaponDmgMax="138"
+			weaponAtt="8"
+			weaponClass="2"
+			weaponROF="1.2"
+			weaponIsMissile="1"
+			maxHull="0"
+			weaponGoodForFlak="0"
+			maxInstallations="2"
+			signature="25"
+		/>
+		<preresearch>Our engineers want to adapt our nanoblasters to target large hulls.</preresearch>
+		<description>Utilizing high energy nano-plasmatics attached to microwarheads, this strobe cannon can shoot down the largest enemy vessels with ease. It's requirement to be fully integrated into a hull inconveniently requires it to only be mounted on small hulls.</description>
+	</technology>
+	<technology id="6306" symbol="ROBOTMISSILE6" name="Penetrating Missile">
+		<discovery
+			researchMod="1.00 + 0.50 + 1.00"
+			level="6"
+			researchRequires="ROBOTROCKET4-5"
+			researchRaces="C"
+		/>
+
+		<shipequip
+			subtype="seq_wpn"
+			buildProd="1440"
+			slots="4"
+			weight="5"
+			weaponDmgMin="36"
+			weaponDmgMax="48"
+			weaponAtt="10"
+			weaponClass="1"
+			weaponROF="2"
+			weaponIsMissile="1"
+			weaponGoodForFlak="0"
+			weaponIgnoreShield="1"
+		/>
+		<preresearch>Long have we envied the bio weapons, able to ignore shields. Perhaps we can make the same?</preresearch>
+		<description>Well, the solution was staring us in the face: combine a gravitational pulse to temporarily overload the enemy shields while slipping a missile through the momentary gap. The only problem is this gap is quite small, limiting our payload.</description>
+	</technology>
+	<technology id="6320" symbol="REPAIR6A" name="Battle Platform">
+		<discovery
+			researchMod="1.75"
+			level="6"
+			researchRequires="REPAIR2A-5"
+			researchRaces="C"
+		/>
+		<structure
+			subtype="str45"
+			buildProd="3600"
+			operEn="250"
+			operWorkers="2000"
+			maxHP="800"
+			refuelMax="80"
+			refuelInc="5"
+			upgradeShip="20"
+			scannerPwr="64"
+			combatAtt="12"
+			structWeapons="6,8,10,0,0"
+			repairShip="0.03"
+			isMilitary="1"
+		/>
+		<preresearch>Bring the power of our military might to defend out greatest forward bases!</preresearch>
+		<description>A fully functional flak integrated into a orbiting base, complete with high end fleet repair, refueling, and refit facilities. The perfect thing for bringing the war to our enemies.</description>
+	</technology>
+	<technology id="6321" symbol="REPAIR6B" name="Fleet Platform">
+		<discovery
+			researchMod="1.25"
+			level="6"
+			researchRequires="REPAIR2B-5"
+			researchRaces="C"
+		/>
+		<structure
+			subtype="str45"
+			buildProd="2000"
+			operEn="200"
+			operWorkers="1500"
+			maxHP="500"
+			refuelMax="80"
+			refuelInc="6"
+			repairShip="0.08"
+			upgradeShip="40"
+			scannerPwr="80"
+			trainShipInc="0.01"
+			trainShipMax="1"
+			isMilitary="1"
+		/>
+		<preresearch>The ultimate base for launching attacks!</preresearch>
+		<description>Our best, most powerful support base, able to greatly increase the capabilities of our civilian docks. It also includes a high powered sensor system and combat simulators.</description>
+	</technology>
+	<technology id="6322" symbol="FLAKBATTERYC6" name="Defense Satellite">
+		<discovery
+			researchMod="1.7 + 0.75"
+			level="6"
+			researchRequires="FLAKBATTERY-5"
+			researchRaces="C"
+		/>
+		<structure
+			subtype="str50"
+			buildProd="4000"
+			operWorkers="2000"
+			operEn="100"
+			scannerPwr="45"
+			maxHP="1200"
+			combatAtt="8"
+			structWeapons="12,12,18,0,1"
+			storEn="3600"
+			prodEn="150"
+			prodEnMod="0.0,0.0,1.0,0.0"
+			isMilitary="1"
+		/>
+		<preresearch>No planet is safe without adequate defenses, and our Flaks just aren't powerful enough.</preresearch>
+		<description>The second generation defense platform, the Defense Satellite, is an orbiting powerhouse of weapons capable of bringing down any enemy ship. When not firing, the internal generators can supply substantial power to whatever planet it orbits.</description>
+	</technology>
+	<technology id="6340" symbol="HUGEHULL6" name="Mobile Planet (Hull)">
+		<discovery
+			researchMod="1.00 + 1.25"
+			level="6"
+			researchRequires="HUGEHULL5-5"
+			researchReqSRes="SR_TL5C"
+			researchRaces="C"
+		/>
+		<shiphull
+			buildProd="4320"
+			buildSRes="SR_TL5C"
+			storEn="8864"
+			operEn="20"
+			maxHP="1440"
+			slots="288"
+			weight="264"
+			combatAtt="5"
+			combatDef="-2"
+			maxWeight="864"
+			signature="100"
+			combatClass="2"
+			minSignature="50"
+		/>
+		<preresearch>Nothing is too big for war.</preresearch>
+		<description>And you thought the Huge Hull was overkill! Well, now we have an even bigger, nastier ship that will bring our power to the furthest corners of the galaxy. No one will be safe, now.</description>
+	</technology>
+	<technology id="6360" symbol="FACTORY6C" name="Strip Mine">
+		<discovery
+			researchMod="2.0"
+			level="6"
+			researchRequires="FACTORY3C-5"
+			researchRaces="C"
+		/>
+		<structure
+			subtype="str30"
+			buildProd="600"
+			operEn="80"
+			operWorkers="2500"
+			prodProd="400"
+			prodProdMod="0.95,0.05,0.0,0.0"
+			prodEnv="-300"
+			maxHP="300"
+		/>
+		<preresearch>Bionics believe in the power of the environment. To us it stands in the way of getting at the deeply burried minerals.</preresearch>
+		<description>Removing and processing the surface of the planet allows us to find significant deposits of minerals. It's only drawback is that, once depleated, there are no more minerals to be found on the planet's surface. As a side effect, this is the best way to cause Bionics havoc: we can now utterly wipe out their Gaia worlds!</description>
+	</technology>
+</techtree>

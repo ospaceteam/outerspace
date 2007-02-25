@@ -1,0 +1,91 @@
+#!/usr/bin/env python2.4
+#
+#  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
+#
+#  This file is part of IGE - Outer Space.
+#
+#  IGE - Outer Space is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  IGE - Outer Space is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with IGE - Outer Space; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+
+# tweak PYTHONPATH
+import sys
+sys.path.insert(0, 'lib')
+
+import os
+from igeclient.IClient import IClient
+import pprint, traceback
+from getpass import getpass
+from optparse import OptionParser
+from ige import log
+
+def msgHandler(id, data):
+	if id >= 0:
+		print 'Message', id, data
+
+def getPlayer(name):
+    u = s.getInfo(1)
+    for playerID in u.players:
+        pl = s.getInfo(playerID)
+        if pl.name == name:
+            return pl
+    return None
+
+# parse command line arguments
+parser = OptionParser(usage = "usage: %prog [options] login")
+parser.add_option("-c", "--cleanup", dest = "cleanup", default = False,
+    action = "store_true", help = "Cleanup server sessions")
+parser.add_option("-t", "--turn", dest = "turns", default = 0,
+    action = "store_const", const = 1, help = "Process one turn on server")
+parser.add_option("--turns", dest = "turns", default = 0,
+    action = "store", type = "int", metavar = "N", help = "Process N turns on server")
+parser.add_option("-b", "--backup", dest = "backup", default = None,
+    action = "store", type = "string", metavar = "BASEFILENAME",
+    help = "Backup server databases into BASEFILENAME-<database name>.osbackup")
+
+options, args = parser.parse_args()
+
+#s = IClient('ige.qgir.cz:9080', None, msgHandler, 'IClient/osc')
+s = IClient('localhost:9080', None, msgHandler, None, 'IClient/osc')
+
+if len(args) != 1:
+	parser.error("no login name specified")
+
+login = args[0]
+
+if login == "admin":
+	# get admin login from var/token
+	password = open(os.path.join("var", "token"), "r").read()
+else:
+	password = getpass("Password: ")
+
+s.connect(login)
+s.login('Alpha', login, password)
+
+if options.backup:
+    s.backup(options.backup)
+elif options.cleanup:
+    log.debug('OSCLIENT', 'Cleaning up sessions')
+    s.cleanupSessions()
+elif options.turns > 0:
+    while options.turns > 0:
+        s.processTurn()
+        options.turns -= 1
+else:
+    # interactive console
+    from code import InteractiveConsole
+    console = InteractiveConsole(locals())
+    console.interact()
+
+s.logout()

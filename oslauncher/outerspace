@@ -1,0 +1,343 @@
+#!/usr/bin/python -t
+
+#
+#  Copyright 2006 Ludek Smid [http://www.ospace.net/]
+#
+#  This file is part of Outer Space.
+#
+#  Outer Space is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  Outer Space is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with Outer Space; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+
+"""
+Synchronize and run sources from given URL.
+"""
+
+import sys
+import os
+import oslauncher
+from oslauncher.urlgrabber.grabber import URLGrabber, URLGrabError
+from oslauncher.urlgrabber.progress import RateEstimator, format_time, format_number
+from ConfigParser import SafeConfigParser
+from StringIO import StringIO
+from urlparse import urlparse
+from oslauncher.pgu import gui
+from oslauncher import version
+
+import pygame
+from pygame.locals import *
+
+try:
+    import zlib
+except ImportError:
+    useCompression = False
+else:
+    useCompression = True
+
+# set base directory for resources
+if hasattr(sys, "frozen"):
+    base = os.path.join(os.path.dirname(sys.executable), "oslauncher")
+else:
+    base = os.path.dirname(oslauncher.__file__)
+    
+resources = os.path.abspath(os.path.join(base, "res"))
+
+del base
+
+# screen size
+screenSize = 639, 479
+screenFlags = SWSURFACE
+
+# constants
+UPTODATE = 1
+NEEDSUPDATE = 2
+CANNOTCONNECT = 3
+
+class NetRunner:
+    """Class responsible for dowloading and launching application from the specified URL."""
+    
+    def __init__(self, baseUrl, useCompression = False):
+        self.baseUrl = baseUrl
+        self.useCompression = useCompression
+        # init grabber
+        self.grabber = URLGrabber()
+        self.baseDir = self.getBaseDir(baseUrl)
+        self.log("Using base directory", self.baseDir)
+
+    def setProgress(self, progress):
+        self.grabber.opts.progress_obj = progress
+    
+    def getStatus(self):
+        # download and process application info
+        self.log("Downloading application info")
+        self.globalConfig = SafeConfigParser()
+        try:
+            data = self.grabber.urlread(self.baseUrl + ".global")
+        except URLGrabError:
+            return CANNOTCONNECT
+        self.globalConfig.readfp(StringIO(data))
+        self.log(
+            "Checking status of application",
+            self.globalConfig.get("application", "name"),
+            self.globalConfig.get("application", "version"),
+        )
+        # check if local mirror is ok
+        if self.isUpToDate(self.globalConfig.get("application", "checksum")):
+            self.log("Application is up-to-date")
+            return UPTODATE
+        else:
+            self.log("Updating application")
+            return NEEDSUPDATE
+
+    def launch(self):
+        """Launch application"""
+        self.log("Launching application")
+        self.log("-" * 79)
+        sys.path.insert(0, self.baseDir)
+        os.chdir(self.baseDir)
+        exec "import %s" % self.globalConfig.get("application", "module")
+
+    def log(self, *args):
+        for arg in args:
+            sys.stdout.write(str(arg))
+            sys.stdout.write(" ")
+        sys.stdout.write("\n")
+        sys.stdout.flush()
+
+    def getBaseDir(self, baseUrl):
+        location, path = urlparse(baseUrl)[1:3]
+        location = location.replace(":", "_")
+        path = path.replace("/", "_")
+        return os.path.abspath(os.path.join(os.path.expanduser("~"), ".ospace", location + path))
+
+    def isUpToDate(self, checksum):
+        config = SafeConfigParser()
+        config.read(os.path.join(self.baseDir, ".global"))
+        if config.has_option("application", "checksum"):
+            return config.get("application", "checksum") == checksum
+        else:
+            return False
+
+    def getFiles(self, text):
+        result = {}
+        for line in text.split("\n"):
+            if not line:
+                continue 
+            # remove additional white spaces (\r at the end)
+            line = line.strip()
+            chksum, size, compSize, name = line.split("|")
+            result[name, chksum] = int(size), int(compSize)
+        return result
+            
+    def update(self):
+        # make sure directory exists
+        if not os.path.exists(self.baseDir):
+            os.makedirs(self.baseDir)
+        # local and remote files checksums
+        if os.path.exists(os.path.join(self.baseDir, ".files")):
+            localFiles = self.getFiles(open(os.path.join(self.baseDir, ".files"), "r").read())
+        else:
+            localFiles = {}
+        # remote files
+        files = self.grabber.urlread(self.baseUrl + ".files")
+        remoteFiles = self.getFiles(files)
+        # diff them
+        for key in localFiles.keys():
+            if key in remoteFiles:
+                del remoteFiles[key]
+                del localFiles[key]
+        self.log("Files to delete:", len(localFiles))
+        self.log("Files to download:", len(remoteFiles))
+        # delete obsolete files
+        for name, cksum in localFiles:
+            self.log("Deleting file", name)
+            os.remove(os.path.join(self.baseDir, name))
+        # compute total size
+        if self.useCompression:
+            size = sum([item[1] for item in remoteFiles.itervalues()])
+        else:
+            size = sum([item[0] for item in remoteFiles.itervalues()])
+        self.log(size, "B to download")
+        self.grabber.opts.progress_obj.setTotal(size)
+        # download new files
+        for name, cksum in remoteFiles:
+            # make directory for file
+            directory = os.path.dirname(os.path.join(self.baseDir, name))
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+            # download it
+            if self.useCompression:
+                data = self.grabber.urlread("%s%s.gz" % (self.baseUrl, name))
+                fh = open(os.path.join(self.baseDir, name), "wb")
+                fh.write(zlib.decompress(data))
+                fh.close()
+            else:
+                self.grabber.urlgrab(self.baseUrl + name, os.path.join(self.baseDir, name))
+        # write config
+        open(os.path.join(self.baseDir, ".files"), "wb").write(files)
+        self.globalConfig.write(open(os.path.join(self.baseDir, ".global"), "w"))
+
+class CancelOperation(Exception):
+    """Raised when user cancels download."""
+    pass
+
+class UpdateDlg(gui.Table):
+    """Dialog that informs user about download progress."""
+    
+    def __init__(self, **params):
+        name = params["name"]
+        del params["name"]
+        version = params["version"]
+        del params["version"]
+        
+        gui.Table.__init__(self, **params)
+        
+        self.tr()
+        self.td(gui.Label(_("Dowloading:  ")), align = 1)
+        self.td(gui.Label(_("%s %s") % (name, version)), align = -1)
+        
+        self.tr()
+        self.td(gui.Spacer(1, 10), colspan = 2)
+        
+        self.tr()
+        self.td(gui.Label(_("Progress:  ")), align = 1)
+        self.progress = gui.ProgressBar(0, 0, 100, width = 200)
+        self.td(self.progress, align = -1)
+
+        self.tr()
+        self.td(gui.Spacer(1, 10), colspan = 2)
+
+        self.tr()
+        self.td(gui.Label(_("Remaining:  ")), align = 1)
+        self.speed = gui.Label(_("00:00 mins (%.2f KiB/sec)" % 0))
+        self.td(self.speed, align = -1)
+
+        self.tr()
+        self.td(gui.Spacer(1, 20), colspan = 2)
+        
+        self.tr()
+        e = gui.Button(_("Cancel"))
+        e.connect(gui.CLICK, self.onCancel, None)        
+        self.td(e, colspan = 2, align = 1)
+    
+    def onCancel(self, arg):
+        raise CancelOperation()
+
+class Progress:
+    """Compute and display progress of download."""
+    
+    def __init__(self, dlg):
+        self.dlg = dlg
+        self.re = None
+    
+    def setTotal(self, total):
+        self.re = RateEstimator()
+        self.re.start(total)
+        self.base = 0
+    
+    def start(self, filename=None, url=None, basename=None,
+              size=None, now=None, text=None):
+        pass
+    
+    def update(self, amount_read, now=None):
+        if self.re is None:
+            return
+        if amount_read > 0:
+            self.re.update(self.base + amount_read)
+            if self.re.fraction_read():
+                self.dlg.progress.value = int(self.re.fraction_read() * 100)
+                self.dlg.speed.value = _("%s mins (%siB/sec)") % (
+                    format_time(self.re.remaining_time()),
+                    format_number(self.re.average_rate()),
+                )
+            self.dlg.update()
+
+    def end(self, amount_read, now=None):
+        if self.re is None:
+            return
+        self.re.update(self.base + amount_read)
+        if self.re.fraction_read():
+            self.dlg.progress.value = int(self.re.fraction_read() * 100)
+            self.dlg.speed.value = _("%s mins (%siB/sec)") % (
+                format_time(self.re.remaining_time()),
+                format_number(self.re.average_rate()),
+            )
+        self.base += amount_read
+        self.dlg.update()
+
+def initLocalization():
+    """initialize _ function"""
+    # TODO: map it to corresponding locale
+    import __builtin__
+    __builtin__.__dict__["_"] = lambda x: x
+
+if __name__ == "__main__":
+    """Setup display and stard dialogue with a user"""
+    initLocalization()
+    # load configuration
+    confFilename = os.path.join(os.path.expanduser("~"), ".ospace", "netrunner.ini")
+    print oslauncher.config
+    oslauncher.config.read(confFilename)
+    if "server" not in oslauncher.config:
+        oslauncher.config.add_section("server")
+    if "url" not in oslauncher.config.server:
+        oslauncher.config.server.url = "http://ospace.net:9080/client/"
+    url = oslauncher.config.server.url
+    # check if server is available and app is up-to-date
+    netRunner = NetRunner(url, useCompression)
+    status = netRunner.getStatus()
+    okToLaunch = False
+    if status != UPTODATE:
+        # initialize pygame
+        os.environ['SDL_VIDEO_CENTERED'] = 'yes'
+        pygame.init()
+        # main screen
+        bestDepth = pygame.display.mode_ok(screenSize, screenFlags)
+        screen = pygame.display.set_mode(screenSize, screenFlags, bestDepth)
+        pygame.mouse.set_visible(True)
+        pygame.display.set_caption(_("Outer Space Launcher %s") % version.versionString)
+        pygame.display.set_icon(pygame.image.load(os.path.join(resources, "icon32.png")).convert_alpha())
+        # connection dlg?
+        while status == CANNOTCONNECT:
+            pass
+        # update app
+        app = gui.Desktop(theme = gui.Theme(os.path.join(resources, "gray")))
+        app.connect(gui.QUIT,app.quit,None)
+        dlg = UpdateDlg(
+            name = netRunner.globalConfig.get("application", "fullname"),
+            version = netRunner.globalConfig.get("application", "version"),
+            align = 1
+        )
+        app.init(dlg)
+        def update():
+            for e in pygame.event.get():
+                app.event(e)
+            app.paint(screen)
+            pygame.display.flip()
+        dlg.update = update
+        # update
+        netRunner.setProgress(Progress(dlg))
+        try:
+            netRunner.update()
+            okToLaunch = True
+        except CancelOperation:
+            pass
+        else:
+            # close screen
+            pygame.display.quit()
+    # launch synchronized application
+    if okToLaunch or status == UPTODATE:
+        netRunner.launch()
+
+# vim:ts=4:sw=4:showmatch:expandtab

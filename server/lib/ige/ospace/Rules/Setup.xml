@@ -1,0 +1,597 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+#
+#  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
+#
+#  This file is part of IGE - Outer Space.
+#
+#  IGE - Outer Space is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  IGE - Outer Space is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with IGE - Outer Space; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+-->
+<techtree>
+	<technology id="9000" symbol="RENEGADEBASE" name="Renegade Base">
+		<discovery
+			researchMod="1.0 + 0.5"
+			level="99"
+		/>
+		<structure
+			buildProd="1440"
+			prodBio="30"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			prodEn="30"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			operWorkers="1000"
+			scannerPwr="50"
+			maxHP="1200"
+			combatAtt="6"
+			revoltThr="-100"
+			structWeapons="6,0,0,0,1"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+	</technology>
+	<technology id="9001" symbol="MUTANTBASE" name="Mutant Base">
+		<discovery
+			researchMod="1.0 + 0.5"
+			level="99"
+		/>
+		<structure
+			buildProd="1440"
+			prodBio="300"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			prodEn="30"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			operWorkers="1000"
+			scannerPwr="50"
+			maxHP="1800"
+			combatAtt="7"
+			revoltThr="-100"
+			structWeapons="6,0,0,0,1"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+	</technology>
+	<technology id="9003" symbol="EDENBASE" name="E.D.E.N. Base">
+		<discovery
+			researchMod="1.0 + 0.5"
+			level="99"
+		/>
+		<structure
+			buildProd="2880"
+			prodBio="500"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			prodEn="120"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			prodProd="10"
+			prodProdMod="0.0,0.0,0.0,1.0"
+			operWorkers="1000"
+			scannerPwr="80"
+			maxHP="4800"
+			combatAtt="20"
+			revoltThr="-100"
+			structWeapons="12,12,12,0,0"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+	</technology>
+	<technology id="9004" symbol="ANCFACTORY" name="Ancient Factory">
+		<discovery
+			researchMod="1.0"
+			level="99"
+		/>
+		<structure
+			buildProd="720"
+			operEn="50"
+			operWorkers="1500"
+			prodProd="34"
+			prodProdMod="0.0,1.0,0.0,0.0"
+			prodEnv="-6"
+			maxHP="600"
+			fullInfo="1"
+		/>
+	</technology>
+	<technology id="9005" symbol="ANCRESLAB" name="Ancient ResLab">
+		<discovery
+			researchMod="1.0"
+			level="99"
+		/>
+		<structure
+			buildProd="720"
+			operEn="30"
+			operWorkers="1500"
+			prodSci="40"
+			maxHP="600"
+			fullInfo="1"
+		/>
+	</technology>
+	<technology id="9002" symbol="PIRATEBASE" name="Pirate Base">
+		<discovery
+			researchMod="1.0 + 0.5"
+			level="99"
+		/>
+		<structure
+			buildProd="3840"
+			prodBio="80"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			prodEn="60"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			prodProd="8"
+			prodProdMod="0.0,0.0,0.0,1.0"
+			operWorkers="5000"
+			maxHP="2400"
+			combatAtt="10"
+			revoltThr="-100"
+			structWeapons="8,8,8,0,0"
+			unpackPop="6000"
+			finishConstrHandler="finishStructPIROUTPOST"
+			validateConstrHandler="validateStructPIROUTPOST"
+			isMilitary="1"
+			fullInfo="1"
+			refuelMax="60"
+			refuelInc="4"
+			repairShip="0.04"
+			upgradeShip="8"
+			scannerPwr="80"
+		/>
+		<description>The basic military structure of a pirate.</description>
+	</technology>	
+	<technology id="9006" symbol="PIRATEDEN" name="Pirate Den">
+		<discovery
+			researchMod="1.0 + 0.5"
+			level="99"
+		/>
+		<structure
+			buildProd="240"
+			prodBio="60"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			prodEn="60"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			prodProd="16"
+			prodProdMod="0.0,0.0,0.0,1.0"
+			operWorkers="1000"
+			maxHP="400"
+			fullInfo="1"
+		/>
+		<description>We can build ships! The better to conquer the enemy with!</description>
+	</technology>
+	<technology id="9007" symbol="PIRATESD" name="Pirate Shipyards">
+		<discovery
+			researchMod="1.00"
+			level="99"
+		/>
+		<structure
+			buildProd="480"
+			operEn="100"
+			prodProd="12"
+			prodProdMod="0.0,0.0,0.0,1.0"
+			operWorkers="1200"
+			maxHP="800"
+			refuelMax="80"
+			refuelInc="5"
+			repairShip="0.04"
+			upgradeShip="15"
+			combatAtt="25"
+			structWeapons="4,3,2,0,0"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+	</technology>
+	<technology id="9008" symbol="PIRATEFTLENG" name="Pirate FTL Engine">
+		<discovery
+			researchMod="1.00 + 1.00"
+			level="99"
+		/>
+		<shipequip
+			subtype="seq_eng"
+			buildProd="240"
+			storEn="384"
+			operEn="5"
+			slots="4"
+			weight="4"
+			engPwr="100"
+			signature="0"
+		/>
+	</technology>
+	<technology id="9009" symbol="PIRCOLONYMOD" name="Pirate Colony Module">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="99"
+		/>
+		<shipequip
+			subtype="seq_struct"
+			buildProd="3840"
+
+			storEn="960"
+			operEn="10"
+
+			slots="8"
+			weight="40"
+			unpackStruct="PIRATEBASE"
+			minHull="1"
+        />
+        <preresearch>Colony Module needs some fame to deploy. Consult your Empire Overview dialog. Deploys a Pirate Colony Module.</preresearch>
+	</technology>
+	<technology id="9010" symbol="PIRGOVERNMENT" name="Main Pirate Base">
+		<discovery
+			researchMod="1.50"
+			level="99"
+		/>
+		<structure
+			subtype="str25"
+			buildProd="2880"
+			operEn="150"
+			operWorkers="7500"
+			maxHP="1800"
+			moraleTrgt="+10"
+			govPwr="500000"
+			finishConstrHandler="finishStructGOVCENTER"
+			isMilitary="1"
+		/>
+		<preresearch>Main pirate base that coordinates actions of pirates. Works like government center for ordinal commanders. So, don't loose it!</preresearch>
+	</technology>
+	<technology id="9011" symbol="BUNKER" name="Bunker">
+		<discovery
+			researchMod="1.00"
+			level="99"
+		        researchRaces="B"
+			maxImprovement="1"
+		/>
+		<structure
+			subtype="str45"
+			buildProd="3840"
+			buildSRes="SR_TL5C"
+			operWorkers="1000"
+			unpackPop="5000"
+			prodBio="167"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			prodEn="14"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			maxHP="2334"
+			refuelMax="134"
+			refuelInc="7"
+			scannerPwr="67"
+			fleetSpeedBoost="2.67"
+			prodEnv="-7"
+			combatAtt="11"
+			structWeapons="10,6,4,0,1"
+			finishConstrHandler="finishStructOUTPOST"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+		<preresearch>A structure to aid the war effort.</preresearch>
+		<description>This building provides all the necessities for stoking the fires in the engine of war.  The Wolframium frame and outer wall reinforcements provide adequate protection against planetary assault deep behind enemy lines.  Housed within this armoured shell are fleet refuelling services, as well as a stargate useful in aiding the arrival of additional combat units as needed to ensure total victory.  A tactical scanner is also installed to keep track of enemy movements nearby.  We even managed to install an impressive array of automated defense weaponry, including ten of our best anti-small, six anti-medium, and four anti-large weapon emplacements.  Given the strategic value this installation provides, it is also capable of colonising freshly conquered planets, including its own workforce ready for activation.  All energy needs are met with an internal reactor.  Nutrient requirements are also provided by internal soil decomposition machinery capable of utilising any type of ground available.  No expenses were spared on repair and upgrade equipment, as with this utility available, none should be needed.  Success is ours!</description>
+	</technology>
+	<technology id="9012" symbol="SPOREOUTPOST" name="Spore">
+		<discovery
+			researchMod="1.00"
+			level="99"
+		        researchRaces="B"
+			maxImprovement="1"
+		/>
+		<structure
+			subtype="str45"
+			buildProd="480"
+			operWorkers="100"
+			unpackPop="500"
+			storPop="2000"
+			prodBio="67"
+			prodBioMod="0,0.0,0.0,1"
+			prodEn="67"
+			prodEnMod="0,0.0,0.0,1"
+			prodProd="16"
+			prodProdMod="0,0.0,0.0,1"
+			maxHP="120"
+			refuelMax="60"
+			refuelInc="2"
+			scannerPwr="44"
+			prodEnv="10"
+			combatAtt="6"
+			structWeapons="2,2,2,0,0"
+			finishConstrHandler="finishStructSPORECOLONY"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+		<preresearch>Our spores colonize many planets.</preresearch>
+		<description>An advanced colony system that fully deploys across the target planet.</description>
+	</technology>
+	<technology id="9013" symbol="SPOREMINOR" name="Extra Spores">
+		<discovery
+			researchMod="1.00"
+			level="99"
+		        researchRaces="B"
+			maxImprovement="1"
+		/>
+		<structure
+			subtype="str45"
+			buildProd="240"
+			operWorkers="10"
+			prodBio="12"
+			prodBioMod="0.5,0.0,0.0,0.5"
+			prodEn="12"
+			prodEnMod="0.5,0.0,0.0,0.5"
+			prodProd="12"
+			prodProdMod="0.75,0.0,0.0,0.25"
+			maxHP="10"
+			moraleTrgt="+4"
+			prodEnv="15"
+			combatAtt="4"
+			structWeapons="1,1,0,0,0"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+		<preresearch>Our spores colonize many planets.</preresearch>
+		<description>There were extra spores left over from the primary Spore Colony.</description>
+	</technology>
+	<technology id="9020" symbol="EDENSTATION" name="Empire DEfense Network (E.D.E.N.) Flak Platform">
+		<discovery
+			researchMod="1.0 + 0.5"
+			level="99"
+		/>
+		<structure
+			buildProd="10000"
+			operWorkers="2000"
+			prodBio="200"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			storPop="10000"
+			scannerPwr="80"
+			maxHP="12000"
+			combatAtt="40"
+			revoltThr="-100"
+			structWeapons="24,48,24,4,1"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+		<preresearch>The elite defensive structure of the long fallen Empire.</preresearch>
+		<description>The elite defensive structure of the long fallen Empire.</description>
+	</technology>
+	<technology id="9021" symbol="EDENCANNON" name="E.D.E.N. Spacial Disruptor">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="99"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="1"
+			weight="2"
+			buildProd="200000"
+			buildSRes="SR_TL5A"
+			weaponDmgMin="20"
+			weaponDmgMax="30"
+			weaponAtt="20"
+			weaponClass="0"
+			weaponROF="6"
+			weaponIgnoreShield="1"
+		/>
+		<description>The Empire's most powerful anti-fighter weapon.</description>
+	</technology>
+	<technology id="9022" symbol="EDENMISSILE" name="E.D.E.N. Hunter-Seeker">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="99"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="3"
+			weight="6"
+			buildProd="200000"
+			buildSRes="SR_TL5A"
+			weaponDmgMin="50"
+			weaponDmgMax="100"
+			weaponAtt="15"
+			weaponClass="1"
+			weaponROF="2"
+			weaponIsMissile="1"
+			weaponIgnoreShield="1"
+		/>
+		<description>The Empire's most powerful anti-frigate weapon.</description>
+	</technology>
+	<technology id="9023" symbol="EDENTORP" name="E.D.E.N. Atomizer">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="99"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="3"
+			weight="3"
+			buildProd="300000"
+			buildSRes="SR_TL5A"
+			weaponDmgMin="200"
+			weaponDmgMax="300"
+			weaponAtt="12"
+			weaponClass="2"
+			weaponROF="2"
+			weaponIsMissile="1"
+			weaponIgnoreShield="1"
+		/>
+		<description>The Empire's most powerful anti-cruiser weapon.</description>
+	</technology>
+	<technology id="9024" symbol="EDENBOMB" name="E.D.E.N. Singularity Bomb">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="99"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="4"
+			weight="5"
+			buildProd="800000"
+			buildSRes="SR_TL5A"
+			weaponDmgMin="2000"
+			weaponDmgMax="3000"
+			weaponAtt="16"
+			weaponClass="3"
+			weaponROF="2"
+			weaponIgnoreShield="1"
+		/>
+		<description>The Empire's most powerful anti-planet weapon.</description>
+	</technology>
+	<technology id="9030" symbol="PIRATEBREWERY" name="Pirate Brewery">
+		<discovery
+			researchMod="1.0 + 0.5"
+			level="99"
+		/>
+		<structure
+			buildProd="1440"
+			operEn="25"
+			prodBio="20"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			operWorkers="1000"
+			maxHP="800"
+			isMilitary="1"
+			trainShipInc="0.02"
+			trainShipMax="7"
+			fullInfo="1"
+		/>
+		<description>A drunk pirate fights better!</description>
+	</technology>
+	<technology id="9031" symbol="PIRATEPRISON" name="Pirate Prison">
+		<discovery
+			researchMod="1.0 + 0.5"
+			level="99"
+		/>
+		<structure
+			buildProd="1440"
+			operEn="50"
+			operWorkers="3000"
+			maxHP="400"
+			prodProd="28"
+			prodProdMod="0.0,0.0,0.0,1.0"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+		<description>Utilizing the power of slave labor, the pirates have found a way to greatly increase their production.</description>
+	</technology>
+	<technology id="9032" symbol="PIRATESMALLBASE" name="Pirate Small Base">
+		<discovery
+			researchMod="1.0 + 0.5"
+			level="99"
+		/>
+		<structure
+			buildProd="1440"
+			prodBio="80"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			prodEn="60"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			prodProd="8"
+			prodProdMod="0.0,0.0,0.0,1.0"
+			operWorkers="5000"
+			maxHP="400"
+			combatAtt="5"
+			revoltThr="-100"
+			structWeapons="2,2,2,0,0"
+			unpackPop="6000"
+			finishConstrHandler="finishStructPIROUTPOST"
+			validateConstrHandler="validateStructPIROUTPOST"
+			isMilitary="1"
+			fullInfo="1"
+			refuelMax="60"
+			refuelInc="2"
+			repairShip="0.02"
+			upgradeShip="4"
+			scannerPwr="40"
+		/>
+		<description>A smaller version of the basic military structure of a pirate.</description>
+	</technology>
+	<technology id="9033" symbol="PIRSMCOLONYMOD" name="Pirate Small Colony Module">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="99"
+		/>
+		<shipequip
+			subtype="seq_struct"
+			buildProd="720"
+
+			storEn="960"
+			operEn="10"
+
+			slots="8"
+			weight="40"
+			unpackStruct="PIRATESMALLBASE"
+			minHull="1"
+	        />
+		<description>Colony Module needs some fame to deploy. Consult your Empire Overview dialog. Deploys a Pirate Small Colony Module.</description>
+	</technology>
+	<technology id="99001" symbol="COMSCANDEVEL" name="Developer Testing Comm/Scan Center">
+		<discovery
+			researchMod="1.0"
+			level="99"
+		/>
+		<structure
+			subtype="str50"
+			buildProd="720"
+			operEn="50"
+			operWorkers="1500"
+			scannerPwr="1000"
+			maxHP="600"
+			isMilitary="1"
+			fleetSpeedBoost="2.0"
+		/>
+		<preresearch>Developer Testing Structure.</preresearch>
+	</technology>
+	<technology id="99002" symbol="FACTORYDEVEL" name="Developer Testing Factory">
+		<discovery
+			researchMod="1.0"
+			level="99"
+		/>
+		<structure
+			subtype="str30"
+			buildProd="10"
+			operEn="15"
+			operWorkers="500"
+			prodProd="750"
+			prodProdMod="0.0,0.5,0.0,0.5"
+			prodBio="80"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			prodEn="60"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			prodEnv="0"
+			maxHP="600"
+		/>
+		<preresearch>Developer Testing Structure.</preresearch>
+	</technology>
+	<technology id="99003" symbol="FTLDEVEL" name="Developer FTL">
+		<discovery
+			researchMod="1.0"
+			level="99"
+		/>
+		<shipequip
+			subtype="seq_eng"
+			buildProd="240"
+			storEn="384"
+			operEn="5"
+			slots="4"
+			weight="4"
+			engPwr="500"
+			signature="0"
+		/>
+		<preresearch>Developer Testing Structure.</preresearch>
+	</technology>
+	<technology id="99004" symbol="SCANNERDEVEL" name="Developer Scanner">
+		<discovery
+			researchMod="1.0"
+			level="99"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="60"
+			slots="1"
+			weight="1"
+			signature="+10"
+			scannerPwr="1000"
+		/>
+		<preresearch>Developer Testing Structure.</preresearch>
+	</technology>
+</techtree>

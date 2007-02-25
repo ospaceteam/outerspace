@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+#
+#  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
+#
+#  This file is part of IGE - Outer Space.
+#
+#  IGE - Outer Space is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  IGE - Outer Space is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with IGE - Outer Space; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+-->
+<techtree>
+	<technology id="1105" symbol="REPAIR1" name="Space Docks">
+		<discovery
+			researchMod="1.00"
+			level="2"
+			researchRequires="SPACEPORT-3"
+		/>
+		<structure
+			subtype="str45"
+			buildProd="480"
+			operEn="100"
+			operWorkers="1000"
+			maxHP="200"
+			refuelMax="80"
+			refuelInc="4"
+			repairShip="0.02"
+			upgradeShip="10"
+			isMilitary="1"
+		/>
+		<preresearch>A network of bases and spaceports that would allow effective repair of spacecrafts. It also serves as refuelling station for our ships.</preresearch>
+		<description>Repair Facility is actually net of the smaller and larger landing pads and airstrips that cover all planet. This allows pilot to choose the station closest to him and be repaired quickly. These facilities usually contain tools necessary to fix the aircraft and few reserve pilots in case of some injury. While effective, repair of spacecrafts is a difficult thing and takes some time, despite the conditions and technology. Repair of larger crafts is fast too, but it is impossible to have some many spare parts ready and some must be manufactured on the spot.</description>
+		<flavor>Empire in its arrogance aimed to win every battle with one decisive strike and hence allmost no repair bases were built. This weakness was soon exploited by rebel generals. Large ships that were able to withstand major beating were being continuously repaired and Imperial fleet was soon overcame with much more inferior fleet.</flavor>
+	</technology>
+	<technology id="1111" symbol="PWRPLANTNUK1" name="Nuclear Power Plant">
+		<discovery
+			researchMod="1.50 + 0.75"
+			level="2"
+			researchRequires="PWRPLANTOIL1-5"
+			researchReqSRes="SR_TL1A"
+		/>
+		<structure
+			subtype="str20"
+			buildProd="1920"
+			buildSRes="SR_TL1A"
+			operWorkers="1000"
+			storEn="3600"
+			prodEn="400"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			maxHP="800"
+		/>
+		<preresearch>A better way of generating energy that everybody needs. Expect that you will need Uranium for each nuclear power plant which you will want to build.</preresearch>
+		<description></description>
+		<flavor></flavor>
+	</technology>
+	<technology id="2000" symbol="HYDRFARM" name="Hydroponics Farm">
+		<discovery
+			researchMod="1.00"
+			level="2"
+			researchRequires="FARM1-3"
+			researchRaces="H"
+		/>
+			<!--operEn="20"-->
+		<structure
+			subtype="str10"
+			buildProd="480"
+			operWorkers="1000"
+			prodBio="200"
+			prodBioMod="0.0,0.0,0.5,0.5"
+			storBio="1200"
+			maxHP="400"
+		/>
+		<preresearch>Research on this field can lead to a special farming method independent of environmental conditions.</preresearch>
+	</technology>
+	<technology id="2001" symbol="ENTCENTER1" name="Entertainment Center">
+		<discovery
+			researchMod="1.00"
+			level="2"
+			researchRequires="GOVCENTER1-3"
+		/>
+		<structure
+			subtype="str50"
+			buildProd="480"
+			operEn="25"
+			operWorkers="500"
+			maxHP="400"
+			moraleTrgt="+20"
+		/>
+		<preresearch>When morale starts to threaten your domain, it is time, to do something about it. Either fix the people or fix the reasons for given disorder. Entertainment center tries to do the latter.</preresearch>
+		<description>Entertainment centers are, as the name suggests, places where colonists can find some pleasure and spent their leisure time. In more civilized parts of the universe, entertainment is more noble, like theaters, galleries and alike. It is the simple matter of demand and supply. These entertainment centers simply try to make people happy. Relieving them of their hardships, they are more likely to be content and less likely to revolt. Especially on border systems, where contact with the rest of the galaxy is rare and people are unlikely to organize anything for themselves, these structures are very important.</description>
+		<flavor>One of the most popular computer games to be found in the entertainment centers across the Sheng sector was called Doom XI. An excellent virtual reality 3D shooter, this was the GAME. While the official version was perfectly harmless with any sustained 'damage' felt only as a added presure of VR suit, the enigma 1.3 patch changed this game into a death-risk reality. The pain was real(induced through neural receptors, the wounds were not) and when you died, the brain was intentionally overloaded and player died too. Illeagal tournaments, bets, random accidents, suicides, it all was extremly appealing to the bored population of Sheng systems and thus, the governor felt no need to do anything against it. Unfortunately, one enlightened hacker managed to insert enigma patch with die-or-win-only feature to his personal VR set. Governor made it to level 17...</flavor>
+	</technology>
+	<technology id="2002" symbol="FOODFACTORY" name="Food Synthesis Facility">
+		<discovery
+			researchMod="1.00"
+			level="2"
+			researchRequires="FARM1-3"
+			researchRaces="C"
+		/>
+			<!--operEn="20"-->
+		<structure
+			subtype="str10"
+			buildProd="480"
+			operWorkers="1000"
+			prodBio="200"
+			prodBioMod="0.0,0.5,0.0,0.5"
+			storBio="1200"
+			maxHP="400"
+			prodEnv="-2"
+		/>
+		<preresearch>This exciting new technology can allow us to produce food from mineral resources of the planet.</preresearch>
+	</technology>
+	<technology id="2003" symbol="FARM2BIO" name="Greenhouse Farm">
+		<discovery
+			researchMod="1.00"
+			level="2"
+			researchRequires="FARM1-3"
+			researchRaces="B"
+		/>
+			<!--operEn="20"-->
+		<structure
+			subtype="str10"
+			buildProd="480"
+			operWorkers="1000"
+			prodBio="200"
+			prodBioMod="0.3,0.0,0.0,0.7"
+			storBio="1200"
+			maxHP="400"
+			prodEnv="+15"
+		/>
+		<preresearch>We can use star's energy to grow biomatter, when we finish this research.</preresearch>
+	</technology>
+	<technology id="2004" symbol="FLAKBATTERY" name="Flak Battery">
+		<discovery
+			researchMod="1.7 + 0.75"
+			level="2"
+			researchRequires="EMCANNON-3"
+			researchRaces="CH"
+		/>
+		<structure
+			subtype="str50"
+			buildProd="2880"
+			operWorkers="1000"
+			operEn="75"
+			scannerPwr="45"
+			maxHP="800"
+			combatAtt="8"
+			structWeapons="6,6,6,0,1"
+			isMilitary="1"
+		/>
+		<preresearch>Flak Battery is equiped by the best six anti-small, six anti-medium and six anti-large ship weapons and serves as planetary defence.</preresearch>
+	</technology>
+	<technology id="2005" symbol="SSFLAKBATTERY" name="S-P Flak Battery">
+		<discovery
+			researchMod="1.7 + 0.75"
+			level="2"
+			researchRequires="EMCANNON-3"
+			researchRaces="B"
+		/>
+		<structure
+			subtype="str50"
+			buildProd="2880"
+			operWorkers="1500"
+			scannerPwr="45"
+			maxHP="1200"
+			combatAtt="8"
+			structWeapons="6,6,6,0,1"
+			isMilitary="1"
+		/>
+		<preresearch>Self Powered Flak Battery is equiped by the best six anti-small, six anti-medium and six anti-large ship weapons and serves as planetary defence.</preresearch>
+	</technology>
+		<technology id="2006" symbol="FACTORY2" name="Ti-Factory">
+		<discovery
+			researchMod="1.50"
+			level="2"
+			researchRequires="FACTORY1-5"
+			researchReqSRes="SR_TL1B"
+		/>
+		<structure
+			subtype="str20"
+			buildProd="1920"
+			operEn="50"
+			operWorkers="1000"
+			buildSRes="SR_TL1B"
+			prodProd="29"
+			prodProdMod="0.0,1.0,0.0,0.0"
+			prodEnv="-2"
+			maxHP="600"
+		/>
+		<preresearch>Usage of Titanum can help us to build improved manufacturing facility.</preresearch>
+	</technology>
+	<technology id="2007" symbol="MUTAGENDISP" name="Mutagen Dispenser">
+		<discovery
+			researchMod="1.50 + 0.75"
+			level="2"
+			researchRequires="FARM2BIO-5"
+			researchReqSRes="SR_BIO1"
+			researchRaces="B"
+		/>
+		<structure
+			subtype="str99"
+			buildProd="1920"
+			buildSRes="SR_BIO1"
+			operWorkers="1000"
+			operEn="25"
+			maxHP="400"
+			prodEnv="+56"
+		/>
+		<preresearch>This structure improves environment by spreading Mutagen into the atmosphere.</preresearch>
+		<description>By dispersing mutagen into the atmosphere through specially tuned venting systems, the Mutagen Dispensor rapidly improves a planet's health.</description>
+	</technology>
+	<technology id="2400" symbol="COLONYMOD2" name="Colony Module">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="2"
+			researchRequires="OUTPOST1-3"
+		/>
+		<shipequip
+			subtype="seq_struct"
+			buildProd="720"
+
+			storEn="960"
+			operEn="10"
+
+			slots="8"
+			weight="20"
+			unpackStruct="OUTPOST1"
+			minHull="1"
+		/>
+		<preresearch>Do you want to colonize other stars? So don't ask and just proceed with this research. You don't? Others do.</preresearch>
+	</technology>
+	<technology id="2401" symbol="MEDIUMHULL2" name="Medium Hull">
+		<discovery
+			researchMod="1.00 + 1.00"
+			level="2"
+			researchRequires="SMALLHULL1-3"
+		/>
+		<shiphull
+			buildProd="240"
+			storEn="768"
+			operEn="4"
+			maxHP="64"
+			slots="32"
+			weight="32"
+			maxWeight="96"
+			signature="8"
+			minSignature="2"
+			combatClass="1"
+		/>
+		<preresearch>Bigger hull capable of carying more equipment. Great - we can mount more weapons!</preresearch>
+	</technology>
+	<technology id="2403" symbol="ETANKS2" name="Fuel Tank">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="2"
+			researchRequires="MEDIUMHULL2-3"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="120"
+			storEn="768"
+			operEn="0"
+			slots="1"
+			weight="4"
+		/>
+		<preresearch>What about extending the range of your ships? You've got an idea.</preresearch>
+	</technology>
+	<technology id="2404" symbol="STEELARM2" name="Steel Armor">
+		<discovery
+			researchMod="1.00 + 0.50 + 0.50"
+			level="2"
+			researchRequires="CANNON1-3"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="180"
+			maxHP="4"
+			slots="0"
+			weight="1"
+		/>
+		<preresearch>More protection never hurts. Especially when you are armored.</preresearch>
+	</technology>
+	<technology id="2405" symbol="TITANIUMSHULL" name="Titanium Small Hull">
+		<discovery
+			researchMod="1.5 + 0.75 + 0.75"
+			level="2"
+			researchRequires="SMALLHULL1-5"
+			researchReqSRes="SR_TL1B"
+		/>
+		<shiphull
+			buildSRes="SR_TL1B"
+			buildProd="240"
+			storEn="384"
+			operEn="4"
+			maxHP="24"
+			slots="24"
+			weight="16"
+			maxWeight="56"
+			signature="4"
+			combatClass="0"
+		/>
+		<preresearch>Give us piece of the Titanium and we'll prepare for you improved version of the small hull.</preresearch>
+	</technology>
+	<technology id="2406" symbol="SSROCKET" name="SS Missile">
+		<discovery
+			researchMod="1.00 + 0.50 + 0.50"
+			level="2"
+			researchRequires="SMALLHULL1-5"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			buildProd="304"
+			slots="1"
+			weight="5"
+			weaponDmgMin="11"
+			weaponDmgMax="21"
+			weaponAtt="6"
+			weaponClass="1"
+			weaponROF="0.5"
+			weaponIsMissile="1"
+			weaponIgnoreShield="0"
+		/>
+		<preresearch>Missiles are used to wrack medium to large ships. Don't bother to use them against small ships - they will not work.</preresearch>
+	</technology>
+	<technology id="2407" symbol="SBRIDGE1" name="Bridge">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="2"
+			researchRequires="MEDIUMHULL2-1"
+		/>
+		<shipequip
+			subtype="seq_ctrl"
+			buildProd="120"
+			combatAtt="4"
+			combatDef="4"
+			missileDef="4"
+			maxHP="8"
+			slots="4"
+			weight="8"
+			scannerPwr="25"
+			minHull="1"
+		/>
+		<preresearch>Larger ship needs larger command room to command it efficiently. That's it.</preresearch>
+	</technology>
+	<technology id="2408" symbol="EMCANNON" name="EM Cannon">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="2"
+			researchRequires="CANNON1-3"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="1"
+			weight="4"
+			buildProd="304"
+			weaponDmgMin="3"
+			weaponDmgMax="5"
+			weaponAtt="9"
+			weaponClass="0"
+			weaponROF="1"
+			weaponIgnoreShield="0"
+		/>
+		<preresearch>Electro-magnetic cannon can deliver more damage and is easier to aim at the target. Do you want to try it?</preresearch>
+	</technology>
+	<technology id="2409" symbol="EMCANNONTUR" name="Twin EM Cannon Turret">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="2"
+			researchRequires="EMCANNON-5"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="2"
+			weight="4"
+			buildProd="608"
+			weaponDmgMin="3"
+			weaponDmgMax="5"
+			weaponAtt="11"
+			weaponClass="0"
+			weaponROF="2"
+			weaponIgnoreShield="0"
+			minHull="1"
+		/>
+		<preresearch>This flak cannon can be mounted on medium to large ships to help deffend them against fighters.</preresearch>
+	</technology>
+	<technology id="2801" symbol="NFURANIUM" name="Nuclear Fusion - Uranium">
+		<discovery
+			researchMod="1.50 + 0.75"
+			level="2"
+			researchReqSRes="SR_TL1A"
+			maxImprovement = "1"
+		/>
+		<project
+			buildProd="9600"
+			data="1"
+			finishConstrHandler="finishProjectNF"
+		/>
+		<preresearch>Using nuclear fusion we can produce URANIUM. Rather costly process, if you care.</preresearch>
+	</technology>
+	<technology id="2802" symbol="NFTITANIUM" name="Nuclear Fusion - Titanium">
+		<discovery
+			researchMod="1.50 + 0.75"
+			level="2"
+			researchReqSRes="SR_TL1B"
+			maxImprovement = "1"
+		/>
+		<project
+			buildProd="9600"
+			data="2"
+			finishConstrHandler="finishProjectNF"
+		/>
+		<preresearch>Using nuclear fusion we can produce TITANIUM. Rather costly process, if you care.</preresearch>
+	</technology>
+	<technology id="2803" symbol="PRODSCI" name="Produce Research Equipment">
+		<discovery
+			researchMod="1.50"
+			level="2"
+			researchRequires="RESCENTRE1-5"
+		/>
+		<project
+			buildProd="240"
+			prodSci="24"
+			finishConstrHandler="finishProjectPRODRSRC"
+		/>
+		<preresearch>We can produce some tools for our scientists to temporary boost their effectivity. You know, they usualy break them pretty fast.</preresearch>
+	</technology>
+	<technology id="2804" symbol="IMPRENV" name="Improve Environment">
+		<discovery
+			researchMod="1.50"
+			level="2"
+			researchRequires="FARM2BIO-5"
+			researchRaces="B"
+		/>
+		<project
+			buildProd="120"
+			data="56"
+			finishConstrHandler="finishProjectIMPRENV"
+		/>
+		<preresearch>Our factories can help improving our environment by producing special cleaning organisms. The only drawback is that these organisms has dies very soon, so they effectivelly acts as one shot improvement.</preresearch>
+	</technology>
+	<technology id="2805" symbol="NFMUTAGEN" name="Mutagen Synthesis">
+		<discovery
+			researchMod="1.50 + 0.75"
+			level="2"
+			maxImprovement = "1"
+			researchRaces="B"
+		/>
+		<project
+			buildProd="9600"
+			data="100"
+			finishConstrHandler="finishProjectNF"
+		/>
+		<preresearch>Highly agressive biomatter with synthetized DNA. It can be usefull for improving our environment.</preresearch>
+	</technology>
+	<technology id="2990" symbol="BIONICTL3" name="Human Body Enhancements">
+		<discovery
+			researchMod="1.00 + 1.00 + 3.00"
+			finishResearchHandler="finishResTLAdvance"
+			level="2"
+			data="B"
+			recheckWhenTechLost="1"
+			researchRequires="BIONICTL2-5"
+			researchRaces="B"
+		/>
+		<preresearch>A theoretical research in the field of biology, which allows us to access advanced biology and biotechnology related technologies. Research in this field will raise our dependency on biomatter and lower our dependency on minerals eventually. When we improve this technology enough, we can advance to the next technological level.</preresearch>
+	</technology>
+	<technology id="2991" symbol="HUMANTL3" name="Brain Enhancements">
+		<discovery
+			researchMod="1.00 + 1.00 + 3.00"
+			finishResearchHandler="finishResTLAdvance"
+			level="2"
+			data="H"
+			recheckWhenTechLost="1"
+			researchRequires="HUMANTL2-5"
+			researchRaces="H"
+		/>
+		<preresearch>A theoretical research of the human mind and thinking processes can lead to improvements in research and cooperation, which in turn will lead to access to the more advanced energy and research related technologies. Our dependencies on resources will remain on the same level as they are now. When we improve this technology enough, we can advance to the next technological level.</preresearch>
+	</technology>
+	<technology id="2992" symbol="ROBOTTL3" name="Cyber Implants">
+		<discovery
+			researchMod="1.00 + 1.00 + 3.00"
+			finishResearchHandler="finishResTLAdvance"
+			level="2"
+			data="C"
+			recheckWhenTechLost="1"
+			researchRequires="ROBOTTL2-5"
+			researchRaces="C"
+		/>
+		<preresearch>A theoretical research in the field of robotics will allow us to access more advanced production and AI technologies in the future. Research in this field will raise our dependency on minerals and lower our dependency on biomatter eventually. When we improve this technology enough, we can advance to the next technological level.</preresearch>
+	</technology>
+</techtree>

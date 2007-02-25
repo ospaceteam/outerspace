@@ -1,0 +1,734 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+#
+#  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
+#
+#  This file is part of IGE - Outer Space.
+#
+#  IGE - Outer Space is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  IGE - Outer Space is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with IGE - Outer Space; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+-->
+<techtree>
+	<technology id="3000" symbol="COMSCAN3" name="Enh. Comm/Scan Center">
+		<discovery
+			researchMod="1.0"
+			level="3"
+			researchRequires="COMSCAN1-3"
+		/>
+		<structure
+			subtype="str50"
+			buildProd="720"
+			operEn="50"
+			operWorkers="1500"
+			scannerPwr="65"
+			maxHP="600"
+			isMilitary="1"
+			fleetSpeedBoost="0.96"
+		/>
+		<preresearch>Communication centre provides direct contact with other planets and also actively scans surrounding space for alien fleets. It also enables our navigators to select faster and safer fly path for ships departuring from or arriving to systems equippend with scanner.</preresearch>
+	</technology>
+	<technology id="3001" symbol="RESCENTRE3A" name="Research Hub">
+		<discovery
+			researchMod="1.0"
+			level="3"
+			researchRequires="RESCENTRE1-3"
+			researchRaces="BC"
+		/>
+		<structure
+			subtype="str40"
+			buildProd="720"
+			operEn="30"
+			operWorkers="1500"
+			prodSci="20"
+			maxHP="600"
+		/>
+		<preresearch>Design of modern and  at least partially independent laboratories, that would allow for a research to continue in these times.</preresearch>
+	</technology>
+	<technology id="3002" symbol="RESCENTRE3B" name="Lab Complex">
+		<discovery
+			researchMod="1.0"
+			level="3"
+			researchRequires="RESCENTRE1-3"
+			researchRaces="H"
+		/>
+		<structure
+			subtype="str40"
+			buildProd="720"
+			operEn="30"
+			operWorkers="1500"
+			prodSci="25"
+			maxHP="600"
+		/>
+		<preresearch>Design of modern and  at least partially independent laboratories, that would allow for a research to continue in these times.</preresearch>
+	</technology>
+	<technology id="3003" symbol="FACTORY3A" name="BioFactory">
+		<discovery
+			researchMod="1.0"
+			level="3"
+			researchRequires="FACTORY1-3"
+			researchRaces="B"
+		/>
+		<structure
+			subtype="str30"
+			buildProd="720"
+			operEn="25"
+			operWorkers="1500"
+			prodProd="20"
+			prodProdMod="1.0,0.0,0.0,0.0"
+			prodEnv="+4"
+			maxHP="600"
+		/>
+		<preresearch>Manufacturing facilities are among the most basic structures. Everything is created in them.</preresearch>
+	</technology>
+	<technology id="3004" symbol="FACTORY3B" name="High-tech Factory">
+		<discovery
+			researchMod="1.0"
+			level="3"
+			researchRequires="FACTORY1-3"
+			researchRaces="H"
+		/>
+		<structure
+			subtype="str30"
+			buildProd="720"
+			operEn="75"
+			operWorkers="1500"
+			prodProd="20"
+			prodProdMod="0.0,0.5,0.0,0.5"
+			prodEnv="-2"
+			maxHP="600"
+		/>
+		<preresearch>Manufacturing facilities are among the most basic structures. Everything is created in them.</preresearch>
+	</technology>
+	<technology id="3005" symbol="FACTORY3C" name="Factory Complex">
+		<discovery
+			researchMod="1.0"
+			level="3"
+			researchRequires="FACTORY1-3"
+			researchRaces="C"
+		/>
+		<structure
+			subtype="str30"
+			buildProd="720"
+			operEn="50"
+			operWorkers="1500"
+			prodProd="25"
+			prodProdMod="0.0,1.0,0.0,0.0"
+			prodEnv="-6"
+			maxHP="600"
+		/>
+		<preresearch>Manufacturing facilities are among the most basic structures. Everything is created in them.</preresearch>
+	</technology>
+	<technology id="3006" symbol="PWRPLANT3A" name="Enh. Oil Power Plant">
+		<discovery
+			researchMod="1.0"
+			level="3"
+			researchRequires="PWRPLANTOIL1-3"
+			researchRaces="CH"
+		/>
+		<structure
+			subtype="str20"
+			buildProd="720"
+			operWorkers="1500"
+			storEn="2700"
+			prodEn="300"
+			prodEnMod="0.0,1.0,0.0,0.0"
+			prodEnv="-20"
+			maxHP="600"
+		/>
+		<preresearch>Large scale energy production is necessary for every industrial planet where sunshine is not abundant.</preresearch>
+	</technology>
+	<technology id="3007" symbol="PWRPLANT3B" name="Bio Power Plant">
+		<discovery
+			researchMod="1.0"
+			level="3"
+			researchRequires="PWRPLANTOIL1-3"
+			researchRaces="B"
+		/>
+		<structure
+			subtype="str20"
+			buildProd="720"
+			operWorkers="1500"
+			storEn="2700"
+			prodEn="300"
+			prodEnMod="1.0,0.0,0.0,0.0"
+			prodEnv="0"
+			maxHP="600"
+		/>
+		<preresearch>Large scale energy production is necessary for every industrial planet where sunshine is not abundant.</preresearch>
+	</technology>
+	<technology id="3008" symbol="PWRPLANT3C" name="Enh. Solar Power Plant">
+		<discovery
+			researchMod="1.0"
+			level="3"
+			researchRequires="PWRPLANTSOL1-5"
+			researchRaces="B"
+		/>
+		<structure
+			subtype="str20"
+			buildProd="720"
+			operWorkers="1500"
+			storEn="2700"
+			prodEn="300"
+			prodEnMod="0.0,0.0,1.0,0.0"
+			maxHP="600"
+		/>
+		<preresearch>A clean way how to extract so needed energy from sunshine.</preresearch>
+	</technology>
+	<technology id="3009" symbol="PWRPLANT3D" name="Solar Convertor">
+		<discovery
+			researchMod="1.0"
+			level="3"
+			researchRequires="PWRPLANTSOL1-5"
+			researchRaces="H"
+		/>
+		<structure
+			subtype="str20"
+			buildProd="720"
+			operWorkers="1500"
+			storEn="2700"
+			prodEn="450"
+			prodEnMod="0.0,0.0,1.0,0.0"
+			maxHP="300"
+		/>
+		<preresearch>A big orbital facility which is able to directly convert all solar light into the energy. Converted energy is transfered onto the planet surface. The only problem is fragility of this structure.</preresearch>
+	</technology>
+	<technology id="3010" symbol="GOVCENTER3A" name="Emperor's Palace">
+		<discovery
+			researchMod="1.50"
+			level="3"
+			researchRequires="GOVCENTER1-3"
+			researchDisables="GOVCENTER3B"
+		/>
+		<structure
+			subtype="str25"
+			buildProd="2880"
+			operEn="150"
+			operWorkers="7500"
+			maxHP="1800"
+			moraleTrgt="+10"
+			govPwr="500000"
+			finishConstrHandler="finishStructGOVCENTER"
+			isMilitary="1"
+		/>
+		<preresearch>When the size of an empire grows, so grows the need for control and formal organization. Government Center is an absolute need for any larger nation.</preresearch>
+	</technology>
+	<technology id="3011" symbol="GOVCENTER3B" name="Parliament">
+		<discovery
+			researchMod="1.50"
+			level="3"
+			researchRequires="GOVCENTER1-3"
+			researchDisables="GOVCENTER3A"
+		/>
+		<structure
+			subtype="str25"
+			buildProd="2880"
+			operEn="150"
+			operWorkers="7500"
+			maxHP="1800"
+			moraleTrgt="+10"
+			govPwr="500000"
+			finishConstrHandler="finishStructGOVCENTER"
+			isMilitary="1"
+		/>
+		<preresearch>When the size of an empire grows, so grows the need for control and formal organization. Government Center is an absolute need for any larger nation.</preresearch>
+	</technology>
+	<technology id="3012" symbol="REPAIR2A" name="Military Space Docks">
+		<discovery
+			researchMod="1.50"
+			level="3"
+			researchRequires="REPAIR1-5"
+			researchDisables="REPAIR2B"
+		/>
+		<structure
+			subtype="str45"
+			buildProd="2880"
+			operEn="200"
+			operWorkers="1500"
+			maxHP="400"
+			refuelMax="80"
+			refuelInc="4"
+			upgradeShip="10"
+			scannerPwr="57"
+			combatAtt="8"
+			structWeapons="2,2,2,0,0"
+			repairShip="0.02"
+			isMilitary="1"
+		/>
+		<preresearch>An improved version of space docks that provides not only the same services as Space Docks, but is equipped by scanner and even two best anti-small, anti-medium, and anti-large ship weapons.</preresearch>
+	</technology>
+	<technology id="3013" symbol="REPAIR2B" name="Civilian Space Docks">
+		<discovery
+			researchMod="1.00"
+			level="3"
+			researchRequires="REPAIR1-5"
+			researchDisables="REPAIR2A"
+		/>
+		<structure
+			subtype="str45"
+			buildProd="1440"
+			operEn="150"
+			operWorkers="1000"
+			maxHP="200"
+			refuelMax="80"
+			refuelInc="5"
+			repairShip="0.04"
+			upgradeShip="20"
+			isMilitary="1"
+		/>
+		<preresearch>An improved version of space docks that is able to repair and refuel our ships faster.</preresearch>
+	</technology>
+	<technology id="3401" symbol="LARGEHULL3" name="Large Hull">
+		<discovery
+			researchMod="1.00 + 1.00"
+			level="3"
+			researchRequires="MEDIUMHULL2-3"
+		/>
+		<shiphull
+			buildProd="480"
+			storEn="3072"
+			operEn="8"
+			maxHP="256"
+			slots="64"
+			weight="64"
+			maxWeight="192"
+			signature="20"
+			minSignature="3"
+			combatClass="2"
+		/>
+		<preresearch>Big hull capable of carying more equipment. Great - we can mount more weapons!</preresearch>
+	</technology>
+	<technology id="3402" symbol="SCOMDECK3" name="Command Deck">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="3"
+			researchRequires="LARGEHULL3-1"
+		/>
+		<shipequip
+			subtype="seq_ctrl"
+			buildProd="120"
+			combatAtt="6"
+			combatDef="6"
+			missileDef="6"
+			maxHP="32"
+			slots="8"
+			weight="16"
+			scannerPwr="50"
+			minHull="2"
+		/>
+		<preresearch>Large ships need large command room to command it efficiently. That's it.</preresearch>
+	</technology>
+	<technology id="3403" symbol="FTLENG3" name="Enh. FTL Engine">
+		<discovery
+			researchMod="1.00 + 1.00"
+			level="3"
+			researchRequires="FTLENG1-3"
+		/>
+		<shipequip
+			subtype="seq_eng"
+			buildProd="480"
+			storEn="384"
+			operEn="3"
+			slots="4"
+			weight="4"
+			engPwr="80"
+			signature="0"
+		/>
+		<preresearch>Enhanced version of the basic engine will allow our ships to travel faster over greater distances.</preresearch>
+	</technology>
+	<technology id="3404" symbol="PLASMABOMB" name="Plasma Bomb">
+		<discovery
+			researchMod="1.0 + 0.5 + 0.5"
+			level="3"
+			researchRequires="CONBOMB1-3"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="2"
+			weight="7"
+			buildProd="720"
+			weaponDmgMin="100"
+			weaponDmgMax="300"
+			weaponAtt="6"
+			weaponClass="3"
+			weaponROF="0.2"
+			minHull="1"
+			weaponIgnoreShield="0"
+		/>
+		<preresearch>Overheated plasma bomb offers more effective way to ruin planets within few moments.</preresearch>
+	</technology>
+	<technology id="3405" symbol="ENHARMOR" name="Enh. Steel Armor">
+		<discovery
+			researchMod="1.00 + 0.50 + 0.50"
+			level="3"
+			researchRequires="STEELARM2-3"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="360"
+			maxHP="8"
+			slots="0"
+			weight="1"
+		/>
+		<preresearch>Your scientist can design more effective and more lightweight armor for your ships.</preresearch>
+	</technology>
+	<technology id="3406" symbol="SCANNERMOD3" name="Enh. Active Scanner Module">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="3"
+			researchRequires="COMSCAN3-3"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="180"
+			slots="1"
+			weight="1"
+			signature="+10"
+			scannerPwr="52"
+		/>
+		<preresearch>Small scanner suitable for small ships with very good range and bad impact on ships signature.</preresearch>
+	</technology>
+	<technology id="3407" symbol="SCANNERMOD4" name="Enh. Passive Scanner Module">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="3"
+			researchRequires="COMSCAN3-5"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="180"
+			slots="1"
+			weight="1"
+			signature="-2"
+			scannerPwr="33"
+		/>
+		<preresearch>Small scanner suitable for small ships good for stealth reconnaissance of the enemy, but limited in range.</preresearch>
+	</technology>
+	<technology id="3408" symbol="STEALTHMOD" name="Stealth Module">
+		<discovery
+			researchMod="1.00 + 0.50 + 0.50"
+			level="3"
+			researchRequires="SCANNERMOD4-5"
+			researchRaces="H"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="720"
+			slots="1"
+			weight="1"
+			signature="-10"
+		/>
+		<preresearch>A signal disruption device preventing detection of the ship by enemy. Because of characteristic of the ship energy signature, you can never lower signature of the ship below 1.</preresearch>
+	</technology>
+	<technology id="3409" symbol="SSROCKET2" name="Adv. SS Missile">
+		<discovery
+			researchMod="1.00 + 0.50 + 0.50"
+			level="3"
+			researchRequires="SSROCKET-3"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			buildProd="360"
+			slots="1"
+			weight="5"
+			weaponDmgMin="15"
+			weaponDmgMax="25"
+			weaponAtt="6"
+			weaponClass="1"
+			weaponROF="0.5"
+			weaponIsMissile="1"
+			weaponIgnoreShield="0"
+		/>
+		<preresearch>Better version of the space-to-space missile used against medium+ hulls.</preresearch>
+	</technology>
+	<technology id="3410" symbol="TORPEDO" name="Torpedo">
+		<discovery
+			researchMod="1.00 + 0.50 + 0.50"
+			level="3"
+			researchRequires="SSROCKET2-5"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			buildProd="720"
+			slots="2"
+			weight="6"
+			weaponDmgMin="80"
+			weaponDmgMax="120"
+			weaponAtt="6"
+			weaponClass="2"
+			weaponROF="0.3"
+			weaponIsMissile="1"
+			weaponIgnoreShield="0"
+			minHull="1"
+		/>
+		<preresearch>Torpedo is definitive the best weapon used against large hulls and in the case of an emergency it can be used to hit planets too.</preresearch>
+	</technology>
+	<technology id="3411" symbol="ECM" name="ECM Module">
+		<discovery
+			researchMod="1.00 + 0.50 + 0.50"
+			level="3"
+			researchRequires="SSROCKET2-3"
+			researchRaces="CH"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="240"
+			slots="1"
+			weight="1"
+			missileDef="13"
+			minHull="1"
+			maxInstallations="1"
+		/>
+		<preresearch>Electronic Counter Measure module greatly reduces the chance to be hit by self-guided weapons like missiles or torpedoes.</preresearch>
+	</technology>
+	<technology id="3412" symbol="MUTAGENDISPMOD" name="Mutagen Dispenser Pod">
+		<discovery
+			researchMod="(1.00 + 0.50) * 1.5"
+			level="3"
+			researchRequires="MUTAGENDISP-5"
+			researchRaces="B"
+		/>
+		<shipequip
+			subtype="seq_struct"
+			buildProd="2880"
+			buildSRes="SR_BIO1"
+
+			storEn="960"
+			operEn="10"
+
+			slots="8"
+			weight="20"
+			unpackStruct="MUTAGENDISP"
+			minHull="1"
+		/>
+		<preresearch>Sometimes you need to deploy Mutagen Dispenser on a low production world. This is a way how to do it.</preresearch>
+	</technology>
+	<technology id="3450" symbol="LASCANNON3" name="Laser Cannon">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="3"
+			researchRequires="EMCANNON-3"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="1"
+			weight="4"
+			buildProd="360"
+			weaponDmgMin="4"
+			weaponDmgMax="6"
+			weaponAtt="10"
+			weaponClass="0"
+			weaponROF="1"
+			weaponIgnoreShield="0"
+		/>
+		<preresearch>The dawn of a new era, and with it, energy weapons.</preresearch>
+	</technology>
+	<technology id="3451" symbol="LASCANNONTUR3" name="Twin Laser Cannon Turret">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="3"
+			researchRequires="LASCANNON3-5"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="2"
+			weight="4"
+			buildProd="540"
+			weaponDmgMin="4"
+			weaponDmgMax="6"
+			weaponAtt="12"
+			weaponClass="0"
+			weaponROF="2"
+			weaponIgnoreShield="0"
+			minHull="1"
+		/>
+		<preresearch>Adapting our new laser technology into proven turret designs for our medium sized ships to carry.</preresearch>
+	</technology>
+	<technology id="3452" symbol="LIVSMALLHULL3" name="Live Small Hull">
+		<discovery
+			researchMod="1.00 + 1.00"
+			level="3"
+			researchRequires="LARGEHULL3-5"
+			researchRaces="B"
+		/>
+		<shiphull
+			buildProd="180"
+			storEn="384"
+			operEn="3"
+			maxHP="32"
+			slots="28"
+			weight="18"
+			maxWeight="66"
+			signature="3"
+			combatClass="0"
+			autoRepairPerc="0.02"
+		/>
+		<preresearch>Breakthroughs in biosynthetic manufacturing provide for a small hull constructed of organic materials, offering the ability of self-repairing damage, superior protection and improved equipment capacity.</preresearch>
+	</technology>
+	<technology id="3453" symbol="ADVSMALLHULL3" name="Advanced Small Hull">
+		<discovery
+			researchMod="1.00 + 1.00"
+			level="3"
+			researchRequires="LARGEHULL3-5"
+			researchRaces="HC"
+		/>
+		<shiphull
+			buildProd="240"
+			storEn="384"
+			operEn="4"
+			maxHP="24"
+			slots="24"
+			weight="22"
+			maxWeight="72"
+			signature="5"
+			combatClass="0"
+		/>
+		<preresearch>Advancements in metallurgy and skeletal design philosophy allow for a small hull capable of holding more equipment while offering better inherent armouring.</preresearch>
+	</technology>
+	<technology id="3454" symbol="LIVCOCKPIT3" name="Living Cockpit">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="3"
+			researchRequires="LIVSMALLHULL3-3"
+			researchRaces="B"
+		/>
+		<shipequip
+			subtype="seq_ctrl"
+			buildProd="120"
+			combatAtt="3"
+			combatDef="3"
+			missileDef="3"
+			maxHP="6"
+			slots="2"
+			weight="4"
+			scannerPwr="20"
+		/>
+		<preresearch>Bionic enhancements embedded into the onboard scanning and computer control systems of this cockpit provide better response time to tactical systems and also organic armour for the added protection of our pilots.</preresearch>
+	</technology>
+	<technology id="3455" symbol="MLCOCKPIT3" name="Mind-linked Cockpit">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="3"
+			researchRequires="ADVSMALLHULL3-3"
+			researchRaces="H"
+		/>
+		<shipequip
+			subtype="seq_ctrl"
+			buildProd="100"
+			combatAtt="4"
+			combatDef="4"
+			missileDef="4"
+			maxHP="5"
+			slots="2"
+			weight="4"
+			scannerPwr="24"
+		/>
+		<preresearch>After long research into bridging the gulf between neurons and transistors, at last we have accomplished the ability to directly link our pilot's brain with the computer network of this cockpit design.  Doing so gives us unparalleled ship maneuverability as well as highly acute scanners.</preresearch>
+	</technology>
+	<technology id="3456" symbol="COMPCOCKPIT3" name="Computerised Cockpit">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="3"
+			researchRequires="ADVSMALLHULL3-3"
+			researchRaces="C"
+		/>
+		<shipequip
+			subtype="seq_ctrl"
+			buildProd="150"
+			combatAtt="4"
+			combatDef="2"
+			missileDef="2"
+			maxHP="8"
+			slots="2"
+			weight="4"
+			scannerPwr="16"
+		/>
+		<preresearch>After collaborating with the data processing division, our combat development team has finalised blueprints for a cockpit with a highly complex network of tactical computers and short-range targetting sensors, giving our cybernetic pilots superior aim.  As well, this module is heavily armoured to withstand counterattacks from lesser beings.</preresearch>
+	</technology>
+	<technology id="3800" symbol="PLANETENG3" name="Planetary Engineering">
+		<discovery
+			researchMod="1.00 + 1.00"
+			level="3"
+		/>
+		<preresearch>Technologies and projects to alter your surroundings on a planetary level.</preresearch>
+		<description>Planetary engineering is only a theoretical science with no direct practical applications, but that does not make it any less useful. It is a theory of altering planets in several ways. Engineering projects contain ways to expand surface and make it usable for population. Ecology theories concern themselves with ecosystems. Either introducing and adapting standards to local planet or adjusting current system to be more useful for colonists. Third and possibly most important is the combination of both, terraforming. While now, it is perfectly understood, practical realization still has to be research. In theory, we know how to terraform any planet and convert it to earthlike planet. Desert, cold, hostile, it all can theoretically end in an earhtlike plant.</description>
+		<flavor>There has been some general concern about planetry engineering technologies being put to general use. Those against this object that we might destroy something, we do not understand, that it would rob us of variety. That space full of earthlike planets would be like a giant megamarket (common department store type, usually orbiting slowly around planet. Buyers are teleported aboard and back with they shoppings right to their home). These arguments are surely nothing against benefits of terraforming.</flavor>
+	</technology>
+	<technology id="3802" symbol="ADDSLOT3" name="Habitable Surface Expansion">
+		<discovery
+			researchMod="1.00"
+			level="3"
+			maxImprovement="1"
+			researchRequires="PLANETENG3-1"
+		/>
+		<project
+			buildProd="9600"
+			finishConstrHandler="finishProjectADDSLOT3"
+			validateConstrHandler="validateProjectADDSLOT3"
+		/>
+		<preresearch>Another application of planetary engineering. This technology should allow building projects on planets to increase their space up to their diameter based maximum.</preresearch>
+		<description>Habitable surface expansion is an extremly useful project, that will increase the capacity of the planet. On desert or rock-like planets, this project has only limited use, as the surface is already quite monotonous. The greatest effect is achieved on earthlike and marginal planets. Seas, tall mountains and such are all affected by surface expansion. Mountains are levelled, and ocean floor is made accesible by constructing large underwater domes. This project is very expansive and only very rich planet can afford this technology. Each project construction will increase planet's space by one.</description>
+		<flavor>Suprisingly, there are no signs of surface expansion or strains of DNA from ecosystem initiation plantlife found on any planets in this region of space. We do not know for sure, wheteher empire had this technology on the same level as we do. It is certain from some old records, that empire had conducted a very similiar projects and research. Perhaps it was not on a such level, to allow a general use. It is a mystery, that we do not know.</flavor>
+	</technology>
+	<technology id="3803" symbol="TERRAFORM3" name="Terraforming">
+		<discovery
+			researchMod="1.00"
+			level="3"
+			maxImprovement="1"
+			researchRequires="PLANETENG3-5"
+			researchRaces="BH"
+		/>
+		<project
+			buildProd="9600"
+			finishConstrHandler="finishProjectTERRAFORM3"
+			validateConstrHandler="validateProjectTERRAFORM3"
+		/>
+	</technology>
+	<technology id="3990" symbol="BIONICTL4" name="DNA Synthesis">
+		<discovery
+			researchMod="1.00 + 1.00 + 3.00"
+			finishResearchHandler="finishResTLAdvance"
+			level="3"
+			data="B"
+			recheckWhenTechLost="1"
+			researchRequires="BIONICTL3-5"
+			researchRaces="B"
+		/>
+		<preresearch>A theoretical research in the field of biology, which allows us to access advanced biology and biotechnology related technologies. Research in this field will raise our dependency on biomatter and lower our dependency on minerals eventually. When we improve this technology enough, we can advance to the next technological level.</preresearch>
+	</technology>
+	<technology id="3991" symbol="HUMANTL4" name="Mind Linking">
+		<discovery
+			researchMod="1.00 + 1.00 + 3.00"
+			finishResearchHandler="finishResTLAdvance"
+			level="3"
+			data="H"
+			recheckWhenTechLost="1"
+			researchRequires="HUMANTL3-5"
+			researchRaces="H"
+		/>
+		<preresearch>A theoretical research of the human mind and thinking processes can lead to improvements in research and cooperation, which in turn will lead to access to the more advanced energy and research related technologies. Our dependencies on resources will remain on the same level as they are now. When we improve this technology enough, we can advance to the next technological level.</preresearch>
+	</technology>
+	<technology id="3992" symbol="ROBOTTL4" name="Artificial Inteligence">
+		<discovery
+			researchMod="1.00 + 1.00 + 3.00"
+			finishResearchHandler="finishResTLAdvance"
+			level="3"
+			data="C"
+			recheckWhenTechLost="1"
+			researchRequires="ROBOTTL3-5"
+			researchRaces="C"
+		/>
+		<preresearch>A theoretical research in the field of robotics will allow us to access more advanced production and AI technologies in the future. Research in this field will raise our dependency on minerals and lower our dependency on biomatter eventually. When we improve this technology enough, we can advance to the next technological level.</preresearch>
+	</technology>
+</techtree>

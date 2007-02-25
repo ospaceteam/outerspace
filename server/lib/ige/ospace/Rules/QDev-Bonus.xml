@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+#
+#  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
+#
+#  This file is part of IGE - Outer Space.
+#
+#  IGE - Outer Space is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  IGE - Outer Space is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with IGE - Outer Space; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+-->
+<techtree>
+	<technology id="9900" symbol="QDEV1" name="QDev - Planet Condensator">
+		<discovery
+			researchMod="1"
+			level="1"
+			researchReqSRes="SR_TLAA"
+		/>
+		<project
+			buildProd="240"
+			buildSRes="SR_TLAA"
+			finishConstrHandler="finishProjectCondPl"
+			validateConstrHandler="validateProjectCondPl"
+		/>
+		<preresearch>This project will convert the Gas Giant type planet into Rock type planet.</preresearch>
+	</technology>
+	<technology id="9901" symbol="QDEV2" name="QDev - Planet Assembler">
+		<discovery
+			researchMod="1"
+			level="1"
+			researchReqSRes="SR_TLAA"
+		/>
+		<project
+			buildProd="240"
+			buildSRes="SR_TLAA"
+			finishConstrHandler="finishProjectAssemblePl"
+			validateConstrHandler="validateProjectAssemblePl"
+		/>
+		<preresearch>This project will convert the Asteroids into Desert type planet.</preresearch>
+	</technology>
+	<technology id="9902" symbol="QDEV3" name="QDev - Bio Enricher">
+		<discovery
+			researchMod="1"
+			level="1"
+			researchReqSRes="SR_TLAA"
+		/>
+		<project
+			buildProd="240"
+			buildSRes="SR_TLAA"
+			finishConstrHandler="finishProjectBioEnrich"
+			validateConstrHandler="validateProjectBioEnrich"
+		/>
+		<preresearch>This project maximize Environment of the planet, but beware of the side effects!</preresearch>
+	</technology>
+	<technology id="9903" symbol="QDEV3" name="QDev - Mineral Enricher">
+		<discovery
+			researchMod="1"
+			level="1"
+			researchReqSRes="SR_TLAA"
+		/>
+		<project
+			buildProd="240"
+			buildSRes="SR_TLAA"
+			finishConstrHandler="finishProjectMinEnrich"
+			validateConstrHandler="validateProjectMinEnrich"
+		/>
+		<preresearch>This project maximize Mineral abundance of the planet, but beware of the side effects!</preresearch>
+	</technology>
+</techtree>

@@ -1,0 +1,3 @@
+mondrian ICON "../../client-sdl/res/smallicon.ico"
+
+#include "wx/msw/wx.rc"

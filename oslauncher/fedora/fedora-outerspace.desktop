@@ -1,0 +1,23 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Type=Application
+Name=Outer Space
+GenericName=Strategy Game
+GenericName[af]=Strategie-spel
+GenericName[ca]=Joc d'estrategia
+GenericName[de]=Strategiespiel
+GenericName[dk]=Strategi-spil
+GenericName[eu]=Estrategiako jokoa
+GenericName[fr]=Jeu de stratégie
+GenericName[hu]=Stratégia
+GenericName[ru]=Стратегическая игра
+GenericName[sk]=Strategická hra
+Comment=On-line sci-fi turn based strategy game (4X)
+Icon=outerspace-icon.png
+FilePattern=outerspace
+TryExec=outerspace
+Exec=outerspace
+Categories=Application;Game;StrategyGame;X-Fedora;
+
+X-Desktop-File-Install-Version=0.1

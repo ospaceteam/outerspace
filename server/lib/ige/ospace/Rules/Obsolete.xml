@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+#
+#  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
+#
+#  This file is part of IGE - Outer Space.
+#
+#  IGE - Outer Space is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  IGE - Outer Space is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with IGE - Outer Space; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+-->
+<techtree>
+	<technology id="1109" symbol="STORAGE1" name="Storage Facility">
+		<discovery
+			researchMod="1.00"
+			level="99"
+		/>
+		<structure
+			buildProd="240"
+			operEn="10"
+			operWorkers="500"
+			maxHP="100"
+			storBio="2500"
+			storEn="5000"
+		/>
+		<preresearch>Safe and large storage capacities are sometimes very useful and strategically important.</preresearch>
+		<description>From time to time, there are periods of peace in every empire. War can be waged for so long. For many rulers, peace is defined as 'a period of time that precedes war'. For this reason, storage facilities are sometimes built. These provide a safe way to store minerals, energy and biomatter during time, when there is nothing produced on planet and therefore potential resources would be wasted. It is also possible to build several storage facilities on planet, that lack some of the resources and 'fuel' this plant via transports and logistic centers. Storage facilities are built separately for every type of resource. Energy is stored in giant Weirstrass Accumulators, that while of simple design(and much more complicated theory), are able to hold great amounts of energy indefinitely. Minerals and biomatter are stored quite simple in huge tanks.</description>
+		<flavor>There are rumours of space pirates that raid systems in Heine Rim using advanced pre-fall teleportation technology. They approach the planet in their large, partially cloaked warships, damage storage facility force fields and quickly transport every available resource to their ships, using part of the stolen energy to escape very quickly. These alarming news were sometimes heard, but only few years after the Fall. Nowadays, it is just a modern myth. It is easy to see, that such pirates would be quickly caught and the transportation technology would be of an utmost importance.</flavor>
+	</technology>
+	<technology id="10000" symbol="LQUARTERS1" name="Living Quarters">
+		<discovery
+			researchMod="1.00"
+			level="99"
+		/>
+		<structure
+			buildProd="240"
+			operEn="25"
+			operWorkers="500"
+			maxHP="100"
+			storPop="5000"
+			deprecated="1"
+		/>
+		<preresearch>Habitable facilities, where a large number of colonists may live.</preresearch>
+		<description>From time to time, it is neccessary for a planet to accommodate more people than usual. Either because some local structures employ more people or because of colony ship production. In this case, living quarters became necessary. It is a large compound that is often built underground to protect civilians from planetary bombardment. These quarters provide new colonists with only basic living conditions and life in them is not very attractive. Hence, entertainment centers are a great idea on planets with living quarters. </description>
+		<flavor>Living quarters of course existed even pre-fall and conditions in them were even worse. It is not surprising, that most of the rebels that led the revolution early on were born in these cattle ranches. Only later, when victory became closer, did more common people join. It was a stigma and a sign of poverty, to be born and live in a living quarter.</flavor>
+	</technology>
+	<technology id="10001" symbol="INTAGENCY" name="Intelligence Agency">
+		<discovery
+			researchMod="1.00"
+			level="99"
+		/>
+		<structure
+			buildProd="480"
+			operEn="25"
+			operWorkers="1000"
+			maxHP="200"
+			deprecated="1"
+		/>
+		<preresearch>Spies and their games. We can use them to support our cause.</preresearch>
+	</technology>
+	<technology id="10002" symbol="FUELSTOR" name="Energy Accumulator">
+		<discovery
+			researchMod="1.00"
+			level="99"
+		/>
+		<structure
+			buildProd="480"
+			operEn="10"
+			operWorkers="1000"
+			storEn="2000"
+			maxHP="50"
+		/>
+		<preresearch>This special building will store so needed energy for our ships and planetary facilities.</preresearch>
+	</technology>
+	<technology id="1001" symbol="POLSTATION1" name="Security Agency">
+		<discovery
+			researchMod="1.50"
+			level="99"
+		/>
+		<structure
+			buildProd="960"
+			operEn="25"
+			operWorkers="500"
+			maxHP="200"
+			revoltThr="-10"
+		/>
+		<preresearch>Security Agency should take care of 'problematic' elements in your population.</preresearch>
+		<description>Some things never change, one of them is a crime. While every planet has some way of dealing with its criminals, building police station means, This will give you some security forces at your disposal to deal with any who would wish to threaten your rule or just cause disorder. There is no need to consider this building a bad thing. While freedom of speech and freedom altogether is a good thing, it has some limits. By dealing with part of the problems on your planet, a n intuitive treshold for an open rebellion is effectively lowered. In other words, planet can live with much more disorder than normally before falling into the state of revolution.</description>
+		<flavor>Imperial security agency was not famous for being extremly subtle or secret. It did practically no surveillance, any suspicion of anti-imperial activities led to immediate arrest and interrgogation. Altough harsh and cruel, it made a perfect sense since truth drugs were extremly effective at those times and it was no problem to rellocate almost any number of people to a very distant and 'uncivilized' worlds. Rebellion forces maimtained na extremly secret counter oganization, that tracked the actions of Empire and provided contact even on even the remotest world.</flavor>
+	</technology>
+	<technology id="3801" symbol="ECOINIT3" name="Ecosystem Initiation">
+		<discovery
+			researchMod="1.00"
+			level="99"
+			maxImprovement="1"
+			researchRequires="PLANETENG3-3"
+			researchRaces="BH"
+		/>
+		<project
+			buildProd="960"
+			finishConstrHandler="finishProjectECOINIT3"
+			validateConstrHandler="validateProjectECOINIT3"
+		/>
+		<preresearch>A most basic application of planetary engineering, this technology will start a basic ecosystem suited for given planet.</preresearch>
+		<description>Ecosystem initiation is a noble name for simply makeing planet alive.  This basic 'nature' usually contains only flora and some small animals. Water is filled with few weeds, but often not even that is used, as sometimes mutations can occur that might be very difficult to fight against. While all this is technologically very demaning and takes up considerable resources, harder still is to maintain and even improve current status, for usually planets capable of maintaining enough production power is usually antiecologically oriented at first, hence often the only viable option is to do this as cross-planetary project. Construction cost is of course doubled because of transportation cost, but it is usually well worth it as many farms should await on a planet with newly introduced ecosystem.</description>
+		<flavor>Ecosystem on Terminus Sigma proved to be a greatest challenge, Enataron scientist had to solve. Desert-type planet has been dead since its initial discovery. Local sun was emanating out unusually intense beta particles  that, while easily blocked by spacesuits, would disturb any organic matter and it would rot and die quickly. Even the smallest bacteria and viruses didn't survive long in searing temperatures and gamma rain. At last, one clever scientist came up with an idea to place ecosystem underground. Great subterran plants that live from minerals and internal heat that rises up from the core make great baseline. Other plantlife was derived from this one. Rodents and burrowers soon followed and whole project was very succesful. Unfortunately, some solar experimant acciddent froze the planet and nothing survived. There are no news of this underground life now.</flavor>
+	</technology>
+	<technology id="2800" symbol="REPAIRSHIPS2" name="Repair Ships">
+		<discovery
+			researchMod="1.00"
+			level="99"
+			researchRequires="REPAIR1-3"
+		/>
+		<project
+			buildProd="480"
+			data="5,2"
+			finishConstrHandler="finishProjectREPAIRSHIPS2"
+		/>
+		<preresearch>Factories can sometimes patch damaged ships on orbit, but do not expect miracles from this process.</preresearch>
+	</technology>
+</techtree>
