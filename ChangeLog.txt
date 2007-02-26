@@ -1,5 +1,8 @@
 Change Log:
 
+[2007-02-26]
+- Backup operation now first checkpoints database (possible backup corruptor). [Qark]
+
 [2007-02-12]
 - Fixed bug with ShipUtils that allowed for less than 0% values on Att and Def +% techs. [Random Chaos]
 - Modified how negative slot and weight units operate so that multiple techs on same ship are cummulative. [Random Chaos]

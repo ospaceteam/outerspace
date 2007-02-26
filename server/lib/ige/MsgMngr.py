@@ -113,7 +113,7 @@ class MsgMngr:
 
 	# delete old messages from mailbox
 	def deleteOld(self, gameID, oid, forum, maxAge):
-		log.debug("Compresing mailbox", gameID, oid, forum)
+		#@log.debug("Compresing mailbox", gameID, oid, forum)
 		self.deleted += self.getMailbox(gameID, oid).deleteOld(forum, maxAge)
 		if self.deleted >= 200:
 			self.database.checkpoint()
@@ -232,7 +232,7 @@ class Mailbox:
 				break
 		if not delete:
 			return 0
-		log.debug("MsgMngr - deleting %d messages (500 max) out of %d" % (len(delete), len(self.messageIDs)))
+		log.debug("MsgMngr - deleting %d messages (500 max) out of %d from %s/%s" % (len(delete), len(self.messageIDs), self.name, forum))
 		t0 = time.time()
 		maxMsg = 500
 		count = min(len(delete), maxMsg)

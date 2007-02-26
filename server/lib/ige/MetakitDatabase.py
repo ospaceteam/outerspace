@@ -308,6 +308,7 @@ class MetakitDatabase:
 		log.message("Database restored")
 
 	def backup(self, basename):
+		self.checkpoint()
 		filename = "%s-%s.osbackup" % (basename, self.dbName)
 		log.message("Creating backup", filename)
 		fh = file(filename, "w") #bz2.BZ2File(filename, "w")
