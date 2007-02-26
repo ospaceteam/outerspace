@@ -1,5 +1,7 @@
 Change Log:
 
+VERSION 0.5.61
+
 [2007-02-26]
 - Backup operation now first checkpoints database (possible backup corruptor). [Qark]
 
