@@ -192,7 +192,7 @@ class StarMapWidget(Widget):
 						owner = getattr(planet, 'owner', OID_NONE)
 						if hasattr(planet, "plType") and planet.plType not in ("A", "G"):
 							numPlanets += 1
-						if int(owner) != 0:
+						if owner:
 								ownerID = owner
 						if hasattr(planet, "morale"):
 							morale = min(morale,planet.morale)
@@ -250,7 +250,7 @@ class StarMapWidget(Widget):
 				#   color = gdata.playerHighlightColor
 				#else:
 				#   color = res.getFFColorCode(rel)
-				colors = res.getStarmapWidgetSystemColor(owner,bio,minerals,slots,numPlanets,speedBoost, refuelInc, upgradeShip, pirProb*100, stratRes, morale)
+				colors = res.getStarmapWidgetSystemColor(ownerID,bio,minerals,slots,numPlanets,speedBoost, refuelInc, upgradeShip, pirProb*100, stratRes, morale)
 				namecolor = res.getPlayerColor(ownerID)
 				self._map[self.MAP_SYSTEMS].append((obj.oid, obj.x, obj.y, name, img, colors, namecolor, False, icons))
 				# pop up info

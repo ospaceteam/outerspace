@@ -213,7 +213,7 @@ def getFameColorCode(fame):
 
 def getMineralColorCode(minerals):
 	if minerals >= 0:
-		return (0xff,min(255,255 - int(255*(minerals/200.0))),0x0) #use min, since it we occasionally get 201+ mineral levels, but it is so rare that we can ignore it for colors.
+		return (0xff,max(0,min(255,255 - int(255*(minerals/200.0)))),0x0) #use min, since it we occasionally get 201+ mineral levels, but it is so rare that we can ignore it for colors.
 	return (0xc0, 0xc0, 0xc0)
 
 def getSlotColorCode(slots):

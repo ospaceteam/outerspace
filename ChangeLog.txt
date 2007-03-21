@@ -1,5 +1,9 @@
 Change Log:
 
+[2007-03-20]
+- Fixing bugs in overlay: minerals > 200 planets; system player colors. [Random Chaos]
+- Modifying StructTaskDlg.py to support 3 rows now that techs won't fit in 2 rows. [Random Chaos]
+
 VERSION 0.5.61
 
 [2007-02-26]

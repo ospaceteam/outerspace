@@ -274,7 +274,7 @@ class StructTaskDlg:
 			align = ui.ALIGN_W, font = 'normal-bold')
 		ui.Title(self.win, layout = (cols - 10, 4, 10, 1), text = _('(right click for technology info)'),
 			align = ui.ALIGN_E, font = 'normal')
-		ui.ButtonArray(self.win, layout = (0, 5, cols, 6), id = 'vTechs',
+		ui.ButtonArray(self.win, layout = (0, 5, cols, 9), id = 'vTechs',
 			buttonSize = (2, 3), showSlider = 0, action = 'onConstruct', rmbAction = 'onInfo')
 
 		ui.Title(self.win, layout = (0, 14, 18, 1), text = _('Filters'),
