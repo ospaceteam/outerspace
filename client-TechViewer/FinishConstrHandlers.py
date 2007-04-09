@@ -94,4 +94,25 @@ class FinishConstrHandlers:
 		self.list.SetStringItem(i, 1, tech.data)
 		self.list.InsertStringItem(i, "Substracts amount of points from target pl. min. abundance")
 		self.list.SetStringItem(i, 1, tech.data)
+		return i + 2
+
+	def finishProjectTERRAFORMALIGNMENT6(self, i, tech):
+		self.list.InsertStringItem(i, "Changes target pl. energy abundance towards best position by")
+		item = self.list.GetItem(i)
+		itemFont = item.GetFont()
+		itemFont.SetWeight(wx.BOLD)
+		item.SetFont(itemFont)
+		self.list.SetItem(item)
+		delta = int(float(tech.data) * Rules.techImprEff[self.improvement])
+		self.list.SetStringItem(i, 1, str(delta))
+		i += 1
+		self.list.InsertStringItem(i, "Improves pl. environment (up to max %d) by" % Rules.envMax)
+		item = self.list.GetItem(i)
+		itemFont = item.GetFont()
+		itemFont.SetWeight(wx.BOLD)
+		item.SetFont(itemFont)
+		self.list.SetItem(item)
+		self.list.SetStringItem(i, 1, str(delta / 2))
+		i += 1
+		self.list.InsertStringItem(i, "Planet is upgraded if suitable for better type")
 		return i + 1
