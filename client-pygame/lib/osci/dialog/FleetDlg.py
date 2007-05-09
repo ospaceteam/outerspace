@@ -73,10 +73,13 @@ class FleetDlg:
 				tech = client.getPlayer().shipDesigns[designID]
 				if shield > 0:
 					hpInfo = _("%d + %d") % (hp, shield)
+					hpSort = hp + 1000 * shield
 				else:
 					hpInfo = _("%d") % hp
+					hpSort = hp
 				item = ui.Item(tech.name,
 					tHP = hpInfo,
+					tHP_raw = hpSort,
 					tExp = exp,
 					tClass = _(gdata.shipClasses[tech.combatClass]),
 					designID = designID,

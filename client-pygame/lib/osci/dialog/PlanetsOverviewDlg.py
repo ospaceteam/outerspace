@@ -84,6 +84,8 @@ class PlanetsOverviewDlg:
 				continue
 			# fill in data
 			#rel = REL_UNDEF
+			maxNA = 999999
+			maxNone = 99999
 			ownerID = OID_NONE
 			if hasattr(planet, 'owner'):
 				ownerID = planet.owner
@@ -121,6 +123,7 @@ class PlanetsOverviewDlg:
 								totalEtc += math.ceil(task.quantity * float(tech.buildProd - task.currProd) / planet.effProdProd)
 								totalEtc += math.ceil((task.quantity - 1) * float(tech.buildProd) / planet.effProdProd)
 						index += 1
+					etc_raw = etc
 					etc = res.formatTime(etc)
 					totalEtc_raw = totalEtc
 					totalEtc = res.formatTime(totalEtc)
@@ -132,23 +135,27 @@ class PlanetsOverviewDlg:
 						tech = client.getTechInfo(task.techID)
 					constrInfo = tech.name
 					etc = _('N/A')
+					etc_raw = maxNA
 					totalEtc = _("N/A")
-					totalEtc_raw = 99999
+					totalEtc_raw = maxNA
 				elif planet.effProdProd > 0:
 					constrInfo = _("-")
 					etc = "-"
+					etc_raw = 0
 					totalEtc = _("-")
 					totalEtc_raw = 0
 				else:
 					constrInfo = _("-")
 					etc = "-"
+					etc_raw = maxNone
 					totalEtc = _("-")
-					totalEtc_raw = 9999
+					totalEtc_raw = maxNone
 			else:
 				constrInfo = '?'
 				etc = '?'
+				etc_raw = maxNA
 				totalEtc = '?'
-				totalEtc_raw = 99999
+				totalEtc_raw = maxNA
 			# used slots
 			if hasattr(planet, 'slots'):
 				freeSlots = planet.plSlots - len(planet.slots)
@@ -171,6 +178,7 @@ class PlanetsOverviewDlg:
 				tChangeBio = getattr(planet, 'changeBio', '?'),
 				tChangeEn = getattr(planet, 'changeEn', '?'),
 				tETC = etc,
+				tETC_raw = etc_raw,
 				tTotalETC = totalEtc,
 				tTotalETC_raw = totalEtc_raw,
 				tConstrInfo = constrInfo,
