@@ -886,7 +886,6 @@
 			subtype="seq_mod"
 			buildProd="640"
 			autoRepairFix="1"
-			autoRepairMaxHP="0.50"
 			slots="6"
 			weight="4"
 			operEn="12"

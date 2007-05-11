@@ -444,6 +444,8 @@ class StarSystemDlg:
 				)
 			self.win.vPCShield.tooltip = info
 			self.win.vPCShield.statustip = info
+		else:
+			self.win.vPCShield.text = _('?')
 		if hasattr(planet, 'revoltLen') and planet.revoltLen > 0:
 			self.win.vPCMorale.foreground = gdata.sevColors[gdata.CRI]
 		else:

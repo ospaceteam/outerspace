@@ -203,7 +203,6 @@
 			subtype="seq_mod"
 			buildProd="720"
 			autoRepairFix="3"
-			autoRepairMaxHP="0.75"
 			slots="6"
 			weight="4"
 			operEn="8"

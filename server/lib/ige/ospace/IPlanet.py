@@ -789,6 +789,7 @@ class IPlanet(IObject):
 			result.owner = obj.owner
 		if scanPwr >= Rules.level4InfoScanPwr:
 			# TODO provide less information
+			result.hasRefuel = (obj.refuelInc > 0) #simple detect if docks exist for problems dialog
 			result.slots = obj.slots
 			result.shield = obj.shield
 			result.prevShield = -1
@@ -802,6 +803,7 @@ class IPlanet(IObject):
 			result.trainShipInc = obj.trainShipInc
 			result.trainShipMax = obj.trainShipMax
 			result.upgradeShip = obj.upgradeShip
+			result.repairShip = obj.repairShip
 			result.fleetSpeedBoost = obj.fleetSpeedBoost
 		return [result]
 

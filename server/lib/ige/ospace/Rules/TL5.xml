@@ -1207,8 +1207,8 @@
 	<technology id="5506" symbol="FLAKMINEFIELD" name="Mine Field">
 		<discovery
 			researchMod="1.7 + 0.75"
-			level="2"
-			researchRequires="EMCANNON-3"
+			level="5"
+			researchRequires="FLAKBATTERY-3"
 			researchRaces="C"
 		/>
 		<structure
