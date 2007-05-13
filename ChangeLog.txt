@@ -1,5 +1,14 @@
 Change Log:
 
+[2007-05-12]
+- Fixed sorting problems in planet overwiev. [Anderuso]
+- Added statistics for database objects. [Qark]
+- Fixed mail addresses in Issue Manager. [Qark]
+- Replaced ige.qgir.cz by ospace.net in sources. [Qark]
+- Removed autoRepairMaxHP feature. [Qark/Random Chaos]
+- Fixed few typos. [Qark]
+- Ship can have at most one scanner module of each type now [Qark] [SF#1716975]
+
 [2007-03-20]
 - Fixing bugs in overlay: minerals > 200 planets; system player colors. [Random Chaos]
 - Modifying StructTaskDlg.py to support 3 rows now that techs won't fit in 2 rows. [Random Chaos]

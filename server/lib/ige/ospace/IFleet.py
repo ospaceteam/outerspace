@@ -315,9 +315,12 @@ class IFleet(IObject):
 		obj.speed = obj.maxSpeed
 		# storage
 		obj.storEn = min(obj.storEn, obj.maxEn)
-		# sort ships by HPs
-		# TODO: remove obj.ships.sort(lambda a, b: cmp(a[1], b[1]))
-		obj.ships = ShipUtils.sortShips(obj.ships)
+		# sort ships only when there is no combat
+                # this prevents resorting fleets in combat
+		if obj.combatCounter == 0:
+			obj.ships = ShipUtils.sortShips(obj.ships)
+		else:
+			log.debug("Skipping ship (re)sorting [fleet in combat]", obj.oid)
 		# closest system
 		if not tran.db.has_key(obj.closeSystem) or tran.db[obj.closeSystem].type not in (T_SYSTEM, T_WORMHOLE):
 			if obj.orbiting == OID_NONE:
@@ -562,7 +565,7 @@ class IFleet(IObject):
 				return
 		# upgrade ships
 		if obj.orbiting != OID_NONE:
-			# autoRepair is part fo serviceShips
+			# autoRepair is part of serviceShips
 			self.cmd(obj).serviceShips(tran, obj)
 			# record scanner into system scanner overview
 			system = tran.db[obj.orbiting]
@@ -943,10 +946,9 @@ class IFleet(IObject):
 				repairFix = spec.autoRepairFix
 				repairPerc = max(spec.autoRepairPerc, forceRepairPerc)
 				if repairFix > 0 or repairPerc > 0:
-					#@log.debug("IFleet - repairing ship", designID, hp, repairFix, repairPerc)
+					#&log.debug("IFleet - repairing ship", obj.oid, designID, hp, repairFix, repairPerc)
 					obj.ships[idx][SHIP_IDX_HP] = int(min(
 						spec.maxHP,
-                                                spec.autoRepairMaxHP*spec.maxHP, #added 9/11/06 - RC
 						hp + repairFix + max(1, spec.maxHP * repairPerc),
 					))
 			if shields < spec.shieldHP:

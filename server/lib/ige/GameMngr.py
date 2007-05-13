@@ -85,6 +85,9 @@ class GameMngr:
 		del objIDs[OID_I_NAME2OID]
 		# stats
 		types = {}
+		typesMin = {}
+		typesMax = {}
+		typesSum = {}
 		# upgrade all objects in database
 		# and collect all not referenced objects
 		for id in self.db.keys():
@@ -97,6 +100,10 @@ class GameMngr:
 				continue
 			#@log.debug('Upgrade - upgrading', id, obj.type)
 			types[obj.type] = types.get(obj.type, 0) + 1
+			size = self.db.getItemLength(id)
+			typesMin[obj.type] = min(typesMin.get(obj.type, 1000000), size)
+			typesMax[obj.type] = max(typesMax.get(obj.type, 0), size)
+			typesSum[obj.type] = typesSum.get(obj.type, 0) + size
 			if self.cmdPool.has_key(obj.type):
 				try:
 					self.cmdPool[obj.type].upgrade(tran, obj)
@@ -114,7 +121,10 @@ class GameMngr:
 		# print stats
 		log.debug("*****")
 		for t in types:
-			log.debug("Object type %d: %d occurences" % (t, types[t]))
+			log.debug("Object type %d:" % t)
+			log.debug("  occurences    : %d" % types[t]) 
+			log.debug("  size interval : %d - %d bytes" % (typesMin[t], typesMax[t]))
+			log.debug("  total size    : %d (avg %d) bytes" % (typesSum[t], typesSum[t] / types[t]))
 		self.status = oldStatus
 
 	def reset(self):

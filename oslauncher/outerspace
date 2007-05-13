@@ -220,7 +220,7 @@ class UpdateDlg(gui.Table):
 
         self.tr()
         self.td(gui.Label(_("Remaining:  ")), align = 1)
-        self.speed = gui.Label(_("00:00 mins (%.2f KiB/sec)" % 0))
+        self.speed = gui.Label(_("%s (%.2f KiB/sec)" % (format_time(None), 0)))
         self.td(self.speed, align = -1)
 
         self.tr()
@@ -257,7 +257,7 @@ class Progress:
             self.re.update(self.base + amount_read)
             if self.re.fraction_read():
                 self.dlg.progress.value = int(self.re.fraction_read() * 100)
-                self.dlg.speed.value = _("%s mins (%siB/sec)") % (
+                self.dlg.speed.value = _("%s (%siB/sec)") % (
                     format_time(self.re.remaining_time()),
                     format_number(self.re.average_rate()),
                 )
@@ -269,7 +269,7 @@ class Progress:
         self.re.update(self.base + amount_read)
         if self.re.fraction_read():
             self.dlg.progress.value = int(self.re.fraction_read() * 100)
-            self.dlg.speed.value = _("%s mins (%siB/sec)") % (
+            self.dlg.speed.value = _("%s (%siB/sec)") % (
                 format_time(self.re.remaining_time()),
                 format_number(self.re.average_rate()),
             )

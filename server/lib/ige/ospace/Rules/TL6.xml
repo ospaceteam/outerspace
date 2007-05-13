@@ -390,6 +390,7 @@
 			weight="1"
 			signature="4"
 			scannerPwr="78"
+			maxInstallations="1"
 		/>
 		<preresearch>By utilizing natural disruptions in the organic nature of space, our scientists believe that we can detect ships at greater distance.</preresearch>
 		<description>Organo-synthetic materials absorb the mitochondria emissions of the hyperspace manifold, allowing us to passively detect vessels at greater distance than the Enhanced Active Scanner.</description>

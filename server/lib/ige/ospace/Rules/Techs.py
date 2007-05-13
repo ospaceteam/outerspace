@@ -118,7 +118,6 @@ attrs = {
         "hardShield": 0.0, #shield penetrating weapons will penetrate at 100%; use as 1-hardShield for penentration level (hardShield percent = %damage absorbed by shield)
 	"autoRepairFix": 0, # fixed amount of HP/turn to repair
 	"autoRepairPerc": 0.0, # how many percent of maxHP/turn is repaired
-	"autoRepairMaxHP": 0.0, # default is 100% in the engine, but leave at 0% here for proper calculation; out of total ship HPs
         "damageAbsorb": 0, #amount of damage absorbed by the hull (not shield!); max sum is 5 damage (set in Rules)
 	# weapons
 	'weaponDmgMin': 0,

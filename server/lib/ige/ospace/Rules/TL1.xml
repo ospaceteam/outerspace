@@ -278,6 +278,7 @@
 			weight="1"
 			signature="+10"
 			scannerPwr="40"
+			maxInstallations="1"
 		/>
 		<preresearch>Small scanner suitable for small ships with very good range and bad impact on ships signature.</preresearch>
 	</technology>
@@ -293,6 +294,7 @@
 			slots="1"
 			signature="-1"
 			scannerPwr="25"
+			maxInstallations="1"
 		/>
 		<preresearch>Small scanner suitable for small ships good for stealth reconnaissance of the enemy, but limited in range.</preresearch>
 	</technology>

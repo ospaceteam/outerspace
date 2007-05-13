@@ -56,7 +56,7 @@ parser.add_option("-b", "--backup", dest = "backup", default = None,
 
 options, args = parser.parse_args()
 
-#s = IClient('ige.qgir.cz:9080', None, msgHandler, 'IClient/osc')
+#s = IClient('ospace.net:9080', None, msgHandler, 'IClient/osc')
 s = IClient('localhost:9080', None, msgHandler, None, 'IClient/osc')
 
 if len(args) != 1:

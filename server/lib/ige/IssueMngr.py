@@ -33,8 +33,8 @@ class IssueMngr:
 		try:
 			smtp = smtplib.SMTP("localhost")
 			smtp.sendmail(
-				"corvus@ospace.net",
-				"qark@seznam.cz",
+				"game_alpha@ospace.net",
+				"qark@ospace.net",
 				"Subject: IGE - Outer Space Issue %s\n\n%s" % (
 					faultID, text
 				)

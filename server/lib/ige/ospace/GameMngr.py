@@ -384,7 +384,7 @@ class GameMngr(IGEGameMngr):
 		print >> fh, '<strong><big>&middot;</big></strong>&nbsp;Tah: <strong>%d:%02d</strong><br>' % (turn / 24, turn % 24)
 		for galaxyID in universe.galaxies:
 			galaxy = self.db[galaxyID]
-			print >> fh, '<strong><big>&middot;</big></strong>&nbsp;Galaxie <strong>%s</strong> [<a href="http://ige.qgir.cz:9080/%s/galaxy%d.html">stats</a>]<br>' % (
+			print >> fh, '<strong><big>&middot;</big></strong>&nbsp;Galaxie <strong>%s</strong> [<a href="http://ospace.net:9080/%s/galaxy%d.html">stats</a>]<br>' % (
 				galaxy.name, self.gameID, galaxyID
 			)
 			aiPlayers = 0
@@ -411,7 +411,7 @@ class GameMngr(IGEGameMngr):
 		print >> fh, '<strong><big>&middot;</big></strong>&nbsp;Turn: <strong>%d:%02d</strong><br>' % (turn / 24, turn % 24)
 		for galaxyID in universe.galaxies:
 			galaxy = self.db[galaxyID]
-			print >> fh, '<strong><big>&middot;</big></strong>&nbsp;Galaxy <strong>%s</strong> [<a href="http://ige.qgir.cz:9080/%s/galaxy%d.html">stats</a>]<br>' % (
+			print >> fh, '<strong><big>&middot;</big></strong>&nbsp;Galaxy <strong>%s</strong> [<a href="http://ospace.net:9080/%s/galaxy%d.html">stats</a>]<br>' % (
 				galaxy.name, self.gameID, galaxyID
 			)
 			aiPlayers = 0

@@ -417,29 +417,29 @@ class StarSystemDlg:
 			if hasattr(planet,'prevShield') and hasattr(planet,'maxShield') and shieldTip:
 				delta = planet.shield - planet.prevShield
 				if (planet.shield > planet.prevShield):
-				    info = _('Sheild (%d/%d) charged by %+d last turn.') % (
+				    info = _('Shield (%d/%d) charged by %+d last turn.') % (
 					planet.shield,
 					planet.maxShield,
 					delta
 				    )
 				elif (planet.shield < planet.prevShield):
-				    info = _('Sheild (%d/%d) was damaged by %+d last turn.') % (
+				    info = _('Shield (%d/%d) was damaged by %+d last turn.') % (
 					planet.shield,
 					planet.maxShield,
 					delta
 				    )
 				elif (planet.shield < planet.maxShield):
-				    info = _('Sheild (%d/%d) is unable to charge.') % (
+				    info = _('Shield (%d/%d) is unable to charge.') % (
 					planet.shield,
 					planet.maxShield,
 				    )
 				else:
-				    info = _('Sheild (%d/%d) is fully charged.') % (
+				    info = _('Shield (%d/%d) is fully charged.') % (
 					planet.shield,
 					planet.maxShield,
 				    )
 			else:
-                        	info = _('Sheild (%d/unknown)') % (
+                        	info = _('Shield (%d/unknown)') % (
 				    planet.shield,
 				)
 			self.win.vPCShield.tooltip = info

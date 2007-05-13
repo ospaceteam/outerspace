@@ -70,7 +70,7 @@ class ConstructionDlg:
 		items = []
 		for designID in player.shipDesigns:
 			spec = player.shipDesigns[designID]
-			# number of ships with this desing in fleet
+			# number of ships with this design in fleet
 			countInService = 0
 			for fleetID in player.fleets:
 				fleet = client.get(fleetID)
@@ -343,7 +343,7 @@ class ConstructionDlg:
 			for designID, hp, shieldHP, exp in fleet.ships:
 				if designID == self.selectedDesignID:
 					count += 1
-		self.confirmDlg.display(_('Deletion of this desing dismantle %d ship(s). Are you sure to scrap it?') % count, _('Yes'),
+		self.confirmDlg.display(_('Deletion of this design dismantle %d ship(s). Are you sure to scrap it?') % count, _('Yes'),
 			_('No'), confirmAction = self.onScrapConfirmed)
 
 	def onScrapConfirmed(self):

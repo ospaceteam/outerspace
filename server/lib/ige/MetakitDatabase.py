@@ -184,6 +184,12 @@ class MetakitDatabase:
 			keys.append(self.view[idx].oid)
 		return keys
 
+	def getItemLength(self, key):
+		idx = self.view.find(oid = key)
+		if idx == -1:
+			raise ige.NoSuchOBjectException(key)
+		return len(self.view[idx].data)
+
 	def checkpoint(self):
 		log.debug('DB Checkpoint', self.dbName)
 		log.debug("Storing all objects")

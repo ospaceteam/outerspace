@@ -67,7 +67,7 @@ class IAIPiratePlayer(IPlayer):
         # "AI" behavior -> construct pirate bases on system AI owns
         for planetID in obj.planets:
             planet = tran.db[planetID]
-            log.debug(obj.oid, "PIRATEAI - scanning", planetID, len(planet.prodQueue), len(planet.slots), planet.plSlots, planet.plMaxSlots)
+            #@log.debug(obj.oid, "PIRATEAI - scanning", planetID, len(planet.prodQueue), len(planet.slots), planet.plSlots, planet.plMaxSlots)
             if planet.prodQueue:
                 # something is in production queue
                 continue

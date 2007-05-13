@@ -61,7 +61,6 @@ def makeShipMinSpec(player, name, hullID, eqIDs, improvements,
 	spec.combatPwr = ship.combatPwr
 	spec.autoRepairFix = ship.autoRepairFix
 	spec.autoRepairPerc = ship.autoRepairPerc
-	spec.autoRepairMaxHP = ship.autoRepairMaxHP
 	spec.shieldRechargeFix = ship.shieldRechargeFix
 	spec.shieldRechargePerc = ship.shieldRechargePerc
 	spec.hardShield = ship.hardShield
@@ -105,7 +104,6 @@ def makeShipFullSpec(player, name, hullID, eqIDs, improvements, raiseExs = True)
 	ship.missileDef = 0
 	ship.missileDefMultiplier = 1.0                                             #NEW; 100% - this is the default rule
 	ship.scannerPwr = max(hull.scannerPwr * techEff, Rules.scannerMinPwr)
-	ship.autoRepairMaxHP = hull.autoRepairMaxHP                                 #New...this had been forgotten
 	ship.autoRepairFix = hull.autoRepairFix
 	ship.autoRepairPerc = hull.autoRepairPerc
 	ship.shieldRechargeFix = hull.shieldRechargeFix
@@ -189,8 +187,6 @@ def makeShipFullSpec(player, name, hullID, eqIDs, improvements, raiseExs = True)
 			ship.operEn += tech.operEn
 			ship.autoRepairFix = max(ship.autoRepairFix, tech.autoRepairFix * techEff)
 			ship.autoRepairPerc = max(ship.autoRepairPerc, tech.autoRepairPerc * techEff)
-			if ((ship.autoRepairFix < tech.autoRepairFix) or (ship.autoRepairPerc < tech.autoRepairPerc) and (ship.autoRepairMaxHP < tech.autoRepairMaxHP)):
-				ship.autoRepairMaxHP = tech.autoRepairMaxHP #grab this ONLY if the tech repairs faster than another tech (prevent abuse through multiple repair systems)
 			ship.shieldRechargeFix = max(ship.shieldRechargeFix, tech.shieldRechargeFix * techEff)
 			ship.shieldRechargePerc = max(ship.shieldRechargePerc, tech.shieldRechargePerc * techEff)
 			ship.hardShield = max(ship.hardShield,tech.hardShield * techEff)
@@ -227,9 +223,6 @@ def makeShipFullSpec(player, name, hullID, eqIDs, improvements, raiseExs = True)
 	combatExtra += ship.damageAbsorb * 1500
 	#calculate final signature
 	ship.signature *= ship.signatureCloak * ship.signatureDecloak
-	#fix autorepair MaxHP / if nothing set autoRepairMaxHP, assume 100%; this is for legacy technologies
-	if ship.autoRepairMaxHP==0.0:
-		ship.autoRepairMaxHP = 1.0
 	# check various conditions
 #	if unpactStruct and deployHandler and raiseExs: #we don't 'need' this, so I'm leaving it disabled for now; however, we might 'want' it to prevent abuse --RC
 #                raise GameException("Cannot have both a deployable structure and a deployable project on the same ship") 
