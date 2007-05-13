@@ -1,5 +1,7 @@
 Change Log:
 
+VERSION 0.5.62
+
 [2007-05-12]
 - Fixed sorting problems in planet overwiev. [Anderuso]
 - Added statistics for database objects. [Qark]
