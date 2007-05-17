@@ -1,5 +1,8 @@
 Change Log:
 
+[2007-05-17]
+- Added Solar Factory. [Qark]
+
 VERSION 0.5.62
 
 [2007-05-12]

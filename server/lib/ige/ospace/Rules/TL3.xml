@@ -106,7 +106,7 @@
 			operWorkers="1500"
 			prodProd="20"
 			prodProdMod="0.0,0.5,0.0,0.5"
-			prodEnv="-2"
+			prodEnv="0"
 			maxHP="600"
 		/>
 		<preresearch>Manufacturing facilities are among the most basic structures. Everything is created in them.</preresearch>

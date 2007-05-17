@@ -208,6 +208,26 @@
         <preresearch>An improved version of the factory.</preresearch>
         <description>An improved version of the factory.</description>
     </technology>
+    <technology id="4009" symbol="SOLARFACTORY4" name="Solar Factory">
+        <discovery
+            researchMod="1.50"
+            level="4"
+            researchRequires="FACTORY3B-5"
+            researchRaces="H"
+        />
+        <structure
+            subtype="str30"
+            buildProd="1440"
+            operWorkers="1500"
+            prodProd="25"
+            prodProdMod="0.0,0.0,1.0,0.0"
+            prodEnv="0"
+            prodEn="20"
+            maxHP="600"
+        />
+        <preresearch>We know fusion, we know how to produce stuff, we know how to use star's energy. We know all we need to try to design factory that will finaly free us from the dependency on minerals.</preresearch>
+        <description>Build this factory on high energy abundance world to get the best results. You even don't need energy to operate it, just workers.</description>
+    </technology>
     <technology id="4400" symbol="BIONICCANNON4" name="Spine Cannon">
         <discovery
             researchMod="1.00 + 0.5 + 0.5"
