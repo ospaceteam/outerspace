@@ -1,6 +1,11 @@
 import wx
 import sys
-sys.path.append("../server/lib")
+import os
+
+for item in ("libsrvr", "../server/lib"):
+    if os.path.exists(item):
+        sys.path.insert(0, item)
+        break
 
 import sequip
 
@@ -226,6 +231,9 @@ class TechViewer(wx.Frame):
 
 		if config.Levels.Level5 == None:
 			config.Levels.Level5 = 1
+
+		if config.Levels.Level6 == None:
+			config.Levels.Level6 = 1
 
 		if config.Levels.Level99 == None:
 			config.Levels.Level99 = 1
