@@ -28,19 +28,19 @@ def cclass2Text(cclass):
 	return [_("small"), _("medium"), _("large"), _("planet")][cclass]
 
 def structWeapons2Text(array):
-    string = _('')
-    i = 0
-    j = 0
-    for weaponNum in array:
-        if i>3:
-            break
-        if weaponNum > 0:
-            if j > 0:
-                string += _(', ')
-            string += _('%d') % ( weaponNum )
-            string += [_("S"), _("M"), _("L"), _("P"), _("?"),_("?"),_("?"),_("?"),_("?"),_("?")][i]
-            j+=1
-        i+=1
+	string = _('')
+	i = 0
+	j = 0
+	for weaponNum in array:
+		if i>3:
+			break
+		if weaponNum > 0:
+			if j > 0:
+				string += _(', ')
+			string += _('%d') % ( weaponNum )
+			string += [_("S"), _("M"), _("L"), _("P"), _("?"),_("?"),_("?"),_("?"),_("?"),_("?")][i]
+			j+=1
+		i+=1
     return string
 
 def bool2Text(value):
@@ -50,12 +50,17 @@ def bool2Text(value):
 		return _("No")
 
 def perc2Text(value):
-    string = _('%d%%') % (value * 100)
-    return string
+	string = _('%d%%') % (value * 100)
+	return string
+
+def percBase1_2Text(value):
+	value = value-1
+	string = _('%+d%%') % (value * 100)
+	return string
 
 def perc100_2Text(value):
-    string = _('%d%%') % (value)
-    return string
+	string = _('%d%%') % (value)
+	return string
 
 
 V_NONE = 0x00
@@ -133,9 +138,9 @@ addAttr('minSignature', _('Min. signature'), V_SEQUIP|V_HULL, 0)
 addAttr('combatDef', _('Combat defence'), V_SEQUIP|V_HULL|V_EFF, 0)
 addAttr('combatAtt', _('Combat attack'), V_SEQUIP|V_HULL|V_EFF, 0)
 addAttr('missileDef', _('Missile defence'), V_SEQUIP|V_EFF, 0)
-addAttr('combatAttPerc', _('Combat defense (extra)'), V_SEQUIP|V_HULL|V_EFF, 0, convertor = perc2Text)
-addAttr('combatDefPerc', _('Combat attack (extra)'), V_SEQUIP|V_HULL|V_EFF, 0, convertor = perc2Text)
-addAttr('missileDefPerc', _('Missile defence (extra)'), V_SEQUIP|V_EFF, 0, convertor = perc2Text)
+addAttr('combatAttPerc', _('Combat defense (extra)'), V_SEQUIP|V_HULL|V_EFF, 1, convertor = percBase1_2Text)
+addAttr('combatDefPerc', _('Combat attack (extra)'), V_SEQUIP|V_HULL|V_EFF, 1, convertor = percBase1_2Text)
+addAttr('missileDefPerc', _('Missile defence (extra)'), V_SEQUIP|V_EFF, 1, convertor = percBase1_2Text)
 
 addAttr('shieldPerc', _('Shield strength'), V_SEQUIP|V_HULL|V_EFF, 0, convertor = perc2Text)
 addAttr('shieldRechargeFix', _('Shield recharge fixed'), V_SEQUIP|V_HULL|V_EFF, 0)

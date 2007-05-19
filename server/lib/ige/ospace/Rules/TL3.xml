@@ -573,6 +573,7 @@
 			weight="18"
 			maxWeight="66"
 			signature="3"
+			minSignature="1"
 			combatClass="0"
 			autoRepairPerc="0.02"
 		/>
@@ -594,6 +595,7 @@
 			weight="22"
 			maxWeight="72"
 			signature="5"
+			minSignature="1"
 			combatClass="0"
 		/>
 		<preresearch>Advancements in metallurgy and skeletal design philosophy allow for a small hull capable of holding more equipment while offering better inherent armouring.</preresearch>

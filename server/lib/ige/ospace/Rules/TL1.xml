@@ -224,6 +224,7 @@
 			weight="16"
 			maxWeight="48"
 			signature="2"
+			minSignature="1"
 			combatClass="0"
 		/>
 		<preresearch>This hull will be used to construct small ships. No more, no less.</preresearch>

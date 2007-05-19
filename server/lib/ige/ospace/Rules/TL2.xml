@@ -308,6 +308,7 @@
 			weight="16"
 			maxWeight="56"
 			signature="4"
+			minSignature="2"
 			combatClass="0"
 		/>
 		<preresearch>Give us piece of the Titanium and we'll prepare for you improved version of the small hull.</preresearch>
