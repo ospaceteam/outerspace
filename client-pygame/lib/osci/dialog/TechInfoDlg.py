@@ -41,7 +41,7 @@ def structWeapons2Text(array):
 			string += [_("S"), _("M"), _("L"), _("P"), _("?"),_("?"),_("?"),_("?"),_("?"),_("?")][i]
 			j+=1
 		i+=1
-    return string
+	return string
 
 def bool2Text(value):
 	if value:
