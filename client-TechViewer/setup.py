@@ -6,9 +6,9 @@ class Target:
     def __init__(self, **kw):
         self.__dict__.update(kw)
         # for the versioninfo resources
-        self.version = "0.3.0.49"
+        self.version = "0.4.0.138"
         self.company_name = "Anderuso"
-        self.copyright = "(C) 2004-2006 Anderuso"
+        self.copyright = "(C) 2004-2007 Anderuso"
         self.name = "OuterSpace Technology Viewer"
         self.description = "OuterSpace Technology Viewer"
 

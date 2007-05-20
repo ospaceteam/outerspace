@@ -1,6 +1,6 @@
 OuterSpace Technology tree viewer
 
-(c) 2004-2006 Anderuso
+(c) 2004-2007 Anderuso
 
 http://sf.net/projects/ospace
 

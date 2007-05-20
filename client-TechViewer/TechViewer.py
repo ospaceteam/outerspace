@@ -162,9 +162,9 @@ addAttr('combatAttPerc', 'Combat defense (extra)', V_SEQUIP|V_HULL|V_EFF, 0, con
 addAttr('combatDefPerc', 'Combat attack (extra)', V_SEQUIP|V_HULL|V_EFF, 0, convertor = perc2Text)
 addAttr('missileDefPerc', 'Missile defence (extra)', V_SEQUIP|V_EFF, 0, convertor = perc2Text)
 
+addAttr('shieldPerc', 'Shield strength', V_SEQUIP|V_HULL|V_EFF, 0, convertor = perc2Text)
 addAttr('shieldRechargeFix', 'Shield recharge fixed', V_SEQUIP|V_HULL|V_EFF, 0)
 addAttr('shieldRechargePerc', 'Shield recharge percent', V_SEQUIP|V_HULL|V_EFF, 0, convertor = perc2Text)
-addAttr('shieldPerc', 'Shield strength', V_SEQUIP|V_HULL|V_EFF, 0, convertor = perc2Text)
 addAttr('damageAbsorb', 'Armor damage absorbstion', V_SEQUIP|V_HULL, 0)
 
 addAttr('addMP', 'Device MP', V_SEQUIP|V_HULL, 0)
