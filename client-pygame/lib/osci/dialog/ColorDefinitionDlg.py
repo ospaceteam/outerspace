@@ -34,9 +34,21 @@ class ColorDefinitionDlg:
 			self.color = (0xff,0xff,0xff)
 		else:
 			self.color = color
+		self.show()
+
+	def show(self):
 		self.win.vR.text = hex(self.color[0])
 		self.win.vG.text = hex(self.color[1])
 		self.win.vB.text = hex(self.color[2])
+		self.win.vRS.slider.min = 0
+		self.win.vRS.slider.max = 265
+		self.win.vRS.slider.position = self.color[0]
+		self.win.vGS.slider.min = 0
+		self.win.vGS.slider.max = 265
+		self.win.vGS.slider.position = self.color[1]
+		self.win.vBS.slider.min = 0
+		self.win.vBS.slider.max = 265
+		self.win.vBS.slider.position = self.color[2]
 		log.debug("ColorDefinitionDlg(%s,%s,%s)" % (self.win.vR.text,self.win.vG.text,self.win.vB.text))
 		self.win.show()
 		self.app.setFocus(self.win.vR)
@@ -55,6 +67,22 @@ class ColorDefinitionDlg:
 
 	def update(self):
 		self.show()
+
+	def onChangeRed(self, widget, action, data):
+		self.color = (int(self.win.vRS.slider.position), self.color[1], self.color[2])
+		self.win.vR.text = hex(self.color[0])
+		self.win.vColor.color = (int(self.win.vRS.slider.position), self.color[1], self.color[2])
+
+
+        def onChangeGreen(self, widget, action, data):
+                self.color = (self.color[0], int(self.win.vGS.slider.position), self.color[2])
+                self.win.vG.text = hex(self.color[1])
+                self.win.vColor.color = (self.color[0], int(self.win.vGS.slider.position), self.color[2])
+
+        def onChangeBlue(self, widget, action, data):
+                self.color = ( self.color[0], self.color[1], int(self.win.vBS.slider.position))
+                self.win.vB.text = hex(self.color[2])
+                self.win.vColor.color = ( self.color[0], self.color[1], int(self.win.vBS.slider.position))
 
 	def onOK(self, widget, action, data):
 		try:
@@ -84,8 +112,8 @@ class ColorDefinitionDlg:
 
 	def createUI(self):
 		w, h = gdata.scrnSize
-		cols = 10
-		rows = 5
+		cols = 14
+		rows = 8
 		width = cols * 20 + 5
 		height = rows * 20 + 4
 		self.win = ui.Window(self.app,
@@ -101,21 +129,24 @@ class ColorDefinitionDlg:
 		self.win.subscribeAction('*', self)
 
 		# R
-		ui.Label(self.win,text = _("Red:"), align = ui.ALIGN_E, layout = (1, 0, 3, 1))
-		ui.Entry(self.win, id = 'vR',align = ui.ALIGN_W,layout = (4, 0, 3, 1), orderNo = 1, reportValueChanged = True,)
+		ui.Label(self.win,text = _("Red:"), align = ui.ALIGN_W, layout = (0, 0, 3, 1))
+		ui.Entry(self.win, id = 'vR',align = ui.ALIGN_W,layout = (7, 0, 3, 1), orderNo = 1, reportValueChanged = True,)
+		ui.Scrollbar(self.win,layout = ( 0,1,10,1), id='vRS',action = "onChangeRed")
 		# G
-		ui.Label(self.win,text = _("Green:"),align = ui.ALIGN_E,layout = (1, 1, 3, 1))
-		ui.Entry(self.win, id = 'vG',align = ui.ALIGN_W,layout = (4, 1, 3, 1), orderNo = 2, reportValueChanged = True,)
+		ui.Label(self.win,text = _("Green:"),align = ui.ALIGN_W,layout = (0, 2, 3, 1))
+		ui.Entry(self.win, id = 'vG',align = ui.ALIGN_W,layout = (7, 2, 3, 1), orderNo = 2, reportValueChanged = True,)
+		ui.Scrollbar(self.win,layout = (0,3,10,1), id='vGS',action = "onChangeGreen")
 		# B
-		ui.Label(self.win,text = _("Blue:"),align = ui.ALIGN_E,layout = (1, 2, 3, 1))
-		ui.Entry(self.win, id = 'vB',align = ui.ALIGN_W,layout = (4, 2, 3, 1), orderNo = 3, reportValueChanged = True,)
+		ui.Label(self.win,text = _("Blue:"),align = ui.ALIGN_W,layout = (0, 4, 3, 1))
+		ui.Entry(self.win, id = 'vB',align = ui.ALIGN_W,layout = (7, 4, 3, 1), orderNo = 3, reportValueChanged = True,)
+		ui.Scrollbar(self.win,layout = (0,5,10,1), id='vBS',action = "onChangeBlue")
 
 		# color example
-		ui.ColorBox(self.win, id = 'vColor', layout = (8, 0, 2, 3), margins = (4, 3, 4, 4))
+		ui.ColorBox(self.win, id = 'vColor', layout = (10, 0, 4, 6), margins = (4, 3, 4, 4))
 
 		#i.Title(self.win, layout = (0, 4, 2, 1))
-		ui.TitleButton(self.win, layout = (0, 3, 5, 1), text = _("Cancel"), action = "onCancel")
-		okBtn = ui.TitleButton(self.win, layout = (5, 3, 5, 1), text = _("OK"), action = 'onOK')
+		ui.TitleButton(self.win, layout = (0, 6, 7, 1), text = _("Cancel"), action = "onCancel")
+		okBtn = ui.TitleButton(self.win, layout = (7, 6, 7, 1), text = _("OK"), action = 'onOK')
 		self.win.acceptButton = okBtn
 
 	def onValueChanged(self, widget, action, data):
@@ -128,3 +159,6 @@ class ColorDefinitionDlg:
 		if not r in range(0,256) or not g in range(0,256) or not b in range(0,256):
 			return
 		self.win.vColor.color = (r, g, b)
+		self.win.vRS.slider.position = r
+		self.win.vGS.slider.position = g
+		self.win.vBS.slider.position = b
