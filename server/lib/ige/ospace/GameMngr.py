@@ -434,9 +434,16 @@ class GameMngr(IGEGameMngr):
 	def generateStats(self):
 		""" Generate games statistics """
 		# gather stats
+		try:
+			os.makedirs('website/%s' % self.gameID)
+		except OSError:
+			pass
 		stats = {}
 		galaxies = {}
 		universe = self.db[OID_UNIVERSE]
+		jsonComma = False
+		fhjson = open('website/%s/json.txt' % (self.gameID), 'w')
+		print >>fhjson, '{"turn":"%s",' % universe.turn
 		for playerID in universe.players:
 			player = self.db[playerID]
 			stats[playerID] = player.stats
@@ -470,21 +477,25 @@ class GameMngr(IGEGameMngr):
 					pStats.prodProd = int(pStats.prodProd * 1000 / prodProd)
 					pStats.prodSci = int(pStats.prodSci * 1000 / prodSci)
 			# generate tables
-			try:
-				os.makedirs('website/%s' % self.gameID)
-			except OSError:
-				pass
 			fh = open('website/%s/galaxy%d.html' % (self.gameID, galaxyID), 'w')
 			galaxy = self.db[galaxyID]
 			if galaxy.imperator != OID_NONE:
 				if self.db[galaxy.imperator].imperator > 1:
 					imperator = " - Imperator %s" % self.db[galaxy.imperator].name
+					imperatoroid = self.db[galaxy.imperator].oid
+					leaderoid = 0
 				else:
 					imperator = " - Leader %s" % self.db[galaxy.imperator].name
+					imperatoroid = 0
+					leaderoid = self.db[galaxy.imperator].oid
 			else:
 				imperator = ""
+				imperatoroid = 0
+				leaderoid = 0
 			print >>fh, statsHeader % (self.gameID, galaxy.name, imperator)
 			order = self.sortStatsBy(gStats, 'storPop')
+			self.printJSONStatsTable(fhjson, gStats, order, galaxyID, galaxy.name, imperatoroid, leaderoid, jsonComma)
+			jsonComma = True
 			self.printStatsEcoTable(fh, 'Sorted by population', gStats, order)
 			#order = self.sortStatsBy(gStats, 'systems')
 			#self.printStatsEcoTable(fh, 'Sorted by number of systems', gStats, order)
@@ -500,6 +511,8 @@ class GameMngr(IGEGameMngr):
 			self.printStatsEcoTable(fh, 'Sorted by military power', gStats, order)
 			print >>fh, statsFooter
 			fh.close()
+		print >>fhjson, '}'
+		fhjson.close()
 
 	def sortStatsBy(self, stats, attr):
 		order = stats.keys()
@@ -508,6 +521,19 @@ class GameMngr(IGEGameMngr):
 		order.reverse()
 		return order
 
+	def printJSONStatsTable(self, fh, stats, order, galaxyID, galaxyName, imperatoroid, leaderoid, jsonComma):
+		if jsonComma:
+			print >> fh, ','
+		print >> fh, '"%s":{"galaxyname":"%s","imperatorid":"%s","leaderid":"%s","players":' % (galaxyID, galaxyName, imperatoroid, leaderoid)
+		print >> fh, '{'
+		print >> fh, '"order":["name","pop","planets","structs","prod","sci","mp"]'
+		for playerID in order:
+			print >> fh, ','
+			needComma = True
+			stat = stats[playerID]
+			print >> fh, '"%s":["%s","%s","%s","%s","%s","%s","%s"]' % (playerID, self.db[playerID].name, stat.storPop, stat.planets, stat.structs, stat.prodProd, stat.prodSci, stat.fleetPwr)
+		print >> fh, '}}'
+		
 	def printStatsEcoTable(self, fh, title, stats, order):
 		print >> fh, '<table cellspacing="1" border="0" cellpadding="2" width="100%">'
 		print >> fh, '<tr>'
