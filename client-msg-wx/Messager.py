@@ -1,6 +1,7 @@
 import wx, time
 import gdata, client, messages, res
-import log, handler
+from ige import log
+import handler
 import os, os.path
 from ige.ospace.Const import * 
 
@@ -27,7 +28,7 @@ class Messager(wx.Frame):
 
 		self.Centre(wx.BOTH)
 		
-		splitter = wx.SplitterWindow(self, -1, style = wx.SP_FULLSASH | wx.SP_NOBORDER | wx.NO_3D)
+		splitter = wx.SplitterWindow(self, -1, style = wx.SP_NOBORDER | wx.NO_3D)
 		splitter2 = wx.SplitterWindow(splitter, -1, style = wx.SP_3D | wx.NO_3D)
 		
 		def EmptyHandler(evt): pass

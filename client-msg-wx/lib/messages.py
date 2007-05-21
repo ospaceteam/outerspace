@@ -3,7 +3,8 @@
 #
 from ige.ospace.Const import *
 from ige import NoSuchObjectException
-import client, types, string, res, gdata, log
+import client, types, string, res, gdata
+from ige import log
 
 #
 # Transform routines

@@ -4,7 +4,8 @@ sys.path.insert(0, 'lib')
 sys.path.insert(0, '../server/lib')
 
 import gdata, client
-import log, handler
+from ige import log
+import handler
 import version as Ver
 import os, os.path
 import binascii

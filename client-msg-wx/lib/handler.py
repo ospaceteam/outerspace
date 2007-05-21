@@ -1,5 +1,5 @@
 import gdata
-import log
+from ige import log
 import wx
 
 # module globals

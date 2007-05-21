@@ -2,7 +2,8 @@ from igeclient import IClient, IClientDB
 from ige.ospace import Rules
 from ige.ospace.Const import *
 from ige.IDataHolder import IDataHolder
-import gdata, log, ige, time
+import gdata, ige, time
+from ige import log
 import version as Ver
 
 # module globals
@@ -43,7 +44,7 @@ def login(gameid, login, password):
 		try:
 			result = cmdProxy.getIntroInfo(OID_UNIVERSE)
 			lastClientVersion = result.lastClientVersion
-			lastClientBuild = result.lastClientBuild
+			lastClientBuild = result.lastClientRevision
 		except ige.NoAccountException:
 			callbackObj.createGameAccount()
 			return 2
