@@ -379,7 +379,7 @@ class GameMngr(IGEGameMngr):
 		# save info
 		fh = open('website/%s/info_cz.html' % self.gameID, 'w')
 		universe = self.db[OID_UNIVERSE]
-		print >> fh, '<strong><big>&middot;</big></strong>&nbsp;Hráèù: <strong>%d</strong><br>' % len(universe.players)
+		print >> fh, '<strong><big>&middot;</big></strong>&nbsp;Hracu: <strong>%d</strong><br>' % len(universe.players)
 		turn = universe.turn
 		print >> fh, '<strong><big>&middot;</big></strong>&nbsp;Tah: <strong>%d:%02d</strong><br>' % (turn / 24, turn % 24)
 		for galaxyID in universe.galaxies:
@@ -394,14 +394,14 @@ class GameMngr(IGEGameMngr):
 					and player.planets:
 					aiPlayers += 1
 			if len(galaxy.startingPos) or aiPlayers:
-				print >> fh, '&nbsp;&nbsp;&nbsp;Volných pozic: <strong>%d + %d</strong><br>' % (
+				print >> fh, '&nbsp;&nbsp;&nbsp;Volnych pozic: <strong>%d + %d</strong><br>' % (
 					len(galaxy.startingPos),
 					aiPlayers,
 				)
-			print >> fh, '&nbsp;&nbsp;&nbsp;Stáøí: <strong>%d</strong> dní<br>' % \
+			print >> fh, '&nbsp;&nbsp;&nbsp;Stari: <strong>%d</strong> dni<br>' % \
 				((time.time() - galaxy.creationTime) / (24 * 3600))
 			if not galaxy.timeEnabled or galaxy.timeStopped:
-				print >> fh, '&nbsp;&nbsp;&nbsp;<strong>Èas zastaven</strong><br>'
+				print >> fh, '&nbsp;&nbsp;&nbsp;<strong>Cas zastaven</strong><br>'
 		fh.close()
 		# save info
 		fh = open('website/%s/info_en.html' % self.gameID, 'w')
