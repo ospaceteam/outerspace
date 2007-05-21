@@ -971,25 +971,25 @@ class StarMapWidget(Widget):
 		#pygame.draw.rect(self.overlayZone,(0x00, 0x00, 0x90),self._overlayRect,1)
 
 		
-
+		mode = _("Overlay Mode: ")
 		if self.overlayMode == gdata.OVERLAY_OWNER:
-			mode = "Overlay Mode: Normal"
+			mode = mode + _("Normal")
 		if self.overlayMode == gdata.OVERLAY_DIPLO:
-			mode = "Overlay Mode: Diplomatic"
+			mode = mode + _("Diplomatic")
 		if self.overlayMode == gdata.OVERLAY_BIO:
-			mode = "Overlay Mode: Environment"
+			mode = mode + _("Environment")
 		if self.overlayMode == gdata.OVERLAY_FAME:
-			mode = "Overlay Mode: Pirate Fame"
+			mode = mode + _("Pirate Fame")
 		if self.overlayMode == gdata.OVERLAY_MIN:
-			mode = "Overlay Mode: Minerals"
+			mode = mode + _("Minerals")
 		if self.overlayMode == gdata.OVERLAY_SLOT:
-			mode = "Overlay Mode: Slots"
+			mode = mode + _("Slots")
 		if self.overlayMode == gdata.OVERLAY_STARGATE:
-			mode = "Overlay Mode: Fleet Acceleration"
+			mode = mode + _("Fleet Acceleration")
 		if self.overlayMode == gdata.OVERLAY_DOCK:
-			mode = "Overlay Mode: Refuel and Repair"
+			mode = mode + _("Refuel and Repair")
 		if self.overlayMode == gdata.OVERLAY_MORALE:
-			mode = "Overlay Mode: Morale"
+			mode = mode + _("Morale")
 		
 		textSrfc = renderText('small', mode, 1, (0x70, 0x70, 0x80))
 		self._overlayZone.blit(textSrfc, (

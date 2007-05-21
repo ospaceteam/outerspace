@@ -114,7 +114,7 @@ class EmpireOverviewDlg:
 		text.append(_("Statistics:"))
 		text.append(u'    %s: %s' % (_("Population"), getattr(player.stats, "storPop", "?")))
 		if hasattr(player.stats, "storPop") and player.govPwr > player.stats.storPop and player.stats.storPop > 0:
-			text.append(u'    %s: %s (%d %% unused)' % (_("Gov. power"), player.govPwr, 100 * (player.govPwr - player.stats.storPop) / player.govPwr))
+			text.append(u'    %s: %s (%d %% %s)' % (_("Gov. power"), player.govPwr, 100 * (player.govPwr - player.stats.storPop) / player.govPwr, _("unused")))
 		else:
 			text.append(u'    %s: %s' % (_("Gov. power"), player.govPwr))
 		text.append(u'    %s: %s' % (_("Planets"), getattr(player.stats, "planets", "?")))
@@ -125,10 +125,11 @@ class EmpireOverviewDlg:
 		text.append(u'    %s: %s' % (_("Total reseach"), player.effSciPoints))
 		text.append(u'    %s: %s' % (_("Military power"), getattr(player.stats, "fleetPwr", "?")))
 		if hasattr(player, "pirateFame"):
-			text.append(_(u'    %s: %s (%+d %% production eff.)') % (
+			text.append(u'    %s: %s (%+d %% %s)' % (
 				_("Fame"),
 				player.pirateFame,
 				player.pirateFame,
+				_("production eff.")
 			))
 			text.append(u'    %s: %s fame' % (
 				_("New colony cost"),
@@ -144,8 +145,8 @@ class EmpireOverviewDlg:
 		text.append(u'    %s: %s' % (_("Raw production"), getattr(player.stats, "prodProd", "?")))
 		if player.prodIncreasePool > 0:
 			ratio = (Rules.unusedProdMod * player.prodIncreasePool) / player.stats.prodProd
-			text.append(u'    %s: %d (%+d %% effectivity)' % (
-				_("Unused production"), player.prodIncreasePool, min(ratio * 100, math.sqrt(ratio) * 100)
+			text.append(u'    %s: %d (%+d %% %s)' % (
+				_("Unused production"), player.prodIncreasePool, min(ratio * 100, math.sqrt(ratio) * 100), _("effectivity")
 			))
 		# fleet support
 		total = getattr(player.stats, 'fleetSupportProd', 0) + player.fleetUpgradePool * Rules.operProdRatio
@@ -153,11 +154,14 @@ class EmpireOverviewDlg:
 			effectivity = - 100 * (total - player.stats.prodProd / 10) / max(player.stats.prodProd, 1)
 		else:
 			effectivity = 0
-		text.append(u'    %s: %+d (first %d CP is free, %+d %% effectivity)' % (
+		text.append(u'    %s: %+d (%s %d %s, %+d %% %s)' % (
 			_("Fleet support"),
 			- total,
+			_("first"),
 			player.stats.prodProd / 10,
+			_("CP is free"),
 			effectivity,
+			_("effectivity")
 		))
 		text.append(u"    %s: %d %%" % (_("Empire effectivity"), int(100 * player.prodEff)))
 		text.append(u'    %s: %d' % (_("Total production"), realProd))
@@ -190,10 +194,10 @@ class EmpireOverviewDlg:
 					civ[tech.combatClass] += 1
 				mp[tech.combatClass] += int(tech.combatPwr * float(hp + shield) / (tech.maxHP + tech.shieldHP))
 		text.append(_("Fleet:"))
-		text.append(u'    %s: %d (%d CP to support)' % (_("Upgrade Pool"), player.fleetUpgradePool, - player.fleetUpgradePool * Rules.operProdRatio))
-		text.append(u'    %s: %d civ + %d mil, %d MP' % (_("Small ships"), civ[0], mil[0], mp[0]))
-		text.append(u'    %s: %d civ + %d mil, %d MP' % (_("Medium ships"), civ[1], mil[1], mp[1]))
-		text.append(u'    %s: %d civ + %d mil, %d MP' % (_("Large ships"), civ[2], mil[2], mp[2]))
+		text.append(u'    %s: %d (%d %s)' % (_("Upgrade Pool"), player.fleetUpgradePool, - player.fleetUpgradePool * Rules.operProdRatio,_("CP to support")))
+		text.append(u'    %s: %d %s + %d %s, %d MP' % (_("Small ships"), civ[0], _("civ"), mil[0], _("mil"), mp[0]))
+		text.append(u'    %s: %d %s + %d %s, %d MP' % (_("Medium ships"), civ[1], _("civ"), mil[1], _("mil"), mp[1]))
+		text.append(u'    %s: %d %s + %d %s, %d MP' % (_("Large ships"), civ[2], _("civ"), mil[2], _("mil"), mp[2]))
 		self.win.vText.text = text
 		self.win.vText.offsetRow = 0
 		self.win.vText.vertScrollbar.slider.position = 0
