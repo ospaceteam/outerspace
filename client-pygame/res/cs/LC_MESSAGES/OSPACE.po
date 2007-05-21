@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Outer Space 0.5\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-05-21 17:34+0100\n"
+"PO-Revision-Date: 2007-05-21 17:44+0100\n"
 "Last-Translator: PeS <pes@sandbox.cz>\n"
 "Language-Team: IGE <qark@seznam.cz>\n"
 "MIME-Version: 1.0\n"
@@ -2466,7 +2466,7 @@ msgstr "Systém"
 
 #: lib/osci/dialog/SystemOverviewDlg.py:215
 msgid "# Pl"
-msgstr "č.hráče"
+msgstr "pl."
 
 #: lib/osci/dialog/SystemOverviewDlg.py:216
 #: lib/osci/dialog/FleetsOverviewDlg.py:243
