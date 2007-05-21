@@ -2,9 +2,10 @@ Change Log:
 
 [2007-05-20]
 - Added JSON-encoded stats page (website/{game}/json.txt) [Random Chaos]
+- Added System Overview dialog [Random Chaos]
+- Fixed display bug with TechInfo dialog for "Extra" ATT and DEF attributes [Random Chaos]
 
 [2007-05-19]
-- Fixed display bug with TechInfo dialog for "Extra" ATT and DEF attributes [Random Chaos]
 - Fixed "stealth" bug with small hulls (techs did not have minsignature attributes) [Random Chaos]
 
 [2007-05-17]

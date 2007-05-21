@@ -21,6 +21,7 @@
 import gdata, client
 import glob, math
 import pygame, pygame.image
+from osci import gdata
 from ige.ospace.Const import *
 from ige.ospace import Rules
 from ige import log
@@ -146,6 +147,12 @@ def getUnknownName():
 
 def getNA():
 	return _('N/A')
+
+def getSystemOverviewProblemColor(owner,problem):
+	if problem:
+		return gdata.sevColors[gdata.CRI]
+	else:
+		return getPlayerColor(owner)
 
 def OLDgetFFColorCode(relationship):
 	if relationship < 0:
@@ -339,7 +346,6 @@ def getStarmapWidgetSystemColorPerDatatype(datatype,ownerid,bio,mineral,slot,num
 	if (datatype == gdata.OVERLAY_MORALE):
 		return getMoraleColors(morale)
 	return getPlayerColor(ownerid) #default
-
 
 def fadeColor(triplet):
 	return ((triplet[0]+0xc0)/2,(triplet[1]+0xc0)/2,(triplet[2]+0xc0)/2)

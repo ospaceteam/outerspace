@@ -27,6 +27,7 @@ from ResearchDlg import ResearchDlg
 from MessagesDlg import MessagesDlg
 from ConstructionDlg import ConstructionDlg
 from PlanetsOverviewDlg import PlanetsOverviewDlg
+from SystemOverviewDlg import SystemOverviewDlg
 from FleetsOverviewDlg import FleetsOverviewDlg
 from PlanetsAnalysisDlg import PlanetsAnalysisDlg
 from FleetsAnalysisDlg import FleetsAnalysisDlg
@@ -55,6 +56,7 @@ class MainGameDlg:
 		self.constructionDlg = ConstructionDlg(self.app)
 		self.messagesDlg = MessagesDlg(self.app)
 		self.planetsOverviewDlg = PlanetsOverviewDlg(self.app)
+		self.systemOverviewDlg = SystemOverviewDlg(self.app)
 		self.fleetsOverviewDlg = FleetsOverviewDlg(self.app)
 		self.optionsDlg = OptionsDlg(self.app)
 		self.searchDlg = SearchDlg(self.app)
@@ -119,6 +121,9 @@ class MainGameDlg:
 		
 	def onPlanets(self, widget, action, data):
 		self.planetsOverviewDlg.display()
+
+	def onSystems(self, widget, action, data):
+		self.systemOverviewDlg.display()
 
 	def onPlanetAnalysis(self, widget, action, data):
 		self.planetsAnalysisDlg.display()
@@ -327,6 +332,7 @@ class MainGameDlg:
 			width = 4,
 			items = [
 				ui.Item(_("Planet List"), action = "onPlanets"),
+				ui.Item(_("System List"), action = "onSystems"),
 				ui.Item(_("Analysis"), action = "onPlanetAnalysis"),
 			]
 		)
