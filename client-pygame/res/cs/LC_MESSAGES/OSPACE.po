@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Outer Space 0.5\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-05-21 17:44+0100\n"
+"PO-Revision-Date: 2007-05-21 20:44+0100\n"
 "Last-Translator: PeS <pes@sandbox.cz>\n"
 "Language-Team: IGE <qark@seznam.cz>\n"
 "MIME-Version: 1.0\n"
@@ -11,6 +11,7 @@ msgstr ""
 "X-Poedit-Language: Czech\n"
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-KeywordsList: N_\n"
+"X-Poedit-Bookmarks: 638,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
 "X-Poedit-SearchPath-0: lib\n"
 
 #: lib/osci/handler.py:59
@@ -127,7 +128,7 @@ msgstr "Budova dokončena: %(1)s"
 #: lib/osci/messages.py:126
 #, python-format
 msgid "A deployment of %(1)s was completed"
-msgstr "Umístění %(1)s bylo dokočeno"
+msgstr "Umístění %(1)s bylo dokončeno"
 
 #: lib/osci/messages.py:127
 #, python-format
@@ -248,7 +249,7 @@ msgid ""
 msgstr ""
 "Nelze zmodernizovat loď z %(1)s na %(2)s\n"
 "\n"
-"Nelze zmodernizovat loď z %(1)s na %(2)s protože nemáme dost stategické suroviny: %(3)s."
+"Nelze zmodernizovat loď z %(1)s na %(2)s protože nemáme dost strategické suroviny: %(3)s."
 
 #: lib/osci/messages.py:149
 #, python-format
@@ -259,7 +260,7 @@ msgid ""
 msgstr ""
 "Nefunkční Hvězdná brána, ztraceno %(1)d %% HP\n"
 "\n"
-"Naše flotila dorazila do systému, který neobsahuje žádnou funkční Hvězdnou bránu nebo Comm/Scann Center. Každá loď ztratila  %(1)d %% hitpoints due to intensive deceleration."
+"Naše flotila dorazila do systému, který neobsahuje žádnou funkční Hvězdnou bránu nebo Comm/Scann Center. Každá loď ztratila  %(1)d %% HP kvůli prudkému zbrzdění."
 
 #: lib/osci/messages.py:150
 #, python-format
@@ -274,7 +275,7 @@ msgstr "%(1)d slávy ztracen."
 #: lib/osci/messages.py:152
 #, python-format
 msgid "Gained %(1)s technology at sublevel %(2)d."
-msgstr "Získána technologie %(1)s na podúrovni %(2)d."
+msgstr "Získána technologie %(1)s na dílčí úrovni %(2)d."
 
 #: lib/osci/messages.py:153
 #, python-format
@@ -356,7 +357,7 @@ msgid ""
 msgstr ""
 "Výsledky voleb! Byl zvolen vůdce!\n"
 "\n"
-"Byly zveřejněny výsledky posledních voleb. %(1)s získal největší podporua byl zvolen jako náš Vůdce. Možná, že jednou se %(1)s stane Imperátorem.\n"
+"Byly zveřejněny výsledky posledních voleb. %(1)s získal největší podporu a byl zvolen jako náš Vůdce. Možná, že jednou se %(1)s stane Imperátorem.\n"
 "\n"
 "Následují oficiální výsledky voleb:\n"
 "\n"
@@ -394,9 +395,9 @@ msgid ""
 "Message from imperator:\n"
 "%(3)s"
 msgstr ""
-"Galaxie %(2)s zná svého vítěze - Imepátor %(1)s!\n"
+"Galaxie %(2)s zná svého vítěze - Imperátor %(1)s!\n"
 "\n"
-"Dnes byla galaxie %(2)s sjednocena a byl opět nastolen mír. Většina velitelů zvolila Imperátora %(1)s jako  nejvyššího velitele.  Blahořejeme Imperátorovi, byl jsi statečný a moudrý!\n"
+"Dnes byla galaxie %(2)s sjednocena a byl opět nastolen mír. Většina velitelů zvolila Imperátora %(1)s jako  nejvyššího velitele.  Blahopřejeme Imperátorovi, byl jsi statečný a moudrý!\n"
 "\n"
 "Zpráva od imperátora:\n"
 "\n"
@@ -449,7 +450,7 @@ msgid ""
 msgstr ""
 "CHYBA\n"
 "Špatný formát zprávy %d: %s\n"
-"Vyjímka: %s: %s\n"
+"Výjimka: %s: %s\n"
 "Formát: %s"
 
 #: lib/osci/messages.py:231
@@ -500,12 +501,12 @@ msgstr "zbrň útk %+d"
 #: lib/osci/sequip.py:58
 #, python-format
 msgid "min dmg %d"
-msgstr "min poškození %d"
+msgstr "min pošk %d"
 
 #: lib/osci/sequip.py:59
 #, python-format
 msgid "max dmg %d"
-msgstr "max poškození %d"
+msgstr "max pošk %d"
 
 #: lib/osci/sequip.py:60
 #, python-format
@@ -609,7 +610,7 @@ msgstr "pevné štíty %d%%"
 #: lib/osci/sequip.py:82
 #, python-format
 msgid "absorb dmg %d"
-msgstr "max poškození %d"
+msgstr "pohltí pošk %d"
 
 #: lib/osci/sequip.py:83
 #, python-format
@@ -832,7 +833,7 @@ msgstr "Podpora (palivo): %d/tah"
 #: lib/osci/StarMapWidget.py:399
 #, python-format
 msgid "Support (const. pts): %d/turn"
-msgstr "Podpora (konst. body): %d/turn"
+msgstr "Podpora (konst. body): %d/tah"
 
 #: lib/osci/StarMapWidget.py:401
 #, python-format
@@ -940,7 +941,7 @@ msgstr "Zrychlení flotily"
 
 #: lib/osci/StarMapWidget.py:990
 msgid "Refuel and Repair"
-msgstr "Čerpání a upgrade"
+msgstr "Čerpání a opravy"
 
 #: lib/osci/StarMapWidget.py:992
 #: lib/osci/dialog/MapOverlayDlg.py:135
@@ -962,7 +963,7 @@ msgstr "Bójka na červí díře: %s [ID: %d]"
 #: lib/osci/StarMapWidget.py:1137
 #, python-format
 msgid "Buoy on unknown object [ID: %d]"
-msgstr "Bójka na neznámem objektu [ID: %d]"
+msgstr "Bójka na neznámém objektu [ID: %d]"
 
 #: lib/osci/gdata.py:36
 msgid "Asteroid"
@@ -1632,7 +1633,7 @@ msgstr "Planeta"
 
 #: lib/osci/dialog/NewTaskDlg.py:340
 msgid "Owner"
-msgstr "Vlasník"
+msgstr "Vlastník"
 
 #: lib/osci/dialog/NewTaskDlg.py:343
 msgid "Target slots"
@@ -2148,7 +2149,7 @@ msgstr "Obrana letky (bonus)"
 
 #: lib/osci/dialog/TechInfoDlg.py:112
 msgid "Maximum refuel percent"
-msgstr "Maximální proceno natankování"
+msgstr "Maximální procento natankování"
 
 #: lib/osci/dialog/TechInfoDlg.py:113
 msgid "Refuel increase percent"
@@ -2160,7 +2161,7 @@ msgstr "Zkušeností za tah"
 
 #: lib/osci/dialog/TechInfoDlg.py:115
 msgid "Exp. cap (base exp multiple)"
-msgstr "Max. zkušností (multiplikátor základních zkušeností)"
+msgstr "Max. zkušeností (multiplikátor základních zkušeností)"
 
 #: lib/osci/dialog/TechInfoDlg.py:116
 msgid "Boost speed of fleets"
@@ -2172,11 +2173,11 @@ msgstr "Zbraně"
 
 #: lib/osci/dialog/TechInfoDlg.py:119
 msgid "Target class"
-msgstr "Cílová tŕída %s"
+msgstr "Cílová třída"
 
 #: lib/osci/dialog/TechInfoDlg.py:120
 msgid "Weapon minimum damage"
-msgstr "Minimální požkození"
+msgstr "Minimální poškození"
 
 #: lib/osci/dialog/TechInfoDlg.py:121
 msgid "Weapon maximum damage"
@@ -2357,7 +2358,7 @@ msgstr " - %d %% na energetické úrovni planety"
 #: lib/osci/dialog/TechInfoDlg.py:256
 #, python-format
 msgid " - %d %% is not dependent on any planet's attribute"
-msgstr " - %d %% nezávísí na žádném atributu planety"
+msgstr " - %d %% nezávisí na žádném atributu planety"
 
 #: lib/osci/dialog/TechInfoDlg.py:245
 msgid "Energy production depends:"
@@ -2423,7 +2424,7 @@ msgstr "Vyber návrh lodě"
 
 #: lib/osci/dialog/ConstrUpgradeDlg.py:103
 msgid "Executing UPGRADE SHIP DESIGN command..."
-msgstr "Vykonávám přikaz ZMODERNIZUJ LODĚ..."
+msgstr "Vykonávám příkaz ZMODERNIZUJ LODĚ..."
 
 #: lib/osci/dialog/ConstrUpgradeDlg.py:115
 msgid "Constructions queues on planets have not been updated, because new design uses different (amount of) strategic resources than old design. You have to fix them manually."
@@ -2642,7 +2643,7 @@ msgstr "%.2f"
 
 #: lib/osci/dialog/FleetSplitDlg.py:331
 msgid "Executing SPLIT FLEET command..."
-msgstr "Vykonávám přikaz ROZDĚL FLOTILU..."
+msgstr "Vykonávám příkaz ROZDĚL FLOTILU..."
 
 #: lib/osci/dialog/FleetSplitDlg.py:389
 msgid "Enter a number."
@@ -2825,7 +2826,7 @@ msgstr "Vyberte si typ číslování planet, prosím."
 
 #: lib/osci/dialog/RenameSysDlg.py:71
 msgid "Executing RENAME SYSTEM command..."
-msgstr "Vykonávám přikaz PŘEJMENUJ SOUSTAVU..."
+msgstr "Vykonávám příkaz PŘEJMENUJ SOUSTAVU..."
 
 #: lib/osci/dialog/RenameSysDlg.py:97
 msgid "Rename system"
@@ -2891,7 +2892,7 @@ msgstr "Vyberte technologii, kterou chcete zlepšit."
 
 #: lib/osci/dialog/ResearchDlg.py:250
 msgid "Executing MOVE RESEARCH command..."
-msgstr "Vykonávám přikaz PŘESUŇ VÝZKUM..."
+msgstr "Vykonávám příkaz PŘESUŇ VÝZKUM..."
 
 #: lib/osci/dialog/ResearchDlg.py:265
 msgid "Executing EDIT RESEARCH command..."
@@ -2903,7 +2904,7 @@ msgstr "Zrušit tento výzkumný projekt?"
 
 #: lib/osci/dialog/ResearchDlg.py:285
 msgid "Executing ABORT RESEARCH command..."
-msgstr "Vykonávám přikaz ZRUŠ VÝZKUM..."
+msgstr "Vykonávám příkaz ZRUŠ VÝZKUM..."
 
 #: lib/osci/dialog/ResearchDlg.py:299
 #: lib/osci/dialog/ResearchDlg.py:329
@@ -3107,7 +3108,7 @@ msgstr "Skutečně sešrotovat tuto loď?"
 
 #: lib/osci/dialog/FleetDlg.py:288
 msgid "Executing SCRAP SHIP command..."
-msgstr "Vykonávám přikaz SEŠROTOVAT LOĎ..."
+msgstr "Vykonávám příkaz SEŠROTOVAT LOĎ..."
 
 #: lib/osci/dialog/FleetDlg.py:335
 msgid "Coordinates"
@@ -3224,7 +3225,7 @@ msgstr "Vložte jméno návrhu:"
 
 #: lib/osci/dialog/ConstructionDlg.py:251
 msgid "Executing ADD SHIP DESIGN command..."
-msgstr "Vykonávám přikaz PŘIDEJ NÁVRH LODĚ..."
+msgstr "Vykonávám příkaz PŘIDEJ NÁVRH LODĚ..."
 
 #: lib/osci/dialog/ConstructionDlg.py:346
 #, python-format
@@ -3366,19 +3367,19 @@ msgstr "Lze budovat jen na planetách."
 
 #: lib/osci/dialog/FleetCommandDlg.py:240
 msgid "Enter number into \"Turns\" field."
-msgstr "Vlož číslo do pole \"Turns\" ."
+msgstr "Vlož číslo do pole \"Tahů\" ."
 
 #: lib/osci/dialog/FleetCommandDlg.py:243
 msgid "\"Turns\" must be 1 or greater."
-msgstr "Pole \"Turns\" musí být 1 nebo větší."
+msgstr "Pole \"Tahů\" musí být 1 nebo větší."
 
 #: lib/osci/dialog/FleetCommandDlg.py:250
 msgid "Enter number into \"Start from command #\" field."
-msgstr "Vlož číslo do pole \"Start from command #\"."
+msgstr "Vlož číslo do pole \"Začni od příkazu #\"."
 
 #: lib/osci/dialog/FleetCommandDlg.py:253
 msgid "\"Start from command #\" must be 1 or greater"
-msgstr "Pole \"Start from command #\" musí být 1 nebo větší"
+msgstr "Pole \"Pole začni od příkazu #\" musí být 1 nebo větší"
 
 #: lib/osci/dialog/FleetCommandDlg.py:258
 msgid "Command not supported yet."
@@ -4110,11 +4111,11 @@ msgstr "Zvolte systém, prosím."
 
 #: lib/osci/dialog/FleetRedirectionDlg.py:83
 msgid "Executing REDIRECT FLEETS command..."
-msgstr "Vykonávám přikaz PŘESMĚRUJ FLOTILY..."
+msgstr "Vykonávám příkaz PŘESMĚRUJ FLOTILY..."
 
 #: lib/osci/dialog/FleetRedirectionDlg.py:96
 msgid "Executing REDIRECT FLEETS OFF command..."
-msgstr "Vykonávám přikaz VYPNI PŘESMĚROVÁNÍ FLOTIL..."
+msgstr "Vykonávám příkaz VYPNI PŘESMĚROVÁNÍ FLOTIL..."
 
 #: lib/osci/dialog/FleetRedirectionDlg.py:115
 msgid "Redirect Fleets"
@@ -4245,7 +4246,7 @@ msgstr "Naposledy vylep."
 
 #: lib/osci/dialog/ColorDefinitionDlg.py:102
 msgid "Values must be hexa numbers between 0x00 - 0xff"
-msgstr "Hodnoty musí být šestnástkové čísla v rozsahu 0x00 - 0xff"
+msgstr "Hodnoty musí být šestnáctková čísla v rozsahu 0x00 - 0xff"
 
 #: lib/osci/dialog/ColorDefinitionDlg.py:123
 msgid "Color Definition"
@@ -4652,7 +4653,7 @@ msgstr "Provozní stav budovy."
 #: lib/osci/dialog/StarSystemDlg.py:852
 #: lib/osci/dialog/StarSystemDlg.py:865
 msgid "Executing MOVE STRUCTURE command..."
-msgstr "Vykonávám přikaz PŘESUŇ BUDOVU..."
+msgstr "Vykonávám příkaz PŘESUŇ BUDOVU..."
 
 #: lib/osci/dialog/StarSystemDlg.py:885
 msgid "Executing SWITCH STRUCTURE ON/OFF command..."
@@ -4664,12 +4665,12 @@ msgstr "Zničit tuto budovu?"
 
 #: lib/osci/dialog/StarSystemDlg.py:903
 msgid "Executing DEMOLISH STRUCTURE command..."
-msgstr "Vykonávám přikaz ZBOUREJ BUDOVU..."
+msgstr "Vykonávám příkaz ZBOUREJ BUDOVU..."
 
 #: lib/osci/dialog/StarSystemDlg.py:920
 #: lib/osci/dialog/StarSystemDlg.py:941
 msgid "Executing MOVE TASK command..."
-msgstr "Vykonávám přikaz PŘESUŇ ÚKOL..."
+msgstr "Vykonávám příkaz PŘESUŇ ÚKOL..."
 
 #: lib/osci/dialog/StarSystemDlg.py:953
 msgid "Abort this construction task?"
@@ -4677,11 +4678,11 @@ msgstr "Zrušit tento konstrukční projekt?"
 
 #: lib/osci/dialog/StarSystemDlg.py:964
 msgid "Executing CHANGE TASK command..."
-msgstr "Vykonávám přikaz ZMĚŇ ÚKOL..."
+msgstr "Vykonávám příkaz ZMĚŇ ÚKOL..."
 
 #: lib/osci/dialog/StarSystemDlg.py:978
 msgid "Executing ABORT TASK command..."
-msgstr "Vykonávám přikaz ZRUŠ ÚKOL..."
+msgstr "Vykonávám příkaz ZRUŠ ÚKOL..."
 
 #: lib/osci/dialog/StarSystemDlg.py:1017
 #: lib/osci/dialog/StarSystemDlg.py:1019
@@ -4690,7 +4691,7 @@ msgstr "Cíl není prozkoumán"
 
 #: lib/osci/dialog/StarSystemDlg.py:1033
 msgid "Executing ADD BUOY command..."
-msgstr "Vykonávám přikaz PŘIDAT BÓJKU..."
+msgstr "Vykonávám příkaz PŘIDAT BÓJKU..."
 
 #: lib/osci/dialog/StarSystemDlg.py:1045
 msgid "Executing DELETE BUOY command..."
@@ -4706,7 +4707,7 @@ msgstr "Vložte číslo do pole minimální rezerva energie."
 
 #: lib/osci/dialog/StarSystemDlg.py:1067
 msgid "Executing CHANGE RESERVES LIMITS command..."
-msgstr "Vykonávám přikaz ZMĚŇ MIN. REZERVU..."
+msgstr "Vykonávám příkaz ZMĚŇ MIN. REZERVU..."
 
 #: lib/osci/dialog/StarSystemDlg.py:1081
 msgid "Executing SWITCH AUTOMATIC REGULATION command..."
