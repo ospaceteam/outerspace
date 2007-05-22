@@ -349,7 +349,8 @@ for playerID in gdata.playersHighlightColors.keys():
     b = hex(color[2])
     hl = "%s %s:%s,%s,%s" % (hl,playerID,r,g,b)
 gdata.config.defaults.colors = hl
-
+if gdata.savePassword == False:
+    gdata.config.game.lastpasswordcrypted = None
 gdata.config.save('var/osci.ini')
 
 # logout

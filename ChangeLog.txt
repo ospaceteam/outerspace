@@ -1,9 +1,11 @@
 Change Log:
+[2007-05-22]
+- Fixed bug in RememberPassword [PeS]
+- code cleanup in LoginDlg (removed really old, commented out code) [PeS]
 
 [2007-05-21]
 - Added authorship on buoy detail view [Random Chaos]
 - Fixed missing Buoy icons [Random Chaos]
-- Fixed client-msg-wx integration [PeS]
 - Updated Czech translations [PeS]
 - Added Slots column in Planet Overview [PeS]
 

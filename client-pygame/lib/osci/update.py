@@ -221,4 +221,6 @@ def updateConfig():
     now = time.strftime('%Y-%m-%d')
     gdata.config.client.lastupdate = now
     # write configuration
+    if gdata.savePassword == False:
+        gdata.config.game.lastpasswordcrypted = None
     gdata.config.save('var/osci.ini')

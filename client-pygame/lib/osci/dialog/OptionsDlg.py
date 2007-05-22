@@ -158,7 +158,7 @@ class OptionsDlg:
 		if gdata.savePassword:
 			self.win.vSavePassword.enabled = True
 			self.win.vSavePassword.checked = True
-		elif gdata.config.game.lastpasswordcrypted != None:
+		elif (gdata.config.game.lastpasswordcrypted != None) and (gdata.config.game.lastpasswordcrypted != ''):
 			self.win.vSavePassword.enabled = True
 			self.win.vSavePassword.checked = False
 		else:

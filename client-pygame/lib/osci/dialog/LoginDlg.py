@@ -39,9 +39,6 @@ class LoginDlg:
 	def display(self, caller = None, message = None):
 		self.caller = caller
 		self.win.vCreate.visible = gdata.config.game.accountcreated == None
-		#self.win.vSavePassword.visible = gdata.config.game.accountcreated != None
-		#self.win.vSavePassword.checked = False
-		#self.win.vAutoLogin.checked = False
 		if gdata.config.game.lastlogin != None:
 			self.win.vLogin.text = gdata.config.game.lastlogin
 		if gdata.config.game.lastpassword:
@@ -90,13 +87,9 @@ class LoginDlg:
 				gdata.config.game.lastpasswordcrypted = None
 			gdata.config.game.lastgameid = gameID
 			gdata.config.game.accountcreated = 1
-			# Auto-login
-			#if self.win.vAutoLogin.checked:
-			#	gdata.config.game.autologin = 'yes'
-			#else:
-			#	gdata.config.game.autologin = 'no'
 			# write configuration
 			gdata.config.save('var/osci.ini')
+			gdata.config.game.lastpasswordcrypted = binascii.b2a_base64(password).strip()
 			# check version
 			if client.lastClientVersion != version or client.lastClientRevision != revision:
 				# wow, a different version!
@@ -179,26 +172,6 @@ class LoginDlg:
 			layout = (11, 1, 10, 1),
 			orderNo = 2
 		)
-		#ui.Label(self.win,
-		#	align = ui.ALIGN_E,
-		#	text = _('Game ID'),
-		#	layout = (5, 2, 6, 1),
-		#)
-		#ui.Entry(self.win, id = 'vGameID',
-		#	align = ui.ALIGN_W,
-		#	layout = (11, 2, 10, 1),
-		#	enabled = 0,
-		#)
-		#ui.Check(self.win, id = 'vSavePassword',
-		#	text = _("Remember password"),
-		#	align = ui.ALIGN_W,
-		#	layout = (11, 3, 10, 1),
-		#)
-		#ui.Check(self.win, id = 'vAutoLogin',
-		#	text = _("Auto-login"),
-		#	align = ui.ALIGN_W,
-		#	layout = (5,3,6,1),
-		#)
 		ui.Button(self.win, layout = (11, 2, 10, 1), text = _("Options"), action = "onOptions", id = "vOptions")
 		ui.Button(self.win, layout = (11, 3, 10, 1), text = _("New account"),
 			action = "onCreateAccount", id = "vCreate")

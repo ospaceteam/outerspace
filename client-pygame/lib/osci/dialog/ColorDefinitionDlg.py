@@ -51,7 +51,6 @@ class ColorDefinitionDlg:
 		self.win.vBS.slider.position = self.color[2]
 		log.debug("ColorDefinitionDlg(%s,%s,%s)" % (self.win.vR.text,self.win.vG.text,self.win.vB.text))
 		self.win.show()
-		self.app.setFocus(self.win.vR)
 		# colorbox
 		self.win.vColor.color = self.color
 		# register for updates
