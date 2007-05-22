@@ -20,6 +20,7 @@
 
 import pygameui as ui, string
 from osci import client, gdata, res
+from ige import log
 from ige.ospace.Const import *
 
 class BuoyDlg:
@@ -32,6 +33,7 @@ class BuoyDlg:
 		self.confirmAction = confirmAction
 		self.win.vText.text = buoyText.split("\n")
 		self.win.vAllied.checked = buoyType == BUOY_TO_ALLY
+		self.win.vScanner.checked = buoyType == BUOY_TO_SCANNERSHARE
 		self.win.show()
 		self.app.setFocus(self.win.vText)
 		# register for updates
@@ -52,6 +54,8 @@ class BuoyDlg:
  		self.buoyText = string.join(self.win.vText.text, "\n")
  		if self.win.vAllied.checked:
  			self.buoyType = BUOY_TO_ALLY
+ 		elif self.win.vScanner.checked:
+ 			self.buoyType = BUOY_TO_SCANNERSHARE
  		else:
  			self.buoyType = BUOY_PRIVATE
 		self.hide()
@@ -62,9 +66,15 @@ class BuoyDlg:
 		self.quantity = None
 		self.hide()
 
+	def turnOff(self, widget, action, data):
+		if widget.data == "vAllied":
+			self.win.vScanner.checked = 0
+		if widget.data == "vScanner":
+			self.win.vAllied.checked = 0
+
 	def createUI(self):
 		w, h = gdata.scrnSize
-		cols = 20
+		cols = 22
 		rows = 13
 		width = cols * 20 + 4
 		height = rows * 20 + 24
@@ -84,11 +94,26 @@ class BuoyDlg:
 			align = ui.ALIGN_W,
 			layout = (0, 0, 3, 1)
 		)
-		ui.Check(self.win,
-			text = _("Visible to allies"),
+		ui.Label(self.win,
+			text = _("Visible to:"),
 			align = ui.ALIGN_W,
-			layout = (14, 0, 6, 1),
+			layout = (9.5, 0, 3, 1)
+		)
+		ui.Check(self.win,
+			text = _("Allies"),
+			align = ui.ALIGN_W,
+			layout = (13, 0, 3, 1),
 			id = 'vAllied',
+			action = "turnOff",
+			data = "vAllied"
+		)
+		ui.Check(self.win,
+			text = _("Scanner Share"),
+			align = ui.ALIGN_W,
+			layout = (16, 0, 5.5, 1),
+			id = 'vScanner',
+			action = "turnOff",
+			data = "vScanner"
 		)
 		s = ui.Scrollbar(self.win, layout = (cols - 1, 1, 1, rows - 3))
 		t = ui.Text(self.win, id = 'vText',

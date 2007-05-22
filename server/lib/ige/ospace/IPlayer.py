@@ -346,7 +346,7 @@ class IPlayer(IObject):
 			else:
 				raise GameException("Buoy at specified system does not exist.")
 
-		if type not in (BUOY_PRIVATE, BUOY_TO_ALLY):
+		if type not in (BUOY_PRIVATE, BUOY_TO_ALLY, BUOY_TO_SCANNERSHARE):
 			raise GameException("Wrong bouy type.")
 
 		# edit buoy
@@ -1136,17 +1136,26 @@ class IPlayer(IObject):
 		# find all allies
 		for partnerID in obj.diplomacyRels.keys():
 			dipl = obj.diplomacyRels[partnerID]
+			getAllyBuoys = False
+			getScannerBuoys = False
 			if dipl.relation >= REL_ALLY_LO:
+				getAllyBuoys = True
+			if self.isPactActive(tran, obj, partnerID, PACT_SHARE_SCANNER):
+				getScannerBuoys = True
+			if (getAllyBuoys or getScannerBuoys):
 				partner = tran.db[partnerID]
 				if hasattr(partner, "buoys"):
 					for systemID in partner.buoys.keys():
-						if partner.buoys[systemID][1] == BUOY_TO_ALLY:
+						toAllyBuoy = BUOY_NONE
+						if getAllyBuoys and partner.buoys[systemID][1] == BUOY_TO_ALLY:
 							toAllyBuoy = (partner.buoys[systemID][0], BUOY_FROM_ALLY, partner.name)
+						elif getScannerBuoys and partner.buoys[systemID][1] == BUOY_TO_SCANNERSHARE:
+							toAllyBuoy = (partner.buoys[systemID][0], BUOY_FROM_ALLY, partner.name)
+						if toAllyBuoy != BUOY_NONE:
 							if systemID in obj.alliedBuoys:
 								obj.alliedBuoys[systemID].append(toAllyBuoy)
 							else:
 								obj.alliedBuoys[systemID] = [toAllyBuoy]
-
 		return None
 
 	processFINALPhase.public = 1
