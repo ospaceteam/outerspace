@@ -3,6 +3,7 @@ Change Log:
 - Added scanner-pact based Buoy [Random Chaos]
 - Fixed bug in RememberPassword [PeS]
 - code cleanup in LoginDlg (removed really old, commented out code) [PeS]
+- Added strategic resource information in TechInfoDlg [Anderuso]
 
 [2007-05-21]
 - Added authorship on buoy detail view [Random Chaos]

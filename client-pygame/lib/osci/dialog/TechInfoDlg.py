@@ -255,6 +255,18 @@ class TechInfoDlg:
 				if tech.prodProdMod[2]: descr.append(_(" - %d %% on planet's en. abundance") % (tech.prodProdMod[2] * 100))
 				if tech.prodProdMod[3]: descr.append(_(" - %d %% is not dependent on any planet's attribute") % (tech.prodProdMod[3] * 100))
 				descr.append("")
+
+			requiredStrategicResourcesForBuilding = self.getStrategicResourcesText(tech, "buildSRes")
+			requiredStrategicResourcesForResearch = self.getStrategicResourcesText(tech, "researchReqSRes")
+			if len(requiredStrategicResourcesForBuilding) > 0 or len(requiredStrategicResourcesForResearch) > 0:
+				descr.append(_("Required strategic resources:"))
+				if len(requiredStrategicResourcesForBuilding) > 0:
+					descr.append(_(" - for building: %s") % requiredStrategicResourcesForBuilding)
+				if len(requiredStrategicResourcesForResearch) > 0:
+					descr.append(_(" - for research: %s") % requiredStrategicResourcesForResearch)
+
+				descr.append("")
+
 			# decription
 			descr.append(_('Description:'))
 			if tech.textDescr != u'Not specified':
@@ -300,9 +312,18 @@ class TechInfoDlg:
 					item.font = 'normal-bold'
 					item.tValue = convertor(value * techEff)
 				items.append(item)
+
 		self.win.vData.items = items
 		self.win.vData.itemsChanged()
 
+	def getStrategicResourcesText(self, tech, attr):
+		requiredStrategicResources = ""
+		for res in getattr(tech, attr, [0]):
+			requiredStrategicResources += gdata.stratRes[res]
+			requiredStrategicResources += ", "
+
+		return requiredStrategicResources[:-2]
+		
 	def onShowType(self, widget, action, data):
 		self.techType = widget.data
 		self.update()
