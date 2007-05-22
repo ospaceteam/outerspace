@@ -353,10 +353,10 @@ class StarMapWidget(Widget):
 				if hasattr(obj, "plStratRes") and obj.plStratRes != SR_NONE:
 					info.append(_("Strat. resource: %s") % _(gdata.stratRes[obj.plStratRes]))
 				if owner:
-					player = client.get(owner)
+					onwerobj = client.get(owner)
 					info.append(_('Owner: %s [ID: %s]') % (
-						getattr(player, 'name', res.getUnknownName()),
-						getattr(player, 'oid', '?')
+						getattr(onwerobj, 'name', res.getUnknownName()),
+						getattr(onwerobj, 'oid', '?')
 					))
 				self._popupInfo[obj.oid] = info
 			elif obj.type == T_FLEET:
@@ -386,10 +386,10 @@ class StarMapWidget(Widget):
 				if eta:
 					info.append(_('ETA: %s') % res.formatTime(eta))
 				if owner:
-					player = client.get(owner)
+					onwerobj = client.get(owner)
 					info.append(_('Owner: %s [ID: %s]') % (
-						getattr(player, 'name', res.getUnknownName()),
-						getattr(player, 'oid', '?')
+						getattr(onwerobj, 'name', res.getUnknownName()),
+						getattr(onwerobj, 'oid', '?')
 					))
 				if hasattr(obj, 'storEn'):
 					if obj.maxEn > 0: full = 100 * obj.storEn / obj.maxEn
@@ -494,10 +494,10 @@ class StarMapWidget(Widget):
 				if eta:
 					info.append(_('ETA: %s') % res.formatTime(eta))
 				if owner:
-					player = client.get(owner)
+					onwerobj = client.get(owner)
 					info.append(_('Owner: %s [ID: %s]') % (
-						getattr(player, 'name', res.getUnknownName()),
-						getattr(player, 'oid', '?')
+						getattr(onwerobj, 'name', res.getUnknownName()),
+						getattr(onwerobj, 'oid', '?')
 					))
 				self._popupInfo[obj.oid] = info
 			elif obj.type in (T_GALAXY, T_AIRENPLAYER, T_AIMUTPLAYER, T_AIPIRPLAYER, T_AIEDENPLAYER, T_PIRPLAYER):

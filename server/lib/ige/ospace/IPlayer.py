@@ -1141,7 +1141,7 @@ class IPlayer(IObject):
 				if hasattr(partner, "buoys"):
 					for systemID in partner.buoys.keys():
 						if partner.buoys[systemID][1] == BUOY_TO_ALLY:
-							toAllyBuoy = (partner.buoys[systemID][0], BUOY_FROM_ALLY)
+							toAllyBuoy = (partner.buoys[systemID][0], BUOY_FROM_ALLY, partner.name)
 							if systemID in obj.alliedBuoys:
 								obj.alliedBuoys[systemID].append(toAllyBuoy)
 							else:

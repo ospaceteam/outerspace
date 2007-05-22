@@ -210,8 +210,8 @@ class SystemOverviewDlg:
 		)
 		self.win.subscribeAction('*', self)
 		# playets listbox
-		ui.Listbox(self.win, layout = (0, 0, 41, 26), id = 'vPlanets',
-			columns = [(_('System'), 'text', 6, ui.ALIGN_W),
+		ui.Listbox(self.win, layout = (0, 0, 40, 26), id = 'vPlanets',
+			columns = [(_('System'), 'text', 5.75, ui.ALIGN_W),
 			(_('# Pl'), 'tSyPnum', 2, ui.ALIGN_E),
 			(_('Mine'), 'tSyPYnum', 2, ui.ALIGN_E),
 			(_('Other'), 'tSyPTnum', 2, ui.ALIGN_E),
@@ -219,12 +219,12 @@ class SystemOverviewDlg:
 			(_('Bio+-'), 'tSyBio', 2, ui.ALIGN_E),
 			(_('En'), 'tSyEnRes', 3, ui.ALIGN_E),
 			(_('En+-'), 'tSyEn', 2, ui.ALIGN_E),
-			(_('%Fuel'), 'tSyRefuel', 2.5, ui.ALIGN_E),
-			(_('%Max'), 'tSyRefuelMax', 2.5, ui.ALIGN_E),
+			(_('%Fuel'), 'tSyRefuel', 2.25, ui.ALIGN_E),
+			(_('%Max'), 'tSyRefuelMax', 2.25, ui.ALIGN_E),
 			(_('%Repair'), 'tSyRepair', 3, ui.ALIGN_E),
 			(_('Upgrade'), 'tSyUpgrade', 3, ui.ALIGN_E),
 			(_('+Gate %'), 'tSyGate', 3, ui.ALIGN_E),
-			(_('Strat Res'), 'tStRes', 4, ui.ALIGN_E)],
+			(_('Strat Res'), 'tStRes', 3.75, ui.ALIGN_E)],
 			columnLabels = 1, action = 'onSelectPlanet', rmbAction = "onShowLocation")
 		ui.Button(self.win, layout = (0, 26, 5, 1), text = _('My planets'), id = "vMine",
 			toggle = 1,	action = "onToggleCondition", data = "showMine")

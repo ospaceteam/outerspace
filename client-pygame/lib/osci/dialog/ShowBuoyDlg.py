@@ -45,6 +45,7 @@ class ShowBuoyDlg:
 			text.append(_("Buoy texts from allies:"))
 			for buoy in player.alliedBuoys[objID]:
 				text.extend(buoy[0].split("\n"))
+				text.append(_('(Author: %s)') % buoy[2]) #owner's name
 				text.append("")
 
 		self.win.vText.text = text
