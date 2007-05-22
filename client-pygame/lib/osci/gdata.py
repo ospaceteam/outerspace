@@ -197,6 +197,9 @@ playersHighlightColorsOld = {
 playersHighlightColors = {
 }
 
+objectFocus = {
+}
+
 savePassword = False
 
 # i18n

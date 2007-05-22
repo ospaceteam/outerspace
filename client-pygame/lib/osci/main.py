@@ -160,6 +160,19 @@ if gdata.config.defaults.colors != None:
             gdata.playersHighlightColors[id] = (red,green,blue)
         else:
             log.warning('OSCI','Unrecognized highlight definition :',coldef)
+# read Object Keys
+if gdata.config.defaults.objectkeys != None:
+    for objectkey in gdata.config.defaults.objectkeys.split(' '):
+        m = re.match('(\d+):(\d+)',objectkey)
+        if m != None :
+            key = int(m.group(1))
+            objid = int(m.group(2))
+            gdata.objectFocus[key] = objid
+        else:
+            log.warning('OSCI','Unrecognized object key definition :',objectkey)
+#check to make sure the client has the object keys help config var
+if gdata.config.defaults.show == None:
+	gdata.config.defaults.showkeymodehelp = 1
 
 #initialize pygame and prepare screen
 pygame.mixer.pre_init(44100, -16, 2, 4096)
@@ -349,6 +362,13 @@ for playerID in gdata.playersHighlightColors.keys():
     b = hex(color[2])
     hl = "%s %s:%s,%s,%s" % (hl,playerID,r,g,b)
 gdata.config.defaults.colors = hl
+# Save objects
+of = ""
+for keyNum in gdata.objectFocus.keys():
+    objid = gdata.objectFocus[keyNum]
+    of = "%s %s:%s" % (of,keyNum,objid)
+gdata.config.defaults.objectkeys = of
+#
 if gdata.savePassword == False:
     gdata.config.game.lastpasswordcrypted = None
 gdata.config.save('var/osci.ini')

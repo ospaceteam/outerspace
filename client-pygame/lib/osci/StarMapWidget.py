@@ -27,6 +27,7 @@ import pygame, pygame.draw, pygame.key
 from pygame.locals import *
 from dialog.ShowBuoyDlg import ShowBuoyDlg
 from dialog.MapOverlayDlg import MapOverlayDlg
+from dialog.KeyModHelp import KeyModHelp
 import gdata, client, res, math, string
 from ige import log
 from osci.dialog.SearchDlg import SearchDlg
@@ -34,7 +35,6 @@ from osci.MiniMap import MiniMap
 
 buoyColors = [(0xff, 0xff, 0x00), (0x00, 0xff, 0xff), (0xff, 0x00, 0xff), (0xb0, 0xb0, 0xff)]
 MAX_BOUY_DISPLAY_LEN = 30
-
 
 class StarMapWidget(Widget):
 
@@ -93,6 +93,7 @@ class StarMapWidget(Widget):
 		self.highlightPos = None
 		self.alwaysShowRangeFor = None
 		self.showBuoyDlg = ShowBuoyDlg(self.app)
+		self.KeyModHelp = KeyModHelp(self.app)
 		self._miniMapRect = Rect(0, 20, 175, 175)
 		self._overlayRect = Rect(0, 0, 175, 24)
 		self._detectOverlayZone = Rect(0,0,0,0)
@@ -106,6 +107,9 @@ class StarMapWidget(Widget):
 		# overlay system
 		self.overlayMode = gdata.OVERLAY_OWNER
 		self._overlayZone = False
+		# key setting system
+		self.selectobject = False
+		self.setKey = False
 
 	def precompute(self):
 		# clear active areas for buoy texts
@@ -1093,58 +1097,67 @@ class StarMapWidget(Widget):
 				bObjIDs.append(objID)
 
 		if (objIDs or bObjIDs) and (self.pressedObjIDs == objIDs or self.pressedBuoyObjIDs == bObjIDs) and self.action:
-			if len(objIDs) + len(bObjIDs) == 1:
-				if len(objIDs) == 1:
-					self.processAction(self.action, objIDs[0])
-					self.pressedObjIDs = []
-				else:
-					self.showBuoyDlg.display(bObjIDs[0])
-					self.pressedBuoyObjIDs = []
-			else:
-				# multiple objects -> post pop-up menu
-				items = []
-				for objID in objIDs:
-					obj = client.get(objID)
-					if obj.type == T_SYSTEM:
-						name = getattr(obj, "name", None)
-						name = _("System: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
-					elif obj.type == T_WORMHOLE:
-						name = getattr(obj, "name", None)
-						name = _("Worm hole: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
-					elif obj.type == T_PLANET:
-						name = getattr(obj, "name", None)
-						name = _("Planet: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
-					elif obj.type == T_FLEET:
-						name = getattr(obj, "name", None)
-						name = _("Fleet: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
-					elif obj.type == T_ASTEROID:
-						name = getattr(obj, "name", None)
-						name = _("Asteroid: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
-					else:
-						name = _("Unknown object [ID: %d]") % obj.oid
-					item = ui.Item(name, action = "onObjectSelected", data = objID)
-					items.append(item)
-
-				for objID in bObjIDs:
-					obj = client.get(objID)
-					if obj.type == T_SYSTEM:
-						name = getattr(obj, "name", None)
-						name = _("Buoy on system: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
-					elif obj.type == T_WORMHOLE:
-						name = getattr(obj, "name", None)
-						name = _("Buoy on worm hole: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
-					else:
-						name = _("Buoy on unknown object [ID: %d]") % obj.oid
-
-					item = ui.Item(name, action = "onBuoySelected", data = objID)
-					items.append(item)
-
-				self.popup.items = items
-				self.popup.show()
+			if self.selectobject:
+				self.setKeyObject(objIDs,bObjIDs)
+				return ui.NoEvent
+			self.gotoObject(objIDs,bObjIDs)
 			return ui.NoEvent
 		else:
 			self.activeObjID = OID_NONE
 			return ui.NoEvent
+
+	def gotoObject(self,objIDs,bObjIDs):
+		if len(objIDs) + len(bObjIDs) == 1:
+			if len(objIDs) == 1:
+				if self.selectobject:
+					return objIDs[0]
+				self.processAction(self.action, objIDs[0])
+				self.pressedObjIDs = []
+			else:
+				if self.selectobject:
+					return OID_NONE
+				self.showBuoyDlg.display(bObjIDs[0])
+				self.pressedBuoyObjIDs = []
+		else:
+			# multiple objects -> post pop-up menu
+			items = []
+			for objID in objIDs:
+				obj = client.get(objID)
+				if obj.type == T_SYSTEM:
+					name = getattr(obj, "name", None)
+					name = _("System: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
+				elif obj.type == T_WORMHOLE:
+					name = getattr(obj, "name", None)
+					name = _("Worm hole: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
+				elif obj.type == T_PLANET:
+					name = getattr(obj, "name", None)
+					name = _("Planet: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
+				elif obj.type == T_FLEET:
+					name = getattr(obj, "name", None)
+					name = _("Fleet: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
+				elif obj.type == T_ASTEROID:
+					name = getattr(obj, "name", None)
+					name = _("Asteroid: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
+				else:
+					name = _("Unknown object [ID: %d]") % obj.oid
+				item = ui.Item(name, action = "onObjectSelected", data = objID)
+				items.append(item)
+			for objID in bObjIDs:
+				obj = client.get(objID)
+				if obj.type == T_SYSTEM:
+					name = getattr(obj, "name", None)
+					name = _("Buoy on system: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
+				elif obj.type == T_WORMHOLE:
+					name = getattr(obj, "name", None)
+					name = _("Buoy on worm hole: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
+				else:
+					name = _("Buoy on unknown object [ID: %d]") % obj.oid
+				item = ui.Item(name, action = "onBuoySelected", data = objID)
+				items.append(item)
+			self.popup.items = items
+			self.popup.show()
+		if self.selectobject:
+			return OID_NONE
 
 	def onObjectSelected(self, widget, action, data):
 		self.processAction(self.action, data)
@@ -1205,6 +1218,25 @@ class StarMapWidget(Widget):
 		return ui.NoEvent
 
 	def processKeyDown(self, evt):
+		#I have not found unicode escape characters for Ctrl-0 through Ctrl-9, so using direct key reference (less preferred due to international keyboards)
+		if evt.key in [49,50,51,52,53,54,55,56,57,48]:
+			if pygame.key.get_mods() & KMOD_CTRL:
+				log.debug('Set Key:',evt.key)
+				if gdata.config.defaults.showkeymodehelp != 'off':
+					self.KeyModHelp.show()
+				self.selectobject = True
+				self.setKey = evt.key
+			elif pygame.key.get_mods() & KMOD_SHIFT:
+				log.debug('Focus Key:',evt.key)
+				self.focusOnKeyObject(evt.key)
+			else:
+				log.debug('Goto Key:',evt.key)
+				self.gotoKeyObject(evt.key)
+			return ui.NoEvent
+		elif evt.key == K_ESCAPE and self.selectobject:
+			log.debug('Canceled Key')
+			self.selectobject = False
+			return ui.NoEvent
 		if not evt.unicode:
 			# force update
 			self.scale += 1
@@ -1235,6 +1267,30 @@ class StarMapWidget(Widget):
 			self.scale += 1
 			self.scale -= 1
 		return ui.NoEvent
+
+	def setKeyObject(self,objIDs,bObjIDs):
+		objID = self.gotoObject(objIDs,bObjIDs)
+		log.debug('Setting Key Object To:',objID)
+		self.selectobject = False
+		if (objID == OID_NONE):
+			return
+		obj = client.get(objID)
+		if obj.type in (T_SYSTEM, T_PLANET, T_FLEET):
+			gdata.objectFocus[self.setKey]=objID
+
+	def gotoKeyObject(self,evtkey):
+		if evtkey in gdata.objectFocus:
+			objID = gdata.objectFocus[evtkey]
+			self.processAction(self.action, objID)
+			self.pressedObjIDs = []
+
+	def focusOnKeyObject(self,evtkey):
+		if evtkey in gdata.objectFocus:
+			objID = gdata.objectFocus[evtkey]
+			obj = client.get(objID, noUpdate = 1)
+			if hasattr(obj, "x"):
+				gdata.mainGameDlg.win.vStarMap.highlightPos = (obj.x, obj.y)
+				gdata.mainGameDlg.win.vStarMap.setPos(obj.x, obj.y)
 
 	def setPos(self, x, y):
 		self.currX = x

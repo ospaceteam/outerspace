@@ -1,12 +1,13 @@
 Change Log:
 [2007-05-22]
-- Added scanner-pact based Buoy [Random Chaos]
+- Added scanner-pact based Buoy [Random Chaos] [SF#1723165]
 - Fixed bug in RememberPassword [PeS]
 - code cleanup in LoginDlg (removed really old, commented out code) [PeS]
 - Added strategic resource information in TechInfoDlg [Anderuso]
+- Added "Hotkey" system of focus/activate object (Ctrl+num sets object, num activates object, Shift+num focuses on object) [Random Chaos] [SF#1717157]
 
 [2007-05-21]
-- Added authorship on buoy detail view [Random Chaos]
+- Added authorship on buoy detail view [Random Chaos] [SF#1480688]
 - Fixed missing Buoy icons [Random Chaos]
 - Updated Czech translations [PeS]
 - Added Slots column in Planet Overview [PeS]
@@ -15,8 +16,8 @@ Change Log:
 - Removed Czech nationals characters from server code. [Qark] [SF#1722181]
 
 [2007-05-20]
-- Added JSON-encoded stats page (website/{game}/json.txt) [Random Chaos]
-- Added System Overview dialog [Random Chaos]
+- Added JSON-encoded stats page (website/{game}/json.txt) [Random Chaos] [SF#1722186]
+- Added System Overview dialog [Random Chaos] [SF#1651099]
 - Fixed display bug with TechInfo dialog for "Extra" ATT and DEF attributes [Random Chaos]
 
 [2007-05-19]
