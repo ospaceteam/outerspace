@@ -91,6 +91,7 @@ def makeShipFullSpec(player, name, hullID, eqIDs, improvements, raiseExs = True)
 	ship.weight = hull.weight
 	ship.slots = 0
 	ship.signature = hull.signature
+	ship.negsignature = 0
 	ship.minSignature = hull.minSignature
 	ship.signatureCloak = 1.0                                                #NEW; 100% - this is the default rule
 	ship.signatureDecloak = 1.0                                              #NEW; 100% - this is the default rule
@@ -163,7 +164,10 @@ def makeShipFullSpec(player, name, hullID, eqIDs, improvements, raiseExs = True)
 			else:
 				currentNegSlots += tech.slots
 				#negslots[techID] = tech.slots + negslots.get(techID, 0) #this is complex for items with max installs...
-			ship.signature += tech.signature
+			if tech.signature < 0 and tech.subtype == "seq_mod":
+				ship.negsignature = min(tech.signature,ship.negsignature)
+			else:
+				ship.signature += tech.signature
 			ship.minSignature = max(ship.minSignature, tech.minSignature)
 			ship.signatureCloak = min(ship.signatureCloak, tech.signatureCloak)
 			ship.signatureDecloak = min(ship.signatureDecloak, tech.signatureDecloak)
@@ -222,6 +226,7 @@ def makeShipFullSpec(player, name, hullID, eqIDs, improvements, raiseExs = True)
 	#add some MP for damage absorb:
 	combatExtra += ship.damageAbsorb * 1500
 	#calculate final signature
+	ship.signature += ship.negsignature
 	ship.signature *= ship.signatureCloak * ship.signatureDecloak
 	# check various conditions
 #	if unpactStruct and deployHandler and raiseExs: #we don't 'need' this, so I'm leaving it disabled for now; however, we might 'want' it to prevent abuse --RC

@@ -5,6 +5,7 @@ Change Log:
 - code cleanup in LoginDlg (removed really old, commented out code) [PeS]
 - Added strategic resource information in TechInfoDlg [Anderuso]
 - Added "Hotkey" system of focus/activate object (Ctrl+num sets object, num activates object, Shift+num focuses on object) [Random Chaos] [SF#1717157]
+- Added equipment limiter for signature. Best negative signature device used; others ignored. [Random Chaos] [SF#1718045]
 
 [2007-05-21]
 - Added authorship on buoy detail view [Random Chaos] [SF#1480688]
