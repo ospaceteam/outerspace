@@ -40,6 +40,7 @@ import DiplomacyDlg
 import EmpireOverviewDlg
 from ige.ospace.Const import *
 from ige.Const import *
+from ige import log
 import webbrowser, pygame
 import time
 import Utils
@@ -65,6 +66,7 @@ class MainGameDlg:
 		self.galaxyRestartDlg = GalaxyRestartDlg(self.app)
 		self.planetsAnalysisDlg = PlanetsAnalysisDlg(app)
 		self.fleetsAnalysisDlg = FleetsAnalysisDlg(app)
+		self.mapWidget = None
 		self.createUI()
 		self.centered = 0
 
@@ -74,6 +76,11 @@ class MainGameDlg:
 		self.win.show()
 		# register for updates
 		gdata.updateDlgs.append(self)
+		self.refocus()
+
+	def refocus(self):
+		#log.debug("refocusing")
+		self.app.setFocus(self.mapWidget)
 
 	def onCmdInProgress(self, inProgress):
 		if inProgress:
@@ -215,6 +222,7 @@ class MainGameDlg:
 			self.win.vMessages.foreground = gdata.sevColors[gdata.MAJ]
 		else:
 			self.win.vMessages.foreground = None
+		self.refocus()
 
 	def galaxyRestart(self, widget, action, data):
 		shownFromMenu = bool(data)
@@ -256,12 +264,12 @@ class MainGameDlg:
 		)
 		self.win.subscribeAction('*', self)
 		# map
-		mapWidget = StarMapWidget(self.win,
+		self.mapWidget = StarMapWidget(self.win,
 			id = 'vStarMap',
 			action = 'onSelectMapObj',
 			layout = (0, 1, lw, lh - 2)
 		)
-		self.searchDlg.mapWidget = mapWidget
+		self.searchDlg.mapWidget = self.mapWidget
 		# bottom
 		ui.Label(self.win,
 			id = 'vStatus',

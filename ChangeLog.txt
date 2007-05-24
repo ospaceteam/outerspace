@@ -1,6 +1,8 @@
 Change Log:
 
 [2007-05-24]
+- Added "Fleet Details" dialog [Random Chaos] [SF#1724110]
+- Fixed SetFocus on Starmap bug (for hotkeys) [Random Chaos] [SF#1723895]
 - updated Czech translation for new code (Hotkey, Buoys) [PeS]
 - disable auto-login when no remember-password on [PeS]
 - new option in defaults - DisplayeHelp, used now only in Hotkey system [PeS]

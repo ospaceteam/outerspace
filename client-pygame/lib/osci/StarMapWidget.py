@@ -1292,6 +1292,13 @@ class StarMapWidget(Widget):
 				gdata.mainGameDlg.win.vStarMap.highlightPos = (obj.x, obj.y)
 				gdata.mainGameDlg.win.vStarMap.setPos(obj.x, obj.y)
 
+	def onMouseOver(self):
+		self.mouseOver = 1
+		try:
+			self.parent.parent.setFocus(self)
+		except:
+			log.debug('Cannot refocus on starmap')
+		
 	def setPos(self, x, y):
 		self.currX = x
 		self.currY = y

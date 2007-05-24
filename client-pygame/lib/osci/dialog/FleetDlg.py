@@ -22,6 +22,7 @@ import pygameui as ui
 from osci import client, res, gdata, sequip
 from osci.SystemMapWidget import SystemMapWidget
 from FleetCommandDlg import FleetCommandDlg
+from FleetSpecsDlg import FleetSpecsDlg
 from FleetSplitDlg import FleetSplitDlg
 from ConfirmDlg import ConfirmDlg
 from ige.ospace.Const import *
@@ -35,6 +36,7 @@ class FleetDlg:
 		self.app = app
 		self.createUI()
 		self.fleetCommandDlg = FleetCommandDlg(self.app)
+		self.fleetSpecsDlg = FleetSpecsDlg(self.app)
 		self.fleetSplitDlg = FleetSplitDlg(self.app)
 		self.confirmDlg = ConfirmDlg(app)
 
@@ -181,6 +183,9 @@ class FleetDlg:
 			items.append(item)
 		self.win.vShipEquipment.items = items
 		self.win.vShipEquipment.itemsChanged()
+
+	def onFleetSpecs(self, widget, action, data):
+		self.fleetSpecsDlg.displayFleet(self.fleetID)
 
 	def onShipSelected(self, widget, action, data):
 		self.showShip(data.designID, data.tExp)
@@ -367,6 +372,8 @@ class FleetDlg:
 			layout = (25, 25, 5, 1), action = 'onRenameFleet', enabled = 0)
 		ui.Button(self.win, text = _('Auto delete'), id = 'vAutoDeleteButton',
 			layout = (30, 25, 5, 1), action = 'onAutoDelete')
+		ui.Button(self.win, text = _('Fleet Specs'), id = 'vFleetSpecs',
+			layout = (35, 25, 5, 1), action = 'onFleetSpecs')
 		# ship data
 		ui.Title(self.win, text = _('Ship Data'), layout = (0, 12, 15, 1),
 			align = ui.ALIGN_W, font = 'normal-bold')
