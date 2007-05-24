@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Outer Space 0.5\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-05-21 20:44+0100\n"
+"PO-Revision-Date: 2007-05-24 01:37+0100\n"
 "Last-Translator: PeS <pes@sandbox.cz>\n"
 "Language-Team: IGE <qark@seznam.cz>\n"
 "MIME-Version: 1.0\n"
@@ -11,7 +11,6 @@ msgstr ""
 "X-Poedit-Language: Czech\n"
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-KeywordsList: N_\n"
-"X-Poedit-Bookmarks: 638,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
 "X-Poedit-SearchPath-0: lib\n"
 
 #: lib/osci/handler.py:59
@@ -651,7 +650,7 @@ msgid "Server sponsored by:"
 msgstr "Server sponzorován"
 
 #: lib/osci/main.py:74
-#: lib/osci/main.py:207
+#: lib/osci/main.py:220
 #, python-format
 msgid "OSCI %s"
 msgstr "OSCI %s"
@@ -671,296 +670,296 @@ msgstr "Python %s"
 msgid "Video Driver: %s [%dx%dx%d]"
 msgstr "Video ovladač: %s [%dx%dx%d]"
 
-#: lib/osci/StarMapWidget.py:104
+#: lib/osci/StarMapWidget.py:105
 msgid "Select object"
 msgstr "Vyber objekt"
 
-#: lib/osci/StarMapWidget.py:258
-#: lib/osci/StarMapWidget.py:1110
+#: lib/osci/StarMapWidget.py:262
+#: lib/osci/StarMapWidget.py:1128
 #, python-format
 msgid "System: %s [ID: %d]"
 msgstr "Soustava: %s [ID: %d]"
 
-#: lib/osci/StarMapWidget.py:259
-#: lib/osci/StarMapWidget.py:287
-#: lib/osci/StarMapWidget.py:384
-#: lib/osci/StarMapWidget.py:489
+#: lib/osci/StarMapWidget.py:263
+#: lib/osci/StarMapWidget.py:291
+#: lib/osci/StarMapWidget.py:388
+#: lib/osci/StarMapWidget.py:493
 #, python-format
 msgid "Coordinates: [%.2f, %.2f]"
 msgstr "Souřadnice: [%.2f, %.2f]"
 
-#: lib/osci/StarMapWidget.py:260
-#: lib/osci/StarMapWidget.py:346
-#: lib/osci/StarMapWidget.py:382
-#: lib/osci/StarMapWidget.py:488
-#: lib/osci/StarMapWidget.py:510
+#: lib/osci/StarMapWidget.py:264
+#: lib/osci/StarMapWidget.py:350
+#: lib/osci/StarMapWidget.py:386
+#: lib/osci/StarMapWidget.py:492
+#: lib/osci/StarMapWidget.py:514
 #, python-format
 msgid "Scan pwr: %d"
 msgstr "Síla senzorů: %d"
 
-#: lib/osci/StarMapWidget.py:261
+#: lib/osci/StarMapWidget.py:265
 #, python-format
 msgid "Star Class: %s"
 msgstr "Třída hvězdy : %s"
 
-#: lib/osci/StarMapWidget.py:262
+#: lib/osci/StarMapWidget.py:266
 #, python-format
 msgid "Star Type: %s"
 msgstr "Typ hvězdy: %s"
 
-#: lib/osci/StarMapWidget.py:264
+#: lib/osci/StarMapWidget.py:268
 #, python-format
 msgid "Refuel: %d %%/turn [%d %% max]"
 msgstr "Tankování: %d %%/tah [%d %% max]"
 
-#: lib/osci/StarMapWidget.py:266
+#: lib/osci/StarMapWidget.py:270
 #, python-format
 msgid "Repair ratio: %d %%/turn"
 msgstr "Rychlost oprav: %d %%/tah"
 
-#: lib/osci/StarMapWidget.py:268
+#: lib/osci/StarMapWidget.py:272
 #, python-format
 msgid "Upgrade points: %d/turn"
 msgstr "Modernizační body: %d/tah"
 
-#: lib/osci/StarMapWidget.py:270
+#: lib/osci/StarMapWidget.py:274
 #, python-format
 msgid "Fleet speed: +%d %%"
 msgstr "Rychlost flotily: +%d %%"
 
-#: lib/osci/StarMapWidget.py:272
-#: lib/osci/StarMapWidget.py:299
+#: lib/osci/StarMapWidget.py:276
+#: lib/osci/StarMapWidget.py:303
 #, python-format
 msgid "Pirate get fame chance: %d %%"
 msgstr "Šance piráta získat slávu: %d %%"
 
-#: lib/osci/StarMapWidget.py:286
-#: lib/osci/StarMapWidget.py:1113
+#: lib/osci/StarMapWidget.py:290
+#: lib/osci/StarMapWidget.py:1131
 #, python-format
 msgid "Worm hole: %s [ID: %d]"
 msgstr "Červí díra: %s [ID: %d]"
 
-#: lib/osci/StarMapWidget.py:292
+#: lib/osci/StarMapWidget.py:296
 #, python-format
 msgid "Destination: %s [ID: %d]"
 msgstr "Cíl: %s [ID: %d]"
 
-#: lib/osci/StarMapWidget.py:293
+#: lib/osci/StarMapWidget.py:297
 #, python-format
 msgid "Dest. Coords: [%.2f, %.2f]"
 msgstr "Souř. cíle: [%.2f, %.2f]"
 
-#: lib/osci/StarMapWidget.py:296
+#: lib/osci/StarMapWidget.py:300
 msgid "Destination: ? [ID: ?]"
 msgstr "Cíl: ? [ID: ?]"
 
-#: lib/osci/StarMapWidget.py:297
+#: lib/osci/StarMapWidget.py:301
 msgid "Dest. Coords: [?, ?]"
 msgstr "Cíl. souřadnice: [?, ?]"
 
-#: lib/osci/StarMapWidget.py:345
-#: lib/osci/StarMapWidget.py:1116
+#: lib/osci/StarMapWidget.py:349
+#: lib/osci/StarMapWidget.py:1134
 #, python-format
 msgid "Planet: %s [ID: %d]"
 msgstr "Planeta: %s [ID: %d]"
 
-#: lib/osci/StarMapWidget.py:347
-#: lib/osci/StarMapWidget.py:383
+#: lib/osci/StarMapWidget.py:351
+#: lib/osci/StarMapWidget.py:387
 #, python-format
 msgid "Scanner pwr: %d"
 msgstr "Síla skeneru: %d"
 
-#: lib/osci/StarMapWidget.py:349
+#: lib/osci/StarMapWidget.py:353
 #, python-format
 msgid "Type: %s"
 msgstr "Typ: %s"
 
-#: lib/osci/StarMapWidget.py:350
+#: lib/osci/StarMapWidget.py:354
 #, python-format
 msgid "Environment: %d"
 msgstr "Životní prostř.: %d"
 
-#: lib/osci/StarMapWidget.py:351
+#: lib/osci/StarMapWidget.py:355
 #, python-format
 msgid "Minerals: %d"
 msgstr "Minerály: %d"
 
-#: lib/osci/StarMapWidget.py:352
+#: lib/osci/StarMapWidget.py:356
 #, python-format
 msgid "Energy: %d"
 msgstr "Energie: %d"
 
-#: lib/osci/StarMapWidget.py:354
+#: lib/osci/StarMapWidget.py:358
 #, python-format
 msgid "Strat. resource: %s"
 msgstr "Strategický zdroj: %s"
 
-#: lib/osci/StarMapWidget.py:357
-#: lib/osci/StarMapWidget.py:390
-#: lib/osci/StarMapWidget.py:498
+#: lib/osci/StarMapWidget.py:361
+#: lib/osci/StarMapWidget.py:394
+#: lib/osci/StarMapWidget.py:502
 #, python-format
 msgid "Owner: %s [ID: %s]"
 msgstr "Vlastník: %s [ID: %s]"
 
-#: lib/osci/StarMapWidget.py:381
-#: lib/osci/StarMapWidget.py:1119
+#: lib/osci/StarMapWidget.py:385
+#: lib/osci/StarMapWidget.py:1137
 #, python-format
 msgid "Fleet: %s [ID: %d]"
 msgstr "Flotila: %s [ID: %d]"
 
-#: lib/osci/StarMapWidget.py:385
-#: lib/osci/StarMapWidget.py:490
+#: lib/osci/StarMapWidget.py:389
+#: lib/osci/StarMapWidget.py:494
 #, python-format
 msgid "Signature: %d"
 msgstr "Signatura: %d"
 
-#: lib/osci/StarMapWidget.py:387
-#: lib/osci/StarMapWidget.py:495
+#: lib/osci/StarMapWidget.py:391
+#: lib/osci/StarMapWidget.py:499
 #, python-format
 msgid "ETA: %s"
 msgstr "ETA: %s"
 
-#: lib/osci/StarMapWidget.py:397
+#: lib/osci/StarMapWidget.py:401
 #, python-format
 msgid "Tanks: %d / %d [%d %%]"
 msgstr "Nádrže: %d / %d [%d %%]"
 
-#: lib/osci/StarMapWidget.py:398
+#: lib/osci/StarMapWidget.py:402
 #, python-format
 msgid "Support (fuel): %d/turn"
 msgstr "Podpora (palivo): %d/tah"
 
-#: lib/osci/StarMapWidget.py:399
+#: lib/osci/StarMapWidget.py:403
 #, python-format
 msgid "Support (const. pts): %d/turn"
 msgstr "Podpora (konst. body): %d/tah"
 
-#: lib/osci/StarMapWidget.py:401
+#: lib/osci/StarMapWidget.py:405
 #, python-format
 msgid "Military power: %d"
 msgstr "Vojenská síla: %d"
 
-#: lib/osci/StarMapWidget.py:413
+#: lib/osci/StarMapWidget.py:417
 #, python-format
 msgid "Target: %s"
 msgstr "Cíl: %s"
 
-#: lib/osci/StarMapWidget.py:415
-#: lib/osci/StarMapWidget.py:435
+#: lib/osci/StarMapWidget.py:419
+#: lib/osci/StarMapWidget.py:439
 msgid "Ships:"
 msgstr "Lodě:"
 
-#: lib/osci/StarMapWidget.py:428
+#: lib/osci/StarMapWidget.py:432
 #, python-format
 msgid "  %d x %s   [%d, %d, %d, %d, %d]"
 msgstr "  %d x %s   [%d, %d, %d, %d, %d]"
 
-#: lib/osci/StarMapWidget.py:438
+#: lib/osci/StarMapWidget.py:442
 msgid "military"
 msgstr "vojenská"
 
-#: lib/osci/StarMapWidget.py:440
+#: lib/osci/StarMapWidget.py:444
 msgid "civilian"
 msgstr "civilní"
 
-#: lib/osci/StarMapWidget.py:441
+#: lib/osci/StarMapWidget.py:445
 #, python-format
 msgid "  %d x %s [%s %s ship]"
 msgstr "  %d x %s [%s %s loď]"
 
-#: lib/osci/StarMapWidget.py:453
+#: lib/osci/StarMapWidget.py:457
 #, python-format
 msgid "Command: %s %s"
 msgstr "Příkaz: %s %s"
 
-#: lib/osci/StarMapWidget.py:487
-#: lib/osci/StarMapWidget.py:1122
+#: lib/osci/StarMapWidget.py:491
+#: lib/osci/StarMapWidget.py:1140
 #, python-format
 msgid "Asteroid: %s [ID: %d]"
 msgstr "Asteroid: %s [ID: %d]"
 
-#: lib/osci/StarMapWidget.py:491
+#: lib/osci/StarMapWidget.py:495
 #, python-format
 msgid "Diameter: %d"
 msgstr "Průměr: %d"
 
-#: lib/osci/StarMapWidget.py:492
+#: lib/osci/StarMapWidget.py:496
 #, python-format
 msgid "HP: %d"
 msgstr "HP: %d"
 
-#: lib/osci/StarMapWidget.py:493
+#: lib/osci/StarMapWidget.py:497
 #, python-format
 msgid "Speed: %.2f"
 msgstr "Rychlost: %.2f"
 
-#: lib/osci/StarMapWidget.py:508
-#: lib/osci/StarMapWidget.py:1124
+#: lib/osci/StarMapWidget.py:512
+#: lib/osci/StarMapWidget.py:1142
 #, python-format
 msgid "Unknown object [ID: %d]"
 msgstr "Neznámý objekt [ID: %d]"
 
-#: lib/osci/StarMapWidget.py:974
+#: lib/osci/StarMapWidget.py:978
 msgid "Overlay Mode: "
 msgstr "Překrytí mapy: "
 
-#: lib/osci/StarMapWidget.py:976
+#: lib/osci/StarMapWidget.py:980
 msgid "Normal"
 msgstr "Normální"
 
-#: lib/osci/StarMapWidget.py:978
+#: lib/osci/StarMapWidget.py:982
 msgid "Diplomatic"
 msgstr "Diplomacie"
 
-#: lib/osci/StarMapWidget.py:980
+#: lib/osci/StarMapWidget.py:984
 #: lib/osci/dialog/MapOverlayDlg.py:125
 #: lib/osci/dialog/StarSystemDlg.py:1162
 msgid "Environment"
 msgstr "Prostředí"
 
-#: lib/osci/StarMapWidget.py:982
+#: lib/osci/StarMapWidget.py:986
 #: lib/osci/dialog/MapOverlayDlg.py:137
 msgid "Pirate Fame"
 msgstr "Pověst pirátů"
 
-#: lib/osci/StarMapWidget.py:984
+#: lib/osci/StarMapWidget.py:988
 #: lib/osci/dialog/MapOverlayDlg.py:127
 msgid "Minerals"
 msgstr "Minerály"
 
-#: lib/osci/StarMapWidget.py:986
+#: lib/osci/StarMapWidget.py:990
 #: lib/osci/dialog/MapOverlayDlg.py:129
 #: lib/osci/dialog/TechInfoDlg.py:129
 msgid "Slots"
 msgstr "Sloty"
 
-#: lib/osci/StarMapWidget.py:988
+#: lib/osci/StarMapWidget.py:992
 #: lib/osci/dialog/MapOverlayDlg.py:131
 msgid "Fleet Acceleration"
 msgstr "Zrychlení flotily"
 
-#: lib/osci/StarMapWidget.py:990
+#: lib/osci/StarMapWidget.py:994
 msgid "Refuel and Repair"
-msgstr "Čerpání a opravy"
+msgstr "Tankování a opravy"
 
-#: lib/osci/StarMapWidget.py:992
+#: lib/osci/StarMapWidget.py:996
 #: lib/osci/dialog/MapOverlayDlg.py:135
 #: lib/osci/dialog/StructTaskDlg.py:312
 #: lib/osci/dialog/StarSystemDlg.py:1231
 msgid "Morale"
 msgstr "Morálka"
 
-#: lib/osci/StarMapWidget.py:1132
+#: lib/osci/StarMapWidget.py:1149
 #, python-format
 msgid "Buoy on system: %s [ID: %d]"
 msgstr "Bójka na soustavě: %s [ID: %d]"
 
-#: lib/osci/StarMapWidget.py:1135
+#: lib/osci/StarMapWidget.py:1152
 #, python-format
 msgid "Buoy on worm hole: %s [ID: %d]"
 msgstr "Bójka na červí díře: %s [ID: %d]"
 
-#: lib/osci/StarMapWidget.py:1137
+#: lib/osci/StarMapWidget.py:1154
 #, python-format
 msgid "Buoy on unknown object [ID: %d]"
 msgstr "Bójka na neznámém objektu [ID: %d]"
@@ -1329,10 +1328,10 @@ msgstr "Informace"
 #: lib/osci/dialog/ConstructionDlg.py:53
 #: lib/osci/dialog/ConstructionDlg.py:156
 #: lib/osci/dialog/FleetCommandDlg.py:62
-#: lib/osci/dialog/BuoyDlg.py:42
+#: lib/osci/dialog/BuoyDlg.py:44
 #: lib/osci/dialog/ExceptionDlg.py:57
 #: lib/osci/dialog/ProblemsDlg.py:44
-#: lib/osci/dialog/ShowBuoyDlg.py:57
+#: lib/osci/dialog/ShowBuoyDlg.py:58
 #: lib/osci/dialog/GalaxyRestartDlg.py:46
 #: lib/osci/dialog/StructTaskDlg.py:62
 #: lib/osci/dialog/OptionsDlg.py:52
@@ -1342,9 +1341,9 @@ msgstr "Informace"
 #: lib/osci/dialog/NewMessageDlg.py:64
 #: lib/osci/dialog/FleetRedirectionDlg.py:52
 #: lib/osci/dialog/FleetsOverviewDlg.py:46
-#: lib/osci/dialog/ColorDefinitionDlg.py:62
+#: lib/osci/dialog/ColorDefinitionDlg.py:61
 #: lib/osci/dialog/FleetsAnalysisDlg.py:45
-#: lib/osci/dialog/SearchDlg.py:52
+#: lib/osci/dialog/SearchDlg.py:54
 #: lib/osci/dialog/PlanetsOverviewDlg.py:47
 #: lib/osci/dialog/StarSystemDlg.py:103
 msgid "Ready."
@@ -1366,13 +1365,13 @@ msgstr "Diplomacie"
 
 #: lib/osci/dialog/MapOverlayDlg.py:133
 msgid "Refuel and Upgrade"
-msgstr "Doplňování paliva a upgrade"
+msgstr "Tankování a upgrade"
 
 #: lib/osci/dialog/MapOverlayDlg.py:141
 #: lib/osci/dialog/PlanetsAnalysisDlg.py:152
 #: lib/osci/dialog/EventsDlg.py:190
 #: lib/osci/dialog/EmpireOverviewDlg.py:251
-#: lib/osci/dialog/TechInfoDlg.py:354
+#: lib/osci/dialog/TechInfoDlg.py:375
 #: lib/osci/dialog/SystemOverviewDlg.py:240
 #: lib/osci/dialog/ResearchDlg.py:306
 #: lib/osci/dialog/MessagesDlg.py:408
@@ -1641,9 +1640,9 @@ msgstr "Cílový slot"
 
 #: lib/osci/dialog/NewTaskDlg.py:346
 #: lib/osci/dialog/StructTaskDlg.py:315
-#: lib/osci/dialog/OptionsDlg.py:373
+#: lib/osci/dialog/OptionsDlg.py:392
 #: lib/osci/dialog/MainGameDlg.py:315
-#: lib/osci/dialog/LoginDlg.py:202
+#: lib/osci/dialog/LoginDlg.py:175
 msgid "Options"
 msgstr "Nastavení"
 
@@ -1656,7 +1655,7 @@ msgstr "Množství"
 
 #: lib/osci/dialog/NewTaskDlg.py:350
 #: lib/osci/dialog/StructTaskDlg.py:319
-#: lib/osci/dialog/OptionsDlg.py:440
+#: lib/osci/dialog/OptionsDlg.py:459
 msgid "Report finalization"
 msgstr "Hlásit dokončení"
 
@@ -1666,19 +1665,19 @@ msgstr "Hlásit dokončení"
 #: lib/osci/dialog/ChangeQtyDlg.py:87
 #: lib/osci/dialog/RenameSysDlg.py:113
 #: lib/osci/dialog/FleetCommandDlg.py:330
-#: lib/osci/dialog/BuoyDlg.py:101
+#: lib/osci/dialog/BuoyDlg.py:126
 #: lib/osci/dialog/GalaxyRestartDlg.py:92
 #: lib/osci/dialog/StructTaskDlg.py:323
-#: lib/osci/dialog/OptionsDlg.py:422
-#: lib/osci/dialog/OptionsDlg.py:481
+#: lib/osci/dialog/OptionsDlg.py:441
+#: lib/osci/dialog/OptionsDlg.py:502
 #: lib/osci/dialog/ConstrSelTechDlg.py:179
 #: lib/osci/dialog/NewAccDlg.py:134
 #: lib/osci/dialog/NewMessageDlg.py:195
 #: lib/osci/dialog/NewMessageDlg.py:219
 #: lib/osci/dialog/FleetRedirectionDlg.py:125
-#: lib/osci/dialog/ColorDefinitionDlg.py:148
+#: lib/osci/dialog/ColorDefinitionDlg.py:147
 #: lib/osci/dialog/_Template.py:74
-#: lib/osci/dialog/SearchDlg.py:117
+#: lib/osci/dialog/SearchDlg.py:119
 msgid "Cancel"
 msgstr "Storno"
 
@@ -2015,7 +2014,7 @@ msgstr "?"
 #: lib/osci/dialog/MessagesDlg.py:305
 #: lib/osci/dialog/FleetDlg.py:282
 #: lib/osci/dialog/ConstructionDlg.py:346
-#: lib/osci/dialog/LoginDlg.py:111
+#: lib/osci/dialog/LoginDlg.py:104
 #: lib/osci/dialog/StarSystemDlg.py:899
 #: lib/osci/dialog/StarSystemDlg.py:954
 msgid "Yes"
@@ -2028,7 +2027,7 @@ msgstr "Ano"
 #: lib/osci/dialog/ConstructionDlg.py:347
 #: lib/osci/dialog/GalaxyRestartDlg.py:50
 #: lib/osci/dialog/MainGameDlg.py:166
-#: lib/osci/dialog/LoginDlg.py:111
+#: lib/osci/dialog/LoginDlg.py:104
 #: lib/osci/dialog/StarSystemDlg.py:899
 #: lib/osci/dialog/StarSystemDlg.py:954
 msgid "No"
@@ -2368,52 +2367,66 @@ msgstr "Produkce energie závisí:"
 msgid "Constr. points production depends:"
 msgstr "Produkce konstrukčních bodů závisí:"
 
-#: lib/osci/dialog/TechInfoDlg.py:259
+#: lib/osci/dialog/TechInfoDlg.py:262
+msgid "Required strategic resources:"
+msgstr "Požadované strategické zdroje:"
+
+#: lib/osci/dialog/TechInfoDlg.py:264
+#, python-format
+msgid " - for building: %s"
+msgstr "- pro budovu: %s"
+
+#: lib/osci/dialog/TechInfoDlg.py:266
+#, python-format
+msgid " - for research: %s"
+msgstr "- pro výzkum: %s"
+
+#: lib/osci/dialog/TechInfoDlg.py:271
 msgid "Description:"
 msgstr "Popis:"
 
-#: lib/osci/dialog/TechInfoDlg.py:266
+#: lib/osci/dialog/TechInfoDlg.py:278
 msgid "Rumours:"
 msgstr "Zvěsti:"
 
-#: lib/osci/dialog/TechInfoDlg.py:323
+#: lib/osci/dialog/TechInfoDlg.py:344
 #: lib/osci/dialog/FleetSplitDlg.py:492
 #: lib/osci/dialog/_Template.py:66
 msgid "Split Fleet"
 msgstr "Rozdělit flotilu"
 
-#: lib/osci/dialog/TechInfoDlg.py:329
+#: lib/osci/dialog/TechInfoDlg.py:350
 #: lib/osci/dialog/FleetDlg.py:399
 #: lib/osci/dialog/ConstructionDlg.py:436
 #: lib/osci/dialog/ConstrSelTechDlg.py:159
 msgid "Data"
 msgstr "Data"
 
-#: lib/osci/dialog/TechInfoDlg.py:332
+#: lib/osci/dialog/TechInfoDlg.py:353
 msgid "Property"
 msgstr "Majetek"
 
-#: lib/osci/dialog/TechInfoDlg.py:333
+#: lib/osci/dialog/TechInfoDlg.py:354
 msgid "Value"
 msgstr "Hodnota"
 
-#: lib/osci/dialog/TechInfoDlg.py:335
+#: lib/osci/dialog/TechInfoDlg.py:356
 msgid "Structure"
 msgstr "Struktura"
 
-#: lib/osci/dialog/TechInfoDlg.py:337
+#: lib/osci/dialog/TechInfoDlg.py:358
 msgid "Ship Hull"
 msgstr "Lodní trup"
 
-#: lib/osci/dialog/TechInfoDlg.py:339
+#: lib/osci/dialog/TechInfoDlg.py:360
 msgid "Ship Eq."
 msgstr "Vybavení lodí"
 
-#: lib/osci/dialog/TechInfoDlg.py:341
+#: lib/osci/dialog/TechInfoDlg.py:362
 msgid "Project"
 msgstr "Projekt"
 
-#: lib/osci/dialog/TechInfoDlg.py:348
+#: lib/osci/dialog/TechInfoDlg.py:369
 msgid "Description"
 msgstr "Popis"
 
@@ -2432,10 +2445,11 @@ msgstr "Fronty konstrukcí na planetách nebyly aktualizovány, protože nový n
 
 #: lib/osci/dialog/ConstrUpgradeDlg.py:115
 #: lib/osci/dialog/ChangeQtyDlg.py:88
-#: lib/osci/dialog/BuoyDlg.py:102
-#: lib/osci/dialog/ShowBuoyDlg.py:95
-#: lib/osci/dialog/OptionsDlg.py:482
-#: lib/osci/dialog/ColorDefinitionDlg.py:149
+#: lib/osci/dialog/BuoyDlg.py:127
+#: lib/osci/dialog/ShowBuoyDlg.py:96
+#: lib/osci/dialog/KeyModHelp.py:87
+#: lib/osci/dialog/OptionsDlg.py:503
+#: lib/osci/dialog/ColorDefinitionDlg.py:148
 msgid "OK"
 msgstr "OK"
 
@@ -2449,7 +2463,7 @@ msgid "Total"
 msgstr "Celkem"
 
 #: lib/osci/dialog/ConstrUpgradeDlg.py:138
-#: lib/osci/dialog/OptionsDlg.py:421
+#: lib/osci/dialog/OptionsDlg.py:440
 #: lib/osci/dialog/ConstrSelTechDlg.py:178
 #: lib/osci/dialog/NewMessageDlg.py:218
 #: lib/osci/dialog/NewAccountDlg.py:134
@@ -3437,18 +3451,26 @@ msgstr "Přílet:"
 msgid "Order"
 msgstr "OK"
 
-#: lib/osci/dialog/BuoyDlg.py:75
+#: lib/osci/dialog/BuoyDlg.py:85
 #: lib/osci/dialog/StarSystemDlg.py:625
 msgid "Edit buoy"
 msgstr "Editovat bójku"
 
-#: lib/osci/dialog/BuoyDlg.py:83
+#: lib/osci/dialog/BuoyDlg.py:93
 msgid "Buoy text:"
 msgstr "Text bójky"
 
-#: lib/osci/dialog/BuoyDlg.py:88
-msgid "Visible to allies"
-msgstr "Viditelná spojenci"
+#: lib/osci/dialog/BuoyDlg.py:98
+msgid "Visible to:"
+msgstr "Viditelná pro:"
+
+#: lib/osci/dialog/BuoyDlg.py:103
+msgid "Allies"
+msgstr "Spojence"
+
+#: lib/osci/dialog/BuoyDlg.py:111
+msgid "Scanner Share"
+msgstr "Sdílení skeneru"
 
 #: lib/osci/dialog/ExceptionDlg.py:32
 #, python-format
@@ -3590,9 +3612,38 @@ msgstr "(zobrazit spojencům)"
 msgid "Buoy texts from allies:"
 msgstr "Texty bójky spojence:"
 
-#: lib/osci/dialog/ShowBuoyDlg.py:79
+#: lib/osci/dialog/ShowBuoyDlg.py:48
+#, python-format
+msgid "(Author: %s)"
+msgstr "(Autor: %s)"
+
+#: lib/osci/dialog/ShowBuoyDlg.py:80
 msgid "Show buoy text"
 msgstr "Zobraz texty bójky"
+
+#: lib/osci/dialog/KeyModHelp.py:45
+msgid "You have pressed 'Ctrl+Number.' This allows you to set a control key. Click on a system, planet, or fleet on the starmap after closing this dialog to set the number key that you pressed to access that object. You can always cancel this action with the ESCAPE key while on the Star Map."
+msgstr "Stisknul jsi 'CTRL+číslo'. Toto ti umožní nastavit kontrolní klávesu. Po zavření tohoto dialogu klikni na systém, planetu nebo flotilu na hvězdné mapě pro nastavení klávesové zkratky k tomuto objektu. Můžeš kdykoliv zrušit tuto akci stisknutím ESCAPE klávesy nad hvězdnou mapou."
+
+#: lib/osci/dialog/KeyModHelp.py:47
+msgid "Once you have selected an object:"
+msgstr "Po zvolení objektu:"
+
+#: lib/osci/dialog/KeyModHelp.py:48
+msgid "- Pressing 'Number' will open that object's dialog."
+msgstr "- Zmáčknutí 'čísla' otevře dialog tohoto objektu."
+
+#: lib/osci/dialog/KeyModHelp.py:49
+msgid "- Pressing 'Shift+Number' will center the starmap on that object."
+msgstr "- Zmáčknutí 'čísla se shiftem' vycentruje hvězdnou mapu na tento objekt."
+
+#: lib/osci/dialog/KeyModHelp.py:71
+msgid "Key Command Help"
+msgstr "Nápověda klávesových zkratek"
+
+#: lib/osci/dialog/KeyModHelp.py:88
+msgid "Do not show help/tooltip again"
+msgstr "Příště nápovědu nezobrazovat"
 
 #: lib/osci/dialog/GalaxyRestartDlg.py:50
 msgid "Are you really really sure you want to restart this galaxy?"
@@ -3663,108 +3714,112 @@ msgstr "vojenská"
 msgid "Select Theme"
 msgstr "Vyber téma"
 
-#: lib/osci/dialog/OptionsDlg.py:382
+#: lib/osci/dialog/OptionsDlg.py:401
 msgid "Resolution"
 msgstr "Rozlišení"
 
-#: lib/osci/dialog/OptionsDlg.py:392
+#: lib/osci/dialog/OptionsDlg.py:411
 msgid "Language"
 msgstr "Jazyk"
 
-#: lib/osci/dialog/OptionsDlg.py:394
+#: lib/osci/dialog/OptionsDlg.py:413
 msgid "English"
 msgstr "Anglicky"
 
-#: lib/osci/dialog/OptionsDlg.py:396
+#: lib/osci/dialog/OptionsDlg.py:415
 msgid "Czech"
 msgstr "Česky"
 
-#: lib/osci/dialog/OptionsDlg.py:400
+#: lib/osci/dialog/OptionsDlg.py:419
 msgid "Themes"
 msgstr "Témata"
 
-#: lib/osci/dialog/OptionsDlg.py:411
+#: lib/osci/dialog/OptionsDlg.py:430
 msgid "Select theme"
 msgstr "Vyber téma"
 
-#: lib/osci/dialog/OptionsDlg.py:426
+#: lib/osci/dialog/OptionsDlg.py:445
 msgid "Display flags"
 msgstr "Volby zobrazení"
 
-#: lib/osci/dialog/OptionsDlg.py:428
+#: lib/osci/dialog/OptionsDlg.py:447
 msgid "Fullscreen"
 msgstr "Celá obrazovka"
 
-#: lib/osci/dialog/OptionsDlg.py:430
+#: lib/osci/dialog/OptionsDlg.py:449
 msgid "Double buf."
 msgstr "Dvojitý buf."
 
-#: lib/osci/dialog/OptionsDlg.py:432
+#: lib/osci/dialog/OptionsDlg.py:451
 msgid "HW surface"
 msgstr "HW povrch"
 
-#: lib/osci/dialog/OptionsDlg.py:434
+#: lib/osci/dialog/OptionsDlg.py:453
 msgid "SW surface"
 msgstr "SW povrch"
 
-#: lib/osci/dialog/OptionsDlg.py:438
+#: lib/osci/dialog/OptionsDlg.py:457
 msgid "Default settings"
 msgstr "Výchozí nastavení"
 
-#: lib/osci/dialog/OptionsDlg.py:442
+#: lib/osci/dialog/OptionsDlg.py:461
 #: lib/osci/dialog/FleetsOverviewDlg.py:255
 msgid "Show redirects"
 msgstr "Včetně přesměrování"
 
-#: lib/osci/dialog/OptionsDlg.py:444
+#: lib/osci/dialog/OptionsDlg.py:463
 msgid "Show coordinates"
 msgstr "Zobraz souřadnice"
 
-#: lib/osci/dialog/OptionsDlg.py:446
+#: lib/osci/dialog/OptionsDlg.py:465
 msgid "Players highlight"
 msgstr "Zvýraznění hráčů"
 
-#: lib/osci/dialog/OptionsDlg.py:450
+#: lib/osci/dialog/OptionsDlg.py:467
+msgid "Display help/tooltip"
+msgstr "Zobrazovat nápovědu"
+
+#: lib/osci/dialog/OptionsDlg.py:471
 msgid "Login settings"
 msgstr "Nastavení přihlášení"
 
-#: lib/osci/dialog/OptionsDlg.py:452
+#: lib/osci/dialog/OptionsDlg.py:473
 msgid "Auto-login"
 msgstr "Automatický login"
 
-#: lib/osci/dialog/OptionsDlg.py:454
+#: lib/osci/dialog/OptionsDlg.py:475
 msgid "Remember password"
 msgstr "Zapamatovat heslo"
 
-#: lib/osci/dialog/OptionsDlg.py:458
+#: lib/osci/dialog/OptionsDlg.py:479
 msgid "Proxy"
 msgstr "Proxy"
 
-#: lib/osci/dialog/OptionsDlg.py:459
+#: lib/osci/dialog/OptionsDlg.py:480
 msgid "Host:"
 msgstr "Hostitel:"
 
-#: lib/osci/dialog/OptionsDlg.py:461
+#: lib/osci/dialog/OptionsDlg.py:482
 msgid "Port:"
 msgstr "Port:"
 
-#: lib/osci/dialog/OptionsDlg.py:463
+#: lib/osci/dialog/OptionsDlg.py:484
 msgid "Username:"
 msgstr "Uživ. jméno:"
 
-#: lib/osci/dialog/OptionsDlg.py:465
+#: lib/osci/dialog/OptionsDlg.py:486
 msgid "Password:"
 msgstr "Heslo:"
 
-#: lib/osci/dialog/OptionsDlg.py:469
+#: lib/osci/dialog/OptionsDlg.py:490
 msgid "Sound / Music"
 msgstr "Zvuky/muzika"
 
-#: lib/osci/dialog/OptionsDlg.py:470
+#: lib/osci/dialog/OptionsDlg.py:491
 msgid "Sounds"
 msgstr "Zvuky"
 
-#: lib/osci/dialog/OptionsDlg.py:474
+#: lib/osci/dialog/OptionsDlg.py:495
 msgid "Music"
 msgstr "Hudba"
 
@@ -3955,13 +4010,13 @@ msgid "Nick"
 msgstr "Přezdívka"
 
 #: lib/osci/dialog/NewAccDlg.py:96
-#: lib/osci/dialog/LoginDlg.py:162
-#: lib/osci/dialog/LoginDlg.py:207
+#: lib/osci/dialog/LoginDlg.py:155
+#: lib/osci/dialog/LoginDlg.py:180
 msgid "Login"
 msgstr "Login"
 
 #: lib/osci/dialog/NewAccDlg.py:105
-#: lib/osci/dialog/LoginDlg.py:172
+#: lib/osci/dialog/LoginDlg.py:165
 msgid "Password"
 msgstr "Heslo"
 
@@ -4139,7 +4194,7 @@ msgstr "Litujeme, ale v této chvíli nejsou k dispozici žádné startovní pos
 
 #: lib/osci/dialog/NewAccountDlg.py:51
 #: lib/osci/dialog/NewAccountDlg.py:133
-#: lib/osci/dialog/LoginDlg.py:206
+#: lib/osci/dialog/LoginDlg.py:179
 msgid "Exit"
 msgstr "Konec"
 
@@ -4244,48 +4299,48 @@ msgstr "Signatura:"
 msgid "Last upgr."
 msgstr "Naposledy vylep."
 
-#: lib/osci/dialog/ColorDefinitionDlg.py:102
+#: lib/osci/dialog/ColorDefinitionDlg.py:101
 msgid "Values must be hexa numbers between 0x00 - 0xff"
 msgstr "Hodnoty musí být šestnáctková čísla v rozsahu 0x00 - 0xff"
 
-#: lib/osci/dialog/ColorDefinitionDlg.py:123
+#: lib/osci/dialog/ColorDefinitionDlg.py:122
 msgid "Color Definition"
 msgstr "Definice barvy"
 
-#: lib/osci/dialog/ColorDefinitionDlg.py:132
+#: lib/osci/dialog/ColorDefinitionDlg.py:131
 msgid "Red:"
 msgstr "Červená:"
 
-#: lib/osci/dialog/ColorDefinitionDlg.py:136
+#: lib/osci/dialog/ColorDefinitionDlg.py:135
 msgid "Green:"
 msgstr "Zelená:"
 
-#: lib/osci/dialog/ColorDefinitionDlg.py:140
+#: lib/osci/dialog/ColorDefinitionDlg.py:139
 msgid "Blue:"
 msgstr "Modrá:"
 
-#: lib/osci/dialog/LoginDlg.py:64
+#: lib/osci/dialog/LoginDlg.py:61
 msgid "Auto-login in progress ..."
 msgstr "Probíhá automatické přihlašování ..."
 
-#: lib/osci/dialog/LoginDlg.py:75
+#: lib/osci/dialog/LoginDlg.py:72
 msgid "Login in progress ..."
 msgstr "Probíhá přihlášení..."
 
-#: lib/osci/dialog/LoginDlg.py:104
+#: lib/osci/dialog/LoginDlg.py:97
 #, python-format
 msgid "Your client version does not match server version %d.%d.%d%s [Revision %d]. Do you want to continue?"
 msgstr "Váš klient je starší než dostupná nová verze (%d.%d.%d%s) [Revize %d]. Chcete pokračovat?"
 
-#: lib/osci/dialog/LoginDlg.py:123
+#: lib/osci/dialog/LoginDlg.py:116
 msgid "Wrong login and/or password"
 msgstr "Chybné jméno a/nebo heslo"
 
-#: lib/osci/dialog/LoginDlg.py:155
+#: lib/osci/dialog/LoginDlg.py:148
 msgid "Outer Space Login"
 msgstr "Přihlášení do hry"
 
-#: lib/osci/dialog/LoginDlg.py:203
+#: lib/osci/dialog/LoginDlg.py:176
 msgid "New account"
 msgstr "Nový účet"
 
@@ -4318,31 +4373,31 @@ msgstr "Jméno flotily"
 msgid "Fleet size"
 msgstr "Velikost flotily"
 
-#: lib/osci/dialog/SearchDlg.py:85
+#: lib/osci/dialog/SearchDlg.py:87
 msgid "No system found"
 msgstr "Nenalezen žádný systém"
 
-#: lib/osci/dialog/SearchDlg.py:100
+#: lib/osci/dialog/SearchDlg.py:102
 msgid "Search for system"
 msgstr "Hledám systém"
 
-#: lib/osci/dialog/SearchDlg.py:108
+#: lib/osci/dialog/SearchDlg.py:110
 msgid "Use wildcard search as with files (*ese* finds Presere and Shesed)"
-msgstr "Vyhledávání s pomocnými znaky (*ese* nalezne Presere i Shesed)"
+msgstr "Vyhledávání s pomocnými znaky(*ra* nalezne Praha i Strakonice)"
 
-#: lib/osci/dialog/SearchDlg.py:109
+#: lib/osci/dialog/SearchDlg.py:111
 msgid "* matches everything, ? matches any single character"
 msgstr "* znamená cokoliv, ? znamená jeden libovolný znak"
 
-#: lib/osci/dialog/SearchDlg.py:110
+#: lib/osci/dialog/SearchDlg.py:112
 msgid "System name:"
-msgstr "Název soustavy: %s"
+msgstr "Název soustavy:"
 
-#: lib/osci/dialog/SearchDlg.py:115
+#: lib/osci/dialog/SearchDlg.py:117
 msgid "Find"
 msgstr "Hledat"
 
-#: lib/osci/dialog/SearchDlg.py:116
+#: lib/osci/dialog/SearchDlg.py:118
 msgid "Next"
 msgstr "Další"
 

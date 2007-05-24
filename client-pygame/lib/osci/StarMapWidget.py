@@ -1222,7 +1222,7 @@ class StarMapWidget(Widget):
 		if evt.key in [49,50,51,52,53,54,55,56,57,48]:
 			if pygame.key.get_mods() & KMOD_CTRL:
 				log.debug('Set Key:',evt.key)
-				if gdata.config.defaults.showkeymodehelp != 'off':
+				if gdata.config.defaults.displayhelp != 'no':
 					self.KeyModHelp.show()
 				self.selectobject = True
 				self.setKey = evt.key

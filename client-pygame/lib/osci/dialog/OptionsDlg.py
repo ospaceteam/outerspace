@@ -150,20 +150,27 @@ class OptionsDlg:
 		if gdata.config.defaults.highlights != None:
 			val = gdata.config.defaults.highlights
 			self.win.vHighlights.checked = val == 'yes'
+			
+		if gdata.config.defaults.displayhelp != None:
+			val = gdata.config.defaults.displayhelp
+			self.win.vDisplayHelp.checked = val == 'yes'
 
-		if gdata.config.game.autologin != None:
-			val = gdata.config.game.autologin
-			self.win.vAutoLogin.checked = val == 'yes'
-
+		self.win.vAutoLogin.enabled = False
 		if gdata.savePassword:
 			self.win.vSavePassword.enabled = True
 			self.win.vSavePassword.checked = True
+			self.win.vAutoLogin.enabled = True
 		elif (gdata.config.game.lastpasswordcrypted != None) and (gdata.config.game.lastpasswordcrypted != ''):
 			self.win.vSavePassword.enabled = True
 			self.win.vSavePassword.checked = False
 		else:
 			self.win.vSavePassword.enabled = False
 			self.win.vSavePassword.checked = False
+
+		if gdata.config.game.autologin != None:
+			val = gdata.config.game.autologin
+			if self.win.vAutoLogin.enabled:
+				self.win.vAutoLogin.checked = val == 'yes'
 
 		# sounds/music
 		if gdata.config.defaults.sound != None:
@@ -275,7 +282,12 @@ class OptionsDlg:
 			gdata.config.defaults.highlights = 'yes'
 		else:
 			gdata.config.defaults.highlights = 'no'
-
+		
+		if self.win.vDisplayHelp.checked:
+			gdata.config.defaults.displayhelp = 'yes'
+		else:
+			gdata.config.defaults.displayhelp = 'no'
+			
 		if self.win.vAutoLogin.checked:
 			gdata.config.game.autologin = 'yes'
 		else:
@@ -357,6 +369,13 @@ class OptionsDlg:
 		ui.SkinableTheme.enableSound(self.win.vSoundEnabled.checked)
 		ui.SkinableTheme.setVolume(self.win.vSoundVolume.slider.position / 100.0)
 
+	def onChangeSavePassword(self, widget, action, data):
+		if self.win.vSavePassword.checked:
+			self.win.vAutoLogin.enabled = True
+		else:
+			self.win.vAutoLogin.enabled = False
+			self.win.vAutoLogin.checked = False
+			
 	def createUI(self):
 		screenWidth, screenHeight = gdata.scrnSize
 		# size of dialog in layout metrics (for SimpleGridLM)
@@ -435,7 +454,7 @@ class OptionsDlg:
 			checked = 0)
 
 		# Defaults
-		ui.Title(self.win, layout = (7, 7, 15, 1), text = _('Default settings'),
+		ui.Title(self.win, layout = (7, 7, 25, 1), text = _('Default settings'),
 			align = ui.ALIGN_NONE, font = 'normal-bold')
 		ui.Check(self.win, layout = (7, 8, 8, 1), text = _('Report finalization'), id = 'vReportFin',
 			checked = 0)
@@ -445,6 +464,8 @@ class OptionsDlg:
 			checked = 1)
 		ui.Check(self.win, layout = (15,9,8,1), text = _('Players highlight'), id = 'vHighlights',
 			checked = 1)
+		ui.Check(self.win, layout = (23, 8, 9, 1), text = _('Display help/tooltip'), id = 'vDisplayHelp',
+			checked = 1)
 
 		# Login settings
 		ui.Title(self.win, layout = (7,11, 15, 1), text = _('Login settings'),
@@ -452,7 +473,7 @@ class OptionsDlg:
 		ui.Check(self.win, layout = (15,12,8,1), text = _('Auto-login'), id = 'vAutoLogin',
 			checked = 0)
 		ui.Check(self.win, layout = (7,12,8,1), text = _('Remember password'), id = 'vSavePassword',
-			checked = 0)
+			checked = 0, action = "onChangeSavePassword")
 
 		# proxy settings
 		ui.Title(self.win, layout = (13, 1, 9, 1), text = _('Proxy'), font = 'normal-bold')

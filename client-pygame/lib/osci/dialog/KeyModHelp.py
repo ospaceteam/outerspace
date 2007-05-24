@@ -51,8 +51,8 @@ class KeyModHelp:
 		self.win.show()
 
  	def onOK(self, widget, action, data):
- 		gdata.config.defaults.showkeymodehelp = 'off'
- 		log.debug('Set show key mode help to:',gdata.config.defaults.showkeymodehelp);
+ 		gdata.config.defaults.displayhelp = 'no'
+ 		log.debug('Set display help to:',gdata.config.defaults.displayhelp);
  		self.hide()
 
 	def onCancel(self, widget, action, data):
@@ -83,6 +83,6 @@ class KeyModHelp:
 		s = ui.Scrollbar(self.win, layout = (cols - 1, 0, 1, rows - 2))
 		t.attachVScrollbar(s)
 
-		ui.Title(self.win, layout = (0, rows - 1, cols - 12, 1))
-		ui.TitleButton(self.win, layout = (cols - 4, rows - 1, 4, 1), text = _("Ok"), action = "onCancel")
-		ui.TitleButton(self.win, layout = (cols - 12, rows - 1, 8, 1), text = _("Do not show again"), action = "onOK")
+		ui.Title(self.win, layout = (0, rows - 1, cols - 16, 1))
+		ui.TitleButton(self.win, layout = (cols - 4, rows - 1, 4, 1), text = _("OK"), action = "onCancel")
+		ui.TitleButton(self.win, layout = (cols - 16, rows - 1, 12, 1), text = _("Do not show help/tooltip again"), action = "onOK")

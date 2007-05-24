@@ -1,4 +1,12 @@
 Change Log:
+
+[2007-05-24]
+- updated Czech translation for new code (Hotkey, Buoys) [PeS]
+- disable auto-login when no remember-password on [PeS]
+- new option in defaults - DisplayeHelp, used now only in Hotkey system [PeS]
+- slightly changed BuoyDlg to fit czech translation [PeS]
+- setFocus in SearchDlg [PeS]
+
 [2007-05-22]
 - Added scanner-pact based Buoy [Random Chaos] [SF#1723165]
 - Fixed bug in RememberPassword [PeS]

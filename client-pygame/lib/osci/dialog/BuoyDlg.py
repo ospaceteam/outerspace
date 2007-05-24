@@ -92,17 +92,17 @@ class BuoyDlg:
 		ui.Label(self.win,
 			text = _("Buoy text:"),
 			align = ui.ALIGN_W,
-			layout = (0, 0, 3, 1)
+			layout = (0, 0, 4, 1)
 		)
 		ui.Label(self.win,
 			text = _("Visible to:"),
 			align = ui.ALIGN_W,
-			layout = (9.5, 0, 3, 1)
+			layout = (6, 0, 4, 1)
 		)
 		ui.Check(self.win,
 			text = _("Allies"),
 			align = ui.ALIGN_W,
-			layout = (13, 0, 3, 1),
+			layout = (10.5, 0, 4, 1),
 			id = 'vAllied',
 			action = "turnOff",
 			data = "vAllied"
@@ -110,7 +110,7 @@ class BuoyDlg:
 		ui.Check(self.win,
 			text = _("Scanner Share"),
 			align = ui.ALIGN_W,
-			layout = (16, 0, 5.5, 1),
+			layout = (15, 0, 6, 1),
 			id = 'vScanner',
 			action = "turnOff",
 			data = "vScanner"

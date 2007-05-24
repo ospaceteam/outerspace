@@ -40,13 +40,15 @@ class SearchDlg:
 		# show window
 		if not self.win.visible:
 			self.win.show()
-
+			self.app.setFocus(self.win.vSystemName)
+			
 	def update(self):
 		if self.win.visible:
 			self.show()
-
+			
 	def show(self):
-		self.win.vSystemName.focus = 1
+		#self.win.vSystemName.focus = 1
+		self.app.setFocus(self.win.vSystemName)
 
 	def hide(self):
 		self.win.setStatus(_("Ready."))
