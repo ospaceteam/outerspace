@@ -104,7 +104,11 @@ class FleetSpecsDlg:
 		for eqID in eqIDs:
 			tech = client.getTechInfo(eqID)
 			if tech.subtype == "seq_wpn":
-				improvement = Rules.techImprEff[player.techs[eqID]]
+				try:
+					level = player.techs[eqID]
+				except:
+					level = 1 #tech not researched
+				improvement = Rules.techImprEff[level]
 				dmgMin = tech.weaponDmgMin
 				dmgMax = tech.weaponDmgMax
 				weaponclass = tech.weaponClass
@@ -238,7 +242,7 @@ class FleetSpecsDlg:
 	def createUI(self):
 		screenWidth, screenHeight = gdata.scrnSize
 		# size of dialog in layout metrics (for SimpleGridLM)
-		cols = 21
+		cols = 20
 		rows = 24
 		# dialog width and height in pixels
 		width = cols * 20 + 5
@@ -255,14 +259,14 @@ class FleetSpecsDlg:
 		self.win.subscribeAction('*', self)
 		# playets listbox
 		ui.Listbox(self.win, layout = (0, 0, cols, rows-3), id = 'vClassData',
-			columns = [(_('Class'), 'text', 9, ui.ALIGN_W),
+			columns = [(_('Class'), 'text', 8, ui.ALIGN_W),
 			(_('Small'), 'tSm', 4, ui.ALIGN_E),
 			(_('Medium'), 'tMed', 4, ui.ALIGN_E),
 			(_('Large'), 'tLg', 4, ui.ALIGN_E)],
 			columnLabels = 1, sortable = 0)
-		ui.Button(self.win, layout = (0, rows-3, 11, 1), text = _('Use Dmg Inheritance'), id = "vInherit",
+		ui.Button(self.win, layout = (0, rows-3, 10, 1), text = _('Use Dmg Inheritance'), id = "vInherit",
 			toggle = 1,	action = "onToggleCondition", data = "showInheritance")
-		ui.Button(self.win, layout = (10, rows-3, 11, 1), text = _('Use Max HPs'), id = "vMaxHP",
+		ui.Button(self.win, layout = (10, rows-3, 10, 1), text = _('Use Max HPs'), id = "vMaxHP",
 			toggle = 1,	action = "onToggleCondition", data = "showMaxHPs")
 		# status bar + submit/cancel
 		ui.TitleButton(self.win, layout = (cols-5, rows-2, 5, 1), text = _('Close'), action = 'onClose')

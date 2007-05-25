@@ -162,7 +162,7 @@ class SystemOverviewDlg:
 		self.win.vOtherPlayers = self.showOtherPlayers
 		self.win.vColonizable = self.showColonizable
 		self.win.vUncolonizable = self.showUncolonizable
-		self.win.vProblems = self.showUncolonizable
+		self.win.vProblems = self.showProblems
 
 	def onSelectPlanet(self, widget, action, data):
 		item = self.win.vPlanets.selection[0]
@@ -226,9 +226,9 @@ class SystemOverviewDlg:
 			(_('+Gate %'), 'tSyGate', 3, ui.ALIGN_E),
 			(_('Strat Res'), 'tStRes', 3.75, ui.ALIGN_E)],
 			columnLabels = 1, action = 'onSelectPlanet', rmbAction = "onShowLocation")
-		ui.Button(self.win, layout = (0, 26, 5, 1), text = _('My planets'), id = "vMine",
+		ui.Button(self.win, layout = (0, 26, 5, 1), text = _('My Systems'), id = "vMine",
 			toggle = 1,	action = "onToggleCondition", data = "showMine")
-		ui.Button(self.win, layout = (5, 26, 5, 1), text = _('Other cmdrs'), id = "vOtherPlayers",
+		ui.Button(self.win, layout = (5, 26, 5, 1), text = _('Other Cmdrs'), id = "vOtherPlayers",
 			toggle = 1,	action = "onToggleCondition", data = "showOtherPlayers")
 		ui.Button(self.win, layout = (10, 26, 5, 1), text = _('Colonizable'), id = "vColonizable",
 			toggle = 1,	action = "onToggleCondition", data = "showColonizable")
