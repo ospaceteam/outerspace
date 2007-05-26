@@ -298,6 +298,7 @@ class NewTaskDlg:
 			title = _('Select new task'),
 			rect = ui.Rect((w - 764) / 2, (h - 463) / 2, 764, 463),
 			layoutManager = ui.SimpleGridLM(),
+			tabChange = True
 		)
 		self.win.subscribeAction('*', self)
 		ui.Title(self.win, layout = (0, 0, 22, 1), text = _('Technology'),
@@ -346,7 +347,7 @@ class NewTaskDlg:
 		ui.Title(self.win, layout = (22, 18, 16, 1), text = _('Options'),
 			align = ui.ALIGN_W, font = 'normal-bold')
 		ui.Label(self.win, layout = (22, 19, 10, 1), text = _('Quantity'), align = ui.ALIGN_W)
-		ui.Entry(self.win, layout = (33, 19, 5, 1), id = 'vQuantity', align = ui.ALIGN_E)
+		ui.Entry(self.win, layout = (33, 19, 5, 1), id = 'vQuantity', align = ui.ALIGN_E, orderNo = 1)
 		ui.Check(self.win, layout = (31, 20, 7, 1), id = 'vReportFin', text = _('Report finalization'))
 		ui.Title(self.win, layout = (0, 21, 28, 1), id = 'vStatusBar', align = ui.ALIGN_W)
 		ui.TitleButton(self.win, layout = (28, 21, 5, 1), text = _('Cancel'), action = 'onCancel')

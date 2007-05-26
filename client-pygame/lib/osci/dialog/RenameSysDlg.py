@@ -34,6 +34,7 @@ class RenameSysDlg:
 		self.systemID = systemID
 		self.show()
 		self.win.show()
+		self.app.setFocus(self.win.vName)
 		# register for updates
 		if self not in gdata.updateDlgs:
 			gdata.updateDlgs.append(self)

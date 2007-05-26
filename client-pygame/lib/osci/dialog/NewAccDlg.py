@@ -81,6 +81,7 @@ class NewAccDlg:
 			title = _('Create account'),
 			rect = ui.Rect((w - 424) / 2, (h - 144) / 2, 424, 144),
 			layoutManager = ui.SimpleGridLM(),
+			tabChange = True
 		)
 		self.win.subscribeAction('*', self)
 		ui.Label(self.win,
@@ -91,15 +92,17 @@ class NewAccDlg:
 		ui.Entry(self.win, id = 'vNick',
 			align = ui.ALIGN_W,
 			layout = (11, 0, 10, 1),
+			orderNo = 1
 		)
 		ui.Label(self.win,
 			text = _('Login'),
 			align = ui.ALIGN_E,
-			layout = (5, 1, 6, 1)
+			layout = (5, 1, 6, 1),
 		)
 		ui.Entry(self.win, id = 'vLogin',
 			align = ui.ALIGN_W,
 			layout = (11, 1, 10, 1),
+			orderNo = 2
 		)
 		ui.Label(self.win,
 			text = _('Password'),
@@ -110,6 +113,7 @@ class NewAccDlg:
 			align = ui.ALIGN_W,
 			showChar = '*',
 			layout = (11, 2, 10, 1),
+			orderNo = 3
 		)
 		ui.Label(self.win,
 			align = ui.ALIGN_E,
@@ -120,6 +124,7 @@ class NewAccDlg:
 			align = ui.ALIGN_W,
 			layout = (11, 3, 10, 1),
 			showChar = "*",
+			orderNo = 4
 		)
 		ui.Label(self.win,
 			align = ui.ALIGN_E,
@@ -129,6 +134,7 @@ class NewAccDlg:
 		ui.Entry(self.win, id = 'vEmail',
 			align = ui.ALIGN_W,
 			layout = (11, 4, 10, 1),
+			orderNo = 5
 		)
 		ui.Title(self.win, layout = (0, 5, 13, 1), id = 'vMessage', align = ui.ALIGN_W)
 		ui.TitleButton(self.win, layout = (13, 5, 4, 1), text = _('Cancel'), action = 'onCancel')

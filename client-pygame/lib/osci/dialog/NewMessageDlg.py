@@ -178,17 +178,18 @@ class NewMessageDlg:
 			title = _("New message"),
 			rect = ui.Rect((w - width) / 2, (h - height) / 2, width, height),
 			layoutManager = ui.SimpleGridLM(),
+			tabChange = True
 		)
 		self.win.subscribeAction('*', self)
 		# headers
 		ui.Label(self.win, layout = (0, 0, 5, 1), text = _("Recipient"), align = ui.ALIGN_W)
 		ui.ActiveLabel(self.win, layout = (5, 0, 33, 1), id = "vRecipient", align = ui.ALIGN_W)
 		ui.Label(self.win, layout = (0, 1, 5, 1), text = _("Subject"), align = ui.ALIGN_W)
-		ui.Entry(self.win, layout = (5, 1, 33, 1), id = "vTopic", align = ui.ALIGN_W)
+		ui.Entry(self.win, layout = (5, 1, 33, 1), id = "vTopic", align = ui.ALIGN_W, orderNo = 1)
 		ui.Title(self.win, layout = (0, 2, 38, 1), text = _("Message"),
 			font = "normal-bold", align = ui.ALIGN_W)
 		s = ui.Scrollbar(self.win, layout = (37, 3, 1, 18))
-		t = ui.Text(self.win, layout = (0, 3, 37, 18), id = "vText")
+		t = ui.Text(self.win, layout = (0, 3, 37, 18), id = "vText", orderNo = 2)
 		t.attachVScrollbar(s)
 		# info
 		ui.Title(self.win, layout = (0, 21, 28, 1), id = 'vStatusBar', align = ui.ALIGN_W)

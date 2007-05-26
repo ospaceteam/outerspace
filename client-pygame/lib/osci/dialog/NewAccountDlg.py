@@ -122,13 +122,14 @@ class NewAccountDlg:
 			title = _('Select starting position'),
 			rect = ui.Rect((w - 424) / 2, (h - 264) / 2, 424, 264),
 			layoutManager = ui.SimpleGridLM(),
+			tabChange = True
 		)
 		ui.Listbox(self.win, layout = (0, 0, 21, 10), id = 'vPos',
 			columns = ((_('Galaxy'), 'text', 5, ui.ALIGN_W), (_('Position'), 'tPos', 0, ui.ALIGN_W)),
 			columnLabels = 1)
 		self.win.subscribeAction('*', self)
 		ui.Label(self.win, layout = (0, 10, 5, 1), text = _("VIP Password:"))
-		ui.Entry(self.win, layout = (5, 10, 5, 1), id = 'vPassword', align = ui.ALIGN_W, showChar = '*')
+		ui.Entry(self.win, layout = (5, 10, 5, 1), id = 'vPassword', align = ui.ALIGN_W, showChar = '*', orderNo = 1 )
 		ui.Title(self.win, layout = (0, 11, 13, 1), id = 'vStatusBar', align = ui.ALIGN_W)
 		ui.TitleButton(self.win, layout = (13, 11, 4, 1), text = _('Exit'), action = 'onCancel')
 		ui.TitleButton(self.win, layout = (17, 11, 4, 1), text = _('Select'), action = 'onSelect')

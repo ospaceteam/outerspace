@@ -392,6 +392,7 @@ class OptionsDlg:
 			title = _("Options"),
 			rect = ui.Rect((screenWidth - width) / 2, (screenHeight - height) / 2, width, height),
 			layoutManager = ui.SimpleGridLM(),
+			tabChange = True
 		)
 		self.win.subscribeAction('*', self)
 		# first row is window title
@@ -478,13 +479,13 @@ class OptionsDlg:
 		# proxy settings
 		ui.Title(self.win, layout = (13, 1, 9, 1), text = _('Proxy'), font = 'normal-bold')
 		ui.Label(self.win, layout = (13, 2, 4, 1), text = _('Host:'), align = ui.ALIGN_E)
-		ui.Entry(self.win, layout = (17, 2, 5, 1), id = 'vProxyHost', align = ui.ALIGN_W)
+		ui.Entry(self.win, layout = (17, 2, 5, 1), id = 'vProxyHost', align = ui.ALIGN_W, orderNo = 1)
 		ui.Label(self.win, layout = (13, 3, 4, 1), text = _('Port:'), align = ui.ALIGN_E)
-		ui.Entry(self.win, layout = (17, 3, 5, 1), id = 'vProxyPort', align = ui.ALIGN_W)
+		ui.Entry(self.win, layout = (17, 3, 5, 1), id = 'vProxyPort', align = ui.ALIGN_W, orderNo = 2)
 		ui.Label(self.win, layout = (13, 4, 4, 1), text = _('Username:'), align = ui.ALIGN_E)
-		ui.Entry(self.win, layout = (17, 4, 5, 1), id = 'vProxyUsername', align = ui.ALIGN_W)
+		ui.Entry(self.win, layout = (17, 4, 5, 1), id = 'vProxyUsername', align = ui.ALIGN_W, orderNo = 3)
 		ui.Label(self.win, layout = (13, 5, 4, 1), text = _('Password:'), align = ui.ALIGN_E)
-		ui.Entry(self.win, layout = (17, 5, 5, 1), id = 'vProxyPassword', align = ui.ALIGN_W)
+		ui.Entry(self.win, layout = (17, 5, 5, 1), id = 'vProxyPassword', align = ui.ALIGN_W, orderNo = 4)
 
 		# sound options
 		ui.Title(self.win, layout = (23, 1, 9, 1), text = _('Sound / Music'), font = 'normal-bold')

@@ -279,6 +279,7 @@ class FleetCommandDlg:
 			title = _('New Command'),
 			rect = ui.Rect((w - 800 - 4 * (w != 800)) / 2, (h - 600 - 4 * (h != 600)) / 2, 800 + 4 * (w != 800), 580 + 4 * (h != 600)),
 			layoutManager = ui.SimpleGridLM(),
+			tabChange = True
 		)
 		self.win.subscribeAction('*', self)
 		StarMapWidget(self.win, layout = (0, 0, 40, 24),
@@ -312,7 +313,7 @@ class FleetCommandDlg:
 		ui.Label(self.win, layout = (0, 26, 5, 1), text = _('Turns'),
 			align = ui.ALIGN_W, tags = [FLACTION_WAIT])
 		ui.Entry(self.win, layout = (5, 26, 5, 1), id = 'vTurns', text = '1',
-			align = ui.ALIGN_E, tags = [FLACTION_WAIT])
+			align = ui.ALIGN_E, tags = [FLACTION_WAIT], orderNo = 1)
 		# Ship to deploy
 		ui.Label(self.win, layout = (15, 26, 5, 1), text = _('Ship'),
 			align = ui.ALIGN_E, tags = [FLACTION_DEPLOY])
@@ -322,7 +323,7 @@ class FleetCommandDlg:
 		ui.Label(self.win, layout = (0, 26, 10, 1), text = _('Start from command #'),
 			align = ui.ALIGN_W, tags = [FLACTION_REPEATFROM])
 		ui.Entry(self.win, layout = (10, 26, 5, 1), id = 'vStartFrom', text = _('1'),
-			align = ui.ALIGN_E, tags = [FLACTION_REPEATFROM])
+			align = ui.ALIGN_E, tags = [FLACTION_REPEATFROM], orderNo = 2)
 		ui.Label(self.win, layout = (36, 26, 2, 1), text = _("ETA:"), align = ui.ALIGN_W)
 		ui.Label(self.win, layout = (38, 26, 2, 1), id = 'vEta', align = ui.ALIGN_E)
 		# status bar + submit/cancel

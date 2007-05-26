@@ -153,8 +153,10 @@ class Window(MetaWidget):
 
 	def focusNext(self):
 		for widget in self.widgets:
+			# We need set lastFocus even when nothing is focused, exception on line 175 without this
+			lastFocus = widget.orderNo
 			if widget.focused:
-				lastFocus = widget.orderNo
+				# keep the focued orderNo
 				break
 
 		nextFocus = None
