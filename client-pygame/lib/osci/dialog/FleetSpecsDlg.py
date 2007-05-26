@@ -102,7 +102,7 @@ class FleetSpecsDlg:
 		size = spec.combatClass
 		eqIDs = spec.weaponIDs #equipment list
 		for eqID in eqIDs:
-			tech = client.getTechInfo(eqID)
+			tech = client.getFullTechInfo(eqID)
 			if tech.subtype == "seq_wpn":
 				try:
 					level = player.techs[eqID]
