@@ -835,6 +835,22 @@
 		<preresearch>An innovative solution to limited fuel, by way of Wolframium.</preresearch>
 		<description>This large and bulky module contains a self-sufficient Bunker that can be deployed onto any planet owned by yourself or uninhabited.  A Bunker requires no outside energy, produces enough food for its workforce, serves the functions of space ship refuelling, as well as a proximity scanner as this structure is most likely to be found in sectors rife with combat.  Added to this are basic stargate functions to assist with calling in reinforcements as necessary.  There are no research nor construction facilities within a Bunker, though, so planetary development must stem from other resources.</description>
 	</technology>
+	<technology id="5436" symbol="STEALTHMOD2" name="Advanced Stealth Module">
+		<discovery
+			researchMod="1.00 + 0.50 + 0.50"
+			level="5"
+			researchRequires="STEALTHMOD-5"
+			researchRaces="H"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="720"
+			slots="1"
+			weight="1"
+			signature="-24"
+		/>
+		<preresearch>A signal disruption device preventing detection of the ship by enemy. Because of characteristic of the ship energy signature, you can never lower signature of the ship below 1.</preresearch>
+	</technology>
 	<technology id="5465" symbol="LIVLARGEHULL5" name="Live Large Hull">
 		<discovery
 			researchMod="1.00 + 1.00"
@@ -909,9 +925,9 @@
 		<shipequip
 			subtype="seq_ctrl"
 			buildProd="100"
-			combatAtt="8"
-			combatDef="8"
-			missileDef="8"
+			combatAtt="12"
+			combatDef="12"
+			missileDef="12"
 			maxHP="40"
 			slots="8"
 			weight="16"

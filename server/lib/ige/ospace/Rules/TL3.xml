@@ -68,7 +68,7 @@
 			buildProd="720"
 			operEn="30"
 			operWorkers="1500"
-			prodSci="25"
+			prodSci="28"
 			maxHP="600"
 		/>
 		<preresearch>Design of modern and  at least partially independent laboratories, that would allow for a research to continue in these times.</preresearch>
@@ -429,7 +429,7 @@
 			buildProd="720"
 			slots="1"
 			weight="1"
-			signature="-10"
+			signature="-12"
 		/>
 		<preresearch>A signal disruption device preventing detection of the ship by enemy. Because of characteristic of the ship energy signature, you can never lower signature of the ship below 1.</preresearch>
 	</technology>
@@ -630,9 +630,9 @@
 		<shipequip
 			subtype="seq_ctrl"
 			buildProd="100"
-			combatAtt="4"
-			combatDef="4"
-			missileDef="4"
+			combatAtt="6"
+			combatDef="6"
+			missileDef="6"
 			maxHP="5"
 			slots="2"
 			weight="4"

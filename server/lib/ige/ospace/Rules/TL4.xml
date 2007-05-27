@@ -791,9 +791,9 @@
         <shipequip
             subtype="seq_ctrl"
             buildProd="100"
-            combatAtt="6"
-            combatDef="6"
-            missileDef="6"
+            combatAtt="9"
+            combatDef="9"
+            missileDef="9"
             maxHP="16"
             slots="4"
             weight="8"

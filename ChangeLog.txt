@@ -1,5 +1,12 @@
 Change Log:
 
+VERSION 0.5.63
+
+[2007-05-27]
+- Increased attack/defense of Mind Linked Cockpit/Bridge/Command Deck. [Qark]
+- Added Advanced Stealth Module for Human. [Qark]
+- Increased output of Lab Complex to address higher number of techs. [Qark]
+
 [2007-05-24]
 - Added "Fleet Details" dialog [Random Chaos] [SF#1724110]
 - Fixed SetFocus on Starmap bug (for hotkeys) [Random Chaos] [SF#1723895]
