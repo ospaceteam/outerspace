@@ -816,7 +816,7 @@
 	<technology id="6323" symbol="FLAKMINEFIELD6" name="Supernova Mine Field Control">
 		<discovery
 			researchMod="1.7 + 0.75"
-			level="5"
+			level="6"
 			researchRequires="FLAKMINEFIELD-3"
 			researchRaces="C"
 		/>
