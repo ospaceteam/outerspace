@@ -1174,7 +1174,8 @@ class IFleet(IObject):
 		level = Rules.shipExpToLevel.get(int(exp / targetShip.baseExp), Rules.shipDefLevel)
 		defense = int(targetShip.missileDef * Rules.shipLevelEff[level])
 		#determine damage:
-		damageRatio = min(max(1.0*attack/defense,0.25),1.25) #the better the defense, the less damage you take from the mine: 25% to 125% damage of normal mine
+		defenseBase = 4 #normal enemy defense to use as part of the ratio
+		damageRatio = min(max(1.0*(attack + defenseBase) / (attack + defense),0.25),1.25) #the better the defense, the less damage you take from the mine: 25% to 125% damage of normal mine
 		damage = int(damage * damageRatio)
 		if not damage:
 			return 0,0 #mine did no damage due to low ATT value on mine
