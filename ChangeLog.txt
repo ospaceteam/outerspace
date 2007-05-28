@@ -8,12 +8,18 @@ Change Log:
 - Fixed weapon damage and class inheritance in Fleet Details dialog [Random Chaos]
 - Fixed bug in update, it kept clearing stored password [PeS] [SF#1726780]
 
+
 VERSION 0.5.63
 
 [2007-05-27]
 - Increased attack/defense of Mind Linked Cockpit/Bridge/Command Deck. [Qark]
 - Added Advanced Stealth Module for Human. [Qark]
 - Increased output of Lab Complex to address higher number of techs. [Qark]
+
+[2007-05-26]
+- fix bug in lib/pygameui/Window.py on line 173 (UnboundLocalError) when using TAB [PeS]
+- added support for TAB to FleetCommandDlg, NewAccDlg, NewAccountDlg, NewTaskDlg, OptionsDlg, NewMessageDlg [PeS]
+- added autofocus to one entry line dialogs [PeS]
 
 [2007-05-24]
 - Added "Fleet Details" dialog [Random Chaos] [SF#1724110]
