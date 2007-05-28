@@ -6,6 +6,7 @@ Change Log:
 - Added Mine Field display info to System Map [Random Chaos]
 - Altered starmap refocus events in an attempt to get rid of "blinking windows" bug [Random Chaos]
 - Fixed weapon damage and class inheritance in Fleet Details dialog [Random Chaos]
+- Fixed bug in update, it kept clearing stored password [PeS] [SF#1726780]
 
 VERSION 0.5.63
 
