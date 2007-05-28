@@ -793,6 +793,7 @@ def drawText(surface, widget):
 		if row < widget.offsetRow:
 			row += 1
 			continue
+		onlyword = False
 		column = 0
 		charIdx = 0
 		firstY = y
@@ -829,13 +830,23 @@ def drawText(surface, widget):
 			lastWordSize = getTextSize(font, words[0])
 			# if word doesn't fit to current line,
 			# move to next line
-			if x + lastWordSize[0] > r.right:
-				x = r.left;
-				y += lastWordSize[1]
-				if y + img.get_height() > r.bottom:
-					surface.set_clip(oldClip)
-					return
-
+			if x + lastWordSize[0] + 10 > r.right:
+				if x == r.left or onlyword: #only word on line, and still too large! Render as much as we can, then move to next line.
+					onlyword = True
+					if x + 10 > r.right:
+						if not r.left + lastWordSize[0] + 10 > r.right: #finally, end of word
+							onlyword = False
+						x = r.left;
+						y += lastWordSize[1]
+						if y + img.get_height() > r.bottom:
+							surface.set_clip(oldClip)
+							return
+				else:
+					x = r.left;
+					y += lastWordSize[1]
+					if y + img.get_height() > r.bottom:
+						surface.set_clip(oldClip)
+						return
 			# render next char
 			img = renderText(font, char, 1, fore, back)
 			# compute next char position
