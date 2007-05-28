@@ -155,6 +155,10 @@ class OptionsDlg:
 			val = gdata.config.defaults.displayhelp
 			self.win.vDisplayHelp.checked = val == 'yes'
 
+		if gdata.config.defaults.showminimap != None:
+			val = gdata.config.defaults.showminimap
+			self.win.vShowMinimap.checked = val == 'yes'
+
 		self.win.vAutoLogin.enabled = False
 		if gdata.savePassword:
 			self.win.vSavePassword.enabled = True
@@ -287,6 +291,11 @@ class OptionsDlg:
 			gdata.config.defaults.displayhelp = 'yes'
 		else:
 			gdata.config.defaults.displayhelp = 'no'
+		
+		if self.win.vShowMinimap.checked:
+			gdata.config.defaults.showminimap = 'yes'
+		else:
+			gdata.config.defaults.showminimap = 'no'
 			
 		if self.win.vAutoLogin.checked:
 			gdata.config.game.autologin = 'yes'
@@ -467,7 +476,8 @@ class OptionsDlg:
 			checked = 1)
 		ui.Check(self.win, layout = (23, 8, 9, 1), text = _('Display help/tooltip'), id = 'vDisplayHelp',
 			checked = 1)
-
+		ui.Check(self.win, layout = (23, 9, 9, 1), text = _('Show minimap'), id = 'vShowMinimap', 
+			checked = 1)
 		# Login settings
 		ui.Title(self.win, layout = (7,11, 15, 1), text = _('Login settings'),
 			align = ui.ALIGN_NONE, font = 'normal-bold')

@@ -7,7 +7,7 @@ Change Log:
 - Altered starmap refocus events in an attempt to get rid of "blinking windows" bug [Random Chaos]
 - Fixed weapon damage and class inheritance in Fleet Details dialog [Random Chaos]
 - Fixed bug in update, it kept clearing stored password [PeS] [SF#1726780]
-
+- added option to disable Minimap [PeS] [SF#1641040]
 
 VERSION 0.5.63
 
