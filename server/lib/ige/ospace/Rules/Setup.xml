@@ -524,6 +524,55 @@
 	        />
 		<description>Colony Module needs some fame to deploy. Consult your Empire Overview dialog. Deploys a Pirate Small Colony Module.</description>
 	</technology>
+	<technology id="9050" symbol="MINE_BASIC" name="Robotic Mine">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="99"
+		/>
+		<mine
+			weaponDmgMin="35"
+			weaponDmgMax="70"
+			weaponAtt="8"
+			shortname="Robotic"
+	        />
+	</technology>
+	<technology id="9051" symbol="MINE_RAPID" name="Rapid-Deploy Mine">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="99"
+		/>
+		<mine
+			weaponDmgMin="7"
+			weaponDmgMax="14"
+			weaponAtt="12"
+			shortname="Rapid-Deploy"
+	        />
+	</technology>
+	<technology id="9052" symbol="MINE_PIERCE" name="Self-Aware Mine">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="99"
+		/>
+		<mine
+			weaponDmgMin="30"
+			weaponDmgMax="60"
+			weaponAtt="10"
+			weaponIgnoreShield="1"
+			shortname="Self-Aware"
+	        />
+	</technology>
+	<technology id="9053" symbol="MINE_HIGHDMG" name="Supernova Mine">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="99"
+		/>
+		<mine
+			weaponDmgMin="60"
+			weaponDmgMax="120"
+			weaponAtt="10"
+			shortname="Supernova"
+	        />
+	</technology>
 	<technology id="99001" symbol="COMSCANDEVEL" name="Developer Testing Comm/Scan Center">
 		<discovery
 			researchMod="1.0"

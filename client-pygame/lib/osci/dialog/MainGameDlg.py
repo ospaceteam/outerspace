@@ -76,7 +76,7 @@ class MainGameDlg:
 		self.win.show()
 		# register for updates
 		gdata.updateDlgs.append(self)
-		self.refocus()
+		#self.refocus()
 
 	def refocus(self):
 		#log.debug("refocusing")
@@ -209,6 +209,7 @@ class MainGameDlg:
 				fleet = client.get(player.fleets[0])
 				self.win.vStarMap.setPos(fleet.x, fleet.y)
 			self.centered = 1
+			self.refocus() #only fire off when dialog first updated
 		# enable/disable construction
 		self.win.vConstruction.enabled = Utils.enableConstruction(client)
 		# enable/disable diplomacy
@@ -222,7 +223,6 @@ class MainGameDlg:
 			self.win.vMessages.foreground = gdata.sevColors[gdata.MAJ]
 		else:
 			self.win.vMessages.foreground = None
-		self.refocus()
 
 	def galaxyRestart(self, widget, action, data):
 		shownFromMenu = bool(data)

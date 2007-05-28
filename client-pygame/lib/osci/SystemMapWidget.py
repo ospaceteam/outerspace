@@ -25,6 +25,7 @@ from ige.ospace.Const import *
 import pygame, pygame.draw
 from pygame.locals import *
 import gdata, res, client
+from ige import log
 
 # number of planet's images
 typeImgs = {'A': 2, 'C': 1, 'D': 5, 'E': 2, 'G': 5, 'H': 2, 'M': 1, 'R': 4, 'X': 1, 'I': 2}
@@ -42,12 +43,24 @@ class SystemMapWidget(Widget):
 		self._planetImgs = []
 		self.selectedObjID = OID_NONE
 		self.systemID = OID_NONE
+		self.unknown_mines = 0
+		self.my_mines = 0
 		# flags
 		self.processKWArguments(kwargs)
 		parent.registerWidget(self)
 
 	def precompute(self):
 		system = client.get(self.systemID, noUpdate = 1)
+		self.unknown_mines = 0
+		self.my_mines = 0
+		if hasattr(system, 'hasmines'):
+			if hasattr(system, 'minefield'):
+				if len(system.minefield) > 0:
+					self.my_mines = 1
+				if system.hasmines == 2:
+					self.unknown_mines = 1
+			elif system.hasmines > 0:
+				self.unknown_mines = 1
 		self._starImg = None
 		if hasattr(system, 'starClass'):
 			self._starImg = res.getBigStarImg(system.starClass[1])
@@ -78,16 +91,30 @@ class SystemMapWidget(Widget):
 		self._actAreas = {}
 		# background
 		surface.fill((0x00, 0x00, 0x00), self.rect)
-		# star
-		if self._starImg:
-			surface.blit(self._starImg, self.rect.topleft)
-			self._actAreas[self.systemID] = Rect(self.rect.topleft, self._starImg.get_size())
-		# planets
+		# common positions
 		y = self.rect.centery
 		x = self.rect.left
 		height = self.rect.height
 		if self._starImg:
 			x += self._starImg.get_width()
+		# mines
+		if self.my_mines:
+			if self.unknown_mines:
+				textSrfc = renderText('small', 'Minefield', 1, res.getFFColorCode(1250))
+				surface.blit(textSrfc, (x, self.rect.top + textSrfc.get_height()))
+				textSrfc = renderText('small', 'Unknown Minefield Detected', 1, res.getFFColorCode(0))
+				surface.blit(textSrfc, (x, self.rect.top + textSrfc.get_height()*2 + 5))
+			else:
+				textSrfc = renderText('small', 'Minefield', 1, res.getFFColorCode(1250))
+				surface.blit(textSrfc, (x, self.rect.top + textSrfc.get_height()))
+		elif self.unknown_mines:
+			textSrfc = renderText('small', 'Unknown Minefield Detected', 1, res.getFFColorCode(0))
+			surface.blit(textSrfc, (x, self.rect.top + textSrfc.get_height()))
+		# star
+		if self._starImg:
+			surface.blit(self._starImg, self.rect.topleft)
+			self._actAreas[self.systemID] = Rect(self.rect.topleft, self._starImg.get_size())
+		# planets
 		for planetID, img, name, ffColor in self._planetImgs:
 			planet = client.get(planetID, noUpdate = 1)
 			py = y - img.get_height() / 2

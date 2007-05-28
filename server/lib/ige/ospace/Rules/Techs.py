@@ -39,11 +39,14 @@ attrs = {
 	'isProject': 0,
 	'isShipEquip' : 0,
 	'isShipHull' : 0,
+	'isMine' : 0,
 	'isStarting' : 0,
 	"subtype": "techSubtype",
 	"level": 0, 
 	"maxImprovement": 5, #Rules.techMaxImprovement,
 	"isMilitary": 0,
+	# dialog info
+	'shortname': '', #for TechInfoDlg tech linkages
 	# construction costs & conditions
 	'buildProd' : 0,
 	'buildTurns' : 1,
@@ -77,9 +80,9 @@ attrs = {
 	'maxHP' : 0,
 	'scannerPwr': 0,
 	"structWeapons": [0],
-        "planetShield": 0, #planetary shield; when structure built, shield = 0; shield will regenerate at 2% per turn until equal to this value. Structures do not add shield strength; strongest shield = planet shield
-        "systemAtt": 0,
-        "systemDef": 0,
+	"planetShield": 0, #planetary shield; when structure built, shield = 0; shield will regenerate at 2% per turn until equal to this value. Structures do not add shield strength; strongest shield = planet shield
+	"systemAtt": 0,
+	"systemDef": 0,
 	"refuelMax": 0,
 	"refuelInc": 0,
 	"repairShip": 0.0,
@@ -89,21 +92,21 @@ attrs = {
 	"fleetSpeedBoost": 0.0, # speed boost for stargates
 	"fullInfo": 0, # if True, show full tech info even player not own tech
 	# ship equipment
-        "addMP" : 0, #for extra MP to be added to ship equipment
+	"addMP" : 0, #for extra MP to be added to ship equipment
 	'combatClass' : 0,
 	'combatAtt': 0, #not cumulative for equipment; cumulative for hull, drives, cockpits, etc
 	'combatDef': 0, #not cumulative for equipment; cumulative for hull, drives, cockpits, etc
 	"missileDef": 0, #not cumulative for equipment; cumulative for hull, drives, cockpits, etc
-        "combatAttPerc": 1.0, #multiplier of ATT; min of 100%; not cumulative
-        "combatDefPerc": 1.0, #multiplier of DEF; min of 100%; not cumulative
-        "missileDefPerc": 1.0, #multiplier of missile DEF; min of 100%; not cumulative
+	"combatAttPerc": 1.0, #multiplier of ATT; min of 100%; not cumulative
+	"combatDefPerc": 1.0, #multiplier of DEF; min of 100%; not cumulative
+	"missileDefPerc": 1.0, #multiplier of missile DEF; min of 100%; not cumulative
 	'unpackStruct': '',
-        'deployHandlerID' : '', #technology ID of tech to find deployHandlerFunction & deployHandlerValidator (this can be the deployable device OR a project)
-        'deployHandlerFunction' : noop, #function name of TechHandler
-        'deployHandlerValidator' : noop, #function name of TechHandler Validator
-	'signature': 0, #cumulative
-        'signatureCloak': 1.0, #max of 1.0 is effective; not cumulative
-        'signatureDecloak': 1.0, #min of 1.0 is effective; not cumulative
+	'deployHandlerID' : '', #technology ID of tech to find deployHandlerFunction & deployHandlerValidator (this can be the deployable device OR a project)
+	'deployHandlerFunction' : noop, #function name of TechHandler
+	'deployHandlerValidator' : noop, #function name of TechHandler Validator
+	'signature': 0, #**** NOT cumulative (change effective 0.5.63)
+	'signatureCloak': 1.0, # max of 1.0 is effective; not cumulative
+	'signatureDecloak': 1.0, # min of 1.0 is effective; not cumulative
 	"minSignature": 0,
 	"slots": 0,
 	"weight": 0,
@@ -111,14 +114,14 @@ attrs = {
 	"engPwr": 0,
 	"shieldPerc": 0.0, # how many percent of maxHP have shields
 	"minHull": 0,
-        "maxHull": 10, #just make this higher than the largest hull so we know it doesn't break anything
+	"maxHull": 10, #just make this higher than the largest hull so we know it doesn't break anything
 	"maxInstallations": 0,
 	"shieldRechargeFix": 0, # fixed amount of HP/turn to recharge
 	"shieldRechargePerc": 0.0, # how many percent of shieldHP/turn is recharged
-        "hardShield": 0.0, #shield penetrating weapons will penetrate at 100%; use as 1-hardShield for penentration level (hardShield percent = %damage absorbed by shield)
+	"hardShield": 0.0, #shield penetrating weapons will penetrate at 100%; use as 1-hardShield for penentration level (hardShield percent = %damage absorbed by shield)
 	"autoRepairFix": 0, # fixed amount of HP/turn to repair
 	"autoRepairPerc": 0.0, # how many percent of maxHP/turn is repaired
-        "damageAbsorb": 0, #amount of damage absorbed by the hull (not shield!); max sum is 5 damage (set in Rules)
+	"damageAbsorb": 0, #amount of damage absorbed by the hull (not shield!); max sum is 5 damage (set in Rules)
 	# weapons
 	'weaponDmgMin': 0,
 	'weaponDmgMax': 0,
@@ -128,6 +131,10 @@ attrs = {
 	"weaponIgnoreShield": 0,
 	"weaponIsMissile": 0,
 	"weaponGoodForFlak": 1,
+	#mines
+	'mineclass':0, #tech id of the mine; usually level 99 tech - structure in the system with the highest tech id will always deploy; others will be ignored (per player)
+	'minenum':0, #number of mines this control structure supports; if another structure built more mines, mines will not self destruct
+	'minerate':0, #number of turns between mine deployments; note that system will deploy mines on: turn%minerate==0
 	# research
 	'researchRequires': ['technology'],
 	'researchEnables': ['technology'],
@@ -273,6 +280,10 @@ class TechTreeContentHandler(ContentHandler):
 				self.tech.set(key, attrs[key])
 		elif self.state == 3 and name == 'shiphull':
 			self.tech.set('isShipHull', 1)
+			for key in attrs.keys():
+				self.tech.set(key, attrs[key])
+		elif self.state == 3 and name == 'mine':
+			self.tech.set('isMine', 1)
 			for key in attrs.keys():
 				self.tech.set(key, attrs[key])
 		elif self.state == 3 and name == 'data':

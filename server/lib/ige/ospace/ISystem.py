@@ -23,7 +23,7 @@ from xml.dom.minidom import Node
 from ige.IObject import IObject
 from ige.IDataHolder import IDataHolder
 from Const import *
-import Rules, Utils, math
+import Rules, Utils, math, random, copy
 from ige import log
 
 class ISystem(IObject):
@@ -50,6 +50,8 @@ class ISystem(IObject):
 		obj.combatCounter = 0
 		# system wide data
 		obj.scannerPwrs = {}
+		# mine field
+		obj.minefield = {}
 
 	def update(self, tran, obj):
 		# check existence of all planets
@@ -59,6 +61,8 @@ class ISystem(IObject):
 					log.debug("CONSISTENCY - planet %d from system %d does not exists" % (planetID, obj.oid))
 				elif tran.db[planetID].type != T_PLANET:
 					log.debug("CONSISTENCY - planet %d from system %d is not a T_PLANET" % (planetID, obj.oid))
+		if not hasattr(obj,'minefield'):
+			obj.miefield = {}
 		# check that all .fleet are in .closeFleets
 		for fleetID in obj.fleets:
 			if fleetID not in obj.closeFleets:
@@ -202,7 +206,7 @@ class ISystem(IObject):
 			result.owner = obj.owner
 			for planetID in obj.planets:
 				planet = tran.db[planetID]
-				if player.owner == player:
+				if planet.owner == player: ####### This was player.owner, which made no sense. Hope this change doesn't break something
 					continue
 				newPwr = scanPwr * planet.signature / obj.signature
 				results.extend(self.cmd(planet).getScanInfos(tran, planet, newPwr, player))
@@ -214,6 +218,12 @@ class ISystem(IObject):
 					continue
 				newPwr = scanPwr * fleet.signature / obj.signature
 				results.extend(self.cmd(fleet).getScanInfos(tran, fleet, newPwr, player))
+			result.hasmines = 0 #no
+			if len(obj.minefield) > 0:
+				result.hasmines = 1 #yes
+			result.minefield = self.getMines(obj,player.oid) #only shows mines you own
+			if len(obj.minefield) > 1 or (len(obj.minefield) == 1 and len(result.minefield) == 0):
+				result.hasmines = 2 #yes, and some aren't my mines
 		return results
 
 	def processINITPhase(self, tran, obj, data):
@@ -223,6 +233,23 @@ class ISystem(IObject):
 	processINITPhase.accLevel = AL_ADMIN
 
 	def processPRODPhase(self, tran, obj, data):
+		#mine deployment
+		owners = []
+		for planetID in obj.planets:
+			planet = tran.db[planetID]
+			if planet.owner not in owners:
+				owners.append(planet.owner)
+		for ownerid in owners:
+			tech,structtech = self.getSystemMineLauncher(tran,obj,ownerid)
+			if tech==0: #no control structure
+				continue
+			owner = tran.db[ownerid]
+			turn = tran.db[OID_UNIVERSE].turn
+			minerate = int(tech.minerate * Rules.techImprEff[owner.techs.get(structtech, Rules.techBaseImprovement)])
+			minenum = int(tech.minenum / Rules.techImprEff[owner.techs.get(structtech, Rules.techBaseImprovement)])
+			if (turn%minerate)==0: #it is the launch turn
+				self.addMine(obj,ownerid,tech.mineclass,minenum)
+				log.debug('ISystem', 'Mine deployed for owner %d in system %d' % (ownerid, obj.oid))
 		return obj.planets
 
 	processPRODPhase.public = 1
@@ -342,7 +369,7 @@ class ISystem(IObject):
 
 	getObjectsInSpace.public = 1
 	getObjectsInSpace.accLevel = AL_ADMIN
-
+	
 	def processBATTLEPhase(self, tran, obj, data):
 		system = obj
 		#@log.debug('ISystem', 'BATTLE - system', obj.oid)
@@ -356,6 +383,7 @@ class ISystem(IObject):
 		ownerIDs = {}
 		systemAtt = {}
 		systemDef = {}
+		hasMine = {}
 		isOwnedObject = 0
 		for objID in objects:
 			attack[objID] = []
@@ -369,6 +397,7 @@ class ISystem(IObject):
 			tempAtt, tempDef = self.getSystemCombatBonuses(tran,system,owner)
 			systemAtt[owner] = tempAtt
 			systemDef[owner] = tempDef
+			hasMine[owner] = self.getSystemMineSource(tran,system,owner)
 		if not isOwnedObject:
 			#@log.debug('ISystem', 'No combat')
 			# reset combat counters
@@ -475,6 +504,7 @@ class ISystem(IObject):
 		for objID in objects:
 			if attack[objID]:
 				isCombat = 1
+				break #end loop
 		if not isCombat:
 			#@log.debug('ISystem', 'No combat')
 			# reset combat counters
@@ -488,23 +518,72 @@ class ISystem(IObject):
 			tran.db[fleetID].combatCounter += 1
 		# debug
 		log.debug('ISystem', 'Final attacks in system %d:' % system.oid, attack)
-		# now to battle
+		# mines detonate before battle
 		shots = {}
 		targets = {}
-		isCombat = False
 		firing = {}
+		damageCaused = {}
+		damageTaken = {}
+		shipsLost = {}
+		isCombat = False
+		isMineCombat = False
+		mineKills = 0
+		for owner in ownerIDs:
+			if not (owner in hasMine): #no planets
+				continue
+			if hasMine[owner] == 0: #no control structure
+				continue
+			objID = hasMine[owner]
+			if len(self.getMines(system,owner))==0:
+				continue #no mines, something broke
+			log.debug('ISystem-Mines', 'Mines Found')
+			if len(attack[objID])==0:
+				continue #no targets
+			fireMine = True
+			mineTargets = copy.copy(attack[objID])
+			while fireMine:
+				while len(mineTargets) > 0:
+					targetID = random.choice(mineTargets) #select random target
+					targetobj = tran.db.get(targetID, None)
+					try:
+						if targetobj.type == T_FLEET:
+							break #target found
+						mineTargets.remove(targetID) #remove an object type that a mine can't hit from the temporary targets list
+					except:
+						mineTargets.remove(targetID) #remove a dead fleet from the temporary targets list
+
+				if len(mineTargets) == 0:
+ 					break #no fleet targets for mines
+				temp, temp, firing[targetID] = self.cmd(targetobj).getPreCombatData(tran, targetobj) #fix firing for "surrender to" section
+				damage,att,ignoreshield = self.fireMine(system,owner)
+				log.debug('ISystem-Mines', 'Mine Details (damage, att, ignore shield):',damage,att,ignoreshield)
+				if not damage: #no more mines
+					fireMine = False
+					break
+				isMineCombat = True
+				#Process Combat
+				dmg, destroyed = self.cmd(targetobj).applyMine(tran, targetobj, att, damage, ignoreshield)
+				log.debug('ISystem-Mines', 'Actual Damage Done:',dmg)
+				damageTaken[targetID] = damageTaken.get(targetID, 0) + dmg
+				if destroyed > 0:
+					shipsLost[targetID] = shipsLost.get(targetID, 0) + destroyed
+					mineKills += destroyed
+				if dmg > 0:
+					damageCaused[objID] = damageCaused.get(objID, 0) + dmg
+		# now to battle
 		for objID in objects:
-			obj = tran.db[objID]
+			obj = tran.db.get(objID, None)
 			# get shots from object, should be sorted by weaponClass
 			# shots = [ shot, ...], shot = (combatAtt, weaponID)
 			# get target classes and numbers
 			# (class1, class2, class3, class4)
 			# cls0 == fighters, cls1 == midships, cls2 == capital ships, cls3 == planet installations
 			#@log.debug(objID, obj.name, "getting pre combat data")
-			shots[objID], targets[objID], firing[objID] = self.cmd(obj).getPreCombatData(tran, obj)
-			if firing[objID]:
-				isCombat = True
-		if not isCombat:
+			if obj: # source already destroyed; ignore
+				shots[objID], targets[objID], firing[objID] = self.cmd(obj).getPreCombatData(tran, obj)
+				if firing[objID]:
+					isCombat = True
+		if not isCombat and not isMineCombat:
 			# no shots has been fired
 			#@log.debug('ISystem', 'No combat')
 			# reset combat counters
@@ -514,66 +593,68 @@ class ISystem(IObject):
 			return
 		#@log.debug("Shots:", shots)
 		#@log.debug("Targets", targets)
-		damageCaused = {}
-		damageTaken = {}
-		shipsLost = {}
-		for shotIdx in (3, 2, 1, 0):
-			for objID in objects:
-				# obj CAN be deleted at this point
-				obj = tran.db.get(objID, None)
-				# if object is fleet, then it's signature is max
-				if obj and obj.type == T_FLEET:
-					obj.signature = Rules.maxSignature
-				# target preselection
-				totalClass = [0, 0, 0, 0]
-				total = 0
-				for targetID in attack[objID]:
-					totalClass[0] += targets[targetID][0]
-					totalClass[1] += targets[targetID][1]
-					totalClass[2] += targets[targetID][2]
-					totalClass[3] += targets[targetID][3]
-				total = totalClass[0] + totalClass[1] + totalClass[2] + totalClass[3]
-				# process shots
-				for combatAtt, weaponID in shots[objID][shotIdx]:
-					weapon = Rules.techs[weaponID]
-					weaponClass = weapon.weaponClass
-					if total == 0:
-						# there are no targets
-						break
-					#@log.debug('ISystem', 'Processing shot', objID, weapon.name, weaponClass)
-					# process from weaponClass up
-					# never shoot on smaller ships than weaponClass
-					applied = 0
-					for tmpWpnClass in xrange(weaponClass, 4):
-						#@log.debug('ISystem', 'Trying target class', tmpWpnClass, totalClass[tmpWpnClass])
-						# select target
-						if totalClass[tmpWpnClass]:
-							target = Utils.rand(0, totalClass[tmpWpnClass])
-							#@log.debug('ISystem', 'Target rnd num', target, totalClass[tmpWpnClass])
-							for targetID in attack[objID]:
-								if target < targets[targetID][tmpWpnClass]:
-									#@log.debug(objID, 'attacks', targetID, tmpWpnClass)
-									# targetID can be deleted at this point
-									anObj = tran.db.get(targetID, None)
-									if anObj:
-										dmg, destroyed, destroyedClass = self.cmd(anObj).applyShot(tran, anObj, systemDef[owners[targetID]], combatAtt + systemAtt[owners[objID]], weaponID, tmpWpnClass, target)
-										#@log.debug("ISystem result", dmg, destroyed, destroyedClass, tmpWpnClass)
-										#@print objID, 'dmg, destroyed', dmg, destroyed
-										damageTaken[targetID] = damageTaken.get(targetID, 0) + dmg
-										if destroyed > 0:
-											shipsLost[targetID] = shipsLost.get(targetID, 0) + destroyed
-											total -= destroyed
-											totalClass[destroyedClass] -= destroyed
-										if dmg > 0 and obj:
-											obj.combatExp += dmg
-											damageCaused[objID] = damageCaused.get(objID, 0) + dmg
-										applied = 1
-									break
-								else:
-									#@log.debug('ISystem', 'Lovering target by', targets[targetID][tmpWpnClass])
-									target -= targets[targetID][tmpWpnClass]
-						if applied:
+		if isCombat:
+			for shotIdx in (3, 2, 1, 0):
+				for objID in objects:
+					# obj CAN be deleted at this point
+					obj = tran.db.get(objID, None)
+					if obj == None:
+						continue # source already destroyed; move to next source
+					# if object is fleet, then it's signature is max
+					if obj and obj.type == T_FLEET:
+						obj.signature = Rules.maxSignature
+					# target preselection
+					totalClass = [0, 0, 0, 0]
+					total = 0
+					for targetID in attack[objID]:
+						totalClass[0] += targets[targetID][0]
+						totalClass[1] += targets[targetID][1]
+						totalClass[2] += targets[targetID][2]
+						totalClass[3] += targets[targetID][3]
+					total = totalClass[0] + totalClass[1] + totalClass[2] + totalClass[3]
+					# process shots
+					for combatAtt, weaponID in shots[objID][shotIdx]:
+						weapon = Rules.techs[weaponID]
+						weaponClass = weapon.weaponClass
+						if total == 0:
+							# there are no targets
 							break
+						#@log.debug('ISystem', 'Processing shot', objID, weapon.name, weaponClass)
+						# process from weaponClass up
+						# never shoot on smaller ships than weaponClass
+						applied = 0
+						for tmpWpnClass in xrange(weaponClass, 4):
+							#@log.debug('ISystem', 'Trying target class', tmpWpnClass, totalClass[tmpWpnClass])
+							# select target
+							if totalClass[tmpWpnClass]:
+								target = Utils.rand(0, totalClass[tmpWpnClass])
+								#@log.debug('ISystem', 'Target rnd num', target, totalClass[tmpWpnClass])
+								for targetID in attack[objID]:
+									if target < targets[targetID][tmpWpnClass]:
+										#@log.debug(objID, 'attacks', targetID, tmpWpnClass)
+										# targetID can be deleted at this point
+										anObj = tran.db.get(targetID, None)
+										if anObj:
+											dmg, destroyed, destroyedClass = self.cmd(anObj).applyShot(tran, anObj, systemDef[owners[targetID]], combatAtt + systemAtt[owners[objID]], weaponID, tmpWpnClass, target)
+											#@log.debug("ISystem result", dmg, destroyed, destroyedClass, tmpWpnClass)
+											#@print objID, 'dmg, destroyed', dmg, destroyed
+											damageTaken[targetID] = damageTaken.get(targetID, 0) + dmg
+											if destroyed > 0:
+												shipsLost[targetID] = shipsLost.get(targetID, 0) + destroyed
+												total -= destroyed
+												totalClass[destroyedClass] -= destroyed
+											if dmg > 0 and obj:
+												obj.combatExp += dmg
+												damageCaused[objID] = damageCaused.get(objID, 0) + dmg
+											applied = 1
+										else:
+											continue # target already destroyed, move to next target
+										break
+									else:
+										#@log.debug('ISystem', 'Lovering target by', targets[targetID][tmpWpnClass])
+										target -= targets[targetID][tmpWpnClass]
+							if applied:
+								break
 		# send messages and modify diplomacy relations
 		# distribute experience pts
 		for objID in objects:
@@ -648,6 +729,15 @@ class ISystem(IObject):
 
 	def processFINALPhase(self, tran, obj, data):
 		# TODO find new starting points
+		# clean up mines if system ownership was lost
+		owners = []
+		for planetID in obj.planets:
+			planet = tran.db[planetID]
+			if planet.owner not in owners:
+				owners.append(planet.owner)
+		for ownerid in obj.minefield:
+			if ownerid not in owners:
+				self.removeMines(obj,ownerid)
 		return obj.planets[:] + obj.closeFleets[:]
 
 	processFINALPhase.public = 1
@@ -720,6 +810,81 @@ class ISystem(IObject):
 		oid = tran.db.create(planet)
 		obj.planets.append(oid)
 		return oid
+
+	def addMine(self,obj,ownerid,minetechid,maxnum): #add a mine for an owner
+		if ownerid in obj.minefield:
+			if len(obj.minefield[ownerid]) < maxnum:
+				obj.minefield[ownerid].append(minetechid)
+		else:
+			obj.minefield[ownerid]= [minetechid]
+
+	addMine.public = 1
+	addMine.accLevel = AL_ADMIN
+
+	def getMines(self,obj,ownerid): #get all mines of an owner
+		if ownerid in obj.minefield:
+			return obj.minefield[ownerid]
+		else:
+			return []
+
+	getMines.public = 1
+	getMines.accLevel = AL_ADMIN
+
+	def removeMines(self,obj,ownerid): #remove all mines of an owner
+		if ownerid in obj.minefield:
+			obj.minefield.remove(ownerid)
+
+	removeMines.public = 0
+
+	def fireMine(self,obj,ownerid): #shoot the mine
+		if ownerid in obj.minefield:
+			mine = obj.minefield[ownerid].pop(random.randrange(0,len(obj.minefield[ownerid]))) #select a random mine to detonate
+			if len(obj.minefield[ownerid]) == 0:
+				obj.minefield.pop(ownerid) #delete the owner if no more mines
+		else:
+			return False,False,False
+		tech = Rules.techs[mine]
+		damage = random.randrange(tech.weaponDmgMin,tech.weaponDmgMax)
+		attack = tech.weaponAtt
+		ignoreshield = tech.weaponIgnoreShield
+		return damage,attack,ignoreshield
+		
+	fireMine.public = 1
+	fireMine.accLevel = AL_ADMIN
+
+	def getSystemMineLauncher(self,tran,obj,playerID):
+		launchtech = 0
+		mineclass = 0
+		structure = 0
+		for planetID in obj.planets:
+			planet = tran.db[planetID]
+			if planet.owner == playerID:
+				for struct in planet.slots:
+					tech = Rules.techs[struct[STRUCT_IDX_TECHID]]
+					if tech.mineclass > mineclass:
+						if tech.mineclass > mineclass:
+							mineclass = tech.mineclass
+							launchtech = tech
+							structure = struct[STRUCT_IDX_TECHID]
+		return launchtech, structure
+
+	getSystemMineLauncher.public = 0
+
+	def getSystemMineSource(self,tran,obj,playerID):
+		source = 0
+		mineclass = 0
+		for planetID in obj.planets:
+			planet = tran.db[planetID]
+			if planet.owner == playerID:
+				for struct in planet.slots:
+					tech = Rules.techs[struct[STRUCT_IDX_TECHID]]
+					if tech.mineclass > mineclass:
+						if tech.mineclass > mineclass:
+							mineclass = tech.mineclass
+							source = planetID
+		return source
+
+	getSystemMineSource.public = 0
 
 	def getSystemCombatBonuses(self,tran,obj,playerID):
 		systemAtt = 0;

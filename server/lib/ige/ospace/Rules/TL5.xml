@@ -1220,7 +1220,7 @@
 		<preresearch>Military combat experts believe that a drive designed to push heavy hulls will be benificial to our military strategy.</preresearch>
 		<description>Sometimes speed is less important that shear power. The Slug Drive is a hugely powerful sublight drive that lets us bring our weapons to bear on enemies quickly. Due to it's massive size and power, it makes the ship harder to kill but easier to find.</description>
 	</technology>
-	<technology id="5506" symbol="FLAKMINEFIELD" name="Mine Field">
+	<technology id="5506" symbol="FLAKMINEFIELD" name="Robotic Mine Field Control">
 		<discovery
 			researchMod="1.7 + 0.75"
 			level="5"
@@ -1232,15 +1232,62 @@
 			buildProd="3200"
 			operWorkers="1500"
 			operEn="15"
-			scannerPwr="20"
+			scannerPwr="30"
 			maxHP="400"
-			combatAtt="18"
-			structWeapons="6,8,10,0,0"
-			systemDef="4"
+			mineclass="9050"
+			minenum="8"
+			minerate="23"
 			isMilitary="1"
 		/>
 		<preresearch>Mines present us with a problem: how do we adaquately deploy a mine field that completely covers a star system, protecting it from attack.</preresearch>
-		<description>Military powers have long desired to effectively mine a star system. The robotic mine field is just that: intelligent mines that track enemy vessles. The enemy must manuever to avoid these mines, or fall prey to their firepower.</description>
+		<description>Military powers have long desired to effectively mine a star system. The robotic mine field is just that: equipped with subspace scanners that detect where fleets will arrive in the system, these mines manuever themselves to detonate just seconds after the enemy arrives.</description>
+		<flavor>Only one mine field control structure in the system will be used for deploying mines. Having two structures is effectively useless.</flavor>
+	</technology>
+	<technology id="5507" symbol="FLAKSWARMMINEFIELD" name="Swarm Mine Field Control">
+		<discovery
+			researchMod="1.7 + 0.75"
+			level="5"
+			researchRequires="FLAKBATTERY-3"
+			researchRaces="H"
+		/>
+		<structure
+			subtype="str50"
+			buildProd="3200"
+			operWorkers="1500"
+			operEn="25"
+			scannerPwr="45"
+			maxHP="500"
+			mineclass="9051"
+			minenum="40"
+			minerate="5"
+			isMilitary="1"
+		/>
+		<preresearch>Mines present us with a problem: how do we adaquately deploy a mine field that completely covers a star system, protecting it from attack.</preresearch>
+		<description>Military powers have long desired to effectively mine a star system. The swarm mine field is just that: by saturating the system with enough mines, and combining that with rapid movement and a powerful planet-based scanner, these mines can be quickly repositioned for maximum effect.</description>
+		<flavor>Only one mine field control structure in the system will be used for deploying mines. Having two structures is effectively useless.</flavor>
+	</technology>
+	<technology id="5508" symbol="BIOMINEFIELD" name="Self Aware Mine Field Control">
+		<discovery
+			researchMod="1.7 + 0.75"
+			level="5"
+			researchRequires="SSFLAKBATTERY-3"
+			researchRaces="B"
+		/>
+		<structure
+			subtype="str50"
+			buildProd="3200"
+			operWorkers="1000"
+			operEn="10"
+			scannerPwr="25"
+			maxHP="300"
+			mineclass="9052"
+			minenum="6"
+			minerate="23"
+			isMilitary="1"
+		/>
+		<preresearch>Mines present us with a problem: how do we adaquately deploy a mine field that completely covers a star system, protecting it from attack.</preresearch>
+		<description>Military powers have long desired to effectively mine a star system. The self aware mine field is just that: a thinking, breathing entity that has one desire, to outthink the enemy and crush them with a single suicide charge.</description>
+		<flavor>Only one mine field control structure in the system will be used for deploying mines. Having two structures is effectively useless.</flavor>
 	</technology>
 	<technology id="5800" symbol="PLCOND5" name="Planetary Condensation">
 		<discovery

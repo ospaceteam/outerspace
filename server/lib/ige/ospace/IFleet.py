@@ -1166,6 +1166,44 @@ class IFleet(IObject):
 
 	getPreCombatData.public = 0
 
+	def applyMine(self, tran, obj, attack, damage, ignoreshield):
+		player = tran.db[obj.owner]
+		targetindex = random.randrange(0,len(obj.ships))
+		designID, hp, shield, exp = obj.ships[targetindex]
+		targetShip = player.shipDesigns[designID]
+		level = Rules.shipExpToLevel.get(int(exp / targetShip.baseExp), Rules.shipDefLevel)
+		defense = int(targetShip.missileDef * Rules.shipLevelEff[level])
+		#determine damage:
+		damageRatio = min(max(1.0*attack/defense,0.25),1.25) #the better the defense, the less damage you take from the mine: 25% to 125% damage of normal mine
+		damage = int(damage * damageRatio)
+		if not damage:
+			return 0,0 #mine did no damage due to low ATT value on mine
+		#do damage:
+		destroyed = 0
+		blocked = 0
+		if not ignoreshield and shield > 0:
+			blocked = min(shield, dmg)
+			obj.ships[targetindex][2] -= blocked
+			dmg -= blocked
+		elif ignoreshield and targetShip.hardShield > 0 and shield > 0:
+			blocked = min(shield, int(dmg*(ship.hardShield))) #hard shields also reduce penetrating weapons
+			obj.ships[targetindex][2] -= blocked
+			dmg -= blocked
+		if shield: #mines never pierce shields at this time; possible future expansion of the tech
+			blocked = min(shield, dmg)
+			dmg -= blocked
+			obj.ships[target][2] -= blocked
+		if damage > 0:
+			if hp < damage:
+				damage = hp
+				destroyed = 1
+				self.cmd(obj).removeShips(tran, obj, [obj.ships[targetindex]])				
+			else:
+				obj.ships[targetindex][1] -= damage
+		return damage + blocked, destroyed
+
+	applyMine.public = 0
+
 	def applyShot(self, tran, obj, defense, attack, weaponID, targetClass, target):
 		#@log.debug(obj.oid, 'IFleet', 'Apply shot', attack, weaponID, targetClass, target)
 		player = tran.db[obj.owner]

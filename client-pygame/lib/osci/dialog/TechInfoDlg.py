@@ -62,13 +62,33 @@ def perc100_2Text(value):
 	string = _('%d%%') % (value)
 	return string
 
+def getTechName(techid):
+	try:
+		tech = client.getFullTechInfo(techid)
+		return tech.name
+	except:
+		return _('Unknown')
+
+def getTechShortname(techid):
+	try:
+		tech = client.getFullTechInfo(techid)
+		if (tech.shortname != ''):
+			return tech.shortname
+		return tech.name
+	except:
+		return _('Unknown')
+
+def getRateName(rate):
+	string = _('%d Turns') % (int(rate))
+	return string
 
 V_NONE = 0x00
 V_STRUCT = 0x01
 V_HULL = 0x02
 V_SEQUIP = 0x04
 V_PROJECT = 0x08
-V_EFF = 0x10
+V_EFF = 0x10 # attr * techEff
+V_EFF_REV = 0x20 # attr / techEff
 V_ALL = V_STRUCT|V_HULL|V_SEQUIP|V_PROJECT
 
 techAttrs = {}
@@ -123,6 +143,10 @@ addAttr('weaponIsMissile', _('Missile weapon (ECM counts)'), V_SEQUIP|V_HULL, 0,
 addAttr('weaponIgnoreShield', _('Weapon ignore shield'), V_SEQUIP|V_HULL, 0, convertor = bool2Text)
 addAttr('weaponAtt', _('Weapon attack'), V_SEQUIP|V_EFF, 0)
 addAttr('weaponROF', _('Weapon Rate Of Fire'), V_SEQUIP, 0, convertor = float)
+
+addAttr('mineclass', _('Mine Class Deployed'), V_STRUCT, 0, convertor = getTechShortname)
+addAttr('minenum', _('Maximum Supported Mines'), V_STRUCT|V_EFF, 0, convertor = int)
+addAttr('minerate', _('Mine Rate of Deploy'), V_STRUCT|V_EFF_REV, 0, convertor = getRateName)
 
 addAttr('minHull', _('Minimum required hull'), V_SEQUIP|V_HULL, 0, convertor = cclass2Text)
 addAttr('weight', _('Weight'), V_SEQUIP|V_HULL, 0)
@@ -311,6 +335,9 @@ class TechInfoDlg:
 				if V_EFF & props:
 					item.font = 'normal-bold'
 					item.tValue = convertor(value * techEff)
+				if V_EFF_REV & props:
+					item.font = 'normal-bold'
+					item.tValue = convertor(value / techEff)
 				items.append(item)
 
 		self.win.vData.items = items

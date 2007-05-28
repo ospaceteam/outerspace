@@ -1,5 +1,12 @@
 Change Log:
 
+[2007-05-28]
+- Added Mine Field (proper mine-based implementation on server) [Random Chaos] [SF#1651098]
+- Added Mine Field techs to Human and Bio trees. Added second Mine Field tech to Cyborg tree. [Random Chaos]
+- Added Mine Field display info to System Map [Random Chaos]
+- Altered starmap refocus events in an attempt to get rid of "blinking windows" bug [Random Chaos]
+- Fixed weapon damage and class inheritance in Fleet Details dialog [Random Chaos]
+
 VERSION 0.5.63
 
 [2007-05-27]

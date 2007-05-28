@@ -109,8 +109,8 @@ class FleetSpecsDlg:
 				except:
 					level = 1 #tech not researched
 				improvement = Rules.techImprEff[level]
-				dmgMin = tech.weaponDmgMin
-				dmgMax = tech.weaponDmgMax
+				dmgMin = tech.weaponDmgMin * tech.weaponROF
+				dmgMax = tech.weaponDmgMax * tech.weaponROF
 				weaponclass = tech.weaponClass
 				if self.showOnlyShieldPiercing and not tech.weaponIgnoreShield:
 					continue
@@ -189,7 +189,7 @@ class FleetSpecsDlg:
 			items.append(ui.Item(_("Dmg vs Medium (min)"), tSm = int(self.sm_min[1]+self.sm_min[0]*Rules.weaponDmgDegrade[1]),
 				tMed = int(self.med_min[1]+self.med_min[0]*Rules.weaponDmgDegrade[1]),
 				tLg = int(self.lg_min[1]+self.lg_min[0]*Rules.weaponDmgDegrade[1])))
-			items.append(ui.Item(_("Dmg vs Medium (max)"), tSm = int(self.sm_max[1]+self.sm_min[0]*Rules.weaponDmgDegrade[1]),
+			items.append(ui.Item(_("Dmg vs Medium (max)"), tSm = int(self.sm_max[1]+self.sm_max[0]*Rules.weaponDmgDegrade[1]),
 				tMed = int(self.med_max[1]+self.med_max[0]*Rules.weaponDmgDegrade[1]),
 				tLg = int(self.lg_max[1]+self.lg_max[0]*Rules.weaponDmgDegrade[1])))
 			items.append(ui.Item(_(" "), tSm = '', tMed = '', tLg = ''))
@@ -203,7 +203,7 @@ class FleetSpecsDlg:
 			items.append(ui.Item(_("Dmg vs Planet (min)"), tSm = int(self.sm_min[3]+self.sm_min[2]*Rules.weaponDmgDegrade[1]+self.sm_min[1]*Rules.weaponDmgDegrade[2]+self.sm_min[0]*Rules.weaponDmgDegrade[3]),
 				tMed = int(self.med_min[3]+self.med_min[2]*Rules.weaponDmgDegrade[1]+self.med_min[1]*Rules.weaponDmgDegrade[2]+self.med_min[0]*Rules.weaponDmgDegrade[3]),
 				tLg = int(self.lg_min[3]+self.lg_min[2]*Rules.weaponDmgDegrade[1]+self.lg_min[1]*Rules.weaponDmgDegrade[2]+self.lg_min[0]*Rules.weaponDmgDegrade[3])))
-			items.append(ui.Item(_("Dmg vs Planet (max)"), tSm = int(self.sm_max[3]+self.sm_min[2]*Rules.weaponDmgDegrade[1]+self.sm_min[1]*Rules.weaponDmgDegrade[2]+self.sm_min[0]*Rules.weaponDmgDegrade[3]),
+			items.append(ui.Item(_("Dmg vs Planet (max)"), tSm = int(self.sm_max[3]+self.sm_max[2]*Rules.weaponDmgDegrade[1]+self.sm_max[1]*Rules.weaponDmgDegrade[2]+self.sm_max[0]*Rules.weaponDmgDegrade[3]),
 				tMed = int(self.med_max[3]+self.med_max[2]*Rules.weaponDmgDegrade[1]+self.med_max[1]*Rules.weaponDmgDegrade[2]+self.med_max[0]*Rules.weaponDmgDegrade[3]),
 				tLg = int(self.lg_max[3]+self.lg_max[2]*Rules.weaponDmgDegrade[1]+self.lg_max[1]*Rules.weaponDmgDegrade[2]+self.lg_max[0]*Rules.weaponDmgDegrade[3])))
 		else:
