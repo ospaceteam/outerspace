@@ -329,7 +329,7 @@ class IUniverse(IObject):
 					# we have the leader!
 					leader = tran.db[nominated[0]]
 					leader.imperator = 1
-					if galaxy.imperator != OID_NONE:
+					if galaxy.imperator != OID_NONE and galaxy.imperator != leader.oid:
 						tran.db[galaxy.imperator].imperator = 0
 					galaxy.imperator = leader.oid
 					# send message
