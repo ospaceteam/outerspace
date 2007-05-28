@@ -887,8 +887,11 @@ class StarMapWidget(Widget):
 					if rng > 1:
 						pygame.draw.circle(surface, (0x20, 0x20, 0x80), (sx, sy), rng, 1)
 
-		if gdata.config.defaults.showminimap == 'yes':
+		if gdata.config.defaults.showminimap != 'no':
 			self.miniMap.draw(surface, self._miniMapRect.left, self._miniMapRect.top)
+			if self.miniMap.needRect():
+				self.processMiniMapRect()
+				self.miniMap.draw(surface, self._miniMapRect.left, self._miniMapRect.top)
 		# draw popups
 		moreIDs = len(self.activeObjIDs) > 1
 		if not moreIDs:
@@ -1049,7 +1052,7 @@ class StarMapWidget(Widget):
 		if mods & KMOD_SHIFT:
 			return self.processMB3Down(evt)
 		pos = evt.pos
-		if gdata.config.defaults.showminimap == 'yes':
+		if gdata.config.defaults.showminimap != 'no':
 			if self._miniMapRect.collidepoint(pos):
 				return ui.NoEvent
 		if self._detectOverlayZone.collidepoint(pos):
@@ -1078,7 +1081,7 @@ class StarMapWidget(Widget):
 		if mods & KMOD_SHIFT:
 			return self.processMB3Up(evt)
 		pos = evt.pos
-		if gdata.config.defaults.showminimap == 'yes':
+		if gdata.config.defaults.showminimap != 'no':
 			if self._miniMapRect.collidepoint(pos):
 				self.currX, self.currY = self.miniMap.processMB1Up((pos[0] - self._miniMapRect.left, self._miniMapRect.height - pos[1] + self._miniMapRect.top))
 				self.processMiniMapRect()
@@ -1169,7 +1172,7 @@ class StarMapWidget(Widget):
 		self.showBuoyDlg.display(data)
 
 	def processMB3Down(self, evt):
-		if gdata.config.defaults.showminimap == 'yes':
+		if gdata.config.defaults.showminimap != 'no':
 			if self._miniMapRect.collidepoint(evt.pos):
 				return ui.NoEvent
 		self._newCurrXY = 1
@@ -1187,7 +1190,7 @@ class StarMapWidget(Widget):
 		return ui.NoEvent
 
 	def processMiniMapRect(self):
-		if gdata.config.defaults.showminimap == 'yes':
+		if gdata.config.defaults.showminimap != 'no':
 			rect = self._mapSurf.get_rect()
 			self.miniMap.moveRect(self.currX, self.currY, rect.width / self.scale, rect.height / self.scale)
 
@@ -1206,7 +1209,7 @@ class StarMapWidget(Widget):
 
 	def processMMotion(self, evt):
 		pos = evt.pos
-		if gdata.config.defaults.showminimap == 'yes':
+		if gdata.config.defaults.showminimap != 'no':
 			if self._miniMapRect.collidepoint(pos):
 				#log.debug('Minimap Rect Position');
 				return ui.NoEvent
@@ -1309,6 +1312,7 @@ class StarMapWidget(Widget):
 		self.currX = x
 		self.currY = y
 		self.repaintMap = 1
+		self.processMiniMapRect()
 		# disable auto position setting
 		self.setPosition = 0
 

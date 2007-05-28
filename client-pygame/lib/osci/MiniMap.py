@@ -22,18 +22,21 @@ from pygameui.Widget import Widget, registerWidget
 from ige.ospace.Const import *
 import pygame, pygame.draw
 from pygame.locals import *
+from ige import log
 import res, client
 
 borderColor = (0x00, 0x00, 0x90)
 rectColor = (29, 118, 229)
+#rect2Color = (0xFF, 0xFF, 0xFF)
+rect2Color = (0x00, 0x00, 0x00)
 
 class MiniMap:
     def __init__(self, width, height):
         self._map = []
-        self.drawnMap = []
         self._repaintMap = True
         self._repaintRect = False
         self._mapSurf = None
+        self._mapSurfCache = None
         self._scaleX = 0.0
         self._scaleY = 0.0
         self._minX = 0
@@ -43,6 +46,9 @@ class MiniMap:
         self._width = width
         self._height = height
         self._rectRect = (0, 0, 0, 0)
+        self._rectRect2 = (0, 0, 0, 0)
+        self._rectRect3 = (0, 0, 0, 0)
+        self._noRect = True
 
     def precompute(self):
         minX = minY = 1000000
@@ -78,47 +84,55 @@ class MiniMap:
         self._scaleY = float(self._height - 2 * self._shiftX) / float(maxY - minY)
         self._repaintMap = True
 
-    def draw(self, surface, startX, startY):
+    def preDraw(self, surface):
         if not self._mapSurf:
             self._mapSurf = pygame.Surface((self._width, self._height), SWSURFACE | SRCALPHA, surface)
             self._repaintMap = 1
-        if self._repaintMap:
-            # redraw map
-            self._mapSurf.fill((0x00, 0x00, 0x00))
-            maxY = self._mapSurf.get_rect().height
-            #reset drawn map
-            self.drawnMap = []
-            for systemID, x, y, color in self._map:
-                sx = int((x - self._minX) * self._scaleX) + self._shiftX
-                sy = maxY - int((y - self._minY) * self._scaleY) - self._shiftY
-                #save drawn map for rectangle moves when recompute of positions isn't needed
-                self.drawnMap.append((systemID,sx,sy,color))
-                pygame.draw.circle(self._mapSurf, color, (sx, sy), 2)
-            pygame.draw.rect(self._mapSurf, rectColor, self._rectRect, 1)
-            pygame.draw.rect(self._mapSurf, borderColor, (0, 0, self._width, self._height), 1)
-            # clean up flag
-            self._repaintMap = False
-            self._repaintRect = False
-        elif self._repaintRect:
-            self._mapSurf.fill((0x00, 0x00, 0x00))
-            maxY = self._mapSurf.get_rect().height
-            for systemID, sx, sy, color in self.drawnMap:
-                pygame.draw.circle(self._mapSurf, color, (sx, sy), 2)
-            pygame.draw.rect(self._mapSurf, rectColor, self._rectRect, 1)
-            pygame.draw.rect(self._mapSurf, borderColor, (0, 0, self._width, self._height), 1)
-            self._repaintRect = False
-        # blit cached map
+        # redraw map
+        self._mapSurf.fill((0x00, 0x00, 0x00))
+        maxY = self._mapSurf.get_rect().height
+        #reset drawn map
+        for systemID, x, y, color in self._map:
+            sx = int((x - self._minX) * self._scaleX) + self._shiftX
+            sy = maxY - int((y - self._minY) * self._scaleY) - self._shiftY
+            #save drawn map for rectangle moves when recompute of positions isn't needed
+            pygame.draw.circle(self._mapSurf, color, (sx, sy), 2)
+        maxY = self._mapSurf.get_rect().height
+        pygame.draw.rect(self._mapSurf, borderColor, (0, 0, self._width, self._height), 1)
+        #cache for rectRect movement
+        self._mapSurfCache = self._mapSurf.copy()
+
+    def draw(self, surface, startX, startY):
+        if self._repaintMap: #repaint whole map
+            self.preDraw(surface)
+        elif self._repaintRect: #when not repainting whole map, pull cached version
+            self._mapSurf = self._mapSurfCache.copy()
+        # draw view area
+        if (self._rectRect[3] != 0):
+            self._noRect = False
+        pygame.draw.rect(self._mapSurf, rectColor, self._rectRect, 1)
+        pygame.draw.rect(self._mapSurf, rect2Color, self._rectRect2, 1)
+        pygame.draw.rect(self._mapSurf, rect2Color, self._rectRect3, 1)
+        # clean up flags
+        self._repaintMap = False
+        self._repaintRect = False
+        # blit map
         rect = Rect(startX, startY, self._width, self._height)
         surface.blit(self._mapSurf, rect)
         return rect
+
+    def needRect(self):
+        return self._noRect
 
     def moveRect(self, centerX, centerY, width, height):
         maxX, maxY = self._mapSurf.get_rect().size
         sx = int((centerX - self._minX) * self._scaleX) + self._shiftX
         sy = maxY - int((centerY - self._minY) * self._scaleY) - self._shiftY
-        w = int(width * self._scaleX)
-        h = int(height * self._scaleY)
+        w = max(int(width * self._scaleX),2)
+        h = max(int(height * self._scaleY),2)
         self._rectRect = (sx - w / 2, sy - h / 2, w, h)
+        self._rectRect2 = (sx - w / 2 - 1, sy - h / 2 - 1, w+2, h+2)
+        self._rectRect3 = (sx - w / 2 + 1, sy - h / 2 + 1, w-2, h-2)
         self._repaintRect = True
 
     def processMB1Up(self, pos):
