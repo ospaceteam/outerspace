@@ -109,9 +109,15 @@ class ResearchDlg:
 		total = 0
 		for task in player.rsrchQueue:
 			tech = client.getTechInfo(task.techID)
+			fulltech = client.getFullTechInfo(task.techID)
 			queueTechs.append(task.techID)
 			item = ui.Item(tech.name, techID = task.techID, index = index)
 			researchSci = Utils.getTechRCost(player, task.techID, task.improvement)
+			maxImprovement = min(Rules.techMaxImprovement,fulltech.maxImprovement)
+			maxImpTotalSci = 0
+			if task.improveToMax and task.improvement < maxImprovement:
+				for impr in range(task.improvement+1,maxImprovement+1):
+					maxImpTotalSci += Utils.getTechRCost(player, task.techID, impr)
 			item.tooltip = _("Research points %d/%d, change %d pts/turn.") % (task.currSci, researchSci, task.changeSci)
 			item.statustip = item.tooltip
 			item.tImpToMax = ["", "*"][task.improveToMax]
@@ -123,6 +129,7 @@ class ResearchDlg:
 			if task.changeSci > 0:
 				value = float(researchSci - task.currSci) / max(task.changeSci, player.effSciPoints)
 				total += int(value + 1)
+				total += float(maxImpTotalSci) / player.effSciPoints
 				item.tETC = res.formatTime(value)
 			elif task.changeSci < 0:
 				value = - float(task.currSci) / min(task.changeSci, player.effSciPoints)
@@ -130,6 +137,7 @@ class ResearchDlg:
 			elif player.effSciPoints > 0:
 				value = float(researchSci) / player.effSciPoints
 				total += int(value + 1)
+				total += float(maxImpTotalSci) / player.effSciPoints
 				item.tETC = res.formatTime(value)
 			else:
 				item.tETC = res.getNA()

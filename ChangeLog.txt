@@ -11,6 +11,7 @@ Change Log:
 - Cached minimap surface before adding overlay rect; significantly improved redraw speed [Random Chaos] [SF#1641061]
 - Added minimap position change to starmap "setPos" method [Random Chaos] [SF#1655685]
 - Fixed leader voting; if a leader was voted more than once, they were "unset" as leader in their iPlayer object. [Random Chaos]
+- Fixed research dialog total ETC [Random Chaos] [SF#1727112]
 
 VERSION 0.5.63
 
