@@ -1,5 +1,8 @@
 Change Log:
 
+[2007-05-30]
+- Solar Factory now produces energy. [Qark] [#SF1728572]
+
 [2007-05-28]
 - Added Mine Field (proper mine-based implementation on server) [Random Chaos] [SF#1651098]
 - Added Mine Field techs to Human and Bio trees. Added second Mine Field tech to Cyborg tree. [Random Chaos]

@@ -223,6 +223,7 @@
             prodProdMod="0.0,0.0,1.0,0.0"
             prodEnv="0"
             prodEn="20"
+            prodEnMod="0.0,0.0,1.0,0.0"
             maxHP="600"
         />
         <preresearch>We know fusion, we know how to produce stuff, we know how to use star's energy. We know all we need to try to design factory that will finaly free us from the dependency on minerals.</preresearch>
