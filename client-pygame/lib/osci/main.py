@@ -170,9 +170,6 @@ if gdata.config.defaults.objectkeys != None:
             gdata.objectFocus[key] = objid
         else:
             log.warning('OSCI','Unrecognized object key definition :',objectkey)
-#check to make sure the client has the object keys help config var
-if gdata.config.defaults.show == None:
-	gdata.config.defaults.showkeymodehelp = 1
 
 #initialize pygame and prepare screen
 pygame.mixer.pre_init(44100, -16, 2, 4096)

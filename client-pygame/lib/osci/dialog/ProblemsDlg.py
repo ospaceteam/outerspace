@@ -313,15 +313,23 @@ class ProblemsDlg:
 			# compute length of research queue
 			for task in player.rsrchQueue:
 				tech = client.getTechInfo(task.techID)
+				fulltech = client.getFullTechInfo(task.techID)
 				researchSci = Utils.getTechRCost(player, task.techID, task.improvement)
+				maxImprovement = min(Rules.techMaxImprovement,fulltech.maxImprovement)
+				maxImpTotalSci = 0
+				if task.improveToMax and task.improvement < maxImprovement:
+					for impr in range(task.improvement+1,maxImprovement+1):
+						maxImpTotalSci += Utils.getTechRCost(player, task.techID, impr)
 				if task.changeSci > 0:
 					value = float(researchSci - task.currSci) / max(task.changeSci, player.effSciPoints)
 					totalEtc += int(value + 1)
+					totalEtc += float(maxImpTotalSci) / player.effSciPoints
 				elif task.changeSci < 0:
 					totalEtc -= float(task.currSci) / min(task.changeSci, player.effSciPoints)
 				elif player.effSciPoints > 0:
 					value = float(researchSci) / player.effSciPoints
 					totalEtc += int(value + 1)
+					totalEtc += float(maxImpTotalSci) / player.effSciPoints
 				else:
 					totalEtc = 99999
 					break
