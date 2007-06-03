@@ -23,7 +23,7 @@ import pygameui as ui
 from pygameui.Fonts import *
 from ige.ospace.Const import *
 from ige.ospace import Rules, Utils
-import pygame, pygame.draw, pygame.key
+import pygame, pygame.draw, pygame.key, pygame.image
 from pygame.locals import *
 from dialog.ShowBuoyDlg import ShowBuoyDlg
 from dialog.MapOverlayDlg import MapOverlayDlg
@@ -110,6 +110,11 @@ class StarMapWidget(Widget):
 		# key setting system
 		self.selectobject = False
 		self.setKey = False
+
+	def save(self,append=''):
+		name = ("starmap_%s.bmp" % append)
+		pygame.image.save(self._mapSurf,name)
+		return name
 
 	def precompute(self):
 		# clear active areas for buoy texts

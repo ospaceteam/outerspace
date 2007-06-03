@@ -173,6 +173,16 @@ class MainGameDlg:
 		self.confirmDlg.display(_('Are you sure to resign current game?'), _('No'),
 			('Yes'), cancelAction = self.onResignConfirmed)
 
+	def onSaveStarmap(self, widget, action, data):
+		self.confirmDlg.display(_('Save the current starmap view as an image?'), _('Yes'),
+			('No'), confirmAction = self.onSaveStarmapConfirm)
+
+	def onSaveStarmapConfirm(self):
+		turn = client.getTurn()
+		name = res.formatTime(turn,'_')
+		savedas = self.mapWidget.save(name)
+		self.confirmDlg.display(_('File saved as %s' % savedas), _('Ok'), False)
+
 	def onMenu(self, widget, action, data):
 		w, h = gdata.scrnSize
 		self.systemMenu.show((w - self.systemMenu.width * 20 - 4, 0))
@@ -183,7 +193,7 @@ class MainGameDlg:
 		self.app.exit()
 
 	def onRestartConfirmed(self, imperatorMsg):
-		self.win.setStatus(_('Galaxy restart in progres...'))
+		self.win.setStatus(_('Galaxy restart in progress...'))
 		oldMsgHandler = client.cmdProxy.msgHandler
 		client.cmdProxy.msgHandler = None
 		client.cmdProxy.keepAliveTime = 60 * 60 # do not try to connect to server (one hour)
@@ -229,7 +239,7 @@ class MainGameDlg:
 		if client.db != None:
 			player = client.getPlayer()
 			if player.imperator > 2:
-				self.systemMenu.items[2].enabled = True
+				self.systemMenu.items[3].enabled = True
 				lastGalaxyRestartShown = gdata.config.game.lastGalaxyRestartShown
 				if lastGalaxyRestartShown != None:
 					localTime = time.time()
@@ -241,7 +251,7 @@ class MainGameDlg:
 					gdata.config.game.lastGalaxyRestartShown = str(time.time())
 					self.galaxyRestartDlg.display(restartAction = self.onRestartConfirmed)
 			else:
-				self.systemMenu.items[2].enabled = False
+				self.systemMenu.items[3].enabled = False
 				if shownFromMenu == True:
 					self.win.setStatus(_("Only imperator elected three times and more can restart galaxy."))
 
@@ -319,7 +329,8 @@ class MainGameDlg:
 			items = [
 				ui.Item(_("Find system"), action = "onSearch"),
 				ui.Item(_("Statistics"), action = "onStats"),
-				ui.Item(_("Galaxy restart"), action = "galaxyRestart", enabled = False, data = True),
+				ui.Item(_("Save Starmap"), action = "onSaveStarmap"),
+				ui.Item(_("Galaxy restart"), action = "galaxyRestart", enabled = False, data = True), #if this position moved, you need to update restartGalaxy's "self.systemMenu.items" lines to reference new index position
 				ui.Item(_("Options"), action = "onOptions"),
 				ui.Item(_("--------"), enabled = False),
 				ui.Item(_("Resign"), action = "onResign"),

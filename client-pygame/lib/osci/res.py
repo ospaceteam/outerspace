@@ -350,7 +350,7 @@ def getStarmapWidgetSystemColorPerDatatype(datatype,ownerid,bio,mineral,slot,num
 def fadeColor(triplet):
 	return ((triplet[0]+0xc0)/2,(triplet[1]+0xc0)/2,(triplet[2]+0xc0)/2)
 
-def formatTime(time):
+def formatTime(time,separator=':'):
 	time = int(math.ceil(time))
 	sign = ''
 	if time < 0:
@@ -358,7 +358,7 @@ def formatTime(time):
 		sign = '-'
 	days = time / 24
 	hours = time % 24
-	return '%s%d:%02d' % (sign, days, hours)
+	return '%s%d%s%02d' % (sign, days, separator, hours)
 
 def formatBE(b, e):
 	return '%d / %d' % (b, e)
