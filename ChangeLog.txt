@@ -1,5 +1,10 @@
 Change Log:
 
+[2007-06-03]
+- Fixed issue where Fleet Dialog did not recieve updated wait counter after deleting an in-progress wait command [Random Chaos] [SF#1730129]
+- Updated Mine Field techs' firepower based on OS-Devel discussion [Random Chaos]
+- Added "super laser" bomb for mounting on Mobile Planet hull [Random Chaos]
+
 [2007-06-01]
 - Fix problems dialog with research Total ETC [PeS] [related to SF#1727112]
 

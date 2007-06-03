@@ -739,6 +739,32 @@
 		<preresearch>Long have we envied the bio weapons, able to ignore shields. Perhaps we can make the same?</preresearch>
 		<description>Well, the solution was staring us in the face: combine a gravitational pulse to temporarily overload the enemy shields while slipping a missile through the momentary gap. The only problem is this gap is quite small, limiting our payload.</description>
 	</technology>
+	<technology id="6307" symbol="PLANETCRACKER" name="Planet Cracker">
+		<discovery
+			researchMod="2.00 + 1.50 + 1.00"
+			level="6"
+			researchRequires="HUGEHULL6-3"
+            researchReqSRes="SR_TL3B"
+			researchRaces="C"
+		/>
+
+		<shipequip
+			subtype="seq_wpn"
+			buildProd="17280"
+			slots="144"
+			weight="216"
+			weaponDmgMin="18000"
+			weaponDmgMax="22000"
+			weaponAtt="25"
+			weaponClass="3"
+			weaponROF="1"
+			minHull="2"
+			weaponGoodForFlak="0"
+			weaponIgnoreShield="0"
+		/>
+		<preresearch>A weapon to wipe out a planet in a single blow?</preresearch>
+		<description>While not quite capable of destroying a planet, this weapon incinerates large portions of the planetary surface every time it fires, dealing massive damage. Due to it's unwieldy nature and inability aim consistantly at anything smaller than a moon, it is useless against other ships.</description>
+	</technology>
 	<technology id="6320" symbol="REPAIR6A" name="Battle Platform">
 		<discovery
 			researchMod="1.75"

@@ -530,8 +530,8 @@
 			level="99"
 		/>
 		<mine
-			weaponDmgMin="35"
-			weaponDmgMax="70"
+			weaponDmgMin="100"
+			weaponDmgMax="150" 
 			weaponAtt="8"
 			shortname="Robotic"
 	        />
@@ -542,8 +542,8 @@
 			level="99"
 		/>
 		<mine
-			weaponDmgMin="7"
-			weaponDmgMax="14"
+			weaponDmgMin="20"
+			weaponDmgMax="30"
 			weaponAtt="12"
 			shortname="Rapid-Deploy"
 	        />
@@ -554,8 +554,8 @@
 			level="99"
 		/>
 		<mine
-			weaponDmgMin="30"
-			weaponDmgMax="60"
+			weaponDmgMin="80"
+			weaponDmgMax="120"
 			weaponAtt="10"
 			weaponIgnoreShield="1"
 			shortname="Self-Aware"
@@ -567,8 +567,8 @@
 			level="99"
 		/>
 		<mine
-			weaponDmgMin="60"
-			weaponDmgMax="120"
+			weaponDmgMin="160"
+			weaponDmgMax="240"
 			weaponAtt="10"
 			shortname="Supernova"
 	        />

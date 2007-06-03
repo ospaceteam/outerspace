@@ -204,7 +204,7 @@ class FleetDlg:
 		else:
 			self.fleetCommandDlg.display(self, self.win.vCommands.items.index(sel[0]) + 1)
 
-	def onDeleteCommand(self, widget, action, data):
+	def onDeleteCommand(self, widget, action, data, all=0):
 		sel = self.win.vCommands.selection
 		if not sel:
 			self.win.setStatus(_('Select command to delete.'))
@@ -215,10 +215,13 @@ class FleetDlg:
 			fleet = client.get(self.fleetID, noUpdate = 1)
 			fleet.actions, fleet.actionIndex = client.cmdProxy.deleteAction(self.fleetID,
 				item.tIndex - 1)
-			self.win.setStatus(_('Command has been executed.'))
 			self.win.vCommands.selection = []
-			self.update()
-			gdata.mainGameDlg.update()
+			if not all: # 0 from UI; 1 from "DeleteAll" function
+				self.win.setStatus(_('Command has been executed.'))
+				if item.text == gdata.fleetActions[FLACTION_WAIT]:
+					fleet = client.get(self.fleetID,forceUpdate=1)
+				self.update()
+				gdata.mainGameDlg.update()
 			return 0
 		except ige.GameException, e:
 			self.win.setStatus(_(e.args[0]))
@@ -228,7 +231,11 @@ class FleetDlg:
 		index = 0
 		while len(self.win.vCommands.items) > index:
 			self.win.vCommands.selection = [self.win.vCommands.items[index]]
-			index += self.onDeleteCommand(widget, action, data)
+			index += self.onDeleteCommand(widget, action, data, all=1)
+		self.win.setStatus(_('Command has been executed.'))
+		fleet = client.get(self.fleetID,forceUpdate=1)
+		self.update()
+		gdata.mainGameDlg.update()
 
 	def onSetActiveCommand(self, widget, action, data):
 		sel = self.win.vCommands.selection
