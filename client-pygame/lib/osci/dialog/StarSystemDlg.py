@@ -29,6 +29,7 @@ from ConfirmDlg import ConfirmDlg
 from BuoyDlg import BuoyDlg
 from ConstructionDlg import ConstructionDlg
 from FleetRedirectionDlg import FleetRedirectionDlg
+from FleetMassRedirectionDlg import FleetMassRedirectionDlg
 from MinefieldDlg import MinefieldDlg
 from ChangeQtyDlg import ChangeQtyDlg
 import ige
@@ -58,6 +59,7 @@ class StarSystemDlg:
 		self.minefieldDlg = MinefieldDlg(app)
 		self.buoyDlg = BuoyDlg(app)
 		self.fleetRedirectionDlg = FleetRedirectionDlg(app)
+		self.fleetMassRedirectionDlg = FleetMassRedirectionDlg(app)
 
 	def display(self, objID):
 		# set initial state
@@ -615,12 +617,15 @@ class StarSystemDlg:
 				targetName = getattr(client.get(player.shipRedirections[self.systemID]), "name", _("[Unknown]"))
 				self.win.vSRedirect.text = _("Redirect to %s") % targetName
 				self.win.vSRedirect.enabled = 1
+				self.win.vSMassRedirect.enabled = 1
 			else:
 				self.win.vSRedirect.text = _("Redirection OFF")
 				self.win.vSRedirect.enabled = 1
+				self.win.vSMassRedirect.enabled = 1
 		else:
 			self.win.vSRedirect.text = _("Redirection OFF")
 			self.win.vSRedirect.enabled = 0
+			self.win.vSMassRedirect.enabled = 0
 
 		if hasattr(player, "buoys"):
 			if self.systemID in player.buoys.keys():
@@ -1012,6 +1017,9 @@ class StarSystemDlg:
 	def onRedirectFleets(self, widget, action, data):
 		self.fleetRedirectionDlg.display(self.systemID, self)
 
+	def onMassRedirectFleets(self, widget, action, data):
+		self.fleetMassRedirectionDlg.display(self.systemID, self)
+
 	def onFindWormholeExit(self, widget, action, data):
 		source = client.get(self.systemID, noUpdate = 1)
 		try:
@@ -1148,11 +1156,13 @@ class StarSystemDlg:
 			id = 'vSFWHExit', tags = ['hidden'], action = 'onFindWormholeExit')
 		ui.Button(self.win, layout = (5, 26, 10, 1), text = _('Redirection OFF'),
 			id = 'vSRedirect', tags = ['sys'], action = 'onRedirectFleets')
-		ui.Button(self.win, layout = (15, 26, 5, 1), text = _('Add buoy'),
+		ui.Button(self.win, layout = (15, 26, 5, 1), text = _('Mass Redirect'),
+			id = 'vSMassRedirect', tags = ['sys'], action = 'onMassRedirectFleets')
+		ui.Button(self.win, layout = (20, 26, 5, 1), text = _('Add buoy'),
 			id = 'vSBuoy', tags = ['sys'], action = 'onBuoy')
-		ui.Button(self.win, layout = (20, 26, 5, 1), text = _('Delete buoy'),
+		ui.Button(self.win, layout = (25, 26, 5, 1), text = _('Delete buoy'),
 			id = 'vSDeleteBuoy', tags = ['sys'], action = 'onDeleteBuoy')
-		ui.Button(self.win, layout = (25, 26, 5, 1), text = _('View Minefield'),
+		ui.Button(self.win, layout = (30, 26, 5, 1), text = _('View Minefield'),
 			id = 'vSViewMinefield', tags = ['sys'], action = 'onViewMinefield')
 		## planet
 		ui.Title(self.win, layout = (0, 10, 20, 1), id = 'vPName',
