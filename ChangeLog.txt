@@ -5,6 +5,7 @@ Change Log:
 - Updated Mine Field techs' firepower based on OS-Devel discussion [Random Chaos]
 - Added "super laser" bomb for mounting on Mobile Planet hull [Random Chaos]
 - Added "Save Starmap" method - saves current starmap view to OS install folder as starmap_{turn}.bmp [Random Chaos]
+- Fixed "missing buoy" bug on starmap where you can't see the system name but you can see the system [Random Chaos] [SF#1728896]
 
 [2007-06-01]
 - Fix problems dialog with research Total ETC [PeS] [related to SF#1727112]

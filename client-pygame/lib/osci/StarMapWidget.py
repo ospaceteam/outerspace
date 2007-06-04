@@ -630,29 +630,35 @@ class StarMapWidget(Widget):
 						namecolor = res.fadeColor(namecolor)
 					img = renderText('small', name, 1, namecolor)
 					self._mapSurf.blit(img, (sx - img.get_width() / 2, sy + h / 2))
-					buoy = self.getBuoy(objID)
-					if buoy != None:
-						lines = buoy[0].split("\n")
+				buoy = self.getBuoy(objID)
+				if buoy != None:
+					if not name: #if name not set and there is a bouy, set "?" as the name
+						if self.overlayMode != gdata.OVERLAY_OWNER:
+							namecolor = res.fadeColor(namecolor)
+						img = renderText('small', '[ ? ]', 1, namecolor)
+						self._mapSurf.blit(img, (sx - img.get_width() / 2, sy + h / 2))
 						nSy = sy + h / 2 + img.get_height()
-						maxW = 0
-						hh = 0
-						for line in lines:
-							if len(line) == 0:
-								break
-							if len(line) > MAX_BOUY_DISPLAY_LEN:
-								line = u"%s..." % line[:MAX_BOUY_DISPLAY_LEN]
-							if self.overlayMode == gdata.OVERLAY_OWNER:
-								bouycolor = buoyColors[buoy[1] - 1]
-							else:
-								bouycolor = res.fadeColor(buoyColors[buoy[1] - 1])
-							img = renderText('small', line, 1, bouycolor)
-							maxW = max(img.get_width(), maxW)
-							self._mapSurf.blit(img, (sx - img.get_width() / 2, nSy + hh))
-							hh += img.get_height()
-						if maxW > 0:
-							actRect = Rect(sx - maxW / 2, nSy, maxW, hh)
-							actRect.move_ip(self.rect.left, self.rect.top)
-							self._actBuoyAreas[objID] = actRect
+					nSy = sy + h / 2 + img.get_height()
+					lines = buoy[0].split("\n")
+					maxW = 0
+					hh = 0
+					for line in lines:
+						if len(line) == 0:
+							break
+						if len(line) > MAX_BOUY_DISPLAY_LEN:
+							line = u"%s..." % line[:MAX_BOUY_DISPLAY_LEN]
+						if self.overlayMode == gdata.OVERLAY_OWNER:
+							bouycolor = buoyColors[buoy[1] - 1]
+						else:
+							bouycolor = res.fadeColor(buoyColors[buoy[1] - 1])
+						img = renderText('small', line, 1, bouycolor)
+						maxW = max(img.get_width(), maxW)
+						self._mapSurf.blit(img, (sx - img.get_width() / 2, nSy + hh))
+						hh += img.get_height()
+					if maxW > 0:
+						actRect = Rect(sx - maxW / 2, nSy, maxW, hh)
+						actRect.move_ip(self.rect.left, self.rect.top)
+						self._actBuoyAreas[objID] = actRect
 				for icon in icons:
 					self._mapSurf.blit(icon, (x, y))
 					x += icon.get_width() + 1
