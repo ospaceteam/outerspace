@@ -521,13 +521,7 @@ class StarMapWidget(Widget):
 			else:
 				log.warning('StarMapWidget', 'Unknown object type %d' % obj.type)
 		# redirections
-		player = client.getPlayer()
-		for sourceID in player.shipRedirections:
-			targetID = player.shipRedirections[sourceID]
-			source = client.get(sourceID, noUpdate = 1)
-			target = client.get(targetID, noUpdate = 1)
-			if hasattr(source, "x") and hasattr(target, "y"):
-				self._map[self.MAP_FREDIRECTS].append((source.x, source.y, target.x, target.y))
+		self.precomputeRedirections()
 		# set position (typically on first show)
 		if self.setPosition:
 			self.setPosition = 0
@@ -537,6 +531,19 @@ class StarMapWidget(Widget):
 		self.miniMap.precompute()
 		# self dirty flag
 		self.repaintMap = 1
+
+	def precomputeRedirections(self,repaint=False): #also called from Mass Redirector
+		if repaint:
+			self._map[self.MAP_FREDIRECTS] = []
+		player = client.getPlayer()
+		for sourceID in player.shipRedirections:
+			targetID = player.shipRedirections[sourceID]
+			source = client.get(sourceID, noUpdate = 1)
+			target = client.get(targetID, noUpdate = 1)
+			if hasattr(source, "x") and hasattr(target, "y"):
+				self._map[self.MAP_FREDIRECTS].append((source.x, source.y, target.x, target.y))
+		if repaint:
+			self.repaintMap = 1
 
 	def precomputePirates(self, system, pirates, icons = False):
 		dist = 10000
