@@ -516,6 +516,45 @@
 		/>
 		<preresearch>Sometimes you need to deploy Mutagen Dispenser on a low production world. This is a way how to do it.</preresearch>
 	</technology>
+	<technology id="3420" symbol="SOLARSHIELD" name="Solar Shield">
+		<discovery
+			researchMod="1.50"
+			level="3"
+			researchRequires="FARM2BIO-3"
+			researchRaces="B"
+		/>
+		<structure
+			subtype="str99"
+			buildProd="2880"
+			operWorkers="1500"
+			operEn="35"
+			maxHP="400"
+			prodEnv="+5"
+			solarMod="-20"
+		/>
+		<preresearch>Planets are not always optimal for terraforming. This technology might help near-star planets terraform.</preresearch>
+		<description>Using a low energy shield that encloses the planet in a radiation absorbing shield, this structure allows us to upgrade near-sun planets to Gaia.</description>
+		<flavor>The shield can be formed to allow solar power plants full energy remittance.</flavor>
+	</technology>
+	<technology id="3421" symbol="THERMALGENERATOR" name="Thermal Generator">
+		<discovery
+			researchMod="1.50"
+			level="3"
+			researchRequires="FARM2BIO-3"
+			researchRaces="B"
+		/>
+		<structure
+			subtype="str99"
+			buildProd="2880"
+			operWorkers="1500"
+			operEn="35"
+			maxHP="400"
+			prodEnv="+5"
+			solarMod="+20"
+		/>
+		<preresearch>Planets are not always optimal for terraforming. This technology might help outer system planets terraform.</preresearch>
+		<description>There are two problems that need to be addressed for outer-system terraformation: (1) solar radiation and (2) heat. This technology takes care of the heat issue, making planets just slightly outside the limits of Gaia to terraform to Gaia, but outer planets still do not gain enough solar radiation.</description>
+	</technology>
 	<technology id="3450" symbol="LASCANNON3" name="Laser Cannon">
 		<discovery
 			researchMod="1.00 + 0.5 + 0.5"

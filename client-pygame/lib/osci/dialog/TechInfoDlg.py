@@ -115,6 +115,8 @@ addAttr('prodProd', _('Production - constr. points'), V_STRUCT|V_PROJECT|V_EFF, 
 addAttr('prodSci', _('Production - research points'), V_STRUCT|V_PROJECT|V_EFF, 0)
 addAttr('prodEnv', _('Production - env. effect'), V_STRUCT|V_EFF, 0)
 
+addAttr('solarMod', _('Orbital Shift Effect'), V_STRUCT|V_EFF, 0)
+
 addAttr('storBio', _('Storage - biomatter'), V_STRUCT|V_EFF, 0)
 addAttr('storMin', _('Storage - minerals'), V_STRUCT|V_EFF, 0)
 addAttr('storEn', _('Storage - energy'), V_ALL|V_EFF, 0)

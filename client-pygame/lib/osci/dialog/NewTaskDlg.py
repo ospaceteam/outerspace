@@ -103,13 +103,16 @@ class NewTaskDlg:
 				continue
 
 			if tech.isStructure:
-				if not ((tech.isMilitary and showMilitary) or \
-				   ((getattr(tech, "prodBio", 0) > 0 or getattr(tech, "prodEnv", 0) > 0) and showBio) or \
-				   (getattr(tech, "prodEn", 0) > 0 and showEn) or \
-				   (getattr(tech, "prodProd", 0) > 0 and showCP) or \
-				   (getattr(tech, "prodSci", 0) > 0 and showRP) or \
-				   (getattr(tech, "moraleTrgt", 0) > 0 and showMorale)):
-					continue
+				if (tech.isMilitary or getattr(tech, "prodBio", 0) > 0 or getattr(tech, "prodEnv", 0) > 0 or \
+				   getattr(tech, "prodEn", 0) > 0 or getattr(tech, "prodProd", 0) > 0 or \
+				   getattr(tech, "prodSci", 0) > 0 or getattr(tech, "moraleTrgt", 0) > 0):
+					if not ((tech.isMilitary and showMilitary) or \
+					   ((getattr(tech, "prodBio", 0) > 0 or getattr(tech, "prodEnv", 0) > 0) and showBio) or \
+					   (getattr(tech, "prodEn", 0) > 0 and showEn) or \
+					   (getattr(tech, "prodProd", 0) > 0 and showCP) or \
+					   (getattr(tech, "prodSci", 0) > 0 and showRP) or \
+					   (getattr(tech, "moraleTrgt", 0) > 0 and showMorale)):
+						continue
 
 			if self.prodProd > 0:
 				etc = math.ceil(float(tech.buildProd) / self.prodProd)

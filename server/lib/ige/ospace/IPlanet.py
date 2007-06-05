@@ -73,6 +73,7 @@ class IPlanet(IObject):
 		obj.popEatEn = 0
 		obj.maxPop = 0
 		# extra goodies
+		obj.solarmod = 0
 		obj.scannerPwr = 0
 		obj.signature = 75
 		obj.autoMinStor = 1
@@ -354,6 +355,7 @@ class IPlanet(IObject):
 		# process all structures
 		destroyed = []
 		obj.maxShield = 0
+		obj.solarmod = 0
 		#@log.debug("Morale bonus/penalty for planet", obj.oid, moraleBonus)
 		for struct in obj.slots:
 			tech = Rules.techs[struct[STRUCT_IDX_TECHID]]
@@ -387,6 +389,11 @@ class IPlanet(IObject):
 			if not struct[STRUCT_IDX_STATUS] & STRUCT_STATUS_ON:
 				opStatus = 0.0
 			struct[STRUCT_IDX_OPSTATUS] = int(100 * opStatus)
+			# solarmod effects ENV change and terraforming only if benificial
+			if tech.solarMod * opStatus > 0:
+				obj.solarmod = max(obj.solarmod,tech.solarMod * techEff * opStatus)
+			elif tech.solarMod * opStatus < 0:
+				obj.solarmod = min(obj.solarmod,tech.solarMod * techEff * opStatus)
 			#@log.debug("IPlanet - oper status", obj.oid, struct, opStatus)
 			# set status bits
 			if tech.operBio > obj.storBio: struct[STRUCT_IDX_STATUS] |= STRUCT_STATUS_NOBIO
@@ -625,8 +632,19 @@ class IPlanet(IObject):
 		#	# report wasting production points
 		#	Utils.sendMessage(tran, obj, MSG_WASTED_PRODPTS, obj.oid, (prod,))
 		# auto environment changes
+		downgradeTo = Rules.planetSpec[obj.plType].downgradeTo
+		solarminus = 0
+		solarplus = 0
+		if obj.solarmod > 0:
+			solarplus = obj.solarmod
+		if obj.solarmod < 0:
+			solarminus = obj.solarmod
+		if not downgradeTo == None:
+			if (Rules.planetSpec[downgradeTo].upgradeEnReqs[0] > obj.plEn + solarplus) or (Rules.planetSpec[downgradeTo].upgradeEnReqs[1] < obj.plEn + solarminus):
+				# auto damage on plEn outside downgrade's upgrade range
+				obj.plEnv -= Rules.envAutoMod
 		if obj.plBio > Rules.planetSpec[obj.plType].maxBio:
-			#@log.debug('IPlanet', obj.oid, 'Env auto damage', obj.plType, obj.plBio, Rules.planetSpec[obj.plType].maxBio)
+			# auto damage on plBio > maxBio of class     #    @log.debug('IPlanet', obj.oid, 'Env auto damage', obj.plType, obj.plBio, Rules.planetSpec[obj.plType].maxBio)
 			obj.plEnv -= min(obj.plEnv, int((obj.plBio - Rules.planetSpec[obj.plType].maxBio) * Rules.envAutoMod))
 			# small chance of self-upgrading
 			spec = Rules.planetSpec[obj.plType]
@@ -635,7 +653,7 @@ class IPlanet(IObject):
 			else:
 				chance = int((obj.plBio - spec.maxBio) * Rules.envSelfUpgradeChance["H"])
 			if Utils.rand(0, 10001) < chance and spec.upgradeTo and \
-				obj.plEn >= spec.upgradeEnReqs[0] and obj.plEn <= spec.upgradeEnReqs[1]:
+				obj.plEn + solarplus >= spec.upgradeEnReqs[0] and obj.plEn - solarminus <= spec.upgradeEnReqs[1]:
 				log.debug('IPlanet', obj.oid, 'Upgraded to', spec.upgradeTo)
 				obj.plType = spec.upgradeTo
 				Utils.sendMessage(tran, obj, MSG_UPGRADED_PLANET_ECO, obj.oid, spec.upgradeTo)
@@ -825,6 +843,8 @@ class IPlanet(IObject):
 		return SUCC
 
 	def update(self, tran, obj):
+		if not hasattr(obj,'solarmod'):
+			obj.solarmod = 0
 		for item in obj.prodQueue:
 			if not hasattr(item, "demolishStruct"):
 				item.demolishStruct = OID_NONE

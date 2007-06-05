@@ -2,6 +2,11 @@ Change Log:
 
 [2007-06-04]
 - Added sort tools to New Task Dialog [Random Chaos] [SF#1731037]
+- Fixed upgrade routine bug in ISystem - error was occurring on wormhole-class systems due to their lack of planets [Random Chaos]
+- Added support for "solar shield" type techs [Random Chaos] [SF#1729269]
+- Added "solar shield" type techs [Random Chaos] [OS-Devel: Orbital Technologies - Building]
+- Added environmental decay when outside planet downgrade's upgrade range [Random Chaos] [SF#1729269]
+- Fixed bug where, when a player was auto-resigned, a server bug occurred when processing that player's government control radius [Random Chaos]
 
 [2007-06-03]
 - Fixed issue where Fleet Dialog did not recieve updated wait counter after deleting an in-progress wait command [Random Chaos] [SF#1730129]

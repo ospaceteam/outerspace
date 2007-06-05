@@ -120,7 +120,7 @@ class ISystem(IObject):
 			if tran.db[planetID].plSlots > 0:
 				hasHabitable = 1
 				break
-		if (not obj.planets or not hasHabitable) and obj.starClass[0] != "b":
+		if (not obj.planets or not hasHabitable) and obj.starClass[0] != "b" and obj.starClass != "wW0":
 			log.debug("No planet for system", obj.oid, obj.name, obj.starClass)
 			# delete old planets
 			for planetID in obj.planets:
@@ -145,32 +145,35 @@ class ISystem(IObject):
 			# select random system
 			import random
 			log.debug("Can copy", avail)
-			systemID = random.choice(avail)
-			# copy it
-			log.debug("Will copy system", systemID)
-			nType = Utils.getPlanetNamesType()
-			orbit = 1
-			for planetID in tran.db[systemID].planets:
-				orig = tran.db[planetID]
-				planet = tran.db[self.createPlanet(tran, obj)]
-				planet.name = Utils.getPlanetName(obj.name, nType, orbit - 1)
-				planet.x = obj.x
-				planet.y = obj.y
-				planet.plDiameter = orig.plDiameter
-				planet.plType = orig.plType
-				planet.plMin = orig.plMin
-				planet.plBio = orig.plBio
-				planet.plEn = orig.plEn
-				planet.plEnv = orig.plEnv
-				planet.plSlots = orig.plSlots
-				planet.plMaxSlots = orig.plMaxSlots
-				planet.plStratRes = 0
-				planet.plDisease = 0
-				planet.plStarting = 0
-				planet.orbit = orbit
-				planet.storPop = 0
-				planet.slots = []
-				orbit += 1
+			try:
+				systemID = random.choice(avail)
+				# copy it
+				log.debug("Will copy system", systemID)
+				nType = Utils.getPlanetNamesType()
+				orbit = 1
+				for planetID in tran.db[systemID].planets:
+					orig = tran.db[planetID]
+					planet = tran.db[self.createPlanet(tran, obj)]
+					planet.name = Utils.getPlanetName(obj.name, nType, orbit - 1)
+					planet.x = obj.x
+					planet.y = obj.y
+					planet.plDiameter = orig.plDiameter
+					planet.plType = orig.plType
+					planet.plMin = orig.plMin
+					planet.plBio = orig.plBio
+					planet.plEn = orig.plEn
+					planet.plEnv = orig.plEnv
+					planet.plSlots = orig.plSlots
+					planet.plMaxSlots = orig.plMaxSlots
+					planet.plStratRes = 0
+					planet.plDisease = 0
+					planet.plStarting = 0
+					planet.orbit = orbit
+					planet.storPop = 0
+					planet.slots = []
+					orbit += 1
+			except:
+				log.debug("Copy failed")
 
 	update.public = 0
 

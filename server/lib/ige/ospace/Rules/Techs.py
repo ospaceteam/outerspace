@@ -65,6 +65,8 @@ attrs = {
 	'prodBioMod': [0.0, 0.0, 0.0, 0.0], # tuple of (plBio, plMin, plEn, default)
 	'prodEnMod': [0.0, 0.0, 0.0, 0.0], # dtto
 	'prodProdMod': [0.0, 0.0, 0.0, 0.0], # dtto
+	# env
+	'solarMod': 0, # - : cloak solar radiation / + : create thermal radiation
 	# storage
 	'storBio' : 0,
 	'storProd' : 0,
@@ -74,10 +76,7 @@ attrs = {
 	'revoltThr': 0,
 	'moraleTrgt': 0,
 	'govPwr': 0,
-	# misc
-	"unpackPop": 0,
-	'envDmg' : 0,
-	'maxHP' : 0,
+	# military
 	'scannerPwr': 0,
 	"structWeapons": [0],
 	"planetShield": 0, #planetary shield; when structure built, shield = 0; shield will regenerate at 2% per turn until equal to this value. Structures do not add shield strength; strongest shield = planet shield
@@ -90,6 +89,10 @@ attrs = {
 	"trainShipInc": 0.0, # how many exp/turn
 	"trainShipMax": 0, # exp. cap (in base exps), not affected by techEff
 	"fleetSpeedBoost": 0.0, # speed boost for stargates
+	# misc
+	"unpackPop": 0,
+	'envDmg' : 0,
+	'maxHP' : 0,
 	"fullInfo": 0, # if True, show full tech info even player not own tech
 	# ship equipment
 	"addMP" : 0, #for extra MP to be added to ship equipment

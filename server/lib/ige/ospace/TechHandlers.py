@@ -129,9 +129,16 @@ def validateDeployTERRAFORM3(tran, source, target, tech):
 
 def validateProjectTERRAFORM3(tran, source, target, tech):
     spec = Rules.planetSpec[target.plType]
+    solarminus = 0
+    solarplus = 0
+    if target.solarmod > 0:
+        solarplus = target.solarmod
+    if target.solarmod < 0:
+        solarminus = target.solarmod
+    log.debug("En:",target.plEn,", Plus:",solarplus,", Minus:",solarminus,", Reqs:",spec.upgradeEnReqs)
     return spec.upgradeTo != None and \
-        target.plEn >= spec.upgradeEnReqs[0] and \
-        target.plEn <= spec.upgradeEnReqs[1] and \
+        target.plEn + solarplus >= spec.upgradeEnReqs[0] and \
+        target.plEn + solarminus <= spec.upgradeEnReqs[1] and \
         target.plBio >= spec.maxBio
 
 def finishProjectTERRAFORM3(tran, source, target, tech):
