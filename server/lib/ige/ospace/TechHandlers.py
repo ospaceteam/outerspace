@@ -135,7 +135,7 @@ def validateProjectTERRAFORM3(tran, source, target, tech):
         solarplus = target.solarmod
     if target.solarmod < 0:
         solarminus = target.solarmod
-    log.debug("En:",target.plEn,", Plus:",solarplus,", Minus:",solarminus,", Reqs:",spec.upgradeEnReqs)
+    #log.debug("En:",target.plEn,", Plus:",solarplus,", Minus:",solarminus,", Reqs:",spec.upgradeEnReqs)
     return spec.upgradeTo != None and \
         target.plEn + solarplus >= spec.upgradeEnReqs[0] and \
         target.plEn + solarminus <= spec.upgradeEnReqs[1] and \
