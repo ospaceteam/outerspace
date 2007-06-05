@@ -1,5 +1,8 @@
 Change Log:
 
+[2007-06-04]
+- Added sort tools to New Task Dialog [Random Chaos] [SF#1731037]
+
 [2007-06-03]
 - Fixed issue where Fleet Dialog did not recieve updated wait counter after deleting an in-progress wait command [Random Chaos] [SF#1730129]
 - Updated Mine Field techs' firepower based on OS-Devel discussion [Random Chaos]

@@ -40,6 +40,8 @@ class NewTaskDlg:
 		self.techInfoDlg = TechInfoDlg(app)
 		self.constructionDlg = ConstructionDlg(app)
 		self.createUI()
+		self.win.setTagAttr('struct', 'visible', 1)
+		self.win.setTagAttr('ship', 'visible', 0)
 		# set default sorting for technologies
 		self.win.vTechs.setSort("text")
 
@@ -79,12 +81,35 @@ class NewTaskDlg:
 		# techs
 		items = []
 		select = None
+
+		showMilitary = self.win.vMilitary.checked
+		showBio = self.win.vBioProduction.checked
+		showEn = self.win.vEnProduction.checked
+		showCP = self.win.vCPProduction.checked
+		showRP = self.win.vRPProduction.checked
+		showMorale = self.win.vMorale.checked
+		
+		showSmall = self.win.vSmall.checked
+		showMed = self.win.vMedium.checked
+		showLarge = self.win.vLarge.checked
+		showCivShip = self.win.vCivShip.checked
+		showMilShip = self.win.vMilShip.checked
+		
 		for techID in client.getPlayer().techs.keys():
 			tech = client.getTechInfo(techID)
 
 			# hide pirate techs from ships and miscs view
 			if not self.showStructures and tech.level == 99:
 				continue
+
+			if tech.isStructure:
+				if not ((tech.isMilitary and showMilitary) or \
+				   ((getattr(tech, "prodBio", 0) > 0 or getattr(tech, "prodEnv", 0) > 0) and showBio) or \
+				   (getattr(tech, "prodEn", 0) > 0 and showEn) or \
+				   (getattr(tech, "prodProd", 0) > 0 and showCP) or \
+				   (getattr(tech, "prodSci", 0) > 0 and showRP) or \
+				   (getattr(tech, "moraleTrgt", 0) > 0 and showMorale)):
+					continue
 
 			if self.prodProd > 0:
 				etc = math.ceil(float(tech.buildProd) / self.prodProd)
@@ -115,8 +140,15 @@ class NewTaskDlg:
 		if self.showShips:
 			for designID in player.shipDesigns.keys():
 				tech = player.shipDesigns[designID]
+
+				if not ((tech.combatClass == 0 and showSmall) or (tech.combatClass == 1 and showMed) or (tech.combatClass == 2 and showLarge)):
+					continue
+
+				if not ((tech.isMilitary and showMilShip) or (not tech.isMilitary and showCivShip)):
+					continue
+
 				if tech.upgradeTo != OID_NONE:
-					# skip shipt that are set to upgrade
+					# skip ships that are set to upgrade
 					continue
 				if self.prodProd > 0:
 					etc = res.formatTime(math.ceil(float(tech.buildProd) / self.prodProd))
@@ -265,18 +297,24 @@ class NewTaskDlg:
 		self.showStructures = 1
 		self.showShips = 0
 		self.showOther = 0
+		self.win.setTagAttr('struct', 'visible', 1)
+		self.win.setTagAttr('ship', 'visible', 0)
 		self.update()
 
 	def onToggleShips(self, widget, action, data):
 		self.showStructures = 0
 		self.showShips = 1
 		self.showOther = 0
+		self.win.setTagAttr('struct', 'visible', 0)
+		self.win.setTagAttr('ship', 'visible', 1)
 		self.update()
 
 	def onToggleOther(self, widget, action, data):
 		self.showStructures = 0
 		self.showShips = 0
 		self.showOther = 1
+		self.win.setTagAttr('struct', 'visible', 0)
+		self.win.setTagAttr('ship', 'visible', 0)
 		self.update()
 
 	def onInfo(self, widget, action, data):
@@ -289,14 +327,21 @@ class NewTaskDlg:
 			self.constructionDlg.selectedDesignID = task.techID;
 			self.constructionDlg.display()
 
+	def onFilter(self, widget, action, data):
+		self.update()
+
 	def createUI(self):
 		w, h = gdata.scrnSize
+		cols = 38
+		rows = 24 #was 23
+		dlgWidth = cols * 20 + 4
+		dlgHeight = rows * 20 + 4
 		self.win = ui.Window(self.app,
 			modal = 1,
 			escKeyClose = 1,
 			movable = 0,
 			title = _('Select new task'),
-			rect = ui.Rect((w - 764) / 2, (h - 463) / 2, 764, 463),
+			rect = ui.Rect((w - dlgWidth) / 2, (h - dlgHeight) / 2, dlgWidth, dlgHeight),
 			layoutManager = ui.SimpleGridLM(),
 			tabChange = True
 		)
@@ -343,12 +388,36 @@ class NewTaskDlg:
 		ui.Listbox(self.win, layout = (22, 11, 16, 7), id = 'vTSlots',
 			columns = ((_('Target slots'), 'text', 15, ui.ALIGN_W), ), columnLabels = 1,
 			action = 'onSelectSlot')
+		# prod types
+		ui.Check(self.win, layout = (0, 21, 6, 1), text = _('Bio production'), tags = ['struct'],
+			id = 'vBioProduction', checked = 1, align = ui.ALIGN_W, action = 'onFilter')
+		ui.Check(self.win, layout = (6, 21, 6, 1), text = _('En production'), tags = ['struct'],
+			id = 'vEnProduction', checked = 1, align = ui.ALIGN_W, action = 'onFilter')
+		ui.Check(self.win, layout = (12, 21, 6, 1), text = _('CP production'), tags = ['struct'],
+			id = 'vCPProduction', checked = 1, align = ui.ALIGN_W, action = 'onFilter')
+		ui.Check(self.win, layout = (18, 21, 6, 1), text = _('RP production'), tags = ['struct'],
+			id = 'vRPProduction', checked = 1, align = ui.ALIGN_W, action = 'onFilter')
+		ui.Check(self.win, layout = (24, 21, 6, 1), text = _('Military'), tags = ['struct'],
+			id = 'vMilitary', checked = 1, align = ui.ALIGN_W, action = 'onFilter')
+		ui.Check(self.win, layout = (30, 21, 6, 1), text = _('Morale'), tags = ['struct'],
+			id = 'vMorale', checked = 1, align = ui.ALIGN_W, action = 'onFilter')
+		# ship types
+		ui.Check(self.win, layout = (0, 21, 6, 1), text = _('Small'), tags = ['ship'],
+			id = 'vSmall', checked = 1, align = ui.ALIGN_W, action = 'onFilter')
+		ui.Check(self.win, layout = (6, 21, 6, 1), text = _('Medium'), tags = ['ship'],
+			id = 'vMedium', checked = 1, align = ui.ALIGN_W, action = 'onFilter')
+		ui.Check(self.win, layout = (12, 21, 6, 1), text = _('Large'), tags = ['ship'],
+			id = 'vLarge', checked = 1, align = ui.ALIGN_W, action = 'onFilter')
+		ui.Check(self.win, layout = (18, 21, 6, 1), text = _('Civilian'), tags = ['ship'],
+			id = 'vCivShip', checked = 1, align = ui.ALIGN_W, action = 'onFilter')
+		ui.Check(self.win, layout = (24, 21, 6, 1), text = _('Military'), tags = ['ship'],
+			id = 'vMilShip', checked = 1, align = ui.ALIGN_W, action = 'onFilter')
 		# build
 		ui.Title(self.win, layout = (22, 18, 16, 1), text = _('Options'),
 			align = ui.ALIGN_W, font = 'normal-bold')
 		ui.Label(self.win, layout = (22, 19, 10, 1), text = _('Quantity'), align = ui.ALIGN_W)
 		ui.Entry(self.win, layout = (33, 19, 5, 1), id = 'vQuantity', align = ui.ALIGN_E, orderNo = 1)
 		ui.Check(self.win, layout = (31, 20, 7, 1), id = 'vReportFin', text = _('Report finalization'))
-		ui.Title(self.win, layout = (0, 21, 28, 1), id = 'vStatusBar', align = ui.ALIGN_W)
-		ui.TitleButton(self.win, layout = (28, 21, 5, 1), text = _('Cancel'), action = 'onCancel')
-		ui.TitleButton(self.win, layout = (33, 21, 5, 1), text = _('Construct'), action = 'onConstruct')
+		ui.Title(self.win, layout = (0, 22, 28, 1), id = 'vStatusBar', align = ui.ALIGN_W)
+		ui.TitleButton(self.win, layout = (28, 22, 5, 1), text = _('Cancel'), action = 'onCancel')
+		ui.TitleButton(self.win, layout = (33, 22, 5, 1), text = _('Construct'), action = 'onConstruct')
