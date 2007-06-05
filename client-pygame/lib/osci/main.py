@@ -49,6 +49,7 @@ def drawBackground():
             'res/bck2_1024x768.jpg',
             'res/bck3_1024x768.jpg',
             'res/bck4_1024x768.jpg',
+            'res/bck5_1024x768.jpg',
         ])
         background = pygame.image.load(image).convert_alpha()
         backgroundOffset = (
