@@ -42,6 +42,7 @@ import Utils
 INFO_NONE = 0
 INFO_TASK = 1
 INFO_SLOT = 2
+INFO_PLANET = 3
 
 class StarSystemDlg:
 
@@ -119,7 +120,7 @@ class StarSystemDlg:
 			else:
 				self.win.title = _('System: %s') % name
 			# clean up info area
-			self.plInfoType = INFO_NONE
+			self.plInfoType = INFO_PLANET
 			self.plInfoData = None
 			if self.planetID:
 				self.showPlanet()
@@ -645,10 +646,47 @@ class StarSystemDlg:
 	def showPlInfo(self):
 		if self.plInfoType == INFO_NONE:
 			self.win.setTagAttr('task', 'visible', 0)
+			self.win.setTagAttr('terra', 'visible', 0)
 			self.win.setTagAttr('slot', 'visible', 0)
 			self.win.vITitle.text = _('N/A')
+		elif self.plInfoType == INFO_PLANET:
+			self.win.setTagAttr('task', 'visible', 0)
+			self.win.setTagAttr('terra', 'visible', 1)
+			self.win.setTagAttr('slot', 'visible', 0)
+			self.win.vITitle.text = _('Planet Upgrade/Downgrade Data')
+			planet = client.get(self.planetID, noUpdate = 1)
+			pltype = getattr(planet, 'plType', None)
+			if (pltype):
+				spec = Rules.planetSpec[pltype]
+				upgradeTo = spec.upgradeTo
+				downgradeTo = spec.downgradeTo
+				if upgradeTo:
+					self.win.vTerraUpEN.text = _('%d - %d EN' % (spec.upgradeEnReqs[0],spec.upgradeEnReqs[1]))
+					self.win.vTerraUpEnv.text = spec.maxBio
+					self.win.vTerraUpTo.text = gdata.planetTypes[upgradeTo]
+				else:
+					self.win.vTerraUpEN.text = _('N/A')
+					self.win.vTerraUpEnv.text = _('N/A')
+					self.win.vTerraUpTo.text = _('N/A')
+				if downgradeTo:
+					downgradeSpec = Rules.planetSpec[downgradeTo]
+					self.win.vTerraEN.text = _('%d - %d EN' % (downgradeSpec.upgradeEnReqs[0],downgradeSpec.upgradeEnReqs[1]))
+					self.win.vTerraDownEnv.text = spec.minBio
+					self.win.vTerraDownTo.text = gdata.planetTypes[downgradeTo]
+				else:
+					self.win.vTerraEN.text = _('0 - 200 EN')
+					self.win.vTerraDownEnv.text = _('N/A')
+					self.win.vTerraDownTo.text = _('N/A')
+			else:
+				self.win.vTerraUpEN.text = _('?')
+				self.win.vTerraUpEnv.text = _('?')
+				self.win.vTerraUpTo.text = _('?')
+				self.win.vTerraEN.text = _('?')
+				self.win.vTerraDownEnv.text = _('?')
+				self.win.vTerraDownTo.text = _('?')
 		elif self.plInfoType == INFO_TASK:
 			self.win.setTagAttr('task', 'visible', 1)
+			self.win.setTagAttr('terra', 'visible', 0)
 			self.win.setTagAttr('slot', 'visible', 0)
 			planet = client.get(self.planetID, noUpdate = 1)
 			task = planet.prodQueue[self.plInfoData]
@@ -859,6 +897,12 @@ class StarSystemDlg:
 			# info about task
 			self.plInfoType = INFO_TASK
 			self.plInfoData = data.index
+		self.showPlInfo()
+
+	def onTerraformDataSelect(self, widget, action, data):
+		self.plInfoType = INFO_PLANET
+		self.plInfoData = None
+		self.win.vPQueue.selectItem(None)
 		self.showPlInfo()
 
 	def onMoveStruct(self, widget, action, data):
@@ -1260,6 +1304,8 @@ class StarSystemDlg:
 			align = ui.ALIGN_W, tags = ['pl'])
 		ui.Label(self.win, layout = (15, 21, 5, 1), id = 'vPCShield',
 			align = ui.ALIGN_E, tags = ['pl'])
+		ui.Button(self.win, layout = (10, 22, 10, 1), text = _('Show Terraforming Data'),
+			tags = ['pl'], action = 'onTerraformDataSelect')
 		ui.Title(self.win, layout = (0, 24, 20, 1), text = _('System data'),
 			align = ui.ALIGN_W, font = 'normal-bold', tags = ['pl'])
 		ui.Label(self.win, layout = (0, 25, 5, 1), text = _('Net Bio +/-'),
@@ -1335,6 +1381,31 @@ class StarSystemDlg:
 		ui.Button(self.win, layout = (36, 26, 4, 1), text = _('Demolish'), id = 'vISDemolish',
 			tags = ['slot', 'pl'], action = 'onDemolishStruct',
 			tooltip = _('Demolish structure'))
+		# terraform
+		ui.Label(self.win, layout = (20, 21, 9, 1), text = _('Class Range En. Abundance'),
+			align = ui.ALIGN_W, tags = ['terra', 'pl'])
+		ui.Label(self.win, layout = (30, 21, 5, 1), id = 'vTerraEN', align = ui.ALIGN_E,
+			tags = ['terra', 'pl'])
+		ui.Label(self.win, layout = (20, 22, 9, 1), text = _('Upgrade Range En. Abund.'),
+			align = ui.ALIGN_W, tags = ['terra', 'pl'])
+		ui.Label(self.win, layout = (30, 22, 5, 1), id = 'vTerraUpEN', align = ui.ALIGN_E,
+			tags = ['terra', 'pl'])
+		ui.Label(self.win, layout = (20, 23, 5, 1), text = _('Downgrade Env.'),
+			align = ui.ALIGN_W, tags = ['terra', 'pl'])
+		ui.Label(self.win, layout = (25, 23, 5, 1), id = 'vTerraDownEnv', align = ui.ALIGN_E,
+			tags = ['terra', 'pl'])
+		ui.Label(self.win, layout = (31, 23, 4, 1), text = _('Upgrade Env.'),
+			align = ui.ALIGN_W, tags = ['terra', 'pl'])
+		ui.Label(self.win, layout = (35, 23, 5, 1), id = 'vTerraUpEnv', align = ui.ALIGN_E,
+			tags = ['terra', 'pl'])
+		ui.Label(self.win, layout = (20, 24, 5, 1), text = _('Downgrade To?'),
+			align = ui.ALIGN_W, tags = ['terra', 'pl'])
+		ui.Label(self.win, layout = (25, 24, 5, 1), id = 'vTerraDownTo', align = ui.ALIGN_E,
+			tags = ['terra', 'pl'])
+		ui.Label(self.win, layout = (31, 24, 4, 1), text = _('Upgrade To?'),
+			align = ui.ALIGN_W, tags = ['terra', 'pl'])
+		ui.Label(self.win, layout = (35, 24, 5, 1), id = 'vTerraUpTo', align = ui.ALIGN_E,
+			tags = ['terra', 'pl'])
 		# task
 		ui.Label(self.win, layout = (20, 21, 5, 1), text = _('Complete'),
 			align = ui.ALIGN_W, tags = ['task', 'pl'])

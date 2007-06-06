@@ -1,5 +1,8 @@
 Change Log:
 
+[2007-06-06]
+- Added terraforming data to Star System dialog [Random Chaos] [SF#1731328]
+
 [2007-06-05]
 - Fixed: Weapon damage was not modified by weapon effectiveness (IPlanet and IFleet) [Random Chaos] [SF#1731691]
 - Fixed: Weapon attack was being added in twice in fleet combat (IFleet) [Random Chaos] [SF#1731691]
