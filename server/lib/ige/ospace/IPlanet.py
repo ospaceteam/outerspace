@@ -1028,7 +1028,9 @@ class IPlanet(IObject):
 		absorb = 0 #for when it doesn't hit
 		if random.random() <= attackChance:
 			# hit
-			dmg = ShipUtils.computeDamage(weapon.weaponClass, 3, weapon.weaponDmgMin, weapon.weaponDmgMax)
+			player = tran.db[obj.owner]
+			weaponEff = Rules.techImprEff[player.techs.get(weaponID, Rules.techBaseImprovement)]
+			dmg = ShipUtils.computeDamage(weapon.weaponClass, 3, weapon.weaponDmgMin, weapon.weaponDmgMax, weaponEff)
 			#@log.debug(obj.oid, 'HIT! att=%d vs def=%d, dmg=%d '% (attack, defense, dmg))
 			#shield strike
 			if obj.shield > 0:

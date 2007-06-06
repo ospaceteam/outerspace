@@ -1,5 +1,11 @@
 Change Log:
 
+[2007-06-05]
+- Fixed: Weapon damage was not modified by weapon effectiveness (IPlanet and IFleet) [Random Chaos] [SF#1731691]
+- Fixed: Weapon attack was being added in twice in fleet combat (IFleet) [Random Chaos] [SF#1731691]
+- Fixed: Flak best weapon calculation was multiplying by weapon attack. This greatly skewed selection of best weapon. Modified to a less skewing method of using weapon attack. (IPlayer) [Random Chaos] [SF#1731691]
+- Fixed: Flak best weapon calculation was not modifying weapon damage by weapon effectiveness (IPlayer) [Random Chaos] [SF#1731691]
+
 [2007-06-04]
 - Added sort tools to New Task Dialog [Random Chaos] [SF#1731037]
 - Fixed upgrade routine bug in ISystem - error was occurring on wormhole-class systems due to their lack of planets [Random Chaos]

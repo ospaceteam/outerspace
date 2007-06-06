@@ -1273,13 +1273,14 @@ class IFleet(IObject):
 			obj.hitMods[cClass] *= Rules.combatShipHitMod
 			#@log.debug(obj.oid, "Increasing hit penalty", obj.hitMods[cClass], obj.maxHits[cClass], "class", cClass)
 		#
-		attack = attack+weapon.weaponAtt
 		attackChance = obj.hitMods[cClass] * attack / (attack + defense)
 		#@log.debug(obj.oid, "Chance to attack", attackChance, obj.hitMods[cClass],
 		#@	 obj.hitCounters[cClass], obj.maxHits[cClass], "without penalty:", float(attack) / (attack + defense))
 		if random.random() <= attackChance:
+			player = tran.db[obj.owner]
+			weaponEff = Rules.techImprEff[player.techs.get(weaponID, Rules.techBaseImprovement)]
 			# HIT! -> apply damage
-			dmg = ShipUtils.computeDamage(weapon.weaponClass, ship.combatClass, weapon.weaponDmgMin, weapon.weaponDmgMax)
+			dmg = ShipUtils.computeDamage(weapon.weaponClass, ship.combatClass, weapon.weaponDmgMin, weapon.weaponDmgMax, weaponEff)
 			#@log.debug(obj.oid, 'HIT! att=%d vs def=%d, dmg=%d '% (attack, defense, dmg))
 			# shield
 			if not weapon.weaponIgnoreShield and shield > 0:

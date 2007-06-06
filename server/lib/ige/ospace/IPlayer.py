@@ -214,8 +214,9 @@ class IPlayer(IObject):
 			if tech.isShipEquip and tech.weaponDmgMin > 0 and not tech.buildSRes\
 				and tech.weaponGoodForFlak:
 				# compute score
+				weaponEff = Rules.techImprEff[obj.techs.get(weaponID, Rules.techBaseImprovement)]
 				score = (tech.weaponDmgMin + tech.weaponDmgMax) / 2.0 * \
-					tech.weaponROF * tech.weaponAtt
+					tech.weaponROF * (tech.weaponAtt + 10)/10 * weaponEff
 				if score > bestScores[tech.weaponClass]:
 					obj.planetWeapons[tech.weaponClass] = techID
 					bestScores[tech.weaponClass] = score

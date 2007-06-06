@@ -539,7 +539,7 @@ class ISystem(IObject):
 			objID = hasMine[owner]
 			if len(self.getMines(system,owner))==0:
 				continue #no mines, something broke
-			log.debug('ISystem-Mines', 'Mines Found')
+			#log.debug('ISystem-Mines', 'Mines Found')
 			if len(attack[objID])==0:
 				continue #no targets
 			fireMine = True
@@ -559,14 +559,14 @@ class ISystem(IObject):
  					break #no fleet targets for mines
 				temp, temp, firing[targetID] = self.cmd(targetobj).getPreCombatData(tran, targetobj) #fix firing for "surrender to" section
 				damage,att,ignoreshield = self.fireMine(system,owner)
-				log.debug('ISystem-Mines', 'Mine Details (damage, att, ignore shield):',damage,att,ignoreshield)
 				if not damage: #no more mines
 					fireMine = False
 					break
+				log.debug('ISystem', 'Mine Shooting (damage, att, ignore shield):',damage,att,ignoreshield)
 				isMineCombat = True
 				#Process Combat
 				dmg, destroyed = self.cmd(targetobj).applyMine(tran, targetobj, att, damage, ignoreshield)
-				log.debug('ISystem-Mines', 'Actual Damage Done:',dmg)
+				#log.debug('ISystem-Mines', 'Actual Damage Done:',dmg)
 				damageTaken[targetID] = damageTaken.get(targetID, 0) + dmg
 				if destroyed > 0:
 					shipsLost[targetID] = shipsLost.get(targetID, 0) + destroyed

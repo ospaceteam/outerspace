@@ -319,12 +319,12 @@ def getRounds(rof, counter):
 	return rof / 100 + rofTable[rof % 100][counter % 100]
 
 # damage
-def computeDamage(wpnCls, trgtCls, dmgMin, dmgMax):
+def computeDamage(wpnCls, trgtCls, dmgMin, dmgMax, weaponEff):
 	"""Compute damage that causes weapon to the target with specified combat
 	   class."""
 	assert trgtCls >= wpnCls
-	dmg = random.uniform(dmgMin, dmgMax) * Rules.weaponDmgDegrade[trgtCls - wpnCls]
-	#@log.debug("Difference", trgtCls, wpnCls, dmg)
+	dmg = random.uniform(dmgMin, dmgMax) * Rules.weaponDmgDegrade[trgtCls - wpnCls] * weaponEff
+	# log.debug("Difference", trgtCls, wpnCls, dmg)
 	intDmg = int(dmg)
 	if random.random() >= dmg - intDmg:
 		intDmg += 1
