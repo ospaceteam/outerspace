@@ -33,6 +33,10 @@ from ige import log
 from osci.dialog.SearchDlg import SearchDlg
 from osci.MiniMap import MiniMap
 
+#testing
+import time 
+PROFILE_TIME = False
+
 buoyColors = [(0xff, 0xff, 0x00), (0x00, 0xff, 0xff), (0xff, 0x00, 0xff), (0xb0, 0xb0, 0xff)]
 MAX_BOUY_DISPLAY_LEN = 30
 
@@ -134,6 +138,8 @@ class StarMapWidget(Widget):
 		}
 		self._popupInfo = {}
 		self._fleetRanges = {}
+		if PROFILE_TIME:
+			currenttime = time.clock()
 		# find all pirate planets
 		pirates = {}
 		log.debug("Checking pirate planets and wormholes")
@@ -152,6 +158,10 @@ class StarMapWidget(Widget):
 				owner = client.get(ownerID, noUpdate = 1)
 				if hasattr(owner, "type") and owner.type == T_PIRPLAYER:
 					pirates[obj.x, obj.y] = None
+		if PROFILE_TIME:
+			newtime = time.clock()
+			log.debug("Pirate processing time:",currenttime - newtime)
+			currenttime = newtime
 		# process objects
 		fleetOrbit = {}
 		anyX = 0.0
@@ -201,12 +211,6 @@ class StarMapWidget(Widget):
 						owner = getattr(planet, 'owner', OID_NONE)
 						if hasattr(planet, "plType") and planet.plType not in ("A", "G"):
 							numPlanets += 1
-						if owner:
-								ownerID = owner
-						if hasattr(planet, "morale"):
-							morale = min(morale,planet.morale)
-							#morale += planet.morale
-							#moraleCount += 1
 						if hasattr(planet, "plMin"):
 							minerals = max(minerals,planet.plMin)
 						if hasattr(planet, "plBio"):
@@ -217,14 +221,18 @@ class StarMapWidget(Widget):
 							stratRes = planet.plStratRes
 							stratRes = planet.plStratRes
 							icons.append(res.icons["sr_%d" % planet.plStratRes])
-						if hasattr(planet, "refuelMax"):
-							refuelMax = max(refuelMax, planet.refuelMax)
-							refuelInc = max(refuelInc, planet.refuelInc)
-						if hasattr(planet, "repairShip"):
-							upgradeShip += planet.upgradeShip
-							repairShip = max(repairShip, planet.repairShip)
-						if hasattr(planet, "fleetSpeedBoost"):
-							speedBoost = max(speedBoost, planet.fleetSpeedBoost)
+						if owner:
+							ownerID = owner
+							if hasattr(planet, "morale"):
+								morale = min(morale,planet.morale)
+							if hasattr(planet, "refuelMax"):
+								refuelMax = max(refuelMax, planet.refuelMax)
+								refuelInc = max(refuelInc, planet.refuelInc)
+							if hasattr(planet, "repairShip"):
+								upgradeShip += planet.upgradeShip
+								repairShip = max(repairShip, planet.repairShip)
+							if hasattr(planet, "fleetSpeedBoost"):
+								speedBoost = max(speedBoost, planet.fleetSpeedBoost)
 						# uncharted system
 						if hasattr(planet, 'plBio') and hasattr(planet, 'plEn'):
 							explored = True
@@ -320,22 +328,14 @@ class StarMapWidget(Widget):
 				moraledata = -1
 				pirProb = self.precomputePirates(obj, pirates, False)
 				famedata = pirProb*100
-				if hasattr(obj, 'plBio'):
-					biodata = getattr(obj, 'plBio', OID_NONE)
-				if hasattr(obj, 'plMin'):
-					mindata = getattr(obj, 'plMin', OID_NONE)
-				if hasattr(obj, 'plSlots'):
-					slotdata = getattr(obj, 'plSlots', OID_NONE)
-				if hasattr(obj, 'refuelInc'):
-					dockrefueldata = getattr(obj, 'refuelInc', OID_NONE)
-				if hasattr(obj, 'upgradeShip'):
-					dockupgradedata = getattr(obj, 'upgradeShip', OID_NONE)
-				if hasattr(obj, 'fleetSpeedBoost'):
-					stargatedata = getattr(obj, 'fleetSpeedBoost', OID_NONE)
-				if hasattr(obj, 'plStratRes'):
-					stratresdata = getattr(obj, 'plStratRes', OID_NONE)
-				if hasattr(obj, 'morale'):
-					moraledata = getattr(obj, 'morale', OID_NONE)
+				biodata = getattr(obj, 'plBio', -1)
+				mindata = getattr(obj, 'plMin', -1)
+				slotdata = getattr(obj, 'plSlots', 0)
+				dockrefueldata = getattr(obj, 'refuelInc', 0)
+				dockupgradedata = getattr(obj, 'upgradeShip', 0)
+				stargatedata = getattr(obj, 'fleetSpeedBoost', 0)
+				stratresdata = getattr(obj, 'plStratRes', SR_NONE)
+				moraledata = getattr(obj, 'morale', -1)
 				# build system
 				name = getattr(obj, 'name', None) or res.getUnknownName()
 				singlet = True
@@ -359,6 +359,7 @@ class StarMapWidget(Widget):
 				if hasattr(obj, 'plBio'): info.append(_('Environment: %d') % obj.plBio)
 				if hasattr(obj, 'plMin'): info.append(_('Minerals: %d') % obj.plMin)
 				if hasattr(obj, 'plEn'): info.append(_('Energy: %d') % obj.plEn)
+				if hasattr(obj, 'plSlots'): info.append(_('Slots: %d') % obj.plSlots)
 				if hasattr(obj, "plStratRes") and obj.plStratRes != SR_NONE:
 					info.append(_("Strat. resource: %s") % _(gdata.stratRes[obj.plStratRes]))
 				if owner:
@@ -520,8 +521,17 @@ class StarMapWidget(Widget):
 				self._popupInfo[obj.oid] = info
 			else:
 				log.warning('StarMapWidget', 'Unknown object type %d' % obj.type)
+			if PROFILE_TIME:
+				newtime = time.clock()
+				if (newtime - currenttime) > 0.015:
+					log.debug(("Object %s type %s data processing time:" % (obj.oid, obj.type)),currenttime - newtime)
+				currenttime = newtime
 		# redirections
 		self.precomputeRedirections()
+		if PROFILE_TIME:
+			newtime = time.clock()
+			log.debug("Redirection processing time:",currenttime - newtime)
+			currenttime = newtime
 		# set position (typically on first show)
 		if self.setPosition:
 			self.setPosition = 0
@@ -529,6 +539,9 @@ class StarMapWidget(Widget):
 			self.currY = anyY
 		
 		self.miniMap.precompute()
+		if PROFILE_TIME:
+			newtime = time.clock()
+			log.debug("Minimap processing time:",currenttime - newtime)
 		# self dirty flag
 		self.repaintMap = 1
 

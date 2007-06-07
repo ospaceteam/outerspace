@@ -216,7 +216,7 @@ class IPlayer(IObject):
 				# compute score
 				weaponEff = Rules.techImprEff[obj.techs.get(weaponID, Rules.techBaseImprovement)]
 				score = (tech.weaponDmgMin + tech.weaponDmgMax) / 2.0 * \
-					tech.weaponROF * (tech.weaponAtt + 10)/10 * weaponEff
+					tech.weaponROF * (tech.weaponAtt + 10.0)/10 * weaponEff
 				if score > bestScores[tech.weaponClass]:
 					obj.planetWeapons[tech.weaponClass] = techID
 					bestScores[tech.weaponClass] = score
