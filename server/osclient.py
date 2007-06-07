@@ -20,7 +20,7 @@
 #
 
 # tweak PYTHONPATH
-import sys, string
+import sys, string, re
 import os
 sys.path.insert(0, 'lib')
 
@@ -320,25 +320,30 @@ def startGalaxy():
                 s.enableTime(galaxyObj,1)
                 print "Galaxy will start on next turn process"
 
+def showObj(objID):
+	try:
+                obj = s.getInfo(objID)
+                objstr = repr(obj)
+                #insanely complex regex to chunk {data} and [data] parts during split by ,'s
+                objarr = re.findall("[^,\{\]]*(?:\{[^\}]*[\}\{]),?|[^,\{\]]*(?:\[[^\]]*[\]\[]),?|[^,\}\]]+,?",objstr)
+                for line in objarr:
+                        print line
+        except:
+                print "Cannot get object",objID
 
 def showMenu(objID):
 	print
 	print "----- OSpace admin console menu -----"
 	print "Current object: %s" % objID
 	print
-	print "1. Show players"
-	print "2. Set current object"
-	print "3. Give techs"
-	print "4. Give particular tech"
-	print "5. Advance to level"
-	print "6. Show Galaxies"
-	print "7. Promote current object to imperator"
-	print "8. Give current object Strategic Resource"
-	print "9. Finish production queue"
-	print "C. Interactive console"
-	print "T. Process turn"
-	print "R. Process X turns"
-	print "S. Start Galaxy Time"
+	print "1. Set current object          6. Give particular tech"
+	print "2. Show Players                7. Give techs"
+	print "3. Show Galaxies               8. Give Strat Res"
+	print "4. Advance to level            9. Finish prod queue"
+	print "5. Make imperator              0. Object Info"
+	print
+	print "T. Process turn                R. Process X turns"
+	print "C. Interactive console         S. Start Galaxy Time"
 	print "D. Init Developer testing race (all techs, 50 each strat resource)"
 	print
 	print "Ctrl+Z to End"
@@ -361,24 +366,26 @@ def finishProdQueue(objId):
 	s.set(p.oid, "prodQueue", p.prodQueue)
 
 def processMenu(inp, objId, s):
-	if inp == "1":
+	if inp == "2":
 		showPlayers()
-	elif inp == "2":
+	elif inp == "1":
 		return setCurrentObject()
 	elif inp == "3":
 		giveTechs(objId)
-	elif inp == "4":
-		giveTech(objId)
-	elif inp == "5":
-		advanceLevel(objId)
-	elif inp == "6":
-		showGalaxies()
 	elif inp == "7":
+		giveTech(objId)
+	elif inp == "6":
+		advanceLevel(objId)
+	elif inp == "3":
+		showGalaxies()
+	elif inp == "5":
 		promoteToImperator(objId)
 	elif inp == "8":
 		giveStratRes(objId)
 	elif inp == "9":
 		finishProdQueue(objId)
+	elif inp == "0":
+		showObj(objID)
 	elif string.upper(inp) == "R":
 		processTurns()
 	elif string.upper(inp) == "T":

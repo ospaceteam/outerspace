@@ -36,16 +36,16 @@ def techID2Name(techID):
 		return client.getPlayer().shipDesigns[techID].name
 
 def objID2Name(objID):
-	obj = client.get(objID, noUpdate = 0)
+	obj = client.get(objID, noUpdate = 0, publicOnly = 1)
 	return getattr(obj, 'name', res.getUnknownName())
 
 def objIDList2Names(objIDs):
 	names = []
 	for objID in objIDs:
-		obj = client.get(objID, noUpdate = 1)
+		obj = client.get(objID, noUpdate = 1, publicOnly = 1)
 		if hasattr(obj, 'owner') and obj.owner != obj.oid:
 			try:
-				owner = _(' (%s)') % client.get(obj.owner, noUpdate = 1).name
+				owner = _(' (%s)') % client.get(obj.owner, noUpdate = 1, publicOnly = 1).name
 			except AttributeError:
 				owner = ''
 		else:
@@ -222,7 +222,7 @@ def getFullMessageText(message):
 		player = client.getPlayer()
 		# source
 		if sourceID != OID_NONE and sourceID != player.oid:
-			obj = client.get(sourceID, noUpdate = 1)
+			obj = client.get(sourceID, noUpdate = 1, publicOnly = 1)
 			if obj:
 				source = getattr(obj, 'name', res.getUnknownName())
 			else:
@@ -232,7 +232,7 @@ def getFullMessageText(message):
 		text = '%s%s\n' % (text, _("Source: %s") % source)
 		# location
 		if locationID != OID_NONE:
-			obj = client.get(locationID, noUpdate = 1)
+			obj = client.get(locationID, noUpdate = 1, publicOnly = 1)
 			location = getattr(obj, 'name', res.getUnknownName())
 		else:
 			location = _('-')

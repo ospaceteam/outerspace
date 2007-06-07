@@ -362,7 +362,7 @@ class StarMapWidget(Widget):
 				if hasattr(obj, "plStratRes") and obj.plStratRes != SR_NONE:
 					info.append(_("Strat. resource: %s") % _(gdata.stratRes[obj.plStratRes]))
 				if owner:
-					onwerobj = client.get(owner)
+					onwerobj = client.get(owner, publicOnly = 1)
 					info.append(_('Owner: %s [ID: %s]') % (
 						getattr(onwerobj, 'name', res.getUnknownName()),
 						getattr(onwerobj, 'oid', '?')
@@ -395,7 +395,7 @@ class StarMapWidget(Widget):
 				if eta:
 					info.append(_('ETA: %s') % res.formatTime(eta))
 				if owner:
-					onwerobj = client.get(owner)
+					onwerobj = client.get(owner, publicOnly = 1)
 					info.append(_('Owner: %s [ID: %s]') % (
 						getattr(onwerobj, 'name', res.getUnknownName()),
 						getattr(onwerobj, 'oid', '?')
@@ -503,7 +503,7 @@ class StarMapWidget(Widget):
 				if eta:
 					info.append(_('ETA: %s') % res.formatTime(eta))
 				if owner:
-					onwerobj = client.get(owner)
+					onwerobj = client.get(owner, publicOnly = 1)
 					info.append(_('Owner: %s [ID: %s]') % (
 						getattr(onwerobj, 'name', res.getUnknownName()),
 						getattr(onwerobj, 'oid', '?')

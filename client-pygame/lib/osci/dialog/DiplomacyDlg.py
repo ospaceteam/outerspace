@@ -71,7 +71,7 @@ class DiplomacyDlg:
 			self.selectedPartyID = None
 		selected = None
 		for contactID in player.diplomacyRels:
-			contact = client.get(contactID)
+			contact = client.get(contactID,publicOnly = 1)
 			dipl = client.getDiplomacyWith(contactID)
 			if dipl.relChng > 0:
 				relation = _("%s +") % _(gdata.relationNames[int(dipl.relation / 125)])
