@@ -77,7 +77,7 @@ levelTechsRaces = {
 'C': [3001, 3005, 3006, 3411, 3453, 3456, ]},
 4: {
 'B': [4003, 4400, 4401, 4402, 4403, 4404, 4405, 4406, 4458, 4460, 4476, 4502, 4504, ],
-'H': [4002, 4407, 4408, 4409, 4410, 4411, 4412, 4413, 4459, 4461, 4477, 4479, 4480, 4500, 4503, ],
+'H': [4002, 4009, 4407, 4408, 4409, 4410, 4411, 4412, 4413, 4459, 4461, 4477, 4479, 4480, 4500, 4503, ],
 'C': [4001, 4414, 4415, 4416, 4417, 4418, 4419, 4420, 4459, 4462, 4477, 4479, 4501, 4503, ]},
 5: {
 'B': [5400, 5401, 5402, 5403, 5404, 5405, 5406, 5007, 5431, 5433, 5465, 5467, 5470, 5475, 5503, 5504, 5507, 5805, 5808],
@@ -298,6 +298,19 @@ def giveStratResNum(objID,stratResID,quantity):
 	s.set(objID, "stratRes", stratRes)
 	print "Player %d has now %d pieces of %d." % (objID, stratRes[stratResID], stratResID)
     
+def createGalaxy():
+	universe = 1
+	print "Creating new galaxy...please specify these parameters. Normal galaxy positions are multiples of 100."
+	name = raw_input("Galaxy Name: ")
+	xpos = raw_input("X Position: ")
+	ypos = raw_input("Y Position: ")
+	try:
+		xpos = int(xpos)
+		ypos = int(ypos)
+	except:
+		print "Positions not integers."
+		return
+	s.createNewGalaxy(universe, xpos, ypos, name)
 
 def startGalaxy():
         showGalaxies()
@@ -343,8 +356,9 @@ def showMenu(objID):
 	print "5. Make imperator              0. Object Info"
 	print
 	print "T. Process turn                R. Process X turns"
-	print "C. Interactive console         S. Start Galaxy Time"
+	print "G. Create Galaxy               S. Start Galaxy Time (does not need Object set)"
 	print "D. Init Developer testing race (all techs, 50 each strat resource)"
+	print "C. Interactive console"
 	print
 	print "Ctrl+Z to End"
 	print
@@ -370,11 +384,11 @@ def processMenu(inp, objId, s):
 		showPlayers()
 	elif inp == "1":
 		return setCurrentObject()
-	elif inp == "3":
-		giveTechs(objId)
 	elif inp == "7":
-		giveTech(objId)
+		giveTechs(objId)
 	elif inp == "6":
+		giveTech(objId)
+	elif inp == "4":
 		advanceLevel(objId)
 	elif inp == "3":
 		showGalaxies()
@@ -395,6 +409,8 @@ def processMenu(inp, objId, s):
 		console.interact()
 	elif string.upper(inp) == "S":
 		startGalaxy()
+	elif string.upper(inp) == "G":
+		createGalaxy()
 	elif string.upper(inp) == "D":
 		initDevelTesting(objID)
 

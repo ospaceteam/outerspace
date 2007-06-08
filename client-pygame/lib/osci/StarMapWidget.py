@@ -33,10 +33,6 @@ from ige import log
 from osci.dialog.SearchDlg import SearchDlg
 from osci.MiniMap import MiniMap
 
-#testing
-import time 
-PROFILE_TIME = False
-
 buoyColors = [(0xff, 0xff, 0x00), (0x00, 0xff, 0xff), (0xff, 0x00, 0xff), (0xb0, 0xb0, 0xff)]
 MAX_BOUY_DISPLAY_LEN = 30
 
@@ -138,8 +134,6 @@ class StarMapWidget(Widget):
 		}
 		self._popupInfo = {}
 		self._fleetRanges = {}
-		if PROFILE_TIME:
-			currenttime = time.clock()
 		# find all pirate planets
 		pirates = {}
 		log.debug("Checking pirate planets and wormholes")
@@ -158,10 +152,6 @@ class StarMapWidget(Widget):
 				owner = client.get(ownerID, noUpdate = 1)
 				if hasattr(owner, "type") and owner.type == T_PIRPLAYER:
 					pirates[obj.x, obj.y] = None
-		if PROFILE_TIME:
-			newtime = time.clock()
-			log.debug("Pirate processing time:",currenttime - newtime)
-			currenttime = newtime
 		# process objects
 		fleetOrbit = {}
 		anyX = 0.0
@@ -363,7 +353,7 @@ class StarMapWidget(Widget):
 				if hasattr(obj, "plStratRes") and obj.plStratRes != SR_NONE:
 					info.append(_("Strat. resource: %s") % _(gdata.stratRes[obj.plStratRes]))
 				if owner:
-					onwerobj = client.get(owner, publicOnly = 1)
+					onwerobj = client.get(owner, noUpdate = 1, publicOnly = 1)
 					info.append(_('Owner: %s [ID: %s]') % (
 						getattr(onwerobj, 'name', res.getUnknownName()),
 						getattr(onwerobj, 'oid', '?')
@@ -373,16 +363,19 @@ class StarMapWidget(Widget):
 				owner = getattr(obj, 'owner', OID_NONE)
 				name = getattr(obj, 'name', None) or res.getUnknownName()
 				color = res.getPlayerColor(owner)
+				# fleet scanner setup
 				scannerPwr = getattr(obj, 'scannerPwr', 0)
 				if hasattr(obj, "scannerOn") and not obj.scannerOn:
 					scannerPwr = 0
 				if scannerPwr:
 					self._map[self.MAP_SCANNER1].append((obj.x, obj.y, scannerPwr / 10.0))
 					self._map[self.MAP_SCANNER2].append((obj.x, obj.y, scannerPwr / 16.0))
+				#  get orbital position
 				orbit = -1
 				if obj.orbiting != OID_NONE:
 					orbit = fleetOrbit.get(obj.orbiting, 0)
 					fleetOrbit[obj.orbiting] = orbit + 1
+				# set path and times
 				eta = getattr(obj, 'eta', 0)
 				self._map[self.MAP_FLEETS].append((obj.oid, obj.x, obj.y, obj.oldX, obj.oldY, orbit, res.formatTime(eta), color,
 					obj.signature / 25, getattr(obj, "isMilitary", 0)))
@@ -396,7 +389,7 @@ class StarMapWidget(Widget):
 				if eta:
 					info.append(_('ETA: %s') % res.formatTime(eta))
 				if owner:
-					onwerobj = client.get(owner, publicOnly = 1)
+					onwerobj = client.get(owner, noUpdate = 1, publicOnly = 1)
 					info.append(_('Owner: %s [ID: %s]') % (
 						getattr(onwerobj, 'name', res.getUnknownName()),
 						getattr(onwerobj, 'oid', '?')
@@ -421,6 +414,7 @@ class StarMapWidget(Widget):
 					if hasattr(target, "x"):
 						self._fleetTarget[obj.oid] = (obj.x, obj.y, target.x, target.y)
 					info.append(_('Target: %s') % getattr(target, "name", res.getUnknownName()))
+				# pop up info (continued)
 				if hasattr(obj, 'ships'):
 					info.append(_('Ships:'))
 					number = {}
@@ -504,13 +498,13 @@ class StarMapWidget(Widget):
 				if eta:
 					info.append(_('ETA: %s') % res.formatTime(eta))
 				if owner:
-					onwerobj = client.get(owner, publicOnly = 1)
+					onwerobj = client.get(owner, noUpdate = 1, publicOnly = 1)
 					info.append(_('Owner: %s [ID: %s]') % (
 						getattr(onwerobj, 'name', res.getUnknownName()),
 						getattr(onwerobj, 'oid', '?')
 					))
 				self._popupInfo[obj.oid] = info
-			elif obj.type in (T_GALAXY, T_AIRENPLAYER, T_AIMUTPLAYER, T_AIPIRPLAYER, T_AIEDENPLAYER, T_PIRPLAYER):
+			elif obj.type in (T_GALAXY, T_AIPLAYER, T_AIRENPLAYER, T_AIMUTPLAYER, T_AIPIRPLAYER, T_AIEDENPLAYER, T_PIRPLAYER):
 				pass
 			elif obj.type == T_UNKNOWN:
 				# pop up info
@@ -521,17 +515,8 @@ class StarMapWidget(Widget):
 				self._popupInfo[obj.oid] = info
 			else:
 				log.warning('StarMapWidget', 'Unknown object type %d' % obj.type)
-			if PROFILE_TIME:
-				newtime = time.clock()
-				if (newtime - currenttime) > 0.015:
-					log.debug(("Object %s type %s data processing time:" % (obj.oid, obj.type)),currenttime - newtime)
-				currenttime = newtime
 		# redirections
 		self.precomputeRedirections()
-		if PROFILE_TIME:
-			newtime = time.clock()
-			log.debug("Redirection processing time:",currenttime - newtime)
-			currenttime = newtime
 		# set position (typically on first show)
 		if self.setPosition:
 			self.setPosition = 0
@@ -539,9 +524,6 @@ class StarMapWidget(Widget):
 			self.currY = anyY
 		
 		self.miniMap.precompute()
-		if PROFILE_TIME:
-			newtime = time.clock()
-			log.debug("Minimap processing time:",currenttime - newtime)
 		# self dirty flag
 		self.repaintMap = 1
 

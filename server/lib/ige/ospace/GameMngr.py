@@ -231,12 +231,14 @@ class GameMngr(IGEGameMngr):
 		# add player to the universe
 		universe.players.append(playerID)
 		# initial scan
-		#for planetID in player.planets:
-		#	planet = self.db[planetID]
-		#	system = self.db[planet.compOf]
-		#	system.scannerPwrs[player.oid] = Rules.startingScannerPwr
-		#	log.debug('Processing scan phase')
-		#	self.cmdPool[T_GALAXY].processSCAN2Phase(tran, galaxy, None)
+		scannerPwr = Rules.techs[9002].scannerPwr
+		for planetID in player.planets:
+			planet = self.db[planetID]
+			system = self.db[planet.compOf]
+			system.scannerPwrs[player.oid] = scannerPwr
+		log.debug('Processing scan phase')
+		galaxy = tran.db[player.galaxies[0]]
+		self.cmdPool[T_GALAXY].processSCAN2Phase(tran, galaxy, None)
 		# save game info
 		self.generateGameInfo()
 		return player.oid, None

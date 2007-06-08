@@ -575,6 +575,9 @@ class IFleet(IObject):
 			#@log.debug('IFleet', obj.oid, 'fleet idle')
 			# reset retreat counter
 			obj.combatRetreatWait = 0
+			# reset last position to current position
+			obj.oldX = obj.x
+			obj.oldY = obj.y
 			# there is nothing to do - try to join other fleets
 			self.cmd(obj).joinFleet(tran, obj, OID_NONE)
 			return
