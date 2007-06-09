@@ -1,5 +1,10 @@
 Change Log:
 
+[2007-06-09]
+- Fixed Problems Dialog to differentiate between No Fuel and Has Fuel at Unknown Rate for refueling notices [Random Chaos]
+- Added (?) Starmap icon on Has Fuel at Unknown Rate [Random Chaos]
+- Added Client Database save routine to fire off every 4 hours to save database in case of operating system crashes [Random Chaos]
+
 [2007-06-08]
 - Fixed pirate initial scanner zone [Random Chaos] [SF#1571760]
 - Fixed remnant fleet movement lines after fleets are idle [Random Chaos]

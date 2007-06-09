@@ -25,7 +25,7 @@ import pygame.transform
 from pygame.locals import *
 from config import Config
 
-import osci, random
+import osci, random, time
 from ige import log
 import sys, os, os.path
 import re
@@ -285,6 +285,8 @@ logdlg.display()
 update()
 
 running = 1
+lastSave = time.clock()
+counter = 0
 while running:
     try:
         if gdata.config.game.autologin == 'yes':
@@ -296,6 +298,7 @@ while running:
         evts.insert(0, evt)
 
         forceKeepAlive = False
+        saveDB = False
 
         for evt in evts:
             if evt.type == QUIT:
@@ -312,6 +315,17 @@ while running:
             update()
         # keep alive connection
         client.keepAlive(forceKeepAlive)
+
+        # save DB every 4 hours in case of a computer crash
+        # using "counter" to limit calls to time.clock() to approximately every 10-15 minutes
+        if counter > 5000: 
+            counter = 0
+            if time.clock() - lastSave > 14400:
+                saveDB = True
+        if saveDB:
+            client.saveDB()
+            lastSave = time.clock();
+        counter += 1
 
     except IClientException, e:
         client.reinitialize()
