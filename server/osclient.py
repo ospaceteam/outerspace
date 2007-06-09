@@ -333,6 +333,31 @@ def startGalaxy():
                 s.enableTime(galaxyObj,1)
                 print "Galaxy will start on next turn process"
 
+def deleteGalaxy():
+        showGalaxies()
+        print "Choose a galaxy to delete."
+	objId = raw_input("oid: ")
+	newObjID = 0
+	try:
+		newObjID = int(objId)
+	except:
+		print "Invalid object"
+	un = s.getInfo(1)
+	galaxyObj = 0
+        print newObjID
+	for galaxyID in un.galaxies:
+		if galaxyID==newObjID:
+			galaxyObjID = newObjID
+	if galaxyObjID == 0:
+		print "Not a galaxy"
+	else:
+		galaxy = s.getInfo(galaxyObjID)
+		print "Please confirm that you want to delete", galaxy.name
+		ok = raw_input("Y/N: ");
+		if string.upper(ok) == "Y":
+			s.delete(galaxyObjID)
+			print "Galaxy deleted"
+
 def showObj(objID):
 	try:
                 obj = s.getInfo(objID)
@@ -349,16 +374,18 @@ def showMenu(objID):
 	print "----- OSpace admin console menu -----"
 	print "Current object: %s" % objID
 	print
-	print "1. Set current object          6. Give particular tech"
-	print "2. Show Players                7. Give techs"
-	print "3. Show Galaxies               8. Give Strat Res"
-	print "4. Advance to level            9. Finish prod queue"
-	print "5. Make imperator              0. Object Info"
+	print "1. Set current object          10. Create Galaxy"
+	print "2. Show Players                11. Start Galaxy Time (does not need Obj set)"
+	print "3. Show Galaxies               12. Delete Galaxy (does not need Obj set)"
+	print "4. Advance to level            13. Init Developer race (all techs, 50 each strat res)"
+	print "5. Make imperator              "
+	print "6. Give particular tech        "
+	print "7. Give techs                  "
+	print "8. Give Strat Res              "
+	print "9. Finish prod queue           "
 	print
 	print "T. Process turn                R. Process X turns"
-	print "G. Create Galaxy               S. Start Galaxy Time (does not need Object set)"
-	print "D. Init Developer testing race (all techs, 50 each strat resource)"
-	print "C. Interactive console"
+	print "C. Interactive console         I. Object Info"
 	print
 	print "Ctrl+Z to End"
 	print
@@ -398,7 +425,15 @@ def processMenu(inp, objId, s):
 		giveStratRes(objId)
 	elif inp == "9":
 		finishProdQueue(objId)
-	elif inp == "0":
+	elif inp == "10":
+		createGalaxy()
+	elif inp == "11":
+		startGalaxy()
+	elif inp == "12":
+		deleteGalaxy()
+	elif inp == "13":
+		initDevelTesting(objID)
+	elif string.upper(inp) == "I":
 		showObj(objID)
 	elif string.upper(inp) == "R":
 		processTurns()
@@ -407,12 +442,6 @@ def processMenu(inp, objId, s):
 	elif string.upper(inp) == "C":
 		console = InteractiveConsole(locals())
 		console.interact()
-	elif string.upper(inp) == "S":
-		startGalaxy()
-	elif string.upper(inp) == "G":
-		createGalaxy()
-	elif string.upper(inp) == "D":
-		initDevelTesting(objID)
 
 	return objId
 

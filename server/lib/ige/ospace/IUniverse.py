@@ -496,7 +496,6 @@ class IUniverse(IObject):
 
 	def restartGalaxy2(self, tran, obj, galaxyID, imperatorMessage): #server-initiated restart
 		log.debug("Restarting Galaxy", galaxyID)
-		galaxy = tran.db[galaxyID]
 		log.debug("Sending message", imperatorMessage)
 		message = {
 			"sender": "Galaxy %s" % galaxy.name,
@@ -571,3 +570,12 @@ class IUniverse(IObject):
 
 	createNewGalaxy.public = 1
 	createNewGalaxy.accLevel = AL_ADMIN
+
+	def deleteGalaxy(self, tran, galaxyID):
+		galaxy = tran.db[galaxyID]
+		log.debug("Deleting galaxy", galaxyID)
+		self.cmd(galaxy).delete(tran, galaxy)
+
+	deleteGalaxy.public = 1
+	deleteGalaxy.accLevel = AL_ADMIN
+
