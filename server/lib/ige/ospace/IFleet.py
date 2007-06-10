@@ -206,7 +206,7 @@ class IFleet(IObject):
 		fleet = tran.db[fleetID]
 		if fleet.allowmerge == 0 and not force:
 			# owner has turned off auto-joins (join other with self)
-			break
+			return
 		fleet.ships.extend(obj.ships)
 		# transfer resources
 		fleet.storEn += obj.storEn

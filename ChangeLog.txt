@@ -3,6 +3,8 @@ Change Log:
 [2007-06-10]
 - Added Rename Fleet ability; included "join prevention" for name preservation [Random Chaos]
 - Fixed "lost checkmark" bug in Overlay Dialog [Random Chaos]
+- Fixed food consumption [Random Chaos] [SF#1600508]
+- Fixed population growth on low population planets [Random Chaos] [SF#1600508]
 
 [2007-06-09]
 - Fixed Problems Dialog to differentiate between No Fuel and Has Fuel at Unknown Rate for refueling notices [Random Chaos]

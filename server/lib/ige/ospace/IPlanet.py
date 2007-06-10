@@ -483,8 +483,8 @@ class IPlanet(IObject):
 			maxPop = int(maxPop)
 			# eat
 			pop = obj.storPop / 1000.0
-			wantBio = int(pop * obj.popEatBio)
-			wantEn = int(pop * obj.popEatEn)
+			wantBio = math.ceil(pop * obj.popEatBio)
+			wantEn = math.ceil(pop * obj.popEatEn)
 			# auto regulation of min resources
 			if obj.autoMinStor:
 				obj.minBio += wantBio * Rules.autoMinStorTurns
@@ -504,7 +504,7 @@ class IPlanet(IObject):
 					obj.morale -= Rules.moraleLostNoFood
 			elif obj.storPop < maxPop:
 				# born
-				obj.storPop += min(int(obj.storPop * Rules.popGrowthRate), maxPop - obj.storPop)
+				obj.storPop += max(min(int(obj.storPop * Rules.popGrowthRate), maxPop - obj.storPop), 1)
 		# produce items in construction queue
 		if owner:
 			moraleBonus = Rules.moraleProdBonus[int(obj.morale / Rules.moraleProdStep)]
