@@ -287,6 +287,7 @@ update()
 running = 1
 lastSave = time.clock()
 counter = 0
+needsRefresh = False
 while running:
     try:
         if gdata.config.game.autologin == 'yes':
@@ -304,6 +305,10 @@ while running:
             if evt.type == QUIT:
                 running = 0
                 break
+            if evt.type == ACTIVEEVENT:
+                if evt.gain == 1 and evt.state == 6:
+                    # pygame desktop window focus event
+                    needsRefresh = True
             if evt.type == KEYUP and evt.key == K_F12:
                 running = 0
                 break
@@ -311,7 +316,8 @@ while running:
                 forceKeepAlive = True
             evt = app.processEvent(evt)
 
-        if app.needsUpdate() or isHWSurface:
+        if app.needsUpdate() or isHWSurface or needsRefresh:
+            needsRefresh = False
             update()
         # keep alive connection
         client.keepAlive(forceKeepAlive)
