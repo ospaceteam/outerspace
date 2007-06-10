@@ -24,7 +24,7 @@ from ige.IDataHolder import IDataHolder
 import Rules
 import math
 import random
-import Utils, ShipUtils, math, copy
+import Utils, ShipUtils, math, copy, re
 from sys import maxint
 from ige import GameException, ServerException, log
 
@@ -67,6 +67,9 @@ class IFleet(IObject):
 		obj.combatCounter = 0
 		obj.combatRetreatWait = 0
 		obj.lastUpgrade = 0
+		#
+		obj.customname = None
+		obj.allowmerge = 1 #states: 0: no merge; 1: normal merging; 2: fleets can merge with this fleet, but this fleet cannot merge with others
 
 	def create(self, tran, obj, refObj, owner):
 		obj.owner = owner
@@ -102,6 +105,8 @@ class IFleet(IObject):
 			if name not in names:
 				break
 		obj.name = name
+		obj.customname = None
+		obj.allowmerge = 1
 		# insert fleet into owner's fleets
 		tran.db[obj.owner].fleets.append(obj.oid)
 
@@ -173,9 +178,12 @@ class IFleet(IObject):
 	disbandFleet.public = 1
 	disbandFleet.accLevel = AL_FULL
 
-	def joinFleet(self, tran, obj, fleetID):
+	def joinFleet(self, tran, obj, fleetID, force=False):
 		if obj.orbiting == OID_NONE:
 			# we are in space
+			return
+		if obj.allowmerge != 1:
+			# owner has turned off auto-joins (join self with other)
 			return
 		if fleetID == OID_NONE:
 			# find suitable fleet
@@ -185,6 +193,9 @@ class IFleet(IObject):
 				if tmpID == obj.oid:
 					continue
 				fleet = tran.db[tmpID]
+				if fleet.allowmerge == 0 and not force:
+					# owner has turned off auto-joins (join other with self)
+					continue
 				rel = self.cmd(player).getRelationTo(tran, player, fleet.owner)
 				if rel == REL_UNITY and Utils.isIdleFleet(fleet):
 					fleetID = tmpID
@@ -248,7 +259,42 @@ class IFleet(IObject):
 	splitFleet.public = 1
 	splitFleet.accLevel = AL_FULL
 
+	def renameFleet(self, tran, obj, name):
+		if not Utils.isCorrectName(name):
+			raise GameException('Invalid name. Only characters, digits, space, dot and dash permitted, max. length is 30 characters.')
+		if re.match("/^Fleet \d+$/",name):
+			raise GameException('Invalid name. You cannot use the format "Fleet ##" for a custom name.')
+		names = {}
+		for fleetID in tran.db[obj.owner].fleets:
+			names[tran.db[fleetID].customname] = None
+		if name in names and name != obj.customname:
+			raise GameException('Name already in use.')
+		obj.customname = name
+		return obj.customname
+
+	renameFleet.public = 1
+	renameFleet.accLevel = AL_FULL
+
+	def removeFleetName(self, tran, obj):
+		obj.customname = None
+		return obj.name
+
+	removeFleetName.public = 1
+	removeFleetName.accLevel = AL_FULL
+
+	def setMergeState(self, tran, obj, state):
+		if not state in [0,1,2]:
+			raise GameException('Bad join fleet state.') #should we log this? Probably don't need to.
+		obj.allowmerge = state
+		return obj.allowmerge
+
+	setMergeState.public = 1
+	setMergeState.accLevel = AL_FULL
+
 	def update(self, tran, obj):
+		if not (hasattr(obj,'customname')): #added in 0.5.64
+			obj.customname = None
+			obj.allowmerge = 1
 		# if there are no ships -> disband fleet
 		if not len(obj.ships) or obj.owner == OID_NONE:
 			log.warning(obj.oid, "FLEET - no ships in the fleet -- disbanding")
@@ -405,8 +451,11 @@ class IFleet(IObject):
 		else:
 			return []
 		if scanPwr >= Rules.level2InfoScanPwr:
-			result.name = obj.name
 			result.owner = obj.owner
+			if obj.customname:
+				result.name = obj.customname
+			else:
+				result.name = obj.name
 		if scanPwr >= Rules.level3InfoScanPwr:
 			result.isMilitary = obj.isMilitary
 			result.combatPwr = obj.combatPwr
@@ -420,6 +469,9 @@ class IFleet(IObject):
 				result.shipScan[key] = result.shipScan.get(key, 0) + 1
 		if scanPwr >= Rules.partnerScanPwr:
 			result.scannerPwr = obj.scannerPwr
+			result.allowmerge = obj.allowmerge
+			result.customname = obj.customname
+			result.name = obj.name
 		return [result]
 
 	def addAction(self, tran, obj, index, action, targetID, aData):

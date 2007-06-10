@@ -366,7 +366,10 @@ class StarMapWidget(Widget):
 				self._popupInfo[obj.oid] = info
 			elif obj.type == T_FLEET:
 				owner = getattr(obj, 'owner', OID_NONE)
-				name = getattr(obj, 'name', None) or res.getUnknownName()
+				if hasattr(obj,'customname') and obj.customname:
+					name = obj.customname
+				else:
+					name = getattr(obj, 'name', res.getUnknownName())
 				color = res.getPlayerColor(owner)
 				# fleet scanner setup
 				scannerPwr = getattr(obj, 'scannerPwr', 0)

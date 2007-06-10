@@ -1,5 +1,9 @@
 Change Log:
 
+[2007-06-10]
+- Added Rename Fleet ability; included "join prevention" for name preservation [Random Chaos]
+- Fixed "lost checkmark" bug in Overlay Dialog [Random Chaos]
+
 [2007-06-09]
 - Fixed Problems Dialog to differentiate between No Fuel and Has Fuel at Unknown Rate for refueling notices [Random Chaos]
 - Added (?) Starmap icon on Has Fuel at Unknown Rate [Random Chaos]

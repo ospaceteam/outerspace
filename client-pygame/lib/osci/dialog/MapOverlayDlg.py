@@ -58,7 +58,8 @@ class MapOverlayDlg:
 				self.mapWidget.overlayMode = self.overlayMode
 				self.mapWidget.repaintMap = 1
 			self.removeChecks()
-
+		else:
+			widget.checked = 1 #recheck it if they didn't change checks
 		self.hide()
 
 	def removeChecks(self):
@@ -111,7 +112,6 @@ class MapOverlayDlg:
 		self.win = ui.Window(self.app,
 			modal = 1,
 			escKeyClose = 1,
-			movable = 1,
 			title = _("Set Map Overlay:"),
 			rect = ui.Rect(10, 25, width, height),
 			layoutManager = ui.SimpleGridLM(),

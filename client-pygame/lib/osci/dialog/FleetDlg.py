@@ -25,6 +25,7 @@ from FleetCommandDlg import FleetCommandDlg
 from FleetSpecsDlg import FleetSpecsDlg
 from FleetSplitDlg import FleetSplitDlg
 from ConfirmDlg import ConfirmDlg
+from RenameFleetDlg import RenameFleetDlg
 from ige.ospace.Const import *
 from ige.ospace import Rules
 import ige
@@ -38,6 +39,7 @@ class FleetDlg:
 		self.fleetCommandDlg = FleetCommandDlg(self.app)
 		self.fleetSpecsDlg = FleetSpecsDlg(self.app)
 		self.fleetSplitDlg = FleetSplitDlg(self.app)
+		self.renameFleetDlg = RenameFleetDlg(self.app)
 		self.confirmDlg = ConfirmDlg(app)
 
 	def display(self, objID):
@@ -66,7 +68,10 @@ class FleetDlg:
 
 	def showFleet(self):
 		fleet = client.get(self.fleetID, noUpdate = 1)
-		self.win.title = _('Fleet: %s') % getattr(fleet, 'name', res.getUnknownName())
+		if hasattr(fleet,'customname') and fleet.customname:
+			self.win.title = _('Fleet: %s') % fleet.customname
+		else:
+			self.win.title = _('Fleet: %s') % getattr(fleet, 'name', res.getUnknownName())
 		# fill listbox
 		items = []
 		# serial ships
@@ -315,7 +320,7 @@ class FleetDlg:
 			return 1
 
 	def onRenameFleet(self, widget, action, data):
-		pass
+		self.renameFleetDlg.display(self.fleetID)
 
 	def createUI(self):
 		w, h = gdata.scrnSize
@@ -376,7 +381,7 @@ class FleetDlg:
 		ui.Button(self.win, text = _('Split fleet'), id = 'vSplitButton',
 			layout = (20, 25, 5, 1), action = 'onSplitFleet')
 		ui.Button(self.win, text = _('Rename fleet'), id = 'vRenameButton',
-			layout = (25, 25, 5, 1), action = 'onRenameFleet', enabled = 0)
+			layout = (25, 25, 5, 1), action = 'onRenameFleet')
 		ui.Button(self.win, text = _('Auto delete'), id = 'vAutoDeleteButton',
 			layout = (30, 25, 5, 1), action = 'onAutoDelete')
 		ui.Button(self.win, text = _('Fleet Specs'), id = 'vFleetSpecs',
