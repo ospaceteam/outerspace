@@ -2,6 +2,7 @@ Change Log:
 
 [2007-06-10]
 - Added Rename Fleet ability; included "join prevention" for name preservation [Random Chaos]
+- Added currently selected planetary weapons to Empire Overview [Random Chaos]
 - Fixed "lost checkmark" bug in Overlay Dialog [Random Chaos]
 - Fixed food consumption [Random Chaos] [SF#1600508]
 - Fixed population growth on low population planets [Random Chaos] [SF#1600508]

@@ -198,10 +198,33 @@ class EmpireOverviewDlg:
 		text.append(u'    %s: %d %s + %d %s, %d MP' % (_("Small ships"), civ[0], _("civ"), mil[0], _("mil"), mp[0]))
 		text.append(u'    %s: %d %s + %d %s, %d MP' % (_("Medium ships"), civ[1], _("civ"), mil[1], _("mil"), mp[1]))
 		text.append(u'    %s: %d %s + %d %s, %d MP' % (_("Large ships"), civ[2], _("civ"), mil[2], _("mil"), mp[2]))
+
+		# Planetary Weapons
+		weapons = player.planetWeapons
+		if weapons[0] or weapons[1] or weapons[2]:
+			text.append("")
+			text.append(u'Planetary Weapons:')
+			if weapons[0] != None:
+				if weapons[0] in player.techs.keys():
+					tech = client.getTechInfo(weapons[0])
+					sweapon = tech.name
+					text.append(u'    Anti-small: %s' % sweapon)
+			if weapons[1] != None:
+				if weapons[1] in player.techs.keys():
+					tech = client.getTechInfo(weapons[1])
+					mweapon = tech.name
+					text.append(u'    Anti-medium: %s' % mweapon)
+			if weapons[2] != None:
+				if weapons[2] in player.techs.keys():
+					tech = client.getTechInfo(weapons[2])
+					lweapon = tech.name
+					text.append(u'    Anti-large: %s' % lweapon)
+		
 		self.win.vText.text = text
 		self.win.vText.offsetRow = 0
 		self.win.vText.vertScrollbar.slider.position = 0
 		self.win.vText.vertScrollbar.slider.max = len(text)
+
 
 	def onClose(self, widget, action, data):
 		self.hide()
