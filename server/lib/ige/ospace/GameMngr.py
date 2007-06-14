@@ -442,6 +442,7 @@ class GameMngr(IGEGameMngr):
 			pass
 		stats = {}
 		galaxies = {}
+		resolutions = {}
 		universe = self.db[OID_UNIVERSE]
 		jsonComma = False
 		fhjson = open('website/%s/json.txt' % (self.gameID), 'w')
@@ -450,6 +451,11 @@ class GameMngr(IGEGameMngr):
 			player = self.db[playerID]
 			stats[playerID] = player.stats
 			galaxies[playerID] = player.galaxies
+			resolution = self.cmdPool[player.type].getResolution(player)
+			if resolutions.has_key(resolution):
+				resolutions[resolution] += 1
+			else:
+				resolutions[resolution] = 1
 		for galaxyID in universe.galaxies:
 			gStats = copy.deepcopy(stats)
 			for playerID in gStats.keys():
@@ -515,6 +521,14 @@ class GameMngr(IGEGameMngr):
 			fh.close()
 		print >>fhjson, '}'
 		fhjson.close()
+		#write resolutions of clients in use for statistics tracking
+		fhres = open('website/res.txt', 'w')
+		print >>fhres, 'Resoltion: Number of users'
+		reskeys = resolutions.keys();
+		reskeys.sort();
+		for resolution in reskeys:
+			print >>fhres, '%s: %s' % (resolution, resolutions[resolution])
+		fhres.close()
 
 	def sortStatsBy(self, stats, attr):
 		order = stats.keys()

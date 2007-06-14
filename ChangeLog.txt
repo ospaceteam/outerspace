@@ -1,5 +1,8 @@
 Change Log:
 
+[2007-06-13]
+- Added tracking of client resolutions; looking to see if we need to continue support of 800x600 for game dialogs, or if we can give them more space. [Random Chaos]
+
 [2007-06-10]
 - Added Rename Fleet ability; included "join prevention" for name preservation [Random Chaos]
 - Added currently selected planetary weapons to Empire Overview [Random Chaos]

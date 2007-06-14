@@ -83,6 +83,8 @@ class IPlayer(IObject):
 		#
 		obj.shipRedirections = {}
 		obj.buoys = {}
+		#
+		obj.clientStats = {}
 
 	def update(self, tran, obj):
 		# update all designs
@@ -1196,3 +1198,22 @@ class IPlayer(IObject):
 
 	cleanUpMsgs.public = 1
 	cleanUpMsgs.accLevel = AL_OWNER
+
+	def setResolution(self, tran, obj, x, y):
+		if not hasattr(obj,'clientStats'):
+			obj.clientStats = {}
+		obj.clientStats['x'] = x;
+		obj.clientStats['y'] = y;
+
+	setResolution.public = 1
+	setResolution.accLevel = AL_OWNER
+
+	def getResolution(self, obj):
+		if not hasattr(obj,'clientStats'):
+			obj.clientStats = {}
+		if obj.clientStats.has_key('x') and obj.clientStats.has_key('y'):
+			return ("%s,%s" % (obj.clientStats['x'],obj.clientStats['y']))
+		else:
+			return "0,0"
+            
+	getResolution.public = 0

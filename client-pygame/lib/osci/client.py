@@ -230,6 +230,10 @@ def updateDatabaseUnsafe(clearDB = 0, force = 0):
 	# clean maps on server
 	current += 1
 	callbackObj.onUpdateProgress(current, max, _("Clearing data on the server..."))
+	try:
+		cmdProxy.setResolution(db.playerID,gdata.scrnSize[0],gdata.scrnSize[1])
+	except:
+		log.debug('Server does not yet support resolution tracking')
 	# TODO not needed - delete cmdProxy.clearScannerMap(db.playerID)
 	# finished
 	log.message('IClient', 'Update finished.')
