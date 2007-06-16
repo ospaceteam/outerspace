@@ -1,5 +1,11 @@
 Change Log:
 
+VERSION 0.5.64
+
+[2007-06-16]
+- Increased population growth on low population planets [Qark]
+- Reduced CP output of Solar Factories [Qark]
+
 [2007-06-13]
 - Added tracking of client resolutions; looking to see if we need to continue support of 800x600 for game dialogs, or if we can give them more space. [Random Chaos]
 
@@ -60,12 +66,16 @@ Change Log:
 - Added Mine Field display info to System Map [Random Chaos]
 - Altered starmap refocus events in an attempt to get rid of "blinking windows" bug [Random Chaos]
 - Fixed weapon damage and class inheritance in Fleet Details dialog [Random Chaos]
-- Fixed bug in update, it kept clearing stored password [PeS] [SF#1726780]
 - Added option to disable Minimap [PeS] [SF#1641040]
 - Cached minimap surface before adding overlay rect; significantly improved redraw speed [Random Chaos] [SF#1641061]
 - Added minimap position change to starmap "setPos" method [Random Chaos] [SF#1655685]
 - Fixed leader voting; if a leader was voted more than once, they were "unset" as leader in their iPlayer object. [Random Chaos]
 - Fixed research dialog total ETC [Random Chaos] [SF#1727112]
+
+VERSION 0.5.63.1
+
+[2007-05-28]
+- Fixed bug in update, it kept clearing stored password [PeS] [SF#1726780]
 
 VERSION 0.5.63
 

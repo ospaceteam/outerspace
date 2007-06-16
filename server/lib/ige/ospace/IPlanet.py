@@ -504,7 +504,7 @@ class IPlanet(IObject):
 					obj.morale -= Rules.moraleLostNoFood
 			elif obj.storPop < maxPop:
 				# born
-				obj.storPop += max(min(int(obj.storPop * Rules.popGrowthRate), maxPop - obj.storPop), 1)
+				obj.storPop += max(min(int(obj.storPop * Rules.popGrowthRate), maxPop - obj.storPop), Rules.popMinGrowthRate)
 		# produce items in construction queue
 		if owner:
 			moraleBonus = Rules.moraleProdBonus[int(obj.morale / Rules.moraleProdStep)]

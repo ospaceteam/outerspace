@@ -219,7 +219,7 @@
             subtype="str30"
             buildProd="1440"
             operWorkers="1500"
-            prodProd="25"
+            prodProd="22"
             prodProdMod="0.0,0.0,1.0,0.0"
             prodEnv="0"
             prodEn="20"

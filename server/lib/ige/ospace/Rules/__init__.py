@@ -138,6 +138,7 @@ stratResRate = turnsPerDay * 6
 
 ## Population
 popGrowthRate = 0.02
+popMinGrowthRate = int(1000 * popGrowthRate)
 popDieRate = 0.1
 popMinDieRate = 100
 popKillMod = 0.25

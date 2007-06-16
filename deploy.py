@@ -16,7 +16,7 @@ parser.add_option("-v", "--version", dest = "version", action = "store",
 options, args = parser.parse_args()
 
 ## break version info into tuple
-match = re.match("(\d+)\.(\d+)\.(\d+)(\w*)", options.version)
+match = re.match("^(\d+)\.(\d+)\.(\d+)(\w*|\.\d+)$", options.version)
 if match:
     version = match.group(1), match.group(2), match.group(3), match.group(4)
 else:
