@@ -2,6 +2,7 @@ Change Log:
 
 [2007-16-16]
 - Fixed typo causing government power being ignored [Random Chaos]
+- Made bio/en integers after calculating [Random Chaos]
 
 VERSION 0.5.64
 

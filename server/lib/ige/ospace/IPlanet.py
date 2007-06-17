@@ -483,8 +483,8 @@ class IPlanet(IObject):
 			maxPop = int(maxPop)
 			# eat
 			pop = obj.storPop / 1000.0
-			wantBio = math.ceil(pop * obj.popEatBio)
-			wantEn = math.ceil(pop * obj.popEatEn)
+			wantBio = int(math.ceil(pop * obj.popEatBio))
+			wantEn = int(math.ceil(pop * obj.popEatEn))
 			# auto regulation of min resources
 			if obj.autoMinStor:
 				obj.minBio += wantBio * Rules.autoMinStorTurns
