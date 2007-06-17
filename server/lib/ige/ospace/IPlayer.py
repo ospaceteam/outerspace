@@ -1082,7 +1082,7 @@ class IPlayer(IObject):
 					eff = Utils.getTechEff(tran, slot[STRUCT_IDX_TECHID], obj.oid)
 					obj.govPwr = max(int(tech.govPwr * eff * (slot[STRUCT_IDX_OPSTATUS] / 100.0)), obj.govPwr)
 		# compute government controll range
-		if not hasattr(obj,"tmpPopDstr"): #when player is force-resigned, tmpPopDistr is unset. This is easiest fix.
+		if not hasattr(obj,"tmpPopDistr"): #when player is force-resigned, tmpPopDistr is unset. This is easiest fix.
 			obj.tmpPopDistr = {}
 		ranges = obj.tmpPopDistr.keys()
 		ranges.sort()

@@ -1,5 +1,8 @@
 Change Log:
 
+[2007-16-16]
+- Fixed typo causing government power being ignored [Random Chaos]
+
 VERSION 0.5.64
 
 [2007-06-16]
