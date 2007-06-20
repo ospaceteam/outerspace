@@ -1,5 +1,8 @@
 Change Log:
 
+[2007-06-20]
+- Planet environment now can degrade faster than 1 point/turn [Qark] [#SF1739554]
+
 [2007-16-16]
 - Fixed typo causing government power being ignored [Random Chaos]
 - Made bio/en integers after calculating [Random Chaos]

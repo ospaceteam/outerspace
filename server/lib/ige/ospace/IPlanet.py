@@ -657,12 +657,12 @@ class IPlanet(IObject):
 				log.debug('IPlanet', obj.oid, 'Upgraded to', spec.upgradeTo)
 				obj.plType = spec.upgradeTo
 				Utils.sendMessage(tran, obj, MSG_UPGRADED_PLANET_ECO, obj.oid, spec.upgradeTo)
-		if obj.plEnv >= Rules.envInterval:
+		while obj.plEnv >= Rules.envInterval:
 			#@log.debug('IPlanet', obj.oid, 'Env improved')
 			obj.plEnv -= Rules.envInterval
 			obj.changeEnv += Rules.envInterval
 			if obj.plBio < 200: obj.plBio += 1
-		elif obj.plEnv < 0:
+		while obj.plEnv < 0:
 			if obj.plBio > 0:
 				obj.plBio -= 1
 				obj.plEnv += Rules.envInterval
