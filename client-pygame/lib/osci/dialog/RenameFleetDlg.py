@@ -48,7 +48,7 @@ class RenameFleetDlg:
 		if fleet.customname:
 			self.win.vName.text = fleet.customname
 		else:
-			self.win.vName.text = _('')
+			self.win.vName.text = ''
 		self.win.show()
 		self.app.setFocus(self.win.vName)
 		# register for updates

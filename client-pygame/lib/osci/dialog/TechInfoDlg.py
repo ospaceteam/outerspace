@@ -28,7 +28,7 @@ def cclass2Text(cclass):
 	return [_("small"), _("medium"), _("large"), _("planet")][cclass]
 
 def structWeapons2Text(array):
-	string = _('')
+	string = ''
 	i = 0
 	j = 0
 	for weaponNum in array:
@@ -390,9 +390,9 @@ class TechInfoDlg:
 			id = 'vSEquip', toggle = 1, action = 'onShowType', data = V_SEQUIP)
 		ui.Button(self.win, layout = (13, 26, 4, 1), text = _('Project'),
 			id = 'vProject', toggle = 1, action = 'onShowType', data = V_PROJECT)
-		ui.Button(self.win, layout = (17, 26, 1, 1), text = _(''),
+		ui.Button(self.win, layout = (17, 26, 1, 1), text = '',
 			id = 'vEmpty1', toggle = 0)
-		ui.Button(self.win, layout = (0, 26, 1, 1), text = _(''),
+		ui.Button(self.win, layout = (0, 26, 1, 1), text = '',
 			id = 'vEmpty2', toggle = 0)
 		# text field
 		ui.Title(self.win, layout = (18, 0, 22, 1), text = _('Description'),
