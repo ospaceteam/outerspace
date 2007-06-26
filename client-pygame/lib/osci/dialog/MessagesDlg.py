@@ -335,7 +335,7 @@ class MessagesDlg:
 				gdata.mainGameDlg.win.vStarMap.setPos(obj.x, obj.y)
 				self.hide()
 				return
-		if item.tForum == "EVENTS" and re.match('^Research completed:(.*)',item.text):
+		if item.tForum == "EVENTS" and re.match(('^%s(.*)')%(_('Research completed:')),item.text):
 			gdata.mainGameDlg.researchDlg.display()
 			return
 		self.win.setStatus(_("Cannot show location"))
@@ -346,7 +346,7 @@ class MessagesDlg:
 
 	def onShowSource(self, widget, action, data):
 		item = self.win.vMessages.selection[0]
-		if item.tForum == "EVENTS" and re.match('^Research completed:(.*)',item.text):
+		if item.tForum == "EVENTS" and re.match(('^%s(.*)')%(_('Research completed:')),item.text):
 				gdata.mainGameDlg.researchDlg.display()
 				return
 		if item.tSourceID != OID_NONE:

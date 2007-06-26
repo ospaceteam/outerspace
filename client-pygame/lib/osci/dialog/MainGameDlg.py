@@ -171,17 +171,17 @@ class MainGameDlg:
 	def onResign(self, widget, action, data):
 		# swap yes and no
 		self.confirmDlg.display(_('Are you sure to resign current game?'), _('No'),
-			('Yes'), cancelAction = self.onResignConfirmed)
+			_('Yes'), cancelAction = self.onResignConfirmed)
 
 	def onSaveStarmap(self, widget, action, data):
 		self.confirmDlg.display(_('Save the current starmap view as an image?'), _('Yes'),
-			('No'), confirmAction = self.onSaveStarmapConfirm)
+			_('No'), confirmAction = self.onSaveStarmapConfirm)
 
 	def onSaveStarmapConfirm(self):
 		turn = client.getTurn()
 		name = res.formatTime(turn,'_')
 		savedas = self.mapWidget.save(name)
-		self.confirmDlg.display(_('File saved as %s' % savedas), _('Ok'), False)
+		self.confirmDlg.display(_('File saved as %s' % savedas), _('OK'), False)
 
 	def onMenu(self, widget, action, data):
 		w, h = gdata.scrnSize

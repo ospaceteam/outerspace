@@ -416,7 +416,7 @@ class StarMapWidget(Widget):
 					if obj.operEn > 0: turns = obj.storEn / obj.operEn
 					range = turns * obj.speed / Rules.turnsPerDay
 					self._fleetRanges[obj.oid] = (obj.x, obj.y, range, (range  * 0.75) / 2, (range  * 0.5) / 2, obj.speed * 6 / Rules.turnsPerDay, turns)
-					info.append("Operational time: %s" % res.formatTime(turns))
+					info.append(_("Operational time: %s") % res.formatTime(turns))
 				if hasattr(obj, 'target') and obj.target != OID_NONE:
 					target = client.get(obj.target, noUpdate=1)
 					if hasattr(target, "x"):

@@ -1,5 +1,16 @@
 Change Log:
 
+[2007-06-26]
+- Updated Options dialog to scan res directory for other languages [PeS]
+- Fixed call for gettext with empty strings [Qark, reported by Yann]
+
+[2007-06-25]
+- Display surplus also as turns in ProblemsDlg, minor as > 7 days, major < 7 days [PeS]
+- Added call for gettext function from dialogs not using it [PeS]
+- Updated Czech translation [PeS]
+- First version of French translation [Yann]
+- Fixed bug with Show Loc/Source on Research Messages (worked only in English) [PeS]
+
 [2007-06-20]
 - Planet environment now can degrade faster than 1 point/turn [Qark] [#SF1739554]
 

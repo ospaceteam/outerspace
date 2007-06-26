@@ -229,27 +229,43 @@ class ProblemsDlg:
 
 				# check bio for system
 				if bio < 0 and self.win.vSystems.checked:
-					disp = major
-					fgColor = gdata.sevColors[gdata.MAJ]
-					if totalBio / (-bio) < 48:
+					disp = minor
+					fgColor = None
+					surplusTurns = totalBio / (-bio)
+					if surplusTurns < 168:
+						disp = major
+						fgColor = gdata.sevColors[gdata.MAJ]
+					if surplusTurns < 48:
 						disp = critical
 						fgColor = gdata.sevColors[gdata.CRI]
 
 					if disp:
-						items.append(ui.Item(obj.name, tOID = obj.oid, tType = T_SYSTEM, foreground = fgColor,
-									 vDescription = _('Bio decreasing - last turn change %d, surplus %d.') % (bio, totalBio)))
+						if totalBio > 0:
+							items.append(ui.Item(obj.name, tOID = obj.oid, tType = T_SYSTEM, foreground = fgColor,
+									 	vDescription = _('Bio decreasing - last turn change %d, surplus %d (%s).') % (bio, totalBio,res.formatTime(surplusTurns))))
+						else:
+							items.append(ui.Item(obj.name, tOID = obj.oid, tType = T_SYSTEM, foreground = fgColor,
+									 	vDescription = _('Bio decreasing - last turn change %d, surplus %d.') % (bio, totalBio)))
 
 				#check en for system
 				if en < 0 and self.win.vSystems.checked:
-					disp = major
-					fgColor = gdata.sevColors[gdata.MAJ]
-					if totalEn / (-en) < 48:
+					disp = minor
+					fgColor = None
+					surplusTurns = totalEn / (-en)
+					if surplusTurns < 168:
+						disp = major
+						fgColor = gdata.sevColors[gdata.MAJ]
+					if surplusTurns < 48:
 						disp = critical
 						fgColor = gdata.sevColors[gdata.CRI]
 
 					if disp:
-						items.append(ui.Item(obj.name, tOID = obj.oid, tType = T_SYSTEM, foreground = fgColor,
-									 vDescription = _('Energy decreasing - last turn change %d, surplus %d.') % (en, totalEn)))
+						if totalEn > 0:
+							items.append(ui.Item(obj.name, tOID = obj.oid, tType = T_SYSTEM, foreground = fgColor,
+										vDescription = _('Energy decreasing - last turn change %d, surplus %d (%s).') % (en, totalEn,res.formatTime(surplusTurns))))
+						else:
+							items.append(ui.Item(obj.name, tOID = obj.oid, tType = T_SYSTEM, foreground = fgColor,
+									 	vDescription = _('Energy decreasing - last turn change %d, surplus %d.') % (en, totalEn)))
 
 			# check fleets
 			elif obj.type == T_FLEET and self.win.vFleets.checked:

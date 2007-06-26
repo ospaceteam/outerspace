@@ -146,8 +146,8 @@ class StructTaskDlg:
 				icons = ((res.getTechImg(techID), ui.ALIGN_N),),
 				font = "small-bold",
 				align = ui.ALIGN_S,
-				tooltip = "%s, %d CP, TL %d" % (tech.name, tech.buildProd, tech.level),
-				statustip = "%s, %d CP, TL %d" % (tech.name, tech.buildProd, tech.level),
+				tooltip = "%s, %d %s, %s %d" % (tech.name, tech.buildProd,_("CP"),_("TL"), tech.level),
+				statustip = "%s, %d %s, %s %d" % (tech.name, tech.buildProd,_("CP"),_("TL"), tech.level),
 			)
 			if tech.level > self.maxTechLevel:
 				self.maxTechLevel = tech.level

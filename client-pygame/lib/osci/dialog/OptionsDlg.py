@@ -39,6 +39,11 @@ class OptionsDlg:
 	"""
 	def __init__(self, app):
 		self.app = app
+		self.languages = {}
+		self.languages['en']=_('English')
+		self.languages['cs']=_('Czech')
+		self.languages['fr']=_('French')
+		self.curLang = gdata.config.client.language
 		self.createUI()
 
 	def display(self, caller = None):
@@ -89,12 +94,10 @@ class OptionsDlg:
 		# reading client language
 		if gdata.config.client.language != None:
 			lang = gdata.config.client.language
-			self.win.vEnglish.pressed = 0
-			self.win.vCzech.pressed = 0
-			if lang == 'en':
-				self.win.vEnglish.pressed = 1
-			elif lang == 'cs':
-				self.win.vCzech.pressed = 1
+			try:
+				self.win.vLanguage.title = self.languages[lang]
+			except:
+				self.win.vLanguage.title = lang
 
 		# reading proxy settings
 		if gdata.config.proxy.http != None:
@@ -226,11 +229,8 @@ class OptionsDlg:
 		gdata.config.display.flags = flags
 
 		# set client language
-		if self.win.vEnglish.pressed:
-			gdata.config.client.language = 'en'
-		else:
-			gdata.config.client.language = 'cs'
-
+		gdata.config.client.language = self.curLang
+		
 		#sel selected display resolution
 		if self.win.vSmallRes.pressed:
 			gdata.config.display.resolution = '800x600'
@@ -371,6 +371,37 @@ class OptionsDlg:
 		self.win.vTheme2.text = curTheme
 		self.twin.hide()
 
+	def onSelectLanguage(self, widget, action, data):
+		items = []
+		items.append(ui.Item(self.languages['en'],tLanguage = 'en'))
+		langDir = "res"
+		for term in os.listdir(langDir):
+			if os.path.isfile(os.path.join(langDir, term,"LC_MESSAGES", "OSPACE.mo")) and not term.startswith("."):
+				if self.languages[term] != None:
+					item = ui.Item(self.languages[term], tLanguage = term)
+				else:
+					item = ui.Item(term, tLanguage = term)
+				items.append(item)
+		self.lwin.vLanguages.items = items
+		self.lwin.vLanguages.itemsChanged()
+		self.lwin.show()
+		
+	def onLanguageCancel(self, widget, action, data):
+		self.lwin.hide()
+
+	def onLanguageSelected(self, widget, action, data):
+		self.recipientObjID = []
+		text = ""
+		if not self.lwin.vLanguages.selection:
+			return
+		self.curLang = self.lwin.vLanguages.selection[0].tLanguage
+		try:
+			self.win.vLanguage.text = self.languages[self.curLang]
+		except:
+			self.win.vLanguage.text = self.curLang
+		self.lwin.hide()
+		self.win.setStatus(_("You have to restart client to change the language."))
+
 	def onChangeMusicVolume(self, widget, action, data):
 		ui.SkinableTheme.setMusicVolume(float(self.win.vMusicVolume.slider.position) / 100.0)
 
@@ -420,16 +451,40 @@ class OptionsDlg:
 		# Languages
 		ui.Title(self.win, layout = (1, 6, 5, 1), text = _('Language'),
 			align = ui.ALIGN_NONE, font = 'normal-bold')
-		ui.Button(self.win, layout = (1, 7, 5, 1), text = _('English'), id = 'vEnglish',
-			toggle = 1, action = 'onEnglish')
-		ui.Button(self.win, layout = (1, 8, 5, 1), text = _('Czech'), id = 'vCzech',
-			toggle = 1, action = 'onCzech')
+		try:
+			longLang = self.languages[self.curLang]
+		except:
+			longLang = self.curLang
+		#ui.Button(self.win, layout = (1, 8, 5, 1), text = longLang, id = 'vLanguage')
+		ui.Button(self.win, layout = (1, 7, 5, 1), text = _('Select language'), id = 'vLangSel', action = 'onSelectLanguage')
+		ui.ActiveLabel(self.win, layout = (1, 8, 5, 1), text = longLang,  id = "vLanguage")
+		lcols = 12
+		lrows = 6
+		width = lcols * 20 + 4
+		height = lrows * 20 + 4
+		self.lwin = ui.Window(self.app,
+			modal = 1,
+			escKeyClose = 1,
+			titleOnly = 0,
+			movable = 0,
+			title = _("Select language"),
+			rect = ui.Rect((screenWidth - width) / 2, (screenHeight - height) / 2, width, height),
+			layoutManager = ui.SimpleGridLM(),
+		)
+		self.lwin.subscribeAction('*', self)
+		# rename
+		ui.Listbox(self.lwin, layout = (0, 0, lcols, lrows-2), id = 'vLanguages', columnLabels = 0,
+			columns = ((None, 'text', 0, ui.ALIGN_W),), multiselection = 0, sortedBy=('text', 1))
+		# status bar + submit/cancel
+		ui.TitleButton(self.lwin, layout = (lcols-5, lrows-2, 5, 1), text = _("Select"), action = 'onLanguageSelected')
+		ui.TitleButton(self.lwin, layout = (lcols-10, lrows-2, 5, 1), text = _("Cancel"), action = 'onLanguageCancel')
+		ui.Title(self.lwin, id = 'vStatusBar', layout = (0, lrows-2, lcols-10, 1), align = ui.ALIGN_W)
 
 		# Theme
 		ui.Title(self.win, layout = (1, 10, 5, 1), text = _('Themes'),
 			align = ui.ALIGN_NONE, font = 'normal-bold')
 		ui.Button(self.win, layout = (1, 11, 5, 1), id = "vTheme", align = ui.ALIGN_W)
-		ui.ActiveLabel(self.win, layout = (1, 12, 5, 1), id = "vTheme2", align = ui.ALIGN_W)
+		ui.ActiveLabel(self.win, layout = (1, 12, 5, 1), id = "vTheme2")
 		width = 304  # 15 * 20 + 4
 		height = 264 # 13 * 20 + 4
 		self.twin = ui.Window(self.app,

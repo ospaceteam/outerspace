@@ -195,9 +195,9 @@ class EmpireOverviewDlg:
 				mp[tech.combatClass] += int(tech.combatPwr * float(hp + shield) / (tech.maxHP + tech.shieldHP))
 		text.append(_("Fleet:"))
 		text.append(u'    %s: %d (%d %s)' % (_("Upgrade Pool"), player.fleetUpgradePool, - player.fleetUpgradePool * Rules.operProdRatio,_("CP to support")))
-		text.append(u'    %s: %d %s + %d %s, %d MP' % (_("Small ships"), civ[0], _("civ"), mil[0], _("mil"), mp[0]))
-		text.append(u'    %s: %d %s + %d %s, %d MP' % (_("Medium ships"), civ[1], _("civ"), mil[1], _("mil"), mp[1]))
-		text.append(u'    %s: %d %s + %d %s, %d MP' % (_("Large ships"), civ[2], _("civ"), mil[2], _("mil"), mp[2]))
+		text.append(u'    %s: %d %s + %d %s, %d %s' % (_("Small ships"), civ[0], _("civ"), mil[0], _("mil"), mp[0],_("MP")))
+		text.append(u'    %s: %d %s + %d %s, %d %s' % (_("Medium ships"), civ[1], _("civ"), mil[1], _("mil"), mp[1],_("MP")))
+		text.append(u'    %s: %d %s + %d %s, %d %s' % (_("Large ships"), civ[2], _("civ"), mil[2], _("mil"), mp[2],_("MP")))
 
 		# Planetary Weapons
 		weapons = player.planetWeapons
