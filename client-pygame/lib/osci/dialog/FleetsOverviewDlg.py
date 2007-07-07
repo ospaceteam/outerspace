@@ -157,10 +157,15 @@ class FleetsOverviewDlg:
 				lastUpgrade = res.formatTime(fleet.lastUpgrade)
 			else:
 				lastUpgrade = "?"
+			
+			if hasattr(fleet,'customname') and fleet.customname:
+				fleetname = fleet.customname
+			else:
+				fleetname = getattr(fleet, 'name', res.getUnknownName())
 
 			# create ListBox Item for fleet
 			item = ui.Item(
-				"%s %s" % (getattr(fleet, 'name', res.getUnknownName()), ownerName),
+				"%s %s" % (fleetname, ownerName),
 				tooltip = ownerNameTip,
 				tLocation = systemName,
 				tOrder = order,

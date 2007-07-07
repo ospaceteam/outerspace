@@ -86,7 +86,11 @@ class FleetsAnalysisDlg:
 		items = []
 		if fleets:
 			for fleet in fleets:
-				items.append(ui.Item(fleet.name, tShipsCount = len(fleet.ships), fleet = fleet, tClassCount = fleetCounts[fleet.oid], tFleetID = fleet.oid))
+				if hasattr(fleet,'customname') and fleet.customname:
+					fleetname = fleet.customname
+				else:
+					fleetname = fleet.name
+				items.append(ui.Item(fleetname, tShipsCount = len(fleet.ships), fleet = fleet, tClassCount = fleetCounts[fleet.oid], tFleetID = fleet.oid))
 		self.win.vFleets.items = items
 		self.win.vFleets.itemsChanged()
 

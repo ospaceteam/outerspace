@@ -1,5 +1,12 @@
 Change Log:
 
+[2007-07-06]
+- Fixed no players names on local DB reset [Random Chaos]
+- Fixed Mass Redirector to properly delete redirects on self click [Random Chaos] [SF#1743960]
+- Added check of redirector location in iPlayer to delete redirect when source and target are the same system [Random Chaos] [SF#1743960]
+- Fixed missing custom fleet names in Fleet Overview and Fleet Analysis [Random Chaos] [SF#1740677]
+- Modified Sound and Music loaders to only load files if sound/music enabled in attempt to fix SF#1743518 (untested) [Random Chaos]
+
 [2007-06-26]
 - Updated Options dialog to scan res directory for other languages [PeS]
 - Fixed call for gettext with empty strings [Qark, reported by Yann]

@@ -535,6 +535,8 @@ class IPlayer(IObject):
 	def redirectShips(self, tran, obj, sourceSystemID, targetSystemID):
 		# check sourceSystemID
 		ok = 0
+		if sourceSystemID == targetSystemID:
+			targetSystemID = OID_NONE
 		for planetID in tran.db[sourceSystemID].planets:
 			if tran.db[planetID].owner == obj.oid:
 				ok = 1

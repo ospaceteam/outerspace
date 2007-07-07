@@ -171,12 +171,13 @@ def createBox(section):
 
 def createSounds(section, option):
 	global sounds
-	name = "%s-%s" % (section[:-4], option[6:])
-	filename = os.path.join(skinDir, config.get(section, option))
-	try:
-		sounds[name] = pygame.mixer.Sound(filename)
-	except pygame.error:
-		log.warning("Cannot create sound", name, filename)
+	if soundEnabled:
+		name = "%s-%s" % (section[:-4], option[6:])
+		filename = os.path.join(skinDir, config.get(section, option))
+		try:
+			sounds[name] = pygame.mixer.Sound(filename)
+		except pygame.error:
+			log.warning("Cannot create sound", name, filename)
 
 def playSound(style):
 	if soundEnabled and style in sounds:
@@ -187,18 +188,19 @@ def playSound(style):
 			log.warning("Cannot play sound", style)
 
 def loadMusic(file):
-	global themeMusic
-	if file != None:
-		musicFile = "res.ext/music/" + file
-	elif themeMusic != None:
-		musicFile = "res.ext/music/" + themeMusic
-	else:
-		musicFile = "res.ext/music/riddleofsteel.ogg"
-	if os.path.exists(musicFile):
-		try:
-			pygame.mixer.music.load(musicFile)
-		except pygame.error:
-			log.warning("Cannot load music ",musicFile)
+	if musicEnabled:
+		global themeMusic
+		if file != None:
+			musicFile = "res.ext/music/" + file
+		elif themeMusic != None:
+			musicFile = "res.ext/music/" + themeMusic
+		else:
+			musicFile = "res.ext/music/riddleofsteel.ogg"
+		if os.path.exists(musicFile):
+			try:
+				pygame.mixer.music.load(musicFile)
+			except pygame.error:
+				log.warning("Cannot load music ",musicFile)
 
 def playMusic():
 	if musicEnabled:

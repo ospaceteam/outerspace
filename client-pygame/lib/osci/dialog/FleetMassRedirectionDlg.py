@@ -74,6 +74,8 @@ class FleetMassRedirectionDlg:
 			self.win.vStarMap.highlightPos = (target.x, target.y)
 			self.win.setStatus(_('Executing REDIRECT FLEETS command...'))
 			player = client.getPlayer()
+			if self.targetID == self.systemID:
+				self.systemID = OID_NONE
 			try:
 				player.shipRedirections = client.cmdProxy.redirectShips(player.oid,
 					self.targetID, self.systemID)
