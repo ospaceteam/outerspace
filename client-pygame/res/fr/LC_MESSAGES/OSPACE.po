@@ -2,15 +2,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Outer Space 0.5\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-06-26 15:02+0100\n"
-"Last-Translator: PeS <pes@sandbox.cz>\n"
+"PO-Revision-Date: 2007-07-19 13:44+0100\n"
+"Last-Translator: Yann Cantin <yann.cantin@laposte.net>\n"
 "Language-Team: IGE <qark@seznam.cz>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Language: French\n"
-"X-Poedit-Basepath: ../../..\n"
+"X-Poedit-Country: FRANCE\n"
 "X-Poedit-KeywordsList: N_\n"
+"X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: lib\n"
 
 #: lib/osci/handler.py:59
@@ -264,7 +265,7 @@ msgid ""
 msgstr ""
 "Portail stellaire défectueux, %(1)d %% HP perdus\n"
 "\n"
-"Notre flotte est arrivée dans un système sans portail stellaire ou centre de comm/scan opérationnel. Tous les vaisseaux ont perdus %(1)d %% HP à cause d'une décélération trop forte."
+"Notre flotte est arrivée dans un système sans portail stellaire ou centre de comm/scan opérationnel. Tous les vaisseaux ont perdus %(1)d %% HP Ã  cause d'une décélération trop forte."
 
 #: lib/osci/messages.py:150
 #, python-format
@@ -663,7 +664,7 @@ msgid "Server sponsored by:"
 msgstr "Serveur sponsorisé par :"
 
 #: lib/osci/main.py:75
-#: lib/osci/main.py:218
+#: lib/osci/main.py:219
 #, python-format
 msgid "OSCI %s"
 msgstr "OSCI %s"
@@ -805,14 +806,14 @@ msgid "Energy: %d"
 msgstr "Énergie : %d"
 
 #: lib/osci/StarMapWidget.py:357
-#, fuzzy, python-format
+#, python-format
 msgid "Slots: %d"
-msgstr "emplacements %d"
+msgstr "emplacements : %d"
 
 #: lib/osci/StarMapWidget.py:359
 #, python-format
 msgid "Strat. resource: %s"
-msgstr "Ressources strat. : %s"
+msgstr "Ressources stra. : %s"
 
 #: lib/osci/StarMapWidget.py:362
 #: lib/osci/StarMapWidget.py:401
@@ -834,7 +835,7 @@ msgid "Signature: %d"
 msgstr "Signature : %d"
 
 # Estimated time of arrival
-# -> Heure d'arrivée estimée
+# -> Heure d'arrivÃ©e estimÃ©e
 #: lib/osci/StarMapWidget.py:398
 #: lib/osci/StarMapWidget.py:507
 #, python-format
@@ -861,10 +862,12 @@ msgstr "Support (constr.) : %d/tour"
 msgid "Military power: %d"
 msgstr "Puissance militaire : %d"
 
+# wip
+# /!\ check signification
 #: lib/osci/StarMapWidget.py:419
-#, fuzzy, python-format
+#, python-format
 msgid "Operational time: %s"
-msgstr "Fonctionnement - travailleurs"
+msgstr "Autonomie : %s"
 
 #: lib/osci/StarMapWidget.py:424
 #, python-format
@@ -1175,28 +1178,28 @@ msgid "Unnilseptium"
 msgstr "Bohrium"
 
 #: lib/osci/gdata.py:91
-#: lib/osci/dialog/FleetsOverviewDlg.py:245
+#: lib/osci/dialog/FleetsOverviewDlg.py:250
 msgid "Enemy"
 msgstr "Ennemi"
 
 #: lib/osci/gdata.py:91
-#: lib/osci/dialog/FleetsOverviewDlg.py:247
+#: lib/osci/dialog/FleetsOverviewDlg.py:252
 msgid "Unfriendly"
 msgstr "Inamical"
 
 #: lib/osci/gdata.py:91
 #: lib/osci/gdata.py:92
-#: lib/osci/dialog/FleetsOverviewDlg.py:249
+#: lib/osci/dialog/FleetsOverviewDlg.py:254
 msgid "Neutral"
 msgstr "Neutre"
 
 #: lib/osci/gdata.py:92
-#: lib/osci/dialog/FleetsOverviewDlg.py:251
+#: lib/osci/dialog/FleetsOverviewDlg.py:256
 msgid "Friendly"
 msgstr "Amical"
 
 #: lib/osci/gdata.py:92
-#: lib/osci/dialog/FleetsOverviewDlg.py:253
+#: lib/osci/dialog/FleetsOverviewDlg.py:258
 msgid "Allied"
 msgstr "Allié"
 
@@ -1314,7 +1317,7 @@ msgstr "LE MORAL EST EN DESSOUS DE LA MOYENNE"
 # wormholes -> portail subspacial
 # .
 # Translation problem :
-# ship classes : petit/moyen/grand/planétaire ou corvette-vedette/frégate/croiseur/destroyer
+# ship classes : petit/moyen/grand/planÃ©taire ou corvette-vedette/frÃ©gate/croiseur/destroyer
 #: lib/osci/gdata.py:140
 #: lib/osci/dialog/MessagesDlg.py:227
 #: lib/osci/dialog/MessagesDlg.py:236
@@ -1410,6 +1413,8 @@ msgstr "Info"
 msgid "Ready."
 msgstr "Prêt."
 
+# wip
+# best trad ?
 #: lib/osci/dialog/MapOverlayDlg.py:115
 msgid "Set Map Overlay:"
 msgstr "Définir le calque de la carte :"
@@ -1442,8 +1447,8 @@ msgstr "Ravitaillement et Amélioration"
 #: lib/osci/dialog/ProblemsDlg.py:459
 #: lib/osci/dialog/FleetSpecsDlg.py:272
 #: lib/osci/dialog/DiplomacyDlg.py:419
-#: lib/osci/dialog/FleetsOverviewDlg.py:258
-#: lib/osci/dialog/FleetsAnalysisDlg.py:152
+#: lib/osci/dialog/FleetsOverviewDlg.py:263
+#: lib/osci/dialog/FleetsAnalysisDlg.py:156
 #: lib/osci/dialog/_Template.py:73
 #: lib/osci/dialog/PlanetsOverviewDlg.py:277
 #: lib/osci/dialog/StarSystemDlg.py:1177
@@ -1463,9 +1468,9 @@ msgstr "Planète(s) avec %s"
 #: lib/osci/dialog/SystemOverviewDlg.py:191
 #: lib/osci/dialog/MessagesDlg.py:341
 #: lib/osci/dialog/MessagesDlg.py:356
-#: lib/osci/dialog/FleetsOverviewDlg.py:196
-#: lib/osci/dialog/FleetsOverviewDlg.py:207
-#: lib/osci/dialog/FleetsAnalysisDlg.py:107
+#: lib/osci/dialog/FleetsOverviewDlg.py:201
+#: lib/osci/dialog/FleetsOverviewDlg.py:212
+#: lib/osci/dialog/FleetsAnalysisDlg.py:111
 #: lib/osci/dialog/PlanetsOverviewDlg.py:217
 #: lib/osci/dialog/PlanetsOverviewDlg.py:228
 msgid "Cannot show location"
@@ -1538,7 +1543,7 @@ msgstr "Exécution de la commande DÉMARRER LA CONSTRUCTION..."
 #: lib/osci/dialog/EventsDlg.py:126
 #: lib/osci/dialog/ConstrUpgradeDlg.py:107
 #: lib/osci/dialog/FleetSplitDlg.py:344
-#: lib/osci/dialog/FleetMassRedirectionDlg.py:80
+#: lib/osci/dialog/FleetMassRedirectionDlg.py:82
 #: lib/osci/dialog/RenameSysDlg.py:82
 #: lib/osci/dialog/ResearchDlg.py:235
 #: lib/osci/dialog/ResearchDlg.py:251
@@ -1631,10 +1636,10 @@ msgstr "Constr."
 
 # wip
 # best trad ?
-# Heure d'Arrivée Estimée
-# Temps Restant Estimé
-# Durée estimée avant finalisation
-# Durée estimée avant achèvement
+# Heure d'ArrivÃ©e EstimÃ©e
+# Temps Restant EstimÃ©
+# DurÃ©e estimÃ©e avant finalisation
+# DurÃ©e estimÃ©e avant achÃ¨vement
 #: lib/osci/dialog/NewTaskDlg.py:356
 #: lib/osci/dialog/ResearchDlg.py:323
 #: lib/osci/dialog/ResearchDlg.py:336
@@ -1651,7 +1656,7 @@ msgid "Stucts"
 msgstr "Infra."
 
 #: lib/osci/dialog/NewTaskDlg.py:361
-#: lib/osci/dialog/FleetsAnalysisDlg.py:145
+#: lib/osci/dialog/FleetsAnalysisDlg.py:149
 msgid "Ships"
 msgstr "Vaiss."
 
@@ -1791,7 +1796,7 @@ msgstr "Quantité"
 #: lib/osci/dialog/StructTaskDlg.py:319
 #: lib/osci/dialog/OptionsDlg.py:524
 msgid "Report finalization"
-msgstr "Rapport d'exécution"
+msgstr "Rapport final"
 
 #: lib/osci/dialog/NewTaskDlg.py:425
 #: lib/osci/dialog/ConstrUpgradeDlg.py:139
@@ -1839,7 +1844,7 @@ msgid "Source"
 msgstr "Source"
 
 #: lib/osci/dialog/EventsDlg.py:178
-#: lib/osci/dialog/FleetsOverviewDlg.py:231
+#: lib/osci/dialog/FleetsOverviewDlg.py:236
 msgid "Location"
 msgstr "Lieu"
 
@@ -2063,7 +2068,7 @@ msgstr "mil."
 #: lib/osci/dialog/EmpireOverviewDlg.py:198
 #: lib/osci/dialog/EmpireOverviewDlg.py:199
 #: lib/osci/dialog/EmpireOverviewDlg.py:200
-#: lib/osci/dialog/FleetsOverviewDlg.py:237
+#: lib/osci/dialog/FleetsOverviewDlg.py:242
 msgid "MP"
 msgstr "P. Milit."
 
@@ -2473,7 +2478,7 @@ msgstr "Coût de l'amélioration : %d"
 
 #: lib/osci/dialog/TechInfoDlg.py:222
 msgid "Research requires:"
-msgstr "Prérequis de la recherche :"
+msgstr "Pré-requis de la recherche :"
 
 #: lib/osci/dialog/TechInfoDlg.py:225
 #, python-format
@@ -2650,6 +2655,8 @@ msgstr "Par vaiss."
 msgid "Total"
 msgstr "Total"
 
+# wip
+# best trad ?
 #: lib/osci/dialog/ConstrUpgradeDlg.py:138
 #: lib/osci/dialog/OptionsDlg.py:479
 #: lib/osci/dialog/OptionsDlg.py:505
@@ -2657,7 +2664,7 @@ msgstr "Total"
 #: lib/osci/dialog/NewMessageDlg.py:219
 #: lib/osci/dialog/NewAccountDlg.py:135
 msgid "Select"
-msgstr "Sélectionner"
+msgstr "Choisir"
 
 #: lib/osci/dialog/SystemOverviewDlg.py:207
 msgid "Systems Overview"
@@ -2674,7 +2681,7 @@ msgstr "# Pl."
 
 # /!\ free trad
 #: lib/osci/dialog/SystemOverviewDlg.py:216
-#: lib/osci/dialog/FleetsOverviewDlg.py:243
+#: lib/osci/dialog/FleetsOverviewDlg.py:248
 msgid "Mine"
 msgstr "Moi"
 
@@ -2684,11 +2691,12 @@ msgid "Other"
 msgstr "Autre"
 
 # /!\ free trad
-# /!\ in sync in PlanetOverviewDlg.py with planet's dialog but not in SystemOverviewDlg.py (bug ?)
+# seems more in sync with planet's dialog
+# best trad ?
 #: lib/osci/dialog/SystemOverviewDlg.py:218
 #: lib/osci/dialog/PlanetsOverviewDlg.py:253
 #: lib/osci/dialog/StarSystemDlg.py:1184
-msgid "Bio"
+msgid "Env"
 msgstr "Env"
 
 #: lib/osci/dialog/SystemOverviewDlg.py:219
@@ -2743,7 +2751,7 @@ msgstr "Vit. +%"
 # /!\ bug : display Path-0: lib in instead of nothing in the listbox
 #: lib/osci/dialog/SystemOverviewDlg.py:227
 msgid "Strat Res"
-msgstr "R. Strat."
+msgstr "Ress. Stra."
 
 #: lib/osci/dialog/SystemOverviewDlg.py:229
 msgid "My Systems"
@@ -2882,7 +2890,7 @@ msgstr "#"
 # wip
 # 2 contexts :
 # - column name (cat.) best trad ?
-# - text : Catégorie
+# - text : CatÃ©gorie
 # /!\ keep in sync
 #: lib/osci/dialog/FleetSplitDlg.py:506
 #: lib/osci/dialog/FleetSplitDlg.py:544
@@ -3029,11 +3037,11 @@ msgstr "Sélectionnez les systèmes, svp."
 msgid "Executing REDIRECT FLEETS command..."
 msgstr "Exécution de la commande REDIRIGER LES FLOTTES..."
 
-#: lib/osci/dialog/FleetMassRedirectionDlg.py:100
+#: lib/osci/dialog/FleetMassRedirectionDlg.py:102
 msgid "Mass Redirect Fleets to This System"
 msgstr "Rediriger en masse les flottes vers ce système"
 
-#: lib/osci/dialog/FleetMassRedirectionDlg.py:108
+#: lib/osci/dialog/FleetMassRedirectionDlg.py:110
 msgid "Done"
 msgstr "Fait"
 
@@ -3256,15 +3264,15 @@ msgstr "%m-%d %H:%M"
 msgid "Delete all messages in this mailbox?"
 msgstr "Effacer tous les messages de cette boîte aux lettres ?"
 
+# /!\ keep in sync
 #: lib/osci/dialog/MessagesDlg.py:338
 #: lib/osci/dialog/MessagesDlg.py:349
-#, fuzzy
 msgid "Research completed:"
-msgstr "Recherche terminée : %(1)s"
+msgstr "Recherche terminée :"
 
 #: lib/osci/dialog/MessagesDlg.py:372
 msgid "Messages and events"
-msgstr "Messages et évènements"
+msgstr "Messages et Évènements"
 
 #: lib/osci/dialog/MessagesDlg.py:379
 msgid "Channel"
@@ -3340,7 +3348,7 @@ msgstr "%d x %s"
 
 #: lib/osci/dialog/FleetDlg.py:215
 msgid "Select command to delete."
-msgstr "Sélectionner la commande à effacer."
+msgstr "Sélectionner l'ordre à effacer."
 
 #: lib/osci/dialog/FleetDlg.py:219
 msgid "Executing DELETE COMMAND command..."
@@ -3360,7 +3368,7 @@ msgstr "Exécution de la commande DÉPLACER L'ORDRE..."
 
 #: lib/osci/dialog/FleetDlg.py:283
 msgid "Executing CLEAR PROCESSED ACTIONS command..."
-msgstr "Exécution de la commande EFFACER LES ORDRES ACHEVÉES..."
+msgstr "Exécution de la commande EFFACER LES ORDRES ACHEVÉS..."
 
 #: lib/osci/dialog/FleetDlg.py:298
 msgid "Really scrap this ship?"
@@ -3444,12 +3452,12 @@ msgstr "Données du vaisseau"
 
 # wip
 # best trad ?
-# démolir
+# dÃ©molir
 # mettre au rebut
 #: lib/osci/dialog/FleetDlg.py:392
 #: lib/osci/dialog/ConstructionDlg.py:486
 msgid "Scrap"
-msgstr "Démanteler "
+msgstr "Démanteler"
 
 #: lib/osci/dialog/FleetDlg.py:398
 msgid "Attack eff"
@@ -3482,9 +3490,8 @@ msgstr "Organes"
 #: lib/osci/dialog/ConstructionDlg.py:96
 #: lib/osci/dialog/StructTaskDlg.py:149
 #: lib/osci/dialog/StructTaskDlg.py:150
-#, fuzzy
 msgid "TL"
-msgstr "G"
+msgstr "NT"
 
 #: lib/osci/dialog/ConstructionDlg.py:143
 msgid "Cancel Upgrd"
@@ -3572,15 +3579,17 @@ msgstr "Enlever"
 msgid "Speed"
 msgstr "Vitesse"
 
+# wip
+# enlarge label ?
 #: lib/osci/dialog/ConstructionDlg.py:457
 msgid "Base attack"
-msgstr "Attaque (base)"
+msgstr "Att. (base)"
 
 # wip
 # enlarge label ?
 #: lib/osci/dialog/ConstructionDlg.py:459
 msgid "Base defence"
-msgstr "Défense (base)"
+msgstr "Déf. (base)"
 
 # wip
 # signification ???
@@ -3857,9 +3866,9 @@ msgid "There is no space for all constructed buildings on %s."
 msgstr "Il n'y a pas assez de place pour tous les bâtiments construits sur %s."
 
 #: lib/osci/dialog/ProblemsDlg.py:245
-#, fuzzy, python-format
+#, python-format
 msgid "Bio decreasing - last turn change %d, surplus %d (%s)."
-msgstr "Biomasse décroissante - variation au dernier tour %d, surplus %d."
+msgstr "Biomasse décroissante - variation au dernier tour %d, surplus %d (%s)."
 
 #: lib/osci/dialog/ProblemsDlg.py:248
 #, python-format
@@ -3867,9 +3876,9 @@ msgid "Bio decreasing - last turn change %d, surplus %d."
 msgstr "Biomasse décroissante - variation au dernier tour %d, surplus %d."
 
 #: lib/osci/dialog/ProblemsDlg.py:265
-#, fuzzy, python-format
+#, python-format
 msgid "Energy decreasing - last turn change %d, surplus %d (%s)."
-msgstr "Énergie décroissante - variation au dernier tour %d, surplus %d."
+msgstr "Énergie décroissante - variation au dernier tour %d, surplus %d (%s)."
 
 #: lib/osci/dialog/ProblemsDlg.py:268
 #, python-format
@@ -4064,7 +4073,7 @@ msgstr "Êtes-vous vraiment absolument sûr de vouloir redémarrer cette galaxie
 # wip (free trad)
 # enlarge submenu
 # best trad ?
-# Redémarrer la galaxie
+# RedÃ©marrer la galaxie
 #: lib/osci/dialog/GalaxyRestartDlg.py:74
 #: lib/osci/dialog/MainGameDlg.py:333
 msgid "Galaxy restart"
@@ -4130,9 +4139,11 @@ msgstr "Français"
 msgid "Select Theme"
 msgstr "Choisir"
 
+# wip
+# best trad ?
 #: lib/osci/dialog/OptionsDlg.py:403
 msgid "You have to restart client to change the language."
-msgstr ""
+msgstr "Vous devez redémarrer le client pour que le changement de langue soit pris en compte."
 
 #: lib/osci/dialog/OptionsDlg.py:442
 msgid "Resolution"
@@ -4142,11 +4153,15 @@ msgstr "Résolution"
 msgid "Language"
 msgstr "Langue"
 
+# wip
+# 2 contexts :
+# - win title : ok
+# - button : too small
+# Change button text to "Select" ?
 #: lib/osci/dialog/OptionsDlg.py:459
 #: lib/osci/dialog/OptionsDlg.py:470
-#, fuzzy
 msgid "Select language"
-msgstr "Sélectionnez un ordre"
+msgstr "Choisir la langue"
 
 #: lib/osci/dialog/OptionsDlg.py:484
 msgid "Themes"
@@ -4186,7 +4201,7 @@ msgstr "Paramètres par défaut"
 # - checkbox (FleetsOverviewDlg.py) enlarge ?
 # best trad ?
 #: lib/osci/dialog/OptionsDlg.py:526
-#: lib/osci/dialog/FleetsOverviewDlg.py:255
+#: lib/osci/dialog/FleetsOverviewDlg.py:260
 msgid "Show redirects"
 msgstr "Voir redirections"
 
@@ -4204,7 +4219,7 @@ msgstr "Montrer les infobulles"
 
 #: lib/osci/dialog/OptionsDlg.py:534
 msgid "Show minimap"
-msgstr ""
+msgstr "Voir minimap"
 
 #: lib/osci/dialog/OptionsDlg.py:537
 msgid "Login settings"
@@ -4403,7 +4418,7 @@ msgstr "Part."
 msgid "Pact"
 msgstr "Pacte"
 
-# A vérifier
+# A vÃ©rifier
 #: lib/osci/dialog/DiplomacyDlg.py:401
 msgid "On"
 msgstr "Conclure"
@@ -4535,7 +4550,7 @@ msgstr "Statistiques"
 
 #: lib/osci/dialog/MainGameDlg.py:332
 msgid "Save Starmap"
-msgstr "Enregistrer la carte stellaire"
+msgstr "Sauver la carte"
 
 #: lib/osci/dialog/MainGameDlg.py:335
 #: lib/osci/dialog/MainGameDlg.py:337
@@ -4714,84 +4729,86 @@ msgid "VIP Password:"
 msgstr "Mot de passe VIP :"
 
 #: lib/osci/dialog/RenameFleetDlg.py:71
-#, fuzzy
 msgid "Executing RENAME FLEET command..."
-msgstr "Exécution de la commande REDIRIGER LES FLOTTES..."
+msgstr "Exécution de la commande RENOMMER LA FLOTTE..."
 
 #: lib/osci/dialog/RenameFleetDlg.py:86
-#, fuzzy
 msgid "Executing DELETE CUSTOM FLEET NAME command..."
-msgstr "Exécution de la commande EFFACER L'ORDRE..."
+msgstr "Exécution de la commande EFFACER LE NOM DE LA FLOTTE..."
 
 #: lib/osci/dialog/RenameFleetDlg.py:122
-#, fuzzy
 msgid "Rename Fleet"
-msgstr "Renommer"
+msgstr "Renommer la flotte"
 
 #: lib/osci/dialog/RenameFleetDlg.py:130
 msgid "Retain name during fleet joins"
-msgstr ""
+msgstr "Conserver le nom lors d'agrégations"
 
 #: lib/osci/dialog/RenameFleetDlg.py:132
 msgid "Prevent all fleet joins"
-msgstr ""
+msgstr "Empêcher toute agrégation de flottes"
 
+# wip
+# best trad ?
+# /!\ keep in sync
 #: lib/osci/dialog/RenameFleetDlg.py:134
 msgid " Note: Retaining name will prevent two"
-msgstr ""
+msgstr " L'option \"Conserver le nom\" empêchera"
 
+# wip
+# best trad ?
+# /!\ keep in sync
 #: lib/osci/dialog/RenameFleetDlg.py:135
 msgid " retain name fleets from joining."
-msgstr ""
+msgstr " l'agrégation si 2 flottes sont concernées."
 
 #: lib/osci/dialog/RenameFleetDlg.py:138
-#, fuzzy
 msgid "Delete Name"
-msgstr "Supp. ordre"
+msgstr "Supp. nom"
 
 #: lib/osci/dialog/FleetsOverviewDlg.py:118
 #, python-format
 msgid "%s (dst)"
 msgstr "%s (dest)"
 
-#: lib/osci/dialog/FleetsOverviewDlg.py:222
+#: lib/osci/dialog/FleetsOverviewDlg.py:227
 msgid "Fleets Overview"
 msgstr "Résumé des flottes"
 
-#: lib/osci/dialog/FleetsOverviewDlg.py:230
+#: lib/osci/dialog/FleetsOverviewDlg.py:235
 msgid "Fleet"
 msgstr "Flotte"
 
-#: lib/osci/dialog/FleetsOverviewDlg.py:232
+#: lib/osci/dialog/FleetsOverviewDlg.py:237
 msgid "Current order"
 msgstr "Ordre actuel"
 
-#: lib/osci/dialog/FleetsOverviewDlg.py:233
+#: lib/osci/dialog/FleetsOverviewDlg.py:238
 msgid "ETA"
 msgstr "HAE"
 
-#: lib/osci/dialog/FleetsOverviewDlg.py:234
+#: lib/osci/dialog/FleetsOverviewDlg.py:239
 msgid "Fuel %"
 msgstr "Fuel %"
 
 # wip
 # best trad ?
 # autonomie
-#: lib/osci/dialog/FleetsOverviewDlg.py:235
+#: lib/osci/dialog/FleetsOverviewDlg.py:240
 msgid "Op. time"
 msgstr "Autono."
 
 # /!\ free trad
-#: lib/osci/dialog/FleetsOverviewDlg.py:236
+#: lib/osci/dialog/FleetsOverviewDlg.py:241
 msgid "Range"
 msgstr "Scanner"
 
-#: lib/osci/dialog/FleetsOverviewDlg.py:238
+#: lib/osci/dialog/FleetsOverviewDlg.py:243
 msgid "Sign"
 msgstr "Sign."
 
 # /!\ free trad
-#: lib/osci/dialog/FleetsOverviewDlg.py:239
+#: lib/osci/dialog/FleetsOverviewDlg.py:244
 msgid "Last upgr."
 msgstr "Amélior."
 
@@ -4843,30 +4860,30 @@ msgstr "Nouveau compte"
 #: lib/osci/dialog/FleetsAnalysisDlg.py:85
 #, python-format
 msgid "Fleets contains design %s"
-msgstr "Les flottes contiennent les modèles %s"
+msgstr "Flottes contenant le modèle %s"
 
-#: lib/osci/dialog/FleetsAnalysisDlg.py:122
+#: lib/osci/dialog/FleetsAnalysisDlg.py:126
 msgid "Fleets analysis"
 msgstr "Analyse des flottes"
 
-#: lib/osci/dialog/FleetsAnalysisDlg.py:131
+#: lib/osci/dialog/FleetsAnalysisDlg.py:135
 msgid "Ship designs"
 msgstr "Modèles de vaisseaux"
 
-#: lib/osci/dialog/FleetsAnalysisDlg.py:135
+#: lib/osci/dialog/FleetsAnalysisDlg.py:139
 msgid "Design name"
 msgstr "Nom du modèle"
 
-#: lib/osci/dialog/FleetsAnalysisDlg.py:136
+#: lib/osci/dialog/FleetsAnalysisDlg.py:140
 msgid "# fleets"
 msgstr "# flottes"
 
-#: lib/osci/dialog/FleetsAnalysisDlg.py:144
+#: lib/osci/dialog/FleetsAnalysisDlg.py:148
 msgid "Fleet name"
 msgstr "Nom de la flotte"
 
 # /!\ free trad
-#: lib/osci/dialog/FleetsAnalysisDlg.py:146
+#: lib/osci/dialog/FleetsAnalysisDlg.py:150
 msgid "Fleet size"
 msgstr "# Tot."
 
@@ -4887,7 +4904,7 @@ msgstr "Utiliser la recherche par wildcard comme pour les fichiers."
 
 # wip
 # enlarge win ?
-# best trad ? * correspond à n'importe quoi, ? correspond à n'importe quel caractère
+# best trad ? * correspond Ã  n'importe quoi, ? correspond Ã  n'importe quel caractÃ¨re
 #: lib/osci/dialog/SearchDlg.py:111
 msgid "* matches everything, ? matches any single character"
 msgstr "* : n'importe quoi ; ? : un caractère."
@@ -4944,7 +4961,7 @@ msgstr "Tot.TRE"
 #: lib/osci/dialog/PlanetsOverviewDlg.py:266
 #: lib/osci/dialog/StarSystemDlg.py:1188
 msgid "Constructing"
-msgstr "Constr. en cours"
+msgstr "Tâche actuelle"
 
 #: lib/osci/dialog/PlanetsOverviewDlg.py:268
 msgid "My planets"
@@ -5062,14 +5079,14 @@ msgstr "0 %"
 #: lib/osci/dialog/StarSystemDlg.py:425
 #, python-format
 msgid "Shield (%d/%d) charged by %+d last turn."
-msgstr "Protection planétaire (%d/%d) rechargé de %+d au dernier tour."
+msgstr "Protection planétaire (%d/%d) rechargée de %+d au dernier tour."
 
 # /!\ free trad
 # /!\ keep in sync
 #: lib/osci/dialog/StarSystemDlg.py:431
 #, python-format
 msgid "Shield (%d/%d) was damaged by %+d last turn."
-msgstr "Protection planétaire (%d/%d) endommagé de %+d au dernier tour."
+msgstr "Protection planétaire (%d/%d) endommagée de %+d au dernier tour."
 
 # /!\ free trad
 # /!\ keep in sync
@@ -5083,7 +5100,7 @@ msgstr "Protection planétaire (%d/%d) incapable de se charger."
 #: lib/osci/dialog/StarSystemDlg.py:442
 #, python-format
 msgid "Shield (%d/%d) is fully charged."
-msgstr "Protection planétaire (%d/%d) complètement chargé."
+msgstr "Protection planétaire (%d/%d) complètement chargée."
 
 # /!\ free trad
 # /!\ keep in sync
@@ -5147,7 +5164,7 @@ msgstr "Ajout. balise"
 
 #: lib/osci/dialog/StarSystemDlg.py:656
 msgid "Planet Upgrade/Downgrade Data"
-msgstr "Données sur le déclassement/l'amélioration de la planète"
+msgstr "Infos déclassement/amélioration de la planète"
 
 #: lib/osci/dialog/StarSystemDlg.py:664
 #: lib/osci/dialog/StarSystemDlg.py:673
@@ -5339,7 +5356,7 @@ msgstr "Trouver la sortie du trou de ver"
 
 #: lib/osci/dialog/StarSystemDlg.py:1204
 msgid "Mass Redirect"
-msgstr "Redirection en masse"
+msgstr "Redirection"
 
 #: lib/osci/dialog/StarSystemDlg.py:1208
 msgid "Delete buoy"
@@ -5347,7 +5364,7 @@ msgstr "Suppr. balise"
 
 #: lib/osci/dialog/StarSystemDlg.py:1210
 msgid "View Minefield"
-msgstr "Voir le champ de mines"
+msgstr "Voir mines"
 
 #: lib/osci/dialog/StarSystemDlg.py:1219
 msgid "Task queue"
@@ -5416,11 +5433,11 @@ msgstr "Statut Env."
 
 #: lib/osci/dialog/StarSystemDlg.py:1296
 msgid "Strat. resource"
-msgstr "Ress. strat."
+msgstr "Ress. stra."
 
 #: lib/osci/dialog/StarSystemDlg.py:1308
 msgid "Show Terraforming Data"
-msgstr "Montrer les données de terraformation"
+msgstr "Voir infos terraformation"
 
 #: lib/osci/dialog/StarSystemDlg.py:1310
 msgid "System data"
@@ -5522,31 +5539,31 @@ msgstr "Démolir l'infrastructure"
 # ???
 #: lib/osci/dialog/StarSystemDlg.py:1386
 msgid "Class Range En. Abundance"
-msgstr "Plage de richesse énergétique de la classe"
+msgstr "Richesse Én. de la classe"
 
 # wip
 # ???
 #: lib/osci/dialog/StarSystemDlg.py:1390
 msgid "Upgrade Range En. Abund."
-msgstr "Plage de richesse énergétique de l'amélioration"
+msgstr "Richesse Én. de l'amélio."
 
 # ???
 #: lib/osci/dialog/StarSystemDlg.py:1394
 msgid "Downgrade Env."
-msgstr "Déclassement Env."
+msgstr "Déclass. Env."
 
 # ???
 #: lib/osci/dialog/StarSystemDlg.py:1398
 msgid "Upgrade Env."
-msgstr "Amélioration Env."
+msgstr "Amélio. Env."
 
 #: lib/osci/dialog/StarSystemDlg.py:1402
 msgid "Downgrade To?"
-msgstr "Déclassement vers ?"
+msgstr "Déclass. vers"
 
 #: lib/osci/dialog/StarSystemDlg.py:1406
 msgid "Upgrade To?"
-msgstr "Amélioration vers ?"
+msgstr "Amélio. vers"
 
 #: lib/osci/dialog/StarSystemDlg.py:1411
 msgid "Complete"

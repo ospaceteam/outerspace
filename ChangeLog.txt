@@ -1,5 +1,13 @@
 Change Log:
 
+[2007-07-19]
+- Updated czech translation [PeS]
+- Updated french translation [Yann]
+- Bio->Env at dialogs, as it shows Envinroment, not the Biomatter [PeS]
+- Fixed sound and music system, can be freed without restart [#SF1743518] [PeS]
+- Replaced Vera.ttf with DejaVuLGCSans.ttf, support for other charsets [PeS]
+- Removed green background from sponsor logo, added alpha channel (it looked bad at other themes) [PeS]
+
 [2007-07-06]
 - Fixed no players names on local DB reset [Random Chaos]
 - Fixed Mass Redirector to properly delete redirects on self click [Random Chaos] [SF#1743960]

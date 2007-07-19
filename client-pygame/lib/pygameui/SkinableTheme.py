@@ -24,6 +24,7 @@ from Const import *
 from Fonts import *
 import os, os.path, sys, ConfigParser
 from ige import log
+import time
 
 try:
 	import _winreg
@@ -39,18 +40,40 @@ soundEnabled = True
 soundVolume = True
 musicEnabled = True
 musicVolume = True
+themeMusic = None
 
 class Box:
 	"""Holds all boxed graphics"""
 	pass
 
 def init():
+	global themeMusic
+	try:
+		themeMusic = config.get("general","music")
+	except ConfigParser.Error:
+		themeMusic = None
 	pass
 	#setSkin(skinDir)
 
+def initMixer():
+	global soundEnabled
+	global musicEnabled
+	if (soundEnabled == False) and (musicEnabled == False):
+		pygame.mixer.init(44100, -16, 2, 4096)
+		
+def closeMixer():
+	global soundEnabled
+	global musicEnabled
+	if (soundEnabled == False) and (musicEnabled == False):
+		pygame.mixer.quit()
+		
 def enableSound(enable):
     global soundEnabled
+    if (enable == True) :
+    	initMixer()
     soundEnabled = enable
+    if (enable == False) :
+    	closeMixer()
 
 def setVolume(volume):
     global soundVolume
@@ -58,17 +81,26 @@ def setVolume(volume):
 
 def enableMusic(enable):
  	global musicEnabled
+ 	if (enable == True) :
+ 		initMixer()
+ 	else:
+ 		closeMixer()
 	musicEnabled = enable
 	if musicEnabled == True:
+		loadMusic(None)
 		playMusic()
 	else:
 		stopMusic()
+		time.sleep(1)
+		closeMixer()
 
 def setMusicVolume(volume):
-	global musicVolume
+	global musicVolume 
+	global musicEnabled
 	musicVolume = volume
 	try:
-		pygame.mixer.music.set_volume(volume)
+		if musicEnabled :
+			pygame.mixer.music.set_volume(volume)
 	except:
 		log.warning("Cannot set music volume")
 
@@ -171,24 +203,31 @@ def createBox(section):
 
 def createSounds(section, option):
 	global sounds
-	if soundEnabled:
-		name = "%s-%s" % (section[:-4], option[6:])
-		filename = os.path.join(skinDir, config.get(section, option))
-		try:
-			sounds[name] = pygame.mixer.Sound(filename)
-		except pygame.error:
-			log.warning("Cannot create sound", name, filename)
+	name = "%s-%s" % (section[:-4], option[6:])
+	filename = os.path.join(skinDir, config.get(section, option))
+	try:
+		sounds[name] = {}
+		sounds[name]["fname"] = filename
+		if soundEnabled:
+			sounds[name]["sound"] = pygame.mixer.Sound(filename)
+		else:
+			sounds[name]["sound"] = None
+	except pygame.error:
+		log.warning("Cannot create sound", name, filename)
 
 def playSound(style):
 	if soundEnabled and style in sounds:
 		try:
-			sounds[style].set_volume(soundVolume)
-			sounds[style].play()
+			if sounds[style]["sound"] == None:
+				filename = sounds[style]["fname"]
+				sounds[style]["sound"] = pygame.mixer.Sound(filename)
+			sounds[style]["sound"].set_volume(soundVolume)
+			sounds[style]["sound"].play()
 		except pygame.error:
 			log.warning("Cannot play sound", style)
 
 def loadMusic(file):
-	if musicEnabled:
+	if musicEnabled and pygame.mixer.music.get_busy() == False:
 		global themeMusic
 		if file != None:
 			musicFile = "res.ext/music/" + file
@@ -216,7 +255,8 @@ def stopMusic():
 			 pygame.mixer.music.fadeout(1000)
 	except pygame.error:
 		log.warning("Cannot stop music")
-
+	except error:
+		pass
 
 def getGridParams():
 	return gridParams

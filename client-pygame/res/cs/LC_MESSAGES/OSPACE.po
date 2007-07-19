@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Outer Space 0.5\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-06-26 14:34+0100\n"
+"PO-Revision-Date: 2007-07-19 11:11+0100\n"
 "Last-Translator: PeS <pes@sandbox.cz>\n"
 "Language-Team: IGE <qark@seznam.cz>\n"
 "MIME-Version: 1.0\n"
@@ -655,7 +655,7 @@ msgid "Server sponsored by:"
 msgstr "Server sponzorován"
 
 #: lib/osci/main.py:75
-#: lib/osci/main.py:218
+#: lib/osci/main.py:219
 #, python-format
 msgid "OSCI %s"
 msgstr "OSCI %s"
@@ -1154,28 +1154,28 @@ msgid "Unnilseptium"
 msgstr "Unnilseptium"
 
 #: lib/osci/gdata.py:91
-#: lib/osci/dialog/FleetsOverviewDlg.py:245
+#: lib/osci/dialog/FleetsOverviewDlg.py:250
 msgid "Enemy"
 msgstr "Nepřítel"
 
 #: lib/osci/gdata.py:91
-#: lib/osci/dialog/FleetsOverviewDlg.py:247
+#: lib/osci/dialog/FleetsOverviewDlg.py:252
 msgid "Unfriendly"
 msgstr "Nepřátelský"
 
 #: lib/osci/gdata.py:91
 #: lib/osci/gdata.py:92
-#: lib/osci/dialog/FleetsOverviewDlg.py:249
+#: lib/osci/dialog/FleetsOverviewDlg.py:254
 msgid "Neutral"
 msgstr "Neutrální"
 
 #: lib/osci/gdata.py:92
-#: lib/osci/dialog/FleetsOverviewDlg.py:251
+#: lib/osci/dialog/FleetsOverviewDlg.py:256
 msgid "Friendly"
 msgstr "Přítel"
 
 #: lib/osci/gdata.py:92
-#: lib/osci/dialog/FleetsOverviewDlg.py:253
+#: lib/osci/dialog/FleetsOverviewDlg.py:258
 msgid "Allied"
 msgstr "Spojenec"
 
@@ -1222,7 +1222,7 @@ msgstr "Zapnuto"
 
 #: lib/osci/gdata.py:116
 msgid "Active"
-msgstr "Aktivuj"
+msgstr "Aktivní"
 
 #: lib/osci/gdata.py:119
 msgid "Mailbox"
@@ -1411,8 +1411,8 @@ msgstr "Tankování a upgrade"
 #: lib/osci/dialog/ProblemsDlg.py:459
 #: lib/osci/dialog/FleetSpecsDlg.py:272
 #: lib/osci/dialog/DiplomacyDlg.py:419
-#: lib/osci/dialog/FleetsOverviewDlg.py:258
-#: lib/osci/dialog/FleetsAnalysisDlg.py:152
+#: lib/osci/dialog/FleetsOverviewDlg.py:263
+#: lib/osci/dialog/FleetsAnalysisDlg.py:156
 #: lib/osci/dialog/_Template.py:73
 #: lib/osci/dialog/PlanetsOverviewDlg.py:277
 #: lib/osci/dialog/StarSystemDlg.py:1177
@@ -1431,9 +1431,9 @@ msgstr "Planety s budovou %s"
 #: lib/osci/dialog/SystemOverviewDlg.py:191
 #: lib/osci/dialog/MessagesDlg.py:341
 #: lib/osci/dialog/MessagesDlg.py:356
-#: lib/osci/dialog/FleetsOverviewDlg.py:196
-#: lib/osci/dialog/FleetsOverviewDlg.py:207
-#: lib/osci/dialog/FleetsAnalysisDlg.py:107
+#: lib/osci/dialog/FleetsOverviewDlg.py:201
+#: lib/osci/dialog/FleetsOverviewDlg.py:212
+#: lib/osci/dialog/FleetsAnalysisDlg.py:111
 #: lib/osci/dialog/PlanetsOverviewDlg.py:217
 #: lib/osci/dialog/PlanetsOverviewDlg.py:228
 msgid "Cannot show location"
@@ -1501,7 +1501,7 @@ msgstr "Vykonávám příkaz NOVÝ KONSTRUKČNÍ ÚKOL..."
 #: lib/osci/dialog/EventsDlg.py:126
 #: lib/osci/dialog/ConstrUpgradeDlg.py:107
 #: lib/osci/dialog/FleetSplitDlg.py:344
-#: lib/osci/dialog/FleetMassRedirectionDlg.py:80
+#: lib/osci/dialog/FleetMassRedirectionDlg.py:82
 #: lib/osci/dialog/RenameSysDlg.py:82
 #: lib/osci/dialog/ResearchDlg.py:235
 #: lib/osci/dialog/ResearchDlg.py:251
@@ -1602,7 +1602,7 @@ msgid "Stucts"
 msgstr "Budovy"
 
 #: lib/osci/dialog/NewTaskDlg.py:361
-#: lib/osci/dialog/FleetsAnalysisDlg.py:145
+#: lib/osci/dialog/FleetsAnalysisDlg.py:149
 msgid "Ships"
 msgstr "Lodě"
 
@@ -1787,7 +1787,7 @@ msgid "Source"
 msgstr "Zdroj"
 
 #: lib/osci/dialog/EventsDlg.py:178
-#: lib/osci/dialog/FleetsOverviewDlg.py:231
+#: lib/osci/dialog/FleetsOverviewDlg.py:236
 msgid "Location"
 msgstr "Místo"
 
@@ -2011,7 +2011,7 @@ msgstr "voj"
 #: lib/osci/dialog/EmpireOverviewDlg.py:198
 #: lib/osci/dialog/EmpireOverviewDlg.py:199
 #: lib/osci/dialog/EmpireOverviewDlg.py:200
-#: lib/osci/dialog/FleetsOverviewDlg.py:237
+#: lib/osci/dialog/FleetsOverviewDlg.py:242
 msgid "MP"
 msgstr "VS"
 
@@ -2112,6 +2112,7 @@ msgstr "?"
 #: lib/osci/dialog/FleetDlg.py:299
 #: lib/osci/dialog/ConstructionDlg.py:346
 #: lib/osci/dialog/MinefieldDlg.py:81
+#: lib/osci/dialog/MainGameDlg.py:174
 #: lib/osci/dialog/MainGameDlg.py:177
 #: lib/osci/dialog/LoginDlg.py:104
 #: lib/osci/dialog/StarSystemDlg.py:958
@@ -2608,7 +2609,7 @@ msgid "# Pl"
 msgstr "pl."
 
 #: lib/osci/dialog/SystemOverviewDlg.py:216
-#: lib/osci/dialog/FleetsOverviewDlg.py:243
+#: lib/osci/dialog/FleetsOverviewDlg.py:248
 msgid "Mine"
 msgstr "Moje"
 
@@ -2620,8 +2621,8 @@ msgstr "Ostatní"
 #: lib/osci/dialog/SystemOverviewDlg.py:218
 #: lib/osci/dialog/PlanetsOverviewDlg.py:253
 #: lib/osci/dialog/StarSystemDlg.py:1184
-msgid "Bio"
-msgstr "Bio"
+msgid "Env"
+msgstr "Prostř."
 
 #: lib/osci/dialog/SystemOverviewDlg.py:219
 #: lib/osci/dialog/PlanetsOverviewDlg.py:256
@@ -2690,15 +2691,15 @@ msgstr "Ukaž problémy"
 
 #: lib/osci/dialog/FleetSplitDlg.py:38
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #: lib/osci/dialog/FleetSplitDlg.py:39
 msgid "0 - 4"
-msgstr ""
+msgstr "0 - 4"
 
 #: lib/osci/dialog/FleetSplitDlg.py:40
 msgid "4 - 5"
-msgstr ""
+msgstr "4 -5"
 
 #: lib/osci/dialog/FleetSplitDlg.py:41
 msgid "5 - 6"
@@ -2710,11 +2711,11 @@ msgstr "6 - 7"
 
 #: lib/osci/dialog/FleetSplitDlg.py:43
 msgid "7 - 8"
-msgstr ""
+msgstr "7 - 8"
 
 #: lib/osci/dialog/FleetSplitDlg.py:44
 msgid "> 8"
-msgstr ""
+msgstr "> 8"
 
 #: lib/osci/dialog/FleetSplitDlg.py:48
 #, python-format
@@ -2941,11 +2942,11 @@ msgstr "Zvolte systémy, prosím."
 msgid "Executing REDIRECT FLEETS command..."
 msgstr "Vykonávám příkaz PŘESMĚRUJ FLOTILY..."
 
-#: lib/osci/dialog/FleetMassRedirectionDlg.py:100
+#: lib/osci/dialog/FleetMassRedirectionDlg.py:102
 msgid "Mass Redirect Fleets to This System"
 msgstr "Přesměruj flotily na tento systém"
 
-#: lib/osci/dialog/FleetMassRedirectionDlg.py:108
+#: lib/osci/dialog/FleetMassRedirectionDlg.py:110
 msgid "Done"
 msgstr "Hotovo"
 
@@ -3692,7 +3693,7 @@ msgstr "Výrobní fronta je prázdná."
 #: lib/osci/dialog/ProblemsDlg.py:160
 #, python-format
 msgid "Production queue ends in %s turns, %d item(s) on list."
-msgstr "Výrobní fronta končí za % stahů, %d položek na seznamu."
+msgstr "Výrobní fronta končí za % s tahů, %d položek na seznamu."
 
 #: lib/osci/dialog/ProblemsDlg.py:191
 #, python-format
@@ -4045,7 +4046,7 @@ msgid "Default settings"
 msgstr "Výchozí nastavení"
 
 #: lib/osci/dialog/OptionsDlg.py:526
-#: lib/osci/dialog/FleetsOverviewDlg.py:255
+#: lib/osci/dialog/FleetsOverviewDlg.py:260
 msgid "Show redirects"
 msgstr "Včetně přesměrování"
 
@@ -4580,39 +4581,39 @@ msgstr "Vymaž jméno"
 msgid "%s (dst)"
 msgstr "%s (cíl)"
 
-#: lib/osci/dialog/FleetsOverviewDlg.py:222
+#: lib/osci/dialog/FleetsOverviewDlg.py:227
 msgid "Fleets Overview"
 msgstr "Přehled flotil"
 
-#: lib/osci/dialog/FleetsOverviewDlg.py:230
+#: lib/osci/dialog/FleetsOverviewDlg.py:235
 msgid "Fleet"
 msgstr "Flotila"
 
-#: lib/osci/dialog/FleetsOverviewDlg.py:232
+#: lib/osci/dialog/FleetsOverviewDlg.py:237
 msgid "Current order"
 msgstr "Aktuální příkaz"
 
-#: lib/osci/dialog/FleetsOverviewDlg.py:233
+#: lib/osci/dialog/FleetsOverviewDlg.py:238
 msgid "ETA"
 msgstr "ETA"
 
-#: lib/osci/dialog/FleetsOverviewDlg.py:234
+#: lib/osci/dialog/FleetsOverviewDlg.py:239
 msgid "Fuel %"
 msgstr "Palivo %"
 
-#: lib/osci/dialog/FleetsOverviewDlg.py:235
+#: lib/osci/dialog/FleetsOverviewDlg.py:240
 msgid "Op. time"
 msgstr "Op. čas"
 
-#: lib/osci/dialog/FleetsOverviewDlg.py:236
+#: lib/osci/dialog/FleetsOverviewDlg.py:241
 msgid "Range"
 msgstr "Dolet"
 
-#: lib/osci/dialog/FleetsOverviewDlg.py:238
+#: lib/osci/dialog/FleetsOverviewDlg.py:243
 msgid "Sign"
 msgstr "Signatura:"
 
-#: lib/osci/dialog/FleetsOverviewDlg.py:239
+#: lib/osci/dialog/FleetsOverviewDlg.py:244
 msgid "Last upgr."
 msgstr "Naposledy vylep."
 
@@ -4666,27 +4667,27 @@ msgstr "Nový účet"
 msgid "Fleets contains design %s"
 msgstr "Flotily obsahující loď %s"
 
-#: lib/osci/dialog/FleetsAnalysisDlg.py:122
+#: lib/osci/dialog/FleetsAnalysisDlg.py:126
 msgid "Fleets analysis"
 msgstr "Analýza flotil"
 
-#: lib/osci/dialog/FleetsAnalysisDlg.py:131
+#: lib/osci/dialog/FleetsAnalysisDlg.py:135
 msgid "Ship designs"
 msgstr "Návrhy lodí"
 
-#: lib/osci/dialog/FleetsAnalysisDlg.py:135
+#: lib/osci/dialog/FleetsAnalysisDlg.py:139
 msgid "Design name"
 msgstr "Jméno lodi"
 
-#: lib/osci/dialog/FleetsAnalysisDlg.py:136
+#: lib/osci/dialog/FleetsAnalysisDlg.py:140
 msgid "# fleets"
 msgstr "č. flotily"
 
-#: lib/osci/dialog/FleetsAnalysisDlg.py:144
+#: lib/osci/dialog/FleetsAnalysisDlg.py:148
 msgid "Fleet name"
 msgstr "Jméno flotily"
 
-#: lib/osci/dialog/FleetsAnalysisDlg.py:146
+#: lib/osci/dialog/FleetsAnalysisDlg.py:150
 msgid "Fleet size"
 msgstr "Velikost flotily"
 
@@ -4954,7 +4955,7 @@ msgstr "%d - %d EN"
 
 #: lib/osci/dialog/StarSystemDlg.py:677
 msgid "0 - 200 EN"
-msgstr ""
+msgstr "0 - 200 en"
 
 #: lib/osci/dialog/StarSystemDlg.py:699
 #, python-format

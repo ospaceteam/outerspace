@@ -250,7 +250,7 @@ class PlanetsOverviewDlg:
 		ui.Listbox(self.win, layout = (0, 0, 40, 26), id = 'vPlanets',
 			columns = [(_('Planet'), 'text', 6, ui.ALIGN_W),
 			(_('Type'), 'tPlType', 3.5, ui.ALIGN_W),
-			(_('Bio'), 'tPlBio', 1.5, ui.ALIGN_E),
+			(_('Env'), 'tPlBio', 1.5, ui.ALIGN_E),
 			(_('Min'), 'tPlMin', 1.5, ui.ALIGN_E),
 			(_('En'), 'tPlEn', 1.5, ui.ALIGN_E),
 			(_('Bio+-'), 'tChangeBio', 2.0, ui.ALIGN_E),

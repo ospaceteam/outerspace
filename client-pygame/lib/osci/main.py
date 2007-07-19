@@ -62,7 +62,7 @@ def drawBackground():
             (screen.get_width() - 5 - sponsorLogo.get_width()),
             (screen.get_height() - 5 - sponsorLogo.get_height()),
         )
-    font = pygame.font.Font('res/fonts/Vera.ttf', 12)
+    font = pygame.font.Font('res/fonts/DejaVuLGCSans.ttf', 12)
     font.set_bold(1)
     color = 0x40, 0x70, 0x40
     #
@@ -173,7 +173,8 @@ if gdata.config.defaults.objectkeys != None:
             log.warning('OSCI','Unrecognized object key definition :',objectkey)
 
 #initialize pygame and prepare screen
-pygame.mixer.pre_init(44100, -16, 2, 4096)
+if (gdata.config.defaults.sound == "yes") or (gdata.config.defaults.music == "yes"):
+    pygame.mixer.pre_init(44100, -16, 2, 4096)
 pygame.init()
 
 # step by step initialization
@@ -232,12 +233,12 @@ import pygameui as ui
 theme = "green"
 if gdata.config.client.theme != None:
     theme = gdata.config.client.theme
+ui.SkinableTheme.enableMusic(gdata.config.defaults.music == "yes")
+ui.SkinableTheme.enableSound(gdata.config.defaults.sound == "yes")
 ui.SkinableTheme.setSkin(os.path.join("res/themes", theme))
 ui.SkinableTheme.loadMusic(gdata.config.defaults.mymusic)
 if gdata.config.defaults.musicvolume:
     ui.SkinableTheme.setMusicVolume(float(gdata.config.defaults.musicvolume)/ 100.0)
-ui.SkinableTheme.enableMusic(gdata.config.defaults.music == "yes")
-ui.SkinableTheme.enableSound(gdata.config.defaults.sound == "yes")
 if gdata.config.defaults.soundvolume:
     ui.SkinableTheme.setVolume(float(gdata.config.defaults.soundvolume) / 100.0)
 

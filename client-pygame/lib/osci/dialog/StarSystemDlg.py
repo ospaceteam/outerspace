@@ -1181,7 +1181,7 @@ class StarSystemDlg:
 			align = ui.ALIGN_W, font = 'normal-bold', tags = ['sys'])
 		ui.Listbox(self.win, layout = (0, 11, 40, 14), id = 'vSSOver',
 			columns = [(_('Planet'), 'text', 5, ui.ALIGN_W), (_('Type'), 'plType', 3.5, ui.ALIGN_W),
-			(_('Bio'), 'plBio', 1.5, ui.ALIGN_E), (_('Min'), 'plMin', 1.5, ui.ALIGN_E), (_('En'), 'plEn', 1.5, ui.ALIGN_E),
+			(_('Env'), 'plBio', 1.5, ui.ALIGN_E), (_('Min'), 'plMin', 1.5, ui.ALIGN_E), (_('En'), 'plEn', 1.5, ui.ALIGN_E),
 			(_('Biomatter'), 'storBio', 3, ui.ALIGN_E), (_('+/-'), 'changeBio', 2, ui.ALIGN_E),
 			(_('Energy'), 'storEn', 3, ui.ALIGN_E), (_('+/-'), 'changeEn', 2, ui.ALIGN_E),
 			(_('Space'), 'space', 3, ui.ALIGN_E), (_('Con / Res'), 'consci', 4, ui.ALIGN_E),
