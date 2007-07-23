@@ -215,7 +215,7 @@ class SystemOverviewDlg:
 			(_('# Pl'), 'tSyPnum', 2, ui.ALIGN_E),
 			(_('Mine'), 'tSyPYnum', 2, ui.ALIGN_E),
 			(_('Other'), 'tSyPTnum', 2, ui.ALIGN_E),
-			(_('Env'), 'tSyBioRes', 3, ui.ALIGN_E),
+			(_('Biomatter'), 'tSyBioRes', 3, ui.ALIGN_E),
 			(_('Bio+-'), 'tSyBio', 2, ui.ALIGN_E),
 			(_('En'), 'tSyEnRes', 3, ui.ALIGN_E),
 			(_('En+-'), 'tSyEn', 2, ui.ALIGN_E),
