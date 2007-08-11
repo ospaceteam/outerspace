@@ -1,5 +1,11 @@
 Change Log:
 
+VERSION 0.5.65
+
+[2007-08-11]
+- Fleets' signature closer than 1.0 are cummulative. [Qark]
+- Fixed problem with Solar Shield and terraforming [#SF1763490] [Qark]
+
 [2007-07-19]
 - Updated czech translation [PeS]
 - Updated french translation [Yann]

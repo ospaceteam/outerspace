@@ -639,7 +639,7 @@ class IPlanet(IObject):
 			solarplus = obj.solarmod
 		if obj.solarmod < 0:
 			solarminus = obj.solarmod
-		if not downgradeTo == None:
+		if downgradeTo is not None:
 			if (Rules.planetSpec[downgradeTo].upgradeEnReqs[0] > obj.plEn + solarplus) or (Rules.planetSpec[downgradeTo].upgradeEnReqs[1] < obj.plEn + solarminus):
 				# auto damage on plEn outside downgrade's upgrade range
 				obj.plEnv -= Rules.envAutoMod
@@ -653,7 +653,7 @@ class IPlanet(IObject):
 			else:
 				chance = int((obj.plBio - spec.maxBio) * Rules.envSelfUpgradeChance["H"])
 			if Utils.rand(0, 10001) < chance and spec.upgradeTo and \
-				obj.plEn + solarplus >= spec.upgradeEnReqs[0] and obj.plEn - solarminus <= spec.upgradeEnReqs[1]:
+				obj.plEn + solarplus >= spec.upgradeEnReqs[0] and obj.plEn + solarminus <= spec.upgradeEnReqs[1]:
 				log.debug('IPlanet', obj.oid, 'Upgraded to', spec.upgradeTo)
 				obj.plType = spec.upgradeTo
 				Utils.sendMessage(tran, obj, MSG_UPGRADED_PLANET_ECO, obj.oid, spec.upgradeTo)
@@ -849,7 +849,7 @@ class IPlanet(IObject):
 			if not hasattr(item, "demolishStruct"):
 				item.demolishStruct = OID_NONE
 			item.currProd = int(item.currProd)
-		# remove in 0.5.34
+		# TODO: remove in 0.5.34
 		for struct in obj.slots:
 			if len(struct) < 4:
 				# add oper status
@@ -864,6 +864,9 @@ class IPlanet(IObject):
 				# kill all population
 				obj.storPop = 0
 				return
+		# TODO: remove in 0.5.65
+		obj.storBio = int(obj.storBio)
+		obj.storEn = int(obj.storEn)
 		# check compOf
 		if not tran.db.has_key(obj.compOf) or tran.db[obj.compOf].type != T_SYSTEM:
 			log.debug("CONSISTENCY invalid compOf for planet", obj.oid)

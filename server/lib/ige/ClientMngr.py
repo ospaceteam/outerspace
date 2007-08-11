@@ -217,10 +217,10 @@ class ClientMngr:
 			if account == "**nick2login**": continue
 			account = self.accounts[account]
 			print >>f, "%s\t%s\t%s\t%s" % (
-				account.nick,
-				account.login,
-				account.passwd,
-				account.email
+				account.nick.encode("utf-8"),
+				account.login.encode("utf-8"),
+				account.passwd.encode("utf-8"),
+				account.email.encode("utf-8")
 			)
 		f.close()
 		return None, None
