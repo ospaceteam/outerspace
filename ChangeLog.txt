@@ -1,5 +1,11 @@
 Change Log:
 
+[2007-08-21]
+- added German translation [Andreas]
+- fixed bug with empty string in SystemOverviewDlg [PeS]
+- fixed bug with StopSound in OptionsDlg [PeS]
+- fixed bug in autosearch new translation [PeS]
+
 VERSION 0.5.65
 
 [2007-08-11]

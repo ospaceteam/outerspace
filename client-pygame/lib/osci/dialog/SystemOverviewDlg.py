@@ -124,7 +124,7 @@ class SystemOverviewDlg:
 					biores = '?'
 				if (planetsMine and self.showMine) or (planetsOwned and self.showOtherPlayers) or (planetsUnowned and self.showColonizable) or (planetsGA and self.showUncolonizable):
 					if stratRes == SR_NONE:
-						stratRes = ''
+						stratRes = ' '
 					problem = (bio < 0 or en < 0)
 					if planetsMine > 0: #make sure you own it
 						useOwner = player.oid
@@ -150,8 +150,8 @@ class SystemOverviewDlg:
 						tSyRepair = (repairShip*100),
 						tSyUpgrade = int(upgradeShip), #return an integer version
 						tSyGate = speedBoost,
-                                                tStRes = _(stratRes),
-                                                tSysID = systemID,
+                        tStRes = _(stratRes),
+                        tSysID = systemID,
 						foreground = color,
 					)
 					items.append(item)

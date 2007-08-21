@@ -43,6 +43,7 @@ class OptionsDlg:
 		self.languages['en']=_('English')
 		self.languages['cs']=_('Czech')
 		self.languages['fr']=_('French')
+		self.languages['de']=_('German')
 		self.curLang = gdata.config.client.language
 		self.createUI()
 
@@ -377,7 +378,7 @@ class OptionsDlg:
 		langDir = "res"
 		for term in os.listdir(langDir):
 			if os.path.isfile(os.path.join(langDir, term,"LC_MESSAGES", "OSPACE.mo")) and not term.startswith("."):
-				if self.languages[term] != None:
+				if self.languages.has_key(term):
 					item = ui.Item(self.languages[term], tLanguage = term)
 				else:
 					item = ui.Item(term, tLanguage = term)
