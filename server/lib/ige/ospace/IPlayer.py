@@ -1042,8 +1042,15 @@ class IPlayer(IObject):
 
 	def processFINALPhase(self, tran, obj, data):
 		if obj.timeEnabled:
-			self.cmd(obj).processRSRCHPhase(tran, obj, data)
-			self.cmd(obj).processDIPLPhase(tran, obj, data)
+			#try/except so that entire final process doesn't break on error in sub-phase
+			try:
+				self.cmd(obj).processRSRCHPhase(tran, obj, data)
+			except:
+				log.warning('Cannot execute FINAL/RSRCH on %d' % (obj.oid))
+			try:
+				self.cmd(obj).processDIPLPhase(tran, obj, data)
+			except:
+				log.warning('Cannot execute FINAL/DIPL on %d' % (obj.oid))
 		# efficiency
 		obj.prodEff = 1.0
 		obj.sciEff = 1.0

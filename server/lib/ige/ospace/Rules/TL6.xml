@@ -202,7 +202,7 @@
 		<shipequip
 			subtype="seq_mod"
 			buildProd="720"
-			autoRepairFix="3"
+			autoRepairFix="4"
 			slots="6"
 			weight="4"
 			operEn="8"
@@ -335,7 +335,7 @@
 			buildProd="160"
 			storEn="384"
 			operEn="4"
-			maxHP="96"
+			maxHP="36"
 			slots="16"
 			weight="8"
 			maxWeight="24"
@@ -488,7 +488,7 @@
 	</technology>
 	<technology id="6205" symbol="ALIGNMENTPOD" name="Planetary Alignment Pod">
 		<discovery
-			researchMod="(1.00 + 0.50) * 1.5"
+			researchMod="(1.00 + 1.00) * 1.5"
 			level="6"
 			researchRequires="TERRAFORMPOD-1"
 			researchReqSRes="SR_BIO1"
@@ -496,7 +496,7 @@
 		/>
 		<shipequip
 			subtype="seq_struct"
-			buildProd="36000"
+			buildProd="48000"
 			buildSRes="SR_BIO1"
 
 			storEn="960"
@@ -750,7 +750,7 @@
 
 		<shipequip
 			subtype="seq_wpn"
-			buildProd="17280"
+			buildProd="24000"
 			slots="144"
 			weight="216"
 			weaponDmgMin="18000"
@@ -901,7 +901,7 @@
 			buildProd="600"
 			operEn="80"
 			operWorkers="2500"
-			prodProd="400"
+			prodProd="320"
 			prodProdMod="0.95,0.05,0.0,0.0"
 			prodEnv="-300"
 			maxHP="300"

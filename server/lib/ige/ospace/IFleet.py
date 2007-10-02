@@ -1241,16 +1241,16 @@ class IFleet(IObject):
 		destroyed = 0
 		blocked = 0
 		if not ignoreshield and shield > 0:
-			blocked = min(shield, dmg)
+			blocked = min(shield, damage)
 			obj.ships[targetindex][2] -= blocked
-			dmg -= blocked
+			damage -= blocked
 		elif ignoreshield and targetShip.hardShield > 0 and shield > 0:
-			blocked = min(shield, int(dmg*(ship.hardShield))) #hard shields also reduce penetrating weapons
+			blocked = min(shield, int(damage*(ship.hardShield))) #hard shields also reduce penetrating weapons
 			obj.ships[targetindex][2] -= blocked
-			dmg -= blocked
+			damage -= blocked
 		if shield: #mines never pierce shields at this time; possible future expansion of the tech
-			blocked = min(shield, dmg)
-			dmg -= blocked
+			blocked = min(shield, damage)
+			damage -= blocked
 			obj.ships[target][2] -= blocked
 		if damage > 0:
 			if hp < damage:

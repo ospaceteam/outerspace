@@ -835,7 +835,7 @@ class ISystem(IObject):
 
 	def removeMines(self,obj,ownerid): #remove all mines of an owner
 		if ownerid in obj.minefield:
-			obj.minefield.remove(ownerid)
+			del obj.minefield[ownerid]
 
 	removeMines.public = 0
 

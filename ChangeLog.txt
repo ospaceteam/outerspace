@@ -1,5 +1,10 @@
 Change Log:
 
+[2007-10-02]
+- Fixed mine field bugs and typos causing server errors and erratic behavior [Random Chaos]
+- Added error catching wrapper around Research and Diplomacy phases within player Final phase to fix stats bugs when a research or diplomacy error is thrown [Random Chaos]
+- Updated TL6 to balance some overpowered techs; reduced base HPs of Stealth Hull to 36 (this was improperly set to 96). [Random Chaos]
+
 [2007-08-21]
 - added German translation [Andreas]
 - fixed bug with empty string in SystemOverviewDlg [PeS]
