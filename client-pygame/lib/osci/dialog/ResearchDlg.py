@@ -129,8 +129,12 @@ class ResearchDlg:
 			if task.changeSci > 0:
 				value = float(researchSci - task.currSci) / max(task.changeSci, player.effSciPoints)
 				total += int(value + 1)
-				total += float(maxImpTotalSci) / player.effSciPoints
-				item.tETC = res.formatTime(value)
+				if player.effSciPoints > 0:
+					total += float(maxImpTotalSci) / player.effSciPoints
+					item.tETC = res.formatTime(value)
+				else:
+					total = 0
+					item.tETC = res.getNA()
 			elif task.changeSci < 0:
 				value = - float(task.currSci) / min(task.changeSci, player.effSciPoints)
 				item.tETC = _("[%s]") % res.formatTime(value)
@@ -153,7 +157,10 @@ class ResearchDlg:
 		self.win.vRQueueRepat.enabled = 0
 		self.win.vRQueueRepat.pressed = 0
 		self.win.vRQueueInfo.enabled = 0
-		self.win.vRTotal.text = res.formatTime(total)
+		if total == 0:
+			self.win.vRTotal.text = _("N/A")
+		else:
+			self.win.vRTotal.text = res.formatTime(total)
 		# Researchable techs
 		items = []
 		for techID in client.getAllTechIDs():
