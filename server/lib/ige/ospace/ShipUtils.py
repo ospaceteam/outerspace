@@ -323,11 +323,10 @@ def computeDamage(wpnCls, trgtCls, dmgMin, dmgMax, weaponEff):
 	"""Compute damage that causes weapon to the target with specified combat
 	   class."""
 	assert trgtCls >= wpnCls
-	dmg = random.uniform(dmgMin, dmgMax) * Rules.weaponDmgDegrade[trgtCls - wpnCls] * weaponEff
-	# log.debug("Difference", trgtCls, wpnCls, dmg)
-	intDmg = int(dmg)
-	if random.random() >= dmg - intDmg:
-		intDmg += 1
+	dmgMin = int(dmgMin*weaponEff)
+	dmgMax = int(dmgMax*weaponEff)
+	dmg = 1.0 * random.randint(dmgMin, dmgMax) * Rules.weaponDmgDegrade[trgtCls - wpnCls]
+	intDmg = int(round(dmg,0))
 	return intDmg
 
 def sortShips(ships):

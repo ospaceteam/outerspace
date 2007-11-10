@@ -1,5 +1,9 @@
 Change Log:
 
+[2007-11-10]
+- Added verification that move commands can only take place to targets in the owner's galaxy [Random Chaos]
+- Updated damage calculation to avoid edge case float to integer conversion bugs and fixed two logic errors [Random Chaos]
+
 [2007-10-02]
 - Fixed mine field bugs and typos causing server errors and erratic behavior [Random Chaos]
 - Added error catching wrapper around Research and Diplomacy phases within player Final phase to fix stats bugs when a research or diplomacy error is thrown [Random Chaos]

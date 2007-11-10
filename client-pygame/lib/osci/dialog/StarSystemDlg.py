@@ -158,7 +158,8 @@ class StarSystemDlg:
 			self.win.vPName.text = _('Planet %s: POPULATION IS REVOLTING') % \
 				getattr(planet, 'name', res.getUnknownName())
 		elif hasattr(planet, 'morale') and hasattr(planet, "morale"):
-			prodState = gdata.moraleStates[Rules.moraleProdBonus[int(planet.morale / Rules.moraleProdStep)]]
+			prodState = 'This planet is screwy!'
+#			prodState = gdata.moraleStates[Rules.moraleProdBonus[int(planet.morale / Rules.moraleProdStep)]]
 			self.win.vPName.text = _('Planet %s: %s') % \
 				(getattr(planet, 'name', res.getUnknownName()), _(prodState))
 		else:
@@ -352,7 +353,8 @@ class StarSystemDlg:
 		# prod & sci
 		self.win.vPCUnempl.text = str(getattr(planet, 'unemployedPop', '?'))
 		if hasattr(planet, "owner") and planet.owner == player.oid:
-			moraleBonus = Rules.moraleProdBonus[int(planet.morale / Rules.moraleProdStep)]
+			#moraleBonus = Rules.moraleProdBonus[int(planet.morale / Rules.moraleProdStep)]
+			moraleBonus = 1
 			self.win.vPCProd.text = _("%d / %d") % (
 				int(planet.effProdProd),
 				planet.prodProd,
@@ -366,7 +368,8 @@ class StarSystemDlg:
 		else:
 			self.win.vPCProd.text = str(getattr(planet, 'prodProd', '?'))
 		if hasattr(planet, "owner") and planet.owner == player.oid:
-			moraleBonus = Rules.moraleProdBonus[int(planet.morale / Rules.moraleProdStep)]
+			#moraleBonus = Rules.moraleProdBonus[int(planet.morale / Rules.moraleProdStep)]
+			moraleBonus = 1
 			self.win.vPCSci.text = _("%d / %d") % (
 				planet.effProdSci,
 				planet.prodSci,

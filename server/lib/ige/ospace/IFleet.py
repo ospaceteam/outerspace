@@ -503,6 +503,17 @@ class IFleet(IObject):
 				raise GameException('Can build on/colonize planets only.')
 			if len(obj.actions) + 1 > Rules.maxCmdQueueLen:
 				raise GameException('Too many commands in the queue.')
+			#validate that the target is in the fleet owner's galaxy
+			if target.type == T_PLANET:
+				systemID = target.compOf
+			else:
+				systemID = targetID
+			owner = tran.db[obj.owner]
+			if not owner.galaxies:
+				raise GameException('The fleet owner is not in a galaxy.')
+			galaxy = tran.db[owner.galaxies[0]]
+			if systemID not in galaxy.systems:
+				raise GameException('The target system is not in your galaxy.')
 		obj.actions.insert(index, (action, targetID, aData))
 		if index <= obj.actionIndex:
 			obj.actionIndex += 1
