@@ -1137,7 +1137,7 @@ class IPlanet(IObject):
 				# steal ship techs
 				self.cmd(newOwner).stealTechs(tran, newOwner, obj.owner, obj.oid)
 			else:
-				log.debug(obj.oid, "Pirate captured planet too soon after previous capture to gain bonuses", dist, planet.oid)
+				log.debug(obj.oid, "Pirate captured planet too soon after previous capture to gain bonuses", obj.oid)
 			obj.storPop = 0
 			obj.lastPirCapture = currentTurn
 			self.cmd(obj).changeOwner(tran, obj, OID_NONE, force = 1)
