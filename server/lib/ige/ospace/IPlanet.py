@@ -50,6 +50,7 @@ class IPlanet(IObject):
 		obj.orbit = 0
 		obj.storPop = 0
 		obj.slots = []
+		obj.lastPirCapture = 0
 		# storage
 		obj.storBio = 0
 		obj.storEn = 0
@@ -1128,11 +1129,17 @@ class IPlanet(IObject):
 		newOwner = tran.db[newOwnerID]
 		if newOwner.type == T_PIRPLAYER:
 			# special handling for pirates
-			# gain/lose fame
-			self.cmd(newOwner).capturePlanet(tran, newOwner, obj)
-			# steal ship techs
-			self.cmd(newOwner).stealTechs(tran, newOwner, obj.owner, obj.oid)
+			currentTurn = tran.db[OID_UNIVERSE].turn
+			# prevent abuse - require 8 turns between capturing the same planet if you want to gain fame & tech
+			if (currentTurn - obj.lastPirCapture) > 8:
+				# gain/lose fame
+				self.cmd(newOwner).capturePlanet(tran, newOwner, obj)
+				# steal ship techs
+				self.cmd(newOwner).stealTechs(tran, newOwner, obj.owner, obj.oid)
+			else:
+				log.debug(obj.oid, "Pirate captured planet too soon after previous capture to gain bonuses", dist, planet.oid)
 			obj.storPop = 0
+			obj.lastPirCapture = currentTurn
 			self.cmd(obj).changeOwner(tran, obj, OID_NONE, force = 1)
 		else:
 			# change owner
