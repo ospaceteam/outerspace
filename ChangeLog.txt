@@ -2,6 +2,7 @@ Change Log:
 
 [2007-11-11]
 - Added planet recapture delay for pirates to gain fame and techs to prevent abuse by players friendly to pirate [Random Chaos]
+- Added requirement that system being moved to has been previously scanned by the player (related to intergalactic travel abuse) [Random Chaos]
 
 [2007-11-10]
 - Added verification that move commands can only take place to targets in the owner's galaxy [Random Chaos]

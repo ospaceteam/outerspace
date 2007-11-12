@@ -378,6 +378,7 @@ class IUniverse(IObject):
 
 	def update(self, tran, obj):
 		# check existence of all galaxies
+		log.debug('Game turn is',obj.turn)
 		if 0:
 			for galaxyID in obj.galaxies:
 				if not tran.db.has_key(galaxyID):

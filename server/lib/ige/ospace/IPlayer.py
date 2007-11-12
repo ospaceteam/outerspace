@@ -74,6 +74,7 @@ class IPlayer(IObject):
 		obj.staticMap = {}
 		obj.dynamicMap = {}
 		obj.galaxies = []
+		obj.validSystems = []
 		#
 		obj.stats = IDataHolder()
 		obj.stats.type = T_STATS
@@ -782,6 +783,9 @@ class IPlayer(IObject):
 			tmpObj = tran.db.get(objID, None)
 			if not tmpObj:
 				continue
+			# add movement validation data
+			if tmpObj.type in (T_SYSTEM,T_WORMHOLE) and objID not in obj.validSystems:
+				obj.validSystems.append(objID)
 			for info in self.cmd(tmpObj).getScanInfos(tran, tmpObj, level, obj):
 				map[info.oid] = info
 
