@@ -24,6 +24,7 @@ from Window import Window
 from SimpleGridLM import SimpleGridLM
 from Title import Title
 from ActiveLabel import ActiveLabel
+from math import ceil
 
 class Menu(Window):
 
@@ -33,6 +34,7 @@ class Menu(Window):
 		self.__dict__["title"] = None
 		self.__dict__["items"] = None
 		self.__dict__["looseFocusClose"] = 1
+		self.__dict__["columns"] = 1
 		self.__dict__["decorated"] = 0
 		self.__dict__["layoutManager"] = SimpleGridLM()
 		self.__dict__["width"] = 10
@@ -48,13 +50,17 @@ class Menu(Window):
 		if not pos:
 			pos = pygame.mouse.get_pos()
 		index = 0
+		width = int(1.0 * self.width / self.columns)
+		perColumn = ceil(1.0 * len(self.items) / self.columns)
+		currentLeft = 0
+		currentVert = 0
 		for item in self.items:
 			if len(self._labels) <= index:
 				label = ActiveLabel(self, align = ALIGN_W, enabled = item.enabled)
 				label.subscribeAction("*", self.actionHandler)
 				self._labels.append(label)
 			label = self._labels[index]
-			label.layout = (0, index + 1, self.width, 1)
+			label.layout = (currentLeft, currentVert + 1, width, 1)
 			label.text = item.text
 			if hasattr(item, "action"):
 				label.action = item.action
@@ -65,8 +71,12 @@ class Menu(Window):
 			else:
 				label.data = None
 			index += 1
+			currentVert += 1
+			if currentVert == perColumn:
+				currentVert = 0
+				currentLeft += width 
 		rowSize, colSize = self.app.theme.getGridParams()
-		self.rect = Rect(pos[0], pos[1], self.width * colSize, (index + 1) * rowSize)
+		self.rect = Rect(pos[0], pos[1], self.width * colSize, (perColumn + 1) * rowSize)
 		return Window.show(self)
 
 	def actionHandler(self, widget, action, data):

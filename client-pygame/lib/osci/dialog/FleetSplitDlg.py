@@ -54,6 +54,14 @@ dmgDesc = {
 def getCountShipsByDesign(ships, maxCount, shipDesignID):
 	count = 0
 	retShips = []
+	if maxCount < 1 and maxCount > 0: # calc percent to num ships
+		numShips = 0
+		for ship in ships:
+			if ship[0] == shipDesignID:
+				numShips += 1
+		maxCount = int(round(numShips * maxCount,0))
+	if maxCount == 0:
+		return retShips
 	for ship in ships:
 		if ship[0] == shipDesignID and (count < maxCount or maxCount == -1):
 			retShips.append(ship)
@@ -63,6 +71,9 @@ def getCountShipsByDesign(ships, maxCount, shipDesignID):
 def getCountShips(ships, maxCount):
 	count = 0
 	retShips = []
+	maxCount = int(round(len(ships) * maxCount,0))
+	if maxCount == 0:
+		return retShips
 	for ship in ships:
 		if count < maxCount or maxCount == -1:
 			retShips.append(ship)
@@ -576,26 +587,34 @@ class FleetSplitDlg:
 		ui.TitleButton(self.win, layout = (35, 27, 5, 1), text = _('Split'), action = 'onSplit')
 		ui.TitleButton(self.win, layout = (30, 27, 5, 1), text = _('Cancel'), action = 'onCancel')
 		self.moveRightPopup = ui.Menu(self.app, title = _("Move right"),
-			width = 5,
+			width = 10,
+                        columns = 2,
 			items = [
 				ui.Item(_("1 ship"), action = "onMoveAction", data = 1),
 				ui.Item(_("5 ships"), action = "onMoveAction", data = 5),
 				ui.Item(_("10 ships"), action = "onMoveAction", data = 10),
 				ui.Item(_("50 ships"), action = "onMoveAction", data = 50),
 				ui.Item(_("100 ships"), action = "onMoveAction", data = 100),
+				ui.Item(_("1/2 of ships"), action = "onMoveAction", data = 0.5),
+				ui.Item(_("1/3 of ships"), action = "onMoveAction", data = 0.34),
+				ui.Item(_("1/4 of ships"), action = "onMoveAction", data = 0.25),
 				ui.Item(_("All ships"), action = "onMoveAction", data = -1),
 			]
 		)
 		self.moveRightPopup.subscribeAction("*", self)
 
 		self.moveLeftPopup = ui.Menu(self.app, title = _("Move left"),
-			width = 5,
-			items = [
+			width = 10,
+                        columns = 2,
+                                items = [
 				ui.Item(_("1 ship"), action = "onNMoveAction", data = 1),
 				ui.Item(_("5 ships"), action = "onNMoveAction", data = 5),
 				ui.Item(_("10 ships"), action = "onNMoveAction", data = 10),
 				ui.Item(_("50 ships"), action = "onNMoveAction", data = 50),
 				ui.Item(_("100 ships"), action = "onNMoveAction", data = 100),
+				ui.Item(_("1/2 of ships"), action = "onNMoveAction", data = 0.5),
+				ui.Item(_("1/3 of ships"), action = "onNMoveAction", data = 0.34),
+				ui.Item(_("1/4 of ships"), action = "onNMoveAction", data = 0.25),
 				ui.Item(_("All ships"), action = "onNMoveAction", data = -1),
 			]
 		)
