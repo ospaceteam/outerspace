@@ -91,7 +91,8 @@ class LoginDlg:
 			gdata.config.save('var/osci.ini')
 			gdata.config.game.lastpasswordcrypted = binascii.b2a_base64(password).strip()
 			# check version
-			if client.lastClientVersion != version or client.lastClientRevision != revision:
+			log.debug('Version',version)
+			if (client.lastClientVersion != version or client.lastClientRevision != revision) and version != (0,0,0,'a'):
 				# wow, a different version!
 				self.confirmDlg.display(
 					_("Your client version does not match server version %d.%d.%d%s [Revision %d]. Do you want to continue?") % (
