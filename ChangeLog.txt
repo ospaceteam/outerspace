@@ -1,5 +1,12 @@
 Change Log:
 
+[2007-11-14]
+- Added starmap functions (click on starmap before using keys): [Random Chaos & Buchtan Satan]
+	CTRL-G: Toggle grid on/off
+	CTRL-S: Toggle scanner circles on/off
+	CTRL-L: Toggle fleet lines on/off
+	CTRL-R: Toggle redirects on/off
+
 [2007-11-13]
 - Added % based fleet split support to dialog [Random Chaos]
 - Updated pygameui/menu.py to support multi-column menus [Random Chaos]

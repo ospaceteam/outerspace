@@ -70,6 +70,7 @@ class StarMapWidget(Widget):
 		self._popupInfo = {}
 		self._fleetRanges = {}
 		self._fleetTarget = {}
+		self._fordersTarget = {}
 		self._actAreas = {}
 		self._actBuoyAreas = {}
 		self.currX = 0.0
@@ -86,6 +87,7 @@ class StarMapWidget(Widget):
 		self.showSystems = 1
 		self.showPlanets = 1
 		self.showFleets = 1
+		self.showFleetLines = 1
 		self.showGrid = 1
 		self.showOverlaySelector = 1
 		self.showRedirects = 1
@@ -481,6 +483,7 @@ class StarMapWidget(Widget):
 							trgt = client.get(target, noUpdate = 1)
 							if hasattr(trgt, 'x'):
 								self._map[self.MAP_FORDERS].append((oldX, oldY, trgt.x, trgt.y, color))
+								self._fordersTarget[obj.oid] = (oldX, oldY, trgt.x, trgt.y, color)
 								oldX, oldY = trgt.x, trgt.y
 			elif obj.type == T_ASTEROID:
 				owner = getattr(obj, 'owner', OID_NONE)
@@ -749,12 +752,13 @@ class StarMapWidget(Widget):
 		currY = self.currY
 		scale = self.scale
 		# draw orders lines
-		for x1, y1, x2, y2, color in self._map[self.MAP_FORDERS]:
-			sx1 = int((x1 - currX) * scale) + centerX
-			sy1 = maxY - (int((y1 - currY) * scale) + centerY)
-			sx2 = int((x2 - currX) * scale) + centerX
-			sy2 = maxY - (int((y2 - currY) * scale) + centerY)
-			pygame.draw.line(self._mapSurf, color, (sx1, sy1), (sx2, sy2), 1)
+		if self.showFleetLines:
+			for x1, y1, x2, y2, color in self._map[self.MAP_FORDERS]:
+				sx1 = int((x1 - currX) * scale) + centerX
+				sy1 = maxY - (int((y1 - currY) * scale) + centerY)
+				sx2 = int((x2 - currX) * scale) + centerX
+				sy2 = maxY - (int((y2 - currY) * scale) + centerY)
+				pygame.draw.line(self._mapSurf, color, (sx1, sy1), (sx2, sy2), 1)
 		# draw fleet symbol
 		for objID, x, y, oldX, oldY, orbit, eta, color, size, military in self._map[self.MAP_FLEETS]:
 			if self.overlayMode != gdata.OVERLAY_OWNER:
@@ -880,6 +884,13 @@ class StarMapWidget(Widget):
 				dx = int((x1 - self.currX) * self.scale) + centerX + self.rect.left
 				dy = maxY - (int((y1 - self.currY) * self.scale) + centerY) + self.rect.top
 				pygame.draw.line(surface, (0xff, 0xff, 0x00), (sx, sy), (dx, dy), 2)
+			if not self.showFleetLines and activeObjID and activeObjID in self._fordersTarget:
+				x, y, x1, y1, color = self._fordersTarget[activeObjID]
+				sx = int((x - self.currX) * self.scale) + centerX + self.rect.left
+				sy = maxY - (int((y - self.currY) * self.scale) + centerY) + self.rect.top
+				dx = int((x1 - self.currX) * self.scale) + centerX + self.rect.left
+				dy = maxY - (int((y1 - self.currY) * self.scale) + centerY) + self.rect.top
+				pygame.draw.line(surface, color, (sx, sy), (dx, dy), 2)
 			if activeObjID and activeObjID in self._fleetRanges:
 				x, y, maxRange, operRange, halfRange, speed, turns = self._fleetRanges[activeObjID]
 				sx = int((x - self.currX) * self.scale) + centerX + self.rect.left
@@ -1285,6 +1296,35 @@ class StarMapWidget(Widget):
 		# Ctrl+M
 		elif evt.unicode == u'\x0D' and pygame.key.get_mods() & KMOD_CTRL:
 			self.showOverlayDlg.display()
+		# Ctrl+G - Toggle grid
+		elif evt.unicode == u'\x07' and pygame.key.get_mods() & KMOD_CTRL:
+			if self.showGrid:
+				self.showGrid = 0
+			else:
+				self.showGrid = 1
+			self.repaintMap = 1
+		# Ctrl+S - Toggle drawing scanners
+		elif evt.unicode == u'\x13' and pygame.key.get_mods() & KMOD_CTRL:
+			if self.showScanners:
+				self.showScanners = 0
+			else:
+				self.showScanners = 1
+			self.repaintMap = 1
+		# Ctrl+L - Toggle drawing fleet lines
+		elif evt.unicode == u'\x0C' and pygame.key.get_mods() & KMOD_CTRL:
+			if self.showFleetLines:
+				self.showFleetLines = 0
+			else:
+				self.showFleetLines = 1
+			self.repaintMap = 1
+		# Ctrl+R - Toggle drawing redirects
+		elif evt.unicode == u'\x12' and pygame.key.get_mods() & KMOD_CTRL:
+			if self.showRedirects:
+				self.showRedirects = 0
+			else:
+				self.showRedirects = 1
+			self.repaintMap = 1
+		# Space Bar - Recenter
 		elif evt.unicode == u' ':
 			x, y = pygame.mouse.get_pos()
 			centerX, centerY = self._mapSurf.get_rect().center
