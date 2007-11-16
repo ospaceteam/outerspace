@@ -41,6 +41,15 @@ class MessagesDlg:
 		self.newMessageDlg = NewMessageDlg(app)
 		self.newMsgs = 0
 		self.confirmDlg = ConfirmDlg(app)
+		self.uignore = []
+		self.gignore = []
+		self.lignore = []
+		if  gdata.config.ignore.universe:
+			self.uignore = gdata.config.ignore.universe.split(',')
+		if  gdata.config.ignore.galaxy:
+			self.gignore = gdata.config.ignore.galaxy.split(',')
+		if  gdata.config.ignore.local:
+			self.lignore = gdata.config.ignore.local.split(',')
 
 	def display(self):
 		self.show()
@@ -70,7 +79,7 @@ class MessagesDlg:
 		items = []
 		colors = [gdata.sevColors[gdata.INFO], gdata.sevColors[gdata.MIN]]
 		# Inbox
-		msgs, new = self.getMsgsNumber(player.oid, "INBOX")
+		msgs, new = self.getMsgsNumber(player.oid, "INBOX",'local')
 		self.newMsgs += new
 		spec = gdata.mailboxSpec[T_PLAYER, "INBOX"]
 		item = ui.Item(_(spec[0]), tObjID = player.oid, tForum = "INBOX",
@@ -104,7 +113,7 @@ class MessagesDlg:
 				tType = T_GALAXY, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
 			items.append(item)
 			# public
-			msgs, new = self.getMsgsNumber(galaxyID, "PUBLIC")
+			msgs, new = self.getMsgsNumber(galaxyID, "PUBLIC",'galaxy')
 			self.newMsgs += new
 			spec = gdata.mailboxSpec[T_GALAXY, "PUBLIC"]
 			item = ui.Item("   %s" % _(spec[0]), tObjID = galaxyID, tForum = "PUBLIC",
@@ -121,28 +130,28 @@ class MessagesDlg:
 			tType = T_UNIVERSE, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
 		items.append(item)
 		# public
-		msgs, new = self.getMsgsNumber(OID_UNIVERSE, "PUBLIC")
+		msgs, new = self.getMsgsNumber(OID_UNIVERSE, "PUBLIC",'universe')
 		self.newMsgs += new
 		spec = gdata.mailboxSpec[T_UNIVERSE, "PUBLIC"]
 		item = ui.Item("   %s" % _(spec[0]), tObjID = OID_UNIVERSE, tForum = "PUBLIC",
 			tType = T_UNIVERSE, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
 		items.append(item)
 		# qa
-		msgs, new = self.getMsgsNumber(OID_UNIVERSE, "QA")
+		msgs, new = self.getMsgsNumber(OID_UNIVERSE, "QA",'universe')
 		self.newMsgs += new
 		spec = gdata.mailboxSpec[T_UNIVERSE, "QA"]
 		item = ui.Item("   %s" % _(spec[0]), tObjID = OID_UNIVERSE, tForum = "QA",
 			tType = T_UNIVERSE, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
 		items.append(item)
 		# ideas
-		msgs, new = self.getMsgsNumber(OID_UNIVERSE, "IDEAS")
+		msgs, new = self.getMsgsNumber(OID_UNIVERSE, "IDEAS",'universe')
 		self.newMsgs += new
 		spec = gdata.mailboxSpec[T_UNIVERSE, "IDEAS"]
 		item = ui.Item("   %s" % _(spec[0]), tObjID = OID_UNIVERSE, tForum = "IDEAS",
 			tType = T_UNIVERSE, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
 		items.append(item)
 		# issues
-		msgs, new = self.getMsgsNumber(OID_UNIVERSE, "ISSUES")
+		msgs, new = self.getMsgsNumber(OID_UNIVERSE, "ISSUES",'universe')
 		self.newMsgs += new
 		spec = gdata.mailboxSpec[T_UNIVERSE, "ISSUES"]
 		item = ui.Item("   %s" % _(spec[0]), tObjID = OID_UNIVERSE, tForum = "ISSUES",
@@ -166,7 +175,7 @@ class MessagesDlg:
 		# update mgs button
 		gdata.mainGameDlg.updateMsgButton()
 
-	def getMsgsNumber(self, objID, forum):
+	def getMsgsNumber(self, objID, forum, forumtype='none'):
 		try:
 			messages = client.get(objID)._messages
 		except AttributeError:
@@ -176,6 +185,15 @@ class MessagesDlg:
 		msgs = 0
 		for messageID in messages:
 			message = messages[messageID]
+			if forumtype == 'universe':
+				if message["sender"] in self.uignore:
+					continue;
+			elif forumtype == 'galaxy':
+				if message["sender"] in self.gignore:
+					continue;
+			elif forumtype == 'local':
+				if message["sender"] in self.lignore:
+					continue;
 			if message["forum"] == forum:
 				if message["readed"] == 0:
 					new += 1
@@ -198,6 +216,8 @@ class MessagesDlg:
 		self.win.vNewTopic.enabled = 1
 		self.win.vAllReaded.enabled = 1
 		self.win.vDeleteAll.enabled = 1
+		player = client.getPlayer()
+		playerid = player.oid
 		objMessages = client.get(selItem.tObjID)._messages
 		ids = objMessages.keys()
 		ids.sort()
@@ -207,6 +227,16 @@ class MessagesDlg:
 		for messageID in ids:
 			message = objMessages[messageID]
 			if message["forum"] == selItem.tForum:
+				# ignore by universe, local (private messages), or galaxy
+				if selItem.tObjID == OID_UNIVERSE:
+					if message["sender"] in self.uignore:
+						continue;
+				elif selItem.tObjID == playerid:
+					if message["sender"] in self.lignore:
+						continue;
+				else:
+					if message["sender"] in self.gignore:
+						continue;
 				# regenerate topics for messages with data
 				if message.has_key("data") and message["topic"] == "EVENT":
 					sourceID, msgID, locationID, turn, data = message["data"]

@@ -1,5 +1,12 @@
 Change Log:
 
+[2007-11-15]
+- Added ignore user messages support using osci.ini - case sensitive comma separated list as follows: [Random Chaos]
+	[ignore]
+	universe = ignore,users,in,universe,forums
+	galaxy = ignore,users,in,galaxy,forums
+	local = ignore,private,messages,from,users
+
 [2007-11-14]
 - Added starmap functions (click on starmap before using keys): [Random Chaos & Buchtan Satan]
 	CTRL-G: Toggle grid on/off
