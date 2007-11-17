@@ -39,7 +39,6 @@ MAX_BOUY_DISPLAY_LEN = 30
 class StarMapWidget(Widget):
 
 	MAP_SCANNER1 = 1
-	MAP_SCANNER2 = 2
 	MAP_SYSTEMS = 3
 	MAP_PLANETS = 4
 	MAP_FLEETS = 5
@@ -59,7 +58,6 @@ class StarMapWidget(Widget):
 		self._mapSurf = None
 		self._map = {
 			self.MAP_SCANNER1: [],
-			self.MAP_SCANNER2: [],
 			self.MAP_SYSTEMS: [],
 			self.MAP_PLANETS: [],
 			self.MAP_FLEETS: [],
@@ -126,7 +124,6 @@ class StarMapWidget(Widget):
 			player_highlight = gdata.config.game.highlight
 		self._map = {
 			self.MAP_SCANNER1: [],
-			self.MAP_SCANNER2: [],
 			self.MAP_SYSTEMS: [],
 			self.MAP_PLANETS: [],
 			self.MAP_FLEETS: [],
@@ -344,8 +341,7 @@ class StarMapWidget(Widget):
 				self._map[self.MAP_PLANETS].append((obj.oid, obj.x, obj.y, obj.orbit, colors, singlet))
 				scannerPwr = getattr(obj, 'scannerPwr', 0)
 				if scannerPwr:
-					self._map[self.MAP_SCANNER1].append((obj.x, obj.y, scannerPwr / 10.0))
-					self._map[self.MAP_SCANNER2].append((obj.x, obj.y, scannerPwr / 16.0))
+					self._map[self.MAP_SCANNER1].append((obj.x, obj.y, scannerPwr))
 				# pop up info
 				info = []
 				info.append(_('Planet: %s [ID: %d]') % (name, obj.oid))
@@ -378,8 +374,7 @@ class StarMapWidget(Widget):
 				if hasattr(obj, "scannerOn") and not obj.scannerOn:
 					scannerPwr = 0
 				if scannerPwr:
-					self._map[self.MAP_SCANNER1].append((obj.x, obj.y, scannerPwr / 10.0))
-					self._map[self.MAP_SCANNER2].append((obj.x, obj.y, scannerPwr / 16.0))
+					self._map[self.MAP_SCANNER1].append((obj.x, obj.y, scannerPwr))
 				#  get orbital position
 				orbit = -1
 				if obj.orbiting != OID_NONE:
@@ -577,25 +572,26 @@ class StarMapWidget(Widget):
 			icons.append(res.icons[buoyName])
 
 	def drawScanners(self):
+		# default scanner ranges (inner and outer circles)
+		scanner1range = 1.0/10
+		scanner2range = 1.0/16
 		# coordinates
 		centerX, centerY = self._mapSurf.get_rect().center
 		maxY = self._mapSurf.get_rect().height
 		currX = self.currX
 		currY = self.currY
 		scale = self.scale
+		scannerCalced = []
 		# draw
 		for x, y, range in self._map[self.MAP_SCANNER1]:
 			sx = int((x - currX) * scale) + centerX
 			sy = maxY - (int((y - currY) * scale) + centerY)
-			pygame.draw.circle(self._mapSurf, (0x00, 0x00, 0x60), (sx, sy), int(range * scale + 2), 0)
-		for x, y, range in self._map[self.MAP_SCANNER1]:
-			sx = int((x - currX) * scale) + centerX
-			sy = maxY - (int((y - currY) * scale) + centerY)
-			pygame.draw.circle(self._mapSurf, (0x00, 0x00, 0x30), (sx, sy), int(range * scale), 0)
-		for x, y, range in self._map[self.MAP_SCANNER2]:
-			sx = int((x - currX) * scale) + centerX
-			sy = maxY - (int((y - currY) * scale) + centerY)
-			pygame.draw.circle(self._mapSurf, (0x00, 0x00, 0x40), (sx, sy), int(range * scale), 0)
+			pygame.draw.circle(self._mapSurf, (0x00, 0x00, 0x60), (sx, sy), int(range * scale * scanner1range + 2), 0)
+			scannerCalced.append((sx,sy,range))
+		for sx, sy, range in scannerCalced:
+			pygame.draw.circle(self._mapSurf, (0x00, 0x00, 0x30), (sx, sy), int(range * scale * scanner1range), 0)
+		for sx, sy, range in scannerCalced:
+			pygame.draw.circle(self._mapSurf, (0x00, 0x00, 0x40), (sx, sy), int(range * scale * scanner2range), 0)
 
 	def drawRedirects(self):
 		# coordinates
