@@ -1,6 +1,8 @@
 Change Log:
 
 [2007-11-18]
+- Increased font cache cleanup to 2000 entries - large starmaps create more than 1000 entries [Random Chaos]
+- Updated starmap widget to increase scanner circle draw speed - removed drawing of extraneous circles [Random Chaos]
 - Added sorting of structures to Structure Task Dialog (icon-based structure dialog) [Random Chaos]
 - Updated all structure subtypes in tech XMLs for consistency, incorporation of new tech types, and order [Random Chaos]
 

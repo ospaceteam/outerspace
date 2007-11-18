@@ -58,8 +58,8 @@ def renderText(name, text, antialias, fg, bg = None):
 		fontCache[name, text, antialias, fg, bg] = surface
 	else:
 		hits += 1
-	# clean up cache if size is > 1000
-	if misses > 1000:
+	# clean up cache if size is > 2000
+	if misses > 2000:
 		print 'FONT CACHE STATS:', misses, hits, hits / float(misses + hits)
 		misses = 0
 		fontCache.clear()

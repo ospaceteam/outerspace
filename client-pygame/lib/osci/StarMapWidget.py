@@ -577,6 +577,7 @@ class StarMapWidget(Widget):
 		scanner2range = 1.0/16
 		# coordinates
 		centerX, centerY = self._mapSurf.get_rect().center
+		maxX = self._mapSurf.get_rect().width
 		maxY = self._mapSurf.get_rect().height
 		currX = self.currX
 		currY = self.currY
@@ -586,12 +587,18 @@ class StarMapWidget(Widget):
 		for x, y, range in self._map[self.MAP_SCANNER1]:
 			sx = int((x - currX) * scale) + centerX
 			sy = maxY - (int((y - currY) * scale) + centerY)
-			pygame.draw.circle(self._mapSurf, (0x00, 0x00, 0x60), (sx, sy), int(range * scale * scanner1range + 2), 0)
-			scannerCalced.append((sx,sy,range))
-		for sx, sy, range in scannerCalced:
-			pygame.draw.circle(self._mapSurf, (0x00, 0x00, 0x30), (sx, sy), int(range * scale * scanner1range), 0)
-		for sx, sy, range in scannerCalced:
-			pygame.draw.circle(self._mapSurf, (0x00, 0x00, 0x40), (sx, sy), int(range * scale * scanner2range), 0)
+			currRange = int(range * scale * scanner1range + 2)
+			range1 = int(range * scale * scanner1range)
+			range2 = int(range * scale * scanner2range)
+			if sx+currRange > 0 and sx-currRange < maxX and sy+currRange > 0 and sy-currRange < maxY:
+				pygame.draw.circle(self._mapSurf, (0x00, 0x00, 0x60), (sx, sy), currRange, 2)
+				scannerCalced.append((sx,sy,range1,range2))
+		for sx, sy, range1, range2 in scannerCalced:
+			pygame.draw.circle(self._mapSurf, (0x00, 0x00, 0x30), (sx, sy), range1, 0)
+		for sx, sy, range1, range2 in scannerCalced:
+			pygame.draw.circle(self._mapSurf, (0x00, 0x00, 0x40), (sx, sy), range2, 0)
+#		log.debug("Total scanner circles:",len(self._map[self.MAP_SCANNER1]))
+#		log.debug("Drawn scanner circles:",len(scannerCalced))
 
 	def drawRedirects(self):
 		# coordinates
@@ -792,7 +799,7 @@ class StarMapWidget(Widget):
 
 	def draw(self, surface):
 		if not self._mapSurf:
-			self._mapSurf = pygame.Surface(self.rect.size, SWSURFACE | SRCALPHA, surface)
+			self._mapSurf = pygame.Surface(self.rect.size, OPENGL | OPENGLBLIT | HWSURFACE | SRCALPHA, surface)
 			# workaround for FILLED CIRCLE CLIP BUG - TODO remove
 			clip = self._mapSurf.get_clip()
 			clip.left += 1
