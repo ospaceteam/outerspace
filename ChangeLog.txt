@@ -1,5 +1,9 @@
 Change Log:
 
+[2007-11-18]
+- Added sorting of structures to Structure Task Dialog (icon-based structure dialog) [Random Chaos]
+- Updated all structure subtypes in tech XMLs for consistency, incorporation of new tech types, and order [Random Chaos]
+
 [2007-11-17]
 - Updated starmap widget to significantly increase scanner circle draw speed [Random Chaos]
 

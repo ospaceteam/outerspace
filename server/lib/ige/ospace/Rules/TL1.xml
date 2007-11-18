@@ -28,7 +28,7 @@
 			researchRequires="OUTPOST1-5"
 		/>
 		<structure
-			subtype="str25"
+			subtype="str110"
 			buildProd="960"
 			operEn="50"
 			operWorkers="2500"
@@ -49,7 +49,7 @@
 			level="1"
 		/>
 		<structure
-			subtype="str15"
+			subtype="str100"
 			buildProd="480"
 			unpackPop="3000"
 			operWorkers="2000"
@@ -78,7 +78,7 @@
 			level="1"
 		/>
 		<structure
-			subtype="str30"
+			subtype="str300"
 			buildProd="240"
 			operEn="25"
 			operWorkers="500"
@@ -98,7 +98,7 @@
 			level="1"
 		/>
 		<structure
-			subtype="str20"
+			subtype="str400"
 			buildProd="240"
 			operWorkers="500"
 			storEn="900"
@@ -119,7 +119,7 @@
 		/>
 			<!--operEn="10"-->
 		<structure
-			subtype="str10"
+			subtype="str200"
 			buildProd="240"
 			operWorkers="500"
 			prodBio="100"
@@ -139,7 +139,7 @@
 			level="1"
 		/>
 		<structure
-			subtype="str40"
+			subtype="str500"
 			buildProd="240"
 			operEn="10"
 			operWorkers="500"
@@ -157,7 +157,7 @@
 			researchRequires="RESCENTRE1-3"
 		/>
 		<structure
-			subtype="str50"
+			subtype="str620"
 			buildProd="240"
 			operEn="25"
 			operWorkers="500"
@@ -177,7 +177,7 @@
 			researchRequires="PWRPLANTOIL1-5"
 		/>
 		<structure
-			subtype="str20"
+			subtype="str400"
 			buildProd="240"
 			operWorkers="500"
 			storEn="3600"
@@ -196,7 +196,7 @@
 			researchRequires="SMALLHULL1-5"
 		/>
 		<structure
-			subtype="str50"
+			subtype="str600"
 			buildProd="480"
 			operEn="100"
 			operWorkers="500"

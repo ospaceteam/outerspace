@@ -28,7 +28,7 @@
 			researchRequires="SPACEPORT-3"
 		/>
 		<structure
-			subtype="str45"
+			subtype="str600"
 			buildProd="480"
 			operEn="100"
 			operWorkers="1000"
@@ -51,7 +51,7 @@
 			researchReqSRes="SR_TL1A"
 		/>
 		<structure
-			subtype="str20"
+			subtype="str400"
 			buildProd="1920"
 			buildSRes="SR_TL1A"
 			operWorkers="1000"
@@ -73,7 +73,7 @@
 		/>
 			<!--operEn="20"-->
 		<structure
-			subtype="str10"
+			subtype="str200"
 			buildProd="480"
 			operWorkers="1000"
 			prodBio="200"
@@ -90,7 +90,7 @@
 			researchRequires="GOVCENTER1-3"
 		/>
 		<structure
-			subtype="str50"
+			subtype="str120"
 			buildProd="480"
 			operEn="25"
 			operWorkers="500"
@@ -110,7 +110,7 @@
 		/>
 			<!--operEn="20"-->
 		<structure
-			subtype="str10"
+			subtype="str200"
 			buildProd="480"
 			operWorkers="1000"
 			prodBio="200"
@@ -130,7 +130,7 @@
 		/>
 			<!--operEn="20"-->
 		<structure
-			subtype="str10"
+			subtype="str200"
 			buildProd="480"
 			operWorkers="1000"
 			prodBio="200"
@@ -149,7 +149,7 @@
 			researchRaces="CH"
 		/>
 		<structure
-			subtype="str50"
+			subtype="str610"
 			buildProd="2880"
 			operWorkers="1000"
 			operEn="75"
@@ -169,7 +169,7 @@
 			researchRaces="B"
 		/>
 		<structure
-			subtype="str50"
+			subtype="str610"
 			buildProd="2880"
 			operWorkers="1500"
 			scannerPwr="45"
@@ -188,7 +188,7 @@
 			researchReqSRes="SR_TL1B"
 		/>
 		<structure
-			subtype="str20"
+			subtype="str300"
 			buildProd="1920"
 			operEn="50"
 			operWorkers="1000"
@@ -209,7 +209,7 @@
 			researchRaces="B"
 		/>
 		<structure
-			subtype="str99"
+			subtype="str250"
 			buildProd="1920"
 			buildSRes="SR_BIO1"
 			operWorkers="1000"

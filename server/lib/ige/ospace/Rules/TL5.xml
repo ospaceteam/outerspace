@@ -28,7 +28,7 @@
 			level="5"
 		/>
 		<structure
-			subtype="str90"
+			subtype="str700"
 			buildProd="1920"
 			operEn="50"
 			operWorkers="1000"
@@ -48,7 +48,7 @@
 			level="5"
 		/>
 		<structure
-			subtype="str90"
+			subtype="str700"
 			buildProd="2880"
 			operEn="100"
 			operWorkers="1000"
@@ -67,7 +67,7 @@
 			level="5"
 		/>
 		<structure
-			subtype="str90"
+			subtype="str630"
 			buildProd="19200"
 			operEn="1000"
 			operWorkers="1000"
@@ -86,7 +86,7 @@
 			level="5"
 		/>
 		<structure
-			subtype="str90"
+			subtype="str630"
 			buildProd="28800"
 			operEn="1500"
 			operWorkers="2000"
@@ -107,7 +107,7 @@
 			researchRaces="H"
 		/>
 		<structure
-			subtype="str50"
+			subtype="str610"
 			buildProd="5760"
 			buildSRes="SR_TL5C"
 			operWorkers="4000"
@@ -131,7 +131,7 @@
 			researchRaces="H"
 		/>
 		<structure
-			subtype="str20"
+			subtype="str400"
 			buildProd="3840"
 			buildSRes="SR_TL5A"
 			operWorkers="3500"
@@ -153,7 +153,7 @@
 			researchRaces="C"
 		/>
 		<structure
-			subtype="str20"
+			subtype="str400"
 			buildProd="3840"
 			buildSRes="SR_TL5B"
 			operWorkers="3500"
@@ -175,7 +175,7 @@
 			researchRaces="B"
 		/>
 		<structure
-			subtype="str01"
+			subtype="str105"
 			buildProd="3840"
 			buildSRes="SR_TL5C"
 			operWorkers="2000"
@@ -205,7 +205,7 @@
 			researchRaces="H"
 		/>
 		<structure
-			subtype="str90"
+			subtype="str600"
 			buildProd="3840"
 			buildSRes="SR_TL5C"
 			operEn="1500"
@@ -1137,7 +1137,7 @@
 			researchRaces="H"
 		/>
 		<structure
-			subtype="str40"
+			subtype="str105"
 			buildProd="1440"
 			operEn="30"
 			operWorkers="2500"
@@ -1228,7 +1228,7 @@
 			researchRaces="C"
 		/>
 		<structure
-			subtype="str50"
+			subtype="str612"
 			buildProd="3200"
 			operWorkers="1500"
 			operEn="15"
@@ -1251,7 +1251,7 @@
 			researchRaces="H"
 		/>
 		<structure
-			subtype="str50"
+			subtype="str612"
 			buildProd="3200"
 			operWorkers="1500"
 			operEn="25"
@@ -1274,7 +1274,7 @@
 			researchRaces="B"
 		/>
 		<structure
-			subtype="str50"
+			subtype="str612"
 			buildProd="3200"
 			operWorkers="1000"
 			operEn="10"

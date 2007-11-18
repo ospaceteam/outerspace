@@ -28,7 +28,7 @@
             researchRequires="COMSCAN3-3"
         />
         <structure
-            subtype="str50"
+            subtype="str620"
             buildProd="960"
             operEn="50"
             operWorkers="1250"
@@ -48,7 +48,7 @@
             researchRaces="C"
         />
         <structure
-            subtype="str40"
+            subtype="str300"
             buildProd="1550"
             buildSRes="SR_TL3A"
             operEn="100"
@@ -69,7 +69,7 @@
             researchRaces="H"
         />
         <structure
-            subtype="str40"
+            subtype="str500"
             buildProd="1550"
             buildSRes="SR_TL3B"
             operEn="60"
@@ -88,7 +88,7 @@
             researchRaces="B"
         />
         <structure
-            subtype="str01"
+            subtype="str105"
             buildProd="1550"
             buildSRes="SR_TL3C"
             operWorkers="1500"
@@ -110,7 +110,7 @@
             level="4"
         />
         <structure
-            subtype="str90"
+            subtype="str700"
             buildProd="1920"
             operEn="50"
             operWorkers="1250"
@@ -128,7 +128,7 @@
             level="4"
         />
         <structure
-            subtype="str90"
+            subtype="str630"
             buildProd="9600"
             operEn="1000"
             operWorkers="1250"
@@ -148,7 +148,7 @@
             researchRaces="BC"
         />
         <structure
-            subtype="str50"
+            subtype="str500"
             buildProd="1550"
             buildSRes="SR_TL3B"
             storEn="720"
@@ -169,7 +169,7 @@
             researchRaces="CH"
         />
         <structure
-            subtype="str01"
+            subtype="str105"
             buildProd="1550"
             buildSRes="SR_TL3C"
             operWorkers="2500"
@@ -196,7 +196,7 @@
             researchRaces="HB"
         />
         <structure
-            subtype="str30"
+            subtype="str300"
             buildProd="1550"
             buildSRes="SR_TL3A"
             operEn="60"
@@ -216,7 +216,7 @@
             researchRaces="H"
         />
         <structure
-            subtype="str30"
+            subtype="str300"
             buildProd="1440"
             operWorkers="1500"
             prodProd="22"
@@ -970,7 +970,7 @@
             researchRaces="CH"
         />
         <structure
-            subtype="str50"
+            subtype="str615"
             buildProd="1200"
             operEn="100"
             operWorkers="1750"
@@ -990,7 +990,7 @@
             researchRaces="B"
         />
         <structure
-            subtype="str50"
+            subtype="str615"
             buildProd="1200"
             operEn="50"
             operWorkers="1750"

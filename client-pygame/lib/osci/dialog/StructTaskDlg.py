@@ -34,6 +34,7 @@ class StructTaskDlg:
 		self.showShips = 0
 		self.showOther = 0
 		self.techID = 0
+		self.sort = 'type'
 		self.showLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 		self.techInfoDlg = TechInfoDlg(app)
 		self.createUI()
@@ -143,6 +144,8 @@ class StructTaskDlg:
 				techID = techID,
 				tIsShip = 0,
 				name = tech.name,
+				tl = int(techID / 1000),
+				subtype = tech.subtype,
 				icons = ((res.getTechImg(techID), ui.ALIGN_N),),
 				font = "small-bold",
 				align = ui.ALIGN_S,
@@ -159,8 +162,15 @@ class StructTaskDlg:
 				if techID == self.techID:
 					select = item
 
-		# sort it by level and then by name
-		items.sort(lambda a, b: cmp(a.name, b.name))
+		# sort methods
+		if self.sort == 'none': # sort by name
+			items.sort(lambda a, b: cmp(a.name, b.name))
+		elif self.sort == 'tl': # sort by TL, subsort by name
+			items.sort(lambda a, b: cmp(a.name, b.name))
+			items.sort(lambda a, b: cmp(a.tl, b.tl))
+		elif self.sort == 'type': #sort by subtype, subsort by tl
+			items.sort(lambda a, b: cmp(a.tl, b.tl))
+			items.sort(lambda a, b: cmp(a.subtype, b.subtype))
 		self.win.vTechs.items = items
 		self.win.vTechs.itemsChanged()
 		if select:
@@ -248,6 +258,19 @@ class StructTaskDlg:
 	def onFilter(self, widget, action, data):
 		self.update()
 
+	def onSort(self, widget, action, data):
+		self.sort = widget.data
+		if widget.data == 'none':
+			self.win.vSortTL.checked = 0
+			self.win.vSortType.checked = 0
+		elif widget.data == 'tl':
+			self.win.vSortNone.checked = 0
+			self.win.vSortType.checked = 0
+		elif widget.data == 'type':
+			self.win.vSortTL.checked = 0
+			self.win.vSortNone.checked = 0
+		self.update()
+
 	def createUI(self):
 		w, h = gdata.scrnSize
 		cols = 32
@@ -312,11 +335,20 @@ class StructTaskDlg:
 		ui.Check(self.win, layout = (12, 17, 6, 1), text = _('Morale'),
 			id = 'vMorale', checked = 1, align = ui.ALIGN_W, action = 'onFilter')
 
-		ui.Title(self.win, layout = (18, 14, 8, 1), text = _('Options'),
+		ui.Title(self.win, layout = (18, 14, 6, 1), text = _('Sort'),
 			align = ui.ALIGN_W, font = 'normal-bold')
-		ui.Label(self.win, layout = (18, 15, 3, 1), text = _('Quantity'), align = ui.ALIGN_W)
-		ui.Entry(self.win, layout = (21, 15, 5, 1), id = 'vQuantity', align = ui.ALIGN_E)
-		ui.Check(self.win, layout = (20, 16, 8, 1), id = 'vReportFin', text = _('Report finalization'),
+		ui.Check(self.win, layout = (18, 15, 6, 1), text = _('Type'),
+			id = 'vSortType', checked = 1, align = ui.ALIGN_W, action = 'onSort', data ='type')
+		ui.Check(self.win, layout = (18, 16, 6, 1), text = _('Tech Level'),
+			id = 'vSortTL', checked = 0, align = ui.ALIGN_W, action = 'onSort', data ='tl')
+		ui.Check(self.win, layout = (18, 17, 6, 1), text = _('Name'),
+			id = 'vSortNone', checked = 0, align = ui.ALIGN_W, action = 'onSort', data ='none')
+		
+		ui.Title(self.win, layout = (24, 14, 8, 1), text = _('Options'),
+			align = ui.ALIGN_W, font = 'normal-bold')
+		ui.Label(self.win, layout = (24, 15, 3, 1), text = _('Quantity'), align = ui.ALIGN_W)
+		ui.Entry(self.win, layout = (27, 15, 5, 1), id = 'vQuantity', align = ui.ALIGN_E)
+		ui.Check(self.win, layout = (26, 16, 8, 1), id = 'vReportFin', text = _('Report finalization'),
 			align = ui.ALIGN_W)
 
 		ui.Title(self.win, layout = (0, rows - 1, cols - 5, 1), align = ui.ALIGN_W)

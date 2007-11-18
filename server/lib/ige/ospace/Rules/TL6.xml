@@ -103,7 +103,7 @@
 			researchRequires="OUTPOST1-5"
 		/>
 		<structure
-			subtype="str15"
+			subtype="str100"
 			buildProd="1080"
 			unpackPop="3500"
 			operWorkers="2500"
@@ -261,7 +261,7 @@
 			researchRaces="H"
 		/>
 		<structure
-			subtype="str50"
+			subtype="str620"
 			buildProd="1200"
 			operEn="175"
 			operWorkers="1750"
@@ -284,7 +284,7 @@
 			researchRaces="H"
 		/>
 		<structure
-			subtype="str50"
+			subtype="str615"
 			buildProd="2400"
 			operEn="250"
 			operWorkers="3000"
@@ -359,7 +359,7 @@
 			researchRaces="H"
 		/>
 		<structure
-			subtype="str50"
+			subtype="str640"
 			buildProd="19200"
 			buildSRes="SR_TL3B"
 			operEn="350"
@@ -545,7 +545,7 @@
 		/>
 
 		<structure
-			subtype="str20"
+			subtype="str200"
 			buildProd="1440"
 			operWorkers="2500"
 			prodBio="500"
@@ -567,7 +567,7 @@
 		/>
 
 		<structure
-			subtype="str20"
+			subtype="str200"
 			buildProd="1440"
 			operWorkers="2000"
 			prodBio="600"
@@ -773,7 +773,7 @@
 			researchRaces="C"
 		/>
 		<structure
-			subtype="str45"
+			subtype="str600"
 			buildProd="3600"
 			operEn="250"
 			operWorkers="2000"
@@ -798,7 +798,7 @@
 			researchRaces="C"
 		/>
 		<structure
-			subtype="str45"
+			subtype="str600"
 			buildProd="2000"
 			operEn="200"
 			operWorkers="1500"
@@ -823,7 +823,7 @@
 			researchRaces="C"
 		/>
 		<structure
-			subtype="str50"
+			subtype="str610"
 			buildProd="4000"
 			operWorkers="2000"
 			operEn="100"
@@ -847,7 +847,7 @@
 			researchRaces="C"
 		/>
 		<structure
-			subtype="str50"
+			subtype="str612"
 			buildProd="3200"
 			operWorkers="2500"
 			operEn="35"
@@ -897,7 +897,7 @@
 			researchRaces="C"
 		/>
 		<structure
-			subtype="str30"
+			subtype="str300"
 			buildProd="600"
 			operEn="80"
 			operWorkers="2500"
