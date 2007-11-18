@@ -799,7 +799,7 @@ class StarMapWidget(Widget):
 
 	def draw(self, surface):
 		if not self._mapSurf:
-			self._mapSurf = pygame.Surface(self.rect.size, OPENGL | OPENGLBLIT | HWSURFACE | SRCALPHA, surface)
+			self._mapSurf = pygame.Surface(self.rect.size, SWSURFACE | SRCALPHA, surface)
 			# workaround for FILLED CIRCLE CLIP BUG - TODO remove
 			clip = self._mapSurf.get_clip()
 			clip.left += 1
