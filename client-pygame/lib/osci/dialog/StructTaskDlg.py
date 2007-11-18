@@ -144,7 +144,7 @@ class StructTaskDlg:
 				techID = techID,
 				tIsShip = 0,
 				name = tech.name,
-				tl = int(techID / 1000),
+				tl = tech.level,
 				subtype = tech.subtype,
 				icons = ((res.getTechImg(techID), ui.ALIGN_N),),
 				font = "small-bold",
