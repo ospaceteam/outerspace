@@ -82,6 +82,15 @@ class SearchDlg:
 					found = True
 					self.founded.append(name)
 					break
+			name = str(objID)
+			if not name in self.founded and fnmatch.fnmatch(name, self.pattern):
+				if hasattr(obj, "x") and hasattr(obj, "y") and self.mapWidget:
+					self.mapWidget.highlightPos = (obj.x, obj.y)
+					self.mapWidget.setPos(obj.x, obj.y)
+					self.update()
+				found = True
+				self.founded.append(name)
+				break
 		if not found and self.mapWidget:
 			self.mapWidget.highlightPos = None
 			self.win.setStatus(_("No system found"))

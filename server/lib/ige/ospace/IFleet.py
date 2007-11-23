@@ -225,7 +225,7 @@ class IFleet(IObject):
 		# update fleet's data
 		self.cmd(fleet).update(tran, fleet)
 		# disband this fleet
-		log.debug(obj.oid, 'FLEET joinFleet, removing old fleet')
+		log.debug('IFleet joinFleet, removing old fleet: source fleet',obj.oid,'; target fleet',fleet.oid)
 		self.cmd(obj).disbandFleet(tran, obj)
 
 	joinFleet.public = 1
