@@ -1146,6 +1146,9 @@ class IPlayer(IObject):
 			real = min(ratio, math.sqrt(ratio))
 			#@log.debug(obj.oid, "Increase production by", ratio, "real", real)
 			obj.prodEff += real
+		# clean up prodEff if prodEff < 0 (prevent abuse)
+		if obj.prodEff < 0:
+			obj.prodEff = 0.0
 		# clean up ship redirections
 		systems = {}
 		for planetID in obj.planets:

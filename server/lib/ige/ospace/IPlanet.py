@@ -100,6 +100,8 @@ class IPlanet(IObject):
 		demolishStruct):
 		if len(obj.prodQueue) > Rules.maxProdQueueLen:
 			raise GameException('Queue is full.')
+		if quantity < 1:
+			raise GameException("Quantity must be greater than 0")
 		player = tran.db[obj.owner]
 		if not player.techs.has_key(techID) and isShip == 0:
 			raise GameException('You do not own this kind of technology.')
@@ -844,12 +846,31 @@ class IPlanet(IObject):
 		return SUCC
 
 	def update(self, tran, obj):
-		if not hasattr(obj,'solarmod'):
-			obj.solarmod = 0
-		for item in obj.prodQueue:
-			if not hasattr(item, "demolishStruct"):
-				item.demolishStruct = OID_NONE
-			item.currProd = int(item.currProd)
+		# clean up negative build queues and fix missing demolishStruct keys
+		loopAgain = True
+		while loopAgain:
+			deletedKey = False
+			for key in range(0,len(obj.prodQueue)):
+				item = obj.prodQueue[key]
+				if not hasattr(item, "demolishStruct"):
+					item.demolishStruct = OID_NONE
+				if item.quantity < 0:
+					log.warning("Deleting negative item queue on", obj.oid,"for player",obj.owner)
+					if item.isShip:
+						tech = player.shipDesigns[item.techID]
+					else:
+						tech = Rules.techs[item.techID]
+					player = tran.db[obj.owner]
+					for sr in tech.buildSRes:
+						player.stratRes[sr] = player.stratRes.get(sr, 0) + item.quantity #quantity negative, so subtracting strat resources
+					# del the bad item. Since this changes indicies, start the check over again on remaining items
+					deletedKey = True
+					del obj.prodQueue[key]
+					break
+			# no more bad entries found; break the while loop
+			if not deletedKey:
+				loopAgain = False
+				
 		# TODO: remove in 0.5.34
 		for struct in obj.slots:
 			if len(struct) < 4:
