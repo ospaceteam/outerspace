@@ -24,6 +24,7 @@ from ige.IObject import IObject
 from ige.IDataHolder import IDataHolder
 from Const import *
 import Rules, Utils, math, ShipUtils, time
+import re
 
 class IPlayer(IObject):
 
@@ -326,6 +327,8 @@ class IPlayer(IObject):
 		for designID in obj.shipDesigns:
 			if obj.shipDesigns[designID].name == name:
 				raise GameException("Design name is already used.")
+		if re.match("^\s*$",name):
+			raise GameException("Design name must not be entirely whitespace.")
 		# find free design id
 		index = 1
 		ids = obj.shipDesigns.keys()
