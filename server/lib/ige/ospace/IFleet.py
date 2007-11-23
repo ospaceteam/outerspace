@@ -186,6 +186,7 @@ class IFleet(IObject):
 			# owner has turned off auto-joins (join self with other)
 			return
 		if fleetID == OID_NONE:
+			raiseExps = False
 			# find suitable fleet
 			system = tran.db[obj.orbiting]
 			player = tran.db[obj.owner]
@@ -200,12 +201,20 @@ class IFleet(IObject):
 				if rel == REL_UNITY and Utils.isIdleFleet(fleet):
 					fleetID = tmpID
 					break
+		else:
+			raiseExps = True
 		if fleetID == OID_NONE:
 			return
 		# join to selected fleet
 		fleet = tran.db[fleetID]
+		# if the fleet was specified from a client call, validate it:
 		if not fleet.owner == obj.owner:
-			raise GameException("Fleets do not have the same owner.")
+			if raiseExps:
+				raise GameException("Fleets do not have the same owner.")
+			return
+		if not fleet.orbiting == obj.orbiting:
+			if raiseExps:
+				raise GameException("Fleets are not in the same system.")
 			return
 		if fleet.allowmerge == 0 and not force:
 			# owner has turned off auto-joins (join other with self)
