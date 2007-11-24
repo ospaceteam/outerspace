@@ -504,7 +504,7 @@ class IPlanet(IObject):
 				# and do not lower morale too
 				if obj.storPop < obj.maxPop:
 					#@Utils.sendMessage(tran, obj, MSG_NOSUPPORT_POP, obj.oid, None)
-					obj.morale -= Rules.moraleLostNoFood
+					obj.morale = max(obj.morale - Rules.moraleLostNoFood,0)
 			elif obj.storPop < maxPop:
 				# born
 				obj.storPop += max(min(int(obj.storPop * Rules.popGrowthRate), maxPop - obj.storPop), Rules.popMinGrowthRate)
