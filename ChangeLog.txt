@@ -1,6 +1,22 @@
 Change Log:
 
+VERSION 0.5.66
+
+[2007-11-25]
+- Fixed problem with wrong scanner updates. [Qark]
+- No new players spawn in random places of galaxy from now. [Qark]
+
+[2007-11-24]
+- Fixed negative morale being created during population loss morale penalty calculation. [Random Chaos]
+
 [2007-11-23]
+- Fixed: Building negative structures/ships artificially generated strategic resources. Negative queues no longer allowed. [Random Chaos]
+- Fixed: Negative empire efficiency is now zeroed (0% production). [Random Chaos]
+- Fixed: Join fleets command allowed your fleet to join to a fleet of another player. This bug was not accessible by a normal client, but an custom client could have abused it. [Random Chaos]
+- Fixed: Join fleets command allowed a fleet in a system to join to a fleet in another system or between systems. This bug was not accessible by a normal client, but an custom client could have abused it. [Random Chaos]
+- Fixed: Purely whitespace ship design names no longer allowed. [Random Chaos]
+- Added: Upgrade mode check of planets for negative build queues; deletes offending queues and penalizes strategic resources. [Random Chaos]
+- Added: In the search dialog, you can now enter an object ID and if you can see it, you will automatically go to it (useful for comparing log data to starmap data) [Random Chaos]
 - Closed several coding loopholes that were being abused by a certain player. [Random Chaos]
 
 [2007-11-18]

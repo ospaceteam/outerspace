@@ -790,7 +790,8 @@ class IPlayer(IObject):
 			if tmpObj.type in (T_SYSTEM,T_WORMHOLE) and objID not in obj.validSystems:
 				obj.validSystems.append(objID)
 			for info in self.cmd(tmpObj).getScanInfos(tran, tmpObj, level, obj):
-				map[info.oid] = info
+				if (info.oid not in map) or (info.scanPwr > map[info.oid].scanPwr):
+					map[info.oid] = info
 
 		return map
 

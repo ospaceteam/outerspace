@@ -357,8 +357,8 @@ class IUniverse(IObject):
 					log.message("AUTO RESTARTING GALAXY", galaxyID)
 					if activePlayerCount == 0:
 						self.restartGalaxy2(tran, obj, galaxyID, ["The galaxy was ended with no active players."])
-					elif piratePlayer: #if the pirate is still alive, then he must be the victor.
-						self.restartGalaxy2(tran, obj, galaxyID, ["The galaxy was automatically ended with the Pirate as victor!"])
+					elif piratePlayer: #if the pirate is still alive, then he must be the winner.
+						self.restartGalaxy2(tran, obj, galaxyID, ["The galaxy was automatically ended with the Pirate as winner!"])
 					elif selfName: #if there is only one player, selfName must be themselves if it isn't null
 						self.restartGalaxy2(tran, obj, galaxyID, ["The galaxy was automatically ended with commander %s as the only remaining player." % selfName])
 		# collect mailboxes

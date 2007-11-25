@@ -97,23 +97,24 @@ class ISystem(IObject):
 				obj.closeFleets.append(fleetID)
 		if old != obj.closeFleets:
 			log.debug("System close fleets fixed", obj.oid, old, obj.closeFleets)
+		# TODO: remove, no need to start players on random systems
 		# try to find starting planets
-		starting = 0
-		free = 1
-		for planetID in obj.planets:
-			planet = tran.db[planetID]
-			if planet.plStarting:
-				starting = planetID
-			if planet.owner != OID_NONE:
-				free = 0
-		if starting and free:
-			# good starting position
-			#@log.debug("Found starting position", obj.oid, starting)
-			# get galaxy
-			galaxy = tran.db[obj.compOf]
-			if starting not in galaxy.startingPos:
-				log.debug("Adding to starting positions of galaxy", galaxy.oid)
-				galaxy.startingPos.append(starting)
+		#starting = 0
+		#free = 1
+		#for planetID in obj.planets:
+		#	planet = tran.db[planetID]
+		#	if planet.plStarting:
+		#		starting = planetID
+		#	if planet.owner != OID_NONE:
+		#		free = 0
+		#if starting and free:
+		#	# good starting position
+		#	#@log.debug("Found starting position", obj.oid, starting)
+		#	# get galaxy
+		#	galaxy = tran.db[obj.compOf]
+		#	if starting not in galaxy.startingPos:
+		#		log.debug("Adding to starting positions of galaxy", galaxy.oid)
+		#		galaxy.startingPos.append(starting)
 		# check if system has planets
 		hasHabitable = 0
 		for planetID in obj.planets:
