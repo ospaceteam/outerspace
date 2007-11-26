@@ -23,6 +23,7 @@ import re, pygame
 from osci import gdata
 from ige.ospace.Const import *
 import os, os.path
+from ige import log
 
 class OptionsDlg:
 	"""Displays options dialog.
@@ -37,6 +38,8 @@ class OptionsDlg:
 	where port must be integer value.
 	Options are saved to file imediately, after users press OK button.
 	"""
+
+	
 	def __init__(self, app):
 		self.app = app
 		self.languages = {}
@@ -44,6 +47,8 @@ class OptionsDlg:
 		self.languages['cs']=_('Czech')
 		self.languages['fr']=_('French')
 		self.languages['de']=_('German')
+		self.gatemodes = {0: _('No gate interconnects'), 1: _('Fleet move interconnects'),2: _('Close gate interconnects'), 3: _('Map center gate interconnects')}
+		self.resolutions = ["800x600","1024x768","1152x864","1280x960","1280x1024","1440x900","1400x1050","1600x900","1680x1050","1600x1200","1920x1200"]
 		self.curLang = gdata.config.client.language
 		self.createUI()
 
@@ -81,17 +86,12 @@ class OptionsDlg:
 
 		# reading resolution info
 		if gdata.config.display.resolution != None:
-			width, height = gdata.config.display.resolution.split('x')
-			self.win.vSmallRes.pressed = 0
-			self.win.vMediumRes.pressed = 0
-			self.win.vLargeRes.pressed = 0
-			if width == '800' and height == '600':
-				self.win.vSmallRes.pressed = 1
-			elif width == '1024' and height == '768':
-				self.win.vMediumRes.pressed = 1
-			elif width == '1280' and height == '1024':
-				self.win.vLargeRes.pressed = 1
+			resolution = gdata.config.display.resolution
+			self.win.vResolution2.text = resolution
 
+		self.win.vResolution.text = _("Select Mode")
+		self.win.vResolution.action = "onSelectResolution"
+		
 		# reading client language
 		if gdata.config.client.language != None:
 			lang = gdata.config.client.language
@@ -163,6 +163,31 @@ class OptionsDlg:
 			val = gdata.config.defaults.showminimap
 			self.win.vShowMinimap.checked = val == 'yes'
 
+		if gdata.config.defaults.showmapgrid != None:
+			val = gdata.config.defaults.showmapgrid
+			self.win.vShowMapGrid.checked = val == 'yes'
+
+		if gdata.config.defaults.showmapscanners != None:
+			val = gdata.config.defaults.showmapscanners
+			self.win.vShowMapScanners.checked = val == 'yes'
+
+		if gdata.config.defaults.showfleetlines != None:
+			val = gdata.config.defaults.showfleetlines
+			self.win.vShowMapFleetLines.checked = val == 'yes'
+
+		if gdata.config.defaults.mapgatemode != None:
+			gatemode = int(gdata.config.defaults.mapgatemode)
+			try:
+				self.win.vGatemode2.text = self.gatemodes[gatemode]
+			except:
+				self.win.vGatemode2.text = gatemode
+		else:
+			self.win.vGatemode2.text = self.gatemodes[0]
+
+		self.win.vGatemode.text = _("Select Gate Draw Mode")
+		self.win.vGatemode.action = "onSelectGatemode"
+
+		# login defaults
 		self.win.vAutoLogin.enabled = False
 		if gdata.savePassword:
 			self.win.vSavePassword.enabled = True
@@ -232,14 +257,6 @@ class OptionsDlg:
 		# set client language
 		gdata.config.client.language = self.curLang
 		
-		#sel selected display resolution
-		if self.win.vSmallRes.pressed:
-			gdata.config.display.resolution = '800x600'
-		elif self.win.vMediumRes.pressed:
-			gdata.config.display.resolution = '1024x768'
-		elif self.win.vLargeRes.pressed:
-			gdata.config.display.resolution = '1280x1024'
-
 		# set proxy
 		host = self.win.vProxyHost.text
 		port = self.win.vProxyPort.text
@@ -297,6 +314,22 @@ class OptionsDlg:
 			gdata.config.defaults.showminimap = 'yes'
 		else:
 			gdata.config.defaults.showminimap = 'no'
+
+		if self.win.vShowMapGrid.checked:
+			gdata.config.defaults.showmapgrid = 'yes'
+		else:
+			gdata.config.defaults.showmapgrid = 'no'
+
+		if self.win.vShowMapScanners.checked:
+			gdata.config.defaults.showmapscanners = 'yes'
+		else:
+			gdata.config.defaults.showmapscanners = 'no'
+
+		if self.win.vShowMapFleetLines.checked:
+			gdata.config.defaults.showfleetlines = 'yes'
+		else:
+			gdata.config.defaults.showfleetlines = 'no'
+
 			
 		if self.win.vAutoLogin.checked:
 			gdata.config.game.autologin = 'yes'
@@ -320,7 +353,7 @@ class OptionsDlg:
 		if self.caller:
 			self.caller.display()	# Redisplay login dlg
 		elif gdata.mainGameDlg:
-			gdata.mainGameDlg.update() # redraw screen (highlights etc)
+			gdata.mainGameDlg.update(configUpdated=True) # redraw screen (highlights etc)
 
 
 	def onSmallRes(self, widget, action, data):
@@ -372,6 +405,26 @@ class OptionsDlg:
 		self.win.vTheme2.text = curTheme
 		self.twin.hide()
 
+	def onSelectGatemode(self, widget, action, data):
+		items = []
+		for key in self.gatemodes.keys():
+			items.append(ui.Item(self.gatemodes[key],tGatemode = key))
+		self.gnwin.vGatemodes.items = items
+		self.gnwin.vGatemodes.itemsChanged()
+		self.gnwin.show()
+
+	def onGatemodeCancel(self, widget, action, data):
+		self.gnwin.hide()
+
+	def onGatemodeSelected(self, widget, action, data):
+		self.recipientObjID = []
+		if not self.gnwin.vGatemodes.selection:
+			return
+		curMode = self.gnwin.vGatemodes.selection[0].tGatemode
+		gdata.config.defaults.mapgatemode = curMode
+		self.win.vGatemode2.text = self.gatemodes[curMode]
+		self.gnwin.hide()
+		
 	def onSelectLanguage(self, widget, action, data):
 		items = []
 		items.append(ui.Item(self.languages['en'],tLanguage = 'en'))
@@ -403,6 +456,31 @@ class OptionsDlg:
 		self.lwin.hide()
 		self.win.setStatus(_("You have to restart client to change the language."))
 
+
+	def onSelectResolution(self, widget, action, data):
+		items = []
+		for mode in self.resolutions:
+			items.append(ui.Item(mode,tRes = mode))
+		self.reswin.vResolutions.items = items
+		self.reswin.vResolutions.itemsChanged()
+		self.reswin.show()
+
+	def onResolutionCancel(self, widget, action, data):
+		self.reswin.hide()
+
+	def onResolutionSelected(self, widget, action, data):
+		if not self.reswin.vResolutions.selection:
+			return
+		curMode = self.reswin.vResolutions.selection[0].tRes
+		try:
+			width,height = curMode.split('x')
+		except:
+			self.win.setStatus(_("The mode you selected is not properly formatted."))
+		gdata.config.display.resolution = curMode
+		self.win.vResolution2.text = curMode
+		self.reswin.hide()
+		self.win.setStatus(_("You have to restart client to change the resolution."))
+		
 	def onChangeMusicVolume(self, widget, action, data):
 		ui.SkinableTheme.setMusicVolume(float(self.win.vMusicVolume.slider.position) / 100.0)
 
@@ -421,7 +499,7 @@ class OptionsDlg:
 		screenWidth, screenHeight = gdata.scrnSize
 		# size of dialog in layout metrics (for SimpleGridLM)
 		cols = 33
-		rows = 16
+		rows = 18
 		# dialog width and height in pixels
 		width = cols * 20 + 5
 		height = rows * 20 + 4
@@ -442,23 +520,39 @@ class OptionsDlg:
 		# Resolution
 		ui.Title(self.win, layout = (1, 1, 5, 1), text = _('Resolution'),
 			align = ui.ALIGN_NONE, font = 'normal-bold')
-		ui.Button(self.win, layout = (1, 2, 5, 1), text = '800x600', id = 'vSmallRes',
-			toggle = 1, action = 'onSmallRes')
-		ui.Button(self.win, layout = (1, 3, 5, 1), text = '1024x768', id = 'vMediumRes',
-			toggle = 1, action = 'onMediumRes')
-		ui.Button(self.win, layout = (1, 4, 5, 1), text = '1280x1024', id = 'vLargeRes',
-			toggle = 1, action = 'onLargeRes')
+
+		ui.Button(self.win, layout = (1, 2, 5, 1), id = "vResolution", align = ui.ALIGN_W)
+		ui.ActiveLabel(self.win, layout = (1, 3, 5, 1), id = "vResolution2")
+		width = 304  # 15 * 20 + 4
+		height = 264 # 13 * 20 + 4
+		self.reswin = ui.Window(self.app,
+			modal = 1,
+			escKeyClose = 1,
+			titleOnly = 0,
+			movable = 0,
+			title = _("Select resolution"),
+			rect = ui.Rect((screenWidth - width) / 2, (screenHeight - height) / 2, width, height),
+			layoutManager = ui.SimpleGridLM(),
+		)
+		self.reswin.subscribeAction('*', self)
+		# rename
+		ui.Listbox(self.reswin, layout = (0, 0, 15, 11), id = 'vResolutions', columnLabels = 0,
+			columns = ((None, 'text', 0, ui.ALIGN_W),), multiselection = 0)
+		# status bar + submit/cancel
+		ui.TitleButton(self.reswin, layout = (10, 11, 5, 1), text = _("Select"), action = 'onResolutionSelected')
+		ui.TitleButton(self.reswin, layout = (5, 11, 5, 1), text = _("Cancel"), action = 'onResolutionCancel')
+		ui.Title(self.reswin, id = 'vStatusBar', layout = (0, 11, 5, 1), align = ui.ALIGN_W)
 
 		# Languages
-		ui.Title(self.win, layout = (1, 6, 5, 1), text = _('Language'),
+		ui.Title(self.win, layout = (1, 5, 5, 1), text = _('Language'),
 			align = ui.ALIGN_NONE, font = 'normal-bold')
 		try:
 			longLang = self.languages[self.curLang]
 		except:
 			longLang = self.curLang
 		#ui.Button(self.win, layout = (1, 8, 5, 1), text = longLang, id = 'vLanguage')
-		ui.Button(self.win, layout = (1, 7, 5, 1), text = _('Select language'), id = 'vLangSel', action = 'onSelectLanguage')
-		ui.ActiveLabel(self.win, layout = (1, 8, 5, 1), text = longLang,  id = "vLanguage")
+		ui.Button(self.win, layout = (1, 6, 5, 1), text = _('Select Language'), id = 'vLangSel', action = 'onSelectLanguage')
+		ui.ActiveLabel(self.win, layout = (1, 7, 5, 1), text = longLang,  id = "vLanguage")
 		lcols = 12
 		lrows = 6
 		width = lcols * 20 + 4
@@ -482,10 +576,10 @@ class OptionsDlg:
 		ui.Title(self.lwin, id = 'vStatusBar', layout = (0, lrows-2, lcols-10, 1), align = ui.ALIGN_W)
 
 		# Theme
-		ui.Title(self.win, layout = (1, 10, 5, 1), text = _('Themes'),
+		ui.Title(self.win, layout = (1, 9, 5, 1), text = _('Themes'),
 			align = ui.ALIGN_NONE, font = 'normal-bold')
-		ui.Button(self.win, layout = (1, 11, 5, 1), id = "vTheme", align = ui.ALIGN_W)
-		ui.ActiveLabel(self.win, layout = (1, 12, 5, 1), id = "vTheme2")
+		ui.Button(self.win, layout = (1, 10, 5, 1), id = "vTheme", align = ui.ALIGN_W)
+		ui.ActiveLabel(self.win, layout = (1, 11, 5, 1), id = "vTheme2")
 		width = 304  # 15 * 20 + 4
 		height = 264 # 13 * 20 + 4
 		self.twin = ui.Window(self.app,
@@ -524,22 +618,51 @@ class OptionsDlg:
 			align = ui.ALIGN_NONE, font = 'normal-bold')
 		ui.Check(self.win, layout = (7, 8, 8, 1), text = _('Report finalization'), id = 'vReportFin',
 			checked = 0)
-		ui.Check(self.win, layout = (7, 9, 8, 1), text = _('Show redirects'), id = 'vRedirects',
+		ui.Check(self.win, layout = (15, 8, 8, 1), text = _('Display help/tooltip'), id = 'vDisplayHelp',
 			checked = 1)
-		ui.Check(self.win, layout = (15,8,8,1), text = _('Show coordinates'), id = 'vCoords',
+		ui.Check(self.win, layout = (23, 8, 9, 1), text = _('Show coordinates'), id = 'vCoords',
 			checked = 1)
-		ui.Check(self.win, layout = (15,9,8,1), text = _('Players highlight'), id = 'vHighlights',
+		ui.Check(self.win, layout = (7 ,9 ,8 ,1), text = _('Players highlight'), id = 'vHighlights',
 			checked = 1)
-		ui.Check(self.win, layout = (23, 8, 9, 1), text = _('Display help/tooltip'), id = 'vDisplayHelp',
+		ui.Check(self.win, layout = (15, 9, 8, 1), text = _('Show minimap'), id = 'vShowMinimap', 
 			checked = 1)
-		ui.Check(self.win, layout = (23, 9, 9, 1), text = _('Show minimap'), id = 'vShowMinimap', 
+		ui.Check(self.win, layout = (7, 10, 8, 1), text = _('Show redirects'), id = 'vRedirects',
 			checked = 1)
+		ui.Check(self.win, layout = (15, 10, 8, 1), text = _('Show map grid'), id = 'vShowMapGrid', 
+			checked = 1)
+		ui.Check(self.win, layout = (7, 11, 8, 1), text = _('Show map scanners'), id = 'vShowMapScanners', 
+			checked = 1)
+		ui.Check(self.win, layout = (15, 11, 8, 1), text = _('Show fleet lines'), id = 'vShowMapFleetLines', 
+			checked = 1)
+
+		ui.Button(self.win, layout = (23, 9, 9, 1), id = "vGatemode", align = ui.ALIGN_W)
+		ui.ActiveLabel(self.win, layout = (23, 10, 9, 1), id = "vGatemode2")
+		width = 304  # 15 * 20 + 4
+		height = 164 # 8 * 20 + 4
+		self.gnwin = ui.Window(self.app,
+			modal = 1,
+			escKeyClose = 1,
+			titleOnly = 0,
+			movable = 0,
+			title = _("Select gate mode"),
+			rect = ui.Rect((screenWidth - width) / 2, (screenHeight - height) / 2, width, height),
+			layoutManager = ui.SimpleGridLM(),
+		)
+		self.gnwin.subscribeAction('*', self)
+		# rename
+		ui.Listbox(self.gnwin, layout = (0, 0, 15, 6), id = 'vGatemodes', columnLabels = 0,
+			columns = ((None, 'text', 0, ui.ALIGN_W),), multiselection = 0)
+		# status bar + submit/cancel
+		ui.TitleButton(self.gnwin, layout = (10, 6, 5, 1), text = _("Select"), action = 'onGatemodeSelected')
+		ui.TitleButton(self.gnwin, layout = (5, 6, 5, 1), text = _("Cancel"), action = 'onGatemodeCancel')
+		ui.Title(self.gnwin, id = 'vStatusBar', layout = (0, 6, 5, 1), align = ui.ALIGN_W)
+		
 		# Login settings
-		ui.Title(self.win, layout = (7,11, 15, 1), text = _('Login settings'),
+		ui.Title(self.win, layout = (7,13, 15, 1), text = _('Login settings'),
 			align = ui.ALIGN_NONE, font = 'normal-bold')
-		ui.Check(self.win, layout = (15,12,8,1), text = _('Auto-login'), id = 'vAutoLogin',
+		ui.Check(self.win, layout = (15,14,8,1), text = _('Auto-login'), id = 'vAutoLogin',
 			checked = 0)
-		ui.Check(self.win, layout = (7,12,8,1), text = _('Remember password'), id = 'vSavePassword',
+		ui.Check(self.win, layout = (7,14,8,1), text = _('Remember password'), id = 'vSavePassword',
 			checked = 0, action = "onChangeSavePassword")
 
 		# proxy settings

@@ -72,7 +72,7 @@ class SystemMapWidget(Widget):
 					continue
 				# image
 				plType = getattr(planet, 'plType', 'X')
-				img = res.getPlanetImg('%s%d' % (plType, (planet.oid + system.oid) % typeImgs[plType]))
+				img = res.getPlanetImg(plType, planet.oid + system.oid)
 				#if plType != 'G':
 				#	ratio = planet.plDiameter / 19000.0
 				#else:

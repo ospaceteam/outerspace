@@ -1,5 +1,12 @@
 Change Log:
 
+[2007-11-25]
+- Added stargate network starmap views (CTRL-N to cycle through available views) [Random Chaos]
+- Added additional planet icons [Random Chaos]
+- Updated res.py to automatically detect and use additional icons without specifying number of icons per type in systemmap widget [Random Chaos]
+- Updated options dialog to provide toggles for all currently hotkeyed starmap modes [Random Chaos]
+- Updated options dialog to provide all standard resolutions up to 1920x1200 [Random Chaos]
+
 VERSION 0.5.66
 
 [2007-11-25]
@@ -366,7 +373,7 @@ VERSION 0.5.60
 - Modified Military Power calculation to not weight anti-large weapons and anti-planet weapons so heavily [Random Chaos]
 
 [2006-09-14]
-- Added new EDEN technologies for players [Malxe]
+- Added new EDEN technologies for players [Sindel]
 
 [2006-08-20]
 - Added Minimap [Anderuso]
@@ -523,7 +530,7 @@ VERSION 0.5.52
 - Asteroid Mining technology no longer requires TL5 strategy resource.
 
 [2004-12-01]
-- Added TL5 technologies for TL5 resources. [Malxe]
+- Added TL5 technologies for TL5 resources. [Sindel]
 - Building an Pirate Base on already inhabited world does not reduce
   fame now.
 

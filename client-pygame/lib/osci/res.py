@@ -33,6 +33,7 @@ smallStarImgs = None
 techImgs = None
 bigStarImgs = None
 planetImgs = None
+planetImgCnt = None
 cmdInProgressImg = None
 loginLogoImg = None
 structProblemImg = None
@@ -93,12 +94,19 @@ def loadResources():
 		bigStarImgs[name] = pygame.image.load(filename).convert_alpha()
 	# load planet images
 	global planetImgs
+	global planetImgCnt
 	planetImgs = {}
+	planetImgCnt = {}
 	for filename in glob.glob('res/system/planet_*.png'):
 		curr += 1
 		if curr % 10 == 0:
 			dlg.setProgress(_('Loading resources...'), curr)
 		name = filename[18:-4]
+		pltype = name[:1]
+		if pltype in planetImgCnt:
+			planetImgCnt[pltype] += 1
+		else:
+			planetImgCnt[pltype] = 1
 		planetImgs[name] = pygame.image.load(filename).convert_alpha()
 	# load ship imgs
 	global shipImgs
@@ -139,7 +147,9 @@ def getSmallStarImg(name):
 def getBigStarImg(name):
 	return bigStarImgs[name]
 
-def getPlanetImg(name):
+def getPlanetImg(pltype,plid):
+	global planetImgCnt
+	name = '%s%d' % (pltype,plid % planetImgCnt[pltype])
 	return planetImgs[name]
 
 def getUnknownName():
@@ -286,6 +296,14 @@ def getPlayerColor(owner, onlyDiplo = False):
 				return gdata.playersHighlightColors[owner]
 	rel = min(REL_UNDEF,client.getRelationTo(owner))
 	return getFFColorCode(rel)
+
+def getGateLineWidth(owner):
+	if owner == OID_NONE:
+		return 1
+	rel = min(REL_UNDEF,client.getRelationTo(owner))
+	if rel == 1250:
+		return 2
+	return 1
 
 def getStarmapWidgetPlanetColor(ownerid,bio,mineral,slot,stargate,dockfuel,dockupgrade,fame,stratres,morale):
 	colors = {}

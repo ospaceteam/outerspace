@@ -203,11 +203,13 @@ class MainGameDlg:
 		self.hide()
 		self.app.exit()
 
-	def update(self):
+	def update(self,configUpdated=False):
 		self.galaxyRestart(None, None, False)
 		player = client.getPlayer()
 		turn = client.getTurn()
 		self.win.vTurn.text = res.formatTime(turn)
+		if configUpdated:
+			self.win.vStarMap.updateConfigModes()
 		self.win.vStarMap.precompute()
 		# center of 1st player star
 		if not self.centered:
