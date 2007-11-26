@@ -667,21 +667,16 @@ class StarMapWidget(Widget):
 		currY = self.currY
 		scale = self.scale
 		pairs = []
-		ignore = []
 		for sObjid, sx, sy, sLineWidth, sSpeedBoost in self._map[self.MAP_GATENETWORK]:
 			_sx = int((sx - currX) * scale) + centerX
 			_sy = maxY - (int((sy - currY) * scale) + centerY)
 			if mode == 3:
 				if _sx > centerX + 50 or _sx < centerX - 50 or _sy > centerY + 50 or _sy < centerY - 50:
-					ignore.append(sObjid)
 					continue
 			elif mode == 1:
 				if not sObjid == objid:
-					ignore.append(sObjid)
 					continue
 			for tObjid, tx, ty, tLineWidth, tSpeedBoost in self._map[self.MAP_GATENETWORK]:
-				if tObjid in ignore:
-					continue
 				tLookup = '%s%s' % (tObjid,sObjid)
 				sLookup = '%s%s' % (sObjid,tObjid)
 				pairs.append(sLookup)
