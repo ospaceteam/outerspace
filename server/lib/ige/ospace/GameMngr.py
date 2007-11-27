@@ -665,10 +665,10 @@ statsFooter = '''\
 </td>
 </tr>
 <tr>
-	<td class="footer" colspan=2 align="center">&copy; 2001 - 2003 Ludek Smid</td>
+	<td class="footer" colspan=2 align="center">&copy; 2001 - %s Ludek Smid</td>
 </tr>
 </table>
 </center>
 
 </body>
-</html>'''
+</html>''' % time.localtime()[0]
