@@ -71,7 +71,12 @@ def getCountShipsByDesign(ships, maxCount, shipDesignID):
 def getCountShips(ships, maxCount):
 	count = 0
 	retShips = []
-	maxCount = int(round(len(ships) * maxCount,0))
+	if maxCount < 1 and maxCount > 0: # calc percent to num ships
+		numShips = 0
+		for ship in ships:
+			if ship[0] == shipDesignID:
+				numShips += 1
+		maxCount = int(round(numShips * maxCount,0))
 	if maxCount == 0:
 		return retShips
 	for ship in ships:

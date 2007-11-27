@@ -1,5 +1,8 @@
 Change Log:
 
+[2007-11-26]
+- Fixed split fleet on grouped ships. [Random Chaos]
+
 [2007-11-25]
 - Added stargate network starmap views (CTRL-N to cycle through available views) [Random Chaos]
 - Added additional planet icons [Random Chaos]
