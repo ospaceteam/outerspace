@@ -24,6 +24,7 @@ from osci.SystemMapWidget import SystemMapWidget
 from FleetCommandDlg import FleetCommandDlg
 from FleetSpecsDlg import FleetSpecsDlg
 from FleetSplitDlg import FleetSplitDlg
+from FleetScoutBloomDlg import FleetScoutBloomDlg
 from ConfirmDlg import ConfirmDlg
 from RenameFleetDlg import RenameFleetDlg
 from ige.ospace.Const import *
@@ -40,6 +41,7 @@ class FleetDlg:
 		self.fleetSpecsDlg = FleetSpecsDlg(self.app)
 		self.fleetSplitDlg = FleetSplitDlg(self.app)
 		self.renameFleetDlg = RenameFleetDlg(self.app)
+		self.fleetScoutBloomDlg = FleetScoutBloomDlg(self.app)
 		self.confirmDlg = ConfirmDlg(app)
 
 	def display(self, objID):
@@ -294,6 +296,13 @@ class FleetDlg:
 	def onSplitFleet(self, widget, action, data):
 		self.fleetSplitDlg.display(self)
 
+	def onScoutWaveFleet(self, widget, action, data):
+		self.fleetScoutBloomDlg.display(self)
+
+	def onScrapFleet(self, widget, action, data):
+		self.confirmDlg.display(_("Really scrap this fleet?"),
+			_("Yes"), _("No"), self.onScrapConfirmed)
+
 	def onDeleteSelectedShip(self, widget, action, data):
 		self.confirmDlg.display(_("Really scrap this ship?"),
 			_("Yes"), _("No"), self.onDeleteSelectedShipConfirmed)
@@ -313,6 +322,20 @@ class FleetDlg:
 				self.hide()
 			else:
 				self.update()
+			gdata.mainGameDlg.update()
+			return 0
+		except ige.GameException, e:
+			self.win.setStatus(_(e.args[0]))
+			return 1
+
+	def onScrapConfirmed(self):
+		try:
+			self.win.setStatus(_('Executing SCRAP FLEET command...'))
+			client.db[self.fleetID] = client.cmdProxy.disbandFleet(self.fleetID)
+			self.win.setStatus(_('Command has been executed.'))
+			client.getPlayer().fleets.remove(self.fleetID)
+			del client.db[self.fleetID]
+			self.hide()
 			gdata.mainGameDlg.update()
 			return 0
 		except ige.GameException, e:
@@ -382,10 +405,14 @@ class FleetDlg:
 			layout = (20, 25, 5, 1), action = 'onSplitFleet')
 		ui.Button(self.win, text = _('Rename fleet'), id = 'vRenameButton',
 			layout = (25, 25, 5, 1), action = 'onRenameFleet')
-		ui.Button(self.win, text = _('Auto delete'), id = 'vAutoDeleteButton',
-			layout = (30, 25, 5, 1), action = 'onAutoDelete')
 		ui.Button(self.win, text = _('Fleet Specs'), id = 'vFleetSpecs',
-			layout = (35, 25, 5, 1), action = 'onFleetSpecs')
+			layout = (30, 25, 5, 1), action = 'onFleetSpecs')
+		ui.Button(self.win, text = _('Auto delete'), id = 'vAutoDeleteButton',
+			layout = (35, 25, 5, 1), action = 'onAutoDelete')
+		ui.Button(self.win, text = _('Scout wave'), id = 'vScoutWaveButton',
+			layout = (20, 26, 5, 1), action = 'onScoutWaveFleet')
+		ui.Button(self.win, text = _('Scrap fleet'), id = 'vScrapButton',
+			layout = (25, 26, 5, 1), action = 'onScrapFleet')
 		# ship data
 		ui.Title(self.win, text = _('Ship Data'), layout = (0, 12, 15, 1),
 			align = ui.ALIGN_W, font = 'normal-bold')

@@ -20,7 +20,7 @@
 
 import cPickle as pickle
 import os.path
-
+from ige import log
 class IClientDB:
 
 	def __init__(self, cid, turn, dataDir = 'var'):
@@ -33,11 +33,12 @@ class IClientDB:
 		return self.data[key]
 
 	def __setitem__(self, key, value):
-		if self.data.has_key(key):
-			self.data[key].__dict__.update(value.__dict__)
-		else:
-			self.data[key] = value
-		self.timestamp[key] = self.turn
+		if value != None:
+			if self.data.has_key(key):
+				self.data[key].__dict__.update(value.__dict__)
+			else:
+				self.data[key] = value
+			self.timestamp[key] = self.turn
 
 	def __delitem__(self, key):
 		del self.data[key]

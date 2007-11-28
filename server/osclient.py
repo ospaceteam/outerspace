@@ -101,6 +101,30 @@ advTechLevel = {
 99: {}
 }
 
+def cleanupBadFleets():
+	un = s.getInfo(1)
+	delete = []
+	#search by system rather than by player; there is no galaxy list of playerIDs
+	for galaxyID in un.galaxies:
+		galaxy = s.getInfo(galaxyID)
+		for systemID in galaxy.systems:
+			system = s.getInfo(systemID)
+			for fleetID in system.fleets:
+				fleet = s.getInfo(fleetID)
+				owner = s.getInfo(fleet.owner)
+				if not owner.galaxies:
+					delete.append((fleetID,systemID,fleet.owner,0))
+				if owner.galaxies[0] != galaxyID:
+					delete.append((fleetID,systemID,fleet.owner,1))
+	for row in delete:
+		if row[3]:
+			print "Deleting",row[0],"- owner not in fleet's galaxy"
+		else:
+			print "Deleting",row[0],"- owner not in a galaxy"
+		s.disbandFleet(row[0])
+		return
+
+
 def msgHandler(id, data):
 	if id >= 0:
 		print 'Message', id, data
@@ -459,6 +483,8 @@ def processMenu(inp, objId, s):
 	elif string.upper(inp) == "C":
 		console = InteractiveConsole(locals())
 		console.interact()
+	elif string.upper(inp) == "CLEANUPFLEETS":
+		console = cleanupBadFleets()
 
 	return objId
 

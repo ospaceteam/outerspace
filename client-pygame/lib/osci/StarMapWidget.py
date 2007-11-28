@@ -141,6 +141,9 @@ class StarMapWidget(Widget):
 				self.showGateNetworks = 0
                 else:
 			self.showGateNetworks = 0
+
+	def requestRepaint(self):
+		self.repaintMap = 1
 		
 	def save(self,append=''):
 		name = ("starmap_%s.bmp" % append)
@@ -184,7 +187,7 @@ class StarMapWidget(Widget):
 				if hasattr(owner, "type") and owner.type == T_PIRPLAYER:
 					pirates[obj.x, obj.y] = None
 		# process objects
-		fleetOrbit = {}
+		self.fleetOrbit = {}
 		anyX = 0.0
 		anyY = 0.0
 		player = client.getPlayer()
@@ -397,123 +400,7 @@ class StarMapWidget(Widget):
 					))
 				self._popupInfo[obj.oid] = info
 			elif obj.type == T_FLEET:
-				owner = getattr(obj, 'owner', OID_NONE)
-				if hasattr(obj,'customname') and obj.customname:
-					name = obj.customname
-				else:
-					name = getattr(obj, 'name', res.getUnknownName())
-				color = res.getPlayerColor(owner)
-				# fleet scanner setup
-				scannerPwr = getattr(obj, 'scannerPwr', 0)
-				if hasattr(obj, "scannerOn") and not obj.scannerOn:
-					scannerPwr = 0
-				if scannerPwr:
-					self._map[self.MAP_SCANNER1].append((obj.x, obj.y, scannerPwr))
-				#  get orbital position
-				orbit = -1
-				if obj.orbiting != OID_NONE:
-					orbit = fleetOrbit.get(obj.orbiting, 0)
-					fleetOrbit[obj.orbiting] = orbit + 1
-				# set path and times
-				eta = getattr(obj, 'eta', 0)
-				self._map[self.MAP_FLEETS].append((obj.oid, obj.x, obj.y, obj.oldX, obj.oldY, orbit, res.formatTime(eta), color,
-					obj.signature / 25, getattr(obj, "isMilitary", 0)))
-				# pop up info
-				info = []
-				info.append(_('Fleet: %s [ID: %d]') % (name, obj.oid))
-				if hasattr(obj, 'scanPwr'):	info.append(_('Scan pwr: %d') % obj.scanPwr)
-				if hasattr(obj, 'scannerPwr'): info.append(_('Scanner pwr: %d') % obj.scannerPwr)
-				info.append(_('Coordinates: [%.2f, %.2f]') % (obj.x, obj.y))
-				info.append(_('Signature: %d') % obj.signature)
-				if eta:
-					info.append(_('ETA: %s') % res.formatTime(eta))
-				if owner:
-					onwerobj = client.get(owner, publicOnly = 1)
-					info.append(_('Owner: %s [ID: %s]') % (
-						getattr(onwerobj, 'name', res.getUnknownName()),
-						getattr(onwerobj, 'oid', '?')
-					))
-				if hasattr(obj, 'storEn'):
-					if obj.maxEn > 0: full = 100 * obj.storEn / obj.maxEn
-					else: full = 0
-					info.append(_('Tanks: %d / %d [%d %%]') % (obj.storEn, obj.maxEn, full))
-					info.append(_('Support (fuel): %d/turn') % (obj.operEn))
-					info.append(_('Support (const. pts): %d/turn') % (obj.operProd))
-				if hasattr(obj, 'combatPwr'):
-					info.append(_('Military power: %d') % obj.combatPwr)
-				# ranges
-				if hasattr(obj, 'storEn') and hasattr(obj, 'operEn'):
-					turns = 100000
-					if obj.operEn > 0: turns = obj.storEn / obj.operEn
-					range = turns * obj.speed / Rules.turnsPerDay
-					self._fleetRanges[obj.oid] = (obj.x, obj.y, range, (range  * 0.75) / 2, (range  * 0.5) / 2, obj.speed * 6 / Rules.turnsPerDay, turns)
-					info.append(_("Operational time: %s") % res.formatTime(turns))
-				if hasattr(obj, 'target') and obj.target != OID_NONE:
-					target = client.get(obj.target, noUpdate=1)
-					if hasattr(target, "x"):
-						self._fleetTarget[obj.oid] = (obj.x, obj.y, target.x, target.y)
-					info.append(_('Target: %s') % getattr(target, "name", res.getUnknownName()))
-				# pop up info (continued)
-				if hasattr(obj, 'ships'):
-					info.append(_('Ships:'))
-					number = {}
-					for designID, hp, shield, exp in obj.ships:
-						tech = client.getPlayer().shipDesigns[designID]
-						level = Rules.shipExpToLevel.get(int(exp / tech.baseExp), Rules.shipDefLevel)
-						if designID not in number:
-							number[designID] = [0, 0, 0, 0, 0]
-						number[designID][level - 1] += 1
-					order = number.keys()
-					order.sort()
-					for designID in order:
-						tech = client.getPlayer().shipDesigns[designID]
-						levels = number[designID]
-						info.append(_('  %d x %s   [%d, %d, %d, %d, %d]') % (
-								levels[0] + levels[1] + levels[2] + levels[3] + levels[4],
-								tech.name,
-								levels[0], levels[1], levels[2], levels[3], levels[4],
-							)
-						)
-				elif hasattr(obj, 'shipScan'):
-					info.append(_('Ships:'))
-					for name, shipClass, isMilitary in obj.shipScan:
-						if isMilitary:
-							sType = _("military")
-						else:
-							sType = _("civilian")
-						info.append(_("  %d x %s [%s %s ship]") % (
-							obj.shipScan[name, shipClass, isMilitary],
-							name,
-							_(gdata.shipClasses[shipClass]),
-							sType
-						))
-				if hasattr(obj, 'actionIndex') and not Utils.isIdleFleet(obj):
-					action, target, data = obj.actions[obj.actionIndex]
-					if target != OID_NONE:
-						targetName = getattr(client.get(target, noUpdate = 1), 'name', res.getUnknownName())
-					else:
-						targetName = ""
-					info.append(_("Command: %s %s") % (
-						gdata.fleetActions[action],
-						targetName,
-					))
-				self._popupInfo[obj.oid] = info
-				# orders
-				if hasattr(obj, 'actions'):
-					oldX = obj.x
-					oldY = obj.y
-					for action, target, aData in obj.actions[obj.actionIndex:]:
-						if target:
-							# TODO add action colors
-							if action == FLACTION_REFUEL: color = (0x00, 0x90, 0x00)
-							elif action == FLACTION_DEPLOY: color = (0x90, 0x90, 0x00)
-							elif action == FLACTION_REDIRECT: color = (0x20, 0x20, 0x80)
-							else: color = (0x90, 0x90, 0x90)
-							trgt = client.get(target, noUpdate = 1)
-							if hasattr(trgt, 'x'):
-								self._map[self.MAP_FORDERS].append((oldX, oldY, trgt.x, trgt.y, color))
-								self._fordersTarget[obj.oid] = (oldX, oldY, trgt.x, trgt.y, color)
-								oldX, oldY = trgt.x, trgt.y
+				self.precomputeFleet(obj)
 			elif obj.type == T_ASTEROID:
 				owner = getattr(obj, 'owner', OID_NONE)
 				name = getattr(obj, 'name', None) or res.getUnknownName()
@@ -521,8 +408,8 @@ class StarMapWidget(Widget):
 				scannerPwr = getattr(obj, 'scannerPwr', 0)
 				orbit = -1
 				if obj.orbiting != OID_NONE:
-					orbit = fleetOrbit.get(obj.orbiting, 0)
-					fleetOrbit[obj.orbiting] = orbit + 1
+					orbit = self.fleetOrbit.get(obj.orbiting, 0)
+					self.fleetOrbit[obj.orbiting] = orbit + 1
 				eta = getattr(obj, 'eta', 0)
 				self._map[self.MAP_FLEETS].append((obj.oid, obj.x, obj.y, obj.oldX, obj.oldY, orbit, res.formatTime(eta), color,
 					obj.signature / 25, 0))
@@ -579,6 +466,126 @@ class StarMapWidget(Widget):
 				self._map[self.MAP_FREDIRECTS].append((source.x, source.y, target.x, target.y))
 		if repaint:
 			self.repaintMap = 1
+
+	def precomputeFleet(self,obj):
+		
+		owner = getattr(obj, 'owner', OID_NONE)
+		if hasattr(obj,'customname') and obj.customname:
+			name = obj.customname
+		else:
+			name = getattr(obj, 'name', res.getUnknownName())
+		color = res.getPlayerColor(owner)
+		# fleet scanner setup
+		scannerPwr = getattr(obj, 'scannerPwr', 0)
+		if hasattr(obj, "scannerOn") and not obj.scannerOn:
+			scannerPwr = 0
+		if scannerPwr:
+			self._map[self.MAP_SCANNER1].append((obj.x, obj.y, scannerPwr))
+		#  get orbital position
+		orbit = -1
+		if obj.orbiting != OID_NONE:
+			orbit = self.fleetOrbit.get(obj.orbiting, 0)
+			self.fleetOrbit[obj.orbiting] = orbit + 1
+		# set path and times
+		eta = getattr(obj, 'eta', 0)
+		self._map[self.MAP_FLEETS].append((obj.oid, obj.x, obj.y, obj.oldX, obj.oldY, orbit, res.formatTime(eta), color,
+			obj.signature / 25, getattr(obj, "isMilitary", 0)))
+		# pop up info
+		info = []
+		info.append(_('Fleet: %s [ID: %d]') % (name, obj.oid))
+		if hasattr(obj, 'scanPwr'):	info.append(_('Scan pwr: %d') % obj.scanPwr)
+		if hasattr(obj, 'scannerPwr'): info.append(_('Scanner pwr: %d') % obj.scannerPwr)
+		info.append(_('Coordinates: [%.2f, %.2f]') % (obj.x, obj.y))
+		info.append(_('Signature: %d') % obj.signature)
+		if eta:
+			info.append(_('ETA: %s') % res.formatTime(eta))
+		if owner:
+			onwerobj = client.get(owner, publicOnly = 1)
+			info.append(_('Owner: %s [ID: %s]') % (
+				getattr(onwerobj, 'name', res.getUnknownName()),
+				getattr(onwerobj, 'oid', '?')
+			))
+		if hasattr(obj, 'storEn'):
+			if obj.maxEn > 0: full = 100 * obj.storEn / obj.maxEn
+			else: full = 0
+			info.append(_('Tanks: %d / %d [%d %%]') % (obj.storEn, obj.maxEn, full))
+			info.append(_('Support (fuel): %d/turn') % (obj.operEn))
+			info.append(_('Support (const. pts): %d/turn') % (obj.operProd))
+		if hasattr(obj, 'combatPwr'):
+			info.append(_('Military power: %d') % obj.combatPwr)
+		# ranges
+		if hasattr(obj, 'storEn') and hasattr(obj, 'operEn'):
+			turns = 100000
+			if obj.operEn > 0: turns = obj.storEn / obj.operEn
+			range = turns * obj.speed / Rules.turnsPerDay
+			self._fleetRanges[obj.oid] = (obj.x, obj.y, range, (range  * 0.75) / 2, (range  * 0.5) / 2, obj.speed * 6 / Rules.turnsPerDay, turns)
+			info.append(_("Operational time: %s") % res.formatTime(turns))
+		if hasattr(obj, 'target') and obj.target != OID_NONE:
+			target = client.get(obj.target, noUpdate=1)
+			if hasattr(target, "x"):
+				self._fleetTarget[obj.oid] = (obj.x, obj.y, target.x, target.y)
+			info.append(_('Target: %s') % getattr(target, "name", res.getUnknownName()))
+		# pop up info (continued)
+		if hasattr(obj, 'ships'):
+			info.append(_('Ships:'))
+			number = {}
+			for designID, hp, shield, exp in obj.ships:
+				tech = client.getPlayer().shipDesigns[designID]
+				level = Rules.shipExpToLevel.get(int(exp / tech.baseExp), Rules.shipDefLevel)
+				if designID not in number:
+					number[designID] = [0, 0, 0, 0, 0]
+				number[designID][level - 1] += 1
+			order = number.keys()
+			order.sort()
+			for designID in order:
+				tech = client.getPlayer().shipDesigns[designID]
+				levels = number[designID]
+				info.append(_('  %d x %s   [%d, %d, %d, %d, %d]') % (
+						levels[0] + levels[1] + levels[2] + levels[3] + levels[4],
+						tech.name,
+						levels[0], levels[1], levels[2], levels[3], levels[4],
+					)
+				)
+		elif hasattr(obj, 'shipScan'):
+			info.append(_('Ships:'))
+			for name, shipClass, isMilitary in obj.shipScan:
+				if isMilitary:
+					sType = _("military")
+				else:
+					sType = _("civilian")
+				info.append(_("  %d x %s [%s %s ship]") % (
+					obj.shipScan[name, shipClass, isMilitary],
+					name,
+					_(gdata.shipClasses[shipClass]),
+					sType
+				))
+		if hasattr(obj, 'actionIndex') and not Utils.isIdleFleet(obj):
+			action, target, data = obj.actions[obj.actionIndex]
+			if target != OID_NONE:
+				targetName = getattr(client.get(target, noUpdate = 1), 'name', res.getUnknownName())
+			else:
+				targetName = ""
+			info.append(_("Command: %s %s") % (
+				gdata.fleetActions[action],
+				targetName,
+			))
+		self._popupInfo[obj.oid] = info
+		# orders
+		if hasattr(obj, 'actions'):
+			oldX = obj.x
+			oldY = obj.y
+			for action, target, aData in obj.actions[obj.actionIndex:]:
+				if target:
+					# TODO add action colors
+					if action == FLACTION_REFUEL: color = (0x00, 0x90, 0x00)
+					elif action == FLACTION_DEPLOY: color = (0x90, 0x90, 0x00)
+					elif action == FLACTION_REDIRECT: color = (0x20, 0x20, 0x80)
+					else: color = (0x90, 0x90, 0x90)
+					trgt = client.get(target, noUpdate = 1)
+					if hasattr(trgt, 'x'):
+						self._map[self.MAP_FORDERS].append((oldX, oldY, trgt.x, trgt.y, color))
+						self._fordersTarget[obj.oid] = (oldX, oldY, trgt.x, trgt.y, color)
+						oldX, oldY = trgt.x, trgt.y
 
 	def precomputePirates(self, system, pirates, icons = False):
 		dist = 10000
