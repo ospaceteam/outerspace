@@ -163,6 +163,10 @@ class OptionsDlg:
 			val = gdata.config.defaults.showminimap
 			self.win.vShowMinimap.checked = val == 'yes'
 
+		if gdata.config.defaults.showgatesystems != None:
+			val = gdata.config.defaults.showgatesystems
+			self.win.vShowGateSystems.checked = val == 'yes'
+
 		if gdata.config.defaults.showmapgrid != None:
 			val = gdata.config.defaults.showmapgrid
 			self.win.vShowMapGrid.checked = val == 'yes'
@@ -314,6 +318,11 @@ class OptionsDlg:
 			gdata.config.defaults.showminimap = 'yes'
 		else:
 			gdata.config.defaults.showminimap = 'no'
+
+		if self.win.vShowGateSystems.checked:
+			gdata.config.defaults.showgatesystems = 'yes'
+		else:
+			gdata.config.defaults.showgatesystems = 'no'
 
 		if self.win.vShowMapGrid.checked:
 			gdata.config.defaults.showmapgrid = 'yes'
@@ -626,6 +635,8 @@ class OptionsDlg:
 			checked = 1)
 		ui.Check(self.win, layout = (15, 9, 8, 1), text = _('Show minimap'), id = 'vShowMinimap', 
 			checked = 1)
+		ui.Check(self.win, layout = (23, 9, 8, 1), text = _('Show gate systems'), id = 'vShowGateSystems', 
+			checked = 1)
 		ui.Check(self.win, layout = (7, 10, 8, 1), text = _('Show redirects'), id = 'vRedirects',
 			checked = 1)
 		ui.Check(self.win, layout = (15, 10, 8, 1), text = _('Show map grid'), id = 'vShowMapGrid', 
@@ -635,8 +646,8 @@ class OptionsDlg:
 		ui.Check(self.win, layout = (15, 11, 8, 1), text = _('Show fleet lines'), id = 'vShowMapFleetLines', 
 			checked = 1)
 
-		ui.Button(self.win, layout = (23, 9, 9, 1), id = "vGatemode", align = ui.ALIGN_W)
-		ui.ActiveLabel(self.win, layout = (23, 10, 9, 1), id = "vGatemode2")
+		ui.Button(self.win, layout = (23, 10, 9, 1), id = "vGatemode", align = ui.ALIGN_W)
+		ui.ActiveLabel(self.win, layout = (23, 11, 9, 1), id = "vGatemode2")
 		width = 304  # 15 * 20 + 4
 		height = 164 # 8 * 20 + 4
 		self.gnwin = ui.Window(self.app,

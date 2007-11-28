@@ -46,6 +46,7 @@ class StarMapWidget(Widget):
 	MAP_OTHERS = 7
 	MAP_FREDIRECTS = 8
 	MAP_GATENETWORK = 9
+	MAP_GATESYSTEMS = 10
 
 	def __init__(self, parent, **kwargs):
 		Widget.__init__(self, parent)
@@ -66,6 +67,7 @@ class StarMapWidget(Widget):
 			self.MAP_OTHERS: [],
 			self.MAP_FREDIRECTS: [],
 			self.MAP_GATENETWORK: [],
+                        self.MAP_GATESYSTEMS: [],
 		}
 		self._popupInfo = {}
 		self._fleetRanges = {}
@@ -134,6 +136,10 @@ class StarMapWidget(Widget):
 			self.showFleetLines = 0
                 else:
 			self.showFleetLines = 1
+		if gdata.config.defaults.showgatesystems == 'no':
+			self.showGateSystems = 0
+                else:
+			self.showGateSystems = 1
 		if gdata.config.defaults.mapgatemode != None:
 			try:
 				self.showGateNetworks = int(gdata.config.defaults.mapgatemode)
@@ -165,6 +171,7 @@ class StarMapWidget(Widget):
 			self.MAP_OTHERS: [],
 			self.MAP_FREDIRECTS: [],
 			self.MAP_GATENETWORK: [],
+                        self.MAP_GATESYSTEMS: [],
 		}
 		self._popupInfo = {}
 		self._fleetRanges = {}
@@ -292,6 +299,7 @@ class StarMapWidget(Widget):
 				# star gates
 				if speedBoost > 1.0:
 					icons.append(res.icons["sg_%02d" % round(speedBoost)])
+					self._map[self.MAP_GATESYSTEMS].append((obj.x, obj.y, speedBoost))
 				if speedBoost > 1.99:
 					self._map[self.MAP_GATENETWORK].append((obj.oid, obj.x, obj.y, res.getGateLineWidth(ownerID), speedBoost))
 				#if owner2 != 0:
@@ -654,34 +662,41 @@ class StarMapWidget(Widget):
 			tx = int((tx - currX) * scale) + centerX
 			ty = maxY - (int((ty - currY) * scale) + centerY)
 			pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx, sy), (tx, ty), 1)
-			pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx + 2, sy), (tx, ty), 1)
-			pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx - 2, sy), (tx, ty), 1)
-			pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx, sy + 2), (tx, ty), 1)
-			pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx, sy - 2), (tx, ty), 1)
 			pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx + 1, sy), (tx, ty), 1)
 			pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx - 1, sy), (tx, ty), 1)
 			pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx, sy + 1), (tx, ty), 1)
 			pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx, sy - 1), (tx, ty), 1)
+			pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx + 1, sy + 1), (tx, ty), 1)
+			pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx + 1, sy - 1), (tx, ty), 1)
+			pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx - 1, sy + 1), (tx, ty), 1)
+			pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx - 1, sy - 1), (tx, ty), 1)
+			pygame.draw.aaline(self._mapSurf, (0x20, 0x20, 0x80), (sx + 2, sy), (tx, ty), 1)
+			pygame.draw.aaline(self._mapSurf, (0x20, 0x20, 0x80), (sx - 2, sy), (tx, ty), 1)
+			pygame.draw.aaline(self._mapSurf, (0x20, 0x20, 0x80), (sx, sy + 2), (tx, ty), 1)
+			pygame.draw.aaline(self._mapSurf, (0x20, 0x20, 0x80), (sx, sy - 2), (tx, ty), 1)
 			# pygame.draw.line(self._mapSurf, (0x00, 0x00, 0x80), (sx, sy), ((sx + tx) / 2, (sy + ty) / 2), 3)
 
 	def drawGateNetworks(self,mode=1,objid=False):
 		# coordinates
 		if mode == 1 and not objid:
 			return
+		baseDist = 5.0*5.0
 		centerX, centerY = self._mapSurf.get_rect().center
 		maxY = self._mapSurf.get_rect().height
 		currX = self.currX
 		currY = self.currY
 		scale = self.scale
 		pairs = []
+		#precalc max dist, so we don't do this calc over and over again. Need it in dist^2
+		maxDistArr = {0: 0, 1: baseDist, 2: baseDist * 4, 3: baseDist * 9, 4: baseDist * 16, 5: baseDist * 25, 6: baseDist * 36}
 		for sObjid, sx, sy, sLineWidth, sSpeedBoost in self._map[self.MAP_GATENETWORK]:
 			_sx = int((sx - currX) * scale) + centerX
 			_sy = maxY - (int((sy - currY) * scale) + centerY)
-			if mode == 3:
-				if _sx > centerX + 50 or _sx < centerX - 50 or _sy > centerY + 50 or _sy < centerY - 50:
-					continue
-			elif mode == 1:
+			if objid and mode in [1,3]:
 				if not sObjid == objid:
+					continue
+			elif mode == 3:
+				if _sx > centerX + 50 or _sx < centerX - 50 or _sy > centerY + 50 or _sy < centerY - 50:
 					continue
 			for tObjid, tx, ty, tLineWidth, tSpeedBoost in self._map[self.MAP_GATENETWORK]:
 				tLookup = '%s%s' % (tObjid,sObjid)
@@ -689,10 +704,12 @@ class StarMapWidget(Widget):
 				pairs.append(sLookup)
 				if tLookup not in pairs:
 					#draw line
+					speedBoost = int(min(sSpeedBoost,tSpeedBoost))
+					maxDist = maxDistArr[speedBoost]
 					dist = (sx-tx)*(sx-tx) + (sy-ty)*(sy-ty)
 					#log.debug('Stargate lines:',dist)
 					if mode == 2:
-						if dist < 400:
+						if dist < maxDist:
 							width = min(sLineWidth,tLineWidth)
 							color = res.getStargateColorCode(min(sSpeedBoost,tSpeedBoost))
 							tx = int((tx - currX) * scale) + centerX
@@ -801,6 +818,24 @@ class StarMapWidget(Widget):
 				actRect.move_ip(self.rect.left, self.rect.top)
 				self._actAreas[objID] = actRect
 
+	def drawGateSystems(self):
+		# coordinates
+		centerX, centerY = self._mapSurf.get_rect().center
+		maxY = self._mapSurf.get_rect().height
+		currX = self.currX
+		currY = self.currY
+		scale = self.scale
+		minRadius = 8
+		radiusMult = 3
+		if scale < 30:
+			for x, y, speed in self._map[self.MAP_GATESYSTEMS]:
+				sx = int((x - currX) * scale) + centerX
+				sy = maxY - (int((y - currY) * scale) + centerY)
+				for curSpeed in range(1,speed+1):
+					radius = (curSpeed-1)* radiusMult + minRadius
+					color = res.getStargateColorCode(curSpeed)
+					pygame.draw.circle(self._mapSurf, color, (sx, sy), radius, 1)
+
 	def drawPlanets(self):
 		# coordinates
 		centerX, centerY = self._mapSurf.get_rect().center
@@ -845,7 +880,7 @@ class StarMapWidget(Widget):
 				sy1 = maxY - (int((y1 - currY) * scale) + centerY)
 				sx2 = int((x2 - currX) * scale) + centerX
 				sy2 = maxY - (int((y2 - currY) * scale) + centerY)
-				pygame.draw.line(self._mapSurf, color, (sx1, sy1), (sx2, sy2), 1)
+				pygame.draw.aaline(self._mapSurf, color, (sx1, sy1), (sx2, sy2), 1)
 		# draw fleet symbol
 		for objID, x, y, oldX, oldY, orbit, eta, color, size, military in self._map[self.MAP_FLEETS]:
 			if self.overlayMode != gdata.OVERLAY_OWNER:
@@ -924,10 +959,13 @@ class StarMapWidget(Widget):
 			# redirections
 			if self.showRedirects:
 				self.drawRedirects()
+			# gate systems
+			if self.showGateSystems:
+				self.drawGateSystems()
 			# gate networks
 			if self.showGateNetworks:
 				if self.lockObj:
-					self.drawGateNetworks(1,self.lockObj)
+					self.drawGateNetworks(self.showGateNetworks,self.lockObj)
 				else:
 					self.drawGateNetworks(self.showGateNetworks)
 			# stars

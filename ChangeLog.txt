@@ -6,6 +6,8 @@ Change Log:
 - Added "Scrap Fleet" method in Fleet Dialog [Random Chaos]
 - Fixed IClientDB to handle __setitem__ commands where value==None (automatically was called during Scrap Fleet method) [Random Chaos]
 - Updated Starmap widget to allow appending a single fleet without full precompute [Random Chaos]
+- Added gate highlight mode while zoomed out [Random Chaos]
+- Updated starmap to use antialised lines where appropriate (no noticeable increase in processing time) [Random Chaos]
 
 [2007-11-26]
 - Fixed split fleet on grouped ships. [Random Chaos]
