@@ -1002,7 +1002,7 @@ class IFleet(IObject):
 						))
 						obj.ships[index][SHIP_IDX_SHIELDHP] = upgradeToSpec.shieldHP
 						# cap max experience based on equivilent percentage of experience transfer (prevent high baseExp ship upgrading to low baseExp ships with a higher bonus)
-						obj.ships[index][SHIP_IDX_EXP] = min(obj.ships[index][SHIP_IDX_EXP],int(1.0 * spec.baseExp / upgradeToSpec.baseExp * obj.ships[index][SHIP_IDX_EXP]))
+						obj.ships[index][SHIP_IDX_EXP] = min(obj.ships[index][SHIP_IDX_EXP],int(1.0 * upgradeToSpec.baseExp / spec.baseExp * obj.ships[index][SHIP_IDX_EXP]))
 						upgraded += 1
 						#@log.debug("HP penalty", diff, upgradeToSpec.buildProd, maxHPRatio)
 						player.fleetUpgradePool -= diff
