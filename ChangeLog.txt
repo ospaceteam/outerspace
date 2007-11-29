@@ -5,7 +5,7 @@ Change Log:
 - Fixed remaining minefield typo with shielded ships being hit by mines [Random Chaos]
 - Added toggle for turning off display of civilian ships to starmap widget (CTRL-H) [Random Chaos]
 - Added display of pirate fame required to colonize to starmap widget (for pirate player only) [Random Chaos]
-- Added ++ and -- buttons to construction dialog to increment/decrement ship equipment by multiples of 5 [Random Chaos]
+- Added ++ and -- buttons to construction dialog to increment/decrement ship equipment by multiples of 5 (LMB) and 20 (RMB) [Random Chaos]
 
 [2007-11-27]
 - Added script to delete all fleets not in their home galaxy to OSClient [Random Chaos]

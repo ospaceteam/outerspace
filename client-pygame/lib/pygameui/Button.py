@@ -83,11 +83,17 @@ class Button(Widget):
 
 	def processMB3Down(self, evt):
 		self._processingMB3 = 1
+		if self.rmbAction and not self.toggle:
+			self.pressed = not self.pressed
 		return NoEvent
 
 	def processMB3Up(self, evt):
 		if self._processingMB3:
 			self.processAction(self.rmbAction)
+		if self.rmbAction and self.pressed and not self.toggle:
+			if self.pressed:
+				self.theme.playButtonSound(self)
+			self.pressed = 0
 		self._processingMB3 = 0
 		return NoEvent
 

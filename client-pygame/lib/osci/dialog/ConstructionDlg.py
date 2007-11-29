@@ -332,6 +332,12 @@ class ConstructionDlg:
 	def onDecrEquipment5(self, widget, action, data):
 		self.onChangeEquipmentQty(-5)
 
+	def onIncrEquipment20(self, widget, action, data):
+		self.onChangeEquipmentQty(20)
+
+	def onDecrEquipment20(self, widget, action, data):
+		self.onChangeEquipmentQty(-20)
+
 	def onRemoveEquipment(self, widget, action, data):
 		if self.win.vEquipment.selection:
 			item = self.win.vEquipment.selection[0]
@@ -442,13 +448,13 @@ class ConstructionDlg:
 			columnLabels = 1, action = "onEqSelectedInList"
 		)
 		ui.Button(self.win, layout = (15, 24, 1.2, 1), text = _("++"),
-			action = "onIncrEquipment5")
+			action = "onIncrEquipment5", rmbAction = "onIncrEquipment20")
 		ui.Button(self.win, layout = (16.2, 24, 1.8, 1), text = _("+"),
 			action = "onIncrEquipment")
 		ui.Button(self.win, layout = (18, 24, 1.8, 1), text = _("-"),
 			action = "onDecrEquipment")
 		ui.Button(self.win, layout = (19.8, 24, 1.2, 1), text = _("--"),
-			action = "onDecrEquipment5")
+			action = "onDecrEquipment5", rmbAction = "onDecrEquipment20")
 		ui.Button(self.win, layout = (21, 24, 4.5, 1), text = _("Add"),
 			action = "onAddEquipment")
 		ui.Button(self.win, layout = (25.5, 24, 4.5, 1), text = _("Remove"),
