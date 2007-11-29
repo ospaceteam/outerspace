@@ -313,20 +313,24 @@ class ConstructionDlg:
 	def onEqSelectedInList(self, widget, action, data):
 		self.selectedEqID = self.win.vEquipment.selection[0].techID
 
-	def onIncrEquipment(self, widget, action, data):
+	def onChangeEquipmentQty(self, delta):
 		if self.win.vEquipment.selection:
 			item = self.win.vEquipment.selection[0]
 			eqID = item.techID
-			self.eqIDs[eqID] = self.eqIDs.get(eqID, 0) + 1
+			self.eqIDs[eqID] = self.eqIDs.get(eqID, 0) + delta
 			self.update()
 
+	def onIncrEquipment(self, widget, action, data):
+		self.onChangeEquipmentQty(1)
+
 	def onDecrEquipment(self, widget, action, data):
-		if self.win.vEquipment.selection:
-			item = self.win.vEquipment.selection[0]
-			eqID = item.techID
-			if self.eqIDs[eqID] > 0:
-				self.eqIDs[eqID] -= 1
-			self.update()
+		self.onChangeEquipmentQty(-1)
+
+	def onIncrEquipment5(self, widget, action, data):
+		self.onChangeEquipmentQty(5)
+
+	def onDecrEquipment5(self, widget, action, data):
+		self.onChangeEquipmentQty(-5)
 
 	def onRemoveEquipment(self, widget, action, data):
 		if self.win.vEquipment.selection:
@@ -437,13 +441,17 @@ class ConstructionDlg:
 			),
 			columnLabels = 1, action = "onEqSelectedInList"
 		)
-		ui.Button(self.win, layout = (15, 24, 2.5, 1), text = _("+"),
+		ui.Button(self.win, layout = (15, 24, 1.2, 1), text = _("++"),
+			action = "onIncrEquipment5")
+		ui.Button(self.win, layout = (16.2, 24, 1.8, 1), text = _("+"),
 			action = "onIncrEquipment")
-		ui.Button(self.win, layout = (17.5, 24, 2.5, 1), text = _("-"),
+		ui.Button(self.win, layout = (18, 24, 1.8, 1), text = _("-"),
 			action = "onDecrEquipment")
-		ui.Button(self.win, layout = (20, 24, 5, 1), text = _("Add"),
+		ui.Button(self.win, layout = (19.8, 24, 1.2, 1), text = _("--"),
+			action = "onDecrEquipment5")
+		ui.Button(self.win, layout = (21, 24, 4.5, 1), text = _("Add"),
 			action = "onAddEquipment")
-		ui.Button(self.win, layout = (25, 24, 5, 1), text = _("Remove"),
+		ui.Button(self.win, layout = (25.5, 24, 4.5, 1), text = _("Remove"),
 			action = "onRemoveEquipment")
 		# ship's attrs
 		ui.Label(self.win, layout = (30, 1, 5, 1), text = _("Class"), align = ui.ALIGN_W)

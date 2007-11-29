@@ -91,6 +91,7 @@ class StarMapWidget(Widget):
 		self.showSystems = 1
 		self.showPlanets = 1
 		self.showFleets = 1
+		self.showCivilianFleets = 1
 		self.showOverlaySelector = 1
 		self.showPirateAreas = True
 		self.highlightPos = None
@@ -394,6 +395,8 @@ class StarMapWidget(Widget):
 				elif hasattr(obj, 'scannerPwr'): info.append(_('Scanner pwr: %d') % obj.scannerPwr)
 				plType = gdata.planetTypes[getattr(obj, 'plType', None)]
 				info.append(_('Type: %s') % _(plType))
+				if player.type == T_PIRPLAYER:
+					info.append(_('Fame to Colonize: %d') % self.getPirateFameCost(player.oid,obj.compOf,len(player.planets)))
 				if hasattr(obj, 'plBio'): info.append(_('Environment: %d') % obj.plBio)
 				if hasattr(obj, 'plMin'): info.append(_('Minerals: %d') % obj.plMin)
 				if hasattr(obj, 'plEn'): info.append(_('Energy: %d') % obj.plEn)
@@ -461,6 +464,19 @@ class StarMapWidget(Widget):
 		self.miniMap.precompute()
 		# self dirty flag
 		self.repaintMap = 1
+
+	def getPirateFameCost(self, playerID, systemID,numPiratePlanets):
+		mod = 1.0
+		system = client.get(systemID, noUpdate = 1)
+		for planetID in system.planets:
+			planet = client.get(planetID, noUpdate = 1)
+			if getattr(planet, 'owner', OID_NONE) == playerID:
+				# minimum reached, don't check rest
+				return 0.0
+			elif getattr(planet, 'plStratRes', None) in (SR_TL3A, SR_TL3B, SR_TL3C):
+				mod = min(mod, Rules.pirateTL3StratResColonyCostMod)
+		famePenalty = int(mod * Rules.pirateColonyCostMod * numPiratePlanets)
+		return famePenalty
 
 	def precomputeRedirections(self,repaint=False): #also called from Mass Redirector
 		if repaint:
@@ -591,7 +607,7 @@ class StarMapWidget(Widget):
 					else: color = (0x90, 0x90, 0x90)
 					trgt = client.get(target, noUpdate = 1)
 					if hasattr(trgt, 'x'):
-						self._map[self.MAP_FORDERS].append((oldX, oldY, trgt.x, trgt.y, color))
+						self._map[self.MAP_FORDERS].append((oldX, oldY, trgt.x, trgt.y, color, getattr(obj, "isMilitary", 0)))
 						self._fordersTarget[obj.oid] = (oldX, oldY, trgt.x, trgt.y, color)
 						oldX, oldY = trgt.x, trgt.y
 
@@ -831,7 +847,7 @@ class StarMapWidget(Widget):
 			for x, y, speed in self._map[self.MAP_GATESYSTEMS]:
 				sx = int((x - currX) * scale) + centerX
 				sy = maxY - (int((y - currY) * scale) + centerY)
-				for curSpeed in range(1,speed+1):
+				for curSpeed in range(1,int(speed+1)):
 					radius = (curSpeed-1)* radiusMult + minRadius
 					color = res.getStargateColorCode(curSpeed)
 					pygame.draw.circle(self._mapSurf, color, (sx, sy), radius, 1)
@@ -875,7 +891,9 @@ class StarMapWidget(Widget):
 		scale = self.scale
 		# draw orders lines
 		if self.showFleetLines:
-			for x1, y1, x2, y2, color in self._map[self.MAP_FORDERS]:
+			for x1, y1, x2, y2, color, military in self._map[self.MAP_FORDERS]:
+				if not self.showCivilianFleets and not military:
+					continue
 				sx1 = int((x1 - currX) * scale) + centerX
 				sy1 = maxY - (int((y1 - currY) * scale) + centerY)
 				sx2 = int((x2 - currX) * scale) + centerX
@@ -883,6 +901,8 @@ class StarMapWidget(Widget):
 				pygame.draw.aaline(self._mapSurf, color, (sx1, sy1), (sx2, sy2), 1)
 		# draw fleet symbol
 		for objID, x, y, oldX, oldY, orbit, eta, color, size, military in self._map[self.MAP_FLEETS]:
+			if not self.showCivilianFleets and not military:
+				continue
 			if self.overlayMode != gdata.OVERLAY_OWNER:
 				color = res.fadeColor(color)
 			sx = int((x - currX) * scale) + centerX
@@ -1391,6 +1411,7 @@ class StarMapWidget(Widget):
 		return ui.NoEvent
 
 	def processKeyDown(self, evt):
+		# ==== Object Hotkeys ====
 		#I have not found unicode escape characters for Ctrl-0 through Ctrl-9, so using direct key reference (less preferred due to international keyboards)
 		if evt.key in [49,50,51,52,53,54,55,56,57,48]:
 			if pygame.key.get_mods() & KMOD_CTRL:
@@ -1406,6 +1427,7 @@ class StarMapWidget(Widget):
 				log.debug('Goto Key:',evt.key)
 				self.gotoKeyObject(evt.key)
 			return ui.NoEvent
+		# ==== Map and Dialog Hotkeys ====
 		elif evt.key == K_ESCAPE and self.selectobject:
 			log.debug('Canceled Key')
 			self.selectobject = False
@@ -1422,12 +1444,18 @@ class StarMapWidget(Widget):
 			if self.scale > 10:
 				self.scale -= 5
 				self.repaintMap = 1
+		# Space Bar - Recenter
+		elif evt.unicode == u' ':
+			x, y = pygame.mouse.get_pos()
+			centerX, centerY = self._mapSurf.get_rect().center
+			self.currX -= float(centerX - x) / self.scale
+			self.currY += float(centerY - y) / self.scale
+			self.repaintMap = 1
+			self._newCurrXY = 0		# ==== Standard Hotkeys ====
+		# Reserve CTRL-C for copy (future editor support)
 		# Ctrl+F
 		elif evt.unicode == u'\x06' and pygame.key.get_mods() & KMOD_CTRL:
 			self.searchDlg.display()
-		# Ctrl+M
-		elif evt.unicode == u'\x0D' and pygame.key.get_mods() & KMOD_CTRL:
-			self.showOverlayDlg.display()
 		# Ctrl+G - Toggle grid
 		elif evt.unicode == u'\x07' and pygame.key.get_mods() & KMOD_CTRL:
 			if self.showGrid:
@@ -1435,12 +1463,12 @@ class StarMapWidget(Widget):
 			else:
 				self.showGrid = 1
 			self.repaintMap = 1
-		# Ctrl+S - Toggle drawing scanners
-		elif evt.unicode == u'\x13' and pygame.key.get_mods() & KMOD_CTRL:
-			if self.showScanners:
-				self.showScanners = 0
+		# Ctrl-H - Toggle visibility of civilian ships
+		elif evt.unicode == u'\x08' and pygame.key.get_mods() & KMOD_CTRL:
+			if self.showCivilianFleets:
+				self.showCivilianFleets = 0
 			else:
-				self.showScanners = 1
+				self.showCivilianFleets = 1
 			self.repaintMap = 1
 		# Ctrl+L - Toggle drawing fleet lines
 		elif evt.unicode == u'\x0C' and pygame.key.get_mods() & KMOD_CTRL:
@@ -1449,6 +1477,13 @@ class StarMapWidget(Widget):
 			else:
 				self.showFleetLines = 1
 			self.repaintMap = 1
+		# Ctrl+M
+		elif evt.unicode == u'\x0D' and pygame.key.get_mods() & KMOD_CTRL:
+			self.showOverlayDlg.display()
+		# Ctrl+N - Toggle drawing gate networks (0: off; 1: draw only fleet command lines; 2: draw 20 parsec groups; 3: draw from center 10 region)
+		elif evt.unicode == u'\x0E' and pygame.key.get_mods() & KMOD_CTRL:
+			self.showGateNetworks = (self.showGateNetworks + 1) % 4
+			self.repaintMap = 1
 		# Ctrl+R - Toggle drawing redirects
 		elif evt.unicode == u'\x12' and pygame.key.get_mods() & KMOD_CTRL:
 			if self.showRedirects:
@@ -1456,18 +1491,15 @@ class StarMapWidget(Widget):
 			else:
 				self.showRedirects = 1
 			self.repaintMap = 1
-		# Ctrl+N - Toggle drawing gate networks (0: off; 1: draw only fleet command lines; 2: draw 20 parsec groups; 3: draw from center 10 region)
-		elif evt.unicode == u'\x0E' and pygame.key.get_mods() & KMOD_CTRL:
-			self.showGateNetworks = (self.showGateNetworks + 1) % 4
+		# Ctrl+S - Toggle drawing scanners
+		elif evt.unicode == u'\x13' and pygame.key.get_mods() & KMOD_CTRL:
+			if self.showScanners:
+				self.showScanners = 0
+			else:
+				self.showScanners = 1
 			self.repaintMap = 1
-		# Space Bar - Recenter
-		elif evt.unicode == u' ':
-			x, y = pygame.mouse.get_pos()
-			centerX, centerY = self._mapSurf.get_rect().center
-			self.currX -= float(centerX - x) / self.scale
-			self.currY += float(centerY - y) / self.scale
-			self.repaintMap = 1
-			self._newCurrXY = 0
+		# Reserve CTRL-V,X,and Z for paste, cut, and undo (future editor support)
+		# ==== Else ====
 		else:
 			# force update
 			self.scale += 1

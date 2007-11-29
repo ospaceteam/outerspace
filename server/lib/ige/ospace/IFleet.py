@@ -1001,6 +1001,8 @@ class IFleet(IObject):
 							int(upgradeToSpec.maxHP * maxHPRatio)
 						))
 						obj.ships[index][SHIP_IDX_SHIELDHP] = upgradeToSpec.shieldHP
+						# cap max experience based on equivilent percentage of experience transfer (prevent high baseExp ship upgrading to low baseExp ships with a higher bonus)
+						obj.ships[index][SHIP_IDX_EXP] = min(obj.ships[index][SHIP_IDX_EXP],int(1.0 * spec.baseExp / upgradeToSpec.baseExp * obj.ships[index][SHIP_IDX_EXP]))
 						upgraded += 1
 						#@log.debug("HP penalty", diff, upgradeToSpec.buildProd, maxHPRatio)
 						player.fleetUpgradePool -= diff
@@ -1280,7 +1282,7 @@ class IFleet(IObject):
 		if shield: #mines never pierce shields at this time; possible future expansion of the tech
 			blocked = min(shield, damage)
 			damage -= blocked
-			obj.ships[target][2] -= blocked
+			obj.ships[targetindex][2] -= blocked
 		if damage > 0:
 			if hp < damage:
 				damage = hp
