@@ -316,12 +316,18 @@ class ProblemsDlg:
 						fgColor = gdata.sevColors[gdata.INFO]
 						disp = info
 
+					# is fleet named?
+					if hasattr(obj,'customname') and obj.customname:
+						name = obj.customname
+					else:
+						name = getattr(obj, "name", None)
+	
 					if energyReserve == 100 and info and disp:
 						items.append(ui.Item(systemName, tOID = obj.oid, tType = T_FLEET,foreground = gdata.sevColors[gdata.INFO],
-									vDescription = _('Fleet "%s" has full fuel tanks.') % (obj.name)))
+									vDescription = _('Fleet "%s" has full fuel tanks.') % (name)))
 					elif disp:
 						items.append(ui.Item(systemName, tOID = obj.oid, tType = T_FLEET,foreground = fgColor,
-									vDescription = _('Fleet "%s" is low on fuel [%d %%]%s.') % (obj.name, energyReserve, note)))
+									vDescription = _('Fleet "%s" is low on fuel [%d %%]%s.') % (name, energyReserve, note)))
 
 		# check research queue
 		if self.win.vResearch.checked:

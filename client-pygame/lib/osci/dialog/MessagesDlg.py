@@ -252,12 +252,18 @@ class MessagesDlg:
 					sourceID, msgID, locationID, turn, data = message["data"]
 					item.tLocationID = locationID
 					item.tSourceID = sourceID
+					obj = client.get(sourceID, noUpdate = 1, publicOnly = 1)   #Custom name in "sender"
+					if hasattr(obj,'customname') and obj.customname:
+						item.tSender = _('"%s"') % obj.customname
+					else:					
+						item.tSender = message["sender"]
 					foreground = gdata.sevColors[messages.getMsgSeverity(msgID)]
 					if message["readed"]:
 						state = _(" ")
 					else:
 						state = _("N")
 				else:
+					item.tSender = message["sender"]
 					if message["readed"]:
 						foreground = gdata.sevColors[gdata.NONE]
 						if message["replied"]:
@@ -275,7 +281,6 @@ class MessagesDlg:
 				item.tMsgID = messageID
 				item.foreground = foreground
 				item.tState = state
-				item.tSender = message["sender"]
 				item.tDate = date
 				item.tDate_raw = message["time"]
 				item.tType = selItem.tType

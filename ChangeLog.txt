@@ -1,5 +1,9 @@
 Change Log:
 
+[2007-12-01]
+- Added custom fleet name support to remaining dialogs [BSE]
+- Added status info during hotkey setting [Random Chaos]
+
 [2007-11-30]
 - Added player control zone highlighting (CTRL-P) [Random Chaos]
 - Updated options dialog to reflect new starmap options [Random Chaos]

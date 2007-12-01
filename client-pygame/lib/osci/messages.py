@@ -224,7 +224,10 @@ def getFullMessageText(message):
 		if sourceID != OID_NONE and sourceID != player.oid:
 			obj = client.get(sourceID, noUpdate = 1, publicOnly = 1)
 			if obj:
-				source = getattr(obj, 'name', res.getUnknownName())
+				if hasattr(obj,'customname') and obj.customname:
+						source = _('"%s"') % obj.customname
+				else:
+						source = getattr(obj, 'name', res.getUnknownName())
 			else:
 				source = _('N/A')
 		else:

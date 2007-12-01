@@ -1367,7 +1367,10 @@ class StarMapWidget(Widget):
 					name = getattr(obj, "name", None)
 					name = _("Planet: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
 				elif obj.type == T_FLEET:
-					name = getattr(obj, "name", None)
+					if hasattr(obj,'customname') and obj.customname:
+						name = obj.customname
+					else:
+						name = getattr(obj, "name", None)
 					name = _("Fleet: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
 				elif obj.type == T_ASTEROID:
 					name = getattr(obj, "name", None)
@@ -1472,6 +1475,7 @@ class StarMapWidget(Widget):
 					self.KeyModHelp.show()
 				self.selectobject = True
 				self.setKey = evt.key
+				self.app.setStatus(_("Select object to hotkey. ESC to cancel."))
 			elif pygame.key.get_mods() & KMOD_SHIFT:
 				log.debug('Focus Key:',evt.key)
 				self.focusOnKeyObject(evt.key)
@@ -1482,7 +1486,9 @@ class StarMapWidget(Widget):
 		# ==== Map and Dialog Hotkeys ====
 		elif evt.key == K_ESCAPE and self.selectobject:
 			log.debug('Canceled Key')
-			self.selectobject = False
+			if self.selectobject:
+				self.app.setStatus(_("Ready."))
+				self.selectobject = False
 			return ui.NoEvent
 		if not evt.unicode:
 			# force update
@@ -1572,6 +1578,7 @@ class StarMapWidget(Widget):
 	def setKeyObject(self,objIDs,bObjIDs):
 		objID = self.gotoObject(objIDs,bObjIDs)
 		log.debug('Setting Key Object To:',objID)
+		self.app.setStatus(_("Ready."))
 		self.selectobject = False
 		if (objID == OID_NONE):
 			return
