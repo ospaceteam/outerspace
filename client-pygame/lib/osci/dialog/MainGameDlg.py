@@ -282,6 +282,7 @@ class MainGameDlg:
 			layout = (0, 1, lw, lh - 2)
 		)
 		self.searchDlg.mapWidget = self.mapWidget
+		self.win.callEventHandler = self.mapWidget
 		# bottom
 		ui.Label(self.win,
 			id = 'vStatus',
@@ -358,4 +359,3 @@ class MainGameDlg:
 			]
 		)
 		self.systemPlanetMenu.subscribeAction("*", self)
-		

@@ -48,6 +48,7 @@ class Window(MetaWidget):
 		self._dragging = 0
 		self._fullUpdate = True
 		self.tabChange = False
+		self.callEventHandler = False
 		# register
 		self.app.registerWindow(self)
 		self.processKWArguments(kwargs)
@@ -149,7 +150,13 @@ class Window(MetaWidget):
 		elif self.acceptButton != None and evt.key == K_RETURN:
 			if isinstance(self.acceptButton, Button) and self.acceptButton.action != None:
 				self.processAction(self.acceptButton.action)
+		if self.callEventHandler:
+			self.callEventHandler.processKeyUp(evt)
 		return evt
+
+	def processKeyDown(self, evt):
+		if self.callEventHandler:
+			self.callEventHandler.processKeyDown(evt)
 
 	def focusNext(self):
 		for widget in self.widgets:
