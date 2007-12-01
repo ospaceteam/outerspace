@@ -349,7 +349,7 @@ class OptionsDlg:
 
 		if self.win.vShowGateNetwork.checked:
 			gdata.config.defaults.mapgatemode = '2'
-		elif gdata.config.defaults.mapgatemode == 2: #only unset if it was set through this panel
+		elif gdata.config.defaults.mapgatemode == '2': #only unset if it was set through this panel
 			gdata.config.defaults.mapgatemode = '0'
 
 		if self.win.vShowPlayerZones.checked:
@@ -428,6 +428,12 @@ class OptionsDlg:
 		ui.SkinableTheme.setSkin(os.path.join("res/themes", curTheme))
 		ui.SkinableTheme.loadMusic(gdata.config.defaults.mymusic)
 		ui.SkinableTheme.playMusic()
+		# update foreground colors
+		gdata.sevColors[gdata.CRI] = (ui.SkinableTheme.themeCritical)
+		gdata.sevColors[gdata.MAJ] = (ui.SkinableTheme.themeMajor)
+		gdata.sevColors[gdata.MIN] = (ui.SkinableTheme.themeMinor)
+		gdata.sevColors[gdata.NONE] = (ui.SkinableTheme.themeNone)
+		gdata.sevColors[gdata.DISABLED] = (ui.SkinableTheme.themeDisabled)
 		# all OK? (no exception) -> store settings
 		gdata.config.client.theme = curTheme
 		self.win.vTheme2.text = curTheme

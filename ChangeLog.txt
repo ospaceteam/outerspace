@@ -5,6 +5,9 @@ Change Log:
 - Added status info during hotkey setting [Random Chaos]
 - Added method to pygamui.window to allow event inheritance to non-direct widgets [Random Chaos]
 - Fixed main game dialog to send starmap widget events when on menu bar [Random Chaos]
+- Fixed options dialog to correctly update severity colors on theme change [Random Chaos]
+- Updated grey theme to make severity colors more readable [Random Chaos]
+- Added additional planet icons for Hostile, Gas Giant, Terrestrial, and Cold [Random Chaos]
 
 [2007-11-30]
 - Added player control zone highlighting (CTRL-P) [Random Chaos]
