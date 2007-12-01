@@ -35,6 +35,8 @@ from osci.MiniMap import MiniMap
 
 buoyColors = [(0xff, 0xff, 0x00), (0x00, 0xff, 0xff), (0xff, 0x00, 0xff), (0xb0, 0xb0, 0xff)]
 MAX_BOUY_DISPLAY_LEN = 30
+CONTROLRANGE = 5
+MAXCONTROLRANGE = 30 #square of CONTROLRANGE + small amount
 
 class StarMapWidget(Widget):
 
@@ -47,6 +49,7 @@ class StarMapWidget(Widget):
 	MAP_FREDIRECTS = 8
 	MAP_GATENETWORK = 9
 	MAP_GATESYSTEMS = 10
+	MAP_CONTROLAREA = 11
 
 	def __init__(self, parent, **kwargs):
 		Widget.__init__(self, parent)
@@ -67,7 +70,8 @@ class StarMapWidget(Widget):
 			self.MAP_OTHERS: [],
 			self.MAP_FREDIRECTS: [],
 			self.MAP_GATENETWORK: [],
-                        self.MAP_GATESYSTEMS: [],
+			self.MAP_GATESYSTEMS: [],
+			self.MAP_CONTROLAREA: {}
 		}
 		self._popupInfo = {}
 		self._fleetRanges = {}
@@ -115,38 +119,44 @@ class StarMapWidget(Widget):
 		# key setting system
 		self.selectobject = False
 		self.setKey = False
+		# commands
+		self.keyPress = False
 
 	def updateConfigModes(self):
 		if gdata.config.defaults.showredirects == 'no':
 			self.showRedirects = 0
-                else:
+		else:
 			self.showRedirects = 1
 		if gdata.config.defaults.showcoords == 'no':
 			self.showCoords = 0
-                else:
+		else:
 			self.showCoords = 1
 		if gdata.config.defaults.showmapgrid == 'no':
 			self.showGrid = 0
-                else:
+		else:
 			self.showGrid = 1
 		if gdata.config.defaults.showmapscanners == 'no':
 			self.showScanners = 0
-                else:
+		else:
 			self.showScanners = 1
 		if gdata.config.defaults.showfleetlines == 'no':
 			self.showFleetLines = 0
-                else:
+		else:
 			self.showFleetLines = 1
 		if gdata.config.defaults.showgatesystems == 'no':
 			self.showGateSystems = 0
-                else:
+		else:
 			self.showGateSystems = 1
+		if gdata.config.defaults.showplayerzones == 'yes': #default off
+			self.toggleControlAreas = 1
+		else:
+			self.toggleControlAreas = 0
 		if gdata.config.defaults.mapgatemode != None:
 			try:
 				self.showGateNetworks = int(gdata.config.defaults.mapgatemode)
 			except:
 				self.showGateNetworks = 0
-                else:
+		else:
 			self.showGateNetworks = 0
 
 	def requestRepaint(self):
@@ -172,7 +182,8 @@ class StarMapWidget(Widget):
 			self.MAP_OTHERS: [],
 			self.MAP_FREDIRECTS: [],
 			self.MAP_GATENETWORK: [],
-                        self.MAP_GATESYSTEMS: [],
+			self.MAP_GATESYSTEMS: [],
+			self.MAP_CONTROLAREA: {}
 		}
 		self._popupInfo = {}
 		self._fleetRanges = {}
@@ -309,6 +320,20 @@ class StarMapWidget(Widget):
 				#   color = res.getFFColorCode(rel)
 				colors = res.getStarmapWidgetSystemColor(ownerID,bio,minerals,slots,numPlanets,speedBoost, refuelInc, upgradeShip, pirProb*100, stratRes, morale)
 				namecolor = res.getPlayerColor(ownerID)
+				controlcolor = res.getControlColor(ownerID)
+				if controlcolor:
+					groupCenterX = int(anyX)
+					groupCenterY = int(anyY)
+					for rX in range(-CONTROLRANGE,CONTROLRANGE):
+						for rY in range(-CONTROLRANGE,CONTROLRANGE):
+							if rX*rX+rY*rY < MAXCONTROLRANGE:
+								ctrlid = "%d:%d" % (groupCenterX+rX,groupCenterY+rY)
+								dist = pow(anyX-groupCenterX-rX,2) + pow(anyY-groupCenterY-rY,2)
+								if ctrlid in self._map[self.MAP_CONTROLAREA]:
+									oldCtrl = self._map[self.MAP_CONTROLAREA][ctrlid]
+									if dist > oldCtrl[1]:
+										continue
+								self._map[self.MAP_CONTROLAREA][ctrlid] = (controlcolor,dist)
 				self._map[self.MAP_SYSTEMS].append((obj.oid, obj.x, obj.y, name, img, colors, namecolor, False, icons))
 				# pop up info
 				info = []
@@ -665,6 +690,22 @@ class StarMapWidget(Widget):
 #		log.debug("Total scanner circles:",len(self._map[self.MAP_SCANNER1]))
 #		log.debug("Drawn scanner circles:",len(scannerCalced))
 
+	def drawControlAreas(self):
+		centerX, centerY = self._mapSurf.get_rect().center
+		maxY = self._mapSurf.get_rect().height
+		currX = self.currX
+		currY = self.currY
+		scale = self.scale
+		first = True
+		for xy in self._map[self.MAP_CONTROLAREA].keys():
+			x,y = xy.split(':',2)
+			sx = int((int(x) - currX) * scale) + centerX + 1
+			sy = maxY - (int((int(y) - currY) * scale) + centerY)
+			if sy > centerY: sy += 1
+			dx = scale
+			dy = scale - 1
+			pygame.draw.rect(self._mapSurf, self._map[self.MAP_CONTROLAREA][xy][0], (sx, sy, dx, dy))
+
 	def drawRedirects(self):
 		# coordinates
 		centerX, centerY = self._mapSurf.get_rect().center
@@ -967,9 +1008,12 @@ class StarMapWidget(Widget):
 			# clipping (TODO better one)
 			clip = mapSurface.get_clip()
 			# scanners
-			# scanner ranges
-			if self.showScanners:
-				self.drawScanners()
+			# scanner ranges and control areas
+			if self.showScanners or self.toggleControlAreas:
+				if self.toggleControlAreas:
+					self.drawControlAreas()
+				else:
+					self.drawScanners()
 			# pirate area
 			if self.showPirateAreas:
 				pass # TODO
@@ -1410,7 +1454,15 @@ class StarMapWidget(Widget):
 				self.activePos = pos
 		return ui.NoEvent
 
+	# put actually processing of key in "processKeyUp" using key pressed during "processKeyDown" to prevent erroneous double press detection when holding down CTRL, SHIFT, or ALT keys
 	def processKeyDown(self, evt):
+		self.keyPress = evt
+		return ui.NoEvent
+
+	def processKeyUp(self,evt2):
+		evt = self.keyPress
+		if not self.keyPress: return ui.NoEvent
+		self.keyPress = False
 		# ==== Object Hotkeys ====
 		#I have not found unicode escape characters for Ctrl-0 through Ctrl-9, so using direct key reference (less preferred due to international keyboards)
 		if evt.key in [49,50,51,52,53,54,55,56,57,48]:
@@ -1482,7 +1534,18 @@ class StarMapWidget(Widget):
 			self.showOverlayDlg.display()
 		# Ctrl+N - Toggle drawing gate networks (0: off; 1: draw only fleet command lines; 2: draw 20 parsec groups; 3: draw from center 10 region)
 		elif evt.unicode == u'\x0E' and pygame.key.get_mods() & KMOD_CTRL:
-			self.showGateNetworks = (self.showGateNetworks + 1) % 4
+			if self.showGateNetworks:
+				self.showGateNetworks = 0
+			else:
+				self.showGateNetworks = 2
+			#self.showGateNetworks = (self.showGateNetworks + 1) % 4
+			self.repaintMap = 1
+		# Ctrl+P - Toggle viewing of control areas (turns off scanner circles)
+		elif evt.unicode == u'\x10' and pygame.key.get_mods() & KMOD_CTRL:
+			if self.toggleControlAreas:
+				self.toggleControlAreas = 0
+			else:
+				self.toggleControlAreas = 1
 			self.repaintMap = 1
 		# Ctrl+R - Toggle drawing redirects
 		elif evt.unicode == u'\x12' and pygame.key.get_mods() & KMOD_CTRL:
@@ -1504,7 +1567,7 @@ class StarMapWidget(Widget):
 			# force update
 			self.scale += 1
 			self.scale -= 1
-		return ui.NoEvent
+		return ui.NoEvent		
 
 	def setKeyObject(self,objIDs,bObjIDs):
 		objID = self.gotoObject(objIDs,bObjIDs)

@@ -180,16 +180,24 @@ class OptionsDlg:
 			self.win.vShowMapFleetLines.checked = val == 'yes'
 
 		if gdata.config.defaults.mapgatemode != None:
-			gatemode = int(gdata.config.defaults.mapgatemode)
-			try:
-				self.win.vGatemode2.text = self.gatemodes[gatemode]
-			except:
-				self.win.vGatemode2.text = gatemode
-		else:
-			self.win.vGatemode2.text = self.gatemodes[0]
+			val = gdata.config.defaults.mapgatemode
+			self.win.vShowGateNetwork.checked = val == '2'
 
-		self.win.vGatemode.text = _("Select Gate Draw Mode")
-		self.win.vGatemode.action = "onSelectGatemode"
+		if gdata.config.defaults.showPlayerZones != None:
+			val = gdata.config.defaults.showplayerzones
+			self.win.vShowPlayerZones.checked = val == 'yes'
+
+		#if gdata.config.defaults.mapgatemode != None:
+		#	gatemode = int(gdata.config.defaults.mapgatemode)
+		#	try:
+		#		self.win.vGatemode2.text = self.gatemodes[gatemode]
+		#	except:
+		#		self.win.vGatemode2.text = gatemode
+		#else:
+		#	self.win.vGatemode2.text = self.gatemodes[0]
+
+		#self.win.vGatemode.text = _("Select Gate Draw Mode")
+		#self.win.vGatemode.action = "onSelectGatemode"
 
 		# login defaults
 		self.win.vAutoLogin.enabled = False
@@ -338,6 +346,17 @@ class OptionsDlg:
 			gdata.config.defaults.showfleetlines = 'yes'
 		else:
 			gdata.config.defaults.showfleetlines = 'no'
+
+		if self.win.vShowGateNetwork.checked:
+			gdata.config.defaults.mapgatemode = '2'
+		elif gdata.config.defaults.mapgatemode == 2: #only unset if it was set through this panel
+			gdata.config.defaults.mapgatemode = '0'
+
+		if self.win.vShowPlayerZones.checked:
+			gdata.config.defaults.showplayerzones = 'yes'
+		else:
+			gdata.config.defaults.showplayerzones = 'no'
+
 
 			
 		if self.win.vAutoLogin.checked:
@@ -641,32 +660,36 @@ class OptionsDlg:
 			checked = 1)
 		ui.Check(self.win, layout = (15, 10, 8, 1), text = _('Show map grid'), id = 'vShowMapGrid', 
 			checked = 1)
+		ui.Check(self.win, layout = (23, 10, 8, 1), text = _('Show gate network'), id = 'vShowGateNetwork', 
+			checked = 0)
 		ui.Check(self.win, layout = (7, 11, 8, 1), text = _('Show map scanners'), id = 'vShowMapScanners', 
 			checked = 1)
 		ui.Check(self.win, layout = (15, 11, 8, 1), text = _('Show fleet lines'), id = 'vShowMapFleetLines', 
 			checked = 1)
+		ui.Check(self.win, layout = (23, 11, 8, 1), text = _('Show player zones'), id = 'vShowPlayerZones', 
+			checked = 0)
 
-		ui.Button(self.win, layout = (23, 10, 9, 1), id = "vGatemode", align = ui.ALIGN_W)
-		ui.ActiveLabel(self.win, layout = (23, 11, 9, 1), id = "vGatemode2")
-		width = 304  # 15 * 20 + 4
-		height = 164 # 8 * 20 + 4
-		self.gnwin = ui.Window(self.app,
-			modal = 1,
-			escKeyClose = 1,
-			titleOnly = 0,
-			movable = 0,
-			title = _("Select gate mode"),
-			rect = ui.Rect((screenWidth - width) / 2, (screenHeight - height) / 2, width, height),
-			layoutManager = ui.SimpleGridLM(),
-		)
-		self.gnwin.subscribeAction('*', self)
+		#ui.Button(self.win, layout = (23, 10, 9, 1), id = "vGatemode", align = ui.ALIGN_W)
+		#ui.ActiveLabel(self.win, layout = (23, 11, 9, 1), id = "vGatemode2")
+		#width = 304  # 15 * 20 + 4
+		#height = 164 # 8 * 20 + 4
+		#self.gnwin = ui.Window(self.app,
+		#	modal = 1,
+		#	escKeyClose = 1,
+		#	titleOnly = 0,
+		#	movable = 0,
+		#	title = _("Select gate mode"),
+		#	rect = ui.Rect((screenWidth - width) / 2, (screenHeight - height) / 2, width, height),
+		#	layoutManager = ui.SimpleGridLM(),
+		#)
+		#self.gnwin.subscribeAction('*', self)
 		# rename
-		ui.Listbox(self.gnwin, layout = (0, 0, 15, 6), id = 'vGatemodes', columnLabels = 0,
-			columns = ((None, 'text', 0, ui.ALIGN_W),), multiselection = 0)
+		#ui.Listbox(self.gnwin, layout = (0, 0, 15, 6), id = 'vGatemodes', columnLabels = 0,
+		#	columns = ((None, 'text', 0, ui.ALIGN_W),), multiselection = 0)
 		# status bar + submit/cancel
-		ui.TitleButton(self.gnwin, layout = (10, 6, 5, 1), text = _("Select"), action = 'onGatemodeSelected')
-		ui.TitleButton(self.gnwin, layout = (5, 6, 5, 1), text = _("Cancel"), action = 'onGatemodeCancel')
-		ui.Title(self.gnwin, id = 'vStatusBar', layout = (0, 6, 5, 1), align = ui.ALIGN_W)
+		#ui.TitleButton(self.gnwin, layout = (10, 6, 5, 1), text = _("Select"), action = 'onGatemodeSelected')
+		#ui.TitleButton(self.gnwin, layout = (5, 6, 5, 1), text = _("Cancel"), action = 'onGatemodeCancel')
+		#ui.Title(self.gnwin, id = 'vStatusBar', layout = (0, 6, 5, 1), align = ui.ALIGN_W)
 		
 		# Login settings
 		ui.Title(self.win, layout = (7,13, 15, 1), text = _('Login settings'),

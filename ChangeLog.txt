@@ -1,5 +1,9 @@
 Change Log:
 
+[2007-11-30]
+- Added player control zone highlighting (CTRL-P) [Random Chaos]
+- Updated options dialog to reflect new starmap options [Random Chaos]
+
 [2007-11-28]
 - Added cap on max experience transfered during upgrade based on comparison of base experience of the two ship classes (prevent abuse) [Random Chaos]
 - Fixed remaining minefield typo with shielded ships being hit by mines [Random Chaos]

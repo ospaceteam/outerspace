@@ -297,6 +297,16 @@ def getPlayerColor(owner, onlyDiplo = False):
 	rel = min(REL_UNDEF,client.getRelationTo(owner))
 	return getFFColorCode(rel)
 
+def getControlColor(owner, onlyDiplo = False):
+	if owner == OID_NONE:
+		return False
+	if not onlyDiplo:
+		if gdata.config.defaults.highlights == 'yes':
+			if gdata.playersHighlightColors.has_key(owner):
+				return fadeDarkColor(gdata.playersHighlightColors[owner])
+	rel = min(REL_UNDEF,client.getRelationTo(owner))
+	return fadeDarkColor(getFFColorCode(rel))
+
 def getGateLineWidth(owner):
 	if owner == OID_NONE:
 		return 1
@@ -367,6 +377,10 @@ def getStarmapWidgetSystemColorPerDatatype(datatype,ownerid,bio,mineral,slot,num
 
 def fadeColor(triplet):
 	return ((triplet[0]+0xc0)/2,(triplet[1]+0xc0)/2,(triplet[2]+0xc0)/2)
+
+def fadeDarkColor(triplet):
+	return ((triplet[0]+0x00*2)/3,(triplet[1]+0x00*2)/3,(triplet[2]+0x00*2)/3)
+
 
 def formatTime(time,separator=':'):
 	time = int(math.ceil(time))
