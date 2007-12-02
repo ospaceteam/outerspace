@@ -32,6 +32,8 @@ class Item:
 		self.expanded = 0
 		self.tooltip = None
 		self.statustip = None
+		self.hotkey = None
+		self.hotkeymod = None
 		self.foreground = None
 		self.background = None
 		self.index = None

@@ -59,6 +59,7 @@ class StarMapWidget(Widget):
 		self.showOverlayDlg.mapWidget = self
 		# data
 		self.action = None
+		self.callEventHandler = None
 		# map
 		self._mapSurf = None
 		self._map = {
@@ -1460,9 +1461,13 @@ class StarMapWidget(Widget):
 	# put actually processing of key in "processKeyUp" using key pressed during "processKeyDown" to prevent erroneous double press detection when holding down CTRL, SHIFT, or ALT keys
 	def processKeyDown(self, evt):
 		self.keyPress = evt
+		if self.callEventHandler:
+			self.callEventHandler.processKeyDown(evt)
 		return ui.NoEvent
 
 	def processKeyUp(self,evt2):
+		if self.callEventHandler:
+			self.callEventHandler.processKeyUp(evt2)
 		evt = self.keyPress
 		if not self.keyPress: return ui.NoEvent
 		self.keyPress = False

@@ -42,6 +42,7 @@ from ige.ospace.Const import *
 from ige.Const import *
 from ige import log
 import webbrowser, pygame
+from pygame.locals import *
 import time
 import Utils
 
@@ -263,6 +264,39 @@ class MainGameDlg:
 		else:
 			self.win.vMessages.foreground = None
 
+	def processKeyUp(self, evt):
+		return ui.NoEvent
+		
+
+	def processKeyDown(self, evt):
+		# Alt+M - Messages
+		if evt.unicode == u'\x6D' and pygame.key.get_mods() & KMOD_ALT:
+			self.messagesDlg.display()
+		# Alt+R - Research
+		elif evt.unicode == u'\x72' and pygame.key.get_mods() & KMOD_ALT:
+			self.researchDlg.display()
+		# Alt+D - Diplomacy
+		elif evt.unicode == u'\x64' and pygame.key.get_mods() & KMOD_ALT:
+			self.diplomacyDlg.display()
+		# Alt+C - Constr
+		elif evt.unicode == u'\x63' and pygame.key.get_mods() & KMOD_ALT:
+			self.constructionDlg.display()
+		# Alt+P - Planets
+		elif evt.unicode == u'\x70' and pygame.key.get_mods() & KMOD_ALT:
+			self.onPlanetsMenu(False,False,False) # use onPlanetsMenu rather than direct control
+		# Alt+F - Fleets
+		elif evt.unicode == u'\x66' and pygame.key.get_mods() & KMOD_ALT:
+			self.onFleetsMenu(False,False,False) # use onFleetsMenu rather than direct control
+		# Alt+O - Overview
+		elif evt.unicode == u'\x6F' and pygame.key.get_mods() & KMOD_ALT:
+			self.empireOverviewDlg.display()
+		# Alt+B - Pro'b'lems
+		elif evt.unicode == u'\x62' and pygame.key.get_mods() & KMOD_ALT:
+			self.problemsDlg.display()
+		# Alt+N - Me'n'u
+		elif evt.unicode == u'\x6E' and pygame.key.get_mods() & KMOD_ALT:
+			self.onMenu(False,False,False) # use onMenu rather than direct control
+		
 	def createUI(self):
 		w, h = gdata.scrnSize
 		lw, lh = w / 20, h / 20
@@ -283,6 +317,7 @@ class MainGameDlg:
 		)
 		self.searchDlg.mapWidget = self.mapWidget
 		self.win.callEventHandler = self.mapWidget
+		self.mapWidget.callEventHandler = self
 		# bottom
 		ui.Label(self.win,
 			id = 'vStatus',
@@ -330,32 +365,32 @@ class MainGameDlg:
 		self.systemMenu = ui.Menu(self.app, title = _("Menu"),
 			width = 5,
 			items = [
-				ui.Item(_("Find system"), action = "onSearch"),
-				ui.Item(_("Statistics"), action = "onStats"),
-				ui.Item(_("Save Starmap"), action = "onSaveStarmap"),
-				ui.Item(_("Galaxy restart"), action = "galaxyRestart", enabled = False, data = True), #if this position moved, you need to update restartGalaxy's "self.systemMenu.items" lines to reference new index position
-				ui.Item(_("Options"), action = "onOptions"),
+				ui.Item(_("Find system"), action = "onSearch", hotkey = u'\x66'), # F
+				ui.Item(_("Statistics"), action = "onStats", hotkey = u'\x73'), # S
+				ui.Item(_("Save Starmap"), action = "onSaveStarmap", hotkey = u'\x76'), # V
+				ui.Item(_("Galaxy restart"), action = "galaxyRestart", enabled = False, data = True), # no hotkey; if this position moved, you need to update restartGalaxy's "self.systemMenu.items" lines to reference new index position
+				ui.Item(_("Options"), action = "onOptions", hotkey = u'\x6F'), # O
 				ui.Item(_("--------"), enabled = False),
-				ui.Item(_("Resign"), action = "onResign"),
+				ui.Item(_("Resign"), action = "onResign"), # no hotkey
 				ui.Item(_("--------"), enabled = False),
-				ui.Item(_("Quit"), action = "onQuit"),
+				ui.Item(_("Quit"), action = "onQuit", hotkey = u'\x71'), # Q
 			]
 		)
 		self.systemMenu.subscribeAction("*", self)
 		self.systemFleetMenu = ui.Menu(self.app, title = _("Fleets"),
 			width = 4,
 			items = [
-				ui.Item(_("Fleet List"), action = "onFleets"),
-				ui.Item(_("Analysis"), action = "onFleetAnalysis"),
+				ui.Item(_("Fleet List"), action = "onFleets", hotkey = u'\x66'), # F
+				ui.Item(_("Analysis"), action = "onFleetAnalysis", hotkey = u'\x61'), # A
 			]
 		)
 		self.systemFleetMenu.subscribeAction("*", self)
 		self.systemPlanetMenu = ui.Menu(self.app, title = _("Planets"),
 			width = 4,
 			items = [
-				ui.Item(_("Planet List"), action = "onPlanets"),
-				ui.Item(_("System List"), action = "onSystems"),
-				ui.Item(_("Analysis"), action = "onPlanetAnalysis"),
+				ui.Item(_("Planet List"), action = "onPlanets", hotkey = u'\x70'), # P
+				ui.Item(_("System List"), action = "onSystems", hotkey = u'\x73'), # S
+				ui.Item(_("Analysis"), action = "onPlanetAnalysis", hotkey = u'\x61'), #A
 			]
 		)
 		self.systemPlanetMenu.subscribeAction("*", self)

@@ -663,17 +663,17 @@ class OptionsDlg:
 		ui.Check(self.win, layout = (23, 9, 8, 1), text = _('Show gate systems'), id = 'vShowGateSystems', 
 			checked = 1)
 		ui.Check(self.win, layout = (7, 10, 8, 1), text = _('Show redirects'), id = 'vRedirects',
-			checked = 1)
+			checked = 1, tooltip = _('Starmap hotkey: CTRL-R'))
 		ui.Check(self.win, layout = (15, 10, 8, 1), text = _('Show map grid'), id = 'vShowMapGrid', 
-			checked = 1)
+			checked = 1, tooltip = _('Starmap hotkey: CTRL-G'))
 		ui.Check(self.win, layout = (23, 10, 8, 1), text = _('Show gate network'), id = 'vShowGateNetwork', 
-			checked = 0)
+			checked = 0, tooltip = _('Starmap hotkey: CTRL-N'))
 		ui.Check(self.win, layout = (7, 11, 8, 1), text = _('Show map scanners'), id = 'vShowMapScanners', 
-			checked = 1)
+			checked = 1, tooltip = _('Starmap hotkey: CTRL-S'))
 		ui.Check(self.win, layout = (15, 11, 8, 1), text = _('Show fleet lines'), id = 'vShowMapFleetLines', 
-			checked = 1)
+			checked = 1, tooltip = _('Starmap hotkey: CTRL-L'))
 		ui.Check(self.win, layout = (23, 11, 8, 1), text = _('Show player zones'), id = 'vShowPlayerZones', 
-			checked = 0)
+			checked = 0, tooltip = _('Starmap hotkey: CTRL-P'))
 
 		#ui.Button(self.win, layout = (23, 10, 9, 1), id = "vGatemode", align = ui.ALIGN_W)
 		#ui.ActiveLabel(self.win, layout = (23, 11, 9, 1), id = "vGatemode2")

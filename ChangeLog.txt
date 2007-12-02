@@ -1,5 +1,11 @@
 Change Log:
 
+[2007-12-02]
+- Extended event inheritance to non-direct widgets to include starmap widget [Random Chaos]
+- Added hotkey processing support to Menu widget in pygameui [Random Chaos]
+- Added hotkeys for main game dialog menu (top bar) - Alt+M, R, D, C, P, F, O, B, N for the 9 menu items [Random Chaos]
+- Added tooltips to options dialog starmap options [Random Chaos]
+
 [2007-12-01]
 - Added custom fleet name support to remaining dialogs [BSE]
 - Added status info during hotkey setting [Random Chaos]

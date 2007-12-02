@@ -82,3 +82,20 @@ class Menu(Window):
 	def actionHandler(self, widget, action, data):
 		self.hide()
 		self.processAction(action, widget.data)
+
+	def processKeyUp(self, evt):
+		return NoEvent
+		
+
+	def processKeyDown(self, evt):
+		for item in self.items:
+			if getattr(item,'hotkeymod',False):
+				if getattr(item,'hotkey',False) == evt.unicode and pygame.key.get_mods() & getattr(item,'hotkeymod',False):
+					self.hide()
+					self.processAction(item.action, False)
+			elif getattr(item,'hotkey',False) == evt.unicode:
+				self.hide()
+				self.processAction(item.action, False)
+		if evt.key == K_ESCAPE:
+			self.hide()
+		return NoEvent
