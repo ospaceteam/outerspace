@@ -329,7 +329,7 @@ class StarMapWidget(Widget):
 						for rY in range(-CONTROLRANGE,CONTROLRANGE):
 							if rX*rX+rY*rY < MAXCONTROLRANGE:
 								ctrlid = "%d:%d" % (groupCenterX+rX,groupCenterY+rY)
-								dist = pow(anyX-groupCenterX-rX,2) + pow(anyY-groupCenterY-rY,2)
+								dist = pow(anyX-(groupCenterX+rX+0.5),2) + pow(anyY-(groupCenterY+rY+0.5),2)
 								if ctrlid in self._map[self.MAP_CONTROLAREA]:
 									oldCtrl = self._map[self.MAP_CONTROLAREA][ctrlid]
 									if dist > oldCtrl[1]:
@@ -701,10 +701,10 @@ class StarMapWidget(Widget):
 		for xy in self._map[self.MAP_CONTROLAREA].keys():
 			x,y = xy.split(':',2)
 			sx = int((int(x) - currX) * scale) + centerX + 1
-			sy = maxY - (int((int(y) - currY) * scale) + centerY)
-			if sy > centerY: sy += 1
+			sy = maxY - (int((int(y) + 1 - currY) * scale) + centerY) # use y+1 because we have to draw from top down rather than bottom up
+			if sy > centerY: sy += 1 #fix a bug with the draw system
 			dx = scale
-			dy = scale - 1
+			dy = scale
 			pygame.draw.rect(self._mapSurf, self._map[self.MAP_CONTROLAREA][xy][0], (sx, sy, dx, dy))
 
 	def drawRedirects(self):
