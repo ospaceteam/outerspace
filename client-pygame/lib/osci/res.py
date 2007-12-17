@@ -223,7 +223,7 @@ def getHabitabilityColorCode(bio):
 def getPirateColonyColorCode(pirate):
 	if not pirate:
 		return (0xc0, 0xc0, 0xc0)
-	if pirate =< 0:
+	if pirate <= 0:
 		return (0xff, 0x00, 0xff)
 	if pirate < 26:
 		return((255),(5*pirate),0x00) # end 255, 125, 0
