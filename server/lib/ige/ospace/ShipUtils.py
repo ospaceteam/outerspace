@@ -154,7 +154,7 @@ def makeShipFullSpec(player, name, hullID, eqIDs, improvements, raiseExs = True)
 				and raiseExs:
 				raise GameException("Maximum number of equipment installations exceeded.")
 			#check maximum type installations
-			if tech.subtype == "seq_mod" and tech.equipType in Rules.maxEquipType and raiseExs::
+			if tech.subtype == "seq_mod" and tech.equipType in Rules.maxEquipType and raiseExs:
 				if tech.equipType in equipCounter:
 					equipCounter[tech.equipType] += 1
 				else:
