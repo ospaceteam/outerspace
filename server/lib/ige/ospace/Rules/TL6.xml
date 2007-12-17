@@ -134,6 +134,7 @@
 		/>
 		<shipequip
 			subtype="seq_mod"
+			equipType="ECM"
 			buildProd="360"
 			slots="1"
 			weight="1"
@@ -178,6 +179,7 @@
 		/>
 		<shipequip
 			subtype="seq_mod"
+			equipType="Shields"
 			buildProd="1480"
 			slots="2"
 			weight="8"
@@ -201,6 +203,7 @@
 		/>
 		<shipequip
 			subtype="seq_mod"
+			equipType="Auto Repair"
 			buildProd="720"
 			autoRepairFix="4"
 			slots="6"
@@ -221,6 +224,7 @@
 		/>
 		<shipequip
 			subtype="seq_mod"
+			equipType="Combat Bonuses"
 			buildProd="960"
 			combatAttPerc="1.20"
 			combatDefPerc="1.20"
@@ -631,6 +635,7 @@
 		/>
 		<shipequip
 			subtype="seq_mod"
+			equipType="Combat Bonuses"
 			buildProd="1440"
 			combatAttPerc="1.50"
 			slots="2"

@@ -76,6 +76,11 @@ class Text(Widget):
 	def deleteSelection(self):
 		# we have some selection
 		if self.selStart != None and self.selEnd != None:
+			# Reorder selStart and selEnd if needed
+			if self.selStart and (self.selEnd[0] < self.selStart[0] or (self.selEnd[0] == self.selStart[0] and self.selEnd[1] < self.selStart[1])):
+				temp = self.selStart
+				self.selStart = self.selEnd
+				self.selEnd = temp
 			# one-line selection
 			if self.selStart[0] == self.selEnd[0]:
 				# text before selection
@@ -88,18 +93,18 @@ class Text(Widget):
 				# handle multi-line selection
 				# delete end of selection
 				self.text[self.selEnd[0]] = self.text[self.selEnd[0]][self.selEnd[1]:]
-				if len(self.text[self.selEnd[0]]) == 0:
-					del self.text[self.selEnd[0]]
 				# delete fully selected rows
-				for row in range(self.selEnd[0] - self.selStart[0] - 1):
-					self.text.pop(row)
+				start = self.selStart[0]+1
+				for row in range(start,self.selEnd[0]):
+					self.text.pop(start)
 				# delete selection on first row
 				self.text[self.selStart[0]] = self.text[self.selStart[0]][:self.selStart[1]]
-				if len(self.text[self.selStart[0]]) == 0:
-					del self.text[self.selStart[0]]
-
+				# join the rows that are spanned
+				self.text[self.selStart[0]] = u'%s%s' % (self.text[self.selStart[0]], self.text[self.selStart[0]+1])
+				del self.text[self.selStart[0]+1]
 			# move cursor to selection begining
 			self.cursorColumn = self.selStart[1]
+			self.cursorRow = self.selStart[0]
 			# clear selection
 			self.selStart = self.selEnd = None
 
@@ -143,52 +148,8 @@ class Text(Widget):
 
 		elif evt.key == K_LEFT:
 			if evt.mod & KMOD_SHIFT:
-				# no current selection
 				if self.selStart == None:
-					# we are not at begining of line
-					if self.cursorColumn > 0:
-						# current position of cursor is end of selection
-						self.selEnd = (self.cursorRow, self.cursorColumn)
-						# start of selection is one column left
-						self.selStart = (self.cursorRow, self.cursorColumn - 1)
-					# we are at first column and not on first row
-					elif self.cursorRow > 0:
-						# current position of cursor is end of selection
-						self.selEnd = (self.cursorRow, self.cursorColumn)
-						# start of selection is end of previous row
-						self.selStart = (self.cursorRow - 1, len(self.text[self.cursorRow - 1]))
-					# we are at very begining
-					else:
-						# clear selection
-						self.selEnd = None
-						self.selStart = None
-				# we have some selection
-				# and we are not at begining of row
-				elif self.cursorColumn > 0:
-					# we have some selection created by K_RIGHT
-					if self.cursorColumn >= self.selEnd[1] and self.cursorRow == self.selEnd[0]:
-						# move end of selection to previous colum
-						self.selEnd = (self.cursorRow, self.cursorColumn - 1)
-					else:
-						# move start of selection to previous column
-						self.selStart = (self.cursorRow, self.cursorColumn - 1)
-				# we have some selection
-				# and we are not at first row
-				elif self.cursorRow > 0:
-					# if selection ends at column 0 - selection was started by K_RIGHT key
-					if self.selEnd[1] == 0:
-						# move end of selection to end of previous row
-						self.selEnd = (self.cursorRow - 1, len(self.text[self.cursorRow - 1]))
-					else:
-						# move start of selection to end of previous row
-						self.selStart = (self.cursorRow - 1, len(self.text[self.cursorRow - 1]))
-
-				# if selection starts and ends at same point, clear selection
-				if self.selStart == self.selEnd:
-					self.selStart = self.selEnd = None
-			else:
-				self.selStart = self.selEnd = None
-
+					self.selStart = (self.cursorRow,self.cursorColumn)
 			if evt.mod & KMOD_CTRL:
 				# move one word left
 				# take words on line
@@ -236,55 +197,18 @@ class Text(Widget):
 			elif self.cursorRow > 0:
 				self.cursorRow -= 1
 				self.cursorColumn = len(self.text[self.cursorRow])
-
-		elif evt.key == K_RIGHT:
 			if evt.mod & KMOD_SHIFT:
-				# no current selection
-				if self.selStart == None:
-					# we are not at end of line
-					if self.cursorColumn < len(self.text[self.cursorRow]):
-						# current position of cursor is start of selection
-						self.selStart = (self.cursorRow, self.cursorColumn)
-						# end of selection is one column right
-						self.selEnd = (self.cursorRow, self.cursorColumn + 1)
-					# we are at last column and not on last row
-					elif self.cursorRow < len(self.text):
-						# current position of cursor is start of selection
-						self.selStart = (self.cursorRow, self.cursorColumn)
-						# end of selection is start of next row
-						self.selEnd = (self.cursorRow + 1, 0)
-					# we are at end
-					else:
-						# clear selection
-						self.selEnd = None
-						self.selStart = None
-				# we have some selection
-				# and we are not at end of row
-				elif self.cursorColumn < len(self.text[self.cursorRow]):
-					# we have some selection created by K_LEFT
-					if self.cursorColumn <= self.selStart[1] and self.cursorRow == self.selStart[0]:
-						# move start of selection to next colum
-						self.selStart = (self.cursorRow, self.cursorColumn + 1)
-					else:
-						# move end of selection to next column
-						self.selEnd = (self.cursorRow, self.cursorColumn + 1)
-				# we have some selection
-				# and we are not at last row
-				elif self.cursorRow < len(self.text):
-					# if selection starts at end of row - selection was started by K_LEFT key
-					if self.selStart[1] == len(self.text[self.cursorRow]):
-						# move end of selection to start of next row
-						self.selStart = (self.cursorRow + 1, 0)
-					else:
-						# move end of selection to start of next row
-						self.selEnd = (self.cursorRow + 1, 0)
-
-				# if selection starts and ends at same point, clear selection
+				self.selEnd = (self.cursorRow,self.cursorColumn)
 				if self.selStart == self.selEnd:
 					self.selStart = self.selEnd = None
 			else:
 				self.selStart = self.selEnd = None
 
+				
+		elif evt.key == K_RIGHT:
+			if evt.mod & KMOD_SHIFT:
+				if self.selStart == None:
+					self.selStart = (self.cursorRow,self.cursorColumn)
 			if evt.mod & KMOD_CTRL:
 				# move one word right
 				# take words on line
@@ -347,10 +271,17 @@ class Text(Widget):
 				if self.cursorRow < len(self.text) - 1:
 					self.cursorRow += 1
 					self.cursorColumn = 0
+			if evt.mod & KMOD_SHIFT:
+				self.selEnd = (self.cursorRow,self.cursorColumn)
+				if self.selStart == self.selEnd:
+					self.selStart = self.selEnd = None
+			else:
+				self.selStart = self.selEnd = None
 
 		elif evt.key == K_UP:
-			if not evt.mod & KMOD_SHIFT:
-				self.selStart = self.selEnd = None
+			if evt.mod & KMOD_SHIFT:
+				if self.selStart == None:
+					self.selStart = (self.cursorRow,self.cursorColumn)
 
 			if self.cursorRow > 0:
 				self.cursorRow -= 1
@@ -358,10 +289,18 @@ class Text(Widget):
 
 			if self.cursorRow - self.offsetRow < 0:
 				self.vertScrollbar.onButton1(self, "", "")
+			
+			if evt.mod & KMOD_SHIFT:
+				self.selEnd = (self.cursorRow,self.cursorColumn)
+				if self.selStart == self.selEnd:
+					self.selStart = self.selEnd = None
+			else:
+				self.selStart = self.selEnd = None
 
 		elif evt.key == K_DOWN:
-			if not evt.mod & KMOD_SHIFT:
-				self.selStart = self.selEnd = None
+			if evt.mod & KMOD_SHIFT:
+				if self.selStart == None:
+					self.selStart = (self.cursorRow,self.cursorColumn)
 
 			if self.cursorRow < len(self.text) - 1:
 				self.cursorRow += 1
@@ -369,6 +308,13 @@ class Text(Widget):
 
 			if self.cursorRow - self.offsetRow >= self.theme.getTextDrawLines(self):
 				self.vertScrollbar.onButton2(self, "", "")
+
+			if evt.mod & KMOD_SHIFT:
+				self.selEnd = (self.cursorRow,self.cursorColumn)
+				if self.selStart == self.selEnd:
+					self.selStart = self.selEnd = None
+			else:
+				self.selStart = self.selEnd = None
 
 		elif evt.key == K_TAB:
 			pass
@@ -445,3 +391,6 @@ class Text(Widget):
 		return self.vertScrollbar.processMWDown(evt)
 
 registerWidget(Text, 'text')
+
+
+

@@ -521,8 +521,8 @@ class IFleet(IObject):
 			else:
 				systemID = targetID
 			owner = tran.db[obj.owner]
-			# TODO! Remove turn check for next release after 12-15-07
-			if systemID not in owner.validSystems and tran.db[OID_UNIVERSE].turn > 37410:
+			# validate that the player has actually scanned this system
+			if systemID not in owner.validSystems:
 				raise GameException('You cannot find this system (never scanned).')
 			if not owner.galaxies:
 				raise GameException('The fleet owner is not in a galaxy.')

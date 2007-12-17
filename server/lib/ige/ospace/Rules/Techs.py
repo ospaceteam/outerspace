@@ -65,6 +65,7 @@ attrs = {
 	'prodBioMod': [0.0, 0.0, 0.0, 0.0], # tuple of (plBio, plMin, plEn, default)
 	'prodEnMod': [0.0, 0.0, 0.0, 0.0], # dtto
 	'prodProdMod': [0.0, 0.0, 0.0, 0.0], # dtto
+	'prodSciMod' : [0.0, 0.0, 0.0, 1.0], # ditto; default is 1.0 for legacy support
 	# env
 	'solarMod': 0, # - : cloak solar radiation / + : create thermal radiation
 	# storage
@@ -95,6 +96,7 @@ attrs = {
 	'maxHP' : 0,
 	"fullInfo": 0, # if True, show full tech info even player not own tech
 	# ship equipment
+	'equipType' : '', # identifier of subtype seq_mod's equipment type; see maxEquipType in Rules/__init__
 	"addMP" : 0, #for extra MP to be added to ship equipment
 	'combatClass' : 0,
 	'combatAtt': 0, #not cumulative for equipment; cumulative for hull, drives, cockpits, etc

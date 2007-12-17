@@ -132,12 +132,16 @@ class EmpireOverviewDlg:
 				_("production eff.")
 			))
 			text.append(u'    %s: %s fame' % (
-				_("New colony cost"),
-				int(Rules.pirateColonyCostMod * len(player.planets)),
-			))
-			text.append(u'    %s: %s fame' % (
 				_("New colony on planet with TL3 resouce cost"),
 				int(Rules.pirateTL3StratResColonyCostMod * Rules.pirateColonyCostMod * len(player.planets)),
+			))
+			text.append(u'    %s: %s fame' % (
+				_("New colony cost multiplier"),
+				int(Rules.pirateColonyCostMod * len(player.planets)),
+			))
+			text.append(u'    %s' % (
+				_("(hover over system/planet to view actual cost)"),
+				int(Rules.pirateColonyCostMod * len(player.planets)),
 			))
 		text.append("")
 		# Production

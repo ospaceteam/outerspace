@@ -831,6 +831,14 @@ def drawText(surface, widget):
 	y = r.top
 	img = renderText(font, ' ', 1, foreground)
 	row = 0
+	if widget.selStart != None:
+		# Reorder selStart and selEnd if needed
+		if widget.selStart and (widget.selEnd[0] < widget.selStart[0] or (widget.selEnd[0] == widget.selStart[0] and widget.selEnd[1] < widget.selStart[1])):
+			selStart = widget.selEnd
+			selEnd = widget.selStart
+		else:
+			selStart = widget.selStart
+			selEnd = widget.selEnd
 	for para in widget.text:
 		if row < widget.offsetRow:
 			row += 1
@@ -847,18 +855,18 @@ def drawText(surface, widget):
 				# lines between first and last line in multiline selection OR
 				# first line in multiline selection OR
 				# one line selection
-				if (line == widget.selEnd[0] and \
-					line > widget.selStart[0] and \
-					column < widget.selEnd[1]) or \
-					(line < widget.selEnd[0] and \
-					line > widget.selStart[0]) or \
-					(line == widget.selStart[0] and \
-					line < widget.selEnd[0] and \
-					column >= widget.selStart[1]) or \
-					(widget.selStart[0] == widget.selEnd[0] and \
-					widget.selStart[0] == line and \
-					column >= widget.selStart[1] and \
-					column < widget.selEnd[1]):
+				if (line == selEnd[0] and \
+					line > selStart[0] and \
+					column < selEnd[1]) or \
+					(line < selEnd[0] and \
+					line > selStart[0]) or \
+					(line == selStart[0] and \
+					line < selEnd[0] and \
+					column >= selStart[1]) or \
+					(selStart[0] == selEnd[0] and \
+					selStart[0] == line and \
+					column >= selStart[1] and \
+					column < selEnd[1]):
 						#switch colors for foreground/background
 						fore = background
 						back = foreground

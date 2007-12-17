@@ -92,19 +92,6 @@ class FleetScoutBloomDlg:
 		if self.targetID != OID_NONE:
 			curTarget = client.get(self.targetID, noUpdate = 1)
 			target = OID_NONE
-			if len(fleet.actions) > 1:
-				if self.cmdIndex != 0 and self.cmdIndex < len(fleet.actions):
-					idx = self.cmdIndex
-				else:
-					idx = len(fleet.actions)
-				while True:
-					idx -= 1
-					if idx < 0:
-						break
-					#print "idx", idx, fleet.actions[idx]
-					action, target, actionData = fleet.actions[idx]
-					if target != OID_NONE:
-						break
 			if fleet.orbiting != OID_NONE and target == OID_NONE:
 				target = fleet.orbiting
 			elif target == OID_NONE:

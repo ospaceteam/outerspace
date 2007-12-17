@@ -36,6 +36,12 @@ class MapOverlayDlg:
 		self.createUI()
 
 	def display(self):
+		player = client.getPlayer()
+		self.isPirate = player.type == T_PIRPLAYER
+		if self.isPirate:
+			self.win.setTagAttr('pirate', 'visible', 1)
+		else:
+			self.win.setTagAttr('pirate', 'visible', 0)
 		if self.mapWidget:
 			self.overlayMode = self.mapWidget.overlayMode
 		if not self.initCheck:
@@ -81,6 +87,8 @@ class MapOverlayDlg:
 			self.win.vOVERLAY_DOCK.checked = 0
 		if gdata.OVERLAY_MORALE != self.overlayMode:
 			self.win.vOVERLAY_MORALE.checked = 0
+		if gdata.OVERLAY_PIRATECOLONYCOST != self.overlayMode and self.isPirate:
+			self.win.vOVERLAY_PIRATECOLONYCOST.checked = 0
 
 	def addChecks(self):
 		if gdata.OVERLAY_OWNER == self.overlayMode:
@@ -101,12 +109,14 @@ class MapOverlayDlg:
 			self.win.vOVERLAY_DOCK.checked = 1
 		if gdata.OVERLAY_MORALE == self.overlayMode:
 			self.win.vOVERLAY_MORALE.checked = 1
+		if gdata.OVERLAY_PIRATECOLONYCOST == self.overlayMode and self.isPirate:
+			self.win.vOVERLAY_PIRATECOLONYCOST.checked = 1
 		
 
 	def createUI(self):
 		w, h = gdata.scrnSize
 		cols = 20
-		rows = 10
+		rows = 11
 		width = cols * 20 + 5
 		height = rows * 20 + 4
 		self.win = ui.Window(self.app,
@@ -136,6 +146,8 @@ class MapOverlayDlg:
 			action = "onSelect", data = gdata.OVERLAY_MORALE)
 		ui.Check(self.win, layout = (0, 8, 10, 1), id = "vOVERLAY_FAME", text = _("Pirate Fame"),
 			action = "onSelect", data = gdata.OVERLAY_FAME)
+		ui.Check(self.win, layout = (0, 9, 10, 1), id = "vOVERLAY_PIRATECOLONYCOST", text = _("Pirate Colony Cost"),
+			tags = ['pirate'], action = "onSelect", data = gdata.OVERLAY_PIRATECOLONYCOST)
 		
 		ui.Title(self.win, layout = (0, rows - 1, cols - 15, 1))
 		ui.TitleButton(self.win, layout = (cols - 5, rows - 1, 5, 1), text = _("Close"), action = 'onClose')

@@ -426,6 +426,7 @@
 		/>
 		<shipequip
 			subtype="seq_mod"
+			equipType="Stealth"
 			buildProd="720"
 			slots="1"
 			weight="1"
@@ -485,6 +486,7 @@
 		/>
 		<shipequip
 			subtype="seq_mod"
+			equipType="ECM"
 			buildProd="240"
 			slots="1"
 			weight="1"

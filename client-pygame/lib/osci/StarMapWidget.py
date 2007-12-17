@@ -289,6 +289,8 @@ class StarMapWidget(Widget):
 				if morale==200:
 					morale = -1
 				pirProb = self.precomputePirates(obj, pirates, icons)
+				if player.type == T_PIRPLAYER:
+					pirateFameCost = self.getPirateFameCost(player.oid,obj.oid,len(player.planets),pirates)
 				# refuelling
 				if refuelMax > 0:
 					if refuelMax >= 87:
@@ -319,7 +321,10 @@ class StarMapWidget(Widget):
 				#   color = gdata.playerHighlightColor
 				#else:
 				#   color = res.getFFColorCode(rel)
-				colors = res.getStarmapWidgetSystemColor(ownerID,bio,minerals,slots,numPlanets,speedBoost, refuelInc, upgradeShip, pirProb*100, stratRes, morale)
+				if player.type == T_PIRPLAYER:
+					colors = res.getStarmapWidgetSystemColor(ownerID,bio,minerals,slots,numPlanets,speedBoost, refuelInc, upgradeShip, pirProb*100, stratRes, morale, pirateFameCost)
+				else:
+					colors = res.getStarmapWidgetSystemColor(ownerID,bio,minerals,slots,numPlanets,speedBoost, refuelInc, upgradeShip, pirProb*100, stratRes, morale)
 				namecolor = res.getPlayerColor(ownerID)
 				controlcolor = res.getControlColor(ownerID)
 				if controlcolor:
@@ -343,6 +348,8 @@ class StarMapWidget(Widget):
 				info.append(_('Scan pwr: %d') % obj.scanPwr)
 				info.append(_('Star Class: %s') % obj.starClass[1:])
 				info.append(_('Star Type: %s') % _(gdata.starTypes[obj.starClass[0]]))
+				if player.type == T_PIRPLAYER:
+					info.append(_('Fame to Colonize: %d') % pirateFameCost)
 				if refuelMax > 0:
 					info.append(_("Refuel: %d %%/turn [%d %% max]") % (refuelInc, refuelMax))
 				if repairShip > 0:
@@ -402,6 +409,8 @@ class StarMapWidget(Widget):
 				stargatedata = getattr(obj, 'fleetSpeedBoost', 0)
 				stratresdata = getattr(obj, 'plStratRes', SR_NONE)
 				moraledata = getattr(obj, 'morale', -1)
+				if player.type == T_PIRPLAYER:
+					pirateFameCost = self.getPirateFameCost(player.oid,obj.compOf,len(player.planets),pirates)
 				# build system
 				name = getattr(obj, 'name', None) or res.getUnknownName()
 				singlet = True
@@ -409,7 +418,10 @@ class StarMapWidget(Widget):
 					colors = gdata.sevColors[gdata.DISABLED]
 				else:
 					singlet = False
-					colors = res.getStarmapWidgetPlanetColor(owner,biodata,mindata,slotdata,stargatedata, dockrefueldata, dockupgradedata, famedata, stratresdata, moraledata)
+					if player.type == T_PIRPLAYER:
+						colors = res.getStarmapWidgetPlanetColor(owner,biodata,mindata,slotdata,stargatedata, dockrefueldata, dockupgradedata, famedata, stratresdata, moraledata, pirateFameCost)
+					else:
+						colors = res.getStarmapWidgetPlanetColor(owner,biodata,mindata,slotdata,stargatedata, dockrefueldata, dockupgradedata, famedata, stratresdata, moraledata)
 				self._map[self.MAP_PLANETS].append((obj.oid, obj.x, obj.y, obj.orbit, colors, singlet))
 				scannerPwr = getattr(obj, 'scannerPwr', 0)
 				if scannerPwr:
@@ -422,7 +434,7 @@ class StarMapWidget(Widget):
 				plType = gdata.planetTypes[getattr(obj, 'plType', None)]
 				info.append(_('Type: %s') % _(plType))
 				if player.type == T_PIRPLAYER:
-					info.append(_('Fame to Colonize: %d') % self.getPirateFameCost(player.oid,obj.compOf,len(player.planets)))
+					info.append(_('Fame to Colonize: %d') % pirateFameCost)
 				if hasattr(obj, 'plBio'): info.append(_('Environment: %d') % obj.plBio)
 				if hasattr(obj, 'plMin'): info.append(_('Minerals: %d') % obj.plMin)
 				if hasattr(obj, 'plEn'): info.append(_('Energy: %d') % obj.plEn)
@@ -491,7 +503,27 @@ class StarMapWidget(Widget):
 		# self dirty flag
 		self.repaintMap = 1
 
-	def getPirateFameCost(self, playerID, systemID,numPiratePlanets):
+	def getPirateFameCost(self, playerID, systemID, numPiratePlanets, pirates):
+		mod = 1
+		system = client.get(systemID, noUpdate = 1)
+		if hasattr(system,'planets') and system.planets:
+			for planetID in system.planets:
+				planet = client.get(planetID, noUpdate = 1)
+				if getattr(planet, 'owner', OID_NONE) == playerID:
+					# minimum reached, don't check rest
+					return 0.0
+				elif getattr(planet, 'plStratRes', None) in (SR_TL3A, SR_TL3B, SR_TL3C):
+					mod = min(mod, Rules.pirateTL3StratResColonyCostMod)
+		dist = 10000
+		for pirX, pirY in pirates:
+			dist = min(dist, math.hypot(system.x - pirX, system.y - pirY))
+		if Rules.pirateGainFamePropability(dist) > 0:
+			mod = Rules.pirateColonyFameZoneCost(dist)
+		else:
+			mod = Rules.pirateColonyPlayerZoneCost(dist)
+		return mod * numPiratePlanets * Rules.pirateColonyCostMod
+
+	def OLDgetPirateFameCost(self, playerID, systemID,numPiratePlanets):
 		mod = 1.0
 		system = client.get(systemID, noUpdate = 1)
 		for planetID in system.planets:

@@ -22,6 +22,7 @@ import Rules, Utils
 from Const import *
 import random
 from ige import log
+import math, sys
 
 def spaceDocksTurn(tran, obj, tech):
     # skip unowned planets
@@ -301,8 +302,8 @@ def finishProjectShiftPlUp(tran, source, target, tech):
     system = tran.db[target.compOf]
     tran.gameMngr.cmdPool[system.type].sortPlanets(tran, system, None)
 
-## Pirate space docks
-def getPirateFameMod(tran, player, system):
+## Pirate colonization
+def OLDgetPirateFameMod(tran, player, system):
     mod = 1.0
     for planetID in system.planets:
         planet = tran.db[planetID]        
@@ -312,6 +313,32 @@ def getPirateFameMod(tran, player, system):
         elif planet.plStratRes in (SR_TL3A, SR_TL3B, SR_TL3C):
             mod = min(mod, Rules.pirateTL3StratResColonyCostMod)
     return mod
+
+def distToNearestPiratePlanet(tran,obj,srcObj):
+	# srcObj can be Planet or System type
+	dist = sys.maxint
+	for objID in obj.planets:
+		pirPl = tran.db[objID]
+		d = math.hypot(srcObj.x - pirPl.x, srcObj.y - pirPl.y)
+		if d < dist:
+			dist = d
+	return dist
+
+def getPirateFameMod(tran, player, system):
+	mod = 1.0
+	for planetID in system.planets:
+		planet = tran.db[planetID]        
+		if getattr(planet, 'owner', OID_NONE) == player.oid:
+			# minimum reached, don't check rest
+			return 0.0
+		elif getattr(planet, 'plStratRes', None) in (SR_TL3A, SR_TL3B, SR_TL3C):
+			mod = min(mod, Rules.pirateTL3StratResColonyCostMod)
+	dist = distToNearestPiratePlanet(tran, player, system)
+	if Rules.pirateGainFamePropability(dist) > 0:
+		mod = Rules.pirateColonyFameZoneCost(dist)
+	else:
+		mod = Rules.pirateColonyPlayerZoneCost(dist)
+	return mod
     
 def validateStructPIROUTPOST(tran, source, target, tech):
     player = tran.db[source.owner]

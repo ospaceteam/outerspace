@@ -131,9 +131,13 @@ def makeShipFullSpec(player, name, hullID, eqIDs, improvements, raiseExs = True)
 	#negweight = {}
 	counter = {}
 	installations = {}
+	equipCounter = {}
 	for techID in eqIDs:
 		tech = Rules.techs[techID]
 		techEff = Rules.techImprEff[player.techs.get(techID, Rules.techBaseImprovement)]
+		# prevent count < 0; allow count == 0 for placeholders.
+		if eqIDs[techID] < 0 and raiseExs:
+			raise GameException("Invalid equipment count (less than 0).")
 		for i in xrange(0, eqIDs[techID]):
 			counter[tech.subtype] = 1 + counter.get(tech.subtype, 0)
 			installations[techID] = 1 + installations.get(techID, 0)
@@ -149,6 +153,15 @@ def makeShipFullSpec(player, name, hullID, eqIDs, improvements, raiseExs = True)
 			if tech.maxInstallations and installations[tech.id] > tech.maxInstallations \
 				and raiseExs:
 				raise GameException("Maximum number of equipment installations exceeded.")
+			#check maximum type installations
+			if tech.subtype == "seq_mod" and tech.equipType in Rules.maxEquipType and raiseExs::
+				if tech.equipType in equipCounter:
+					equipCounter[tech.equipType] += 1
+				else:
+					equipCounter[tech.equipType] = 1
+				log.debug(equipCounter[tech.equipType])
+				if equipCounter[tech.equipType] > Rules.maxEquipType[tech.equipType]:
+					raise GameException("Maximum number of restricted type equipment installations exceeded: %s." % tech.equipType)
 			# add values
 			ship.level = max(ship.level, tech.level)
 			ship.buildProd += tech.buildProd

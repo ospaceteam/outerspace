@@ -219,7 +219,8 @@
             subtype="str300"
             buildProd="1440"
             operWorkers="1500"
-            prodProd="22"
+            operEn="30"
+            prodProd="14"
             prodProdMod="0.0,0.0,1.0,0.0"
             prodEnv="0"
             prodEn="20"
@@ -228,6 +229,28 @@
         />
         <preresearch>We know fusion, we know how to produce stuff, we know how to use star's energy. We know all we need to try to design factory that will finaly free us from the dependency on minerals.</preresearch>
         <description>Build this factory on high energy abundance world to get the best results. You even don't need energy to operate it, just workers.</description>
+    </technology>
+    <technology id="4010" symbol="SOLARLAB4" name="Orbital Lab Complex">
+        <discovery
+            researchMod="1.50"
+            level="4"
+            researchRequires="RESCENTRE3B-5"
+            researchRaces="H"
+        />
+        <structure
+            subtype="str300"
+            buildProd="1440"
+            operWorkers="1500"
+            operEn="30"
+            prodSci="28"
+            prodSciMod="0.0,0.0,0.5,0.5"
+            prodEnv="0"
+            prodEn="20"
+            prodEnMod="0.0,0.0,1.0,0.0"
+            maxHP="600"
+        />
+        <preresearch>Some research can only be done in space. The Orbital Lab Complex promises to the solution to this.</preresearch>
+        <description>Utilizing high the high energies of the local star, the Orbital Lab Complex provides a zero-gravity research environment. The more energy that can be collected from the star, the more efficiently the labs run!</description>
     </technology>
     <technology id="4400" symbol="BIONICCANNON4" name="Spine Cannon">
         <discovery
@@ -865,6 +888,7 @@
         />
         <shipequip
             subtype="seq_mod"
+            equipType="Shields"
             buildProd="768"
             shieldPerc="0.20"
             shieldRechargeFix="1"
@@ -885,6 +909,7 @@
         />
         <shipequip
             subtype="seq_mod"
+            equipType="Shields"
             buildProd="1024"
             shieldPerc="0.40"
             shieldRechargeFix="1"
@@ -905,6 +930,7 @@
 		/>
 		<shipequip
 			subtype="seq_mod"
+			equipType="Auto Repair"
 			buildProd="640"
 			autoRepairFix="1"
 			slots="6"
@@ -925,6 +951,7 @@
 		/>
 		<shipequip
 			subtype="seq_mod"
+			equipType="Combat Bonuses"
 			buildProd="1200"
 			combatAttPerc="1.20"
 			slots="2"

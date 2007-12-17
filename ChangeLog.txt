@@ -1,5 +1,20 @@
 Change Log:
 
+[2007-12-16]
+- Added prodSciMod for resource-based RP production [Random Chaos]
+- Added "max install" support per equipment type rather than per just per item and updated critical techs to use this [Random Chaos]
+- Added Orbital Lab Complex to make a higher production lab for humans [Random Chaos]
+- Updated Solar Factory to make production balanced to other races [Random Chaos]
+- Updated pirate colonization cost to be a gradated cost from existing colonies; it is now much more expensive to colonize in player space [Random Chaos]
+- Updated starmap infoboxes to show new pirate colonization cost [Random Chaos]
+- Updated map overlay to add an additional overlay for pirate player showing colonization cost [Random Chaos]
+- Updated diplomacy dialog - sorting "Relation" column now sorts by raw value rather than textual description [Random Chaos]
+- Fixed bug in scout wave that produced error when original fleet had commands in the queue [Random Chaos]
+- Fixed bug in pygameui/text box that was causing an index error [Random Chaos] [SF#1843691]
+- Fixed bugs in pygameui/text box that were causing highlighting irregularities [Random Chaos]
+- Fixed bug in pygameui/text box that was causing block delete deleting the wrong lines [Random Chaos]
+- Removed temporary fleet movement validation bypass from iFleet (was planned to be removed after 12-15-07) [Random Chaos]
+
 [2007-12-02]
 - Extended event inheritance to non-direct widgets to include starmap widget [Random Chaos]
 - Added hotkey processing support to Menu widget in pygameui [Random Chaos]

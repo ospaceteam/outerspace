@@ -220,6 +220,23 @@ def getHabitabilityColorCode(bio):
 		return (0x00, 0xff, 0xff)
 	return (0xc0, 0xc0, 0xc0)
 
+def getPirateColonyColorCode(pirate):
+	if not pirate:
+		return (0xc0, 0xc0, 0xc0)
+	if pirate =< 0:
+		return (0xff, 0x00, 0xff)
+	if pirate < 26:
+		return((255),(5*pirate),0x00) # end 255, 125, 0
+	if pirate < 76:
+		return((255-2*(pirate-25)),(125+2*(pirate-25)),0x00) # end 155, 225, 0
+	if pirate < 126:
+		return((155-3*(pirate-75)),(225),0x00) #end 5, 225, 0
+	if pirate < 201:
+		return(0x00,0xFF,(2*(pirate-125))) #end 0, 225, 250
+	if pirate > 200:
+		return (0x00, 0xff, 0xff)
+	return (0xc0, 0xc0, 0xc0)
+
 def getFameColorCode(fame):
 	if fame > 0 and fame < 200:
 		#log.debug(fame,(0xff,255 - int(255*(fame/200)),0x00))
@@ -315,20 +332,20 @@ def getGateLineWidth(owner):
 		return 2
 	return 1
 
-def getStarmapWidgetPlanetColor(ownerid,bio,mineral,slot,stargate,dockfuel,dockupgrade,fame,stratres,morale):
+def getStarmapWidgetPlanetColor(ownerid,bio,mineral,slot,stargate,dockfuel,dockupgrade,fame,stratres,morale,pirate=False):
 	colors = {}
 	for datatype in gdata.OVERLAY_TYPES:
-		colors[datatype] = getStarmapWidgetPlanetColorPerDatatype(datatype,ownerid,bio,mineral,slot,stargate,dockfuel,dockupgrade,fame,stratres,morale)
+		colors[datatype] = getStarmapWidgetPlanetColorPerDatatype(datatype,ownerid,bio,mineral,slot,stargate,dockfuel,dockupgrade,fame,stratres,morale,pirate)
 	return colors
 
-def getStarmapWidgetSystemColor(ownerid,bio,mineral,slot,num_planets,stargate,dockfuel,dockupgrade,fame,stratres,morale):
+def getStarmapWidgetSystemColor(ownerid,bio,mineral,slot,num_planets,stargate,dockfuel,dockupgrade,fame,stratres,morale,pirate=False):
 	colors = {}
 	for datatype in gdata.OVERLAY_TYPES:
-		colors[datatype] = getStarmapWidgetSystemColorPerDatatype(datatype,ownerid,bio,mineral,slot,num_planets,stargate,dockfuel,dockupgrade,fame,stratres,morale)
+		colors[datatype] = getStarmapWidgetSystemColorPerDatatype(datatype,ownerid,bio,mineral,slot,num_planets,stargate,dockfuel,dockupgrade,fame,stratres,morale,pirate)
 	return colors
 
 
-def getStarmapWidgetPlanetColorPerDatatype(datatype,ownerid,bio,mineral,slot,stargate,dockfuel,dockupgrade,fame,stratres,morale):
+def getStarmapWidgetPlanetColorPerDatatype(datatype,ownerid,bio,mineral,slot,stargate,dockfuel,dockupgrade,fame,stratres,morale,pirate=False):
 	if (datatype == gdata.OVERLAY_OWNER):
 		return getPlayerColor(ownerid)
 	if (datatype == gdata.OVERLAY_DIPLO):
@@ -345,6 +362,8 @@ def getStarmapWidgetPlanetColorPerDatatype(datatype,ownerid,bio,mineral,slot,sta
 		return getDockColorCode(dockfuel,dockupgrade)
 	if (datatype == gdata.OVERLAY_FAME):
 		return getFameColorCode(fame)
+	if (datatype == gdata.OVERLAY_PIRATECOLONYCOST):
+		return getPirateColonyColorCode(pirate)
 #	if (datatype == "stratres"):
 #		return getMoraleColors(stratres)
 	if (datatype == gdata.OVERLAY_MORALE):
@@ -352,7 +371,7 @@ def getStarmapWidgetPlanetColorPerDatatype(datatype,ownerid,bio,mineral,slot,sta
 	return getPlayerColor(ownerid) #default
 
 
-def getStarmapWidgetSystemColorPerDatatype(datatype,ownerid,bio,mineral,slot,num_planets,stargate,dockfuel,dockupgrade,fame,stratres,morale):
+def getStarmapWidgetSystemColorPerDatatype(datatype,ownerid,bio,mineral,slot,num_planets,stargate,dockfuel,dockupgrade,fame,stratres,morale,pirate=False):
 	if (datatype == gdata.OVERLAY_OWNER):
 		return getPlayerColor(ownerid)
 	if (datatype == gdata.OVERLAY_DIPLO):
@@ -369,6 +388,8 @@ def getStarmapWidgetSystemColorPerDatatype(datatype,ownerid,bio,mineral,slot,num
 		return getDockColorCode(dockfuel,dockupgrade)
 	if (datatype == gdata.OVERLAY_FAME):
 		return getFameColorCode(fame)
+	if (datatype == gdata.OVERLAY_PIRATECOLONYCOST):
+		return getPirateColonyColorCode(pirate)
 #	if (datatype == "stratres"):
 #		return getMoraleColors(stratres)
 	if (datatype == gdata.OVERLAY_MORALE):
@@ -380,7 +401,6 @@ def fadeColor(triplet):
 
 def fadeDarkColor(triplet):
 	return ((triplet[0]+0x00*2)/3,(triplet[1]+0x00*2)/3,(triplet[2]+0x00*2)/3)
-
 
 def formatTime(time,separator=':'):
 	time = int(math.ceil(time))

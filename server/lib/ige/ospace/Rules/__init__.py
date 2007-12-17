@@ -177,6 +177,15 @@ combatRetreatWait = 3
 starGateDamage = 0.2 # damage for 100% speed boost (double for 200%, etc...)
 shipDecayRatio = 0.04
 maxDamageAbsorb = 5 # max absorbed damage for tech "damageAbsorb" property.
+# max seq_mod equipments of equipType; anything not in list is unlimited
+maxEquipType = {
+	'ECM' : 1, # +Missile DEF
+        'Combat Bonuses' : 1, # +%ATT, +%DEF
+        'Combat Modifiers' : 1, # +ATT, +DEF
+        'Shields' : 1, # not hardshields
+        'Stealth' : 1,
+        'Auto Repair' : 1,
+}
 
 ## Buildings
 repairRatio = 0.02
@@ -337,19 +346,34 @@ emrSeasons[3] = makeIDataHolder(
 )
 
 ## Pirates
+##   General
 pirateInfluenceRange = 7.5 # in parsecs
+pirateGovPwr = int(500000 * 1.25)
+##   Fame
 pirateGainFamePropability = lambda d: 2 - d * 0.2
 pirateLoseFameProbability = lambda d: 1 - (15 - d) * 0.2
 pirateCaptureInRangeFame = 1
 pirateSurvivalFame = 1
 pirateCaptureOutOfRangeFame = -1
-pirateColonyCostMod = 1.5
+##   Colonization
+pirateColonyCostMod = 1.5 # base multiplier - all other multipliers are multiplied by this
 pirateTL3StratResColonyCostMod = 0.25
-pirateGovPwr = int(500000 * 1.25)
+piratePlayerZoneCostMod = 1.25
+pirateColonyFameZoneCost = lambda d: min(d * 0.1 + pirateTL3StratResColonyCostMod,1)
+pirateColonyPlayerZoneCost = lambda d: piratePlayerZoneCostMod + (d - 15) * 0.01 * piratePlayerZoneCostMod
+##   Techs
 pirateCanStealImprovements = 3
-pirateGrantHSE = 60*24*3600    #60 days
-pirateGrantASSEM = 105*24*3600  #105 days
-pirateGrantCOND = 105*24*3600   #105 days
+pirateGrantHSE = 60*24*3600     #60 days; AI only
+pirateGrantASSEM = 105*24*3600  #105 days; AI only
+pirateGrantCOND = 105*24*3600   #105 days; AI only
+##   Timed events (not implemented)
+pirateTimerMod = 3*24*3600               # +/- up to 3 days for each grant
+pirateTimerRum = 20*24*3600              #20 days; grant Brewery, Rum strategic resource, and Drunken Factory (110% Pirate Prison; requires Rum)
+pirateTimerEnslavement = 60*24*3600      #60 days; grant Prison
+pirateTimerEDENStructure = 120*24*3600   #120 days; grant EDEN Factory (you have discovered a prototype factory...; 135% Pirate Prison; requires Rum)
+pirateTimerBerserk = 150*24*3600          #150 days; grant "Berserk" ship module (major defense penalty; major ATT bonus; requires Rum)
+pirateTimerSlaveMine = 180*24*3600        #180 days; grant Slave Mine (mining facility with hamster wheel for power; 160% Pirate Prison; requires Rum)
+
 
 ## Bonuses
 galLeaderBonus = 0.05

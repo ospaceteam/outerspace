@@ -129,14 +129,19 @@ class IPiratePlayer(IPlayer):
 	processRSRCHPhase.public = 1
 	processRSRCHPhase.accLevel = AL_ADMIN
 
-	def capturePlanet(self, tran, obj, planet):
-		# find distance to closes pirate's planet
+	def distToNearestPiratePlanet(self,tran,obj,srcObj):
+		# srcObj can be Planet or System type
 		dist = sys.maxint
 		for objID in obj.planets:
 			pirPl = tran.db[objID]
-			d = math.hypot(planet.x - pirPl.x, planet.y - pirPl.y)
+			d = math.hypot(srcObj.x - pirPl.x, srcObj.y - pirPl.y)
 			if d < dist:
 				dist = d
+		return dist
+
+	def capturePlanet(self, tran, obj, planet):
+		# find distance to closes pirate's planet
+		dist = self.distToNearestPiratePlanet(tran,obj,planet)
 		if random.random() <= Rules.pirateGainFamePropability(dist):
 			log.debug(obj.oid, "Pirate captured planet + fame", dist, planet.oid)
 			obj.pirateFame += Rules.pirateCaptureInRangeFame

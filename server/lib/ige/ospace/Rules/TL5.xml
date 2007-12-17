@@ -799,6 +799,7 @@
 		/>
 		<shipequip
 			subtype="seq_mod"
+			equipType="Combat Bonuses"
 			buildProd="960"
 			buildSRes="SR_TL5B"
 			slots="1"
@@ -844,6 +845,7 @@
 		/>
 		<shipequip
 			subtype="seq_mod"
+			equipType="Stealth"
 			buildProd="720"
 			slots="1"
 			weight="1"

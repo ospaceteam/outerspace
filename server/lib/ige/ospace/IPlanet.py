@@ -421,7 +421,9 @@ class IPlanet(IObject):
 			prodMod = (b * obj.plBio + m * obj.plMin + e * obj.plEn + d * 100) / 100
 			obj.prodProd += int(tech.prodProd * prodMod * techEff * opStatus)
 			# science
-			obj.prodSci += int(tech.prodSci * techEff * opStatus)
+			b, m, e, d = tech.prodSciMod
+			prodMod = (b * obj.plBio + m * obj.plMin + e * obj.plEn + d * 100) / 100
+			obj.prodSci += int(tech.prodSci * prodMod * techEff * opStatus)
 			# refuelling & repairing
 			obj.refuelMax = max(obj.refuelMax, int(tech.refuelMax * techEff * opStatus))
 			if obj.revoltLen == 0 and not isCombat:
@@ -1151,14 +1153,14 @@ class IPlanet(IObject):
 		if newOwner.type == T_PIRPLAYER:
 			# special handling for pirates
 			currentTurn = tran.db[OID_UNIVERSE].turn
-			# prevent abuse - require 8 turns between capturing the same planet if you want to gain fame & tech
-			if (currentTurn - obj.lastPirCapture) > 8:
+			# prevent abuse - require 8 turns between capturing the same planet and require the owner to control the planet at least 2 turns if you want to gain fame & tech (two turns prevents orbiting pirate fleet from immediately bombing)
+			if (currentTurn - obj.lastPirCapture) > 8 and (currentTurn - obj.ownerSince) > 2:
 				# gain/lose fame
 				self.cmd(newOwner).capturePlanet(tran, newOwner, obj)
 				# steal ship techs
 				self.cmd(newOwner).stealTechs(tran, newOwner, obj.owner, obj.oid)
 			else:
-				log.debug(obj.oid, "Pirate captured planet too soon after previous capture to gain bonuses", obj.oid)
+				log.debug(obj.oid, "Pirate captured planet too soon after previous capture or colonization to gain bonuses", obj.oid)
 			obj.storPop = 0
 			obj.lastPirCapture = currentTurn
 			self.cmd(obj).changeOwner(tran, obj, OID_NONE, force = 1)
