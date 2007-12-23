@@ -90,6 +90,7 @@ class StarMapWidget(Widget):
 		self.activePos = (0, 0)
 		self.lockObj = None # source object in fleet move
 		self.repaintMap = 1
+		self.repaintHotbuttons = 1
 		self.setPosition = 1
 		#modes
 		self.updateConfigModes()
@@ -102,11 +103,14 @@ class StarMapWidget(Widget):
 		self.highlightPos = None
 		self.alwaysShowRangeFor = None
 		#setup
+		self.pirateDlgs = False
 		self.showBuoyDlg = ShowBuoyDlg(self.app)
 		self.KeyModHelp = KeyModHelp(self.app)
 		self._miniMapRect = Rect(0, 20, 175, 175)
 		self._overlayRect = Rect(0, 0, 175, 24)
 		self._detectOverlayZone = Rect(0,0,0,0)
+		self._hotbuttonsZone = Rect(0,0,0,0)
+		self.initHotbuttons()
 		self.miniMap = MiniMap(self._miniMapRect.width, self._miniMapRect.height)
 		# flags
 		self.processKWArguments(kwargs)
@@ -211,6 +215,9 @@ class StarMapWidget(Widget):
 		anyX = 0.0
 		anyY = 0.0
 		player = client.getPlayer()
+		if player.type == T_PIRPLAYER and not self.pirateDlgs:
+			self.pirateDlgs = True
+			self.initHotbuttons() #reinit to add the pirate button
 		for objID in client.db.keys():
 			if objID < OID_FREESTART:
 				continue
@@ -1074,11 +1081,16 @@ class StarMapWidget(Widget):
 			# fleets
 			if self.showFleets:
 				self.drawFleets()
-			# overlay selector
-			if self.showOverlaySelector:
-				self.drawOverlaySelector(surface)
 			# clean up flag
+			self.repaintHotbuttons = 1
 			self.repaintMap = 0
+		if self.repaintHotbuttons:
+			# overlay selector
+			#if self.showOverlaySelector:
+			#	self.drawOverlaySelector(surface)
+			self.drawHotbuttons()
+			# clean up flag
+			self.repaintHotbuttons = 0
 		# blit cached map
 		surface.blit(self._mapSurf, self.rect)
 		# additional informations
@@ -1307,16 +1319,136 @@ class StarMapWidget(Widget):
 					(rect.left, yScrn), (rect.right, yScrn), 1)
 			y += scale
 
+	def drawHotbuttons(self):
+		rect = self._mapSurf.get_rect()
+		bottom = rect.bottom
+		right = rect.right
+		dx = 137
+		dy = 46
+		top = bottom - dy - 1
+		left = right - dx - 1
+		self._hotbuttonsZone.top = top + self.rect.top
+		self._hotbuttonsZone.left = left
+		self._hotbuttonsZone.width = dx
+		self._hotbuttonsZone.height = dy
+
+		for buttonkey in self._hotbuttons:
+			button = self._hotbuttons[buttonkey]
+
+		pygame.draw.rect(self._mapSurf,(0x00, 0x00, 0x90),(left-1,top-1,dx+2,dy+2))
+		pygame.draw.rect(self._mapSurf,(0x33, 0x33, 0x66),(left,top,dx,dy))
+
+		for buttonkey in self._hotbuttons:
+			button = self._hotbuttons[buttonkey]
+			self._hotbuttonRects[button[0]] = [button[0],Rect(button[2]+self._hotbuttonsZone.left,button[3]+self._hotbuttonsZone.top+15,button[4],button[5])]
+			img = res.getButton(button[0],button[1])
+			if (button[1] and not (self._tempOverlayHotbutton and self._tempOverlayHotbutton == button[0])) or (not button[1] and self._tempOverlayHotbutton and self._tempOverlayHotbutton == button[0]):
+				pygame.draw.rect(self._mapSurf,(0x90, 0x90, 0x90),(left+button[2]-1,top+15+button[3]-1,button[4]+2,button[5]+2),1)
+			self._mapSurf.blit(img,(left+button[2],top+15+button[3]))
+		if self._tempOverlayHotbutton:
+			text = self._hotbuttons[self._tempOverlayHotbutton][7]
+			textSrfc = renderText('small', text, 1, (0xEF, 0xEF, 0xEF))
+			self._mapSurf.blit(textSrfc, (left+2,top+1))
+
+	def initHotbuttons(self):
+		# key : [ key , state , x , y , dx, dy, value, tooltip ]
+		# 'value' is "active state' gdata value or true
+		self._hotbuttons = {
+			'pzone': ['pzone',self.toggleControlAreas,2,2,17,13, 1,_('Player Zones (CTRL-P)')],
+			'civ': ['civ',self.showCivilianFleets,21,2,18,13, 1,_('Civilian Ships (CTRL-H)')],
+			'lines': ['lines',self.showFleetLines,41,2,18,13, 1,_('Fleet Lines (CTRL-L)')],
+			'redir': ['redir',self.showRedirects,61,2,18,13, 1,_('Redirect Arrows (CTRL-R)')],
+			'scanner': ['scanner',self.showScanners,81,2,17,13, 1,_('Scanners (CTRL-S)')],
+			'grid': ['grid',self.showGrid,100,2,17,13, 1,_('Grid (CTRL-G)')],
+			'gatenet': ['gatenet',self.showGateNetworks,119,2,17,13, 2,_('Gate Network (CTRL-N)')],
+                        
+			'ov_diplo': ['ov_diplo',False,2,17,13,13, gdata.OVERLAY_DIPLO,_('Overlay: Diplomacy')],
+			'ov_min': ['ov_min',False,17,17,13,13, gdata.OVERLAY_MIN,_('Overlay: Minerals')],
+			'ov_env': ['ov_env',False,32,17,13,13, gdata.OVERLAY_BIO,_('Overlay: Environment')],
+			'ov_slot': ['ov_slot',False,47,17,13,13, gdata.OVERLAY_SLOT,_('Overlay: Slots')],
+			'ov_morale': ['ov_morale',False,62,17,13,13, gdata.OVERLAY_MORALE,_('Overlay: Morale')],
+			'ov_fuel': ['ov_fuel',False,77,17,13,13, gdata.OVERLAY_DOCK,_('Overlay: Fuel and Repair')],
+			'ov_gate': ['ov_gate',False,92,17,13,13, gdata.OVERLAY_STARGATE,_('Overlay: Star Gate Speed')],
+			'ov_pirate': ['ov_pirate',False,107,17,13,13, gdata.OVERLAY_FAME,_('Overlay: Pirate Fame')],
+                }
+		if self.pirateDlgs:
+			self._hotbuttons['ov_piratecolony'] = ['ov_piratecolony',False,122,17,13,13, gdata.OVERLAY_PIRATECOLONYCOST,'Overlay: Pirate Colony Cost']
+		self._oldOverlayHotbutton = False;
+		self._tempOverlayHotbutton = False;
+		self._hotbuttonRects = {}
+
+	def toggleHotbuttons(self,button):
+		self.toggleTempButton(False)
+		if (button[:3] == 'ov_'): #overlay
+			if self._oldOverlayHotbutton == button:
+				self.overlayMode = gdata.OVERLAY_OWNER
+				self._hotbuttons[button][1] = False
+				self._oldOverlayHotbutton = False
+			else:
+				if self._oldOverlayHotbutton:
+					self._hotbuttons[self._oldOverlayHotbutton][1] = False
+				self._hotbuttons[button][1] = True
+				self.overlayMode = self._hotbuttons[button][6]
+				self._oldOverlayHotbutton = button
+		else: #normal toggle
+			if self._hotbuttons[button][1]:
+ 				self._hotbuttons[button][1] = 0
+                        else:
+ 				self._hotbuttons[button][1] = self._hotbuttons[button][6] # set standard value
+			if button == 'pzone':
+				self.toggleControlAreas = self._hotbuttons[button][1]
+			elif button == 'civ':
+				self.showCivilianFleets = self._hotbuttons[button][1]
+			elif button == 'lines':
+				self.showFleetLines = self._hotbuttons[button][1]
+			elif button == 'redir':
+				self.showRedirects = self._hotbuttons[button][1]
+			elif button == 'scanner':
+				self.showScanners = self._hotbuttons[button][1]
+			elif button == 'grid':
+				self.showGrid = self._hotbuttons[button][1]
+			elif button == 'gatenet':
+				self.showGateNetworks = self._hotbuttons[button][1]
+		self.repaintHotbuttons = 1
+		self.repaintMap = 1
+
+	def toggleTempButton(self,pos=False):
+		if pos: # true unless we are no longer in the box, in which case we are resetting
+			currentButton = self.detectButtonOverpass(pos)
+			if currentButton == self._tempOverlayHotbutton: return
+			if self._tempOverlayHotbutton:
+				self._hotbuttons[self._tempOverlayHotbutton][1] = not self._hotbuttons[self._tempOverlayHotbutton][1]
+			if not currentButton:
+				self.repaintHotbuttons = 1
+				self._tempOverlayHotbutton = False
+				return
+			self._hotbuttons[currentButton][1] = not self._hotbuttons[currentButton][1]
+			self._tempOverlayHotbutton = currentButton
+		elif self._tempOverlayHotbutton:
+			self._hotbuttons[self._tempOverlayHotbutton][1] = not self._hotbuttons[self._tempOverlayHotbutton][1]
+			self._tempOverlayHotbutton = False
+		self.repaintHotbuttons = 1
+
+	def detectButtonOverpass(self,pos):
+		for buttonkey in self._hotbuttonRects:
+			#log.debug(self._hotbuttonRects[buttonkey][1],pos)
+			if self._hotbuttonRects[buttonkey][1].collidepoint(pos): return buttonkey
+		return False
+
 	def processMB1Down(self, evt):
 		# handle SHIFT click as MB3
 		mods = pygame.key.get_mods()
 		if mods & KMOD_SHIFT:
 			return self.processMB3Down(evt)
 		pos = evt.pos
+		# show current position for debugging
+		# log.debug(pos)
 		if gdata.config.defaults.showminimap != 'no':
 			if self._miniMapRect.collidepoint(pos):
 				return ui.NoEvent
 		if self._detectOverlayZone.collidepoint(pos):
+			return ui.NoEvent
+		if self._hotbuttonsZone.collidepoint(pos):
 			return ui.NoEvent
 		self.pressedObjIDs = []
 		for objID in self._actAreas.keys():
@@ -1350,6 +1482,11 @@ class StarMapWidget(Widget):
 				return ui.NoEvent
 		if self._detectOverlayZone.collidepoint(pos):
 			self.showOverlayDlg.display()
+			return ui.NoEvent
+		if self._hotbuttonsZone.collidepoint(pos):
+			button = self.detectButtonOverpass(pos)
+			if button:
+				self.toggleHotbuttons(button)
 			return ui.NoEvent
 		objIDs = []
 		for objID in self._actAreas.keys():
@@ -1480,6 +1617,12 @@ class StarMapWidget(Widget):
 		if self._detectOverlayZone.collidepoint(pos):
 			#log.debug('Overlay Rect Position');
 			return ui.NoEvent
+		if self._hotbuttonsZone.collidepoint(pos):
+			#should give hotkey tooltips for this eventually
+			self.toggleTempButton(pos)
+			return ui.NoEvent
+		elif self._tempOverlayHotbutton: # cleanup if cursor not in zone
+			self.toggleTempButton(False)
 		self.activeObjID = OID_NONE
 		self.activeObjIDs = []
 		for objID in self._actAreas.keys():

@@ -1,5 +1,8 @@
 Change Log:
 
+[2007-12-22]
+- Added starmap widget control buttons. Removed overlay dialog usage. [Random Chaos]
+
 [2007-12-16]
 - Added prodSciMod for resource-based RP production [Random Chaos]
 - Added "max install" support per equipment type rather than per just per item and updated critical techs to use this [Random Chaos]

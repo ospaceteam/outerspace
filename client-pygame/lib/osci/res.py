@@ -34,6 +34,7 @@ techImgs = None
 bigStarImgs = None
 planetImgs = None
 planetImgCnt = None
+buttonImgs = None
 cmdInProgressImg = None
 loginLogoImg = None
 structProblemImg = None
@@ -50,7 +51,7 @@ def loadResources():
 	dlg = dialog.ProgressDlg(gdata.app)
 	curr = 0
 	max = len(glob.glob('res/galaxy/*.png')) + len(glob.glob('res/techs/*.png')) + \
-		len(glob.glob('res/system/*.png')) + len(glob.glob('res/icons/*.png'))
+		len(glob.glob('res/system/*.png')) + len(glob.glob('res/icons/*.png')) + len(glob.glob('res/buttons/*.png'))
 	dlg.display(_('Loading resources'), 0, max)
 	# load star imgs
 	global smallStarImgs
@@ -126,6 +127,15 @@ def loadResources():
 			dlg.setProgress(_('Loading resources...'), curr)
 		name = filename[10:-4]
 		icons[name] = pygame.image.load(filename).convert_alpha()
+	# load buttons
+	global buttonImgs
+	buttonImgs = {}
+	for filename in glob.glob('res/buttons/*.png'):
+		curr += 1
+		if curr % 10 == 0:
+			dlg.setProgress(_('Loading resources...'), curr)
+		name = filename[12:-4]
+		buttonImgs[name] = pygame.image.load(filename).convert_alpha()
 	# other icons
 	global cmdInProgressImg
 	cmdInProgressImg = pygame.image.load('res/cmdInProgress.png').convert_alpha()
@@ -151,6 +161,13 @@ def getPlanetImg(pltype,plid):
 	global planetImgCnt
 	name = '%s%d' % (pltype,plid % planetImgCnt[pltype])
 	return planetImgs[name]
+
+def getButton(name,state):
+	if state:
+		name = "%s_%s" % (name,'active')
+	else:
+		name = "%s_%s" % (name,'inactive')
+	return buttonImgs[name]
 
 def getUnknownName():
 	return _('[Unknown]')
