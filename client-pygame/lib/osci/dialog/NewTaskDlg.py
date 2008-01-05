@@ -208,8 +208,10 @@ class NewTaskDlg:
 				else:
 					#color = res.getFFColorCode(rel)
 					color = res.getPlayerColor(ownerID)
+				plname = getattr(planet, 'name', res.getUnknownName())
 				item = ui.Item(
-					getattr(planet, 'name', res.getUnknownName()),
+					plname,
+                                        text_raw = getattr(planet, 'plEn', plname),
 					planetID = planetID,
 					plOwner = owner,
 					foreground = color,
