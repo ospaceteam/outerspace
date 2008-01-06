@@ -1096,6 +1096,7 @@ class StarSystemDlg:
 			player = client.getPlayer()
 			player.buoys = client.cmdProxy.addBuoy(player.oid, self.systemID, self.buoyDlg.buoyText, self.buoyDlg.buoyType)
 			gdata.mainGameDlg.update()
+			self.win.vSystemMap.computeBuoy()
 			self.showSystem()
 			self.win.setStatus(_('Command has been executed.'))
 		except ige.GameException, e:
@@ -1108,6 +1109,7 @@ class StarSystemDlg:
 			player = client.getPlayer()
 			player.buoys = client.cmdProxy.addBuoy(player.oid, self.systemID, "", 0)
 			gdata.mainGameDlg.update()
+			self.win.vSystemMap.computeBuoy()
 			self.showSystem()
 			self.win.setStatus(_('Command has been executed.'))
 		except ige.GameException, e:

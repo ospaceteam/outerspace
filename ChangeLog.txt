@@ -1,5 +1,8 @@
 Change Log:
 
+[2009-01-06]
+- Update system map widget to display your own buoys (allowing you to leave notes for yourself) [Random Chaos]
+
 [2008-01-05]
 - Updated New Task Dialog to, when clicking on the Planet column, to sort planets by EN Abundance instead of name field. [Random Chaos]
 

@@ -30,6 +30,10 @@ from ige import log
 # number of planet's images
 typeImgs = {'A': 2, 'C': 1, 'D': 5, 'E': 2, 'G': 5, 'H': 2, 'M': 1, 'R': 4, 'X': 1, 'I': 2}
 
+buoyColors = [(0xff, 0xff, 0x00), (0x00, 0xff, 0xff), (0xff, 0x00, 0xff), (0xb0, 0xb0, 0xff)]
+MAX_BOUY_DISPLAY_LEN = 30
+MAX_BOUY_DISPLAY_ROWS = 3
+
 class SystemMapWidget(Widget):
 
 	def __init__(self, parent, **kwargs):
@@ -45,6 +49,7 @@ class SystemMapWidget(Widget):
 		self.systemID = OID_NONE
 		self.unknown_mines = 0
 		self.my_mines = 0
+		self.buoytext = None
 		# flags
 		self.processKWArguments(kwargs)
 		parent.registerWidget(self)
@@ -61,6 +66,7 @@ class SystemMapWidget(Widget):
 					self.unknown_mines = 1
 			elif system.hasmines > 0:
 				self.unknown_mines = 1
+		self.computeBuoy()
 		self._starImg = None
 		if hasattr(system, 'starClass'):
 			self._starImg = res.getBigStarImg(system.starClass[1])
@@ -86,6 +92,11 @@ class SystemMapWidget(Widget):
 					ownerID = OID_NONE
 				self._planetImgs.append((planetID, img, name, res.getPlayerColor(ownerID)))
 
+	def computeBuoy(self):
+		player = client.getPlayer()
+		if hasattr(player, "buoys") and self.systemID in player.buoys:
+			self.buoytext = player.buoys[self.systemID]
+
 	def draw(self, surface):
 		player = client.getPlayer()
 		self._actAreas = {}
@@ -94,6 +105,7 @@ class SystemMapWidget(Widget):
 		# common positions
 		y = self.rect.centery
 		x = self.rect.left
+		r = self.rect.right
 		height = self.rect.height
 		if self._starImg:
 			x += self._starImg.get_width()
@@ -110,6 +122,29 @@ class SystemMapWidget(Widget):
 		elif self.unknown_mines:
 			textSrfc = renderText('small', 'Unknown Minefield Detected', 1, res.getFFColorCode(0))
 			surface.blit(textSrfc, (x, self.rect.top + textSrfc.get_height()))
+		# buoy
+		if self.buoytext:
+			lines = self.buoytext[0].split("\n")
+			maxW = 0
+			hh = 0
+			i = 1
+			textSrfcs = []
+			bouycolor = buoyColors[self.buoytext[1] - 1]
+			for line in lines:
+				if len(line) == 0:
+					break
+				if len(line) > MAX_BOUY_DISPLAY_LEN:
+					line = u"%s..." % line[:MAX_BOUY_DISPLAY_LEN]
+				elif i == MAX_BOUY_DISPLAY_ROWS:
+					line = u"%s..." % line
+				textSrfc = renderText('small', line, 1, bouycolor)
+				textSrfcs.append(textSrfc)
+				maxW = max(textSrfc.get_width(), maxW)
+				i += 1
+				if i > MAX_BOUY_DISPLAY_ROWS: break
+			for textSrfc in textSrfcs:
+				hh += textSrfc.get_height()
+				surface.blit(textSrfc, (r - maxW - 20, 5 + hh))
 		# star
 		if self._starImg:
 			surface.blit(self._starImg, self.rect.topleft)
