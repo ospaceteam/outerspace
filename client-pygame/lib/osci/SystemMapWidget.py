@@ -96,6 +96,8 @@ class SystemMapWidget(Widget):
 		player = client.getPlayer()
 		if hasattr(player, "buoys") and self.systemID in player.buoys:
 			self.buoytext = player.buoys[self.systemID]
+		else:
+			self.buoytext = None
 
 	def draw(self, surface):
 		player = client.getPlayer()
