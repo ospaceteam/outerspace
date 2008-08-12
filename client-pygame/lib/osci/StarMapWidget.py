@@ -377,6 +377,7 @@ class StarMapWidget(Widget):
 				self.precomputeCombat(obj, icons)
 				self.precomputeBuoys(obj, player, icons)
 				color = res.getPlayerColor(OID_NONE)
+				namecolor = res.getPlayerColor(OID_NONE)
 				self._map[self.MAP_SYSTEMS].append((obj.oid, obj.x, obj.y, name, img, color, namecolor, True, icons))
 				# pop up info
 				info = []
@@ -828,6 +829,7 @@ class StarMapWidget(Widget):
 		currX = self.currX
 		currY = self.currY
 		scale = self.scale
+		namecolor = res.getPlayerColor(OID_NONE)
 		if scale >= 30:
 			for objID, x, y, name, img, color, namecolor, singlet, icons in self._map[self.MAP_SYSTEMS]:
 				sx = int((x - currX) * scale) + centerX
