@@ -80,8 +80,15 @@ class MiniMap:
         zoomFactor = 0.05 #percent
         self._shiftX = int(self._width * zoomFactor)
         self._shiftY = int(self._height * zoomFactor)
-        self._scaleX = float(self._width - 2 * self._shiftX) / float(maxX - minX)
-        self._scaleY = float(self._height - 2 * self._shiftX) / float(maxY - minY)
+        if ((maxX - minX) == 0) :
+            self._scaleX = 1
+        else :
+            self._scaleX = float(self._width - 2 * self._shiftX) / float(maxX - minX)
+        if ((maxY - minY) == 0) :
+            self._scaleY = 1
+        else :
+            self._scaleY = float(self._height - 2 * self._shiftX) / float(maxY - minY)
+
         self._repaintMap = True
 
     def preDraw(self, surface):
