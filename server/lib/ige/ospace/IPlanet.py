@@ -650,7 +650,11 @@ class IPlanet(IObject):
 				obj.plEnv -= Rules.envAutoMod
 		if obj.plBio > Rules.planetSpec[obj.plType].maxBio:
 			# auto damage on plBio > maxBio of class     #    @log.debug('IPlanet', obj.oid, 'Env auto damage', obj.plType, obj.plBio, Rules.planetSpec[obj.plType].maxBio)
-			obj.plEnv -= min(obj.plEnv, int((obj.plBio - Rules.planetSpec[obj.plType].maxBio) * Rules.envAutoMod))
+			dEnv = int((obj.plBio - Rules.planetSpec[obj.plType].maxBio) * Rules.envAutoMod)
+			if obj.plEnv > 0:
+				obj.plEnv -= min(obj.plEnv, dEnv)
+			else:
+				obj.plEnv -= dEnv
 			# small chance of self-upgrading
 			spec = Rules.planetSpec[obj.plType]
 			if owner:
