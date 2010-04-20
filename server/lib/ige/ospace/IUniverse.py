@@ -498,6 +498,7 @@ class IUniverse(IObject):
 	def restartGalaxy2(self, tran, obj, galaxyID, imperatorMessage): #server-initiated restart
 		log.debug("Restarting Galaxy", galaxyID)
 		log.debug("Sending message", imperatorMessage)
+		galaxy = tran.db[galaxyID]
 		message = {
 			"sender": "Galaxy %s" % galaxy.name,
 			"senderID": tran.cid,
