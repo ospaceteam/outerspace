@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 #  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
 #
@@ -102,6 +103,7 @@ class StarMapWidget(Widget):
 		self.showPirateAreas = True
 		self.highlightPos = None
 		self.alwaysShowRangeFor = None
+		self.alternativeSystemNames = False
 		#setup
 		self.pirateDlgs = False
 		self.showBuoyDlg = ShowBuoyDlg(self.app)
@@ -248,11 +250,14 @@ class StarMapWidget(Widget):
 				speedBoost = 0
 				moraleCount = 0
 				morale = 200
+				constPoints = 0
+				sciPoints = 0
 				minerals = -1
 				bio = -1
 				slots = 0
 				numPlanets = 0
 				stratRes = SR_NONE
+				isGovCentral = False
 				#owner2 = 0
 				ownerID = OID_NONE
 				explored = False
@@ -286,6 +291,30 @@ class StarMapWidget(Widget):
 							hasRefuel = hasRefuel or getattr(planet, 'hasRefuel', False)
 							if hasattr(planet, "fleetSpeedBoost"):
 								speedBoost = max(speedBoost, planet.fleetSpeedBoost)
+							if hasattr(planet, "effProdProd"):
+								constPoints += planet.effProdProd
+							if hasattr(planet, "effProdSci"):
+								sciPoints += planet.effProdSci
+							if hasattr(planet, "slots"):
+								for struct in planet.slots:
+									tech = Rules.techs[struct[STRUCT_IDX_TECHID]]
+									if not tech.govPwr == 0:
+										isGovCentral = True
+									if not hasattr(planet, "morale"): # ugly way to say "planets of other players"
+										b, m, e, d = tech.prodProdMod
+										maxTechHP = tech.maxHP
+										opStatus = struct[STRUCT_IDX_OPSTATUS]/100.0
+										if opStatus != 0: 
+											currHP = struct[STRUCT_IDX_HP]
+											techEff = (currHP / opStatus) / maxTechHP
+										else:
+											techEff = 0
+										prodMod = (b * planet.plBio + m * planet.plMin + e * planet.plEn + d * 100) / 100
+										constPoints += int(tech.prodProd * prodMod * techEff * opStatus)
+										# science
+										b, m, e, d = tech.prodSciMod
+										prodMod = (b * planet.plBio + m * planet.plMin + e * planet.plEn + d * 100) / 100
+										sciPoints += int(tech.prodSci * prodMod * techEff * opStatus)
 						# uncharted system
 						if hasattr(planet, 'plBio') and hasattr(planet, 'plEn'):
 							explored = True
@@ -347,7 +376,7 @@ class StarMapWidget(Widget):
 									if dist > oldCtrl[1]:
 										continue
 								self._map[self.MAP_CONTROLAREA][ctrlid] = (controlcolor,dist)
-				self._map[self.MAP_SYSTEMS].append((obj.oid, obj.x, obj.y, name, img, colors, namecolor, False, icons))
+				self._map[self.MAP_SYSTEMS].append((obj.oid, obj.x, obj.y, name, img, colors, namecolor, False, icons, constPoints, sciPoints, isGovCentral))
 				# pop up info
 				info = []
 				info.append(_('System: %s [ID: %d]') % (name or res.getUnknownName(), obj.oid))
@@ -378,7 +407,7 @@ class StarMapWidget(Widget):
 				self.precomputeBuoys(obj, player, icons)
 				color = res.getPlayerColor(OID_NONE)
 				namecolor = res.getPlayerColor(OID_NONE)
-				self._map[self.MAP_SYSTEMS].append((obj.oid, obj.x, obj.y, name, img, color, namecolor, True, icons))
+				self._map[self.MAP_SYSTEMS].append((obj.oid, obj.x, obj.y, name, img, color, namecolor, True, icons, constPoints, sciPoints, isGovCentral))
 				# pop up info
 				info = []
 				info.append(_('Worm hole: %s [ID: %d]') % (name or res.getUnknownName(), obj.oid))
@@ -450,10 +479,10 @@ class StarMapWidget(Widget):
 				if hasattr(obj, "plStratRes") and obj.plStratRes != SR_NONE:
 					info.append(_("Strat. resource: %s") % _(gdata.stratRes[obj.plStratRes]))
 				if owner:
-					onwerobj = client.get(owner, publicOnly = 1)
+					ownerobj = client.get(owner, publicOnly = 1)
 					info.append(_('Owner: %s [ID: %s]') % (
-						getattr(onwerobj, 'name', res.getUnknownName()),
-						getattr(onwerobj, 'oid', '?')
+						getattr(ownerobj, 'name', res.getUnknownName()),
+						getattr(ownerobj, 'oid', '?')
 					))
 				self._popupInfo[obj.oid] = info
 			elif obj.type == T_FLEET:
@@ -482,10 +511,10 @@ class StarMapWidget(Widget):
 				if eta:
 					info.append(_('ETA: %s') % res.formatTime(eta))
 				if owner:
-					onwerobj = client.get(owner, publicOnly = 1)
+					ownerobj = client.get(owner, publicOnly = 1)
 					info.append(_('Owner: %s [ID: %s]') % (
-						getattr(onwerobj, 'name', res.getUnknownName()),
-						getattr(onwerobj, 'oid', '?')
+						getattr(ownerobj, 'name', res.getUnknownName()),
+						getattr(ownerobj, 'oid', '?')
 					))
 				self._popupInfo[obj.oid] = info
 			elif obj.type in (T_GALAXY, T_AIPLAYER, T_AIRENPLAYER, T_AIMUTPLAYER, T_AIPIRPLAYER, T_AIEDENPLAYER, T_PIRPLAYER):
@@ -579,7 +608,7 @@ class StarMapWidget(Widget):
 		# set path and times
 		eta = getattr(obj, 'eta', 0)
 		self._map[self.MAP_FLEETS].append((obj.oid, obj.x, obj.y, obj.oldX, obj.oldY, orbit, res.formatTime(eta), color,
-			obj.signature / 25, getattr(obj, "isMilitary", 0)))
+			obj.signature / 25, getattr(obj, "isMilitary", 1)))
 		# pop up info
 		info = []
 		info.append(_('Fleet: %s [ID: %d]') % (name, obj.oid))
@@ -587,13 +616,23 @@ class StarMapWidget(Widget):
 		if hasattr(obj, 'scannerPwr'): info.append(_('Scanner pwr: %d') % obj.scannerPwr)
 		info.append(_('Coordinates: [%.2f, %.2f]') % (obj.x, obj.y))
 		info.append(_('Signature: %d') % obj.signature)
+		if hasattr(obj, 'speed'): info.append(_(u'Speed: %3.2f') % obj.speed)
 		if eta:
+			if hasattr(obj, 'target') and obj.target != OID_NONE:
+				target = client.get(obj.target, noUpdate = 1)
+				if hasattr(target, "x") and eta != 1:
+					info.append(_(u'Speed: <%3.2f – %3.2f>') % (\
+						((target.x - obj.x)**2 + (target.y - obj.y)**2)**.5/(eta/24),\
+						((target.x - obj.x)**2 + (target.y - obj.y)**2)**.5/((eta - 1)/24)))
+				elif hasattr(target, "x") and eta == 1:
+					info.append(_(u'Speed: <%3.2f – ∞>') % (\
+					((target.x - obj.x)**2 + (target.y - obj.y)**2)**.5/(eta/24)))
 			info.append(_('ETA: %s') % res.formatTime(eta))
 		if owner:
-			onwerobj = client.get(owner, publicOnly = 1)
+			ownerobj = client.get(owner, publicOnly = 1)
 			info.append(_('Owner: %s [ID: %s]') % (
-				getattr(onwerobj, 'name', res.getUnknownName()),
-				getattr(onwerobj, 'oid', '?')
+				getattr(ownerobj, 'name', res.getUnknownName()),
+				getattr(ownerobj, 'oid', '?')
 			))
 		if hasattr(obj, 'storEn'):
 			if obj.maxEn > 0: full = 100 * obj.storEn / obj.maxEn
@@ -768,10 +807,10 @@ class StarMapWidget(Widget):
 			pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx + 1, sy - 1), (tx, ty), 1)
 			pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx - 1, sy + 1), (tx, ty), 1)
 			pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx - 1, sy - 1), (tx, ty), 1)
-			pygame.draw.aaline(self._mapSurf, (0x20, 0x20, 0x80), (sx + 2, sy), (tx, ty), 1)
-			pygame.draw.aaline(self._mapSurf, (0x20, 0x20, 0x80), (sx - 2, sy), (tx, ty), 1)
-			pygame.draw.aaline(self._mapSurf, (0x20, 0x20, 0x80), (sx, sy + 2), (tx, ty), 1)
-			pygame.draw.aaline(self._mapSurf, (0x20, 0x20, 0x80), (sx, sy - 2), (tx, ty), 1)
+			pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx + 2, sy), (tx, ty), 1)
+			pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx - 2, sy), (tx, ty), 1)
+			pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx, sy + 2), (tx, ty), 1)
+			pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx, sy - 2), (tx, ty), 1)
 			# pygame.draw.line(self._mapSurf, (0x00, 0x00, 0x80), (sx, sy), ((sx + tx) / 2, (sy + ty) / 2), 3)
 
 	def drawGateNetworks(self,mode=1,objid=False):
@@ -831,7 +870,7 @@ class StarMapWidget(Widget):
 		scale = self.scale
 		namecolor = res.getPlayerColor(OID_NONE)
 		if scale >= 30:
-			for objID, x, y, name, img, color, namecolor, singlet, icons in self._map[self.MAP_SYSTEMS]:
+			for objID, x, y, name, img, color, namecolor, singlet, icons, constPoints, sciPoints, isGovCentral in self._map[self.MAP_SYSTEMS]:
 				sx = int((x - currX) * scale) + centerX
 				sy = maxY - (int((y - currY) * scale) + centerY)
 				w, h = img.get_size()
@@ -847,7 +886,7 @@ class StarMapWidget(Widget):
 					img = renderText('small', name, 1, namecolor)
 					self._mapSurf.blit(img, (sx - img.get_width() / 2, sy + h / 2))
 				buoy = self.getBuoy(objID)
-				if buoy != None:
+				if buoy != None and not self.alternativeSystemNames:
 					if not name: #if name not set and there is a bouy, set "?" as the name
 						if self.overlayMode != gdata.OVERLAY_OWNER:
 							namecolor = res.fadeColor(namecolor)
@@ -875,6 +914,15 @@ class StarMapWidget(Widget):
 						actRect = Rect(sx - maxW / 2, nSy, maxW, hh)
 						actRect.move_ip(self.rect.left, self.rect.top)
 						self._actBuoyAreas[objID] = actRect
+				elif self.alternativeSystemNames:
+					alternative = name
+					nSy = sy + h / 2 + img.get_height()
+					if constPoints != 0 or sciPoints != 0:
+						img = renderText('small', u"CP: %d RP: %d" % (constPoints, sciPoints), 1, namecolor)
+						self._mapSurf.blit(img, (sx - img.get_width() / 2, nSy))
+					if isGovCentral:
+						img = renderText('small', u"Central system", 1, (255, 255, 255))
+						self._mapSurf.blit(img, (sx - img.get_width() / 2, nSy + img.get_height()))
 				for icon in icons:
 					self._mapSurf.blit(icon, (x, y))
 					x += icon.get_width() + 1
@@ -883,7 +931,7 @@ class StarMapWidget(Widget):
 				actRect.move_ip(self.rect.left, self.rect.top)
 				self._actAreas[objID] = actRect
 		else:
-			for objID, x, y, name, img, color, namecolor, singlet, icons in self._map[self.MAP_SYSTEMS]:
+			for objID, x, y, name, img, color, namecolor, singlet, icons, constPoints, sciPoints, isGovCentral in self._map[self.MAP_SYSTEMS]:
 				if not singlet:
 					color = color[self.overlayMode]
 				sx = int((x - currX) * scale) + centerX
@@ -981,7 +1029,7 @@ class StarMapWidget(Widget):
 				sy1 = maxY - (int((y1 - currY) * scale) + centerY)
 				sx2 = int((x2 - currX) * scale) + centerX
 				sy2 = maxY - (int((y2 - currY) * scale) + centerY)
-				pygame.draw.aaline(self._mapSurf, color, (sx1, sy1), (sx2, sy2), 1)
+				pygame.draw.line(self._mapSurf, color, (sx1, sy1), (sx2, sy2), 1)
 		# draw fleet symbol
 		for objID, x, y, oldX, oldY, orbit, eta, color, size, military in self._map[self.MAP_FLEETS]:
 			if not self.showCivilianFleets and not military:
@@ -1021,7 +1069,7 @@ class StarMapWidget(Widget):
 
 	def draw(self, surface):
 		if not self._mapSurf:
-			self._mapSurf = pygame.Surface(self.rect.size, SWSURFACE | SRCALPHA, surface)
+			self._mapSurf = pygame.Surface(self.rect.size, SWSURFACE |SRCALPHA, surface)
 			# workaround for FILLED CIRCLE CLIP BUG - TODO remove
 			clip = self._mapSurf.get_clip()
 			clip.left += 1
@@ -1333,9 +1381,6 @@ class StarMapWidget(Widget):
 		self._hotbuttonsZone.left = left
 		self._hotbuttonsZone.width = dx
 		self._hotbuttonsZone.height = dy
-
-		for buttonkey in self._hotbuttons:
-			button = self._hotbuttons[buttonkey]
 
 		pygame.draw.rect(self._mapSurf,(0x00, 0x00, 0x90),(left-1,top-1,dx+2,dy+2))
 		pygame.draw.rect(self._mapSurf,(0x33, 0x33, 0x66),(left,top,dx,dy))
@@ -1691,64 +1736,41 @@ class StarMapWidget(Widget):
 			self.currX -= float(centerX - x) / self.scale
 			self.currY += float(centerY - y) / self.scale
 			self.repaintMap = 1
-			self._newCurrXY = 0		# ==== Standard Hotkeys ====
+			self._newCurrXY = 0
+		# ==== Standard Hotkeys ====
+		# Ctrl+A - Alternative system info [production instead of buoys]
+		elif evt.unicode == u'\x01':
+			self.alternativeSystemNames = not self.alternativeSystemNames
+			self.repaintMap = 1
 		# Reserve CTRL-C for copy (future editor support)
 		# Ctrl+F
 		elif evt.unicode == u'\x06' and pygame.key.get_mods() & KMOD_CTRL:
 			self.searchDlg.display()
 		# Ctrl+G - Toggle grid
 		elif evt.unicode == u'\x07' and pygame.key.get_mods() & KMOD_CTRL:
-			if self.showGrid:
-				self.showGrid = 0
-			else:
-				self.showGrid = 1
-			self.repaintMap = 1
+			self.toggleHotbuttons('grid')
 		# Ctrl-H - Toggle visibility of civilian ships
 		elif evt.unicode == u'\x08' and pygame.key.get_mods() & KMOD_CTRL:
-			if self.showCivilianFleets:
-				self.showCivilianFleets = 0
-			else:
-				self.showCivilianFleets = 1
-			self.repaintMap = 1
+			self.toggleHotbuttons('civ')
 		# Ctrl+L - Toggle drawing fleet lines
 		elif evt.unicode == u'\x0C' and pygame.key.get_mods() & KMOD_CTRL:
-			if self.showFleetLines:
-				self.showFleetLines = 0
-			else:
-				self.showFleetLines = 1
-			self.repaintMap = 1
+			self.toggleHotbuttons('lines')
 		# Ctrl+M
 		elif evt.unicode == u'\x0D' and pygame.key.get_mods() & KMOD_CTRL:
 			self.showOverlayDlg.display()
 		# Ctrl+N - Toggle drawing gate networks (0: off; 1: draw only fleet command lines; 2: draw 20 parsec groups; 3: draw from center 10 region)
 		elif evt.unicode == u'\x0E' and pygame.key.get_mods() & KMOD_CTRL:
-			if self.showGateNetworks:
-				self.showGateNetworks = 0
-			else:
-				self.showGateNetworks = 2
+			self.toggleHotbuttons('gatenet')
 			#self.showGateNetworks = (self.showGateNetworks + 1) % 4
-			self.repaintMap = 1
 		# Ctrl+P - Toggle viewing of control areas (turns off scanner circles)
 		elif evt.unicode == u'\x10' and pygame.key.get_mods() & KMOD_CTRL:
-			if self.toggleControlAreas:
-				self.toggleControlAreas = 0
-			else:
-				self.toggleControlAreas = 1
-			self.repaintMap = 1
+			self.toggleHotbuttons('pzone')
 		# Ctrl+R - Toggle drawing redirects
 		elif evt.unicode == u'\x12' and pygame.key.get_mods() & KMOD_CTRL:
-			if self.showRedirects:
-				self.showRedirects = 0
-			else:
-				self.showRedirects = 1
-			self.repaintMap = 1
+			self.toggleHotbuttons('redir')
 		# Ctrl+S - Toggle drawing scanners
 		elif evt.unicode == u'\x13' and pygame.key.get_mods() & KMOD_CTRL:
-			if self.showScanners:
-				self.showScanners = 0
-			else:
-				self.showScanners = 1
-			self.repaintMap = 1
+			self.toggleHotbuttons('scanner')
 		# Reserve CTRL-V,X,and Z for paste, cut, and undo (future editor support)
 		# ==== Else ====
 		else:

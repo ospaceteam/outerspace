@@ -345,7 +345,8 @@ class ProblemsDlg:
 				if task.changeSci > 0:
 					value = float(researchSci - task.currSci) / max(task.changeSci, player.effSciPoints)
 					totalEtc += int(value + 1)
-					totalEtc += float(maxImpTotalSci) / player.effSciPoints
+					if player.effSciPoints != 0:
+						totalEtc += float(maxImpTotalSci) / player.effSciPoints
 				elif task.changeSci < 0:
 					totalEtc -= float(task.currSci) / min(task.changeSci, player.effSciPoints)
 				elif player.effSciPoints > 0:

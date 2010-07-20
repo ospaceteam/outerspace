@@ -1,5 +1,11 @@
 Change Log:
 
+[2010-07-20]
+- CTRL+A displays CP/RP of the system instead of buoys. [Marek]
+- Bug fixes to StarMapWidget (antialising, typos). [Marek]
+- Better handling of hot buttons. [Marek]
+- Zero RP does not cause exceptions in Problems dialog anymore. [Qark]
+
 [2009-01-06]
 - Update system map widget to display your own buoys (allowing you to leave notes for yourself) [Random Chaos]
 
