@@ -1,5 +1,8 @@
 Change Log:
 
+[2010-07-21]
+- Various fixes for Win32 build. [Qark]
+
 [2010-07-20]
 - CTRL+A displays CP/RP of the system instead of buoys. [Marek]
 - Bug fixes to StarMapWidget (antialising, typos). [Marek]

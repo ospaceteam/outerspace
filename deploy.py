@@ -149,16 +149,17 @@ data = {
 }
 open("setup.iss", "w").write(template % data)
 
-os.system('..\\tools\\ISetup4\\iscc.exe setup.iss')
+os.system("tools\\InnoSetup5\\iscc.exe setup.iss")
 
 # copy version
 shutil.copy2('client-pygame/lib/osci/version.py', 'server/lib/ige/ospace/ClientVersion.py')
 shutil.copy2('client-pygame/lib/osci/versiondata.py', 'server/lib/ige/ospace/versiondata.py')
 
 # create tech tree
-os.chdir("tools")
-os.system("techtree.bat")
-os.chdir("..")
+# FIXME: disabled for now
+#os.chdir("tools")
+#os.system("techtree.bat")
+#os.chdir("..")
 
 print '#'
 print '# Operation successfull'

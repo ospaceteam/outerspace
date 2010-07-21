@@ -17,6 +17,15 @@ import shutil
 import os
 import stat
 
+# hack to persuade py2exe to include PyGame libraries
+if havePy2Exe:
+    origIsSystemDLL = py2exe.build_exe.isSystemDLL
+    def isSystemDLL(pathname):
+        if "pygame" in pathname.lower():
+            return 0
+        return origIsSystemDLL(pathname)
+    py2exe.build_exe.isSystemDLL = isSystemDLL
+
 # copy server library
 if not os.path.exists("libsrvr"):
     shutil.copytree("../server/lib", "libsrvr")
@@ -64,8 +73,8 @@ import ige.ospace.Rules
 # setup
 setup(
     name = 'OuterSpace',
-    version = '%d.%d.%d%s' % version,
-    description = 'Client for IGE - Outer Space game',
+    version = '%d.%d.%d' % version[0:3],
+    description = 'Client for Outer Space game',
     author = "Ludek Smid",
     author_email = "qark@ospace.net",
     maintainer = 'Ludek Smid',

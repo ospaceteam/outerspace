@@ -25,7 +25,7 @@ Name: "quicklaunchicon"; Description: "Create a &Quick Launch icon"; GroupDescri
 Name: "{app}\var"; Flags: deleteafterinstall
 
 [Files]
-Source: "server\website\osclient\latest\*"; DestDir: "{app}"; CopyMode: alwaysoverwrite; Flags: recursesubdirs
+Source: "server\website\osclient\latest\*"; DestDir: "{app}"; Flags: recursesubdirs ignoreversion
 
 [INI]
 Filename: "{app}\osc.url"; Section: "InternetShortcut"; Key: "URL"; String: "http://www.ospace.net/"
