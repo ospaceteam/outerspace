@@ -1,7 +1,7 @@
 [Setup]
 AppName=Outer Space
 AppVerName=Outer Space %(version)s
-AppPublisher=Ludek Smid
+AppPublisher=Outer Space Team
 AppVersion=%(version)s
 AppPublisherURL=http://www.ospace.net
 AppSupportURL=http://www.ospace.net

@@ -1,8 +1,11 @@
 Change Log:
 
+VERSION 0.5.67beta
+
 [2010-08-01]
 - $HOME/.outerspace is now default config directory for client. [Qark]
 - Client now supports command line arguments --configdir and --server. [Qark]
+- Fixed issues with Vista/Win7 UAC. [Qark]
 
 [2010-07-21]
 - Various fixes for Win32 build. [Qark]

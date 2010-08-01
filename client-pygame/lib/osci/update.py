@@ -21,6 +21,7 @@
 import time, urllib, shutil, os, os.path, sys, string, glob
 from ige import log
 import dialog, gdata
+import version
 
 totalSize = 0
 downloadedSize = 0
@@ -50,6 +51,11 @@ def checkForUpdate():
     else:
         updateMode = 'normal'
         gdata.config.client.updatemode = updateMode
+    # do not auto update alpha/beta versions
+    if version.version[3] in ("alpha", "beta"):
+        log.message("Alpha or beta version detected -- set updatemode to 'force' to enable updates")
+        if updateMode != "force":
+            return
     # quit if update is disabled
     if updateMode == 'never':
         return
