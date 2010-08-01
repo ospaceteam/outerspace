@@ -221,4 +221,4 @@ def updateConfig():
     now = time.strftime('%Y-%m-%d')
     gdata.config.client.lastupdate = now
     # write configuration
-    gdata.config.save('var/osci.ini')
+    gdata.config.save()

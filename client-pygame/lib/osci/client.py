@@ -35,11 +35,13 @@ lastClientVersion = None
 lastClientRevision = None
 ignoreMsgs = {}
 nonexistingObj = {}
+optins = None
 
-def initialize(aServer, aCallbackObj):
-	global callbackObj, server
+def initialize(aServer, aCallbackObj, anOptions):
+	global callbackObj, server, options
 	callbackObj = aCallbackObj
 	server = aServer
+	options = anOptions
 
 def reinitialize():
 	global cmdProxy
@@ -145,7 +147,7 @@ def updateDatabaseUnsafe(clearDB = 0, force = 0):
 	# get real turn
 	result = cmdProxy.getIntroInfo(OID_UNIVERSE)
 	if not db:
-		db = IClientDB.IClientDB(result.cid, result.turn)
+		db = IClientDB.IClientDB(result.cid, result.turn, options.configDir)
 	if clearDB:
 		db.clear()
 	db.turn = result.turn

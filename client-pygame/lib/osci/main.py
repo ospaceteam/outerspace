@@ -29,10 +29,30 @@ import osci, random, time
 from ige import log
 import sys, os, os.path
 import re
+from optparse import OptionParser
 
+# log initialization
 log.message("Starting IGE - Outer Space Client version", osci.versionString)
 log.debug("sys.path =", sys.path)
 log.debug("os.name =", os.name)
+
+# parse command line parameters
+parser = OptionParser()
+parser.add_option("",  "--configdir", dest = "configDir", 
+    metavar = "DIRECTORY", 
+    default = os.path.join(os.path.expanduser("~"), ".outerspace"), 
+    help = "Override default configuration directory", 
+)
+parser.add_option("",  "--server", dest = "server", 
+    metavar = "HOSTNAME:PORT", 
+    default = "www.ospace.net:9080",
+    help = "Outer Space server location"
+)
+
+options, args = parser.parse_args()
+
+if args:
+  parser.error("No additional arguments are supported")
 
 # splash screen
 background = None
@@ -108,32 +128,19 @@ def update():
     pygame.event.pump()
 
 # create required directories
-if not os.path.exists('var'):
-    os.mkdir('var')
+if not os.path.exists(options.configDir):
+    os.makedirs(options.configDir)
 
 # parse configuration
 import gdata
 #from ConfigParser import ConfigParser
 
-#gdata.config = ConfigParser()
-gdata.config = Config('var/osci.ini')
-#gdata.config.read('var/osci.ini')
+gdata.config = Config(os.path.join(options.configDir, "osci.ini"))
 
 # default configuration
-#if not gdata.config.has_section('game'):
-#	gdata.config.add_section('game')
-
-#if not gdata.config.has_option('game', 'server'):
-#	gdata.config.set('game', 'server', 'www.ospace.net:9080')
 if gdata.config.game.server == None:
-    gdata.config.game.server = 'www.ospace.net:9080'
+    gdata.config.game.server = options.server
 
-# prepare internationalization
-#if not gdata.config.has_section('client'):
-#	gdata.config.add_section('client')
-
-#if not gdata.config.has_option('client', 'language'):
-#	gdata.config.set('client', 'language', 'en')
 if gdata.config.client.language == None:
     gdata.config.client.language = 'en'
 
@@ -276,7 +283,7 @@ res.loadResources()
 import client, handler
 from igeclient.IClient import IClientException
 
-client.initialize(gdata.config.game.server, handler)
+client.initialize(gdata.config.game.server, handler, options)
 
 # display login
 import dialog
@@ -392,7 +399,7 @@ gdata.config.defaults.objectkeys = of
 #
 if gdata.savePassword == False:
     gdata.config.game.lastpasswordcrypted = None
-gdata.config.save('var/osci.ini')
+gdata.config.save()
 
 # logout
 client.logout()

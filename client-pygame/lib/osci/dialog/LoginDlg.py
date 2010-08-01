@@ -88,7 +88,7 @@ class LoginDlg:
 			gdata.config.game.lastgameid = gameID
 			gdata.config.game.accountcreated = 1
 			# write configuration
-			gdata.config.save('var/osci.ini')
+			gdata.config.save()
 			gdata.config.game.lastpasswordcrypted = binascii.b2a_base64(password).strip()
 			# check version
 			log.debug('Version',version)
