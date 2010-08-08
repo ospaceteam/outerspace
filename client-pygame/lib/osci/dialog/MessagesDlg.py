@@ -120,7 +120,7 @@ class MessagesDlg:
 				tType = T_GALAXY, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
 			items.append(item)
 		# universe
-		item = ui.Item(_("Outer Space"), tObjID = OID_NONE, tForum = "", tMsgs = "", foreground = colors[0])
+		item = ui.Item(_("English channels"), tObjID = OID_NONE, tForum = "", tMsgs = "", foreground = colors[0])
 		items.append(item)
 		# news
 		msgs, new = self.getMsgsNumber(OID_UNIVERSE, "NEWS")
@@ -155,6 +155,30 @@ class MessagesDlg:
 		self.newMsgs += new
 		spec = gdata.mailboxSpec[T_UNIVERSE, "ISSUES"]
 		item = ui.Item("   %s" % _(spec[0]), tObjID = OID_UNIVERSE, tForum = "ISSUES",
+			tType = T_UNIVERSE, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
+		items.append(item)
+		# universe (CZ)
+		item = ui.Item(_("Czech channels"), tObjID = OID_NONE, tForum = "", tMsgs = "", foreground = colors[0])
+		items.append(item)
+		# public
+		msgs, new = self.getMsgsNumber(OID_UNIVERSE, "CZ_PUBLIC",'universe')
+		self.newMsgs += new
+		spec = gdata.mailboxSpec[T_UNIVERSE, "PUBLIC"]
+		item = ui.Item("   %s" % _(spec[0]), tObjID = OID_UNIVERSE, tForum = "CZ_PUBLIC",
+			tType = T_UNIVERSE, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
+		items.append(item)
+		# qa
+		msgs, new = self.getMsgsNumber(OID_UNIVERSE, "CZ_QA",'universe')
+		self.newMsgs += new
+		spec = gdata.mailboxSpec[T_UNIVERSE, "QA"]
+		item = ui.Item("   %s" % _(spec[0]), tObjID = OID_UNIVERSE, tForum = "CZ_QA",
+			tType = T_UNIVERSE, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
+		items.append(item)
+		# ideas
+		msgs, new = self.getMsgsNumber(OID_UNIVERSE, "CZ_IDEAS",'universe')
+		self.newMsgs += new
+		spec = gdata.mailboxSpec[T_UNIVERSE, "IDEAS"]
+		item = ui.Item("   %s" % _(spec[0]), tObjID = OID_UNIVERSE, tForum = "CZ_IDEAS",
 			tType = T_UNIVERSE, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
 		items.append(item)
 		#
@@ -293,7 +317,7 @@ class MessagesDlg:
 		self.win.vMessages.itemsChanged()
 		self.win.vMessage.text = [""]
 		self.win.vReply.enabled = 0
-		self.win.vNewTopic.enabled = gdata.mailboxSpec[selItem.tType, selItem.tForum][1] != None
+		self.win.vNewTopic.enabled = gdata.mailboxSpec[selItem.tType, gdata.mailboxStripLang(selItem.tForum)][1] != None
 		self.win.vDelete.enabled = len(self.win.vMessages.selection) > 0
 
 	def onMessageSelected(self, widget, action, data):
@@ -314,7 +338,7 @@ class MessagesDlg:
 		self.win.vMessage.text = text
 		self.win.vMessage.offsetRow = 0
 		self.win.vMessage.vertScrollbar.slider.position = 0
-		self.win.vReply.enabled = gdata.mailboxSpec[selItem.tType, selItem.tForum][1] != None
+		self.win.vReply.enabled = gdata.mailboxSpec[selItem.tType, gdata.mailboxStripLang(selItem.tForum)][1] != None
 		self.win.vDelete.enabled = 1
 		self.show(updateForum = 0)
 

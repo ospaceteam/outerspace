@@ -184,6 +184,7 @@ if (gdata.config.defaults.sound == "yes") or (gdata.config.defaults.music == "ye
     pygame.mixer.pre_init(44100, -16, 2, 4096)
 
 os.environ['SDL_VIDEO_ALLOW_SCREENSAVER'] = '1'
+os.environ['SDL_DEBUG'] = '1'
 pygame.init()
 
 # step by step initialization

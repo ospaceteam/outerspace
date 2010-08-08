@@ -31,7 +31,7 @@ class NewMessageDlg:
 
 	def display(self, caller, objID, objType, forum, msgID = None):
 		self.caller = caller
-		self.msgSpec = gdata.mailboxSpec[objType, forum]
+		self.msgSpec = gdata.mailboxSpec[objType, gdata.mailboxStripLang(forum)]
 		messages = client.get(objID)._messages
 		if self.msgSpec[1] == None:
 			# cannot reply

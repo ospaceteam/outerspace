@@ -120,13 +120,20 @@ mailboxSpec = {
 	(Const.T_PLAYER, "OUTBOX"): (N_("Sent"), None),
 	(Const.T_PLAYER, "EVENTS"): (N_("Events"), None),
 	(Const.T_UNIVERSE, "NEWS"): (N_("News"), None),
-	(Const.T_UNIVERSE, "QA"): (N_("QA channel"), "forum"),
+	(Const.T_UNIVERSE, "QA"): (N_("Questions"), "forum"),
 	(Const.T_UNIVERSE, "ISSUES"): (N_("Issues"), "forum"),
 	(Const.T_UNIVERSE, "IDEAS"): (N_("Suggestions"), "forum"),
-	(Const.T_UNIVERSE, "PUBLIC"): (N_("Public channel"), "forum"),
-	(Const.T_GALAXY, "PUBLIC"): (N_("Public channel"), "forum"),
-	(Const.T_GALAXY, "NEWS"): (N_("News channel"), None),
+	(Const.T_UNIVERSE, "PUBLIC"): (N_("Public"), "forum"),
+	(Const.T_GALAXY, "PUBLIC"): (N_("Public"), "forum"),
+	(Const.T_GALAXY, "NEWS"): (N_("News"), None),
 }
+
+def mailboxStripLang(forum):
+	if "_" in forum:
+		return forum.split("_")[1]
+	else:
+		return forum
+	
 
 # morale states
 moraleStates = {
