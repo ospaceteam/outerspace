@@ -25,6 +25,7 @@ from osci import gdata, res, client
 from ige.ospace.Const import *
 from ige.ospace import Rules
 import ige
+import math
 
 # grouping options
 CLASS = 1
@@ -59,7 +60,7 @@ def getCountShipsByDesign(ships, maxCount, shipDesignID):
 		for ship in ships:
 			if ship[0] == shipDesignID:
 				numShips += 1
-		maxCount = int(round(numShips * maxCount,0))
+		maxCount = int(math.floor(numShips * maxCount))
 	if maxCount == 0:
 		return retShips
 	for ship in ships:
@@ -72,11 +73,7 @@ def getCountShips(ships, maxCount):
 	count = 0
 	retShips = []
 	if maxCount < 1 and maxCount > 0: # calc percent to num ships
-		numShips = 0
-		for ship in ships:
-			if ship[0] == shipDesignID:
-				numShips += 1
-		maxCount = int(round(numShips * maxCount,0))
+		maxCount = int(math.floor(len(ships) * maxCount))
 	if maxCount == 0:
 		return retShips
 	for ship in ships:
