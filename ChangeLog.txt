@@ -1,5 +1,8 @@
 Change Log:
 
+[2010-08-17]
+- Overview Dialog for pirate does not throw exception anymore. [Qark]
+
 VERSION 0.5.67beta
 
 [2010-08-01]

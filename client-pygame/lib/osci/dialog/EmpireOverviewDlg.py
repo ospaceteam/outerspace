@@ -139,9 +139,8 @@ class EmpireOverviewDlg:
 				_("New colony cost multiplier"),
 				int(Rules.pirateColonyCostMod * len(player.planets)),
 			))
-			text.append(u'    %s' % (
+			text.append(u'        %s' % (
 				_("(hover over system/planet to view actual cost)"),
-				int(Rules.pirateColonyCostMod * len(player.planets)),
 			))
 		text.append("")
 		# Production
