@@ -25,22 +25,10 @@ import Rules
 from IGalaxy import IGalaxy
 import time, tempfile, os
 import ige
+import ige.version
 from ige import log
 from GalaxyGenerator import GenerateGalaxy
 from ige import GameException
-
-try:
-	import ClientVersion
-except ImportError:
-	# fake it
-	class ClientVersionClass:
-		pass
-	ClientVersion = ClientVersionClass()
-	ClientVersion.version = (0, 0, 0, "?")
-	ClientVersion.build = 0
-	ClientVersion.revision = 0
-	ClientVersion.versionString = "Version not specified"
-
 
 class IUniverse(IObject):
 
@@ -74,8 +62,16 @@ class IUniverse(IObject):
 		result.cid = tran.cid
 		result.turn = obj.turn
 		result.serverTime = time.time()
-		result.lastClientVersion = ClientVersion.version
-		result.lastClientRevision = ClientVersion.revision
+		result.version = ige.version.version
+		# legacy client side update support
+		# TODO: Remove once not needed
+		result.lastClientVersion = (
+			ige.version.major,
+			ige.version.minor,
+			ige.version.revision,
+			ige.version.status,
+		)
+		result.lastClientRevision = ige.version.svnRevision
 		return result
 
 	getIntroInfo.public = 1

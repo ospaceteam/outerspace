@@ -19,7 +19,8 @@
 #
 
 import pygameui as ui
-from osci import gdata, client, versionString
+from osci import gdata, client
+from ige.version import versionString
 import xmlrpclib, time, os, pygame, sys
 
 class ExceptionDlg:

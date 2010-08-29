@@ -22,6 +22,7 @@ import traceback
 import time
 import log
 import ige
+import ige.version
 from medusa import igerpc_handler, http_server, asyncore, logger, status_handler
 from medusa import filesys, default_handler, counter, producers, xmlrpc_handler
 
@@ -39,6 +40,12 @@ def shutdownHandler(obj, passPhrase):
 		return 1, None
 	else:
 		return 0, None
+
+def versionHandler(obj):
+	result = {}
+	result.update(ige.version.version)
+	result["clientURLs"] = ige.version.clientURLs
+	return result, None
 
 ## IGE RPC medusa handler
 class igerpc(igerpc_handler.igerpc_handler):
@@ -149,6 +156,7 @@ def init(clientMngr):
 	callMap['shutdown'] = shutdownHandler
 	callMap['cleanupSessions'] = clientMngr.cleanupSessions
 	callMap['exportAccounts'] = clientMngr.exportAccounts
+	callMap['getVersion'] = versionHandler
 
 def register(game):
 	global callMap

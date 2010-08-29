@@ -1,20 +1,20 @@
 #
-#  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
+#  Copyright 2001 - 2010 Ludek Smid [http://www.ospace.net/]
 #
-#  This file is part of IGE - Outer Space.
+#  This file is part of Outer Space.
 #
-#  IGE - Outer Space is free software; you can redistribute it and/or modify
+#  Outer Space is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation; either version 2 of the License, or
 #  (at your option) any later version.
 #
-#  IGE - Outer Space is distributed in the hope that it will be useful,
+#  Outer Space is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with IGE - Outer Space; if not, write to the Free Software
+#  along with Outer Space; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
@@ -31,8 +31,7 @@ db = None
 callbackObj = None
 lastUpdate = -1
 server = None
-lastClientVersion = None
-lastClientRevision = None
+serverVersion = None
 ignoreMsgs = {}
 nonexistingObj = {}
 optins = None
@@ -42,30 +41,34 @@ def initialize(aServer, aCallbackObj, anOptions):
 	callbackObj = aCallbackObj
 	server = aServer
 	options = anOptions
+	initCmdProxy()
 
 def reinitialize():
 	global cmdProxy
 	cmdProxy = None
-## Authentication
 
-def login(gameid, login, password):
+def initCmdProxy():
 	global cmdProxy, server
 	if not cmdProxy:
 		callbackObj.onInitConnection()
 		proxy = None
 		if gdata.config.proxy.http != None:
 			proxy = gdata.config.proxy.http
-		cmdProxy = IClient.IClient(server, proxy, msgHandler, idleHandler, 'OSClient/%s' % osci.versionString)
-		cmdProxy.connect(login)
-		if gdata.config.client.keepAlive != None:
-			cmdProxy.keepAliveTime = int(gdata.config.client.keepAlive)
+		cmdProxy = IClient.IClient(server, proxy, msgHandler, idleHandler, 'OSClient/%s' % ige.version.versionString)
 		callbackObj.onConnInitialized()
+
+## Authentication
+
+def login(gameid, login, password):
+	initCmdProxy()
+	cmdProxy.connect(login)
+	if gdata.config.client.keepAlive != None:
+		cmdProxy.keepAliveTime = int(gdata.config.client.keepAlive)
 	if cmdProxy.login(gameid, login, password):
-		global lastClientVersion, lastClientRevision
+		global serverVersion
 		try:
 			result = cmdProxy.getIntroInfo(OID_UNIVERSE)
-			lastClientVersion = result.lastClientVersion
-			lastClientRevision = result.lastClientRevision
+			serverVersion = result.version
 		except ige.NoAccountException:
 			callbackObj.createGameAccount()
 			return 2

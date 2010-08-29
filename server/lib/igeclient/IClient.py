@@ -85,6 +85,9 @@ class IClient:
 	def logout(self):
 		self.logged = 0
 		return apply(IProxy('logout', None, self), ())
+		
+	def getVersion(self):
+		return apply(IProxy('getVersion', None, self), ())
 
 	def cleanupSessions(self):
 		return apply(IProxy('cleanupSessions', None, self), ())

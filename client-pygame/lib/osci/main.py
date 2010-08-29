@@ -1,20 +1,20 @@
 #
-#  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
+#  Copyright 2001 - 2010 Ludek Smid [http://www.ospace.net/]
 #
-#  This file is part of IGE - Outer Space.
+#  This file is part of Outer Space.
 #
-#  IGE - Outer Space is free software; you can redistribute it and/or modify
+#  Outer Space is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation; either version 2 of the License, or
 #  (at your option) any later version.
 #
-#  IGE - Outer Space is distributed in the hope that it will be useful,
+#  Outer Space is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with IGE - Outer Space; if not, write to the Free Software
+#  along with Outer Space; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
@@ -26,13 +26,14 @@ from pygame.locals import *
 from config import Config
 
 import osci, random, time
+import ige.version
 from ige import log
 import sys, os, os.path
 import re
 from optparse import OptionParser
 
 # log initialization
-log.message("Starting IGE - Outer Space Client version", osci.versionString)
+log.message("Starting Outer Space Client", ige.version.versionStringFull)
 log.debug("sys.path =", sys.path)
 log.debug("os.name =", os.name)
 
@@ -92,7 +93,7 @@ def drawBackground():
     screen.blit(img, (sponsorLogoOffset[0], sponsorLogoOffset[1] - img.get_height() - 2))
     # screen.fill((0x00, 0x00, 0x00))
     # OSCI version
-    img = font.render(_('OSCI %s') % osci.versionString, 1, color)
+    img = font.render(_('Outer Space %s') % ige.version.versionStringFull, 1, color)
     screen.blit(img, (5, screen.get_height() - 4 * img.get_height() - 5))
     # Pygame version
     img = font.render(_('Pygame %s') % pygame.version.ver, 1, color)
@@ -226,7 +227,7 @@ log.debug('OSCI', 'Display info:', pygame.display.Info())
 
 pygame.mouse.set_visible(1)
 
-pygame.display.set_caption(_('OSCI %s') % osci.versionString)
+pygame.display.set_caption(_('Outer Space %s') % ige.version.versionString)
 
 # set icon
 pygame.display.set_icon(pygame.image.load('res/icon32.png').convert_alpha())
@@ -267,16 +268,6 @@ import res
 
 res.initialize()
 
-# check for client updates
-import update as appUpdate
-
-try:
-    appUpdate.checkForUpdate()
-except SystemExit, e:
-    raise e
-except:
-    log.warning('OSCI', 'Update failed.')
-
 # load resources
 res.loadResources()
 
@@ -285,6 +276,16 @@ import client, handler
 from igeclient.IClient import IClientException
 
 client.initialize(gdata.config.game.server, handler, options)
+
+# check for client updates
+import update as appUpdate
+
+#try:
+appUpdate.update(options)
+#except SystemExit, e:
+#    raise e
+#except:
+#    log.warning('OSCI', 'Update failed.')
 
 # display login
 import dialog
@@ -359,7 +360,7 @@ while running:
             exctype, value, tb = sys.exc_info()
             funcs = [entry[2] for entry in traceback.extract_tb(tb)]
             faultID = "%04d-%06d-%03d" % (
-                osci.revision,
+                osci.version.version["svnRevision"],
                 hash("/".join(funcs)) % 1000000,
                 traceback.extract_tb(tb)[-1][1] % 1000,
             )

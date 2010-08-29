@@ -1,4 +1,13 @@
-Change Log:
+Outer Space Change Log
+======================
+
+Last change:
+- $Date$
+- $Author$
+- $Revision$
+
+[2010-08-22]
+- Alpha version of new code for updating the client. [Qark]
 
 [2010-08-17]
 - Overview Dialog for pirate does not throw exception anymore. [Qark]

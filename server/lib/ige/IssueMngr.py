@@ -1,9 +1,9 @@
 #
 #  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
 #
-#  This file is part of IGE - Outer Space.
+#  This file is part of Outer Space.
 #
-#  IGE - Outer Space is free software; you can redistribute it and/or modify
+#  Outer Space is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation; either version 2 of the License, or
 #  (at your option) any later version.
@@ -14,12 +14,13 @@
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with IGE - Outer Space; if not, write to the Free Software
+#  along with Outer Space; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
 import log
 import smtplib
+from email.mime.text import MIMEText
 
 class IssueMngr:
 
@@ -31,13 +32,15 @@ class IssueMngr:
 		log.message("ISSUE:\n", text)
 		# send it
 		try:
+			msg = MIMEText(text)
+			msg["Subject"] = "Outer Space Issue %s" % faultID
+			msg["From"] = "game_alpha@ospace.net"
+			mgs["To"] = "qark@ospace.net"
 			smtp = smtplib.SMTP("localhost")
 			smtp.sendmail(
 				"game_alpha@ospace.net",
-				"qark@ospace.net",
-				"Subject: IGE - Outer Space Issue %s\n\n%s" % (
-					faultID, text
-				)
+				["qark@ospace.net"],
+				msg.as_string()
 			)
 			smtp.quit()
 		except:
