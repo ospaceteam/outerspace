@@ -76,8 +76,9 @@ class Entry(Widget):
 		elif evt.key == K_TAB:
 			pass
 		elif hasattr(evt, 'unicode') and evt.unicode:
-			# TODO this is ugly windows only hack
-			char = unicode(chr(ord(evt.unicode)), 'cp1250')
+			# TODO this is ugly windows only hack needed for Win 9x and XP
+			# char = unicode(chr(ord(evt.unicode)), 'cp1250')
+			char = evt.unicode
 			if self.text:
 				self.text = u'%s%c%s' % (
 					self.text[:self.cursorPos], char, self.text[self.cursorPos:]

@@ -356,8 +356,9 @@ class Text(Widget):
 			if self.selStart != None:
 				self.deleteSelection()
 
-			# TODO this is ugly windows only hack
-			char = unicode(chr(ord(evt.unicode)), 'cp1250')
+			# TODO this is ugly windows only hack needed for Win 9x and XP
+			# char = unicode(chr(ord(evt.unicode)), 'cp1250')
+			char = evt.unicode
 			self.text[self.cursorRow] = u'%s%c%s' % (
 				self.text[self.cursorRow][:self.cursorColumn], char, self.text[self.cursorRow][self.cursorColumn:]
 			)

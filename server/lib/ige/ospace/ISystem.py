@@ -249,8 +249,8 @@ class ISystem(IObject):
 				continue
 			owner = tran.db[ownerid]
 			turn = tran.db[OID_UNIVERSE].turn
-			minerate = int(tech.minerate * Rules.techImprEff[owner.techs.get(structtech, Rules.techBaseImprovement)])
-			minenum = int(tech.minenum / Rules.techImprEff[owner.techs.get(structtech, Rules.techBaseImprovement)])
+			minerate = int(tech.minerate / Rules.techImprEff[owner.techs.get(structtech, Rules.techBaseImprovement)])
+			minenum = int(tech.minenum * Rules.techImprEff[owner.techs.get(structtech, Rules.techBaseImprovement)])
 			if (turn%minerate)==0: #it is the launch turn
 				self.addMine(obj,ownerid,tech.mineclass,minenum)
 				log.debug('ISystem', 'Mine deployed for owner %d in system %d' % (ownerid, obj.oid))

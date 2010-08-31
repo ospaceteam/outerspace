@@ -6,6 +6,10 @@ Last change:
 - $Author$
 - $Revision$
 
+[2010-08-31]
+- Removed win only hack for national characters. [Mark]
+- Fixed issue with improving tech level of mines. [Mark]
+
 [2010-08-22]
 - Alpha version of new code for updating the client. [Qark]
 
