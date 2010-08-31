@@ -52,6 +52,8 @@ class LoginDlg:
 		#if gdata.config.game.autologin != 'yes':	# enable this to disable auto-login after change in options
 		#	self.firstlogin = false
 		self.win.show()
+		if gdata.config.game.autologin == 'yes':
+			self.autoLogin()
 
 	def hide(self):
 		self.win.hide()

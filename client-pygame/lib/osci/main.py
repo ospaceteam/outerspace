@@ -280,19 +280,14 @@ client.initialize(gdata.config.game.server, handler, options)
 # check for client updates
 import update as appUpdate
 
-#try:
-appUpdate.update(options)
-#except SystemExit, e:
-#    raise e
-#except:
-#    log.warning('OSCI', 'Update failed.')
-
-# display login
+# create initial dialogs
 import dialog
 
 gdata.savePassword = gdata.config.game.lastpasswordcrypted != None
-logdlg = dialog.LoginDlg(gdata.app)
-logdlg.display()
+
+loginDlg = dialog.LoginDlg(gdata.app)
+updateDlg = dialog.UpdateDlg(gdata.app)
+
 # event loop
 update()
 
@@ -302,9 +297,10 @@ counter = 0
 needsRefresh = False
 while running:
     try:
-        if gdata.config.game.autologin == 'yes':
-            logdlg.autoLogin()
-
+        counter += 1
+        if counter == 1:
+            # display initial dialog in the first cycle
+            updateDlg.display(caller = loginDlg, options = options)
         # process as many events as possible before updating
         evt = pygame.event.wait()
         evts = pygame.event.get()
@@ -343,13 +339,11 @@ while running:
         if saveDB:
             client.saveDB()
             lastSave = time.clock();
-        counter += 1
 
     except IClientException, e:
         client.reinitialize()
         gdata.app.setStatus(e.args[0])
-#		dialog.LoginDlg(gdata.app).display(message = e.args[0])
-        logdlg.display(message = e.args[0])
+        loginDlg.display(message = e.args[0])
     except Exception, e:
         log.warning('OSCI', 'Exception in event loop')
         if not isinstance(e, SystemExit) and not isinstance(e, KeyboardInterrupt):
@@ -360,7 +354,7 @@ while running:
             exctype, value, tb = sys.exc_info()
             funcs = [entry[2] for entry in traceback.extract_tb(tb)]
             faultID = "%04d-%06d-%03d" % (
-                osci.version.version["svnRevision"],
+                ige.version.version["svnRevision"],
                 hash("/".join(funcs)) % 1000000,
                 traceback.extract_tb(tb)[-1][1] % 1000,
             )
