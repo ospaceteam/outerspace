@@ -36,6 +36,9 @@ from optparse import OptionParser
 log.message("Starting Outer Space Client", ige.version.versionStringFull)
 log.debug("sys.path =", sys.path)
 log.debug("os.name =", os.name)
+log.debug("sys.platform =", sys.platform)
+log.debug("os.getcwd() =", os.getcwd())
+log.debug("sys.frozen =", getattr(sys, "frozen", None))
 
 # parse command line parameters
 parser = OptionParser()
@@ -276,9 +279,6 @@ import client, handler
 from igeclient.IClient import IClientException
 
 client.initialize(gdata.config.game.server, handler, options)
-
-# check for client updates
-import update as appUpdate
 
 # create initial dialogs
 import dialog

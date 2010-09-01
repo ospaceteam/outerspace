@@ -68,7 +68,17 @@ def login(gameid, login, password):
 		global serverVersion
 		try:
 			result = cmdProxy.getIntroInfo(OID_UNIVERSE)
-			serverVersion = result.version
+			if hasattr(result, "version"):
+				serverVersion = result.version
+			elif hasattr(result, "lastClientVersion"):
+				# support for legacy version reporting
+				serverVersion = dict(
+					major = result.lastClientVersion[0],
+					minor = result.lastClientVersion[1],
+					revision = result.lastClientVersion[2],
+					status = result.lastClientVersion[3],
+					svnRevision = result.lastClientRevision,
+				)
 		except ige.NoAccountException:
 			callbackObj.createGameAccount()
 			return 2

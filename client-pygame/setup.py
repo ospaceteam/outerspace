@@ -12,6 +12,13 @@ try:
 except ImportError:
     pass
 
+havePy2App = False
+try:
+    import py2app
+    havePy2App = True
+except ImportError:
+    pass
+
 import glob
 import shutil
 import os
@@ -65,32 +72,46 @@ if havePy2Exe:
     data_files.append((".", ["../updater/update.exe"]))
 
 # version
-from osci import version
+import ige.version
 
 # generate up-to-date rules
 import ige.ospace.Rules
 
 # setup
+extraArgs = dict()
+
+if havePy2Exe:
+    extraArgs = dict(
+        windows = [
+            {
+                "script": "osc.pyw",
+                "icon_resources": [(1, "res/smallicon.ico"), (1, "res/bigicon.ico")]
+            }
+        ],
+    )
+elif havePy2App:
+    extraArgs = dict(
+        app = ["osc.pyw"],
+    )
+else:
+    extraArgs = dict(
+        scripts = ["osc.py"]
+    )
+        
 setup(
     name = 'OuterSpace',
-    version = '%d.%d.%d' % version[0:3],
+    version = '%(major)s.%(minor)s.%(revision)s' % ige.version.version,
     description = 'Client for Outer Space game',
     author = "Ludek Smid",
     author_email = "qark@ospace.net",
     maintainer = 'Ludek Smid',
     maintainer_email = 'qark@ospace.net',
     url = 'http://www.ospace.net/',
-    windows = [
-        {
-            "script": "osc.pyw",
-            "icon_resources": [(1, "res/smallicon.ico"), (1, "res/bigicon.ico")]
-        }
-    ],
     data_files = data_files,
     package_dir = {"osci": "lib/osci", "pygameui": "lib/pygameui", "": "libsrvr"},
     packages = ["osci", "osci.dialog", "pygameui", "igeclient", "ige", "ige.ospace", "ige.ospace.Rules"],
     py_modules = ["log"],
-    scripts = ["osc.py"],
+    **extraArgs
 )
 
 # cleanup

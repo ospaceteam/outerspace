@@ -36,12 +36,14 @@ class UpdateDlg:
     def display(self, caller = None, options = None):
         self.caller = caller
         self.options = options
-        if not self.isUpdateAvailable():
+        update = self.isUpdateAvailable()
+        if update is False:
             self.onCancel(None, None, _("Client is up-to-date"))
             return
-        self.win.vProgress.visible = 0
         self.win.show()
-        self.setUpdateAction()
+        self.win.vProgress.visible = 0
+        if update is True:
+            self.setUpdateAction()
 
     def hide(self):
         self.win.hide()
@@ -144,7 +146,13 @@ class UpdateDlg:
             return False
         # compare server and client versions
         log.message("Retrieving server version")
-        self.serverVersion = client.cmdProxy.getVersion()
+        try:
+            self.serverVersion = client.cmdProxy.getVersion()
+        except KeyError:
+            # call is not supported on older server versions
+            log.debug("getVersion call not supported")
+            self.reportFailure(_("Server does not support update feature yet. Check for updates manually, please."))
+            return None
         log.debug("Comparing server and client versions", self.serverVersion, ige.version.version)
         matches = True
         for i in ("major", "minor", "revision", "status", "svnRevision"):

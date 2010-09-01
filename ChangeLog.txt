@@ -6,6 +6,10 @@ Last change:
 - $Author$
 - $Revision$
 
+[2010-09-01]
+- Added support for Mac OS X. [Qark]
+- Added legacy update system support. Client now talks to older versions of server. [Qark]
+
 [2010-08-31]
 - Removed win only hack for national characters. [Mark]
 - Fixed issue with improving tech level of mines. [Mark]
