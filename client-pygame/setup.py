@@ -99,9 +99,9 @@ else:
     )
         
 setup(
-    name = 'OuterSpace',
+    name = 'Outer Space',
     version = '%(major)s.%(minor)s.%(revision)s' % ige.version.version,
-    description = 'Client for Outer Space game',
+    description = 'Client for Outer Space on-line game',
     author = "Ludek Smid",
     author_email = "qark@ospace.net",
     maintainer = 'Ludek Smid',

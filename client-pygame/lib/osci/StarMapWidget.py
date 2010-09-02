@@ -1069,7 +1069,7 @@ class StarMapWidget(Widget):
 
 	def draw(self, surface):
 		if not self._mapSurf:
-			self._mapSurf = pygame.Surface(self.rect.size, SWSURFACE |SRCALPHA, surface)
+			self._mapSurf = pygame.Surface(self.rect.size, SWSURFACE, surface)
 			# workaround for FILLED CIRCLE CLIP BUG - TODO remove
 			clip = self._mapSurf.get_clip()
 			clip.left += 1
@@ -1407,8 +1407,8 @@ class StarMapWidget(Widget):
 			'redir': ['redir',self.showRedirects,61,2,18,13, 1,_('Redirect Arrows (CTRL-R)')],
 			'scanner': ['scanner',self.showScanners,81,2,17,13, 1,_('Scanners (CTRL-S)')],
 			'grid': ['grid',self.showGrid,100,2,17,13, 1,_('Grid (CTRL-G)')],
-			'gatenet': ['gatenet',self.showGateNetworks,119,2,17,13, 2,_('Gate Network (CTRL-N)')],
-                        
+#			'gatenet': ['gatenet',self.showGateNetworks,119,2,17,13, 2,_('Gate Network (CTRL-N)')],
+			'alternate': ['alternate',self.alternativeSystemNames,119,2,17,13, 2,_('Alternate View (CTRL-A)')],                        
 			'ov_diplo': ['ov_diplo',False,2,17,13,13, gdata.OVERLAY_DIPLO,_('Overlay: Diplomacy')],
 			'ov_min': ['ov_min',False,17,17,13,13, gdata.OVERLAY_MIN,_('Overlay: Minerals')],
 			'ov_env': ['ov_env',False,32,17,13,13, gdata.OVERLAY_BIO,_('Overlay: Environment')],
@@ -1454,8 +1454,10 @@ class StarMapWidget(Widget):
 				self.showScanners = self._hotbuttons[button][1]
 			elif button == 'grid':
 				self.showGrid = self._hotbuttons[button][1]
-			elif button == 'gatenet':
-				self.showGateNetworks = self._hotbuttons[button][1]
+			elif button == 'alternate':
+				self.alternativeSystemNames = self._hotbuttons[button][1]
+#			elif button == 'gatenet':
+#				self.showGateNetworks = self._hotbuttons[button][1]
 		self.repaintHotbuttons = 1
 		self.repaintMap = 1
 
@@ -1740,8 +1742,7 @@ class StarMapWidget(Widget):
 		# ==== Standard Hotkeys ====
 		# Ctrl+A - Alternative system info [production instead of buoys]
 		elif evt.unicode == u'\x01':
-			self.alternativeSystemNames = not self.alternativeSystemNames
-			self.repaintMap = 1
+			self.toggleHotbuttons('alternate')
 		# Reserve CTRL-C for copy (future editor support)
 		# Ctrl+F
 		elif evt.unicode == u'\x06' and pygame.key.get_mods() & KMOD_CTRL:
@@ -1759,8 +1760,8 @@ class StarMapWidget(Widget):
 		elif evt.unicode == u'\x0D' and pygame.key.get_mods() & KMOD_CTRL:
 			self.showOverlayDlg.display()
 		# Ctrl+N - Toggle drawing gate networks (0: off; 1: draw only fleet command lines; 2: draw 20 parsec groups; 3: draw from center 10 region)
-		elif evt.unicode == u'\x0E' and pygame.key.get_mods() & KMOD_CTRL:
-			self.toggleHotbuttons('gatenet')
+#		elif evt.unicode == u'\x0E' and pygame.key.get_mods() & KMOD_CTRL:
+#			self.toggleHotbuttons('gatenet')
 			#self.showGateNetworks = (self.showGateNetworks + 1) % 4
 		# Ctrl+P - Toggle viewing of control areas (turns off scanner circles)
 		elif evt.unicode == u'\x10' and pygame.key.get_mods() & KMOD_CTRL:

@@ -6,13 +6,17 @@ Last change:
 - $Author$
 - $Revision$
 
+[2010-09-02]
+- Temporarily disabled gatenet overlay in star map. [dahaic]
+- Fixed credits in ChangeLog. [dahaic]
+
 [2010-09-01]
 - Added support for Mac OS X. [Qark]
 - Added legacy update system support. Client now talks to older versions of server. [Qark]
 
 [2010-08-31]
-- Removed win only hack for national characters. [Mark]
-- Fixed issue with improving tech level of mines. [Mark]
+- Removed win only hack for national characters. [dahaic]
+- Fixed issue with improving tech level of mines. [dahaic]
 - Added Update dialog. [Qark]
 
 [2010-08-22]
@@ -32,9 +36,9 @@ VERSION 0.5.67beta
 - Various fixes for Win32 build. [Qark]
 
 [2010-07-20]
-- CTRL+A displays CP/RP of the system instead of buoys. [Marek]
-- Bug fixes to StarMapWidget (antialising, typos). [Marek]
-- Better handling of hot buttons. [Marek]
+- CTRL+A displays CP/RP of the system instead of buoys. [dahaic]
+- Bug fixes to StarMapWidget (antialising, typos). [dahaic]
+- Better handling of hot buttons. [dahaic]
 - Zero RP does not cause exceptions in Problems dialog anymore. [Qark]
 
 [2009-01-06]
@@ -68,7 +72,7 @@ VERSION 0.5.67beta
 - Added tooltips to options dialog starmap options [Random Chaos]
 
 [2007-12-01]
-- Added custom fleet name support to remaining dialogs [BSE]
+- Added custom fleet name support to remaining dialogs [dahaic]
 - Added status info during hotkey setting [Random Chaos]
 - Added method to pygamui.window to allow event inheritance to non-direct widgets [Random Chaos]
 - Fixed main game dialog to send starmap widget events when on menu bar [Random Chaos]
@@ -143,7 +147,7 @@ VERSION 0.5.66
 	local = ignore,private,messages,from,users
 
 [2007-11-14]
-- Added starmap functions (click on starmap before using keys): [Random Chaos & Buchtan Satan]
+- Added starmap functions (click on starmap before using keys): [Random Chaos & dahaic]
 	CTRL-G: Toggle grid on/off
 	CTRL-S: Toggle scanner circles on/off
 	CTRL-L: Toggle fleet lines on/off
