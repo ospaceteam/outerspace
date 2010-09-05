@@ -32,11 +32,18 @@ class UpdateDlg:
     def __init__(self, app):
         self.app = app
         self.createUI()
+        self.checkedForUpdate = False
 
     def display(self, caller = None, options = None):
         self.caller = caller
         self.options = options
+        if self.checkedForUpdate:
+            log.debug("Update already checked this session, skipping it")
+            self.onCancel(None, None, _(""))
+            return
         update = self.isUpdateAvailable()
+        # check for new version only once per session
+        self.checkedForUpdate = True
         if update is False:
             self.onCancel(None, None, _("Client is up-to-date"))
             return
@@ -131,7 +138,7 @@ class UpdateDlg:
     def onCancel(self, widget, action, data):
         self.win.hide()
         if self.caller:
-            self.caller.display(message = data or _("Update cancelled."))
+            self.caller.display(message = data or _("Update skipped."))
 
     def isUpdateAvailable(self):
         """Check if client version matches server version and update client

@@ -86,6 +86,9 @@ class IClient:
 		self.logged = 0
 		return apply(IProxy('logout', None, self), ())
 		
+	def hello(self, login, clientID):
+		return apply(IProxy('hello', None, self), (login, clientID))
+
 	def getVersion(self):
 		return apply(IProxy('getVersion', None, self), ())
 

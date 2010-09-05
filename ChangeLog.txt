@@ -6,6 +6,16 @@ Last change:
 - $Author$
 - $Revision$
 
+VERSION 0.5.67-beta3
+
+[2010-09-05]
+- Update dialog is displayed only once per session. [Qark]
+- Server/client version mismatch dialog is displayed only once per session. [Qark]
+- Update dialog is no longer repeatedly displayed every 5000 internal cycles. [Qark]
+- Client now correctly handles "hello" rpc call in all situations. [Qark]
+
+VERSION 0.5.67-beta2
+
 [2010-09-02]
 - Temporarily disabled gatenet overlay in star map. [dahaic]
 - Fixed credits in ChangeLog. [dahaic]

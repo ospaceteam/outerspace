@@ -35,6 +35,7 @@ class LoginDlg:
 		self.newAccDlg = NewAccDlg(app)
 		self.confirmDlg = ConfirmDlg(app)
 		self.firstlogin = True
+		self.versionChecked = False
 		self.createUI()
 
 	def display(self, caller = None, message = None):
@@ -95,7 +96,9 @@ class LoginDlg:
 			gdata.config.game.lastpasswordcrypted = binascii.b2a_base64(password).strip()
 			# check version
 			log.debug('Comparing server and client versions', client.serverVersion, version)
-			if client.serverVersion != version:
+			if client.serverVersion != version and not self.versionChecked:
+				# don't check next time in this session
+				self.versionChecked = True
 				# wow, a different version!
 				self.confirmDlg.display(
 					_("Your client version does not match server version %d.%d.%d%s. Do you want to continue?") % (

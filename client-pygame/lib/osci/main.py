@@ -293,13 +293,14 @@ update()
 
 running = 1
 lastSave = time.clock()
-counter = 0
+# set counter to -1 to trigger Update dialog (see "if" below)
+counter = -1
 needsRefresh = False
 while running:
     try:
         counter += 1
-        if counter == 1:
-            # display initial dialog in the first cycle
+        if counter == 0:
+            # display initial dialog in the very first cycle
             updateDlg.display(caller = loginDlg, options = options)
         # process as many events as possible before updating
         evt = pygame.event.wait()
@@ -332,7 +333,8 @@ while running:
 
         # save DB every 4 hours in case of a computer crash
         # using "counter" to limit calls to time.clock() to approximately every 10-15 minutes
-        if counter > 5000: 
+        if counter > 5000:
+            # set this to zero so we don't display Update dialog
             counter = 0
             if time.clock() - lastSave > 14400:
                 saveDB = True

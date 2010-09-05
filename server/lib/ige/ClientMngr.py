@@ -199,6 +199,7 @@ class ClientMngr:
 			deleted = 0
 			for id in self.sessions.keys():
 				if self.sessions[id].timeout < now:
+					log.debug("Deleting session", sessions[id].sid, getattr(sessions[id], "login", "<unknown>"))
 					del self.sessions[id]
 					deleted += 1
 			log.debug('cleanup finished (%d active, %d deleted)' % (len(self.sessions), deleted))
