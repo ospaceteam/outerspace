@@ -85,7 +85,7 @@ if havePy2Exe:
         windows = [
             {
                 "script": "osc.pyw",
-                "icon_resources": [(1, "res/smallicon.ico"), (1, "res/bigicon.ico")]
+                "icon_resources": [(1, "res/icon48.ico")]
             }
         ],
     )

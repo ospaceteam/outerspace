@@ -233,7 +233,7 @@ pygame.mouse.set_visible(1)
 pygame.display.set_caption(_('Outer Space %s') % ige.version.versionString)
 
 # set icon
-pygame.display.set_icon(pygame.image.load('res/icon32.png').convert_alpha())
+pygame.display.set_icon(pygame.image.load('res/icon48.png').convert_alpha())
 
 # load cursor
 cursorImg = pygame.image.load('res/cursor.png').convert_alpha()
