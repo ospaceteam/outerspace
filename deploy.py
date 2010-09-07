@@ -6,24 +6,19 @@ import time
 from optparse import OptionParser
 import re
 
+sys.path.append("server/lib")
+import ige.version
+
 baseDir = 'server/website/osclient/latest'
 
 parser = OptionParser()
 parser.add_option("-f", "--force", dest = "force", action = "store_true",
     default = False, help = "Bypass CVS checks")
 parser.add_option("-v", "--version", dest = "version", action = "store",
-    default = "0.0.0a", help = "Set version (format N.N.NS)")
+    default = ige.version.versionString, help = "Set version (format N.N.N-S, default is %s)" % ige.version.versionString)
 options, args = parser.parse_args()
 
-## break version info into tuple
-match = re.match("^(\d+)\.(\d+)\.(\d+)(\w*|\.\d+)$", options.version)
-if match:
-    version = match.group(1), match.group(2), match.group(3), match.group(4)
-else:
-    print "Cannot parse version string N.N.NS format required"
-
-
-## generate version info
+## check version
 import pysvn
 
 svn = pysvn.Client()
@@ -34,19 +29,7 @@ entry = svn.info(".")
 
 if entry.revision.kind == pysvn.opt_revision_kind.number:
     print 'Revision:', entry.revision.number
-    print 'Version :', version
-    fh = open("client-pygame/lib/osci/versiondata.py", "w")
-    print >> fh, """\
-#
-# This is generated file, please, do not edit
-#
-revision = %d
-version = %s, %s, %s, "%s"
-""" % (
-    entry.revision.number,
-    version[0], version[1], version[2], version[3],
-)
-    fh.close()
+    print 'Version :', options.version
 else:
     print "Cannot retrieve revision info"
     sys.exit(1)
@@ -81,7 +64,6 @@ except:
 os.chdir('client-pygame')
 os.system('setup.py py2exe')
 os.system('setup.py sdist')
-os.system('client-setup.py --name=ospace1 --longname="Outer Space" --version=%s --module=main.py ../server/website/client' % options.version)
 os.chdir('..')
 shutil.copytree('dist_win32', baseDir)
 
@@ -141,19 +123,13 @@ def compress(base, directory):
             raise 'Unknow file type %s' % file
 
 # create installation
-sys.path.append("client-pygame/lib")
 template = open("setup.iss.template", "r").read()
-import osci
 data = {
-    "version": "%d.%d.%d%s" % osci.version,
+    "version": options.version,
 }
 open("setup.iss", "w").write(template % data)
 
 os.system("tools\\InnoSetup5\\iscc.exe setup.iss")
-
-# copy version
-shutil.copy2('client-pygame/lib/osci/version.py', 'server/lib/ige/ospace/ClientVersion.py')
-shutil.copy2('client-pygame/lib/osci/versiondata.py', 'server/lib/ige/ospace/versiondata.py')
 
 # create tech tree
 # FIXME: disabled for now

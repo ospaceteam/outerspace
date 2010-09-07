@@ -1,4 +1,4 @@
-Outer Space Change Log
+﻿Outer Space Change Log
 ======================
 
 Last change:
@@ -8,6 +8,7 @@ Last change:
 
 [2010-09-07]
 - Updated icon. [Qark]
+- Win32 related fixes in deployment. [Qark]
 
 VERSION 0.5.67-beta3
 
