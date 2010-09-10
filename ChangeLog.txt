@@ -6,6 +6,11 @@ Last change:
 - $Author$
 - $Revision$
 
+VERSION 0.5.67
+
+[2020-09-10]
+- Updated version. [Qark]
+
 [2010-09-07]
 - Updated icon. [Qark]
 - Win32 related fixes in deployment. [Qark]

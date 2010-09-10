@@ -22,7 +22,7 @@ major = 0
 minor = 5
 revision = 67
 # status must be either empty string or must start with a dash
-status = "-beta3"
+status = ""
 svnRevision = int("$Revision$"[11:-2])
 
 assert not status or status.startswith("-"), "Status MUST start with dash if set"
@@ -45,6 +45,6 @@ clientURLs = {
 	),
 	"nt": (
 		"execute",
-		"http://sourceforge.net/projects/ospace/files/Client/%(major)d.%(minor)d.%(revision)d%(status)s/OuterSpace-%(major)d.%(minor)d.%(revision)d%(status)s.exe/download" % version,
+		"http://sourceforge.net/projects/ospace/files/Client/%(major)d.%(minor)d.%(revision)d%(status)s/Outer Space-%(major)d.%(minor)d.%(revision)d%(status)s.exe/download" % version,
 	),
 }
