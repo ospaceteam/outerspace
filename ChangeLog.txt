@@ -6,9 +6,22 @@ Last change:
 - $Author$
 - $Revision$
 
+[2010-10-13]
+- Removed rest of the gatenet code, in options changed gatenet for alternative view. [dahaic]
+- Speeding up drawing of control areas. [dahaic]
+- Fixed StarSystem dialog, research output correctly counts in planet parameters (Orbital Lab fix). [dahaic]
+- Fixed TechView dialog to support dependant research, 100% independence is not shown anymore. [dahaic]
+- Fixed alternative view to not crash when wormholes are visible. [dahaic]
+- Fleet and planet symbols now resize with zoom. Minimal size defined in osci.ini. (tickets #2, #3) [dahaic]
+- Change behavior of --server parameter (now the parameter overrides the osci.ini settings). [dahaic]
+- Locate button added to fleet and system dialog. (ticket #4) [dahaic]
+- Fixed showing fleet orders of focused fleet when fleet lines are disabled. Now fleet focus highlights whole route all the time. (ticket #14) [dahaic]
+- Morale overlay now displays circles of morale by government power. [dahaic]
+- Some code cleaning. [dahaic]
+
 VERSION 0.5.67
 
-[2020-09-10]
+[2010-09-10]
 - Updated version. [Qark]
 
 [2010-09-07]

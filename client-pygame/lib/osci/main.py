@@ -142,14 +142,19 @@ import gdata
 gdata.config = Config(os.path.join(options.configDir, "osci.ini"))
 
 # default configuration
-if gdata.config.game.server == None:
-    gdata.config.game.server = options.server
+gdata.config.game.server = options.server
 
 if gdata.config.client.language == None:
     gdata.config.client.language = 'en'
 
 language = gdata.config.client.language
 
+if gdata.config.defaults.minfleetsymbolsize == None:
+    gdata.config.defaults.minfleetsymbolsize = 4
+
+if gdata.config.defaults.minplanetsymbolsize == None:
+    gdata.config.defaults.minplanetsymbolsize = 5
+    
 import gettext
 try:
     tran = gettext.translation('OSPACE', 'res', languages = [language])

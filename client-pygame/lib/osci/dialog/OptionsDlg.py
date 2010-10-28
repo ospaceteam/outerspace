@@ -47,7 +47,6 @@ class OptionsDlg:
 		self.languages['cs']=_('Czech')
 		self.languages['fr']=_('French')
 		self.languages['de']=_('German')
-		self.gatemodes = {0: _('No gate interconnects'), 1: _('Fleet move interconnects'),2: _('Close gate interconnects'), 3: _('Map center gate interconnects')}
 		self.resolutions = ["800x600","1024x768","1152x864","1280x960","1280x1024","1440x900","1400x1050","1600x900","1680x1050","1600x1200","1920x1200"]
 		self.curLang = gdata.config.client.language
 		self.createUI()
@@ -179,25 +178,13 @@ class OptionsDlg:
 			val = gdata.config.defaults.showfleetlines
 			self.win.vShowMapFleetLines.checked = val == 'yes'
 
-		if gdata.config.defaults.mapgatemode != None:
-			val = gdata.config.defaults.mapgatemode
-			self.win.vShowGateNetwork.checked = val == '2'
+		if gdata.config.defaults.alternateviewmode != None:
+			val = gdata.config.defaults.alternateviewmode
+			self.win.vShowAlternateView.checked = val == 'yes'
 
 		if gdata.config.defaults.showPlayerZones != None:
 			val = gdata.config.defaults.showplayerzones
 			self.win.vShowPlayerZones.checked = val == 'yes'
-
-		#if gdata.config.defaults.mapgatemode != None:
-		#	gatemode = int(gdata.config.defaults.mapgatemode)
-		#	try:
-		#		self.win.vGatemode2.text = self.gatemodes[gatemode]
-		#	except:
-		#		self.win.vGatemode2.text = gatemode
-		#else:
-		#	self.win.vGatemode2.text = self.gatemodes[0]
-
-		#self.win.vGatemode.text = _("Select Gate Draw Mode")
-		#self.win.vGatemode.action = "onSelectGatemode"
 
 		# login defaults
 		self.win.vAutoLogin.enabled = False
@@ -347,10 +334,11 @@ class OptionsDlg:
 		else:
 			gdata.config.defaults.showfleetlines = 'no'
 
-		if self.win.vShowGateNetwork.checked:
-			gdata.config.defaults.mapgatemode = '2'
-		elif gdata.config.defaults.mapgatemode == '2': #only unset if it was set through this panel
-			gdata.config.defaults.mapgatemode = '0'
+		if self.win.vShowAlternateView.checked:
+			gdata.config.defaults.alternateviewmode = 'yes'
+		else:
+			gdata.config.defaults.alternateviewmode = 'no'
+
 
 		if self.win.vShowPlayerZones.checked:
 			gdata.config.defaults.showplayerzones = 'yes'
@@ -439,26 +427,6 @@ class OptionsDlg:
 		self.win.vTheme2.text = curTheme
 		self.twin.hide()
 
-	def onSelectGatemode(self, widget, action, data):
-		items = []
-		for key in self.gatemodes.keys():
-			items.append(ui.Item(self.gatemodes[key],tGatemode = key))
-		self.gnwin.vGatemodes.items = items
-		self.gnwin.vGatemodes.itemsChanged()
-		self.gnwin.show()
-
-	def onGatemodeCancel(self, widget, action, data):
-		self.gnwin.hide()
-
-	def onGatemodeSelected(self, widget, action, data):
-		self.recipientObjID = []
-		if not self.gnwin.vGatemodes.selection:
-			return
-		curMode = self.gnwin.vGatemodes.selection[0].tGatemode
-		gdata.config.defaults.mapgatemode = curMode
-		self.win.vGatemode2.text = self.gatemodes[curMode]
-		self.gnwin.hide()
-		
 	def onSelectLanguage(self, widget, action, data):
 		items = []
 		items.append(ui.Item(self.languages['en'],tLanguage = 'en'))
@@ -666,8 +634,8 @@ class OptionsDlg:
 			checked = 1, tooltip = _('Starmap hotkey: CTRL-R'))
 		ui.Check(self.win, layout = (15, 10, 8, 1), text = _('Show map grid'), id = 'vShowMapGrid', 
 			checked = 1, tooltip = _('Starmap hotkey: CTRL-G'))
-		ui.Check(self.win, layout = (23, 10, 8, 1), text = _('Show gate network'), id = 'vShowGateNetwork', 
-			checked = 0, tooltip = _('Starmap hotkey: CTRL-N'))
+		ui.Check(self.win, layout = (23, 10, 8, 1), text = _('Alternate system info'), id = 'vShowAlternateView', 
+			checked = 0, tooltip = _('Starmap hotkey: CTRL-A'))
 		ui.Check(self.win, layout = (7, 11, 8, 1), text = _('Show map scanners'), id = 'vShowMapScanners', 
 			checked = 1, tooltip = _('Starmap hotkey: CTRL-S'))
 		ui.Check(self.win, layout = (15, 11, 8, 1), text = _('Show fleet lines'), id = 'vShowMapFleetLines', 
@@ -675,28 +643,6 @@ class OptionsDlg:
 		ui.Check(self.win, layout = (23, 11, 8, 1), text = _('Show player zones'), id = 'vShowPlayerZones', 
 			checked = 0, tooltip = _('Starmap hotkey: CTRL-P'))
 
-		#ui.Button(self.win, layout = (23, 10, 9, 1), id = "vGatemode", align = ui.ALIGN_W)
-		#ui.ActiveLabel(self.win, layout = (23, 11, 9, 1), id = "vGatemode2")
-		#width = 304  # 15 * 20 + 4
-		#height = 164 # 8 * 20 + 4
-		#self.gnwin = ui.Window(self.app,
-		#	modal = 1,
-		#	escKeyClose = 1,
-		#	titleOnly = 0,
-		#	movable = 0,
-		#	title = _("Select gate mode"),
-		#	rect = ui.Rect((screenWidth - width) / 2, (screenHeight - height) / 2, width, height),
-		#	layoutManager = ui.SimpleGridLM(),
-		#)
-		#self.gnwin.subscribeAction('*', self)
-		# rename
-		#ui.Listbox(self.gnwin, layout = (0, 0, 15, 6), id = 'vGatemodes', columnLabels = 0,
-		#	columns = ((None, 'text', 0, ui.ALIGN_W),), multiselection = 0)
-		# status bar + submit/cancel
-		#ui.TitleButton(self.gnwin, layout = (10, 6, 5, 1), text = _("Select"), action = 'onGatemodeSelected')
-		#ui.TitleButton(self.gnwin, layout = (5, 6, 5, 1), text = _("Cancel"), action = 'onGatemodeCancel')
-		#ui.Title(self.gnwin, id = 'vStatusBar', layout = (0, 6, 5, 1), align = ui.ALIGN_W)
-		
 		# Login settings
 		ui.Title(self.win, layout = (7,13, 15, 1), text = _('Login settings'),
 			align = ui.ALIGN_NONE, font = 'normal-bold')

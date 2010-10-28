@@ -802,7 +802,9 @@ class StarSystemDlg:
 				prodMod = (b * planet.plBio + m * planet.plMin + e * planet.plEn + d * 100) / 100
 				self.win.vISConstr.text = _('%d') % int(tech.prodProd * prodMod * techEff * opStatus)
 				# sci
-				self.win.vISSci.text = _('%d') % int(tech.prodSci * techEff * opStatus)
+				b, m, e, d = tech.prodSciMod
+				prodMod = (b * planet.plBio + m * planet.plMin + e * planet.plEn + d * 100) / 100
+				self.win.vISSci.text = _('%d') % int(tech.prodSci * prodMod * techEff * opStatus)
 				# op. status
 				self.win.vISOpStatus.text = _("%d %%") % (opStatus * 100)
 				info = _("Operational status of the structure.")
@@ -1153,7 +1155,13 @@ class StarSystemDlg:
 		except ige.GameException, e:
 			self.win.setStatus(e.args[0])
 			return
-
+			
+	def onLocateSystem(self, widget, action, data):
+		system = client.get(self.systemID, noUpdate = 1)
+		gdata.mainGameDlg.win.vStarMap.highlightPos = (system.x, system.y)
+		gdata.mainGameDlg.win.vStarMap.setPos(system.x, system.y)
+		self.hide()
+		
 	def onCloseDlg(self, widget, action, data):
 		self.hide()
 
@@ -1174,10 +1182,13 @@ class StarSystemDlg:
 			action = 'onSelectMapObj',
 			layout = (0, 0, 40, 10)
 		)
-		ui.Title(self.win, layout = (0, 27, 35, 1), id = 'vStatusBar',
+
+		ui.Title(self.win, layout = (0, 27, 30, 1), id = 'vStatusBar',
 			align = ui.ALIGN_W)
 		ui.TitleButton(self.win, layout = (35, 27, 5, 1), text = _('Close'),
 			action = 'onCloseDlg')
+		ui.TitleButton(self.win, layout = (30, 27, 5, 1), text = _('Locate'),
+			action = 'onLocateSystem')
 		## system
 		ui.Title(self.win, layout = (0, 10, 40, 1), id = 'vSTitle',
 			align = ui.ALIGN_W, font = 'normal-bold', tags = ['sys'])

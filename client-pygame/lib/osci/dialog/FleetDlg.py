@@ -290,6 +290,12 @@ class FleetDlg:
 		self.update()
 		gdata.mainGameDlg.update()
 
+	def onLocateFleet(self, widget, action, data):
+		fleet = client.get(self.fleetID, noUpdate = 1)
+		gdata.mainGameDlg.win.vStarMap.highlightPos = (fleet.x, fleet.y)
+		gdata.mainGameDlg.win.vStarMap.setPos(fleet.x, fleet.y)
+		self.hide()
+
 	def onCloseDlg(self, widget, action, data):
 		self.hide()
 
@@ -356,8 +362,10 @@ class FleetDlg:
 			layoutManager = ui.SimpleGridLM(),
 		)
 		self.win.subscribeAction('*', self)
-		ui.Title(self.win, layout = (0, 27, 35, 1), id = 'vStatusBar',
+		ui.Title(self.win, layout = (0, 27, 30, 1), id = 'vStatusBar',
 			align = ui.ALIGN_W)
+		ui.TitleButton(self.win, layout = (30, 27, 5, 1), text = _('Locate'),
+			action = 'onLocateFleet')
 		ui.TitleButton(self.win, layout = (35, 27, 5, 1), text = _('Close'),
 			action = 'onCloseDlg')
 		# fleet selection

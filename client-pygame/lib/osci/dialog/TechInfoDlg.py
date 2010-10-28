@@ -260,28 +260,35 @@ class TechInfoDlg:
 				descr.extend(tmp)
 				descr.append('')
 			# production dependency
-			if tech.prodBioMod != [0, 0, 0, 0]:
+			if tech.prodBioMod != [0, 0, 0, 0] and tech.prodBioMod != [0, 0, 0, 1]:
 				descr.append(_("Bio production depends:"))
 				if tech.prodBioMod[0]: descr.append(_(" - %d %% on planet's environment") % (tech.prodBioMod[0] * 100))
 				if tech.prodBioMod[1]: descr.append(_(" - %d %% on planet's min. abundance") % (tech.prodBioMod[1] * 100))
 				if tech.prodBioMod[2]: descr.append(_(" - %d %% on planet's en. abundance") % (tech.prodBioMod[2] * 100))
 				if tech.prodBioMod[3]: descr.append(_(" - %d %% is not dependent on any planet's attribute") % (tech.prodBioMod[3] * 100))
 				descr.append("")
-			if tech.prodEnMod != [0, 0, 0, 0]:
+			if tech.prodEnMod != [0, 0, 0, 0] and tech.prodEnMod != [0, 0, 0, 1]:
 				descr.append(_("Energy production depends:"))
 				if tech.prodEnMod[0]: descr.append(_(" - %d %% on planet's environment") % (tech.prodEnMod[0] * 100))
 				if tech.prodEnMod[1]: descr.append(_(" - %d %% on planet's min. abundance") % (tech.prodEnMod[1] * 100))
 				if tech.prodEnMod[2]: descr.append(_(" - %d %% on planet's en. abundance") % (tech.prodEnMod[2] * 100))
 				if tech.prodEnMod[3]: descr.append(_(" - %d %% is not dependent on any planet's attribute") % (tech.prodEnMod[3] * 100))
 				descr.append("")
-			if tech.prodProdMod != [0, 0, 0, 0]:
+			if tech.prodProdMod != [0, 0, 0, 0] and tech.prodProdMod != [0, 0, 0, 1]:
 				descr.append(_("Constr. points production depends:"))
 				if tech.prodProdMod[0]: descr.append(_(" - %d %% on planet's environment") % (tech.prodProdMod[0] * 100))
 				if tech.prodProdMod[1]: descr.append(_(" - %d %% on planet's min. abundance") % (tech.prodProdMod[1] * 100))
 				if tech.prodProdMod[2]: descr.append(_(" - %d %% on planet's en. abundance") % (tech.prodProdMod[2] * 100))
 				if tech.prodProdMod[3]: descr.append(_(" - %d %% is not dependent on any planet's attribute") % (tech.prodProdMod[3] * 100))
 				descr.append("")
-
+			if tech.prodSciMod != [0, 0, 0, 0] and tech.prodSciMod != [0, 0, 0, 1]:
+				descr.append(_("Research points production depends:"))
+				if tech.prodSciMod[0]: descr.append(_(" - %d %% on planet's environment") % (tech.prodSciMod[0] * 100))
+				if tech.prodSciMod[1]: descr.append(_(" - %d %% on planet's min. abundance") % (tech.prodSciMod[1] * 100))
+				if tech.prodSciMod[2]: descr.append(_(" - %d %% on planet's en. abundance") % (tech.prodSciMod[2] * 100))
+				if tech.prodSciMod[3]: descr.append(_(" - %d %% is not dependent on any planet's attribute") % (tech.prodSciMod[3] * 100))
+				descr.append("")
+			
 			requiredStrategicResourcesForBuilding = self.getStrategicResourcesText(tech, "buildSRes")
 			requiredStrategicResourcesForResearch = self.getStrategicResourcesText(tech, "researchReqSRes")
 			if len(requiredStrategicResourcesForBuilding) > 0 or len(requiredStrategicResourcesForResearch) > 0:

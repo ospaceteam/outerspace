@@ -48,7 +48,6 @@ class StarMapWidget(Widget):
 	MAP_FORDERS = 6
 	MAP_OTHERS = 7
 	MAP_FREDIRECTS = 8
-	MAP_GATENETWORK = 9
 	MAP_GATESYSTEMS = 10
 	MAP_CONTROLAREA = 11
 
@@ -71,7 +70,6 @@ class StarMapWidget(Widget):
 			self.MAP_FORDERS: [],
 			self.MAP_OTHERS: [],
 			self.MAP_FREDIRECTS: [],
-			self.MAP_GATENETWORK: [],
 			self.MAP_GATESYSTEMS: [],
 			self.MAP_CONTROLAREA: {}
 		}
@@ -103,7 +101,7 @@ class StarMapWidget(Widget):
 		self.showPirateAreas = True
 		self.highlightPos = None
 		self.alwaysShowRangeFor = None
-		self.alternativeSystemNames = False
+		self.alternativeViewMode = False
 		#setup
 		self.pirateDlgs = False
 		self.showBuoyDlg = ShowBuoyDlg(self.app)
@@ -154,17 +152,14 @@ class StarMapWidget(Widget):
 			self.showGateSystems = 0
 		else:
 			self.showGateSystems = 1
+		if gdata.config.defaults.alternateviewmode == 'no':
+			self.alternativeViewMode = 0
+		else:
+			self.alternativeViewMode = 1
 		if gdata.config.defaults.showplayerzones == 'yes': #default off
 			self.toggleControlAreas = 1
 		else:
 			self.toggleControlAreas = 0
-		if gdata.config.defaults.mapgatemode != None:
-			try:
-				self.showGateNetworks = int(gdata.config.defaults.mapgatemode)
-			except:
-				self.showGateNetworks = 0
-		else:
-			self.showGateNetworks = 0
 
 	def requestRepaint(self):
 		self.repaintMap = 1
@@ -188,7 +183,6 @@ class StarMapWidget(Widget):
 			self.MAP_FORDERS: [],
 			self.MAP_OTHERS: [],
 			self.MAP_FREDIRECTS: [],
-			self.MAP_GATENETWORK: [],
 			self.MAP_GATESYSTEMS: [],
 			self.MAP_CONTROLAREA: {}
 		}
@@ -301,7 +295,7 @@ class StarMapWidget(Widget):
 									if not tech.govPwr == 0:
 										isGovCentral = True
 									if not hasattr(planet, "morale"): # ugly way to say "planets of other players"
-										b, m, e, d = tech.prodProdMod
+										# operational status and tech effectivity
 										maxTechHP = tech.maxHP
 										opStatus = struct[STRUCT_IDX_OPSTATUS]/100.0
 										if opStatus != 0: 
@@ -309,6 +303,8 @@ class StarMapWidget(Widget):
 											techEff = (currHP / opStatus) / maxTechHP
 										else:
 											techEff = 0
+										# production
+										b, m, e, d = tech.prodProdMod
 										prodMod = (b * planet.plBio + m * planet.plMin + e * planet.plEn + d * 100) / 100
 										constPoints += int(tech.prodProd * prodMod * techEff * opStatus)
 										# science
@@ -351,8 +347,6 @@ class StarMapWidget(Widget):
 				if speedBoost > 1.0:
 					icons.append(res.icons["sg_%02d" % round(speedBoost)])
 					self._map[self.MAP_GATESYSTEMS].append((obj.x, obj.y, speedBoost))
-				if speedBoost > 1.99:
-					self._map[self.MAP_GATENETWORK].append((obj.oid, obj.x, obj.y, res.getGateLineWidth(ownerID), speedBoost))
 				#if owner2 != 0:
 				#   color = gdata.playerHighlightColor
 				#else:
@@ -703,6 +697,7 @@ class StarMapWidget(Widget):
 		if hasattr(obj, 'actions'):
 			oldX = obj.x
 			oldY = obj.y
+			self._fordersTarget[obj.oid]=[]
 			for action, target, aData in obj.actions[obj.actionIndex:]:
 				if target:
 					# TODO add action colors
@@ -713,7 +708,7 @@ class StarMapWidget(Widget):
 					trgt = client.get(target, noUpdate = 1)
 					if hasattr(trgt, 'x'):
 						self._map[self.MAP_FORDERS].append((oldX, oldY, trgt.x, trgt.y, color, getattr(obj, "isMilitary", 0)))
-						self._fordersTarget[obj.oid] = (oldX, oldY, trgt.x, trgt.y, color)
+						self._fordersTarget[obj.oid].append((oldX, oldY, trgt.x, trgt.y, color))
 						oldX, oldY = trgt.x, trgt.y
 
 	def precomputePirates(self, system, pirates, icons = False):
@@ -784,7 +779,7 @@ class StarMapWidget(Widget):
 			if sy > centerY: sy += 1 #fix a bug with the draw system
 			dx = scale
 			dy = scale
-			pygame.draw.rect(self._mapSurf, self._map[self.MAP_CONTROLAREA][xy][0], (sx, sy, dx, dy))
+			self._mapSurf.fill(self._map[self.MAP_CONTROLAREA][xy][0], pygame.Rect(sx, sy, dx, dy), 0)
 
 	def drawRedirects(self):
 		# coordinates
@@ -813,54 +808,6 @@ class StarMapWidget(Widget):
 			pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx, sy - 2), (tx, ty), 1)
 			# pygame.draw.line(self._mapSurf, (0x00, 0x00, 0x80), (sx, sy), ((sx + tx) / 2, (sy + ty) / 2), 3)
 
-	def drawGateNetworks(self,mode=1,objid=False):
-		# coordinates
-		if mode == 1 and not objid:
-			return
-		baseDist = 5.0*5.0
-		centerX, centerY = self._mapSurf.get_rect().center
-		maxY = self._mapSurf.get_rect().height
-		currX = self.currX
-		currY = self.currY
-		scale = self.scale
-		pairs = []
-		#precalc max dist, so we don't do this calc over and over again. Need it in dist^2
-		maxDistArr = {0: 0, 1: baseDist, 2: baseDist * 4, 3: baseDist * 9, 4: baseDist * 16, 5: baseDist * 25, 6: baseDist * 36}
-		for sObjid, sx, sy, sLineWidth, sSpeedBoost in self._map[self.MAP_GATENETWORK]:
-			_sx = int((sx - currX) * scale) + centerX
-			_sy = maxY - (int((sy - currY) * scale) + centerY)
-			if objid and mode in [1,3]:
-				if not sObjid == objid:
-					continue
-			elif mode == 3:
-				if _sx > centerX + 50 or _sx < centerX - 50 or _sy > centerY + 50 or _sy < centerY - 50:
-					continue
-			for tObjid, tx, ty, tLineWidth, tSpeedBoost in self._map[self.MAP_GATENETWORK]:
-				tLookup = '%s%s' % (tObjid,sObjid)
-				sLookup = '%s%s' % (sObjid,tObjid)
-				pairs.append(sLookup)
-				if tLookup not in pairs:
-					#draw line
-					speedBoost = int(min(sSpeedBoost,tSpeedBoost))
-					maxDist = maxDistArr[speedBoost]
-					dist = (sx-tx)*(sx-tx) + (sy-ty)*(sy-ty)
-					#log.debug('Stargate lines:',dist)
-					if mode == 2:
-						if dist < maxDist:
-							width = min(sLineWidth,tLineWidth)
-							color = res.getStargateColorCode(min(sSpeedBoost,tSpeedBoost))
-							tx = int((tx - currX) * scale) + centerX
-							ty = maxY - (int((ty - currY) * scale) + centerY)
-							#log.debug('Stargate lines:',width,color,_sx,_sy,tx,ty)
-							pygame.draw.line(self._mapSurf, color, (_sx, _sy), (tx, ty), width)
-					elif mode == 3 or mode == 1:
-						width = min(sLineWidth,tLineWidth)
-						color = res.getStargateColorCode(min(sSpeedBoost,tSpeedBoost))
-						tx = int((tx - currX) * scale) + centerX
-						ty = maxY - (int((ty - currY) * scale) + centerY)
-						#log.debug('Stargate lines:',width,color,_sx,_sy,tx,ty)
-						pygame.draw.line(self._mapSurf, color, (_sx, _sy), (tx, ty), width)
-						
 	def drawSystems(self):
 		# coordinates
 		centerX, centerY = self._mapSurf.get_rect().center
@@ -886,7 +833,7 @@ class StarMapWidget(Widget):
 					img = renderText('small', name, 1, namecolor)
 					self._mapSurf.blit(img, (sx - img.get_width() / 2, sy + h / 2))
 				buoy = self.getBuoy(objID)
-				if buoy != None and not self.alternativeSystemNames:
+				if buoy != None and not self.alternativeViewMode:
 					if not name: #if name not set and there is a bouy, set "?" as the name
 						if self.overlayMode != gdata.OVERLAY_OWNER:
 							namecolor = res.fadeColor(namecolor)
@@ -914,7 +861,7 @@ class StarMapWidget(Widget):
 						actRect = Rect(sx - maxW / 2, nSy, maxW, hh)
 						actRect.move_ip(self.rect.left, self.rect.top)
 						self._actBuoyAreas[objID] = actRect
-				elif self.alternativeSystemNames:
+				elif self.alternativeViewMode:
 					alternative = name
 					nSy = sy + h / 2 + img.get_height()
 					if constPoints != 0 or sciPoints != 0:
@@ -991,13 +938,16 @@ class StarMapWidget(Widget):
 		currY = self.currY
 		scale = self.scale
 		if scale >= 30:
+			rectSize = max(int(gdata.config.defaults.minplanetsymbolsize), math.floor(scale/6))
+			rectSpace = rectSize + math.floor(scale/30)
 			for objID, x, y, orbit, color, singlet in self._map[self.MAP_PLANETS]:
 				if not singlet:
 					color = color[self.overlayMode]
 				sx = int((x - currX) * scale) + centerX
 				sy = maxY - (int((y - currY) * scale) + centerY)
 				orbit -= 1
-				actRect = Rect(sx + (orbit % 8) * 6 + 13, sy + 6 * (orbit / 8) - 6, 5, 5)
+				actRect = Rect(sx + (orbit % 8) * rectSpace + 13, sy + 6 * (orbit / 8) - rectSize , rectSize, rectSize)
+				
 				self._mapSurf.fill(color, actRect)
 				actRect.move_ip(self.rect.left, self.rect.top)
 				self._actAreas[objID] = actRect
@@ -1020,6 +970,9 @@ class StarMapWidget(Widget):
 		currX = self.currX
 		currY = self.currY
 		scale = self.scale
+		minSize = int(gdata.config.defaults.minfleetsymbolsize)
+		rectSize = max(minSize, math.floor(scale / 7) - math.floor(scale / 7) % 2)
+		rectSpace = rectSize + math.floor(scale/30)
 		# draw orders lines
 		if self.showFleetLines:
 			for x1, y1, x2, y2, color, military in self._map[self.MAP_FORDERS]:
@@ -1039,18 +992,19 @@ class StarMapWidget(Widget):
 			sx = int((x - currX) * scale) + centerX
 			sy = maxY - (int((y - currY) * scale) + centerY)
 			if orbit >= 0 and scale >= 30:
-				actRect = Rect(sx + (orbit % 8) * 6 + 13, sy + 6 * (orbit / 8) + 6, 4, 4)
+				actRect = Rect(sx + (orbit % 8) * rectSpace + 13, sy + scale/6 * (orbit / 8) + 6, rectSize, rectSize)
 				# TODO this is a workaround - fix it when pygame gets fixed
-				pygame.draw.polygon(self._mapSurf, color,
-					(actRect.midleft, actRect.midtop, actRect.midright, actRect.midbottom), 1)
+				# pygame.draw.polygon(self._mapSurf, color,
+				#	(actRect.midleft, actRect.midtop, actRect.midright, actRect.midbottom), 1)
 				pygame.draw.polygon(self._mapSurf, color,
 					(actRect.midleft, actRect.midtop, actRect.midright, actRect.midbottom), 0)
 				actRect.move_ip(self.rect.left, self.rect.top)
 				self._actAreas[objID] = actRect
 			elif orbit < 0:
+				rectSizeFlying = rectSize+2
 				sox = int((oldX - currX) * scale) + centerX
 				soy = maxY - (int((oldY - currY) * scale) + centerY)
-				actRect = Rect(sx - 3, sy - 3, 6, 6)
+				actRect = Rect(sx - rectSizeFlying / 2, sy - rectSizeFlying / 2, rectSizeFlying , rectSizeFlying)
 				if military:
 					mColor = color
 				else:
@@ -1066,6 +1020,32 @@ class StarMapWidget(Widget):
 					self._mapSurf.blit(img, actRect.topright)
 				actRect.move_ip(self.rect.left, self.rect.top)
 				self._actAreas[objID] = actRect
+
+	def drawOverlayEffects(self):	
+		# coordinates
+		centerX, centerY = self._mapSurf.get_rect().center
+		maxY = self._mapSurf.get_rect().height
+		currX = self.currX
+		currY = self.currY
+		scale = self.scale
+		# draw overlay specific features, coloring itself is applied in drawPlanets etc.
+		if self.overlayMode == gdata.OVERLAY_MORALE:
+			player = client.getPlayer()
+			if hasattr(player, "planets"):
+				centralPlanet = client.get(player.planets[0])
+				govPCR = player.govPwrCtrlRange
+				player.stats.storPop, player.govPwr
+				for step in xrange(100, max(Rules.minMoraleTrgt-1, int(107.5-37.5*player.stats.storPop/player.govPwr) - 1) , -10):
+					moraleColor = res.getMoraleColors(step)
+					centralX = int((centralPlanet.x - currX) * scale) + centerX
+					centralY = maxY - (int((centralPlanet.y - currY) * scale) + centerY)
+					radius = int((107.5 - step) * govPCR / 37.5 * scale)
+					pygame.draw.circle(self._mapSurf, moraleColor, (centralX, centralY), radius, 1)
+					text = renderText('small', step, 1, moraleColor)
+					#maxW = max(text.get_width(), maxW)
+					self._mapSurf.blit(text, (centralX + radius, centralY))
+
+
 
 	def draw(self, surface):
 		if not self._mapSurf:
@@ -1116,12 +1096,6 @@ class StarMapWidget(Widget):
 			# gate systems
 			if self.showGateSystems:
 				self.drawGateSystems()
-			# gate networks
-			if self.showGateNetworks:
-				if self.lockObj:
-					self.drawGateNetworks(self.showGateNetworks,self.lockObj)
-				else:
-					self.drawGateNetworks(self.showGateNetworks)
 			# stars
 			if self.showSystems:
 				self.drawSystems()
@@ -1131,6 +1105,7 @@ class StarMapWidget(Widget):
 			# fleets
 			if self.showFleets:
 				self.drawFleets()
+			self.drawOverlayEffects()
 			# clean up flag
 			self.repaintHotbuttons = 1
 			self.repaintMap = 0
@@ -1407,8 +1382,7 @@ class StarMapWidget(Widget):
 			'redir': ['redir',self.showRedirects,61,2,18,13, 1,_('Redirect Arrows (CTRL-R)')],
 			'scanner': ['scanner',self.showScanners,81,2,17,13, 1,_('Scanners (CTRL-S)')],
 			'grid': ['grid',self.showGrid,100,2,17,13, 1,_('Grid (CTRL-G)')],
-#			'gatenet': ['gatenet',self.showGateNetworks,119,2,17,13, 2,_('Gate Network (CTRL-N)')],
-			'alternate': ['alternate',self.alternativeSystemNames,119,2,17,13, 2,_('Alternate View (CTRL-A)')],                        
+			'alternate': ['alternate',self.alternativeViewMode,119,2,17,13, 2,_('Alternate View (CTRL-A)')],                        
 			'ov_diplo': ['ov_diplo',False,2,17,13,13, gdata.OVERLAY_DIPLO,_('Overlay: Diplomacy')],
 			'ov_min': ['ov_min',False,17,17,13,13, gdata.OVERLAY_MIN,_('Overlay: Minerals')],
 			'ov_env': ['ov_env',False,32,17,13,13, gdata.OVERLAY_BIO,_('Overlay: Environment')],
@@ -1455,9 +1429,7 @@ class StarMapWidget(Widget):
 			elif button == 'grid':
 				self.showGrid = self._hotbuttons[button][1]
 			elif button == 'alternate':
-				self.alternativeSystemNames = self._hotbuttons[button][1]
-#			elif button == 'gatenet':
-#				self.showGateNetworks = self._hotbuttons[button][1]
+				self.alternativeViewMode = self._hotbuttons[button][1]
 		self.repaintHotbuttons = 1
 		self.repaintMap = 1
 
@@ -1759,10 +1731,6 @@ class StarMapWidget(Widget):
 		# Ctrl+M
 		elif evt.unicode == u'\x0D' and pygame.key.get_mods() & KMOD_CTRL:
 			self.showOverlayDlg.display()
-		# Ctrl+N - Toggle drawing gate networks (0: off; 1: draw only fleet command lines; 2: draw 20 parsec groups; 3: draw from center 10 region)
-#		elif evt.unicode == u'\x0E' and pygame.key.get_mods() & KMOD_CTRL:
-#			self.toggleHotbuttons('gatenet')
-			#self.showGateNetworks = (self.showGateNetworks + 1) % 4
 		# Ctrl+P - Toggle viewing of control areas (turns off scanner circles)
 		elif evt.unicode == u'\x10' and pygame.key.get_mods() & KMOD_CTRL:
 			self.toggleHotbuttons('pzone')
