@@ -32,6 +32,7 @@ from FleetRedirectionDlg import FleetRedirectionDlg
 from FleetMassRedirectionDlg import FleetMassRedirectionDlg
 from MinefieldDlg import MinefieldDlg
 from ChangeQtyDlg import ChangeQtyDlg
+from LocateDlg import LocateDlg
 import ige
 from ige.ospace.Const import *
 from ige.ospace import Rules
@@ -58,6 +59,7 @@ class StarSystemDlg:
 		self.changeQtyDlg = ChangeQtyDlg(app)
 		self.constructionDlg = ConstructionDlg(app)
 		self.minefieldDlg = MinefieldDlg(app)
+		self.locateDlg = LocateDlg(app)
 		self.buoyDlg = BuoyDlg(app)
 		self.fleetRedirectionDlg = FleetRedirectionDlg(app)
 		self.fleetMassRedirectionDlg = FleetMassRedirectionDlg(app)
@@ -154,6 +156,7 @@ class StarSystemDlg:
 		self.win.setTagAttr('hidden', 'visible', 0)
 		planet = client.get(self.planetID, noUpdate = 1)
 		player = client.getPlayer()
+		
 		if hasattr(planet, 'revoltLen') and planet.revoltLen > 0:
 			self.win.vPName.text = _('Planet %s: POPULATION IS REVOLTING') % \
 				getattr(planet, 'name', res.getUnknownName())
@@ -220,12 +223,21 @@ class StarSystemDlg:
 		self.win.vPSlots.items = items
 		self.win.vPSlots.itemsChanged()
 		# enable/disable button for moving and destroying structures
+		# show / hide global queue selector
 		if hasattr(planet, "owner") and planet.owner == client.getPlayerID():
 			enabled = 1
+			self.win.vQueueSelector.visible = 1
+			self.win.vTaskTitleWithQueue.visible = 1
+			self.win.vTaskTitleNoQueue.visible = 0
+			self.win.vQueueSelector.text = _('Queue \"{0}\"'.format(res.globalQueueName(planet.globalQueue)))
 		else:
+			self.win.vQueueSelector.visible = 0
+			self.win.vTaskTitleWithQueue.visible = 0
+			self.win.vTaskTitleNoQueue.visible = 1
 			enabled = 0
 		self.win.vISOnOff.enabled = enabled
 		self.win.vISDemolish.enabled = enabled
+		self.win.vQueueSelector.enabled = enabled
 		# construction queue
 		items = []
 		if hasattr(planet, 'prodQueue'):
@@ -1157,16 +1169,43 @@ class StarSystemDlg:
 			return
 			
 	def onLocateSystem(self, widget, action, data):
-		system = client.get(self.systemID, noUpdate = 1)
-		gdata.mainGameDlg.win.vStarMap.highlightPos = (system.x, system.y)
-		gdata.mainGameDlg.win.vStarMap.setPos(system.x, system.y)
-		self.hide()
+		self.locateDlg.display(self.systemID, self)
+		
+	def onGlobalQueuesMenu(self, widget, action, data):
+		items = []
+		for queue in xrange(5):
+			items.append(ui.Item(res.globalQueueName(queue),tQue = queue))
+		self.queueWin.vGlobalQueues.items = items
+		self.queueWin.vGlobalQueues.itemsChanged()
+		self.queueWin.show()
+
+	def onGlobalQueueSelect(self, widget, action, data):
+		if not self.queueWin.vGlobalQueues.selection:
+			return
+		newQueue = self.queueWin.vGlobalQueues.selection[0].tQue
+		player = client.getPlayer()
+		planet = client.get(self.planetID, noUpdate = 1)
+		try:
+			self.win.setStatus(_('Executing CHANGE PLANETS GLOBAL QUEUE command...'))
+			newQueue = client.cmdProxy.changePlanetsGlobalQueue(planet.oid, newQueue)
+			planet.globalQueue = newQueue
+			self.win.vQueueSelector.text = res.globalQueueName(newQueue)
+			self.queueWin.hide()
+			self.win.setStatus(_('Command has been executed.'))
+			self.update()
+		except ige.GameException, e:
+			self.win.setStatus(e.args[0])
+			return
+
+	def onGlobalQueueCancel(self, widget, action, data):
+		self.queueWin.hide()
 		
 	def onCloseDlg(self, widget, action, data):
 		self.hide()
 
 	def createUI(self):
 		w, h = gdata.scrnSize
+
 		self.win = ui.Window(self.app,
 			modal = 1,
 			escKeyClose = 1,
@@ -1229,7 +1268,10 @@ class StarSystemDlg:
 			align = ui.ALIGN_W, font = 'normal-bold', tags = ['pl'])
 		ui.ButtonArray(self.win, layout = (20, 11, 20, 6), id = 'vPSlots',
 			buttonSize = (2, 2), showSlider = 0, tags = ['pl'], action = 'onSlotSelected', rmbAction = 'onSlotRSelected')
-		ui.Title(self.win, layout = (20, 17, 20, 1), text = _('Task queue'),
+		ui.Title(self.win, layout = (20, 17, 12, 1), id = 'vTaskTitleWithQueue', text = _('Task queue'),
+			align = ui.ALIGN_W, font = 'normal-bold', tags = ['pl'])
+		ui.TitleButton(self.win, layout = (32, 17, 8, 1), id = 'vQueueSelector', align = ui.ALIGN_W, font = 'normal-bold', tags = ['pl'], action = 'onGlobalQueuesMenu')
+		ui.Title(self.win, layout = (20, 17, 20, 1), id = 'vTaskTitleNoQueue', text = _('Task queue'),
 			align = ui.ALIGN_W, font = 'normal-bold', tags = ['pl'])
 		ui.ButtonArray(self.win, layout = (20, 18, 20, 2), id = 'vPQueue',
 			buttonSize = (2, 2), showSlider = 0, tags = ['pl'], action = 'onQueueItemSelected')
@@ -1466,3 +1508,26 @@ class StarSystemDlg:
 		ui.Button(self.win, layout = (36, 26, 4, 1), text = _('Abort'),
 			tags = ['task', 'pl'], action = 'onAbortTask',
 			tooltip = _('Abort task construction'))
+
+		# Global queue selector window
+		width = 304  # 15 * 20 + 4
+		height = 144 # 7 * 20 + 4
+		self.queueWin = ui.Window(self.app,
+			modal = 1,
+			escKeyClose = 1,
+			titleOnly = 0,
+			movable = 0,
+			title = _("Select global queue"),
+			rect = ui.Rect((w - width) / 2, (h - height) / 2, width, height),
+			layoutManager = ui.SimpleGridLM(),
+		)
+		self.queueWin.subscribeAction('*', self)
+		# rename
+		ui.Listbox(self.queueWin, layout = (0, 0, 15, 5), id = 'vGlobalQueues', columnLabels = 0,
+			columns = ((None, 'text', 0, ui.ALIGN_W),), multiselection = 0)
+		# status bar + submit/cancel
+		ui.TitleButton(self.queueWin, layout = (10, 5, 5, 1), text = _("Select"), action = 'onGlobalQueueSelect')
+		ui.TitleButton(self.queueWin, layout = (5, 5, 5, 1), text = _("Cancel"), action = 'onGlobalQueueCancel')
+		ui.Title(self.queueWin, id = 'vStatusBar', layout = (0, 5, 5, 1), align = ui.ALIGN_W)
+
+

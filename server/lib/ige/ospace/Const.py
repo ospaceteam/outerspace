@@ -36,6 +36,7 @@ T_AIPIRPLAYER = 111
 T_AIEDENPLAYER = 112
 T_PIRPLAYER = 113
 T_WORMHOLE = 114
+T_QUEUE = 115
 
 PLAYER_TYPES = (T_PLAYER, T_NATURE, T_AIPLAYER, T_AIRENPLAYER, T_AIMUTPLAYER,
 	T_AIPIRPLAYER, T_AIEDENPLAYER, T_PIRPLAYER)
@@ -91,6 +92,9 @@ MSG_ENTERED_WORMHOLE = 1035 # Wormhole Entered
 MSG_NOT_ENTERED_WORMHOLE = 1036 # Failed to enter wormhole on enter wormhole command
 MSG_FOUND_WORMHOLE = 1037 #todo
 MSG_DELOY_HANDLER = 1038
+MSG_FUEL_LOST_ORBITING = 1039 # orbiting fleet lost by running out of fuel
+MSG_FUEL_LOST_FLYING = 1040 # fleet on route somewhere lost by running out of fuel
+MSG_QUEUE_TASK_ALLOTED = 1041 # task in global queue with "report allot" was distributed completely
 
 MSG_GNC_EMR_FORECAST = 2000 # Electromagnetic radiation (EMR) forecast
 MSG_GNC_EMR_CURRENT_LVL = 2001 # Curren level of EMR

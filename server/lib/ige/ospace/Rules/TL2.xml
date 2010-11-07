@@ -403,6 +403,7 @@
 			maxImprovement = "1"
 		/>
 		<project
+			globalDisabled="0"
 			buildProd="9600"
 			data="1"
 			finishConstrHandler="finishProjectNF"
@@ -417,6 +418,7 @@
 			maxImprovement = "1"
 		/>
 		<project
+			globalDisabled="0"
 			buildProd="9600"
 			data="2"
 			finishConstrHandler="finishProjectNF"
@@ -430,6 +432,7 @@
 			researchRequires="RESCENTRE1-5"
 		/>
 		<project
+			globalDisabled="0"
 			buildProd="240"
 			prodSci="24"
 			finishConstrHandler="finishProjectPRODRSRC"
@@ -444,6 +447,7 @@
 			researchRaces="B"
 		/>
 		<project
+			globalDisabled="0"
 			buildProd="120"
 			data="56"
 			finishConstrHandler="finishProjectIMPRENV"
@@ -458,6 +462,7 @@
 			researchRaces="B"
 		/>
 		<project
+			globalDisabled="0"
 			buildProd="9600"
 			data="100"
 			finishConstrHandler="finishProjectNF"

@@ -718,6 +718,7 @@
 			researchRequires="PLANETENG3-1"
 		/>
 		<project
+			globalDisabled="1"
 			buildProd="9600"
 			finishConstrHandler="finishProjectADDSLOT3"
 			validateConstrHandler="validateProjectADDSLOT3"
@@ -735,6 +736,7 @@
 			researchRaces="BH"
 		/>
 		<project
+			globalDisabled="1"
 			buildProd="9600"
 			finishConstrHandler="finishProjectTERRAFORM3"
 			validateConstrHandler="validateProjectTERRAFORM3"

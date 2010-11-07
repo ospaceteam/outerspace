@@ -640,8 +640,15 @@ class IFleet(IObject):
 						obj.ships[index][SHIP_IDX_HP] -= dmg
 				index += 1
 			self.cmd(obj).removeShips(tran, obj, destroyed)
-			# if fleet has been destroyed -> abort action processing
+			# if fleet has been destroyed -> abort action processing and send message
 			if not tran.db.has_key(obj.oid):
+				print 'sending message %s' % obj.name
+				if obj.orbiting:
+					system = tran.db[obj.orbiting]
+					Utils.sendMessage(tran, player, MSG_FUEL_LOST_ORBITING, system.oid, (obj.name, system.oid))
+				else:
+					action, target, actionData = obj.actions[obj.actionIndex]
+					Utils.sendMessage(tran, player, MSG_FUEL_LOST_FLYING, target, (obj.name, target))
 				log.debug('IFleet', obj.oid, 'fleet destroyed')
 				return
 		# upgrade ships

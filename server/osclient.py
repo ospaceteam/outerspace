@@ -435,9 +435,7 @@ def processTurns():
 		num = int(numT)
 	except:
 		print "invalid number of turns"
-
-	for i in range(1, num + 1):
-		s.processTurn()
+	s.processTurns(num)
 
 def finishProdQueue(objId):
 	p = s.get(objId)

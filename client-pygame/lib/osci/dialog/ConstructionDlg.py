@@ -90,6 +90,11 @@ class ConstructionDlg:
 				for task in planet.prodQueue:
 					if task.isShip and task.techID == designID:
 						countInBuild += task.quantity
+			# plus ships in global queue
+			for queue in player.prodQueues:
+				for task in queue:
+					if task.isShip and task.techID == designID:
+						countInBuild += task.quantity					
 			# ui list item
 			item = ui.Item(spec.name, tDesignID = designID,
 				tClass = "%s/%s%d" % (

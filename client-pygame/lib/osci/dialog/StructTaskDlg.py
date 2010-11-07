@@ -20,6 +20,7 @@
 
 import pygameui as ui
 from TechInfoDlg import TechInfoDlg
+from ConfirmDlg import ConfirmDlg
 from ige.ospace.Const import *
 from ige.ospace import Rules
 from osci import gdata, client, res
@@ -37,6 +38,7 @@ class StructTaskDlg:
 		self.sort = 'type'
 		self.showLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 		self.techInfoDlg = TechInfoDlg(app)
+		self.confirmDlg = ConfirmDlg(app)
 		self.createUI()
 
 	def display(self, caller, planetID, extraSlot = False, structToDemolish = OID_NONE):
@@ -52,6 +54,8 @@ class StructTaskDlg:
 		self.extraSlot = extraSlot
 		self.maxTechLevel = 0
 		self.quantity = 1
+		self.govTransferConfirm = False
+		self.govTransferData = None
 		self.structToDemolish = structToDemolish
 		self.win.vPlanets.selectItem(None)
 		self.showPlanets()
@@ -67,6 +71,7 @@ class StructTaskDlg:
 
 	def update(self):
 		if self.win.visible:
+			self.quantity = int(self.win.vQuantity.text)
 			self.showPlanets()
 			self.showTechs()
 
@@ -198,6 +203,7 @@ class StructTaskDlg:
 					self.win.vPlanets.selectItem(item)
 					break
 			return
+		self.quantity = int(self.win.vQuantity.text)
 		self.sourceID = data.planetID
 		self.showTechs()
 
@@ -212,6 +218,12 @@ class StructTaskDlg:
 	def onCancel(self, widget, action, data):
 		self.hide()
 
+	def onGovTransferConfirmed(self):
+		# we assume player wants to build just one center - in opposite case, he may change quantity in the task itself
+		self.win.vQuantity.text = str(1)
+		self.govTransferConfirm = True
+		self.onConstruct(*self.govTransferData)
+
 	def onConstruct(self, widget, action, data):
 		if not data:
 			self.win.setStatus(_('Select technology to construct.'))
@@ -225,28 +237,35 @@ class StructTaskDlg:
 		except ValueError:
 			self.win.setStatus(_('Specify quantity (1, 2, 3, ...).'))
 			return
-
-		try:
-			self.win.setStatus(_('Executing START CONSTRUCTION command...'))
-			planet = client.get(self.sourceID, noUpdate = 1)
-			if self.extraSlot:
-				for i in range(1, self.quantity + 1):
-					client.cmdProxy.startConstruction(self.sourceID,
-						Rules.Tech.ADDSLOT3, 1, self.planetID, False,
-						self.win.vReportFin.checked, OID_NONE)
+		# government centers have additional query and if confirmed, another round of this function is called
+		tech = client.getTechInfo(data.techID)
+		if tech.govPwr and not self.govTransferConfirm:
+			# confirm dialog doesn't send through parameters, so we have to save them
+			self.govTransferData = (widget, action, data)
+			self.confirmDlg.display(_("Do you want to issue relocation of your government?"),
+				_("Yes"), _("No"), self.onGovTransferConfirmed)
+		else:
+			try:
+				self.win.setStatus(_('Executing START CONSTRUCTION command...'))
+				planet = client.get(self.sourceID, noUpdate = 1)
+				if self.extraSlot:
+					for i in range(1, self.quantity + 1):
+						client.cmdProxy.startConstruction(self.sourceID,
+							Rules.Tech.ADDSLOT3, 1, self.planetID, False,
+							self.win.vReportFin.checked, OID_NONE)
+						player = client.getPlayer()
+						planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(self.sourceID,
+							data.techID, 1, self.planetID, data.techID < 1000,
+							self.win.vReportFin.checked, self.structToDemolish)
+				else:
 					player = client.getPlayer()
 					planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(self.sourceID,
-						data.techID, 1, self.planetID, data.techID < 1000,
+						data.techID, self.quantity, self.planetID, data.techID < 1000,
 						self.win.vReportFin.checked, self.structToDemolish)
-			else:
-				player = client.getPlayer()
-				planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(self.sourceID,
-					data.techID, self.quantity, self.planetID, data.techID < 1000,
-					self.win.vReportFin.checked, self.structToDemolish)
-			self.win.setStatus(_('Command has been executed.'))
-		except GameException, e:
-			self.win.setStatus(e.args[0])
-			return
+				self.win.setStatus(_('Command has been executed.'))
+			except GameException, e:
+				self.win.setStatus(e.args[0])
+				return
 
 		self.hide()
 		self.caller.update()

@@ -98,10 +98,10 @@ class StarMapWidget(Widget):
 		self.showFleets = 1
 		self.showCivilianFleets = 1
 		self.showOverlaySelector = 1
+		self.showHotButtons = 1
 		self.showPirateAreas = True
 		self.highlightPos = None
 		self.alwaysShowRangeFor = None
-		self.alternativeViewMode = False
 		#setup
 		self.pirateDlgs = False
 		self.showBuoyDlg = ShowBuoyDlg(self.app)
@@ -160,6 +160,10 @@ class StarMapWidget(Widget):
 			self.toggleControlAreas = 1
 		else:
 			self.toggleControlAreas = 0
+		if gdata.config.defaults.showminimap == 'yes':
+			self.showMiniMap = 1
+		else:
+			self.showMiniMap = 0
 
 	def requestRepaint(self):
 		self.repaintMap = 1
@@ -213,7 +217,8 @@ class StarMapWidget(Widget):
 		player = client.getPlayer()
 		if player.type == T_PIRPLAYER and not self.pirateDlgs:
 			self.pirateDlgs = True
-			self.initHotbuttons() #reinit to add the pirate button
+			if self.showHotButtons:
+				self.initHotbuttons() #reinit to add the pirate button
 		for objID in client.db.keys():
 			if objID < OID_FREESTART:
 				continue
@@ -401,6 +406,9 @@ class StarMapWidget(Widget):
 				self.precomputeBuoys(obj, player, icons)
 				color = res.getPlayerColor(OID_NONE)
 				namecolor = res.getPlayerColor(OID_NONE)
+				constPoints = 0
+				sciPoints = 0
+				isGovCentral = False
 				self._map[self.MAP_SYSTEMS].append((obj.oid, obj.x, obj.y, name, img, color, namecolor, True, icons, constPoints, sciPoints, isGovCentral))
 				# pop up info
 				info = []
@@ -1109,7 +1117,7 @@ class StarMapWidget(Widget):
 			# clean up flag
 			self.repaintHotbuttons = 1
 			self.repaintMap = 0
-		if self.repaintHotbuttons:
+		if self.repaintHotbuttons and self.showHotButtons:
 			# overlay selector
 			#if self.showOverlaySelector:
 			#	self.drawOverlaySelector(surface)
@@ -1149,13 +1157,13 @@ class StarMapWidget(Widget):
 				dx = int((x1 - self.currX) * self.scale) + centerX + self.rect.left
 				dy = maxY - (int((y1 - self.currY) * self.scale) + centerY) + self.rect.top
 				pygame.draw.line(surface, (0xff, 0xff, 0x00), (sx, sy), (dx, dy), 2)
-			if not self.showFleetLines and activeObjID and activeObjID in self._fordersTarget:
-				x, y, x1, y1, color = self._fordersTarget[activeObjID]
-				sx = int((x - self.currX) * self.scale) + centerX + self.rect.left
-				sy = maxY - (int((y - self.currY) * self.scale) + centerY) + self.rect.top
-				dx = int((x1 - self.currX) * self.scale) + centerX + self.rect.left
-				dy = maxY - (int((y1 - self.currY) * self.scale) + centerY) + self.rect.top
-				pygame.draw.line(surface, color, (sx, sy), (dx, dy), 2)
+			if activeObjID and activeObjID in self._fordersTarget:
+				for x, y, x1, y1, color in self._fordersTarget[activeObjID]:
+					sx = int((x - self.currX) * self.scale) + centerX + self.rect.left
+					sy = maxY - (int((y - self.currY) * self.scale) + centerY) + self.rect.top
+					dx = int((x1 - self.currX) * self.scale) + centerX + self.rect.left
+					dy = maxY - (int((y1 - self.currY) * self.scale) + centerY) + self.rect.top
+					pygame.draw.line(surface, color, (sx, sy), (dx, dy), 2)
 			if activeObjID and activeObjID in self._fleetRanges:
 				x, y, maxRange, operRange, halfRange, speed, turns = self._fleetRanges[activeObjID]
 				sx = int((x - self.currX) * self.scale) + centerX + self.rect.left
@@ -1184,7 +1192,7 @@ class StarMapWidget(Widget):
 					if rng > 1:
 						pygame.draw.circle(surface, (0x20, 0x20, 0x80), (sx, sy), rng, 1)
 
-		if gdata.config.defaults.showminimap != 'no':
+		if self.showMiniMap:
 			self.miniMap.draw(surface, self._miniMapRect.left, self._miniMapRect.top)
 			if self.miniMap.needRect():
 				self.processMiniMapRect()
@@ -1226,6 +1234,7 @@ class StarMapWidget(Widget):
 						surface.blit(textSrfc, (x, tmpY))
 						tmpY += textSrfc.get_height()
 					x += width + 2
+
 		# restore clipping
 		surface.set_clip(oldClip)
 		#
@@ -1464,12 +1473,12 @@ class StarMapWidget(Widget):
 		pos = evt.pos
 		# show current position for debugging
 		# log.debug(pos)
-		if gdata.config.defaults.showminimap != 'no':
+		if self.showMiniMap:
 			if self._miniMapRect.collidepoint(pos):
 				return ui.NoEvent
 		if self._detectOverlayZone.collidepoint(pos):
 			return ui.NoEvent
-		if self._hotbuttonsZone.collidepoint(pos):
+		if self.showHotButtons and self._hotbuttonsZone.collidepoint(pos):
 			return ui.NoEvent
 		self.pressedObjIDs = []
 		for objID in self._actAreas.keys():
@@ -1495,7 +1504,7 @@ class StarMapWidget(Widget):
 		if mods & KMOD_SHIFT:
 			return self.processMB3Up(evt)
 		pos = evt.pos
-		if gdata.config.defaults.showminimap != 'no':
+		if self.showMiniMap:
 			if self._miniMapRect.collidepoint(pos):
 				self.currX, self.currY = self.miniMap.processMB1Up((pos[0] - self._miniMapRect.left, self._miniMapRect.height - pos[1] + self._miniMapRect.top))
 				self.processMiniMapRect()
@@ -1504,7 +1513,7 @@ class StarMapWidget(Widget):
 		if self._detectOverlayZone.collidepoint(pos):
 			self.showOverlayDlg.display()
 			return ui.NoEvent
-		if self._hotbuttonsZone.collidepoint(pos):
+		if self.showHotButtons and self._hotbuttonsZone.collidepoint(pos):
 			button = self.detectButtonOverpass(pos)
 			if button:
 				self.toggleHotbuttons(button)
@@ -1594,7 +1603,7 @@ class StarMapWidget(Widget):
 		self.showBuoyDlg.display(data)
 
 	def processMB3Down(self, evt):
-		if gdata.config.defaults.showminimap != 'no':
+		if self.showMiniMap:
 			if self._miniMapRect.collidepoint(evt.pos):
 				return ui.NoEvent
 		self._newCurrXY = 1
@@ -1612,7 +1621,7 @@ class StarMapWidget(Widget):
 		return ui.NoEvent
 
 	def processMiniMapRect(self):
-		if gdata.config.defaults.showminimap != 'no':
+		if self.showMiniMap:
 			rect = self._mapSurf.get_rect()
 			self.miniMap.moveRect(self.currX, self.currY, rect.width / self.scale, rect.height / self.scale)
 
@@ -1631,14 +1640,14 @@ class StarMapWidget(Widget):
 
 	def processMMotion(self, evt):
 		pos = evt.pos
-		if gdata.config.defaults.showminimap != 'no':
+		if self.showMiniMap:
 			if self._miniMapRect.collidepoint(pos):
 				#log.debug('Minimap Rect Position');
 				return ui.NoEvent
 		if self._detectOverlayZone.collidepoint(pos):
 			#log.debug('Overlay Rect Position');
 			return ui.NoEvent
-		if self._hotbuttonsZone.collidepoint(pos):
+		if self.showHotButtons and self._hotbuttonsZone.collidepoint(pos):
 			#should give hotkey tooltips for this eventually
 			self.toggleTempButton(pos)
 			return ui.NoEvent

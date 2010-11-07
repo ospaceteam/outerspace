@@ -69,6 +69,13 @@ class ProblemsDlg:
 			if planet.compOf not in systems:
 				systems[planet.compOf] = None
 		objects += systems.keys()
+		
+		# counting construction points value of each global production queue
+		# holder for (number , eff production) of planets set to each queue 
+		globalQueueStats=[(0,0), (0,0), (0,0), (0,0), (0,0)]
+		prodQueueProblems = []
+
+						
 		# go through all objects
 		for objID in objects:
 			if objID < OID_FREESTART:
@@ -87,6 +94,7 @@ class ProblemsDlg:
 				buildingInfo = {}
 				# holds modified planets
 				planetCopies = {}
+
 				for planetID in obj.planets:
 					planet = client.get(planetID, noUpdate = 1)
 					# copy of planet to change plSlots count
@@ -96,12 +104,17 @@ class ProblemsDlg:
 					else:
 						cPlanet = planetCopies[planetID]
 					if hasattr(planet, 'owner') and planet.owner == player.oid:
+						queuePlanetNumber, queueEffProd = globalQueueStats[planet.globalQueue]
+						queuePlanetNumber += 1
+						queueEffProd += planet.effProdProd
+						globalQueueStats[planet.globalQueue] = (queuePlanetNumber, queueEffProd)
 						# compute bio and en for system
 						bio += planet.changeBio
 						totalBio += max(0, planet.storBio - planet.minBio)
 						en  += planet.changeEn
 						totalEn += max(0, planet.storEn - planet.minEn)
-						if hasattr(planet, 'prodQueue') and self.win.vPlanets.checked:
+						# the planet needs to have global queue 0 - the default one - to have its queue reported
+						if hasattr(planet, 'prodQueue') and self.win.vPlanets.checked and not planet.globalQueue:
 							totalEtc = 0
 							# compute length of production queue
 							if cPlanet.prodQueue and cPlanet.effProdProd > 0:
@@ -141,23 +154,8 @@ class ProblemsDlg:
 							else:
 								totalEtc = 99999
 
-							# check empty production queue
-							if len(planet.prodQueue) == 0 and planet.effProdProd > 0 and critical:
-								items.append(ui.Item(planet.name, tOID = planetID, tType = T_PLANET,
-									foreground = gdata.sevColors[gdata.CRI],
-									vDescription = _('Production queue is empty.')))
+							prodQueueProblems.append((planetID, totalEtc, len(planet.prodQueue)))
 
-							# check end of production queue
-							if totalEtc < 48:
-								fgColor = None
-								disp = minor
-								if totalEtc < 24:
-									disp = major
-									fgColor = gdata.sevColors[gdata.MAJ]
-
-								if disp:
-									items.append(ui.Item(planet.name, tOID = planetID, tType = T_PLANET, foreground = fgColor,
-										vDescription = _('Production queue ends in %s turns, %d item(s) on list.') % (res.formatTime(totalEtc), len(planet.prodQueue))))
 
 						# check for structures status
 						if hasattr(planet, 'slots') and self.win.vPlanets.checked:
@@ -195,15 +193,15 @@ class ProblemsDlg:
 									disp = major
 									fgColor = gdata.sevColors[gdata.MAJ]
 								elif status & STRUCT_STATUS_NOBIO:
-									problem = _('has insufficiend supply of biomatter')
+									problem = _('has insufficient supply of biomatter')
 									disp = info
 									fgColor = gdata.sevColors[gdata.INFO]
 								elif status & STRUCT_STATUS_NOEN:
-									problem = _('has insufficiend supply of energy')
+									problem = _('has insufficient supply of energy')
 									disp = info
 									fgColor = gdata.sevColors[gdata.INFO]
 								elif status & STRUCT_STATUS_NOPOP:
-									problem = _('has insufficiend supply of workers')
+									problem = _('has insufficient supply of workers')
 									disp = info
 									fgColor = gdata.sevColors[gdata.INFO]
 								elif status & STRUCT_STATUS_REPAIRING:
@@ -329,6 +327,65 @@ class ProblemsDlg:
 						items.append(ui.Item(systemName, tOID = obj.oid, tType = T_FLEET,foreground = fgColor,
 									vDescription = _('Fleet "%s" is low on fuel [%d %%]%s.') % (name, energyReserve, note)))
 
+
+		queConstValues = [0, 0, 0, 0, 0]
+		queEtc = [0, 0, 0, 0, 0]
+		for queue in xrange(5):
+			quePlanets, queEffProd = globalQueueStats[queue]
+			if queEffProd > 0:
+				for task in player.prodQueues[queue]:
+					if task.isShip:
+						tech = client.getPlayer().shipDesigns[task.techID]
+					else:
+						tech = client.getFullTechInfo(task.techID)						
+					queConstValues[queue] += task.quantity * tech.buildProd
+			
+				queEtc[queue] = math.ceil(float(queConstValues[queue])/queEffProd)
+			else:
+				queEtc[queue] = 99999
+
+		# creation of items with production queue [default one] problems
+		for planetID, totalEtc, queueLen in prodQueueProblems:		
+			planet = client.get(planetID, noUpdate = 1)
+			
+			# check empty production queue
+			if queueLen == 0 and planet.effProdProd > 0 and queConstValues[0] == 0 and critical:
+				items.append(ui.Item(planet.name, tOID = planetID, tType = T_PLANET,
+					foreground = gdata.sevColors[gdata.CRI],
+					vDescription = _('Production queue is empty.')))
+
+			# check end of production queue
+			if totalEtc+queEtc[0] < 48:
+				fgColor = None
+				disp = minor
+				if totalEtc+queEtc[0] < 24:
+					disp = major
+					fgColor = gdata.sevColors[gdata.MAJ]
+					if disp:
+						items.append(ui.Item(planet.name, tOID = planetID, tType = T_PLANET, foreground = fgColor,
+							vDescription = _('Production queue may end in {0} turns ({1} directly in planet queue), {2} item(s) on list.'.format(res.formatTime(totalEtc+queEtc[0]), res.formatTime(totalEtc), queueLen))))
+
+		# creation of items with global queue problems
+		for queue in xrange(1, 5):
+			queName = res.globalQueueName(queue)
+			quePlanets = globalQueueStats[queue][0]
+			# check empty global production queue with at least one planet [so its relevant]
+			if queConstValues[queue] == 0 and  quePlanets > 0 and critical:
+				items.append(ui.Item(_('Global queue ' + queName), tType = T_QUEUE,
+					foreground = gdata.sevColors[gdata.CRI],
+					vDescription = _('Global production queue {0} used by {1} planet(s) is empty.'.format(queName, quePlanets))))
+
+			# check end of global production queue
+			elif queEtc[queue] < 48:
+				fgColor = None
+				disp = minor
+				if queEtc[queue] < 24:
+					disp = major
+					fgColor = gdata.sevColors[gdata.MAJ]
+				if disp:
+					items.append(ui.Item(_('Global queue ' + queName), tType = T_QUEUE, foreground = fgColor,
+						vDescription = _('Global production queue {0} used by {1} planet(s) runs out in {2} turns.'.format(queName, quePlanets, res.formatTime(queEtc[queue])))))
+
 		# check research queue
 		if self.win.vResearch.checked:
 			totalEtc = 0
@@ -396,6 +453,8 @@ class ProblemsDlg:
 		elif item.tType == T_TECHNOLOGY:
 			gdata.mainGameDlg.researchDlg.display()
 			return
+		elif item.tType == T_QUEUE:
+			gdata.mainGameDlg.globalQueuesDlg.display()
 		self.win.setStatus(_("Cannot show location."))
 
 	def onShowLocation(self, widget, action, data):

@@ -79,9 +79,8 @@ elif options.cleanup:
     log.debug('OSCLIENT', 'Cleaning up sessions')
     s.cleanupSessions()
 elif options.turns > 0:
-    while options.turns > 0:
-        s.processTurn()
-        options.turns -= 1
+    s.processTurns(options.turns)
+
 else:
     # interactive console
     from code import InteractiveConsole

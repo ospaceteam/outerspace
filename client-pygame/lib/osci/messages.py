@@ -66,6 +66,9 @@ def plType2Name(plType):
 def designID2Name(designID):
 	return client.getPlayer().shipDesigns[designID].name
 
+def queueID2Name(queueID):
+	return res.globalQueueName(queueID)
+
 def votes2Txt((votes, voters)):
 	lines = []
 	nominated = votes.keys()
@@ -150,9 +153,12 @@ addMsg(MSG_DAMAGE_BY_SG, N_('Malfunctional Star Gate, lost %(1)d %% HP\n\nOur fl
 addMsg(MSG_GAINED_FAME, N_('Gained %(1)d fame.'), severity = INFO)
 addMsg(MSG_LOST_FAME, N_('Lost %(1)d fame.'), severity = CRI)
 addMsg(MSG_GAINED_TECH, N_('Gained %(1)s technology at sublevel %(2)d.'), (techID2Name, int), severity = INFO)
-addMsg(MSG_ENTERED_WORMHOLE, N_('Your fleet entered a wormhole at %(1)s and exited at %(2)s.'), (unicode,unicode), MIN)
+addMsg(MSG_ENTERED_WORMHOLE, N_('Your fleet entered a wormhole at %(1)s and exited at %(2)s.'), (unicode,unicode), severity = MIN)
 addMsg(MSG_NOT_ENTERED_WORMHOLE, N_('Cannot enter wormhole - ship may be lost.'), severity = MIN)
 addMsg(MSG_FOUND_WORMHOLE, N_('You have located a wormhole'), severity = MIN) #todo
+addMsg(MSG_FUEL_LOST_ORBITING, N_('Fleet lost.\n\n We lost contact with the %(1)s after they ran out of fuel in the system %(2)s.'), (unicode, objID2Name), severity = MAJ)
+addMsg(MSG_FUEL_LOST_FLYING, N_('Fleet lost.\n\n We lost contact with the %(1)s after they ran out of fuel en route to the system %(2)s.'), (unicode, objID2Name), severity = MAJ)
+addMsg(MSG_QUEUE_TASK_ALLOTED, N_('Task alloted.\n\nGlobal queue \"%(1)s\" alloted %(2)s.'), (queueID2Name, techID2Name), severity = MAJ)
 
 # GNC
 addMsg(MSG_GNC_EMR_FORECAST, N_("EMR Forecast\n\nLevel of the electromagnetic radiation is believed to be about %(1)d %% of the average level for the next %(2)s turns"), (float2percent, res.formatTime), severity = MIN)

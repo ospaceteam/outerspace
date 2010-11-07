@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 #
-#  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
+#  Copyright 2001 - 2010 Ludek Smid [http://www.ospace.net/]
 #
 #  This file is part of IGE - Outer Space.
 #
@@ -21,23 +21,142 @@
 #
 -->
 <techtree>
-	<technology id="9000" symbol="RENEGADEBASE" name="Renegade Base">
+	<technology id="9000" symbol="RENEGADEBASE" name="Renegade Outpost">
 		<discovery
 			researchMod="1.0 + 0.5"
 			level="99"
 		/>
 		<structure
-			buildProd="1440"
-			prodBio="30"
+			buildProd="1320"
+			prodBio="15"
 			prodBioMod="0.0,0.0,0.0,1.0"
+			prodProd="20"
+			prodProdMod="0.0,0.3,0.0,0.7"
 			prodEn="30"
 			prodEnMod="0.0,0.0,0.0,1.0"
 			operWorkers="1000"
 			scannerPwr="50"
-			maxHP="1200"
+			maxHP="400"
+			combatAtt="6"
+			revoltThr="-100"
+			structWeapons="4,0,0,0,1"
+			unpackPop="1000"
+			finishConstrHandler="finishStructOUTPOST"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+	</technology>
+	<technology id="9060" symbol="RENEGADEBASE2" name="Renegade Base">
+		<discovery
+			researchMod="1.0 + 0.5"
+			level="99"
+		/>
+		<structure
+			buildProd="1920"
+			prodBio="30"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			prodProd="30"
+			prodProdMod="0.0,0.3,0.0,0.7"
+			prodEn="30"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			operWorkers="2000"
+			scannerPwr="50"
+			maxHP="600"
 			combatAtt="6"
 			revoltThr="-100"
 			structWeapons="6,0,0,0,1"
+			unpackPop="2000"
+			finishConstrHandler="finishStructOUTPOST"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+	</technology>
+	<technology id="9061" symbol="RENEGADEBASE2MINOR" name="Renegade Camp">
+		<discovery
+			researchMod="1.0 + 0.5"
+			level="99"
+		/>
+		<structure
+			buildProd="480"
+			prodBio="30"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			prodProd="10"
+			prodProdMod="0.0,0.3,0.0,0.7"
+			prodEn="30"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			operWorkers="500"
+			scannerPwr="50"
+			maxHP="250"
+			combatAtt="6"
+			structWeapons="2,0,0,0,1"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+	</technology>
+	<technology id="9062" symbol="RENEGADEBASE3" name="Renegade HQ">
+		<discovery
+			researchMod="1.0 + 0.5"
+			level="99"
+		/>
+		<structure
+			buildProd="5280"
+			prodBio="60"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			prodProd="40"
+			prodProdMod="0.0,0.3,0.0,0.7"
+			prodEn="30"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			operWorkers="4000"
+			scannerPwr="50"
+			maxHP="1200"
+			combatAtt="6"
+			moraleTrgt="+50"
+			revoltThr="-100"
+			structWeapons="10,0,0,0,1"
+			unpackPop="4000"
+			finishConstrHandler="finishStructOUTPOST"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+	</technology>
+	<technology id="9063" symbol="RENEGADEBASE3MINOR" name="Renegade Fort">
+		<discovery
+			researchMod="1.0 + 0.5"
+			level="99"
+		/>
+		<structure
+			buildProd="1020"
+			prodBio="30"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			prodProd="15"
+			prodProdMod="0.0,0.3,0.0,0.7"
+			prodEn="30"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			operWorkers="1000"
+			scannerPwr="50"
+			maxHP="500"
+			combatAtt="6"
+			structWeapons="3,0,0,0,1"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+	</technology>
+	<technology id="9064" symbol="RENEGADECOSMODROME" name="Renegade Cosmodrome">
+		<discovery
+			researchMod="1.0 + 0.5"
+			level="99"
+		/>
+		<structure
+			buildProd="5280"
+			operWorkers="2000"
+			operEn="100"
+			scannerPwr="50"
+			maxHP="400"
+			combatAtt="6"
+			refuelMax="20"
+			refuelInc="1"
+			repairShip="0.01"
+			structWeapons="0,3,0,0,1"
 			isMilitary="1"
 			fullInfo="1"
 		/>

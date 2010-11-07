@@ -24,7 +24,7 @@ from ige.IObject import IObject
 from ige.IDataHolder import IDataHolder
 import Rules, Utils, ShipUtils
 from Const import *
-import math, random
+import math, random, copy
 from ige import log
 
 class IPlanet(IObject):
@@ -60,6 +60,7 @@ class IPlanet(IObject):
 		obj.maxEn = 0
 		# changes/prod
 		obj.prodQueue = []
+		obj.globalQueue = 0
 		obj.changeBio = 0
 		obj.changeEn = 0
 		obj.changePop = 0
@@ -521,6 +522,12 @@ class IPlanet(IObject):
 		index = 0
 		missing = [0, 0, 0, 0, 0]
 		idleProd = 0.0
+		# empty queue should be filled by global queue
+		if len(obj.prodQueue) == 0:
+			task = self.cmd(obj).popGlobalQueue(tran, obj)
+			if task:
+				obj.prodQueue.append(task)
+		
 		while prod > 0 and index < len(obj.prodQueue):
 			item = obj.prodQueue[index]
 			# check if owner has this tech
@@ -615,6 +622,12 @@ class IPlanet(IObject):
 				if item.quantity == 0:
 					# remove item from the queue
 					del obj.prodQueue[index]
+					# was it last item in the queue? pop the global one!
+					if index == len(obj.prodQueue):
+						task = self.cmd(obj).popGlobalQueue(tran, obj)
+						if task:
+							obj.prodQueue.append(task)
+
 				else:
 					# try to produce another item
 					item.currProd = 0
@@ -895,6 +908,9 @@ class IPlanet(IObject):
 		# TODO: remove in 0.5.65
 		obj.storBio = int(obj.storBio)
 		obj.storEn = int(obj.storEn)
+		# TODO: remove in 0.5.69
+		if not hasattr(obj, "globalQueue"):
+			obj.globalQueue = 0
 		# check compOf
 		if not tran.db.has_key(obj.compOf) or tran.db[obj.compOf].type != T_SYSTEM:
 			log.debug("CONSISTENCY invalid compOf for planet", obj.oid)
@@ -902,6 +918,39 @@ class IPlanet(IObject):
 		obj.signature = 75
 
 	update.public = 0
+
+	def changePlanetsGlobalQueue(self, tran, obj, newQueue):
+		player = tran.db[obj.owner]
+		if newQueue < 0 or newQueue >= len(player.prodQueues):
+			raise GameException("Invalid queue")
+		obj.globalQueue = newQueue
+		return obj.globalQueue
+		
+	changePlanetsGlobalQueue.public = 1
+	changePlanetsGlobalQueue.accLevel = AL_FULL
+
+	def popGlobalQueue(self, tran, obj):
+		player = tran.db[obj.owner]
+		queue = obj.globalQueue
+		task = None
+		if len(player.prodQueues[queue]):
+			task = copy.copy(player.prodQueues[queue][0])
+			if task.quantity > 1:
+				player.prodQueues[queue][0].quantity -= 1
+			else:
+				if task.reportFin:
+					Utils.sendMessage(tran, obj, MSG_QUEUE_TASK_ALLOTED, OID_NONE, (queue, task.techID))
+				del player.prodQueues[queue][0]
+			# add other demanded values, report finalization was used to report allot (to prevent reporting every unit)
+			task.reportFin = 0
+			task.quantity = 1
+			task.isShip = task.techID < 1000
+			task.targetID = obj.oid
+			task.currProd = 0
+			task.demolishStruct = OID_NONE
+		return task
+	
+	popGlobalQueue.public = 0
 
 	def deleteDesign(self, tran, obj, designID, keepWIP = 0):
 		# TODO: handle stategic resources

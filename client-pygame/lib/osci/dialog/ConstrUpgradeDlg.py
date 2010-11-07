@@ -102,7 +102,7 @@ class ConstrUpgradeDlg:
 		try:
 			self.win.setStatus(_("Executing UPGRADE SHIP DESIGN command..."))
 			player = client.getPlayer()
-			player.shipDesigns, player.stratRes, tasksUpgraded = \
+			player.shipDesigns, player.stratRes, tasksUpgraded, player.prodQueues = \
 				client.cmdProxy.upgradeShipDesign(player.oid, self.designID, designID)
 			self.win.setStatus(_('Command has been executed.'))
 		except GameException, e:

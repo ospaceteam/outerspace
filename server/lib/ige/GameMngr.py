@@ -144,49 +144,50 @@ class GameMngr:
 		self.msgMngr.checkpoint()
 		self.clientMngr.checkpoint()
 
-	def processTurn(self, sid):
+	def processTurn(self, sid, turns = 1):
 		session = self.clientMngr.getSession(sid)
 		if session.login != ADMIN_LOGIN:
 			raise SecurityException('You cannot issue this command.')
-		log.message("--- TURN PROCESSING STARTED ---")
-		# commit player's changes
-		#if ige.igeRuntimeMode:
-		#	self.db.checkpoint()
-		# get turn phases
-		turn, turnspec, data = self.getTurnData(sid)[0]
-		log.debug('Processing turn %d' % turn)
-		tran = Transaction(self, session.cid, session)
-		counter = 0
-		# phases
-		for objIDs, phases in turnspec:
-			# process all objects
-			for objID in objIDs:
-				# process all phases
-				for phase in phases:
-					todo = [objID]
-					t0 = time.time()
-					cnt0 = self.db.statCount
-					log.debug('Processing turn %d phase %d.%s' % (turn, objID, phase))
-					while todo:
-						tmpID = todo.pop(0)
-						#@log.debug('Processing obj', tmpID)
-						try:
-							counter += 1
-							obj = self.db[tmpID]
-							method = getattr(self.cmdPool[obj.type], 'process%sPhase' % phase,)
-							result = method(tran, obj, data)
-							if result:
-								todo.extend(result)
-							obj = None
-						except:
-							log.warning('Cannot execute %s on %d' % (phase, tmpID))
-					log.debug('STATS -- time: %.3f sec, db accesses: %d' % (time.time() - t0, tran.db.statCount - cnt0))
-		log.message('Processed commands:', counter)
-		# turn processing has finished
-		self.turnFinished(sid)
-		log.message("--- TURN PROCESSING FINISHED ---")
+		for turn in xrange(turns):
+			log.message("--- TURN PROCESSING STARTED ---")
+			# commit player's changes
+			#if ige.igeRuntimeMode:
+			#	self.db.checkpoint()
+			# get turn phases
+			turn, turnspec, data = self.getTurnData(sid)[0]
+			log.debug('Processing turn %d' % turn)
+			tran = Transaction(self, session.cid, session)
+			counter = 0
+			# phases
+			for objIDs, phases in turnspec:
+				# process all objects
+				for objID in objIDs:
+					# process all phases
+					for phase in phases:
+						todo = [objID]
+						t0 = time.time()
+						cnt0 = self.db.statCount
+						log.debug('Processing turn %d phase %d.%s' % (turn, objID, phase))
+						while todo:
+							tmpID = todo.pop(0)
+							#@log.debug('Processing obj', tmpID)
+							try:
+								counter += 1
+								obj = self.db[tmpID]
+								method = getattr(self.cmdPool[obj.type], 'process%sPhase' % phase,)
+								result = method(tran, obj, data)
+								if result:
+									todo.extend(result)
+								obj = None
+							except:
+								log.warning('Cannot execute %s on %d' % (phase, tmpID))
+						log.debug('STATS -- time: %.3f sec, db accesses: %d' % (time.time() - t0, tran.db.statCount - cnt0))
+			log.message('Processed commands:', counter)
+			# turn processing has finished
+			self.turnFinished(sid)
+			log.message("--- TURN PROCESSING FINISHED ---")
 		return 1, None
-
+		
 	def getTurnData(self, sid):
 		# disable command execution during turn processing
 		self.status = GS_TURNINPROG

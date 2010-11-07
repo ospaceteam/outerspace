@@ -27,6 +27,7 @@ from FleetSplitDlg import FleetSplitDlg
 from FleetScoutBloomDlg import FleetScoutBloomDlg
 from ConfirmDlg import ConfirmDlg
 from RenameFleetDlg import RenameFleetDlg
+from LocateDlg import LocateDlg
 from ige.ospace.Const import *
 from ige.ospace import Rules
 import ige
@@ -42,6 +43,7 @@ class FleetDlg:
 		self.fleetSplitDlg = FleetSplitDlg(self.app)
 		self.renameFleetDlg = RenameFleetDlg(self.app)
 		self.fleetScoutBloomDlg = FleetScoutBloomDlg(self.app)
+		self.locateDlg = LocateDlg(self.app)
 		self.confirmDlg = ConfirmDlg(app)
 
 	def display(self, objID):
@@ -291,10 +293,7 @@ class FleetDlg:
 		gdata.mainGameDlg.update()
 
 	def onLocateFleet(self, widget, action, data):
-		fleet = client.get(self.fleetID, noUpdate = 1)
-		gdata.mainGameDlg.win.vStarMap.highlightPos = (fleet.x, fleet.y)
-		gdata.mainGameDlg.win.vStarMap.setPos(fleet.x, fleet.y)
-		self.hide()
+		self.locateDlg.display(self.fleetID, self)
 
 	def onCloseDlg(self, widget, action, data):
 		self.hide()
@@ -452,3 +451,4 @@ class FleetDlg:
 			columns = ((_('Name'), 'text', 8, ui.ALIGN_W),
 			(_('Data'), 'tData', 0, ui.ALIGN_W)),
 			columnLabels = 1)
+

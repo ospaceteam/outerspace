@@ -1299,6 +1299,7 @@
 			researchRequires="PLANETENG3-3"
 		/>
 		<project
+			globalDisabled="1"
 			buildProd="19200"
 			finishConstrHandler="finishProjectCondPl"
 			validateConstrHandler="validateProjectCondPl"
@@ -1315,6 +1316,7 @@
 			researchRequires="PLANETENG3-3"
 		/>
 		<project
+			globalDisabled="1"
 			buildProd="19200"
 			finishConstrHandler="finishProjectAssemblePl"
 			validateConstrHandler="validateProjectAssemblePl"
@@ -1330,6 +1332,7 @@
 			researchRequires="PLANETENG3-5"
 		/>
 		<project
+			globalDisabled="1"
 			buildProd="19200"
 			data="20"
 			finishConstrHandler="finishProjectShiftPlDown"
@@ -1346,6 +1349,7 @@
 			researchRequires="PLANETENG3-5"
 		/>
 		<project
+			globalDisabled="1"
 			buildProd="19200"
 			data="20"
 			finishConstrHandler="finishProjectShiftPlUp"
@@ -1364,6 +1368,7 @@
 			researchRaces="H"
 		/>
 		<project
+			globalDisabled="1"
 			buildProd="4800"
 			data="10"
 			finishConstrHandler="finishProjectAsteroidMining"
@@ -1382,6 +1387,7 @@
 			researchReqSRes="SR_TL5C"
 		/>
 		<project
+			globalDisabled="1"
 			buildProd="480"
 			buildSRes="SR_TL5C"
 			finishConstrHandler="finishProjectBioEnrich"
@@ -1400,6 +1406,7 @@
 			maxImprovement="1"
 		/>
 		<project
+			globalDisabled="0"
 			buildProd="48000"
 			buildSRes="SR_TL5A"
 			data="3"
@@ -1418,6 +1425,7 @@
 			maxImprovement="1"
 		/>
 		<project
+			globalDisabled="0"
 			buildProd="48000"
 			buildSRes="SR_TL5A"
 			data="4"
@@ -1436,6 +1444,7 @@
 			maxImprovement="1"
 		/>
 		<project
+			globalDisabled="0"
 			buildProd="48000"
 			buildSRes="SR_TL5A"
 			data="5"

@@ -28,6 +28,7 @@ from MessagesDlg import MessagesDlg
 from ConstructionDlg import ConstructionDlg
 from PlanetsOverviewDlg import PlanetsOverviewDlg
 from SystemOverviewDlg import SystemOverviewDlg
+from GlobalQueuesDlg import GlobalQueuesDlg
 from FleetsOverviewDlg import FleetsOverviewDlg
 from PlanetsAnalysisDlg import PlanetsAnalysisDlg
 from FleetsAnalysisDlg import FleetsAnalysisDlg
@@ -58,6 +59,7 @@ class MainGameDlg:
 		self.constructionDlg = ConstructionDlg(self.app)
 		self.messagesDlg = MessagesDlg(self.app)
 		self.planetsOverviewDlg = PlanetsOverviewDlg(self.app)
+		self.globalQueuesDlg = GlobalQueuesDlg(self.app)
 		self.systemOverviewDlg = SystemOverviewDlg(self.app)
 		self.fleetsOverviewDlg = FleetsOverviewDlg(self.app)
 		self.optionsDlg = OptionsDlg(self.app)
@@ -135,6 +137,9 @@ class MainGameDlg:
 
 	def onPlanetAnalysis(self, widget, action, data):
 		self.planetsAnalysisDlg.display()
+		
+	def onGlobalQueues(self, widget, action, data):
+		self.globalQueuesDlg.display()
 		
 	def onFleetsMenu(self, widget, action, data):
 		self.systemFleetMenu.show((20*20, 0))
@@ -386,10 +391,11 @@ class MainGameDlg:
 		)
 		self.systemFleetMenu.subscribeAction("*", self)
 		self.systemPlanetMenu = ui.Menu(self.app, title = _("Planets"),
-			width = 4,
+			width = 5,
 			items = [
 				ui.Item(_("Planet List"), action = "onPlanets", hotkey = u'\x70'), # P
 				ui.Item(_("System List"), action = "onSystems", hotkey = u'\x73'), # S
+				ui.Item(_("Global queues"), action = "onGlobalQueues"),
 				ui.Item(_("Analysis"), action = "onPlanetAnalysis", hotkey = u'\x61'), #A
 			]
 		)

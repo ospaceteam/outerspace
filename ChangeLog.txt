@@ -6,6 +6,21 @@ Last change:
 - $Author$
 - $Revision$
 
+[2010-11-02]
+- Building of government center now requires confirmation (and quantity is reset to 1). (ticket #12) [dahaic]
+- Quantities set in build dialogues now doesn't reset itself when switching to another target/task list. [dahaic]
+- StarMapWidget now supports Minimap and HotButtons disabling. [dahaic]
+- Locate button now shows small window with map, centered on the object. [dahaic]
+- Menu widget now supports per item alignment. [dahaic]
+- Global queues: each planet is assigned to the global queue, and if it doesn't have any task to do, it pops another task from global queue. [dahaic]
+- Problem dialog now reports differently for planets with default global queue and for the other ones. Other planets are ignored and just their queue is reported (by dividing sum of CP in the queue by sum of effective productions of all assigned planets). Planets in default queue are reported if their queue + time to deplete whole default global queue (same mechanism described above) meet the criteria. [dahaic]
+- Fixed typos in Problems dialogue. [dahaic]
+- Fixed fleet order lines highlights (ticket #14). [dahaic]
+- Fleets lost to low fuel are now reported by message (ticket #10). [dahaic]
+- Some projects got "globalDisabled" tag to prevent it to show in globalQueue. [dahaic]
+- Renegade faction awakened! [dahaic]
+- Server will not communicate with the clients anymore if issued with processing more turns in batch, until its done. [dahaic]
+
 [2010-10-13]
 - Removed rest of the gatenet code, in options changed gatenet for alternative view. [dahaic]
 - Speeding up drawing of control areas. [dahaic]

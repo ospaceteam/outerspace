@@ -431,3 +431,6 @@ def formatTime(time,separator=':'):
 
 def formatBE(b, e):
 	return '%d / %d' % (b, e)
+	
+def globalQueueName(index):
+	return ['Default', 'Red', 'Blue', 'Yellow', 'Violet'][index]

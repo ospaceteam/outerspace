@@ -122,6 +122,9 @@ class IClient:
 	def processTurn(self):
 		return apply(IProxy('%s.processTurn' % self.gameID, None, self), ())
 
+	def processTurns(self, turns):
+		return apply(IProxy('%s.processTurn' % self.gameID, None, self), (turns,))
+
 	def backup(self, basename):
 		return apply(IProxy('%s.backup' % self.gameID, None, self), (basename,))
 

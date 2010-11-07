@@ -21,6 +21,7 @@
 import pygameui as ui
 from TechInfoDlg import TechInfoDlg
 from ConstructionDlg import ConstructionDlg
+from ConfirmDlg import ConfirmDlg
 from ige.ospace.Const import *
 from ige.ospace import Rules
 from osci import gdata, client, res
@@ -39,6 +40,7 @@ class NewTaskDlg:
 		self.showLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 99]
 		self.techInfoDlg = TechInfoDlg(app)
 		self.constructionDlg = ConstructionDlg(app)
+		self.confirmDlg = ConfirmDlg(app)
 		self.createUI()
 		self.win.setTagAttr('struct', 'visible', 1)
 		self.win.setTagAttr('ship', 'visible', 0)
@@ -57,6 +59,8 @@ class NewTaskDlg:
 		self.targetID = caller.planetID
 		self.maxTechLevel = 0
 		self.quantity = 1
+		self.govTransferConfirm = False
+		self.govTransferData = None
 		self.prodProd = prodProd
 		self.structToDemolish = structToDemolish
 		self.showTechs()
@@ -72,6 +76,7 @@ class NewTaskDlg:
 
 	def update(self):
 		if self.win.visible:
+			self.quantity = int(self.win.vQuantity.text)
 			if self.showShips:
 				self.win.vInfo.enabled = Utils.enableConstruction(client)
 			self.showTechs()
@@ -251,6 +256,7 @@ class NewTaskDlg:
 		self.structToDemolish = OID_NONE
 
 	def onSelectPlanet(self, widget, action, data):
+		self.quantity = int(self.win.vQuantity.text)
 		self.targetID = data.planetID
 		self.showTechs()
 		self.showSlots()
@@ -272,7 +278,15 @@ class NewTaskDlg:
 	def onCancel(self, widget, action, data):
 		self.hide()
 
+	def onGovTransferConfirmed(self):
+		# we assume player wants to build just one center - in opposite case, he may change quantity in the task itself
+		self.win.vQuantity.text = str(1)
+		self.govTransferConfirm = True
+		self.onConstruct(*self.govTransferData)
+
 	def onConstruct(self, widget, action, data):
+		planet = client.get(self.planetID, noUpdate = 1)
+		player = client.getPlayer()
 		if not self.techID:
 			self.win.setStatus(_('Select technology to construct.'))
 			return
@@ -284,17 +298,26 @@ class NewTaskDlg:
 		except ValueError:
 			self.win.setStatus(_('Specify quantity (1, 2, 3, ...).'))
 			return
-		try:
-			self.win.setStatus(_('Executing START CONSTRUCTION command...'))
-			planet = client.get(self.planetID, noUpdate = 1)
-			player = client.getPlayer()
-			planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(self.planetID,
-				self.techID, self.quantity, self.targetID, self.techID < 1000,
-				self.win.vReportFin.checked, self.structToDemolish)
-			self.win.setStatus(_('Command has been executed.'))
-		except GameException, e:
-			self.win.setStatus(e.args[0])
-			return
+		# government centers have additional query and if confirmed, another round of this function is called
+		if self.techID < 1000:
+			tech = player.shipDesigns[self.techID]
+		else:
+			tech = client.getTechInfo(self.techID)
+		if not getattr(tech, 'govPwr', 0) == 0 and not self.govTransferConfirm:
+			# confirm dialog doesn't send through parameters, so we have to save them
+			self.govTransferData = (widget, action, data)
+			self.confirmDlg.display(_("Do you want to issue relocation of your government?"),
+				_("Yes"), _("No"), self.onGovTransferConfirmed)
+		else:
+			try:
+				self.win.setStatus(_('Executing START CONSTRUCTION command...'))
+				planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(self.planetID,
+					self.techID, self.quantity, self.targetID, self.techID < 1000,
+					self.win.vReportFin.checked, self.structToDemolish)
+				self.win.setStatus(_('Command has been executed.'))
+			except GameException, e:
+				self.win.setStatus(e.args[0])
+				return
 		self.hide()
 		self.caller.update()
 

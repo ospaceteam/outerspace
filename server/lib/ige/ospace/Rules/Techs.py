@@ -45,6 +45,7 @@ attrs = {
 	"level": 0, 
 	"maxImprovement": 5, #Rules.techMaxImprovement,
 	"isMilitary": 0,
+	"globalDisabled": 0, # to disallow some projects in global queues
 	# dialog info
 	'shortname': '', #for TechInfoDlg tech linkages
 	# construction costs & conditions

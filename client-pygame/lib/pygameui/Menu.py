@@ -55,8 +55,12 @@ class Menu(Window):
 		currentLeft = 0
 		currentVert = 0
 		for item in self.items:
+			if not hasattr(item, 'align'):
+				item.align = ALIGN_W
+			elif not item.align:
+				item.align = ALIGN_W
 			if len(self._labels) <= index:
-				label = ActiveLabel(self, align = ALIGN_W, enabled = item.enabled)
+				label = ActiveLabel(self, align = item.align, enabled = item.enabled)
 				label.subscribeAction("*", self.actionHandler)
 				self._labels.append(label)
 			label = self._labels[index]

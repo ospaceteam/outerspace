@@ -59,6 +59,7 @@ class IPlayer(IObject):
 		obj.fleetUpgradePool = 0.0
 		obj.fleetUpgradeInProgress = 0
 		# production
+		obj.prodQueues = [[],[],[],[],[]]
 		obj.prodIncreasePool = 0.0
 		# diplomacy
 		obj.diplomacyRels = {}
@@ -201,6 +202,9 @@ class IPlayer(IObject):
 		# check nick (TODO remove in 0.5.33)
 		if not hasattr(obj, "fullName"):
 			obj.fullName = obj.name
+		# TODO remove in 0.5.69
+		if not hasattr(obj, "prodQueues"):
+			obj.prodQueues = [[],[],[],[],[]]
 		# check if player is a leader
 		if not obj.galaxies:
 			log.debug(obj.oid, obj.name, "IS NOT IN ANY GALAXY")
@@ -235,6 +239,113 @@ class IPlayer(IObject):
 			obj.shipDesigns[designID] = new
 
 	update.public = 0
+
+	def startGlobalConstruction(self, tran, player, techID, quantity, isShip, reportFinished, queue):
+		if len(player.prodQueues) <= queue:
+			raise GameException('Invalid queue.')		
+		if len(player.prodQueues[queue]) > Rules.maxProdQueueLen:
+			raise GameException('Queue is full.')
+		if quantity < 1:
+			raise GameException("Quantity must be greater than 0")
+		if not player.techs.has_key(techID) and isShip == 0:
+			raise GameException('You do not own this kind of technology.')
+		if not player.shipDesigns.has_key(techID) and isShip == 1:
+			raise GameException('You do not own this ship design.')
+		if isShip:
+			tech = player.shipDesigns[techID]
+			if tech.upgradeTo:
+				raise GameException("You cannot build obsolete ship design.")
+		else:
+			tech = Rules.techs[techID]
+			if tech.isStructure or not tech.isProject:
+				raise GameException('You cannot construct this technology.')
+			elif tech.globalDisabled:
+				raise GameException('You cannot construct targeted project.')
+		neededSR = {}
+		for sr in tech.buildSRes:
+			if player.stratRes.get(sr, 0) < neededSR.get(sr, 0) + quantity:
+				raise GameException("You do not own required strategic resource(s)")
+			neededSR[sr] = neededSR.get(sr, 0) + quantity
+		# consume strategic resources
+		for sr in neededSR:
+			player.stratRes[sr] -= neededSR[sr]
+		# start construction
+		item = IDataHolder()
+		item.techID = techID
+		item.quantity = int(quantity)
+		item.changePerc = 0
+		item.isShip = bool(isShip)
+		item.reportFin = bool(reportFinished)
+		item.type = T_TASK
+		player.prodQueues[queue].append(item)
+		return player.prodQueues[queue], player.stratRes
+		
+	startGlobalConstruction.public = 1
+	startGlobalConstruction.accLevel = AL_FULL
+
+	def changeGlobalConstruction(self, tran, player, queue, index, quantity):
+		if index < 0 or index >= len(player.prodQueues[queue]):
+			raise GameException("No such item in the construction queue.")
+
+		if quantity < 1:
+			raise GameException("Quantity must be greater than 0")
+
+		item = player.prodQueues[queue][index]
+		if item.isShip:
+			tech = player.shipDesigns[item.techID]
+		else:
+			tech = Rules.techs[item.techID]
+
+		quantityChange = quantity - player.prodQueues[queue][index].quantity
+
+		neededSR = {}
+		for sr in tech.buildSRes:
+			if player.stratRes.get(sr, 0) < neededSR.get(sr, 0) + quantityChange:
+				raise GameException("You do not own required strategic resource(s)")
+			neededSR[sr] = neededSR.get(sr, 0) + quantityChange
+		# consume strategic resources
+		for sr in neededSR:
+			player.stratRes[sr] += (-1 * neededSR[sr])
+
+		player.prodQueues[queue][index].quantity = quantity
+		player.prodQueues[queue][index].const = tech.buildProd * quantity
+		return player.prodQueues[queue], player.stratRes
+
+	changeGlobalConstruction.public = 1
+	changeGlobalConstruction.accLevel = AL_FULL
+	
+	def abortGlobalConstruction(self, tran, player, queue, index):
+		if len(player.prodQueues) <= queue or queue < 0:
+			raise GameException('Invalid queue.')
+		if len(player.prodQueues[queue]) <= index or index < 0:
+			raise GameException('Invalid task.')
+		item = player.prodQueues[queue][index]
+		# return strategic resources
+		#is ship
+		if item.techID < 1000:
+			tech = player.shipDesigns[item.techID]
+		else:
+			tech = Rules.techs[item.techID]
+		for sr in tech.buildSRes:
+			player.stratRes[sr] += item.quantity
+		player.prodQueues[queue].pop(index)
+		return player.prodQueues[queue], player.stratRes
+		
+	abortGlobalConstruction.public = 1
+	abortGlobalConstruction.accLevel = AL_FULL	
+	
+	def moveGlobalConstrItem(self, tran, player, queue, index, rel):
+		if index >= len(player.prodQueues[queue]):
+			raise GameException('No such item in the construction queue.')
+		if index + rel < 0 or index + rel >= len(player.prodQueues[queue]):
+			raise GameException('Cannot move.')
+		item = player.prodQueues[queue][index]
+		del player.prodQueues[queue][index]
+		player.prodQueues[queue].insert(index + rel, item)
+		return player.prodQueues[queue]
+
+	moveGlobalConstrItem.public = 1
+	moveGlobalConstrItem.accLevel = AL_FULL
 
 	def getReferences(self, tran, obj):
 		return obj.fleets
@@ -445,10 +556,15 @@ class IPlayer(IObject):
 			for planetID in obj.planets:
 				planet = tran.db[planetID]
 				self.cmd(planet).changeShipDesign(tran, planet, oldDesignID, newDesignID)
+			# upgrade global queue as well
+			for queue in obj.prodQueues:
+				for task in queue:
+					if task.techID == oldDesignID:
+						task.techID = newDesignID
 			tasksUpgraded = True
 		else:
 			log.debug("upgradeShipDesing - NOT upgrading tasks")
-		return obj.shipDesigns, obj.stratRes, tasksUpgraded
+		return obj.shipDesigns, obj.stratRes, tasksUpgraded, obj.prodQueues
 
 	upgradeShipDesign.public = 1
 	upgradeShipDesign.accLevel = AL_OWNER
