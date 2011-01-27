@@ -1,7 +1,7 @@
 #
 #  Copyright 2001 - 2010 Ludek Smid [http://www.ospace.net/]
 #
-#  This file is part of Outer Space.
+#  This file is part of IGE - Outer Space.
 #
 #  Outer Space is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -21,14 +21,14 @@
 import ige
 import os.path, log, os, sys, time, types, binascii, bz2
 import cPickle as pickle
-import metakit
+import sqlite3
 
 IDX_PREV = 0
 IDX_NEXT = 1
 
 class Database:
 
-	dbSchema = "data[_B[oid:I,data:B]]"
+	dbSchema = "data(oid integer primary key asc, data blog not null)"
 
 	def __init__(self, directory, dbName, cache = 128):
 		log.message("Opening database", dbName)
@@ -41,10 +41,12 @@ class Database:
 		except OSError:
 			pass
 		# open db
-		self.storage = metakit.storage(os.path.join(directory, dbName), 1)
-		view = self.storage.getas(self.dbSchema).blocked()
-		map = self.storage.getas("map[_H:I,_R:I]")
-		self.view = view.hash(map, 1)
+		self.connection = sqlite3.connect(os.path.join(directory, "%s.sqlite" % dbName))
+		# allow 8-bits strings to be handled correctly (default is unicode)
+		self.connection.text_factory = str
+		self.cursor = self.connection.cursor()
+		self.cursor.execute("create table if not exists %s" % self.dbSchema)
+		self.connection.commit()
 		# cache
 		self.cache = {}
 		self.cacheLinks = {
@@ -149,10 +151,11 @@ class Database:
 			self.moveExistingCacheItem(key)
 			return self.cache[key]
 		self.statMiss += 1
-		idx = self.view.find(oid = key)
-		if idx == -1:
+		self.cursor.execute("select * from data where oid = ?", (key,))
+		row = self.cursor.fetchone()
+		if row is None:
 			raise ige.NoSuchObjectException(key)
-		item = pickle.loads(self.view[idx].data)
+		item = pickle.loads(str(row[1]))
 		self.addNewCacheItem(key)
 		self.cache[key] = item
 		#TODOitem.setModified(0)
@@ -173,15 +176,17 @@ class Database:
 		if key in self.cache:
 			self.delCacheItem(key)
 			del self.cache[key]
-		self.view.delete(self.view.find(oid = key))
+		self.cursor.execute("delete from data where oid = ?", (key,))
 
 	def has_key(self, key):
-		return self.view.find(oid = key) >= 0
+		self.cursor.execute("select oid from data where oid = ?", (key,))
+		return self.cursor.fetchone() is not None
 
 	def keys(self):
 		keys = []
-		for idx in xrange(0, len(self.view)):
-			keys.append(self.view[idx].oid)
+		self.cursor.execute("select oid from data")
+		for row in self.cursor:
+			keys.append(row[0])
 		return keys
 
 	def getItemLength(self, key):
@@ -197,15 +202,19 @@ class Database:
 			self.put(key, pickle.dumps(value, pickle.HIGHEST_PROTOCOL))
 		# commit transaction
 		log.debug("Commiting transaction")
-		self.storage.commit()
+		self.connection.commit()
 		log.debug("Commit completed")
 		# TODO clear cache?
 		# self.cache.clear()
 		# self.cacheLinks.clear()
 		# stats TODO: reenable
+		self.cursor.execute("select * from data")
+		items = 0
+		for i in self.cursor:
+			items += 1
 		if self.statCount > 0:
 			log.debug("****** %s" % self.dbName)
-			log.debug("Items: %10d" % len(self.view))
+			log.debug("Items: %10d" % items)
 			log.debug("Count: %10d" % self.statCount)
 			log.debug("Hit  : %10d [%02d %%]" % (self.statHit, int(self.statHit * 100 / self.statCount)))
 			log.debug("Miss : %10d [%02d %%]" % (self.statMiss, int(self.statMiss * 100 / self.statCount)))
@@ -232,11 +241,12 @@ class Database:
 	def shutdown(self):
 		log.message('DB Shutting down', self.dbName)
 		self.checkpoint()
-		del self.storage
+		del self.connection
 
 	def clear(self):
 		log.message("Deleting database", self.dbName)
-		self.view[:] = []
+		self.cursor.execute("delete from data")
+		self.connection.commit()
 		self.cache.clear()
 		self.cacheLinks = {
 			"__first__": [None, "__last__"],
@@ -270,12 +280,14 @@ class Database:
 			return default
 
 	def put(self, key, data):
-		#@log.debug("Storing OID", key)
-		idx = self.view.find(oid = key)
-		if idx >= 0:
-			self.view[idx].data = data
+		self.cursor.execute("select oid from data where oid = ?", (key,))
+		row = self.cursor.fetchone()
+		if row:
+			self.cursor.execute("update data set data = ? where oid = ?", (sqlite3.Binary(data), key))
 		else:
-			self.view.append(oid = key, data = data)
+			self.cursor.execute("insert into data (oid, data) values (?, ?)", (key, sqlite3.Binary(data)))
+		#per put commits impacts performance significantly
+		#self.connection.commit()
 
 	def loadBSDDBBackup(self, filename):
 		log.message("Restoring database from file", filename)
@@ -330,28 +342,6 @@ class Database:
 		log.message("Backup completed")
 
 class DatabaseString(Database):
+	
+	dbSchema = "data(oid text primary key asc, data blog not null)"
 
-	dbSchema = "data[_B[oid:B,data:B]]"
-
-	def restore(self, filename, include = None):
-		log.message("Restoring database from file", filename)
-		fh = file(filename, "r")
-		line = fh.readline().strip()
-		if line != "IGE OUTER SPACE BACKUP VERSION 1":
-			raise ige.ServerException("Incorrect header: %s" % line)
-		imported = 0
-		skipped = 0
-		while True:
-			key = fh.readline().strip()
-			if key == "END OF BACKUP":
-				break
-			data = fh.readline().strip()
-			key = binascii.a2b_hex(key)
-			if include and not include(key):
-				skipped += 1
-				continue
-			imported += 1
-			data = binascii.a2b_hex(data)
-			#@log.debug("Storing key", key)
-			self.put(key, data)
-		log.message("Database restored (%d imported, %d skipped)" % (imported, skipped))

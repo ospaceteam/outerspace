@@ -147,12 +147,17 @@ ige.setRuntimeMode(not optDevel)
 gameName = 'Alpha'
 
 # open database
-from ige.MetakitDatabase import MetakitDatabase, MetakitDatabaseString
+if config.server.dbbackend == "metakit":
+    log.message("Using metakit database backend")
+    from ige.MetakitDatabase import Database, DatabaseString
+else:
+    log.message("Using sqlite3 dabase backend")
+    from ige.SQLiteDatabase import Database, DatabaseString
 
 log.debug("Creating databases...")
-gameDB = MetakitDatabase("var/db_data", "game_%s" % gameName, cache = 15000)
-clientDB = MetakitDatabaseString("var/db_data", "accounts", cache = 100)
-msgDB = MetakitDatabaseString("var/db_data", "messages", cache = 1000)
+gameDB = Database("var/db_data", "game_%s" % gameName, cache = 15000)
+clientDB = DatabaseString("var/db_data", "accounts", cache = 100)
+msgDB = DatabaseString("var/db_data", "messages", cache = 1000)
 
 if optRestore:
 	gameDB.restore("var/%s-game_Alpha.osbackup" % optRestore)

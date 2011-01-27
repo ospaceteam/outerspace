@@ -6,6 +6,9 @@ Last change:
 - $Author$
 - $Revision$
 
+[2011-01-28]
+- Initial support for SQLite backend in server. [Qark]
+
 [2010-11-02]
 - Building of government center now requires confirmation (and quantity is reset to 1). (ticket #12) [dahaic]
 - Quantities set in build dialogues now doesn't reset itself when switching to another target/task list. [dahaic]
