@@ -6,6 +6,17 @@ Last change:
 - $Author$
 - $Revision$
 
+[2011-02-06]
+- Damage dealt/caused by minefields is reported separately. [dahaic]
+- Construction of building which costs special resource on non-expanded slot when player doesn't possess required resource now doesn't create stealth expansion project. [dahaic]
+- Zooming of starmap is now centered to the cursor position. [dahaic]
+- Clicking in locate dialog is now safe. [dahaic]
+- Planets now switch to default global queue when owner is changed. [dahaic]
+- Fleets and planets now fight in random order. [dahaic]
+- Additional parameter to define maximum size of fleet and planets symbols. [dahaic]
+- Fixed some typos [dahaic]
+- Backup and restore of sqlite3 backend is now supported. [Qark]
+
 [2011-01-28]
 - Initial support for SQLite backend in server. [Qark]
 

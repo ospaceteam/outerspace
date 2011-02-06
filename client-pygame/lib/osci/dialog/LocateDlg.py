@@ -75,7 +75,7 @@ class LocateDlg:
 		)
 		self.win.subscribeAction('*', self)
 		StarMapWidget(self.win, layout = (0, 0, 20, 19),
-			id = 'vStarMap', action = 'onSelectMapObj')
+			id = 'vStarMap')
 		# status bar + submit/cancel
 
 		ui.TitleButton(self.win, layout = (15, 19, 5, 1), text = _('Cancel'), action = 'onCancel')

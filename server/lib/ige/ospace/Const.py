@@ -95,6 +95,8 @@ MSG_DELOY_HANDLER = 1038
 MSG_FUEL_LOST_ORBITING = 1039 # orbiting fleet lost by running out of fuel
 MSG_FUEL_LOST_FLYING = 1040 # fleet on route somewhere lost by running out of fuel
 MSG_QUEUE_TASK_ALLOTED = 1041 # task in global queue with "report allot" was distributed completely
+MSG_MINES_OWNER_RESULTS = 1042 # Our minefield was triggered
+MSG_MINES_FLEET_RESULTS = 1043 # Our fleet triggered a minefield
 
 MSG_GNC_EMR_FORECAST = 2000 # Electromagnetic radiation (EMR) forecast
 MSG_GNC_EMR_CURRENT_LVL = 2001 # Curren level of EMR

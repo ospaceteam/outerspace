@@ -947,7 +947,9 @@ class StarMapWidget(Widget):
 		scale = self.scale
 		if scale >= 30:
 			rectSize = max(int(gdata.config.defaults.minplanetsymbolsize), math.floor(scale/6))
-			rectSpace = rectSize + math.floor(scale/30)
+			if not int(gdata.config.defaults.maxplanetsymbolsize) == 0:
+				rectSize = min(int(gdata.config.defaults.maxplanetsymbolsize), rectSize)
+			rectSpace = rectSize + math.floor(rectSize/5)
 			for objID, x, y, orbit, color, singlet in self._map[self.MAP_PLANETS]:
 				if not singlet:
 					color = color[self.overlayMode]
@@ -980,7 +982,9 @@ class StarMapWidget(Widget):
 		scale = self.scale
 		minSize = int(gdata.config.defaults.minfleetsymbolsize)
 		rectSize = max(minSize, math.floor(scale / 7) - math.floor(scale / 7) % 2)
-		rectSpace = rectSize + math.floor(scale/30)
+		if not int(gdata.config.defaults.maxfleetsymbolsize) == 0:
+			rectSize = min(int(gdata.config.defaults.maxfleetsymbolsize), rectSize)
+		rectSpace = rectSize + math.floor(rectSize/5)
 		# draw orders lines
 		if self.showFleetLines:
 			for x1, y1, x2, y2, color, military in self._map[self.MAP_FORDERS]:
@@ -1626,6 +1630,10 @@ class StarMapWidget(Widget):
 			self.miniMap.moveRect(self.currX, self.currY, rect.width / self.scale, rect.height / self.scale)
 
 	def processMWUp(self, evt):
+		x, y = evt.pos
+		centerX, centerY = self._mapSurf.get_rect().center
+		self.currX -= float(centerX - x) * (1/ self.scale - 1 / (self.scale+5))
+		self.currY += float(centerY - y) * (1/ self.scale - 1 / (self.scale+5))
 		self.scale += 5
 		self.repaintMap = 1
 		self.processMiniMapRect()
@@ -1633,6 +1641,10 @@ class StarMapWidget(Widget):
 
 	def processMWDown(self, evt):
 		if self.scale > 10:
+			x, y = evt.pos
+			centerX, centerY = self._mapSurf.get_rect().center
+			self.currX += float(centerX - x) * (1/ self.scale - 1 / (self.scale+5))
+			self.currY -= float(centerY - y) * (1/ self.scale - 1 / (self.scale+5))
 			self.scale -= 5
 			self.repaintMap = 1
 			self.processMiniMapRect()

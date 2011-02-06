@@ -190,10 +190,11 @@ class Database:
 		return keys
 
 	def getItemLength(self, key):
-		idx = self.view.find(oid = key)
-		if idx == -1:
-			raise ige.NoSuchOBjectException(key)
-		return len(self.view[idx].data)
+		self.cursor.execute("select * from data where oid = ?", (key,))
+		row = self.cursor.fetchone()
+		if row is None:
+			raise ige.NoSuchObjectException(key)
+		return len(str(row[1]))
 
 	def checkpoint(self):
 		log.debug('DB Checkpoint', self.dbName)
@@ -289,25 +290,6 @@ class Database:
 		#per put commits impacts performance significantly
 		#self.connection.commit()
 
-	def loadBSDDBBackup(self, filename):
-		log.message("Restoring database from file", filename)
-		fh = file(filename, "r")
-		for hLine in ("VERSION=3", "format=bytevalue", "type=btree", "keys=1",
-			"HEADER=END"):
-			line = fh.readline().strip()
-			if line != hLine:
-				raise ige.ServerException("Incorrect header: %s" % line)
-		while True:
-			key = fh.readline().strip()
-			if key == "DATA=END":
-				break
-			data = fh.readline().strip()
-			key = int(binascii.a2b_hex(key))
-			data = binascii.a2b_hex(data)
-			#@log.debug("Storing key", key)
-			self.put(key, data)
-		log.message("Database restored")
-
 	def restore(self, filename):
 		log.message("Restoring database from file", filename)
 		fh = file(filename, "r")
@@ -334,8 +316,7 @@ class Database:
 		for key in self.keys():
 			fh.write(binascii.b2a_hex(str(key)))
 			fh.write("\n")
-			idx = self.view.find(oid = key)
-			fh.write(binascii.b2a_hex(self.view[idx].data))
+			fh.write(binascii.b2a_hex(pickle.dumps(self[key], pickle.HIGHEST_PROTOCOL)))
 			fh.write("\n")
 		fh.write("END OF BACKUP\n")
 		fh.close()
@@ -344,4 +325,27 @@ class Database:
 class DatabaseString(Database):
 	
 	dbSchema = "data(oid text primary key asc, data blog not null)"
+
+	def restore(self, filename, include = None):
+		log.message("Restoring database from file", filename)
+		fh = file(filename, "r")
+		line = fh.readline().strip()
+		if line != "IGE OUTER SPACE BACKUP VERSION 1":
+			raise ige.ServerException("Incorrect header: %s" % line)
+		imported = 0
+		skipped = 0
+		while True:
+			key = fh.readline().strip()
+			if key == "END OF BACKUP":
+				break
+			data = fh.readline().strip()
+			key = binascii.a2b_hex(key)
+			if include and not include(key):
+				skipped += 1
+				continue
+			imported += 1
+			data = binascii.a2b_hex(data)
+			#@log.debug("Storing key", key)
+			self.put(key, data)
+		log.message("Database restored (%d imported, %d skipped)" % (imported, skipped))
 

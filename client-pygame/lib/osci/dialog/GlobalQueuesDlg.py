@@ -107,15 +107,18 @@ class GlobalQueuesDlg:
 		self.activeQueue = widget.orderNo
 		if not data:
 			# unselected
-			self.win.vTaskName.text = "None"
+			self.activeIndex = None
+			self.win.setTagAttr('data', 'visible', False)
 		elif data.index == None:
 			# new task
-			self.win.vTaskName.text = "None"
+			self.win.setTagAttr('data', 'visible', False)
+			self.activeIndex = None
 			self.newGlobalTaskDlg.display(self, self.activeQueue)
 		else:
 			# info about task
 			task = self.vPQueues[self.activeQueue].items[data.index]
 			self.activeIndex = data.index
+			self.win.setTagAttr('data', 'visible', True)
 			self.win.vTaskName.text = task.tooltip
 			self.win.vTaskQuantity.text = task.text
 			self.win.vTaskConstPoints.text = task.const
@@ -249,15 +252,15 @@ class GlobalQueuesDlg:
 		ui.ButtonArray(self.win, layout = (0, 13, 20, 2), id = 'vPQueue4',
 			buttonSize = (2, 2), showSlider = 0, tags = ['pl'], action = 'onQueueItemSelected', orderNo = 4)
 		ui.Label(self.win, layout = (0, 16, 20, 1), id = 'vTaskName', align = ui.ALIGN_W,
-			font = 'normal-bold', tags = ['queue'])
+			font = 'normal-bold', tags = ['queue', 'data'])
 		ui.Label(self.win, layout = (9, 17, 7, 1), text = _('Construction pts'),
 			align = ui.ALIGN_W, tags = ['queue'])
 		ui.Label(self.win, layout = (16, 17, 4, 1), id = 'vTaskConstPoints', align = ui.ALIGN_E,
-			tags = ['queue'])
+			tags = ['queue', 'data'])
 		ui.Label(self.win, layout = (0, 17, 5, 1), text = _('Quantity'),
 			align = ui.ALIGN_W, tags = ['queue'])
 		ui.Label(self.win, layout = (5, 17, 3, 1), id = 'vTaskQuantity', align = ui.ALIGN_E,
-			tags = ['queue'])
+			tags = ['queue', 'data'])
 		ui.Button(self.win, layout = (0, 18, 2, 1), id = 'vITFirst', text = _('<<'),
 			tags = ['queue'], action = 'onMoveTaskFirstLast',
 			tooltip = _('Move task to first position in queue'), data = -1)

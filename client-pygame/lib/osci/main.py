@@ -154,6 +154,12 @@ if gdata.config.defaults.minfleetsymbolsize == None:
 
 if gdata.config.defaults.minplanetsymbolsize == None:
     gdata.config.defaults.minplanetsymbolsize = 5
+
+if gdata.config.defaults.maxfleetsymbolsize == None:
+    gdata.config.defaults.maxfleetsymbolsize = 0
+
+if gdata.config.defaults.maxplanetsymbolsize == None:
+    gdata.config.defaults.maxplanetsymbolsize = 0
     
 import gettext
 try:

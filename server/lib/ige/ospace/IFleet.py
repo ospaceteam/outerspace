@@ -642,7 +642,6 @@ class IFleet(IObject):
 			self.cmd(obj).removeShips(tran, obj, destroyed)
 			# if fleet has been destroyed -> abort action processing and send message
 			if not tran.db.has_key(obj.oid):
-				print 'sending message %s' % obj.name
 				if obj.orbiting:
 					system = tran.db[obj.orbiting]
 					Utils.sendMessage(tran, player, MSG_FUEL_LOST_ORBITING, system.oid, (obj.name, system.oid))

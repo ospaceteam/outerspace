@@ -54,6 +54,19 @@ def objIDList2Names(objIDs):
 		names.append(text)
 	return string.join(names, ', ')
 
+def minesReport((damageCaused, killsCaused, minesTriggered)):
+	lines = []
+	techs = minesTriggered.keys()
+	for techID in techs:
+		techName = client.getTechInfo(techID).name.encode()
+		text = _('%d of the %s detonated, causing %d damage, killing %d ships in the process.') %\
+					(minesTriggered[techID],
+					techName,
+					damageCaused.get(techID, 0),
+					killsCaused.get(techID, 0))
+		lines.append(text)
+	return '\n'.join(lines)
+
 def stratID2Name(resID):
 	return _(gdata.stratRes[resID])
 
@@ -159,6 +172,8 @@ addMsg(MSG_FOUND_WORMHOLE, N_('You have located a wormhole'), severity = MIN) #t
 addMsg(MSG_FUEL_LOST_ORBITING, N_('Fleet lost.\n\n We lost contact with the %(1)s after they ran out of fuel in the system %(2)s.'), (unicode, objID2Name), severity = MAJ)
 addMsg(MSG_FUEL_LOST_FLYING, N_('Fleet lost.\n\n We lost contact with the %(1)s after they ran out of fuel en route to the system %(2)s.'), (unicode, objID2Name), severity = MAJ)
 addMsg(MSG_QUEUE_TASK_ALLOTED, N_('Task alloted.\n\nGlobal queue \"%(1)s\" alloted %(2)s.'), (queueID2Name, techID2Name), severity = MAJ)
+addMsg(MSG_MINES_OWNER_RESULTS, N_('Our minefield triggered: HP / ships destroyed: %(3)s / %(4)s.\n\nForces of %(1)s triggered our minefield. Report:\n\n%(2)s'), (objIDList2Names,minesReport,int,int), severity = MAJ)
+addMsg(MSG_MINES_FLEET_RESULTS, N_('Hostile minefield triggered: HP / ships lost: %(1)s / %(2)s.\n\nOur fleet triggered enemy minefield, losing %(1)s HP resulting in destruction of %(2)s ships.'), (int,int), severity = MAJ)
 
 # GNC
 addMsg(MSG_GNC_EMR_FORECAST, N_("EMR Forecast\n\nLevel of the electromagnetic radiation is believed to be about %(1)d %% of the average level for the next %(2)s turns"), (float2percent, res.formatTime), severity = MIN)
@@ -207,7 +222,7 @@ def getMsgText(msgID, data):
 		text = msg % newData
 	except Exception, e:
 		# wrong arguments -> default message
-		log.warning("Erorr while formating message")
+		log.warning("Error while formating message")
 		return _('ERROR\nWrong format for msg %d: %s\nException: %s: %s\nFormat: %s') % (msgID, repr(data), str(e.__class__), str(e), msg)
 	return text
 

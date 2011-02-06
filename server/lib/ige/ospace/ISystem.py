@@ -379,6 +379,8 @@ class ISystem(IObject):
 		#@log.debug('ISystem', 'BATTLE - system', obj.oid)
 		# we are processing fleets, planets, ...
 		objects = obj.planets[:] + obj.fleets[:]
+		# shuffle them to prevent predetermined one-sided battles (temporary hack) 
+		random.shuffle(objects)
 		# store owners of objects
 		# find enemies and allies
 		attack = {}
@@ -527,30 +529,33 @@ class ISystem(IObject):
 		targets = {}
 		firing = {}
 		damageCaused = {}
+		killsCaused = {}
 		damageTaken = {}
 		shipsLost = {}
+		minesTriggered = {}
+		fleetOwners = {}
 		isCombat = False
 		isMineCombat = False
-		mineKills = 0
 		for owner in ownerIDs:
 			if not (owner in hasMine): #no planets
 				continue
 			if hasMine[owner] == 0: #no control structure
 				continue
 			objID = hasMine[owner]
-			if len(self.getMines(system,owner))==0:
+			if len(self.getMines(system,owner)) == 0:
 				continue #no mines, something broke
 			#log.debug('ISystem-Mines', 'Mines Found')
-			if len(attack[objID])==0:
+			if len(attack[objID]) == 0:
 				continue #no targets
-			fireMine = True
+			isMineFired = True
 			mineTargets = copy.copy(attack[objID])
-			while fireMine:
+			while isMineFired:
 				while len(mineTargets) > 0:
 					targetID = random.choice(mineTargets) #select random target
 					targetobj = tran.db.get(targetID, None)
 					try:
 						if targetobj.type == T_FLEET:
+							fleetOwners[targetID] = targetobj.owner
 							break #target found
 						mineTargets.remove(targetID) #remove an object type that a mine can't hit from the temporary targets list
 					except:
@@ -559,21 +564,49 @@ class ISystem(IObject):
 				if len(mineTargets) == 0:
  					break #no fleet targets for mines
 				temp, temp, firing[targetID] = self.cmd(targetobj).getPreCombatData(tran, targetobj) #fix firing for "surrender to" section
-				damage,att,ignoreshield = self.fireMine(system,owner)
+				damage,att,ignoreshield, mineID = self.cmd(obj).fireMine(system, owner)
 				if not damage: #no more mines
-					fireMine = False
+					isMineFired = False
 					break
 				log.debug('ISystem', 'Mine Shooting (damage, att, ignore shield):',damage,att,ignoreshield)
 				isMineCombat = True
+				minesTriggered[mineID] = minesTriggered.get(mineID, 0) + 1
 				#Process Combat
+				#for now we assume only one ship can be destroyed by one mine
 				dmg, destroyed = self.cmd(targetobj).applyMine(tran, targetobj, att, damage, ignoreshield)
 				#log.debug('ISystem-Mines', 'Actual Damage Done:',dmg)
 				damageTaken[targetID] = damageTaken.get(targetID, 0) + dmg
 				if destroyed > 0:
 					shipsLost[targetID] = shipsLost.get(targetID, 0) + destroyed
-					mineKills += destroyed
+					killsCaused[mineID] = killsCaused.get(mineID, 0) + destroyed
 				if dmg > 0:
-					damageCaused[objID] = damageCaused.get(objID, 0) + dmg
+					damageCaused[mineID] = damageCaused.get(mineID, 0) + dmg
+			# send messages about mine effects to the owner of the minefield
+			# collect hit players
+			players = {}
+			for triggerID in firing.keys():
+				players[owners[triggerID]] = None
+			controllerPlanet = tran.db.get(objID, None)
+			for mineID in damageCaused.keys():
+				damageCausedSum = 0
+				killsCausedSum = 0
+				damageCausedSum = damageCausedSum + damageCaused.get(mineID, 0)
+				killsCausedSum = killsCausedSum + killsCaused.get(mineID, 0)
+			Utils.sendMessage(tran, controllerPlanet, MSG_MINES_OWNER_RESULTS, system.oid, (players.keys(),(damageCaused, killsCaused, minesTriggered),damageCausedSum,killsCausedSum))
+		# send messages to the players whose fleets got hit by minefields
+		for targetID in damageTaken.keys():
+			targetFleet = tran.db.get(targetID, None)
+			if targetFleet:
+				Utils.sendMessage(tran, targetFleet, MSG_MINES_FLEET_RESULTS, system.oid, (damageTaken[targetID], shipsLost[targetID]))
+			else:
+				targetFleet = IDataHolder()
+				targetFleet.oid = fleetOwners[targetID]
+				Utils.sendMessage(tran, targetFleet, MSG_MINES_FLEET_RESULTS, system.oid, (damageTaken[targetID], shipsLost[targetID]))
+				Utils.sendMessage(tran, targetFleet, MSG_DESTROYED_FLEET, system.oid, ())
+		damageCaused = {}
+		killsCaused = {}
+		damageTaken = {}
+		shipsLost = {}
 		# now to battle
 		for objID in objects:
 			obj = tran.db.get(objID, None)
@@ -846,12 +879,12 @@ class ISystem(IObject):
 			if len(obj.minefield[ownerid]) == 0:
 				obj.minefield.pop(ownerid) #delete the owner if no more mines
 		else:
-			return False,False,False
+			return False,False,False,False
 		tech = Rules.techs[mine]
 		damage = random.randrange(tech.weaponDmgMin,tech.weaponDmgMax)
 		attack = tech.weaponAtt
 		ignoreshield = tech.weaponIgnoreShield
-		return damage,attack,ignoreshield
+		return damage,attack,ignoreshield, mine
 		
 	fireMine.public = 1
 	fireMine.accLevel = AL_ADMIN

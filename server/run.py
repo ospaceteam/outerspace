@@ -160,8 +160,8 @@ clientDB = DatabaseString("var/db_data", "accounts", cache = 100)
 msgDB = DatabaseString("var/db_data", "messages", cache = 1000)
 
 if optRestore:
-	gameDB.restore("var/%s-game_Alpha.osbackup" % optRestore)
-	clientDB.restore("var/%s-accounts.osbackup" % optRestore)
+	gameDB.restore("%s-game_Alpha.osbackup" % optRestore)
+	clientDB.restore("%s-accounts.osbackup" % optRestore)
 	# TODO: remove afer fix of the message database
 	# the following code imports to the message database only valid entries
         # and forces mailbox scan
@@ -173,7 +173,7 @@ if optRestore:
 			if k.startswith("Alpha-%d-" % i) or (k == "Alpha-%d" % i):
 				return True
 		return False
-	msgDB.restore("var/%s-messages.osbackup" % optRestore, include = include)
+	msgDB.restore("%s-messages.osbackup" % optRestore, include = include)
 
 # initialize game
 log.message('Initializing game \'%s\'...' % gameName)

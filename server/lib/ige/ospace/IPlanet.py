@@ -238,6 +238,7 @@ class IPlanet(IObject):
 		obj.owner = ownerID
 		obj.revoltLen = 0 # no revolt
 		obj.prodQueue = [] # clear production queue
+		obj.globalQueue = 0 # default global queue
 		if ownerID != OID_NONE:
 			# notify player
 			Utils.sendMessage(tran, obj, MSG_GAINED_PLANET, obj.oid, None)
