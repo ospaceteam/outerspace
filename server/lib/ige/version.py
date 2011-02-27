@@ -20,9 +20,9 @@
 
 major = 0
 minor = 5
-revision = 67
+revision = 68
 # status must be either empty string or must start with a dash
-status = ""
+status = "-alpha"
 svnRevision = int("$Revision$"[11:-2])
 
 assert not status or status.startswith("-"), "Status MUST start with dash if set"
