@@ -41,26 +41,26 @@ def initialize(aServer, aCallbackObj, anOptions):
 	callbackObj = aCallbackObj
 	server = aServer
 	options = anOptions
-	initCmdProxy()
+	initCmdProxy(options.heartbeat)
 
 def reinitialize():
 	global cmdProxy
 	cmdProxy = None
 
-def initCmdProxy():
+def initCmdProxy(keepAliveTime):
 	global cmdProxy, server
 	if not cmdProxy:
 		callbackObj.onInitConnection()
 		proxy = None
 		if gdata.config.proxy.http != None:
 			proxy = gdata.config.proxy.http
-		cmdProxy = IClient.IClient(server, proxy, msgHandler, idleHandler, 'OSClient/%s' % ige.version.versionString)
+		cmdProxy = IClient.IClient(server, proxy, msgHandler, idleHandler, 'OSClient/%s' % ige.version.versionString, keepAliveTime)
 		callbackObj.onConnInitialized()
 
 ## Authentication
 
 def login(gameid, login, password):
-	initCmdProxy()
+	initCmdProxy(options.heartbeat)
 	cmdProxy.connect(login)
 	if gdata.config.client.keepAlive != None:
 		cmdProxy.keepAliveTime = int(gdata.config.client.keepAlive)

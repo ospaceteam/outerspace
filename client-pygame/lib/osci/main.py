@@ -52,6 +52,12 @@ parser.add_option("",  "--server", dest = "server",
     default = "www.ospace.net:9080",
     help = "Outer Space server location"
 )
+parser.add_option("",  "--heartbeat", dest = "heartbeat", 
+    type = "int",
+    metavar = "SECONDS", 
+    default = 180,
+    help = "Heartbeat for server connection"
+)
 
 options, args = parser.parse_args()
 

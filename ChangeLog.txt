@@ -6,6 +6,9 @@ Last change:
 - $Author$
 - $Revision$
 
+[2011-02-27]
+- New command line option --heartbeat supported. [Qark]
+
 [2011-02-06]
 - Damage dealt/caused by minefields is reported separately. [dahaic]
 - Construction of building which costs special resource on non-expanded slot when player doesn't possess required resource now doesn't create stealth expansion project. [dahaic]

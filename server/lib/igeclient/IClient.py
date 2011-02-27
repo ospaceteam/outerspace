@@ -36,14 +36,14 @@ class IClientException(Exception):
 
 class IClient:
 
-	def __init__(self, server, proxy, msgHandler, idleHandler, clientIdent):
+	def __init__(self, server, proxy, msgHandler, idleHandler, clientIdent, keepAliveTime = 180):
 		self.clientIdent = clientIdent
 		self.gameID = None
 		self.server = server
 		self.logged = 0
 		self.sid = None
 		self.httpConn = None
-		self.keepAliveTime = 180
+		self.keepAliveTime = keepAliveTime
 		self.proxy = proxy
 		self.msgHandler = msgHandler
 		self.idleHandler = idleHandler
@@ -135,7 +135,7 @@ class IClient:
 		return apply(IProxy('%s.turnFinished' % self.gameID, None, self), ())
 
 	def doKeepAlive(self):
-		return time.time() - self.lastCommand > self.keepAliveTime and self.logged
+		return ((time.time() - self.lastCommand) > self.keepAliveTime) and self.logged
 
 	def keepAlive(self):
 		if time.time() - self.lastCommand > self.keepAliveTime and self.logged:
