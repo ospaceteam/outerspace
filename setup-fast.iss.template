@@ -1,0 +1,45 @@
+[Setup]
+AppName=Outer Space Fast Edition
+AppVerName=Outer Space Fast Edition %(version)s
+AppPublisher=Outer Space Team
+AppVersion=%(version)s
+AppPublisherURL=http://www.ospace.net
+AppSupportURL=http://www.ospace.net
+AppUpdatesURL=http://www.ospace.net
+DefaultDirName={pf}\Outer Space Fast Edition
+DefaultGroupName=Outer Space Fast Edition
+AllowNoIcons=yes
+ExtraDiskSpaceRequired=5242880
+DisableStartupPrompt=yes
+OutputBaseFilename=Outer Space Fast Edition-%(version)s
+OutputDir=.
+InfoBeforeFile=license.rtf
+SolidCompression=no
+Compression=bzip
+
+[Tasks]
+Name: "desktopicon"; Description: "Create a &desktop icon"; GroupDescription: "Additional icons:"; MinVersion: 4,4
+Name: "quicklaunchicon"; Description: "Create a &Quick Launch icon"; GroupDescription: "Additional icons:"; MinVersion: 4,4; Flags: unchecked
+
+[Dirs]
+Name: "{app}\var"; Flags: deleteafterinstall
+
+[Files]
+Source: "server\website\osclient\latest\*"; DestDir: "{app}"; Flags: recursesubdirs ignoreversion
+
+[INI]
+Filename: "{app}\osc.url"; Section: "InternetShortcut"; Key: "URL"; String: "http://www.ospace.net/"
+
+[Icons]
+Name: "{group}\Outer Space Fast Edition"; Filename: "{app}\osc.exe"; Parameters: "--server=http://ospace-fast.dyndns-server.com:9080 --heartbeat=10 --configfilename=fast.ini"; WorkingDir: "{app}"; IconFilename: "{app}\res\icon48.ico"
+Name: "{group}\Outer Space Web"; Filename: "{app}\osc.url"
+Name: "{group}\README_CZ.TXT"; Filename: "{app}\README_CZ.TXT"
+Name: "{group}\README_EN.TXT"; Filename: "{app}\README_EN.TXT"
+Name: "{userdesktop}\Outer Space Fast Edition"; Filename: "{app}\osc.exe"; Parameters: "--server=http://ospace-fast.dyndns-server.com:9080 --heartbeat=10 --configfilename=fast.ini"; MinVersion: 4,4; Tasks: desktopicon; IconFilename: "{app}\res\icon48.ico"
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Outer Space Fast Edition"; Filename: "{app}\osc.exe"; Parameters: "--server=http://ospace-fast.dyndns-server.com:9080 --heartbeat=10 --configfilename=fast.ini"; MinVersion: 4,4; Tasks: quicklaunchicon; IconFilename: "{app}\res\icon48.ico"
+
+[Run]
+Filename: "{app}\osc.exe";  Parameters: "--server=http://ospace-fast.dyndns-server.com:9080 --heartbeat=10 --configfilename=fast.ini"; Description: "Launch Outer Space Fast Edition"; WorkingDir: "{app}"; Flags: nowait postinstall skipifsilent
+
+[UninstallDelete]
+Type: files; Name: "{app}\osc.url"

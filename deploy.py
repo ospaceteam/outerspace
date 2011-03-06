@@ -123,13 +123,14 @@ def compress(base, directory):
             raise 'Unknow file type %s' % file
 
 # create installation
-template = open("setup.iss.template", "r").read()
-data = {
-    "version": options.version,
-}
-open("setup.iss", "w").write(template % data)
+for templateFile in ("setup.iss.template", "setup-fast.iss.template"):
+    template = open(templateFile, "r").read()
+    data = {
+        "version": options.version,
+    }
+    open("setup.iss", "w").write(template % data)
 
-os.system("tools\\InnoSetup5\\iscc.exe setup.iss")
+    os.system("tools\\InnoSetup5\\iscc.exe setup.iss")
 
 # create tech tree
 # FIXME: disabled for now

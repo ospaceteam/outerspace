@@ -47,6 +47,11 @@ parser.add_option("",  "--configdir", dest = "configDir",
     default = os.path.join(os.path.expanduser("~"), ".outerspace"), 
     help = "Override default configuration directory", 
 )
+parser.add_option("",  "--configfilename", dest = "configFilename", 
+    metavar = "FILENAME", 
+    default = "osci.ini", 
+    help = "Override default configuration file name", 
+)
 parser.add_option("",  "--server", dest = "server", 
     metavar = "HOSTNAME:PORT", 
     default = "www.ospace.net:9080",
@@ -145,7 +150,7 @@ if not os.path.exists(options.configDir):
 import gdata
 #from ConfigParser import ConfigParser
 
-gdata.config = Config(os.path.join(options.configDir, "osci.ini"))
+gdata.config = Config(os.path.join(options.configDir, options.configFilename))
 
 # default configuration
 gdata.config.game.server = options.server

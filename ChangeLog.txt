@@ -6,6 +6,10 @@ Last change:
 - $Author$
 - $Revision$
 
+[2001-03-06]
+- New command line option --configfilename for support of alternate servers. [Qark]
+- Windows installation for "Outer Space Fast Edition". [Qark] 
+
 [2011-02-27]
 - New command line option --heartbeat supported. [Qark]
 
