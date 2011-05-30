@@ -80,7 +80,7 @@ class ScrollSlider(Widget):
 		return NoEvent
 
 	def processMWUp(self, evt):
-		self.position -= 1
+		self.position -= 3
 		if self.position < self.min:
 			self.position = self.min
 
@@ -88,7 +88,7 @@ class ScrollSlider(Widget):
 		return NoEvent
 
 	def processMWDown(self, evt):
-		self.position += 1
+		self.position += 3
 		if self.position + self.shown > self.max:
 			self.position = self.max - self.shown
 		# if shown is greater then max, then position is negative

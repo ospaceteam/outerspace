@@ -1,5 +1,5 @@
 #
-#  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
+#  Copyright 2001 - 2011 Ludek Smid [http://www.ospace.net/]
 #
 #  This file is part of IGE - Outer Space.
 #
@@ -21,7 +21,7 @@
 import sys, copy
 from ige import log
 from ige.ospace import Const
-import sha, os.path
+import hashlib, os.path
 import cPickle as pickle
 import types
 from ige.ospace import TechHandlers
@@ -346,7 +346,7 @@ forceLoad = 0
 if os.path.exists(file):
 	# regular module
 	directory = os.path.dirname(file)
-	chsum = sha.new()
+	chsum = hashlib.sha1()
 	os.path.walk(directory, chsumDir, chsum)
 else:
 	# packed, cannot access xml specifications

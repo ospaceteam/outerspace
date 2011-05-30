@@ -1,4 +1,5 @@
 import sys
+from optparse import OptionParser
 sys.path.insert(0,"lib")
 
 import types
@@ -7,7 +8,15 @@ from ige.ospace.Const import *
 from ige.IDataHolder import IDataHolder
 from ige.MetakitDatabase import MetakitDatabase, MetakitDatabaseString
 
-gameDB = MetakitDatabase("var/db_data", "game_Alpha", cache = 15000)
+# parse command line arguments
+parser = OptionParser(usage = "usage: %prog [--configdir=]")
+parser.add_option("",  "--configdir", dest = "configDir", 
+    metavar = "DIRECTORY", default = "var", 
+    help = "Override default configuration directory", 
+)
+options, args = parser.parse_args()
+
+gameDB = MetakitDatabase(os.path.join(options.configDir, "db_data"), "game_Alpha", cache = 15000)
 #~ gameDB = MetakitDatabaseString("var/db_data", "messages", cache = 15000)
 
 def typeIdToString(obj):

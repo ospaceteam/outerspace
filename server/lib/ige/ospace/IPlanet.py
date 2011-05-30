@@ -1,5 +1,5 @@
 #
-#  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
+#  Copyright 2001 - 2011 Ludek Smid [http://www.ospace.net/]
 #
 #  This file is part of IGE - Outer Space.
 #
@@ -239,6 +239,7 @@ class IPlanet(IObject):
 		obj.revoltLen = 0 # no revolt
 		obj.prodQueue = [] # clear production queue
 		obj.globalQueue = 0 # default global queue
+		obj.autoMinStor = 1 # storage is set to auto
 		if ownerID != OID_NONE:
 			# notify player
 			Utils.sendMessage(tran, obj, MSG_GAINED_PLANET, obj.oid, None)
@@ -524,7 +525,7 @@ class IPlanet(IObject):
 		missing = [0, 0, 0, 0, 0]
 		idleProd = 0.0
 		# empty queue should be filled by global queue
-		if len(obj.prodQueue) == 0:
+		if len(obj.prodQueue) == 0 and prod:
 			task = self.cmd(obj).popGlobalQueue(tran, obj)
 			if task:
 				obj.prodQueue.append(task)
@@ -1204,7 +1205,7 @@ class IPlanet(IObject):
 		# we've lost the battle - we have a new owner
 		#@log.debug('IPlanet', 'Surrender - surrending to', newOwnerID)
 		newOwner = tran.db[newOwnerID]
-		if newOwner.type == T_PIRPLAYER:
+		if newOwner.type == T_PIRPLAYER or newOwner.type == T_AIPIRPLAYER:
 			# special handling for pirates
 			currentTurn = tran.db[OID_UNIVERSE].turn
 			# prevent abuse - require 8 turns between capturing the same planet and require the owner to control the planet at least 2 turns if you want to gain fame & tech (two turns prevents orbiting pirate fleet from immediately bombing)

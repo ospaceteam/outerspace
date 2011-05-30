@@ -1,5 +1,5 @@
 #
-#  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
+#  Copyright 2001 - 2011 Ludek Smid [http://www.ospace.net/]
 #
 #  This file is part of IGE - Outer Space.
 #
@@ -24,7 +24,11 @@ from IPlayer import IPlayer
 from ige.IDataHolder import IDataHolder
 import Rules, Utils
 from Const import *
-import math, time
+import math, time, random, os
+
+import hashlib
+
+from ai_parser import AIList
 
 class IAIPlayer(IPlayer):
 
@@ -36,21 +40,54 @@ class IAIPlayer(IPlayer):
 		obj.name = u'Rebels'
 		obj.login = '*'
 
-	def reregister(self, tran, obj):
+	def register(self, tran, obj):
 		log.debug("Reregistering player", obj.oid)
 		counter = 1
 		while 1:
 			try:
 				obj.name = u'Rebel faction %d' % counter
 				obj.login = '*AIP*rebels%d' % counter
-				log.debug("Trying", obj.name)
+#				log.debug("Trying", obj.name)
+				password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
 				tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
 				log.debug("Player registered")
 				tran.db[OID_UNIVERSE].players.append(obj.oid)
-				return
+				tran.gameMngr.clientMngr.createAiAccount(None, obj.login, password, obj.name)
+				break
 			except CreatePlayerException:
-				log.debug("Name exists")
+#				log.debug("Name exists")
 				counter += 1
+		# after succesfull registration, register it to the AI system
+		aiList = AIList(tran.gameMngr.configDir)
+		aiList.add(obj.login, password, 'ais_rebel')
+		# grant techs and so on
+		self.cmd(obj).update(tran, obj)
+		
+	def reregister(self, tran, obj):
+		# nearly identical to register, just now we know the galaxy
+		# to add this information tu AIList
+		log.debug("Reregistering player", obj.oid)
+		counter = 1
+		while 1:
+			try:
+				obj.name = u'Rebel faction %d' % counter
+				obj.login = '*AIP*rebels%d' % counter
+#				log.debug("Trying", obj.name)
+				password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
+				tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
+				log.debug("Player registered")
+				tran.db[OID_UNIVERSE].players.append(obj.oid)
+				tran.gameMngr.clientMngr.createAiAccount(None, obj.login, password, obj.name)
+				break
+			except CreatePlayerException:
+#				log.debug("Name exists")
+				counter += 1
+		# after succesfull registration, register it to the AI system
+		aiList = AIList(tran.gameMngr.configDir)
+		aiList.add(obj.login, password, 'ais_rebel')
+		aiList.setGalaxy(obj.login, tran.db[obj.galaxies[0]].name)
+		# grant techs and so on
+		self.cmd(obj).update(tran, obj)
 
 	def processINITPhase(self, tran, obj, data):
 		IPlayer.processINITPhase(self, tran, obj, data)

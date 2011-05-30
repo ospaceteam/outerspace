@@ -79,6 +79,7 @@ class IPiratePlayer(IPlayer):
 		IPlayer.update(self, tran, obj)
 		#
 		obj.techLevel = 99
+		obj.race = "p"
 		# grant special technologies
 		obj.techs[Rules.Tech.PIRATEBASE] = Rules.techMaxImprovement
 		obj.techs[Rules.Tech.PIRATEDEN] = Rules.techMaxImprovement

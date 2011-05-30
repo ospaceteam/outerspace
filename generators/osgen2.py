@@ -38,6 +38,9 @@ galaxyCenter = (20.0, 20.0)
 galaxyRadius = 20.0
 galaxyStartR = (14.0, 16.0)
 galaxyPlayers = 4
+galaxyPlayerGroup = 1
+galaxyGroupDist = 1
+galaxyMinR = 5
 galaxyDensity = {5: 2, 10: 2, 20: 3, 30: 4, 40: 5, 50: 6}
 galaxyResources = {
 	# format resourceID : (minDist, maxDist, number of resources)
@@ -50,8 +53,9 @@ galaxyResources = {
 	7 : (5, 6, 1), # TL 5
 	8 : (5, 6, 1), # TL 5
 }
+galaxyDiseases = {}
 
-if 1: # THIS IS THE RECOMENDED MEDIUM GALAXY
+if 0: # THIS IS THE RECOMENDED MEDIUM GALAXY
 	galaxyID = 'Circle42P'
 	galaxyCenter = (50.0, 50.0)
 	galaxyRadius = 50.0

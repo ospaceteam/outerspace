@@ -19,13 +19,12 @@
 #
 
 import os
-import md5
+import hashlib
 import random
 import time
 import log
 from ige import SecurityException
 from ige.Const import ADMIN_LOGIN
-import sha
 
 class Account:
 
@@ -47,8 +46,9 @@ class Account:
 
 class ClientMngr:
 
-	def __init__(self, database):
-		self._filename = os.path.join('var', 'accounts')
+	def __init__(self, database, configDir):
+		self.configDir = configDir
+		self._filename = os.path.join(self.configDir, 'accounts')
 		self.sessions = {}
 		#
 		self.accounts = database
@@ -59,8 +59,8 @@ class ClientMngr:
 			log.message("No administator account found! (looking for '%s')" % ADMIN_LOGIN)
 			log.message("Creating default account")
 			self.createAccount(None, ADMIN_LOGIN, "tobechanged", "Administrator", "nospam@nospam.com")
-		password = sha.new(str(random.randrange(0, 1e10))).hexdigest()
-		open(os.path.join("var", "token"), "w").write(password)
+		password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
+		open(os.path.join(self.configDir, "token"), "w").write(password)
 		self.accounts[ADMIN_LOGIN].passwd = password
 
 	def shutdown(self):
@@ -111,11 +111,34 @@ class ClientMngr:
 		account.passwd = passwd
 		account.nick = nick
 		account.email = email
-		account.confToken = md5.new('%s%s%d' % (login, email, time.time())).hexdigest()
+		account.confToken = hashlib.md5('%s%s%d' % (login, email, time.time())).hexdigest()
 		self.accounts.create(account, id = str(account.login))
 		self.nick2login[account.nick] = account.login
 		log.message('Account created, confirmation token:', account.confToken)
 		# TODO send confirmation token to the email address
+		return 1, None
+
+	def createAiAccount(self, sid, login, passwd, nick):
+		self.accounts.delete(login)
+		log.message('Creating AI account', login, nick)
+		login = login.strip()
+		passwd = passwd.strip()
+		nick = nick.strip()
+		# create account
+		account = Account()
+		# update
+		account.login = login
+		account.passwd = passwd
+		account.nick = nick
+		account.email = None
+		account.confToken = None
+		self.accounts.create(account, id = str(account.login))
+		self.nick2login[account.nick] = account.login
+		log.message('AI account created')
+		return 1, None
+
+	def removeAiAccount(self,login):
+		self.accounts.delete(login)
 		return 1, None
 
 	def hello(self, sid, login, clientId):
@@ -123,7 +146,7 @@ class ClientMngr:
 		login = str(login)
 		# create sort of cookie
 		while 1:
-			sid = md5.new(str(time.time())).hexdigest()[:8]
+			sid = hashlib.md5(str(time.time())).hexdigest()[:8]
 			if not self.sessions.has_key(sid):
 				break
 		challenge = 'IGEServer@%f' % time.time()
@@ -147,7 +170,7 @@ class ClientMngr:
 
 		account = self.accounts[login]
 		challenge = self.sessions[sid].challenge
-		if md5.new(account.passwd + challenge).hexdigest() != cpasswd:
+		if hashlib.md5(account.passwd + challenge).hexdigest() != cpasswd:
 			raise SecurityException('Wrong login and/or password.')
 		self.sessions[sid].setAttrs(account.login, account.nick, account.email)
 		account.lastLogin = time.time()
@@ -213,7 +236,7 @@ class ClientMngr:
 		if session.login != "admin":
 			raise SecurityException('You cannot issue this command.')
 		# export accounts
-		f = open("var/accounts.txt", "w")
+		f = open(os.path.join(self.configDir,"accounts.txt"), "w")
 		for account in self.accounts.keys():
 			if account == "**nick2login**": continue
 			account = self.accounts[account]

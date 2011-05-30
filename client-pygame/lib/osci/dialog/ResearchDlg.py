@@ -1,5 +1,5 @@
 #
-#  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
+#  Copyright 2001 - 2011 Ludek Smid [http://www.ospace.net/]
 #
 #  This file is part of IGE - Outer Space.
 #
@@ -33,9 +33,12 @@ class ResearchDlg:
 		self.techInfoDlg = TechInfoDlg(app)
 		self.confirmDlg = ConfirmDlg(app)
 		self.showCompleted = 0
+		self.showObsolete = 0
 		self.createUI()
 
 	def display(self):
+		self.win.vUnObs.enabled = 0
+		self.win.vObs.enabled = 0
 		self.show()
 		# show window
 		if not self.win.visible:
@@ -70,6 +73,8 @@ class ResearchDlg:
 		for task in player.rsrchQueue:
 			taskIDs[task.techID] = None
 		for techID in player.techs.keys():
+			if techID in player.obsoleteTechs and not self.showObsolete:
+					continue
 			tech = client.getTechInfo(techID)
 			improvement = player.techs[techID]
 			item = ui.Item(tech.name,
@@ -95,6 +100,9 @@ class ResearchDlg:
 				if not self.showCompleted:
 					# skip this item
 					continue
+					item.foreground = None
+			if techID in player.obsoleteTechs:
+				item.foreground = (0x80, 0x40, 0x40)
 			items.append(item)
 			disabled.extend(tech.researchDisables)
 			#~for improvement in range(1, improvement + 1):
@@ -197,8 +205,15 @@ class ResearchDlg:
 		self.win.vRTechs.itemsChanged()
 
 	def onSelectKTech(self, widget, action, data):
-		# TODO implement
-		pass
+		techID = self.win.vKTechs.selection[0].techID
+		player = client.getPlayer()
+		if techID in player.obsoleteTechs:
+			self.win.vObs.enabled = 0
+			self.win.vUnObs.enabled = 1
+		else:
+			self.win.vUnObs.enabled = 0
+			self.win.vObs.enabled = 1
+		#self.update()
 
 	def onKTechInfo(self, widget, action, data):
 		if self.win.vKTechs.selection:
@@ -304,6 +319,42 @@ class ResearchDlg:
 		self.update()
 		self.win.setStatus(_('Command has been executed.'))
 
+	def onStartObsolete(self, widget, action, data):
+		if not self.win.vKTechs.selection:
+			self.win.setStatus(_('Select technology to obsolete.'))
+			return
+		else:
+			techID = self.win.vKTechs.selection[0].techID
+		try:
+			self.win.setStatus(_('Executing OBSOLETTE command...'))
+			player = client.getPlayer()
+			player.obsoleteTechs = client.cmdProxy.addObsoleteTechs(player.oid, techID)
+			self.win.setStatus(_('Command has been executed.'))
+		except ige.GameException, e:
+			self.win.setStatus(e.args[0])
+			return
+		self.update()
+
+	def offStartObsolete(self, widget, action, data):
+		if not self.win.vKTechs.selection:
+			self.win.setStatus(_('Select technology to un-obsolete.'))
+			return
+		else:
+			techID = self.win.vKTechs.selection[0].techID
+		try:
+			self.win.setStatus(_('Executing UN-OBSOLETTE command...'))
+			player = client.getPlayer()
+			player.obsoleteTechs = client.cmdProxy.delObsoleteTechs(player.oid, techID)
+			self.win.setStatus(_('Command has been executed.'))
+		except ige.GameException, e:
+			self.win.setStatus(e.args[0])
+			return
+		self.update()
+
+	def onToggleObsolete(self, widget, action, data):
+		self.showObsolete = self.win.vSObsl.pressed
+		self.update()
+
 	def createUI(self):
 		w, h = gdata.scrnSize
 		self.win = ui.Window(self.app,
@@ -324,16 +375,23 @@ class ResearchDlg:
 		# known techs
 		ui.Title(self.win, layout = (0, 0, 20, 1), text = _('Known technologies'),
 			align = ui.ALIGN_W, font = 'normal-bold')
-		ui.Listbox(self.win, layout = (0, 1, 20, 25), id = 'vKTechs',
+		ui.Listbox(self.win, layout = (0, 1, 20, 24), id = 'vKTechs',
 			columns = ((_('Name'), 'text', 10, ui.ALIGN_W), (_('Lvl'), 'tLevel', 1.5, 0),
 			(_('Str'), 'tStruct', 1, 0), (_('Sh'), 'tShip', 1, 0),
 			(_('ETC'), 'tETC', 0, ui.ALIGN_E)), columnLabels = 1, action = 'onSelectKTech')
-		ui.Button(self.win, layout = (0, 26, 5, 1), text = _('Improve'),
+		ui.Button(self.win, layout = (0, 25, 5, 1), text = _('Improve'),
 			action = 'onStartImprovement')
-		ui.Button(self.win, layout = (5, 26, 5, 1), id = "vSCompl", text = _('Show completed'),
+		ui.Button(self.win, layout = (5, 25, 5, 1), id = "vSCompl", text = _('Show completed'),
 			action = 'onToggleComleted', toggle = 1, pressed = 0)
-		ui.Button(self.win, layout = (15, 26, 5, 1), text = _('Info'),
+		ui.Button(self.win, layout = (15, 25, 5, 1), text = _('Info'),
 			action = 'onKTechInfo')
+		#if techID in player.obsoleteTechs: 
+		ui.Button(self.win, layout = (0, 26, 5, 1), id = 'vUnObs', text = _('Un-Obsolete'),
+			action = 'offStartObsolete')
+		ui.Button(self.win, layout = (0, 26, 5, 1), id = 'vObs', text = _('Obsolete'),
+			action = 'onStartObsolete')
+		ui.Button(self.win, layout = (5, 26, 5, 1), id = "vSObsl", text = _('Show obsolete'),
+			action = 'onToggleObsolete', toggle = 1, pressed = 0)
 		# unknown techs
 		ui.Title(self.win, layout = (20, 0, 20, 1), text = _('Researchable technologies'),
 			align = ui.ALIGN_W, font = 'normal-bold')
@@ -373,3 +431,4 @@ class ResearchDlg:
 			id = 'vRQueueInfo', action = 'onRQueueTechInfo')
 		ui.Label(self.win, layout = (35, 26, 4, 1), id = "vRTotal", align = ui.ALIGN_E,
 			tooltip = _("Total amount of time needed to research all technologies in the queue"))
+

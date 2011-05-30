@@ -30,6 +30,7 @@ import ige.version
 from ige import log
 import sys, os, os.path
 import re
+import binascii
 from optparse import OptionParser
 
 # log initialization
@@ -56,6 +57,16 @@ parser.add_option("",  "--server", dest = "server",
     metavar = "HOSTNAME:PORT", 
     default = "www.ospace.net:9080",
     help = "Outer Space server location"
+)
+parser.add_option("",  "--login", dest = "login", 
+    metavar = "HOSTNAME:PORT", 
+    default = None,
+    help = "Account login"
+)
+parser.add_option("",  "--password", dest = "password", 
+    metavar = "HOSTNAME:PORT", 
+    default = None,
+    help = "Account password"
 )
 parser.add_option("",  "--heartbeat", dest = "heartbeat", 
     type = "int",
@@ -269,7 +280,7 @@ import pygameui as ui
 theme = "green"
 if gdata.config.client.theme != None:
     theme = gdata.config.client.theme
-ui.SkinableTheme.enableMusic(gdata.config.defaults.music == "yes")
+ui.SkinableTheme.enableMusic(gdata.config.defaults.music == "no")
 ui.SkinableTheme.enableSound(gdata.config.defaults.sound == "yes")
 ui.SkinableTheme.setSkin(os.path.join("res/themes", theme))
 ui.SkinableTheme.loadMusic(gdata.config.defaults.mymusic)
@@ -306,6 +317,15 @@ client.initialize(gdata.config.game.server, handler, options)
 import dialog
 
 gdata.savePassword = gdata.config.game.lastpasswordcrypted != None
+
+if options.login and options.password:
+	gdata.config.game.lastlogin = options.login
+	gdata.config.game.lastpassword = options.password
+	gdata.config.game.lastpasswordcrypted = binascii.b2a_base64(options.password).strip()
+	gdata.config.game.autologin = 'yes'
+	gdata.savePassword = 'no'
+
+
 
 loginDlg = dialog.LoginDlg(gdata.app)
 updateDlg = dialog.UpdateDlg(gdata.app)

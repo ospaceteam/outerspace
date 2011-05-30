@@ -575,8 +575,8 @@ class ISystem(IObject):
 				#for now we assume only one ship can be destroyed by one mine
 				dmg, destroyed = self.cmd(targetobj).applyMine(tran, targetobj, att, damage, ignoreshield)
 				#log.debug('ISystem-Mines', 'Actual Damage Done:',dmg)
-				damageTaken[targetID] = damageTaken.get(targetID, 0) + dmg
-				if destroyed > 0:
+				if dmg > 0:
+					damageTaken[targetID] = damageTaken.get(targetID, 0) + dmg
 					shipsLost[targetID] = shipsLost.get(targetID, 0) + destroyed
 					killsCaused[mineID] = killsCaused.get(mineID, 0) + destroyed
 				if dmg > 0:
@@ -587,9 +587,9 @@ class ISystem(IObject):
 			for triggerID in firing.keys():
 				players[owners[triggerID]] = None
 			controllerPlanet = tran.db.get(objID, None)
+			damageCausedSum = 0
+			killsCausedSum = 0
 			for mineID in damageCaused.keys():
-				damageCausedSum = 0
-				killsCausedSum = 0
 				damageCausedSum = damageCausedSum + damageCaused.get(mineID, 0)
 				killsCausedSum = killsCausedSum + killsCaused.get(mineID, 0)
 			Utils.sendMessage(tran, controllerPlanet, MSG_MINES_OWNER_RESULTS, system.oid, (players.keys(),(damageCaused, killsCaused, minesTriggered),damageCausedSum,killsCausedSum))

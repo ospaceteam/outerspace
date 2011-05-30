@@ -41,26 +41,26 @@ def initialize(aServer, aCallbackObj, anOptions):
 	callbackObj = aCallbackObj
 	server = aServer
 	options = anOptions
-	initCmdProxy(options.heartbeat)
+	initCmdProxy()
 
 def reinitialize():
 	global cmdProxy
 	cmdProxy = None
 
-def initCmdProxy(keepAliveTime):
+def initCmdProxy():
 	global cmdProxy, server
 	if not cmdProxy:
 		callbackObj.onInitConnection()
 		proxy = None
 		if gdata.config.proxy.http != None:
 			proxy = gdata.config.proxy.http
-		cmdProxy = IClient.IClient(server, proxy, msgHandler, idleHandler, 'OSClient/%s' % ige.version.versionString, keepAliveTime)
+		cmdProxy = IClient.IClient(server, proxy, msgHandler, idleHandler, 'OSClient/%s' % ige.version.versionString)
 		callbackObj.onConnInitialized()
 
 ## Authentication
 
 def login(gameid, login, password):
-	initCmdProxy(options.heartbeat)
+	initCmdProxy()
 	cmdProxy.connect(login)
 	if gdata.config.client.keepAlive != None:
 		cmdProxy.keepAliveTime = int(gdata.config.client.keepAlive)
@@ -240,8 +240,17 @@ def updateDatabaseUnsafe(clearDB = 0, force = 0):
 	# TODO: try to load allies's info
 	# get messages from server
 	current += 1
-	callbackObj.onUpdateProgress(current, max, _("Downloading messages..."))
-	getMessages()
+	callbackObj.onUpdateProgress(current, max, _("Skipping messages..."))
+	# getMessages()
+	# clean maps on server
+	current += 1
+	callbackObj.onUpdateProgress(current, max, _("Clearing data on the server..."))
+	try:
+		cmdProxy.setResolution(db.playerID,gdata.scrnSize[0],gdata.scrnSize[1])
+	except:
+		log.debug('Server does not yet support resolution tracking')
+	# TODO not needed - delete cmdProxy.clearScannerMap(db.playerID)
+	# finished
 	log.message('IClient', 'Update finished.')
 	callbackObj.onUpdateFinished()
 	messageEnable(SMESSAGE_NEWTURN)

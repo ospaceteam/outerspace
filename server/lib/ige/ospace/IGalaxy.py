@@ -18,6 +18,8 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+import copy
+
 from ige.IObject import IObject
 from ige import *
 from Const import *
@@ -27,8 +29,11 @@ from ISystem import ISystem
 from ige.IDataHolder import IDataHolder
 import os.path, time, Utils, Rules
 from ige import log
+from Rules import Tech
 
 import Scanner
+
+from ai_parser import AIList
 
 class IGalaxy(IObject):
 
@@ -179,7 +184,7 @@ class IGalaxy(IObject):
 		# TODO: reneable history when it's optimized
 		if turn % 6 == 0 and False:
 			log.debug("Saving history for galaxy", obj.oid, obj.name)
-			fh = open("var/history/galaxy%d-%06d.xml" % (obj.oid, turn), "w+")
+			fh = open(os.path.join(tran.config.configDir,"history/galaxy%d-%06d.xml" % (obj.oid, turn), "w+"))
 			print >>fh, '<?xml version="1.0" encoding="UTF-8"?>'
 			print >>fh, '<history turn="%d" galaxy="%d" name="%s">' % (turn, obj.oid, obj.name)
 			# save systems and owners
@@ -311,6 +316,77 @@ class IGalaxy(IObject):
 				canRun = 1
 			if not canRun:
 				return 0
+		# spawn rebel player on all vacant starting positions
+		for positionID in copy.copy(obj.startingPos):
+			obj.startingPos.remove(positionID)
+			# create new player
+			log.debug("Creating new Rebel player", T_AIPLAYER)
+			player = self.new(T_AIPLAYER)
+			self.cmd(player).register(tran, player)
+			player.galaxies.append(obj.oid)
+			playerID = player.oid
+			# finish AI list
+			aiList = AIList(tran.gameMngr.configDir)
+			aiList.setGalaxy(player.login, obj.name)
+			# TODO tweak more planet's attrs
+			planet = tran.db[positionID]
+			# Grant starting technologies (at medium improvement)
+			for techID in Rules.techs.keys():
+				if Rules.techs[techID].isStarting:
+					player.techs[techID] = (Rules.techBaseImprovement + Rules.techMaxImprovement) / 2
+			self.cmd(planet).changeOwner(tran, planet, playerID, 1)
+			planet.slots = [
+				Utils.newStructure(tran, Tech.PWRPLANTNUK1, playerID, STRUCT_STATUS_ON),
+				Utils.newStructure(tran, Tech.FARM1, playerID, STRUCT_STATUS_ON),
+				Utils.newStructure(tran, Tech.FARM1, playerID, STRUCT_STATUS_ON),
+				Utils.newStructure(tran, Tech.FARM1, playerID, STRUCT_STATUS_ON),
+				Utils.newStructure(tran, Tech.ANCFACTORY, playerID, STRUCT_STATUS_ON),
+				Utils.newStructure(tran, Tech.ANCFACTORY, playerID, STRUCT_STATUS_ON),
+				Utils.newStructure(tran, Tech.ANCRESLAB, playerID, STRUCT_STATUS_ON),
+				Utils.newStructure(tran, Tech.REPAIR1, playerID, STRUCT_STATUS_ON),
+			]
+			planet.storPop = Rules.startingPopulation
+			planet.storBio = Rules.startingBio
+			planet.storEn = Rules.startingEn
+			planet.scannerPwr = Rules.startingScannerPwr
+			planet.morale = Rules.maxMorale
+			# fleet
+			# add basic ships designs
+			tempTechs = [Tech.FTLENG1, Tech.SCOCKPIT1, Tech.SCANNERMOD1, Tech.CANNON1,
+				Tech.CONBOMB1, Tech.SMALLHULL1, Tech.MEDIUMHULL2, Tech.COLONYMOD2]
+			for techID in tempTechs:
+				player.techs[techID] = 1
+			dummy, scoutID = tran.gameMngr.cmdPool[T_AIPLAYER].addShipDesign(tran, player, "Scout", Tech.SMALLHULL1,
+				{Tech.FTLENG1:3, Tech.SCOCKPIT1:1, Tech.SCANNERMOD1:1})
+			dummy, fighterID = tran.gameMngr.cmdPool[T_AIPLAYER].addShipDesign(tran, player, "Fighter", Tech.SMALLHULL1,
+				{Tech.FTLENG1:3, Tech.SCOCKPIT1:1, Tech.CANNON1:1})
+			dummy, fighterID = tran.gameMngr.cmdPool[T_AIPLAYER].addShipDesign(tran, player, "Bomber", Tech.SMALLHULL1,
+				{Tech.FTLENG1:3, Tech.SCOCKPIT1:1, Tech.CONBOMB1:1})
+			dummy, colonyID = tran.gameMngr.cmdPool[T_AIPLAYER].addShipDesign(tran, player, "Colony Ship", Tech.MEDIUMHULL2,
+				{Tech.FTLENG1:4, Tech.SCOCKPIT1:1, Tech.COLONYMOD2:1})
+			for techID in tempTechs:
+				del player.techs[techID]
+			# add small fleet
+			log.debug('Creating fleet')
+			system = tran.db[planet.compOf]
+			fleet = tran.gameMngr.cmdPool[T_FLEET].new(T_FLEET)
+			tran.db.create(fleet)
+			log.debug('Creating fleet - created', fleet.oid)
+			tran.gameMngr.cmdPool[T_FLEET].create(tran, fleet, system, playerID)
+			log.debug('Creating fleet - addShips')
+			tran.gameMngr.cmdPool[T_FLEET].addNewShip(tran, fleet, scoutID)
+			tran.gameMngr.cmdPool[T_FLEET].addNewShip(tran, fleet, scoutID)
+			tran.gameMngr.cmdPool[T_FLEET].addNewShip(tran, fleet, fighterID)
+			tran.gameMngr.cmdPool[T_FLEET].addNewShip(tran, fleet, fighterID)
+			tran.gameMngr.cmdPool[T_FLEET].addNewShip(tran, fleet, colonyID)
+			system.scannerPwrs[playerID] = Rules.startingScannerPwr
+		# do scanner evaluation because of all new players
+		self.cmd(obj).processSCAN2Phase(tran, obj, None)
+			# add player to universe
+#			log.debug('Adding player to universe')
+#			universe = tran.db[OID_UNIVERSE]
+#			universe.players.append(playerID)
+
 		# ok, enable time
 		log.message('IGalaxy', 'Enabling time for', obj.oid)
 		obj.timeEnabled = enable
@@ -338,6 +414,8 @@ class IGalaxy(IObject):
 	def delete(self, tran, obj):
 		log.debug(obj.oid, "GALAXY - delete")
 		universe = tran.db[OID_UNIVERSE]
+		aiList = AIList(tran.gameMngr.configDir)
+		aiList.finishGalaxy(obj.name)
 		# delete systems and planets
 		for systemID in obj.systems:
 			log.debug("Deleting system", systemID)
@@ -409,6 +487,8 @@ class IGalaxy(IObject):
 			log.debug("Creating new player", playerType)
 			player = self.new(playerType)
 			self.cmd(player).register(tran, player)
+			aiList = AIList(tran.gameMngr.configDir)
+			aiList.setGalaxy(player.login, obj.name)
 			player.galaxies.append(obj.oid)
 			players[playerType] = player
 		# great we have all players - scan planets

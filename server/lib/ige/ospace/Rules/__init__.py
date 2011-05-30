@@ -1,5 +1,5 @@
 #
-#  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
+#  Copyright 2001 - 2011 Ludek Smid [http://www.ospace.net/]
 #
 #  This file is part of IGE - Outer Space.
 #
@@ -48,7 +48,7 @@ unusedProdMod = 0.75
 envInterval = 1000
 envAutoMod = 10.0
 envMax = 200
-envSelfUpgradeChance = {"H": 5, "C": 1, "B": 500} # in ten thousandths (10 000)
+envSelfUpgradeChance = {"H": 5, "C": 1, "B": 500, "m": 100} # in ten thousandths (10 000)
 planetSpec = {}
 planetSpec[u'A'] = makeIDataHolder(
 	minBio = 0,

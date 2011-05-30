@@ -30,10 +30,11 @@ from Const import *
 import os, os.path, time
 import log
 from IObject import IDataHolder
+from ai_parser import AIList
 
 class GameMngr:
 
-	def __init__(self, gameID, config, clientMngr, msgMngr, database):
+	def __init__(self, gameID, config, clientMngr, msgMngr, database, configDir):
 		log.debug("Runtime mode", ige.igeRuntimeMode)
 		self.status = GS_INIT
 		self.gameID = gameID
@@ -42,6 +43,7 @@ class GameMngr:
 		self.cmdPool = {}
 		self.db = database
 		self.config = config
+		self.configDir = configDir
 		# register command objects
 		# None here
 
@@ -215,6 +217,8 @@ class GameMngr:
 		self.db.backup(basename)
 		self.clientMngr.backup(basename)
 		self.msgMngr.backup(basename)
+		aiList = AIList(self.configDir)
+		aiList.backup(basename)
 		return True, None
 
 	def createAdmin(self):

@@ -23,26 +23,67 @@ import sys
 
 # setup system path
 sys.path.insert(0,"lib")
+sys.path.insert(0,"../client-ai")
 
 import os, atexit
 import getopt
+import optparse
+
+from ai_parser import AIList
+
+parser = optparse.OptionParser()
+parser.add_option("",  "--configdir", dest = "configDir", 
+    metavar = "DIRECTORY", 
+    default = "var", 
+    help = "Override default configuration directory", 
+)
+parser.add_option("",  "--configfile", dest = "configFile", 
+    metavar = "DIRECTORY", 
+    default = "config.ini", 
+    help = "Override default name of configuration file", 
+)
+parser.add_option("",  "--restore", dest = "restore", 
+    metavar = "STRING", 
+    default = None, 
+    help = "Restore from backup files beginning with STRING", 
+)
+parser.add_option("",  "--reset", dest = "reset", 
+    action = "store_true", default=False,
+    help = "Sets server to reset itself" 
+)
+parser.add_option("",  "--upgrade", dest = "upgrade", 
+    action = "store_true", default=False,
+    help = "Server will undergo upgrade routine"
+)
+parser.add_option("",  "--devel", dest = "devel", 
+    action = "store_true", default=False,
+    help = "Server will run in debug mode", 
+)
+
+options, args = parser.parse_args()
+
+if args:
+  parser.error("No additional arguments are supported")
 
 #configure gc
 #import gc
 #gc.set_debug(gc.DEBUG_STATS | gc.DEBUG_COLLECTABLE | gc.DEBUG_UNCOLLECTABLE |
 #	gc.DEBUG_INSTANCES | gc.DEBUG_OBJECTS)
 
+
 # legacy logger
 from ige import log
-log.setMessageLog('var/logs/messages.log')
-log.setErrorLog('var/logs/errors.log')
+log.setMessageLog(os.path.join(options.configDir,'logs/messages.log'))
+log.setErrorLog(os.path.join(options.configDir,'logs/errors.log'))
 
+import ige.version
+log.message("Outer Space %s" % ige.version.versionStringFull)
 #~ # standard logger
 #~ import logging, logging.handlers
 #~ log = logging.getLogger()
 #~ log.setLevel(logging.DEBUG)
 #~ # file handler
-#~ h = logging.handlers.RotatingFileHandler('var/log/server.log', 'a', 16 * 1024 * 1024, 5)
+#~ h = logging.handlers.RotatingFileHandler(os.path.join(options.configDir,'log/server.log'), 'a', 16 * 1024 * 1024, 5)
 #~ h.setLevel(logging.INFO)
 #~ h.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(name)s %(message)s'))
 #~ log.addHandler(h)
@@ -52,38 +93,11 @@ log.setErrorLog('var/logs/errors.log')
 #~ h.setFormatter(logging.Formatter('%(created)d %(levelname)-5s %(name)-8s %(message)s'))
 #~ log.addHandler(h)
 
-import ige.version
-log.message("Outer Space %s" % ige.version.versionStringFull)
-
-# options
-# parse arguments
-log.message('Parsing arguments...')
-options = ('reset', 'upgrade', 'devel', 'restore=', "config=")
-
-opts, args = getopt.getopt(sys.argv[1:], '', options)
-
-optReset = 0
-optUpgrade = 0
-optDevel = 0
-optRestore = 0
-optConfig = "var/config.ini"
-
-for opt, arg in opts:
-	if opt == '--reset':
-		optReset = 1
-	elif opt == '--upgrade':
-		optUpgrade = 1
-	elif opt == '--devel':
-		optDevel = 1
-	elif opt == '--restore':
-		optRestore = arg
-	elif opt == "--config":
-		optConfig = arg
 
 # record my pid
 
 # pid
-pidFd = os.open("var/server.pid", os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+pidFd = os.open(os.path.join(options.configDir,"server.pid"), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
 os.write(pidFd, str(os.getpid()))
 # TODO: check if server.pid points to the running process
 
@@ -118,7 +132,7 @@ def cleanup():
 	log.message("Cleaning up...")
 	# delete my pid
 	os.close(pidFd)
-	os.remove("var/server.pid")
+	os.remove(os.path.join(options.configDir,"server.pid"))
 
 atexit.register(cleanup)
 
@@ -138,11 +152,11 @@ from ige.ospace.GameMngr import GameMngr
 
 # read configuration
 from ige.Config import Config
-log.message("Reading configuration from", optConfig)
-config = Config(optConfig)
+log.message("Reading configuration from", os.path.join(options.configDir, options.configFile))
+config = Config(os.path.join(options.configDir, options.configFile))
 
 # set runtime mode
-ige.setRuntimeMode(not optDevel)
+ige.setRuntimeMode(not options.devel)
 
 gameName = 'Alpha'
 
@@ -153,15 +167,18 @@ if config.server.dbbackend == "metakit":
 else:
     log.message("Using sqlite3 dabase backend")
     from ige.SQLiteDatabase import Database, DatabaseString
+# set type of generated galaxies
+if not config.server.newgalaxytype:
+	config.server.newgalaxytype = 'Circle42P'
 
 log.debug("Creating databases...")
-gameDB = Database("var/db_data", "game_%s" % gameName, cache = 15000)
-clientDB = DatabaseString("var/db_data", "accounts", cache = 100)
-msgDB = DatabaseString("var/db_data", "messages", cache = 1000)
+gameDB = Database(os.path.join(options.configDir,"db_data"), "game_%s" % gameName, cache = 15000)
+clientDB = DatabaseString(os.path.join(options.configDir,"db_data"), "accounts", cache = 100)
+msgDB = DatabaseString(os.path.join(options.configDir,"db_data"), "messages", cache = 1000)
 
-if optRestore:
-	gameDB.restore("%s-game_Alpha.osbackup" % optRestore)
-	clientDB.restore("%s-accounts.osbackup" % optRestore)
+if options.restore:
+	gameDB.restore("%s-game_Alpha.osbackup" % options.restore)
+	clientDB.restore("%s-accounts.osbackup" % options.restore)
 	# TODO: remove afer fix of the message database
 	# the following code imports to the message database only valid entries
         # and forces mailbox scan
@@ -173,7 +190,9 @@ if optRestore:
 			if k.startswith("Alpha-%d-" % i) or (k == "Alpha-%d" % i):
 				return True
 		return False
-	msgDB.restore("%s-messages.osbackup" % optRestore, include = include)
+	msgDB.restore("%s-messages.osbackup" % options.restore, include = include)
+	aiList = AIList(options.configDir)
+	aiList.restore("%s-ais.osbackup" % options.restore)
 
 # initialize game
 log.message('Initializing game \'%s\'...' % gameName)
@@ -181,14 +200,14 @@ log.message('Initializing game \'%s\'...' % gameName)
 log.debug("Initializing issue manager")
 issueMngr = IssueMngr()
 log.debug("Initializing client manager")
-clientMngr = ClientMngr(clientDB)
+clientMngr = ClientMngr(clientDB, options.configDir)
 log.debug("Initializing message manager")
 msgMngr = MsgMngr(msgDB)
 
 log.debug("Initializing game manager")
-game = GameMngr(gameName, config, clientMngr, msgMngr, gameDB)
+game = GameMngr(gameName, config, clientMngr, msgMngr, gameDB, options.configDir)
 
-if optReset:
+if options.reset:
 	# reset game
 	log.message('Resetting game \'%s\'...' % gameName)
 	game.reset()
@@ -196,7 +215,7 @@ else:
 	# normal operations
 	game.init()
 
-	if optUpgrade:
+	if options.upgrade:
 		game.upgrade()
 		msgMngr.upgrade()
 

@@ -263,6 +263,7 @@ class Stats:
 		self.zipBytes = 0
 
 # load stats TODO remove profiling code
+# TODO change dir according to config file
 try:
 	fh = open('var/marshal.stats.data', 'rb')
 	stats = pickle.load(fh)
@@ -272,10 +273,10 @@ except IOError, e:
 except EOFError, e:
 	stats = Stats()
 
-def saveStats():
+def saveStats(directory):
 	print 'Saving IMarshal statistics'
 	# stats
-	fh = open('var/marshal.stats.data', 'wb')
+	fh = open(os.path.join(directory, 'marshal.stats.data'), 'wb')
 	pickle.dump(stats, fh, 1)
 	fh.close()
 	# various data
@@ -284,9 +285,9 @@ def saveStats():
 		keys.append((len(key) * stats.data[key],key))
 	keys.sort()
 	keys.reverse()
-	fstats = open('var/marshal.stats', 'w')
-	fscheme = open('var/marshal.cscheme', 'w')
-	fpysrc = open('var/marshal.cscheme.py', 'w')
+	fstats = open(os.path.join(directory, 'marshal.stats'), 'w')
+	fscheme = open(os.path.join(directory, 'marshal.cscheme'), 'w')
+	fpysrc = open(os.path.join(directory, 'marshal.cscheme.py'), 'w')
 	print >> fpysrc, 'compress = {'
 	print >> fstats, '# Summary'
 	print >> fstats, '# Total strings:', stats.total

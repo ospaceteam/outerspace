@@ -208,14 +208,16 @@ class StarMapWidget(Widget):
 				if ownerID == OID_NONE:
 					continue
 				owner = client.get(ownerID, publicOnly = 1)
-				if hasattr(owner, "type") and owner.type == T_PIRPLAYER:
+				if hasattr(owner, "type") and (owner.type == T_PIRPLAYER or\
+												owner.type == T_AIPIRPLAYER):
 					pirates[obj.x, obj.y] = None
 		# process objects
 		self.fleetOrbit = {}
 		anyX = 0.0
 		anyY = 0.0
 		player = client.getPlayer()
-		if player.type == T_PIRPLAYER and not self.pirateDlgs:
+		if (player.type == T_PIRPLAYER or\
+			player.type == T_AIPIRPLAYER) and not self.pirateDlgs:
 			self.pirateDlgs = True
 			if self.showHotButtons:
 				self.initHotbuttons() #reinit to add the pirate button
@@ -326,7 +328,8 @@ class StarMapWidget(Widget):
 				if morale==200:
 					morale = -1
 				pirProb = self.precomputePirates(obj, pirates, icons)
-				if player.type == T_PIRPLAYER:
+				if (player.type == T_PIRPLAYER or\
+						player.type == T_AIPIRPLAYER):
 					pirateFameCost = self.getPirateFameCost(player.oid,obj.oid,len(player.planets),pirates)
 				# refuelling
 				if refuelMax > 0:
@@ -356,7 +359,8 @@ class StarMapWidget(Widget):
 				#   color = gdata.playerHighlightColor
 				#else:
 				#   color = res.getFFColorCode(rel)
-				if player.type == T_PIRPLAYER:
+				if (player.type == T_PIRPLAYER or\
+						player.type == T_AIPIRPLAYER):
 					colors = res.getStarmapWidgetSystemColor(ownerID,bio,minerals,slots,numPlanets,speedBoost, refuelInc, upgradeShip, pirProb*100, stratRes, morale, pirateFameCost)
 				else:
 					colors = res.getStarmapWidgetSystemColor(ownerID,bio,minerals,slots,numPlanets,speedBoost, refuelInc, upgradeShip, pirProb*100, stratRes, morale)
@@ -383,7 +387,8 @@ class StarMapWidget(Widget):
 				info.append(_('Scan pwr: %d') % obj.scanPwr)
 				info.append(_('Star Class: %s') % obj.starClass[1:])
 				info.append(_('Star Type: %s') % _(gdata.starTypes[obj.starClass[0]]))
-				if player.type == T_PIRPLAYER:
+				if (player.type == T_PIRPLAYER or\
+						player.type == T_AIPIRPLAYER):
 					info.append(_('Fame to Colonize: %d') % pirateFameCost)
 				if refuelMax > 0:
 					info.append(_("Refuel: %d %%/turn [%d %% max]") % (refuelInc, refuelMax))
@@ -448,7 +453,8 @@ class StarMapWidget(Widget):
 				stargatedata = getattr(obj, 'fleetSpeedBoost', 0)
 				stratresdata = getattr(obj, 'plStratRes', SR_NONE)
 				moraledata = getattr(obj, 'morale', -1)
-				if player.type == T_PIRPLAYER:
+				if (player.type == T_PIRPLAYER or\
+						player.type == T_AIPIRPLAYER):
 					pirateFameCost = self.getPirateFameCost(player.oid,obj.compOf,len(player.planets),pirates)
 				# build system
 				name = getattr(obj, 'name', None) or res.getUnknownName()
@@ -457,7 +463,8 @@ class StarMapWidget(Widget):
 					colors = gdata.sevColors[gdata.DISABLED]
 				else:
 					singlet = False
-					if player.type == T_PIRPLAYER:
+					if (player.type == T_PIRPLAYER or\
+							player.type == T_AIPIRPLAYER):
 						colors = res.getStarmapWidgetPlanetColor(owner,biodata,mindata,slotdata,stargatedata, dockrefueldata, dockupgradedata, famedata, stratresdata, moraledata, pirateFameCost)
 					else:
 						colors = res.getStarmapWidgetPlanetColor(owner,biodata,mindata,slotdata,stargatedata, dockrefueldata, dockupgradedata, famedata, stratresdata, moraledata)
@@ -472,7 +479,8 @@ class StarMapWidget(Widget):
 				elif hasattr(obj, 'scannerPwr'): info.append(_('Scanner pwr: %d') % obj.scannerPwr)
 				plType = gdata.planetTypes[getattr(obj, 'plType', None)]
 				info.append(_('Type: %s') % _(plType))
-				if player.type == T_PIRPLAYER:
+				if (player.type == T_PIRPLAYER or\
+						player.type == T_AIPIRPLAYER):
 					info.append(_('Fame to Colonize: %d') % pirateFameCost)
 				if hasattr(obj, 'plBio'): info.append(_('Environment: %d') % obj.plBio)
 				if hasattr(obj, 'plMin'): info.append(_('Minerals: %d') % obj.plMin)
@@ -619,16 +627,9 @@ class StarMapWidget(Widget):
 		info.append(_('Coordinates: [%.2f, %.2f]') % (obj.x, obj.y))
 		info.append(_('Signature: %d') % obj.signature)
 		if hasattr(obj, 'speed'): info.append(_(u'Speed: %3.2f') % obj.speed)
+		elif eta:
+			info.append(_(u'Speed: %3.2f') % (24*((obj.y-obj.oldY)**2+(obj.x-obj.oldX)**2)**.5))
 		if eta:
-			if hasattr(obj, 'target') and obj.target != OID_NONE:
-				target = client.get(obj.target, noUpdate = 1)
-				if hasattr(target, "x") and eta != 1:
-					info.append(_(u'Speed: <%3.2f – %3.2f>') % (\
-						((target.x - obj.x)**2 + (target.y - obj.y)**2)**.5/(eta/24),\
-						((target.x - obj.x)**2 + (target.y - obj.y)**2)**.5/((eta - 1)/24)))
-				elif hasattr(target, "x") and eta == 1:
-					info.append(_(u'Speed: <%3.2f – ∞>') % (\
-					((target.x - obj.x)**2 + (target.y - obj.y)**2)**.5/(eta/24)))
 			info.append(_('ETA: %s') % res.formatTime(eta))
 		if owner:
 			ownerobj = client.get(owner, publicOnly = 1)
@@ -1004,7 +1005,7 @@ class StarMapWidget(Widget):
 			sx = int((x - currX) * scale) + centerX
 			sy = maxY - (int((y - currY) * scale) + centerY)
 			if orbit >= 0 and scale >= 30:
-				actRect = Rect(sx + (orbit % 8) * rectSpace + 13, sy + scale/6 * (orbit / 8) + 6, rectSize, rectSize)
+				actRect = Rect(sx + (orbit % 7) * rectSpace + 13 + 2 * (orbit % 7), sy + scale/6 * (orbit / 7) + 6, rectSize, rectSize)
 				# TODO this is a workaround - fix it when pygame gets fixed
 				# pygame.draw.polygon(self._mapSurf, color,
 				#	(actRect.midleft, actRect.midtop, actRect.midright, actRect.midbottom), 1)

@@ -252,23 +252,25 @@ class StructTaskDlg:
 				if self.extraSlot:
 					# check required special resources, if not available, do not continue
 					# (without check, server start slot expansion but not the tech)
-					canBuild = True
 					specialResources = player.stratRes
 					for sr in tech.buildSRes:
 						if specialResources.get(sr, 0) < self.quantity:
-							canBuild = False
 							self.win.setStatus(_('You do not own required strategic resource(s)'))
 							return
 						else:
 							specialResources[sr] = specialResources.get(sr, 0) - self.quantity
-					if canBuild:
-						for i in range(1, self.quantity + 1):
-							client.cmdProxy.startConstruction(self.sourceID,
-								Rules.Tech.ADDSLOT3, 1, self.planetID, False,
-								self.win.vReportFin.checked, OID_NONE)
-							planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(self.sourceID,
-								data.techID, 1, self.planetID, data.techID < 1000,
-								self.win.vReportFin.checked, self.structToDemolish)
+					for i in range(1, self.quantity + 1):
+						# as we need two slots instead of one, check whether is task queue short
+						# enough (ie 8 tasks max)
+						if len(planet.prodQueue) > 8:
+							self.win.setStatus(_('Queue is full'))
+							return
+						client.cmdProxy.startConstruction(self.sourceID,
+							Rules.Tech.ADDSLOT3, 1, self.planetID, False,
+							self.win.vReportFin.checked, OID_NONE)
+						planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(self.sourceID,
+							data.techID, 1, self.planetID, data.techID < 1000,
+							self.win.vReportFin.checked, self.structToDemolish)
 				else:
 						planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(self.sourceID,
 						data.techID, self.quantity, self.planetID, data.techID < 1000,

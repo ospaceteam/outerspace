@@ -1103,6 +1103,7 @@ class IFleet(IObject):
 		obj.oldY = obj.y
 		obj.eta = 0.0
 		target = tran.db[targetID]
+		obj.target = targetID
 		# MOVE to target
 		dx = target.x - obj.x
 		dy = target.y - obj.y
@@ -1174,6 +1175,7 @@ class IFleet(IObject):
 			# (already moved 1 x maxDelta) (0.01 is acceptable error)
 			obj.eta = math.ceil(dist / maxDelta - 1 - 0.01)
 		if arrived:
+			obj.target = OID_NONE
 			# just make sure that this is reset
 			obj.combatRetreatWait = 0
 			# turn scanner on

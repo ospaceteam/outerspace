@@ -24,7 +24,10 @@ from IPlayer import IPlayer
 from ige.IDataHolder import IDataHolder
 import Rules, Utils
 from Const import *
-import math, time
+import math, time, random, os
+import hashlib
+
+from ai_parser import AIList
 
 class IAIEDENPlayer(IPlayer):
 
@@ -43,14 +46,22 @@ class IAIEDENPlayer(IPlayer):
 			try:
 				obj.name = u'E.D.E.N. [%d]' % counter
 				obj.login = '*AIP*eden%d' % counter
+				password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
 				tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
 				tran.db[OID_UNIVERSE].players.append(obj.oid)
-				return
+				tran.gameMngr.clientMngr.createAiAccount(None, obj.login, password, obj.name)
+				break
 			except CreatePlayerException:
 				counter += 1
+		# after succesfull registration, register it to the AI system
+		aiList = AIList(tran.gameMngr.configDir)
+		aiList.add(obj.login, password, 'ais_eden')
+		# grant techs and so on
+		self.cmd(obj).update(tran, obj)
 
 	def update(self, tran, obj):
 		obj.techLevel = 3
+		obj.race = "e"
 		# grant technologies
 		obj.techs[Rules.Tech.LASCANNONTUR3] = Rules.techMaxImprovement
 		obj.techs[Rules.Tech.SSROCKET2] = Rules.techMaxImprovement
@@ -69,6 +80,8 @@ class IAIEDENPlayer(IPlayer):
 		IPlayer.processINITPhase(self, tran, obj, data)
 		obj.lastLogin = time.time()
 		# delete itself if there are no fleets and planets
+		# delete the account as well
+		# unregister it from the AI system
 		if not obj.fleets and not obj.planets:
 			self.cmd(obj).delete(tran, obj)
 

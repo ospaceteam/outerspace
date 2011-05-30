@@ -1,5 +1,5 @@
 #
-#  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
+#  Copyright 2001 - 2011 Ludek Smid [http://www.ospace.net/]
 #
 #  This file is part of IGE - Outer Space.
 #
@@ -24,205 +24,243 @@ from IPlayer import IPlayer
 from ige.IDataHolder import IDataHolder
 import Rules, Utils
 from Const import *
-import math, time
+import math, time, random, os, sys
+import hashlib
+
+from ai_parser import AIList
 
 class IAIPiratePlayer(IPlayer):
 
-    typeID = T_AIPIRPLAYER
-    resignTo = T_PIRPLAYER
+	typeID = T_AIPIRPLAYER
+	resignTo = T_PIRPLAYER
+	forums = {"INBOX": 56, "OUTBOX": 56, "EVENTS": 0}
 
-    def init(self, obj):
-        IPlayer.init(self, obj)
-        #
-        obj.name = u'Pirate'
-        obj.login = '*'
-        #
-        obj.pirateFame = 0
+	def init(self, obj):
+		IPlayer.init(self, obj)
+		#
+		obj.name = u'Pirate'
+		obj.login = '*'
+		#
+		obj.pirateFame = 0
+		obj.techLevel = 99
+		# grant technologies
+		obj.techs[Rules.Tech.EMCANNONTUR] = Rules.techMaxImprovement
+		obj.techs[Rules.Tech.SSROCKET2] = Rules.techMaxImprovement
+		obj.techs[Rules.Tech.TORPEDO] = Rules.techMaxImprovement
+		# grant special technologies
+		obj.techs[Rules.Tech.PIRATEBASE] = Rules.techMaxImprovement
+		obj.techs[Rules.Tech.PIRATEDEN] = Rules.techMaxImprovement
+		obj.techs[Rules.Tech.PIRATESD] = Rules.techMaxImprovement
+		obj.techs[Rules.Tech.PIRATEBREWERY] = Rules.techMaxImprovement
+		obj.techs[Rules.Tech.PIRATEPRISON] = Rules.techMaxImprovement
+		obj.techs[Rules.Tech.PIRATEPRISON] = Rules.techMaxImprovement
+		obj.techs[Rules.Tech.PIRSMCOLONYMOD] = Rules.techMaxImprovement
+		obj.techs[Rules.Tech.PIRATEFTLENG] = Rules.techMaxImprovement
+		obj.techs[Rules.Tech.PIRCOLONYMOD] = Rules.techMaxImprovement
+		# grant all TL1 ship techs except for colony module(s)
+		for techID in Rules.techs:
+			tech = Rules.techs[techID]
+			if tech.level == 1 and (tech.isShipEquip or tech.isShipHull) and not tech.unpackStruct:
+				obj.techs[techID] = Rules.techMaxImprovement
     
-    def register(self, tran, obj):
-        log.debug("Registering player", obj.oid)
-        counter = 1
-        while 1:
-            try:
-                obj.name = u'Pirate faction %d' % counter
-                obj.login = '*AIP*pirate%d' % counter
-                tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
-                tran.db[OID_UNIVERSE].players.append(obj.oid)
-                return
-            except CreatePlayerException:
-                counter += 1
-        # grant techs and so on
-        self.cmd(obj).update(tran, obj)
+	def register(self, tran, obj):
+		log.debug("Registering player", obj.oid)
+		counter = 1
+		while 1:
+			try:
+				obj.name = u'Pirate faction %d' % counter
+				obj.login = '*AIP*pirate%d' % counter
+				password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
+				tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
+				tran.db[OID_UNIVERSE].players.append(obj.oid)
+				tran.gameMngr.clientMngr.createAiAccount(None, obj.login, password, obj.name)
+				break
+			except CreatePlayerException:
+				counter += 1
+		# after succesfull registration, register it to the AI system
+		aiList = AIList(tran.gameMngr.configDir)
+		aiList.add(obj.login, password, 'ais_pirate')
+		# grant techs and so on
+		self.cmd(obj).update(tran, obj)
 
-    def reregister(self, tran, obj):
-        self.cmd(obj).register(tran, obj)
+	def reregister(self, tran, obj):
+		# nearly identical to register, just now we know the galaxy
+		# to add this information tu AIList
+		log.debug("Registering player", obj.oid)
+		counter = 1
+		while 1:
+			try:
+				obj.name = u'Pirate faction %d' % counter
+				obj.login = '*AIP*pirate%d' % counter
+				password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
+				tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
+				tran.db[OID_UNIVERSE].players.append(obj.oid)
+				tran.gameMngr.clientMngr.createAiAccount(None, obj.login, password, obj.name)
+				break
+			except CreatePlayerException:
+				counter += 1
+		# after succesfull registration, register it to the AI system
+		aiList = AIList(tran.gameMngr.configDir)
+		aiList.add(obj.login, password, 'ais_pirate')
+		aiList.setGalaxy(obj.login, tran.db[obj.galaxies[0]].name)
+		# grant techs and so on
+		self.cmd(obj).update(tran, obj)
 
-    def processINITPhase(self, tran, obj, data):
-        IPlayer.processINITPhase(self, tran, obj, data)
-        # TODO -- remove following lines
-        obj.lastLogin = time.time()
-        # delete itself if there are no fleets and planets
-        if not obj.fleets and not obj.planets:
-            self.cmd(obj).delete(tran, obj)
-        # "AI" behavior -> construct pirate bases on system AI owns
-        for planetID in obj.planets:
-            planet = tran.db[planetID]
-            #@log.debug(obj.oid, "PIRATEAI - scanning", planetID, len(planet.prodQueue), len(planet.slots), planet.plSlots, planet.plMaxSlots)
-            if planet.prodQueue:
-                # something is in production queue
-                continue
-            if not Rules.Tech.PIRATEBREWERY in obj.techs:
-                log.warning('Pirate player in INIT phase without techs; granting again')
-                self.cmd(obj).update(tran, obj) #grant the techs because something screwed up
-            if planet.plSlots > len(planet.slots):
-                # build PIRBASE
-                log.debug(obj.oid, "PIRATEAI - building pirate base", planet.oid)
-                self.cmd(planet).startConstruction(tran, planet, Rules.Tech.PIRATEBASE, 1, planet.oid, False, False, OID_NONE)
-                continue
-            else:
-                # no room
-                # try to build on another planets
-                system = tran.db[planet.compOf]
-                build = False
-                for targetID in system.planets:
-                    target = tran.db[targetID]
-                    if target.owner == OID_NONE and target.plSlots > 0:
-                        log.debug(obj.oid, "PIRATEAI - colonizing planet", target.oid)
-                        self.cmd(planet).startConstruction(tran, planet, Rules.Tech.PIRATEBASE, 1, targetID, False, False, OID_NONE)
-                        build = True
-                    if build:
-                        break
-                if build:
-                    continue
-                # try to expand slots
-                if Rules.Tech.ADDSLOT3 in obj.techs and planet.plSlots < planet.plMaxSlots:
-                    log.debug(obj.oid, "PIRATEAI - building surface expansion", planet.oid)
-                    self.cmd(planet).startConstruction(tran, planet, Rules.Tech.ADDSLOT3, 1, planet.oid, False, False, OID_NONE)
-                    build = True
-                if build:
-                    continue
-                #try to assemble/condense planets
-                if Rules.Tech.PLASSEMBL5 in obj.techs or Rules.Tech.PLCOND5 in obj.techs:
-                    for targetID in system.planets:
-                        target = tran.db[targetID]
-                        if target.plType == 'A' and Rules.Tech.PLASSEMBL5 in obj.techs:
-                            log.debug(obj.oid, "PIRATEAI - assembling asteroid", target.oid)
-                            self.cmd(planet).startConstruction(tran, planet, Rules.Tech.PLASSEMBL5, 1, planet.oid, False, False, OID_NONE)
-                            build = True
-                        elif target.plType == 'G' and Rules.Tech.PLCOND5 in obj.techs:
-                            log.debug(obj.oid, "PIRATEAI - assembling asteroid", target.oid)
-                            self.cmd(planet).startConstruction(tran, planet, Rules.Tech.PLCOND5, 1, planet.oid, False, False, OID_NONE)
-                            build = True
-                        if build:
-                            break
-                    continue
-        #grant time based techs as needed:
-	if obj.galaxies:
-                if not (Rules.Tech.ADDSLOT3 in obj.techs and Rules.Tech.PLASSEMBL5 in obj.techs and Rules.Tech.PLCOND5 in obj.techs):
-        		galaxy = tran.db[obj.galaxies[0]]
-        		if galaxy.creationTime + Rules.pirateGrantHSE < time.time() and not Rules.Tech.ADDSLOT3 in obj.techs:
-                                obj.techs[Rules.Tech.ADDSLOT3] = Rules.techMaxImprovement
-        		if galaxy.creationTime + Rules.pirateGrantASSEM < time.time() and not Rules.Tech.PLASSEMBL5 in obj.techs:
-                                obj.techs[Rules.Tech.PLASSEMBL5] = Rules.techMaxImprovement
-        		if galaxy.creationTime + Rules.pirateGrantCOND < time.time() and not Rules.Tech.PLCOND5 in obj.techs:
-                                obj.techs[Rules.Tech.PLCOND5] = Rules.techMaxImprovement
-		
-		
+	def processINITPhase(self, tran, obj, data):
+		IPlayer.processINITPhase(self, tran, obj, data)
+		# TODO -- remove following lines
+		obj.lastLogin = time.time()
+		# delete itself if there are no fleets and planets
+		if not obj.fleets and not obj.planets:
+			self.cmd(obj).delete(tran, obj)
 
-    def update(self, tran, obj):
-        # TODO: remove in 0.5.59
-        if not hasattr(self, "techs"):
-            self.techs = {}
-        
-        obj.techLevel = 99
-        # call super method
-        IPlayer.update(self, tran, obj)
-        #
-        obj.techLevel = 99
-        # grant technologies
-        obj.techs[Rules.Tech.EMCANNONTUR] = Rules.techMaxImprovement
-        obj.techs[Rules.Tech.SSROCKET2] = Rules.techMaxImprovement
-        obj.techs[Rules.Tech.TORPEDO] = Rules.techMaxImprovement
-        # grant special technologies
-        obj.techs[Rules.Tech.PIRATEBASE] = Rules.techMaxImprovement
-        obj.techs[Rules.Tech.PIRATEDEN] = Rules.techMaxImprovement
-        obj.techs[Rules.Tech.PIRATESD] = Rules.techMaxImprovement
-        obj.techs[Rules.Tech.PIRATEBREWERY] = Rules.techMaxImprovement
-        obj.techs[Rules.Tech.PIRATEPRISON] = Rules.techMaxImprovement
-        obj.techs[Rules.Tech.PIRATEPRISON] = Rules.techMaxImprovement
-        obj.techs[Rules.Tech.PIRSMCOLONYMOD] = Rules.techMaxImprovement
-        obj.techs[Rules.Tech.PIRATEFTLENG] = Rules.techMaxImprovement
-        obj.techs[Rules.Tech.PIRCOLONYMOD] = Rules.techMaxImprovement
+	def update(self, tran, obj):
+		# TODO: remove in 0.5.59
+		if not hasattr(self, "techs"):
+			self.techs = {}
 
-    def getDiplomacyWith(self, tran, obj, playerID):
-        if obj.oid == playerID:
-            return REL_UNITY
-        # this AI battles with overyone
-        # make default
-        dipl = IDataHolder()
-        dipl.type = T_DIPLREL
-        dipl.pacts = {}
-        dipl.relation = REL_ENEMY
-        dipl.relChng = 0
-        dipl.lastContact = tran.db[OID_UNIVERSE].turn
-        dipl.contactType = CONTACT_NONE
-        dipl.stats = None
-        return dipl
+		obj.techLevel = 99
+		obj.race = "p"
+		# call super method
+		IPlayer.update(self, tran, obj)
+		#
+		obj.techLevel = 99
+		# grant technologies
+		obj.techs[Rules.Tech.EMCANNONTUR] = Rules.techMaxImprovement
+		obj.techs[Rules.Tech.SSROCKET2] = Rules.techMaxImprovement
+		obj.techs[Rules.Tech.TORPEDO] = Rules.techMaxImprovement
+		# grant special technologies
+		obj.techs[Rules.Tech.PIRATEBASE] = Rules.techMaxImprovement
+		obj.techs[Rules.Tech.PIRATEDEN] = Rules.techMaxImprovement
+		obj.techs[Rules.Tech.PIRATESD] = Rules.techMaxImprovement
+		obj.techs[Rules.Tech.PIRATEBREWERY] = Rules.techMaxImprovement
+		obj.techs[Rules.Tech.PIRATEPRISON] = Rules.techMaxImprovement
+		obj.techs[Rules.Tech.PIRSMCOLONYMOD] = Rules.techMaxImprovement
+		obj.techs[Rules.Tech.PIRATEFTLENG] = Rules.techMaxImprovement
+		obj.techs[Rules.Tech.PIRCOLONYMOD] = Rules.techMaxImprovement
 
-    def isPactActive(self, tran, obj, partnerID, pactID):
-        return 0
+	def getDiplomacyWith(self, tran, obj, playerID):
+		if obj.oid == playerID:
+			return REL_UNITY
+		# this AI battles with overyone
+		# make default
+		dipl = IDataHolder()
+		dipl.type = T_DIPLREL
+		dipl.pacts = {}
+		dipl.relation = REL_ENEMY
+		dipl.relChng = 0
+		dipl.lastContact = tran.db[OID_UNIVERSE].turn
+		dipl.contactType = CONTACT_NONE
+		dipl.stats = None
+		return dipl
 
-    def processDIPLPhase(self, tran, obj, data):
-        self.forceAllyWithEDEN(tran,obj)
-        IPlayer.processDIPLPhase(self,tran, obj, data)
+	def isPactActive(self, tran, obj, partnerID, pactID):
+		return 0
 
-    def processFINALPhase(self, tran, obj, data):
-        obj.govPwr = Rules.pirateGovPwr
-        IPlayer.processFINALPhase(self, tran, obj, data)
-        # get fame every 1:00 turns
-        if tran.db[OID_UNIVERSE].turn % Rules.turnsPerDay == 0:
-            Utils.sendMessage(tran, obj, MSG_GAINED_FAME, obj.oid, Rules.pirateSurvivalFame)
-            obj.pirateFame += Rules.pirateSurvivalFame
-        # fix goverment power
-        obj.govPwrCtrlRange = 10000
-        # bonus for gained fame
-        obj.prodEff += obj.pirateFame / 100.0
+	def processDIPLPhase(self, tran, obj, data):
+		self.forceAllyWithEDEN(tran,obj)
+		IPlayer.processDIPLPhase(self,tran, obj, data)
 
-    processFINALPhase.public = 1
-    processFINALPhase.accLevel = AL_ADMIN
+	def processFINALPhase(self, tran, obj, data):
+		obj.govPwr = Rules.pirateGovPwr
+		IPlayer.processFINALPhase(self, tran, obj, data)
+		# get fame every 1:00 turns
+		if tran.db[OID_UNIVERSE].turn % Rules.turnsPerDay == 0:
+			Utils.sendMessage(tran, obj, MSG_GAINED_FAME, obj.oid, Rules.pirateSurvivalFame)
+			obj.pirateFame += Rules.pirateSurvivalFame
+		# fix goverment power
+		obj.govPwrCtrlRange = 10000
+		# bonus for gained fame
+		obj.prodEff += obj.pirateFame / 100.0
 
-    def processRSRCHPhase(self, tran, obj, data):
-        # do not research anything
-        return
+	processFINALPhase.public = 1
+	processFINALPhase.accLevel = AL_ADMIN
 
-    processRSRCHPhase.public = 1
-    processRSRCHPhase.accLevel = AL_ADMIN
+	def processRSRCHPhase(self, tran, obj, data):
+		# do not research anything
+		return
 
-    def forceAllyWithEDEN(self,tran,obj):
-        for partyID in obj.diplomacyRels.keys():
-            party = tran.db.get(partyID, None)
-            if party.type == T_AIEDENPLAYER:
-                diplSelf = obj.diplomacyRels.get(party.oid, None)
-                log.debug("Allying Pirate with EDEN (forced)", obj.oid, partyID)
-                diplEDEN = IDataHolder()
-                diplEDEN.type = T_DIPLREL
-                diplEDEN.pacts = {
-                        PACT_ALLOW_CIVILIAN_SHIPS: [PACT_ACTIVE, PACT_ALLOW_CIVILIAN_SHIPS],
-                        PACT_ALLOW_MILITARY_SHIPS: [PACT_ACTIVE, PACT_ALLOW_MILITARY_SHIPS]
-                }
-                diplEDEN.relation = REL_FRIENDLY
-                diplEDEN.relChng = 0
-                diplEDEN.lastContact = tran.db[OID_UNIVERSE].turn
-                diplEDEN.contactType = CONTACT_STATIC
-                diplEDEN.stats = None
+	processRSRCHPhase.public = 1
+	processRSRCHPhase.accLevel = AL_ADMIN
 
-                diplSelf.relation = REL_FRIENDLY
-                diplSelf.pacts = {
-                    PACT_ALLOW_CIVILIAN_SHIPS: [PACT_ACTIVE, PACT_ALLOW_CIVILIAN_SHIPS],
-                    PACT_ALLOW_MILITARY_SHIPS: [PACT_ACTIVE, PACT_ALLOW_MILITARY_SHIPS]
-                }
-                
-                obj.diplomacyRels[party.oid] = diplSelf
-                party.diplomacyRels[obj.oid] = diplEDEN
+	def distToNearestPiratePlanet(self,tran,obj,srcObj):
+		# srcObj can be Planet or System type
+		dist = sys.maxint
+		for objID in obj.planets:
+			pirPl = tran.db[objID]
+			d = math.hypot(srcObj.x - pirPl.x, srcObj.y - pirPl.y)
+			if d < dist:
+				dist = d
+		return dist
+
+	def capturePlanet(self, tran, obj, planet):
+		# find distance to closes pirate's planet
+		dist = self.distToNearestPiratePlanet(tran,obj,planet)
+		if random.random() <= Rules.pirateGainFamePropability(dist):
+			log.debug(obj.oid, "Pirate captured planet + fame", dist, planet.oid)
+			obj.pirateFame += Rules.pirateCaptureInRangeFame
+			Utils.sendMessage(tran, obj, MSG_GAINED_FAME, planet.oid, Rules.pirateCaptureInRangeFame)
+		elif random.random() <= Rules.pirateLoseFameProbability(dist):
+			log.debug(obj.oid, "Pirate captured planet OUT OF range", dist, planet.oid)
+			obj.pirateFame += Rules.pirateCaptureOutOfRangeFame
+			Utils.sendMessage(tran, obj, MSG_LOST_FAME, planet.oid, Rules.pirateCaptureOutOfRangeFame)
+
+	def stealTechs(self, tran, piratePlayer, oldOwnerID, stealFromPlanetID):
+		if oldOwnerID == OID_NONE:
+			return
+		log.debug(piratePlayer.oid, "IPiratePlayer stealing techs")
+		oldOwner = tran.db[oldOwnerID]
+		canSteal = Rules.pirateCanStealImprovements
+		while canSteal > 0:
+			stealed = False
+			for techID in oldOwner.techs:
+				tech = Rules.techs[techID]
+				if oldOwner.techs[techID] <= piratePlayer.techs.get(techID, 0):
+					# skip techs that are already stealed
+					continue
+				if (tech.isShipEquip or tech.isShipHull) and not tech.unpackStruct and canSteal > 0:
+					self.givePirateTech(tran, piratePlayer, oldOwner, techID, stealFromPlanetID)
+					canSteal -= 1
+					stealed = True
+				if tech.isProject and canSteal > 0:
+					self.givePirateTech(tran, piratePlayer, oldOwner, techID, stealFromPlanetID)
+					canSteal -= 1
+					stealed = True
+			if not stealed:
+				break
+		# update techs
+		self.cmd(piratePlayer).update(tran, piratePlayer)
+		return
+
+	def givePirateTech(self, tran, piratePlayer, oldOwner, techID, stealFromPlanetID):
+		piratePlayer.techs[techID] = min(piratePlayer.techs.get(techID, 0) + 1, oldOwner.techs[techID])
+		Utils.sendMessage(tran, piratePlayer, MSG_GAINED_TECH, stealFromPlanetID, (techID, piratePlayer.techs[techID]))
+
+	def forceAllyWithEDEN(self,tran,obj):
+		for partyID in obj.diplomacyRels.keys():
+			party = tran.db.get(partyID, None)
+			if party.type == T_AIEDENPLAYER:
+				diplSelf = obj.diplomacyRels.get(party.oid, None)
+				log.debug("Allying Pirate with EDEN (forced)", obj.oid, partyID)
+				diplEDEN = IDataHolder()
+				diplEDEN.type = T_DIPLREL
+				diplEDEN.pacts = {
+					PACT_ALLOW_CIVILIAN_SHIPS: [PACT_ACTIVE, PACT_ALLOW_CIVILIAN_SHIPS],
+					PACT_ALLOW_MILITARY_SHIPS: [PACT_ACTIVE, PACT_ALLOW_MILITARY_SHIPS]
+				}
+				diplEDEN.relation = REL_FRIENDLY
+				diplEDEN.relChng = 0
+				diplEDEN.lastContact = tran.db[OID_UNIVERSE].turn
+				diplEDEN.contactType = CONTACT_STATIC
+				diplEDEN.stats = None
+
+				diplSelf.relation = REL_FRIENDLY
+				diplSelf.pacts = {
+					PACT_ALLOW_CIVILIAN_SHIPS: [PACT_ACTIVE, PACT_ALLOW_CIVILIAN_SHIPS],
+					PACT_ALLOW_MILITARY_SHIPS: [PACT_ACTIVE, PACT_ALLOW_MILITARY_SHIPS]
+				}
+
+				obj.diplomacyRels[party.oid] = diplSelf
+				party.diplomacyRels[obj.oid] = diplEDEN
                 
 

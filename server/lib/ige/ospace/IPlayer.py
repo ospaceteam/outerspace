@@ -1,5 +1,5 @@
 #
-#  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
+#  Copyright 2001 - 2011 Ludek Smid [http://www.ospace.net/]
 #
 #  This file is part of IGE - Outer Space.
 #
@@ -26,6 +26,8 @@ from Const import *
 import Rules, Utils, math, ShipUtils, time
 import re
 
+from ai_parser import AIList
+
 class IPlayer(IObject):
 
 	typeID = T_PLAYER
@@ -43,6 +45,7 @@ class IPlayer(IObject):
 		obj.planets = []
 		obj.fleets = []
 		obj.techs = {} # techs and their sublevel
+		obj.obsoleteTechs = set()
 		obj.rsrchQueue = []
 		obj.sciPoints = 0
 		obj.effSciPoints = 0
@@ -237,6 +240,8 @@ class IPlayer(IObject):
 			new.built = old.built
 			new.upgradeTo = old.upgradeTo
 			obj.shipDesigns[designID] = new
+		if not hasattr(obj, 'obsoleteTechs'):
+			obj.obsoleteTechs = set()
 
 	update.public = 0
 
@@ -376,6 +381,13 @@ class IPlayer(IObject):
 	resign.accLevel = AL_OWNER
 
 	def delete(self, tran, obj):
+		# check whether it is AI or normal player
+		if obj.type in AI_PLAYER_TYPES:
+			# remove AI account from the game, and record in the AI list
+			log.debug("Removing AI account from the AI list", obj.oid)
+			tran.gameMngr.clientMngr.removeAiAccount(obj.login)
+			aiList = AIList(tran.gameMngr.configDir)
+			aiList.remove(obj.login)
 		log.debug("Deleting player", obj.oid)
 		# delete relations
 		for playerID in tran.db[OID_UNIVERSE].players:
@@ -1097,6 +1109,7 @@ class IPlayer(IObject):
 					degraded = 1
 					break
 				if degraded: break
+		
 		return
 
 	processRSRCHPhase.public = 1
@@ -1353,3 +1366,22 @@ class IPlayer(IObject):
 			return "0,0"
             
 	getResolution.public = 0
+
+	def addObsoleteTechs(self, tran, player, techID):
+		# add tech
+		temp = set([techID])
+		player.obsoleteTechs = player.obsoleteTechs | temp
+		return player.obsoleteTechs
+		
+	addObsoleteTechs.public = 1
+	addObsoleteTechs.accLevel = AL_FULL
+
+	def delObsoleteTechs(self, tran, player, techID):
+		# del tech
+		temp = set([techID])
+		player.obsoleteTechs = player.obsoleteTechs - temp
+		return player.obsoleteTechs
+	
+	delObsoleteTechs.public = 1
+	delObsoleteTechs.accLevel = AL_FULL
+

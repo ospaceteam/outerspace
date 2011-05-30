@@ -22,13 +22,14 @@
 # tweak PYTHONPATH
 import sys, string, re
 import os
+from optparse import OptionParser
 sys.path.insert(0, 'lib')
 
 from igeclient.IClient import IClient
 import pprint, traceback
 from getpass import getpass
 from code import InteractiveConsole
-from ige.ospace import Rules
+from ige.ospace import Rules, Const
 import time
 
 #not race specific:
@@ -142,7 +143,8 @@ def showPlayers():
 	players = []
 	for playerID in un.players:
 		player = s.getInfo(playerID)
-		players.append((playerID, player.name))
+		if not player.type in Const.AI_PLAYER_TYPES:
+			players.append((playerID, player.name))
 
 	print
 	print
@@ -486,18 +488,26 @@ def processMenu(inp, objId, s):
 
 	return objId
 
+# parse command line arguments
+parser = OptionParser(usage = "usage: %prog [options] login")
+parser.add_option("",  "--configdir", dest = "configDir", 
+    metavar = "DIRECTORY", default = "var", 
+    help = "Override default configuration directory", 
+)
+options, args = parser.parse_args()
+
 #s = IClient('ospace.net:9080', None, msgHandler, None, 'IClient/osc')
 s = IClient('localhost:9080', None, msgHandler, None, 'IClient/osc')
 
-if len(sys.argv) != 2:
-	print "Usage: osclient LOGIN"
+if len(args) != 1:
+	print "Usage: osclient [options] LOGIN"
 	sys.exit(1)
 
 login = sys.argv[1]
 
 if login == "admin":
-	# get admin login from var/token
-	password = open(os.path.join("var", "token"), "r").read()
+	# get admin login from <configDir>/token
+	password = open(os.path.join(options.configDir, "token"), "r").read()
 else:
 	password = getpass("Password: ")
 

@@ -1,5 +1,5 @@
 #
-#  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
+#  Copyright 2001 - 2011 Ludek Smid [http://www.ospace.net/]
 #
 #  This file is part of IGE - Outer Space.
 #
@@ -35,6 +35,7 @@ import INature, IAIPlayer, IAIRenegadePlayer, IAIMutantPlayer, IAIPiratePlayer
 import IAIEDENPlayer, IPiratePlayer
 import Rules, Utils
 from Rules import Tech
+from ai_parser import AIList
 
 class GameMngr(IGEGameMngr):
 
@@ -42,8 +43,8 @@ class GameMngr(IGEGameMngr):
 	# Reguired methods
 	#
 
-	def __init__(self, gameID, config, clientMngr, msgMngr, database):
-		IGEGameMngr.__init__(self, gameID, config, clientMngr, msgMngr, database)
+	def __init__(self, gameID, config, clientMngr, msgMngr, database, configDir):
+		IGEGameMngr.__init__(self, gameID, config, clientMngr, msgMngr, database, configDir)
 		# register command object
 		self.registerObject(IUniverse.IUniverse)
 		self.registerObject(IPlayer.IPlayer)
@@ -75,6 +76,11 @@ class GameMngr(IGEGameMngr):
 		IGEGameMngr.shutdown(self)
 
 	def reset(self):
+		# remove all AI accounts and their records in AI list
+		aiList = AIList(self.configDir)
+		for login in aiList.getLogins():
+			self.clientMngr.removeAiAccount(login)
+		aiList.removeAll()
 		IGEGameMngr.reset(self)
 		# save informations
 		self.db.checkpoint()
@@ -164,6 +170,10 @@ class GameMngr(IGEGameMngr):
 		player.type = T_PLAYER
 		self.cmdPool[T_PLAYER].upgrade(tran, player)
 		self.cmdPool[T_PLAYER].update(tran, player)
+		# remove AI player account from game and its record from the AIlist
+		self.clientMngr.removeAiAccount(player.login)
+		aiList = AIList(self.configDir)
+		aiList.remove(player.login)
 		# reregister player
 		self.removePlayer(player.oid)
 		player.name = session.nick
@@ -222,6 +232,10 @@ class GameMngr(IGEGameMngr):
 		player.type = T_PIRPLAYER
 		self.cmdPool[T_PIRPLAYER].upgrade(tran, player)
 		self.cmdPool[T_PIRPLAYER].update(tran, player)
+		# remove AI player account from game and its record from the AIlist
+		self.clientMngr.removeAiAccount(player.login)
+		aiList = AIList(self.configDir)
+		aiList.remove(player.login)
 		# reregister player
 		self.removePlayer(player.oid)
 		player.fullName = "Pirate %s" % session.nick
@@ -310,7 +324,7 @@ class GameMngr(IGEGameMngr):
 			{Tech.FTLENG1:3, Tech.SCOCKPIT1:1, Tech.SCANNERMOD1:1})
 		dummy, fighterID = self.cmdPool[T_PLAYER].addShipDesign(tran, player, "Fighter", Tech.SMALLHULL1,
 			{Tech.FTLENG1:3, Tech.SCOCKPIT1:1, Tech.CANNON1:1})
-		self.cmdPool[T_PLAYER].addShipDesign(tran, player, "Bomber", Tech.SMALLHULL1,
+		dummy, bomberID = self.cmdPool[T_PLAYER].addShipDesign(tran, player, "Bomber", Tech.SMALLHULL1,
 			{Tech.FTLENG1:3, Tech.SCOCKPIT1:1, Tech.CONBOMB1:1})
 		dummy, colonyID = self.cmdPool[T_PLAYER].addShipDesign(tran, player, "Colony Ship", Tech.MEDIUMHULL2,
 			{Tech.FTLENG1:4, Tech.SCOCKPIT1:1, Tech.COLONYMOD2:1})

@@ -463,7 +463,7 @@ class IUniverse(IObject):
 
 		fh, galaxyFileName = tempfile.mkstemp(text = True)
 		log.debug("Generating new galaxy to temporary file", galaxyFileName)
-		strGalaxyID = 'Circle42P'
+		strGalaxyID = tran.gameMngr.config.server.newgalaxytype
 		GenerateGalaxy(strGalaxyID, os.fdopen(fh, "w+b"))
 		oldX = galaxy.x
 		oldY = galaxy.y
@@ -511,7 +511,7 @@ class IUniverse(IObject):
 
 		fh, galaxyFileName = tempfile.mkstemp(text = True)
 		log.debug("Generating new galaxy to temporary file", galaxyFileName)
-		strGalaxyID = 'Circle42P'
+		strGalaxyID = tran.gameMngr.config.server.newgalaxytype
 		GenerateGalaxy(strGalaxyID, os.fdopen(fh, "w+b"))
 		oldX = galaxy.x
 		oldY = galaxy.y
@@ -547,7 +547,7 @@ class IUniverse(IObject):
 		log.message("Adding new galaxy '%s' to (%d, %d)" % (galaxyName, x, y))
 		fh, galaxyFileName = tempfile.mkstemp(text = True)
 		log.debug("Generating new galaxy to temporary file", galaxyFileName)
-		strGalaxyID = 'Circle42P'
+		strGalaxyID = tran.gameMngr.config.server.newgalaxytype
 		GenerateGalaxy(strGalaxyID, os.fdopen(fh, "w+b"))
 		log.debug("Creating new galaxy")
 		newGalaxyID = self.createGalaxy(tran, obj)

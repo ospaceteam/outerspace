@@ -6,6 +6,31 @@ Last change:
 - $Author$
 - $Revision$
 
+[2011-05-13]
+- Faster mouse scroll in widgets [dahaic]
+- Creation of tasks addslot + structure should now build both or nothing [dahaic]
+- Technologies may be set as obsolete to hide them from the technologies lists [Miran]
+- AI pirate player should produce same influence signs as player pirate [dahaic]
+- Speed of fleets of other players are now reported as the exact numbers in the infobox [dahaic]
+- Login and password may be used as command line parameters.
+- AI framework [dahaic]
+  - Each player is now logable
+  - Whole system supporting creation and usage of AI scripts, with few tools to lessen the pain of creating one
+- AI players [dahaic]
+  - Pirate now defends its region, but it's not using stolen technologies
+  - Mutant build up its systems, expands, is attacking everyone. Its buildings are environment dependable.
+  - Rebel researches every TL1 tech, expands, and defend itself.
+  - Renegade defends its systems.
+  - EDEN is doing nothing :)
+  - All AIs are implemented quite naively, with focus on "doing something" more than "doing it perfectly"
+- Server has new command line option to change config dir [dahaic]
+- Added support for different galaxy generators. Type of generated galaxy may be changed in the config.ini [dahaic]
+  - Possible galaxies are Circle4P, Circle9P, Circle42P and Circle65P
+- Auto storage is set True after conquering the planet. [dahaic]
+- Pirate, renegade, mutant and EDEN has its own race ["p", "r", "m", "e"]. It solves some ugliness in pirates research tab. [dahaic]
+- Mutant structure icons [Tiamat]
+- Other minor tweaks [dahaic]
+
 [2011-03-15]
 - Fixed command line arguments for "Outer Space Fast Edition". [Qark]
 
@@ -43,6 +68,7 @@ Last change:
 - Fleets lost to low fuel are now reported by message (ticket #10). [dahaic]
 - Some projects got "globalDisabled" tag to prevent it to show in globalQueue. [dahaic]
 - Renegade faction awakened! [dahaic]
+- Renegade structure icons [Tiamat]
 - Server will not communicate with the clients anymore if issued with processing more turns in batch, until its done. [dahaic]
 
 [2010-10-13]
