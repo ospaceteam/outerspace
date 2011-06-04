@@ -100,7 +100,6 @@ class ResearchDlg:
 				if not self.showCompleted:
 					# skip this item
 					continue
-					item.foreground = None
 			if techID in player.obsoleteTechs:
 				item.foreground = (0x80, 0x40, 0x40)
 			items.append(item)
@@ -213,7 +212,6 @@ class ResearchDlg:
 		else:
 			self.win.vUnObs.enabled = 0
 			self.win.vObs.enabled = 1
-		#self.update()
 
 	def onKTechInfo(self, widget, action, data):
 		if self.win.vKTechs.selection:
@@ -319,7 +317,7 @@ class ResearchDlg:
 		self.update()
 		self.win.setStatus(_('Command has been executed.'))
 
-	def onStartObsolete(self, widget, action, data):
+	def onSetObsolete(self, widget, action, data):
 		if not self.win.vKTechs.selection:
 			self.win.setStatus(_('Select technology to obsolete.'))
 			return
@@ -335,7 +333,7 @@ class ResearchDlg:
 			return
 		self.update()
 
-	def offStartObsolete(self, widget, action, data):
+	def onUnsetObsolete(self, widget, action, data):
 		if not self.win.vKTechs.selection:
 			self.win.setStatus(_('Select technology to un-obsolete.'))
 			return
@@ -387,9 +385,9 @@ class ResearchDlg:
 			action = 'onKTechInfo')
 		#if techID in player.obsoleteTechs: 
 		ui.Button(self.win, layout = (0, 26, 5, 1), id = 'vUnObs', text = _('Un-Obsolete'),
-			action = 'offStartObsolete')
+			action = 'onUnsetObsolete')
 		ui.Button(self.win, layout = (0, 26, 5, 1), id = 'vObs', text = _('Obsolete'),
-			action = 'onStartObsolete')
+			action = 'onSetObsolete')
 		ui.Button(self.win, layout = (5, 26, 5, 1), id = "vSObsl", text = _('Show obsolete'),
 			action = 'onToggleObsolete', toggle = 1, pressed = 0)
 		# unknown techs

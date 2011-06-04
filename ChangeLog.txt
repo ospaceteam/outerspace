@@ -6,6 +6,10 @@ Last change:
 - $Author$
 - $Revision$
 
+[2011-06-05]
+- Detailed info about morale modifiers in system dialog via tooltip [Miran]
+- Minor code cleaning [dahaic]
+
 [2011-05-13]
 - Faster mouse scroll in widgets [dahaic]
 - Creation of tasks addslot + structure should now build both or nothing [dahaic]

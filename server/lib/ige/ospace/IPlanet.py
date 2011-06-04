@@ -82,6 +82,8 @@ class IPlanet(IObject):
 		obj.morale = Rules.maxMorale
 		obj.changeMorale = 0.0
 		obj.moraleTrgt = 0.0
+		# moraleModifiers [ base morale by distance from homeworld, from buildings, from population, sumary 1+2+3 ]
+		obj.moraleModifiers = [ 0.0 , 0.0 , 0.0 , 0.0 ]
 		obj.revoltLen = 0
 		obj.combatExp = 0
 		obj.isMilitary = 0
@@ -343,12 +345,12 @@ class IPlanet(IObject):
 			if turn % Rules.stratResRate == 0:
 				owner.stratRes[obj.plStratRes] = owner.stratRes.get(obj.plStratRes, 0) + 1
 				Utils.sendMessage(tran, obj, MSG_EXTRACTED_STRATRES, obj.oid, obj.plStratRes)
-		# compute moraleTrgt
+		# compute base morale
 		if owner:
 			homePlanet = tran.db[owner.planets[0]]
 			dist = int(math.sqrt((homePlanet.x - obj.x) ** 2 + (homePlanet.y - obj.y) ** 2))
 			moraleTrgt = -37.5 * dist / owner.govPwrCtrlRange + 107.5
-			obj.moraleTrgt = max(Rules.minMoraleTrgt, min(moraleTrgt, Rules.maxMorale))
+			obj.moraleModifiers[0] = max(Rules.minMoraleTrgt, min(moraleTrgt, Rules.maxMorale))
 			#@log.debug(obj.oid, "Morale target", obj.moraleTrgt, "dist", dist, owner.govPwrCtrlRange)
 		# auto regulation of min resources
 		if obj.autoMinStor:
@@ -363,6 +365,8 @@ class IPlanet(IObject):
 		obj.maxShield = 0
 		obj.solarmod = 0
 		#@log.debug("Morale bonus/penalty for planet", obj.oid, moraleBonus)
+		# reset of "morale modifier by buildings" value
+		obj.moraleModifiers[1] = 0
 		for struct in obj.slots:
 			tech = Rules.techs[struct[STRUCT_IDX_TECHID]]
 			# compute struct effectivity
@@ -447,7 +451,8 @@ class IPlanet(IObject):
 			obj.maxEn += int(tech.storEn * techEff)
 			obj.maxPop += int(tech.storPop * techEff)
 			obj.plEnv += int(tech.prodEnv * techEff * opStatus)
-			obj.moraleTrgt += tech.moraleTrgt * techEff * opStatus
+			# morale modifier of the building
+			obj.moraleModifiers[1] += tech.moraleTrgt * techEff * opStatus
 			# auto repair/damage
 			# also damage structures on not owned planets
 			if struct[STRUCT_IDX_HP] < maxHP and opStatus > 0.0:
@@ -739,15 +744,19 @@ class IPlanet(IObject):
 		if obj.storPop <= 0 and not obj.slots and obj.owner == OID_NONE:
 			# do not process this planet
 			return
-		# morale
+		# reset of "morale modifier by population" value
+		obj.moraleModifiers[2] = 0
 		system = tran.db[obj.compOf]
 		galaxy = tran.db[system.compOf]
 		if galaxy.timeEnabled and not galaxy.timeStopped:
 			# too much population affects morale (if there is more than base population)
 			if obj.storPop > Rules.moraleBasePop:
-				obj.moraleTrgt -= Rules.moraleHighPopPenalty * obj.storPop / Rules.moraleBasePop
+				obj.moraleModifiers[2] -= Rules.moraleHighPopPenalty * obj.storPop / Rules.moraleBasePop
 			elif obj.storPop <= Rules.moraleLowPop:
-				obj.moraleTrgt += Rules.moraleLowPopBonus
+				obj.moraleModifiers[2] += Rules.moraleLowPopBonus
+			# count final morale values
+			obj.moraleModifiers[3] = obj.moraleModifiers[0] +obj.moraleModifiers[1] + obj.moraleModifiers[2]
+			obj.moraleTrgt = obj.moraleModifiers[3]
 			obj.moraleTrgt = max(0.0, min(obj.moraleTrgt, Rules.maxMorale))
 			if obj.morale > int(obj.moraleTrgt):
 				obj.morale -= max(1.0, (obj.morale - obj.moraleTrgt) * Rules.moraleChngPerc)
@@ -918,6 +927,8 @@ class IPlanet(IObject):
 			log.debug("CONSISTENCY invalid compOf for planet", obj.oid)
 		# fix signature
 		obj.signature = 75
+		if not hasattr(obj, 'moraleModifiers'):
+			obj.moraleModifiers = [ 0.0 , 0.0 , 0.0 , 0.0 ]	
 
 	update.public = 0
 
