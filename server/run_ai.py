@@ -148,3 +148,4 @@ for login, (password, ais, galaxy) in aiList.getAll():
 #	os.system('python ../client-ai/ai_osc.py --configdir=%s --server=%s --login=%s --password=%s --ai=%s' %\
 #		 (options.configDir, options.server, login, password, ais))
 procQueue.waitForEnd()
+sys.exit()

@@ -6,6 +6,11 @@ Last change:
 - $Author$
 - $Revision$
 
+[2011-07-25]
+- AI doesn't crash on "wait" or "repeat" fleet orders [dahaic]
+- Ships out of fuel shouldn't repair itself by their autorepair function [dahaic]
+- Fixed some small annoyances [dahaic]
+
 [2011-06-05]
 - Detailed info about morale modifiers in system dialog via tooltip [Miran]
 - Minor code cleaning [dahaic]

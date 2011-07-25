@@ -261,10 +261,10 @@ def finishProjectAssemblePl(tran, source, target, tech):
 def finishProjectAsteroidMining(tran, source, target, tech):
     techEff = Utils.getTechEff(tran, tech.id, source.owner)
     minerals = min(int(float(tech.data) * techEff), target.plMin)
+    # now, transfer only minerals up to 200 on source planet
+    minerals = min(minerals, 200 - source.plMin)
     target.plMin -= minerals
     source.plMin += minerals
-    if source.plMin > 200:
-        source.plMin = 200
 
 def validateProjectBioEnrich(tran, source, target, tech):
     spec = Rules.planetSpec['E']

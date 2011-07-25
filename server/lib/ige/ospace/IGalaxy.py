@@ -360,7 +360,7 @@ class IGalaxy(IObject):
 				{Tech.FTLENG1:3, Tech.SCOCKPIT1:1, Tech.SCANNERMOD1:1})
 			dummy, fighterID = tran.gameMngr.cmdPool[T_AIPLAYER].addShipDesign(tran, player, "Fighter", Tech.SMALLHULL1,
 				{Tech.FTLENG1:3, Tech.SCOCKPIT1:1, Tech.CANNON1:1})
-			dummy, fighterID = tran.gameMngr.cmdPool[T_AIPLAYER].addShipDesign(tran, player, "Bomber", Tech.SMALLHULL1,
+			dummy, bomberID = tran.gameMngr.cmdPool[T_AIPLAYER].addShipDesign(tran, player, "Bomber", Tech.SMALLHULL1,
 				{Tech.FTLENG1:3, Tech.SCOCKPIT1:1, Tech.CONBOMB1:1})
 			dummy, colonyID = tran.gameMngr.cmdPool[T_AIPLAYER].addShipDesign(tran, player, "Colony Ship", Tech.MEDIUMHULL2,
 				{Tech.FTLENG1:4, Tech.SCOCKPIT1:1, Tech.COLONYMOD2:1})

@@ -184,7 +184,7 @@ def planetManager():
 						Rules.Tech.PIRATEDEN < 1000, 0, OID_NONE)
 					idlePlanets.remove(planetID)
 		# sixth - condensate and assembly all other planets
-		for targetID in copy.copy(data.nonhabPlanets):
+		for targetID in copy.copy(data.nonhabPlanets & set(system.planets)):
 			target = db[targetID]
 			if Rules.Tech.PLCOND5 in player.techs and target.plType == u'G':
 				if idlePlanets:
@@ -210,14 +210,24 @@ def planetManager():
 					data.nonhabPlanets.remove(targetID)
 		# ===============
 		# last - remaining idle planets should start producing ships
+		systemFleets = getattr(system, 'fleets', [])
+		hasScout = False
+		for fleetID in systemFleets:
+			fleet = db[fleetID]
+			if getattr(fleet, 'owner', OID_NONE) == playerID:
+				if fleetContains(fleet, {4:1}):
+					hasScout = True
 		for planetID in idlePlanets:
-			dice = random.randint(1, 3)
-			if dice == 1:
-				client.cmdProxy.startConstruction(planetID, 1, 3, planetID, True, False, OID_NONE)
-			elif dice == 2:
-				client.cmdProxy.startConstruction(planetID, 2, 3, planetID, True, False, OID_NONE)
+			if not hasScout:
+				planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 4, 1, planetID, True, False, OID_NONE)
 			else:
-				client.cmdProxy.startConstruction(planetID, 3, 2, planetID, True, False, OID_NONE)
+				dice = random.randint(1, 3)
+				if dice == 1:
+					planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 1, 3, planetID, True, False, OID_NONE)
+				elif dice == 2:
+					planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 2, 3, planetID, True, False, OID_NONE)
+				else:
+					planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 3, 2, planetID, True, False, OID_NONE)
 
 def shipDesignManager():
 	global client
@@ -245,7 +255,7 @@ def shipDesignManager():
 def fleetsManager():
 	global db, client, data
 	attackFleets = set()
-	attackMinimum = {1:10, 2:10, 3:10}
+	attackMinimum = {1:10, 2:10, 3:10, 4:1}
 	for fleetID in copy.copy(data.myFleets & data.idleFleets):
 		fleet = db.get(fleetID, None)
 		if fleet.combatCounter and fleet.orbiting not in data.mySystems:
@@ -278,6 +288,7 @@ def fleetsManager():
 		if fleet.orbiting in data.mySystems:
 			ships[3] = min(sheet[1], sheet[2], sheet[3])
 			ships[1] = ships[2] = ships[3]
+			ships[4] = 1
 			maxRange = subfleetMaxRange(client, db, ships, fleetID)
 			nearestSysIDs = findNearest(db, fleet, data.otherSystems & data.relevantSystems, maxRange * 0.45)
 			if len(nearestSysIDs):

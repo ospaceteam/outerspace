@@ -122,6 +122,10 @@ def tool_parseDB(client, db):
 	for fleetID in data.myFleets:
 		fleet = db[fleetID]
 		for orType, orTargID, orData in fleet.actions[fleet.actionIndex:]:
+			if orType == FLACTION_WAIT:
+				continue
+			elif orType == FLACTION_REPEATFROM:
+				continue
 			orTarg = db[orTargID]
 			if orTarg.type == T_SYSTEM:
 				data.unknownSystems -= set([orTargID])
