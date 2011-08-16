@@ -6,6 +6,11 @@ Last change:
 - $Author$
 - $Revision$
 
+VERSION 0.5.68
+
+[2011-08-16]
+- Server startup script can be run from a different directory now. [Qark]
+
 [2011-07-25]
 - AI doesn't crash on "wait" or "repeat" fleet orders [dahaic]
 - Ships out of fuel shouldn't repair itself by their autorepair function [dahaic]

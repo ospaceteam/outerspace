@@ -19,11 +19,14 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+import os
 import sys
 
 # setup system path
-sys.path.insert(0,"lib")
-sys.path.insert(0,"../client-ai")
+baseDir = os.path.abspath(os.path.dirname(__file__))
+
+sys.path.insert(0, os.path.join(baseDir, "lib"))
+sys.path.insert(0, os.path.join(baseDir, "..", "client-ai"))
 
 import os, atexit
 import getopt
