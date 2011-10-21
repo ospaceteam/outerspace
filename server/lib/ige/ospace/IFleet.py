@@ -1047,12 +1047,12 @@ class IFleet(IObject):
 						spec.maxHP,
 						hp + repairFix + max(1, spec.maxHP * repairPerc),
 					))
-				if shields < spec.shieldHP and obj.storEn:
-					#@log.debug("IFleet - recharging shields", designID, shields, spec.shieldRechargeFix, spec.shieldRechargePerc)
-					obj.ships[idx][SHIP_IDX_SHIELDHP] = int(min(
-						spec.shieldHP,
-						shields + spec.shieldRechargeFix + max(1, spec.shieldHP * spec.shieldRechargePerc),
-					))
+			if shields < spec.shieldHP and obj.storEn:
+				#@log.debug("IFleet - recharging shields", designID, shields, spec.shieldRechargeFix, spec.shieldRechargePerc)
+				obj.ships[idx][SHIP_IDX_SHIELDHP] = int(min(
+					spec.shieldHP,
+					shields + spec.shieldRechargeFix + max(1, spec.shieldHP * spec.shieldRechargePerc),
+				))
 			idx += 1
 
 	autoRepairAndRecharge.public = 0
