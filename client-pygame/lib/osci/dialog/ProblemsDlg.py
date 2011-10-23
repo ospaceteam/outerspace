@@ -332,14 +332,13 @@ class ProblemsDlg:
 		queEtc = [0, 0, 0, 0, 0]
 		for queue in xrange(5):
 			quePlanets, queEffProd = globalQueueStats[queue]
+			for task in player.prodQueues[queue]:
+				if task.isShip:
+					tech = client.getPlayer().shipDesigns[task.techID]
+				else:
+					tech = client.getFullTechInfo(task.techID)						
+				queConstValues[queue] += task.quantity * tech.buildProd
 			if queEffProd > 0:
-				for task in player.prodQueues[queue]:
-					if task.isShip:
-						tech = client.getPlayer().shipDesigns[task.techID]
-					else:
-						tech = client.getFullTechInfo(task.techID)						
-					queConstValues[queue] += task.quantity * tech.buildProd
-			
 				queEtc[queue] = math.ceil(float(queConstValues[queue])/queEffProd)
 			else:
 				queEtc[queue] = 99999

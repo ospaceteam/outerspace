@@ -8,6 +8,12 @@ Last change:
 
 VERSION 0.5.68
 
+[2011-10-23]
+- Fixed bug in 'Problems' dialog, global queues were reported as empty when all assigned planets had 0 production. [dahaic] 
+
+[2011-10-21]
+- Fixed shields being recharged just in case of hull damage. [dahaic]
+
 [2011-08-16]
 - Server startup script can be run from a different directory now. [Qark]
 
