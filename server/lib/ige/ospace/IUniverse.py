@@ -28,6 +28,7 @@ import ige
 import ige.version
 from ige import log
 from GalaxyGenerator import GenerateGalaxy
+import GalaxyGenerator
 from ige import GameException
 
 class IUniverse(IObject):
@@ -49,6 +50,7 @@ class IUniverse(IObject):
 		obj.owner = OID_ADMIN
 		obj.galaxies = []
 		obj.players = []
+		obj.waitingPlayers = []
 		# auto loading of galaxies
 		obj.galX = 0.0
 		obj.galY = 0.0
@@ -409,6 +411,13 @@ class IUniverse(IObject):
 
 	getReferences.public = 0
 
+	def getPossibleGalaxyTypes(self, tran, obj):
+		galGen = GalaxyGenerator.GalaxyGenerator()
+		return galGen.getGalaxyTypes()
+
+	getPossibleGalaxyTypes.public = 1
+	getPossibleGalaxyTypes.accLevel = AL_ADMIN
+	
 	def getPublicInfo(self, tran, obj):
 		result = IDataHolder()
 		result.oid = obj.oid
@@ -461,36 +470,15 @@ class IUniverse(IObject):
 		}
 		self.cmd(obj).sendMsg(tran, obj, message)
 
-		fh, galaxyFileName = tempfile.mkstemp(text = True)
-		log.debug("Generating new galaxy to temporary file", galaxyFileName)
-		strGalaxyID = tran.gameMngr.config.server.newgalaxytype
-		GenerateGalaxy(strGalaxyID, os.fdopen(fh, "w+b"))
 		oldX = galaxy.x
 		oldY = galaxy.y
 		oldName = galaxy.name
+		# not created by booker - will restart it
+		restart = not galaxy.bookedCreation
 		log.debug("Deleting galaxy", galaxyID)
 		self.cmd(galaxy).delete(tran, galaxy)
-		log.debug("Creating new galaxy")
-		newGalaxyID = self.createGalaxy(tran, obj)
-		log.debug("Created new galaxy", newGalaxyID)
-		newGalaxy = tran.db[newGalaxyID]
-		log.debug("Loading new ", newGalaxyID)
-		self.cmd(newGalaxy).loadFromXML(tran, newGalaxy, galaxyFileName, strGalaxyID, oldX, oldY, oldName)
-		log.debug("Setup Enviroment", newGalaxyID)
-		self.cmd(newGalaxy).setupEnvironment(tran, newGalaxy)
-		log.debug("Sending Announcement Message", newGalaxyID)
-		#self.cmd(newGalaxy).announceGalaxy(tran,newGalaxy)
-		log.debug("Removing temp file", galaxyFileName)
-		os.remove(galaxyFileName)
-		# TODO: find you what's this code about
-		#message = {
-		#    "sender": 'Galaxy %s' % oldName,
-		#    "senderID": obj.oid,
-		#    "forum": "NEWS",
-		#    "data": (obj.oid, MSG_GNC_GALAXY_GENERATOR, obj.oid, tran.db[OID_UNIVERSE].turn, (oldName, newGalaxy.description)),
-		#    "topic": "EVENT",
-                #}
-		log.debug("Galaxy Restarting END")
+		if restart:
+			self.cmd(obj).createNewGalaxy(self, tran, obj, oldX, oldY, oldName)
 
 	restartGalaxy.public = 1
 	restartGalaxy.accLevel = AL_NONE
@@ -508,41 +496,47 @@ class IUniverse(IObject):
 			"topic": "EVENT",
 		}
 		self.cmd(obj).sendMsg(tran, obj, message)
-
-		fh, galaxyFileName = tempfile.mkstemp(text = True)
-		log.debug("Generating new galaxy to temporary file", galaxyFileName)
-		strGalaxyID = tran.gameMngr.config.server.newgalaxytype
-		GenerateGalaxy(strGalaxyID, os.fdopen(fh, "w+b"))
 		oldX = galaxy.x
 		oldY = galaxy.y
 		oldName = galaxy.name
+		# not created by booker - will restart it
+		restart = not galaxy.bookedCreation
 		log.debug("Deleting galaxy", galaxyID)
 		self.cmd(galaxy).delete(tran, galaxy)
+		if restart:
+			self.cmd(obj).createNewGalaxy(self, tran, obj, oldX, oldY, oldName)
+
+	restartGalaxy2.public = 1
+	restartGalaxy2.accLevel = AL_ADMIN
+
+	def createNewSubscribedGalaxy(self, tran, obj, x, y, galaxyName, galaxyType, listOfPlayers):
+		log.message("Adding new galaxy '%s' to (%d, %d)" % (galaxyName, x, y))
+		fileHandle, galaxyFileName = tempfile.mkstemp(text = True)
+		log.debug("Generating new galaxy to temporary file", galaxyFileName)
+		galGen = GalaxyGenerator.GalaxyGenerator()
+		galGen.generateGalaxy(galaxyType, os.fdopen(fileHandle, "w+b"))
 		log.debug("Creating new galaxy")
 		newGalaxyID = self.createGalaxy(tran, obj)
 		log.debug("Created new galaxy", newGalaxyID)
 		newGalaxy = tran.db[newGalaxyID]
 		log.debug("Loading new ", newGalaxyID)
-		self.cmd(newGalaxy).loadFromXML(tran, newGalaxy, galaxyFileName, strGalaxyID, oldX, oldY, oldName)
+		self.cmd(newGalaxy).loadFromXML(tran, newGalaxy, galaxyFileName, galaxyType, x, y, galaxyName)
+		log.debug("Running scripts specific to booked galaxies", newGalaxyID)
+		self.cmd(newGalaxy).bookedInit(tran, newGalaxy)
 		log.debug("Setup Enviroment", newGalaxyID)
 		self.cmd(newGalaxy).setupEnvironment(tran, newGalaxy)
 		log.debug("Sending Announcement Message", newGalaxyID)
 		#self.cmd(newGalaxy).announceGalaxy(tran,newGalaxy)
 		log.debug("Removing temp file", galaxyFileName)
 		os.remove(galaxyFileName)
-		# TODO: find you what's this code about
-		#message = {
-		#    "sender": 'Galaxy'+galaxyName,
-		#    "senderID": obj.oid,
-		#    "forum": "NEWS",
-		#    "data": (obj.oid, MSG_GNC_GALAXY_GENERATOR, obj.oid, tran.db[OID_UNIVERSE].turn, (galaxyName, newGalaxy.description)),
-		#    "topic": "EVENT",
-                #}
-		log.debug("Galaxy Restarting END")
+		for playerInfo in listOfPlayers:
+			tran.gameMngr.createNewSubscribedPlayer(playerInfo, newGalaxyID)
+		log.debug("Galaxy creation END")
 
-	restartGalaxy2.public = 1
-	restartGalaxy2.accLevel = AL_ADMIN
-
+	createNewSubscribedGalaxy.public = 1
+	createNewSubscribedGalaxy.accLevel = AL_ADMIN
+		
+	
 	def createNewGalaxy(self, tran, obj, x, y, galaxyName):
 		log.message("Adding new galaxy '%s' to (%d, %d)" % (galaxyName, x, y))
 		fh, galaxyFileName = tempfile.mkstemp(text = True)
@@ -569,7 +563,7 @@ class IUniverse(IObject):
 		#    "data": (obj.oid, MSG_GNC_GALAXY_GENERATOR, obj.oid, tran.db[OID_UNIVERSE].turn, (galaxyName, newGalaxy.description)),
 		#    "topic": "EVENT",
                 #}
-		log.debug("Galaxy Restarting END")
+		log.debug("Galaxy creation END")
 
 	createNewGalaxy.public = 1
 	createNewGalaxy.accLevel = AL_ADMIN

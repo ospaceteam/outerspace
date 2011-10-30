@@ -74,7 +74,11 @@ parser.add_option("",  "--heartbeat", dest = "heartbeat",
     default = 180,
     help = "Heartbeat for server connection"
 )
-
+parser.add_option("",  "--galaxer", dest = "galaxer", 
+    metavar = "PROTOCOL://HOSTNAME:PORT", 
+    default = "http://www.ospace.net:9081",
+    help = "Outer Space galaxy booking system location"
+)
 options, args = parser.parse_args()
 
 if args:
@@ -165,6 +169,7 @@ gdata.config = Config(os.path.join(options.configDir, options.configFilename))
 
 # default configuration
 gdata.config.game.server = options.server
+gdata.config.galaxer.server = options.galaxer
 
 if gdata.config.client.language == None:
     gdata.config.client.language = 'en'

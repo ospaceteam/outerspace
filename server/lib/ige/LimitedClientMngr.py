@@ -128,6 +128,9 @@ class ClientMngr:
 		account.addHostID(hostID)
 		return 1, None
 
+	def getToken(self, sid):
+		return self.tokens[sid], None
+		
 	def getSession(self, sid):
 		session = self.sessions.get(sid, None)
 		if not session:

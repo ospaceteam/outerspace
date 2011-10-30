@@ -53,6 +53,7 @@ class IGalaxy(IObject):
 		obj.timeEnabled = 0 # TODO change to 0
 		obj.timeStopped = 0
 		obj.creationTime = 0.0
+		obj.bookedCreation = False
 		obj.imperator = OID_NONE
 		obj.description = ""
 		# electromagnetic radiation
@@ -83,6 +84,9 @@ class IGalaxy(IObject):
 		# check compOf
 		if not tran.db.has_key(obj.compOf) or tran.db[obj.compOf].type != T_UNIVERSE:
 			log.debug("CONSISTENCY invalid compOf for galaxy", obj.oid, obj.compOf)
+		# TODO remove after 0.5.69
+		if not hasattr(obj, 'bookedCreation'):
+			obj.bookedCreation = False	
 
 	update.public = 0
 
@@ -91,6 +95,12 @@ class IGalaxy(IObject):
 
 	getReferences.public = 0
 
+	def bookedInit(self, tran, obj):
+		obj.bookedCreation = True
+
+	bookedInit.public = 1
+	bookedInit.accLevel = AL_ADMIN
+	
 	def processINITPhase(self, tran, obj, data):
 		# compute emr level
 		turn = tran.db[OID_UNIVERSE].turn
@@ -308,7 +318,7 @@ class IGalaxy(IObject):
 			#   log.debug("Half galaxy populated", len(obj.startingPos), obj.numOfStartPos)
 			#   canRun = 1
 			# at least two days must pass from creation
-			if not obj.startingPos:
+			if not obj.startingPos and not obj.bookedCreation:
 				log.debug("All positions taken, starting galaxy")
 				canRun = 1
 			if obj.creationTime < time.time() - 2 * 24 * 3600:
@@ -452,6 +462,12 @@ class IGalaxy(IObject):
 	delete.public = 1
 	delete.accLevel = AL_ADMIN
 
+	def getGalaxerInfo(self, tran, obj):
+		return obj.name, obj.x, obj.y, obj.radius
+
+	getGalaxerInfo.public = 1
+	getGalaxerInfo.accLevel = AL_ADMIN
+	
 	def getPublicInfo(self, tran, obj):
 		result = IDataHolder()
 		result.oid = obj.oid

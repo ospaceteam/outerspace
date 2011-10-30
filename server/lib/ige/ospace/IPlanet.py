@@ -901,11 +901,6 @@ class IPlanet(IObject):
 			if not deletedKey:
 				loopAgain = False
 				
-		# TODO: remove in 0.5.34
-		for struct in obj.slots:
-			if len(struct) < 4:
-				# add oper status
-				struct.append(100)
 		# change owner to OID_NONE when owner is invalid
 		if obj.owner != OID_NONE:
 			player = tran.db.get(obj.owner, None)
@@ -916,12 +911,6 @@ class IPlanet(IObject):
 				# kill all population
 				obj.storPop = 0
 				return
-		# TODO: remove in 0.5.65
-		obj.storBio = int(obj.storBio)
-		obj.storEn = int(obj.storEn)
-		# TODO: remove in 0.5.69
-		if not hasattr(obj, "globalQueue"):
-			obj.globalQueue = 0
 		# check compOf
 		if not tran.db.has_key(obj.compOf) or tran.db[obj.compOf].type != T_SYSTEM:
 			log.debug("CONSISTENCY invalid compOf for planet", obj.oid)

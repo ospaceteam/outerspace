@@ -18,6 +18,8 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+import xmlrpclib
+
 from igeclient import IClient, IClientDB
 from ige.ospace import Rules
 from ige.ospace.Const import *
@@ -34,12 +36,14 @@ server = None
 serverVersion = None
 ignoreMsgs = {}
 nonexistingObj = {}
-optins = None
+options = None
+galaxer = None
 
 def initialize(aServer, aCallbackObj, anOptions):
-	global callbackObj, server, options
+	global callbackObj, server, options, galaxer
 	callbackObj = aCallbackObj
 	server = aServer
+	galaxer = xmlrpclib.ServerProxy(gdata.config.galaxer.server)
 	options = anOptions
 	initCmdProxy(options.heartbeat)
 
@@ -111,7 +115,20 @@ def saveDB():
 		log.message('OSClient', 'Saving database')
 		db.save()
 
-## Message handler
+## Part for communication with Galaxer
+def getGalaxerData():
+	global cmdProxy, galaxer
+	token = cmdProxy.getToken()
+	galaxerData = galaxer.getDataForPlayer(token)
+	return galaxerData
+
+def setPlayerPreference(galType):
+	global cmdProxy, galaxer
+	token = cmdProxy.getToken()
+	galaxerData = galaxer.setPlayerPreference(token, galType)
+	return galaxerData
+		
+		## Message handler
 
 def msgHandler(mid, data):
 	if ignoreMsgs.has_key(mid):

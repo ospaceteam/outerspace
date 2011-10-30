@@ -23,6 +23,7 @@ import random, os, time, copy
 import ige
 from ige import log
 
+from ige.ClientMngr import Session
 from ige.GameMngr import GameMngr as IGEGameMngr
 from ige.Index import Index
 from ige.Transaction import Transaction
@@ -257,9 +258,7 @@ class GameMngr(IGEGameMngr):
 		self.generateGameInfo()
 		return player.oid, None
 
-	def createNewPlayer(self, sid, galaxyID):
-		log.debug('Creating new player in session', sid)
-		session = self.clientMngr.getSession(sid)
+	def _createNewPlayer(self, session, galaxyID):
 		log.debug('Creating new player with CID', session.cid)
 		universe = self.db[OID_UNIVERSE]
 		galaxy = self.db[galaxyID]
@@ -355,7 +354,18 @@ class GameMngr(IGEGameMngr):
 		self.cmdPool[T_GALAXY].enableTime(tran, galaxy)
 		# save game info
 		self.generateGameInfo()
-		return playerID, None
+		return playerID, None		
+
+	def createNewPlayer(self, sid, galaxyID):
+		log.debug('Creating new player in session', sid)
+		session = self.clientMngr.getSession(sid)
+		self._createNewPlayer(session, galaxyID)
+
+	def createNewSubscribedPlayer(self, (login, nick, email), galaxyID):
+		log.debug('Creating new subscribed player using fake session')
+		session = Session(None)
+		session.setAttrs(login, nick, email)
+		self._createNewPlayer(session, galaxyID)
 
 	def removePlayer(self, playerID):
 		log.debug('removePlayer', playerID)

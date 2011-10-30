@@ -92,6 +92,12 @@ class IClient:
 	def getVersion(self):
 		return apply(IProxy('getVersion', None, self), ())
 
+	def getToken(self):
+		return apply(IProxy('getToken', None, self), ())
+
+	def getSessionByToken(self, token):
+		return apply(IProxy('getSessionByToken', None, self), (token,))
+		
 	def cleanupSessions(self):
 		return apply(IProxy('cleanupSessions', None, self), ())
 

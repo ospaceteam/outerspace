@@ -8,6 +8,14 @@ Last change:
 
 VERSION 0.5.68
 
+[2011-10-30]
+- First implementation of galaxy booking system (named Galaxer) [dahaic]
+  - players may book the galaxy type of their choice, and it will create it
+    as soon as there is enough willing to play. In that case, it will auto
+    join all the subscribers into it
+  - galaxies created by galaxer doesn't restart, only ends
+  - galaxies created by galaxer has 2 days of forced time freeze period
+
 [2011-10-23]
 - Fixed bug in 'Problems' dialog, global queues were reported as empty when all assigned planets had 0 production. [dahaic] 
 

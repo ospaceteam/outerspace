@@ -42,7 +42,7 @@ class GalaxyStats:
 		self.galaxyPlayerGroup = 1
 		self.galaxyGroupDist = 1
 		self.galaxyMinR = 5
-		self.galaxyDensity = {5: 2, 10: 2, 20: 3, 30: 4, 40: 5, 50: 6}
+		self.galaxyDensity = {5: 3, 10: 3.5, 20: 4}
 		self.galaxyResources = {
 			# format resourceID : (minDist, maxDist, number of resources)
 			1 : (12, 15, 2), # TL 1 + 2
@@ -155,7 +155,22 @@ class GalaxyStats:
 			self.activeGalaxy = self.galaxies[galaxyID]
 		self.activeGalaxy()
 		
-	
+
+class GalaxyGenerator:
+	def __init__(self):
+		self.galaxyTypes = {'Circle9P':(9, 'Smaller galaxy for 9 players, without pirate or EDEN. Recommended for new players or those who seek more casual gameplay.'),
+							'Circle42P':(42, 'Original size galaxy for 42 players, place of epic battles, recommended only to the experienced players. May be quite time consuming.')}
+
+	def generateGalaxy(self, galaxyType, fileHandle):
+		if not galaxyType in self.galaxyTypes.keys():
+			return False
+		else:
+			GenerateGalaxy(galaxyType, fileHandle)
+			return True
+
+	def getGalaxyTypes(self):
+		return self.galaxyTypes
+		
 # galaxy specification for GalaxyGenerator() [not used anymore]
 sectorSize = [10, 10]
 sectorsOffset = [0, 0]

@@ -157,6 +157,8 @@ def init(clientMngr):
 	callMap['cleanupSessions'] = clientMngr.cleanupSessions
 	callMap['exportAccounts'] = clientMngr.exportAccounts
 	callMap['getVersion'] = versionHandler
+	callMap['getToken'] = clientMngr.getToken
+	callMap['getSessionByToken'] = clientMngr.getSessionByToken
 
 def register(game):
 	global callMap
