@@ -8,6 +8,10 @@ Last change:
 
 VERSION 0.5.68
 
+[2011-10-31]
+- Players lose their bookings when joining a galaxy.
+- Fixed few things made in the last revision.
+
 [2011-10-30]
 - First implementation of galaxy booking system (named Galaxer) [dahaic]
   - players may book the galaxy type of their choice, and it will create it

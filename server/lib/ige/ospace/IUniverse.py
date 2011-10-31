@@ -417,6 +417,17 @@ class IUniverse(IObject):
 
 	getPossibleGalaxyTypes.public = 1
 	getPossibleGalaxyTypes.accLevel = AL_ADMIN
+
+	def getActivePlayers(self, tran, obj):
+		playerNames = []
+		for playerID in obj.players:
+			player = tran.db[playerID]
+			if not player.type in AI_PLAYER_TYPES:
+				playerNames.append(player.name)
+		return playerNames
+
+	getActivePlayers.public = 1
+	getActivePlayers.accLevel = AL_ADMIN
 	
 	def getPublicInfo(self, tran, obj):
 		result = IDataHolder()

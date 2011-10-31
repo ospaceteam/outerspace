@@ -59,13 +59,19 @@ def _getActualGalaxies():
 	return galaxies
 
 def _getActivePlayers():
-	un = s.getInfo(OID_UNIVERSE)
-	players = []
-	for playerID in un.players:
-		player = s.getInfo(playerID)
-		if not player.type in Const.AI_PLAYER_TYPES:
-			players.append(player.name)
-	return players
+	return s.getActivePlayers(OID_UNIVERSE)
+
+def _removePlayingPlayers():
+	activePlayers = _getActivePlayers()
+	query = db.execute('SELECT DISTINCT nick FROM players', ()).fetchall()
+	bookingPlayers = []
+	for (nick,) in query:
+		bookingPlayers.append(nick)
+	zombiePlayers = set(bookingPlayers) & set(activePlayers)
+	for nick in zombiePlayers:
+		db.execute('DELETE FROM players\
+						WHERE nick=?',
+						(nick,))
 	
 def setPlayerPreference(token, galType):
 	global db
@@ -125,13 +131,14 @@ def getDataForPlayer(token):
 
 def testBooking():
 	global db
-	modifier = 1
+	_removePlayingPlayers()
 	query = db.execute('SELECT galType, COUNT(*) FROM players\
 							GROUP BY galType', ()).fetchall()
 	types = s.getPossibleGalaxyTypes(OID_UNIVERSE)
 	for galType, count in query:
 		galCap, galInfo = types[galType]
-		if galCap * modifier <= count:
+		if galCap * options.threshold <= count:
+			#
 			return createNewGalaxy(galType, galCap)
 
 def createNewGalaxy(galType, galCap):
@@ -240,13 +247,19 @@ parser.add_option("",  "--configdir", dest = "configDir",
 )
 parser.add_option("",  "--OSserver", dest = "server", 
 	metavar = "HOSTNAME:PORT", 
-	default = "localhost:9080",
+	default = "www.ospace.net:9080",
 	help = "Outer Space server location"
 )
 parser.add_option("",  "--address", dest = "address", 
 	metavar = "HOSTNAME:PORT", 
-	default = "localhost:9081",
+	default = "www.ospace.net:9081",
 	help = "Outer Space galaxer location"
+)
+parser.add_option("",  "--threshold", dest = "threshold", 
+	metavar = "REALNUMBER", 
+	default = 1.0,
+	type = "float",
+	help = "Ratio of galaxy capacity, which is necessary to create it."
 )
 
 options, args = parser.parse_args()
