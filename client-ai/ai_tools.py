@@ -222,7 +222,7 @@ def doRelevance(client, db, rangeOfRelevance):
 
 def findInfluence(client, db, rangeOfInfluence, objectIDList):
 	""" Returns list of all systems, which distance to any object
-	from the objectList	is lesser than rangeOfInfluence. 
+	from the objectList	is less than rangeOfInfluence. 
 
 	objectList -- iterable of IDs, and each	of the objects in the db has
 	              to have .x and .y numeric parameters.
@@ -670,6 +670,20 @@ def getSystemStatsChange(client, db, techID, targetPlanetID, targetTechID):
 		deltaBio -= tech.prodBio * Rules.techImprEff[player.techs.get(techID, 1)] * sum([x*y/100.0 for x, y in zip(tech.prodBioMod, [planet.plBio, planet.plMin, planet.plEn, 100])])			
 		deltaProd -= tech.prodProd * Rules.techImprEff[player.techs.get(techID, 1)] * sum([x*y/100.0 for x, y in zip(tech.prodProdMod, [planet.plBio, planet.plMin, planet.plEn, 100])])
 	return deltaBio, deltaEn, deltaProd
+
+def checkBuildQueues(client, db, systemID, prodPlanets):
+	system = db[systemID]
+	player = client.getPlayer()
+	for planetID in prodPlanets:
+		planet = db[planetID]
+		validTasks = 0
+		while len(planet.prodQueue) > validTasks:
+			# validTasks is effectively the actual index
+			task = planet.prodQueue[validTasks]
+			if task.targetID in data.myPlanets | data.freePlanets | set([OID_NONE, None]):
+				validTasks += 1
+			else:
+				planet.prodQueue, player.stratRes = client.cmdProxy.abortConstruction(planetID, validTasks)
 	
 def buildSystem(client, db, systemID, prodPlanets, finalSystemPlan):
 	""" Assigns tasks to all idle planets with CP > 0 in one system, according
@@ -691,6 +705,7 @@ def buildSystem(client, db, systemID, prodPlanets, finalSystemPlan):
 	structsToBuild = {}
 	structsToDemolish = {}
 	difference = {}
+	checkBuildQueues(client, db, systemID, prodPlanets)
 	# parse final plan to set buildings which need to be build and those that
 	# may be demolished
 	for planetID in finalSystemPlan:

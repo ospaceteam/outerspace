@@ -138,7 +138,7 @@ def systemManager():
 			if not hasSeeders or not hasSeekers:
 				# 20 %
 				if shipDraw < 3:
-					planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 1, 3, planetID, True, False, OID_NONE)
+					planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 1, 2, planetID, True, False, OID_NONE)
 				else:
 					if not hasSeeders:
 						planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 2, 1, planetID, True, False, OID_NONE)
@@ -190,7 +190,7 @@ def expansionManager():
 					if noOfSlots < planet.plSlots:
 						noOfSlots = planet.plSlots
 						biggestPlanet = planetID
-				# send the fleet
+						# send the fleet
 				fleet, newFleet, myFleets = orderPartFleet(client, db,
 					{2:1}, True, fleetID, FLACTION_DEPLOY, biggestPlanet, 2)
 				data.myFleetSheets[fleetID][2] -= 1
@@ -200,6 +200,28 @@ def expansionManager():
 				else:
 					shouldRepeat = True
 				data.freeSystems.remove(systemID)
+			# if there is no free system to go to, does the ship levitate over
+			# the system partly occupied by someone else, and partly free?
+			else:
+				fleet = db[fleetID]
+				orbitingID = fleet.orbiting
+				if not orbitingID == OID_NONE:
+					orbiting = db[orbitingID]
+					if set(orbiting.planets) & data.freePlanets and orbitingID in data.otherSystems:
+						noOfSlots = 0
+						biggestPlanet = None
+						for planetID in set(orbiting.planets) & data.freePlanets:
+							planet = db[planetID]
+							if noOfSlots < planet.plSlots:
+								noOfSlots = planet.plSlots
+								biggestPlanet = planetID
+						# issue the deploy order
+						fleet, newFleet, myFleets = orderPartFleet(client, db,
+							{2:1}, True, fleetID, FLACTION_DEPLOY, biggestPlanet, 2)
+						data.myFleetSheets[fleetID][2] -= 1
+						if data.myFleetSheets[fleetID][2] == 0:
+							del data.myFleetSheets[fleetID][2]
+							seederFleets.remove(fleetID)						
 	
 
 def shipDesignManager():

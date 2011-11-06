@@ -311,6 +311,8 @@ class TechInfoDlg:
 			descr.append(_('Rumours:'))
 			descr.extend(tech.textFlavor.split('\n'))
 			descr.append('')
+		if not len(descr):
+			descr.append(_('No information available'))
 		#
 		self.win.vDescr.text = descr
 		# re-set techType if neccessary

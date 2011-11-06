@@ -317,6 +317,7 @@
 			minenum="15"
 			minerate="6"
 			isMilitary="1"
+			fullInfo="1"
 		/>
 	</technology>
 	<technology id="9077" symbol="MUTANTBASE4" name="Mutant Junction">

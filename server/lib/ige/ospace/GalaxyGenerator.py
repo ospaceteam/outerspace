@@ -36,10 +36,10 @@ class GalaxyStats:
 		self.galaxyMinPlanets = 0
 		self.galaxyMaxPlanets = 99999
 		self.galaxyCenter = (20.0, 20.0)
-		self.galaxyRadius = 20.0
+		self.galaxyRadius = 15.0
 		self.galaxyStartR = (14.0, 16.0)
 		self.galaxyPlayers = 4
-		self.galaxyPlayerGroup = 1
+		self.galaxyPlayerGroup = 4
 		self.galaxyGroupDist = 1
 		self.galaxyMinR = 5
 		self.galaxyDensity = {5: 3, 10: 3.5, 20: 4}

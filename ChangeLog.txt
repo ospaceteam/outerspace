@@ -6,11 +6,18 @@ Last change:
 - $Author$
 - $Revision$
 
-VERSION 0.5.68
+[2011-11-06]
+- Mutant may, from now on, deploy on a free planets of the system owned by someone else. [dahaic]
+- AI from now on checks, whether the build jobs target a non-other-player planets (ie. no more building on neighbours planets) [dahaic]  
+- Mutant minefield now correctly show the information. [dahaic]
+- Bug in TechInfoDlg when no information for particular building was available. [dahaic]
+- Added import pygame._view for better support of py2exe. [dahaic]
+- Fixed statistics of Generator Complex [Tiamat]
+- Fix of the ChangeLog :)
 
 [2011-10-31]
-- Players lose their bookings when joining a galaxy.
-- Fixed few things made in the last revision.
+- From now on, players lose their bookings when joining a galaxy. [dahaic]
+- Fixed few things made in the last revision. [dahaic]
 
 [2011-10-30]
 - First implementation of galaxy booking system (named Galaxer) [dahaic]
@@ -25,6 +32,8 @@ VERSION 0.5.68
 
 [2011-10-21]
 - Fixed shields being recharged just in case of hull damage. [dahaic]
+
+VERSION 0.5.68
 
 [2011-08-16]
 - Server startup script can be run from a different directory now. [Qark]
