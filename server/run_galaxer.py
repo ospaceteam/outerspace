@@ -19,8 +19,10 @@
 #
 
 import atexit
+import math
 import optparse
 import os
+import random
 import sys
 import time
 import xmlrpclib
@@ -106,7 +108,7 @@ def getDataForPlayer(token):
 	if session:
 		playerNick = session.nick
 		for galType in types:
-			playerCapacity, infoText = types[galType]
+			playerCapacity, infoText, radius = types[galType]
 			query = db.execute('SELECT COUNT(*), galType\
 									FROM players GROUP BY galType\
 										HAVING galType=?', (galType,)).fetchone()
@@ -136,27 +138,31 @@ def testBooking():
 							GROUP BY galType', ()).fetchall()
 	types = s.getPossibleGalaxyTypes(OID_UNIVERSE)
 	for galType, count in query:
-		galCap, galInfo = types[galType]
-		if galCap * options.threshold <= count:
-			#
-			return createNewGalaxy(galType, galCap)
+		galCap, galInfo, radius = types[galType]
+		if galCap * options.threshold <= count:		
+			return createNewGalaxy(galType, galCap, radius)
 
-def createNewGalaxy(galType, galCap):
+def createNewGalaxy(galType, galCap, radius):
 	actualGalaxies = _getActualGalaxies()
-	galPositions = set([])
+	# using sqlite to provide rtree, as it is part of the standard library
+	tempdb = sqlite3.connect(':memory:')
+	tempdb.execute('CREATE VIRTUAL TABLE galaxies_positions USING rtree(id INTEGER PRIMARY KEY, x_min, x_max, y_min, y_max)')
 	galNames = set([])
-	maxCoordinate = 0
-	names = ['Argo', 'Beidos', 'Ceelia', 'Daela', 'Everen', 'Ferun', 'Garis', 'Hiron', 'Inera', 'Jinx', 'Kelenor', 'Larion', 'Merlis']
+	maxRadius = radius
+	# reserve is half of the minimal range of the galaxies
+	reserve = 50.0
+	galRadius = radius + reserve
+	# fill list of possible galaxy names
+	names = []
+	for name in open('data/GalaxyNames.txt'):
+		names.append(name.strip())
 	for galaxyID in actualGalaxies:
 		galName, galX, galY, galRadius = actualGalaxies[galaxyID]
-		galX = int(galX)
-		galY = int(galY)
-		galRadius = int(galRadius)
+		maxRadius = max(maxRadius, galRadius)
+		galRadius += reserve
 		galNames.add(galName)
-		galPositions.add((galX, galY))
-		maxCoordinate = max(maxCoordinate, galX, galY)
-		if galRadius > 50 or galX % 100 or galY % 100:
-			raise NotImplementedError
+		tempdb.execute('INSERT INTO galaxies_positions VALUES (?, ?, ?, ?, ?)',
+					(galaxyID, galX-galRadius, galX+galRadius, galY-galRadius, galY+galRadius))
 	# get list of booked players, and delete
 	# their records from the booking system
 	query = db.execute('SELECT login, nick, email FROM players\
@@ -170,21 +176,21 @@ def createNewGalaxy(galType, galCap):
 						WHERE nick=?',
 						(nick,))
 	# now we need to find the place for it
-	squareSide = maxCoordinate / 200 + 1
-	if squareSide**2 == len(actualGalaxies):
-		squareSide += 1
-	hasFound = False
-	for y in xrange(squareSide):
-		posY = y * 200 + 100 
-		for x in xrange(squareSide):
-			posX = x * 200 + 100
-			if (posX, posY) in galPositions:
-				continue
-			hasFound = True
-			if hasFound:
-				break
-		if hasFound:
-			break
+	search = True
+	# we don't want to have negative coordinates
+	lowLimit = int(math.ceil(radius))
+	# surface of biggest galaxy is multiplied by number of galaxies to get
+	# filled surface. By adding the surface of new galaxy, we get the surface of
+	# hypothetical square. 4.4 is magic constant that multiply length of side to
+	# ensure that the new galaxy will fit in all cases (actually 4.3 should be
+	# sufficient according to 10000 run Monte Carlo simulation)
+	highLimit = int(math.ceil(((maxRadius ** 2 ) * len(actualGalaxies) + galRadius ** 2) ** 0.5 * 4.4 + radius))
+	while search:
+		posX = random.randrange(lowLimit, highLimit)
+		posY = random.randrange(lowLimit, highLimit)
+		search = bool(tempdb.execute('SELECT id FROM galaxies_positions WHERE\
+							x_min<? AND x_max>? AND y_min<? AND y_max>?',
+							(posX+galRadius, posX-galRadius, posY+galRadius, posY-galRadius)).fetchall())
 	# searching for free name for the galaxy
 	nameFound = False
 	for name in names:

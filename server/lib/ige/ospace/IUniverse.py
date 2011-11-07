@@ -411,6 +411,7 @@ class IUniverse(IObject):
 
 	getReferences.public = 0
 
+	# TODO remove it as soon as having a standalone galaxy generator
 	def getPossibleGalaxyTypes(self, tran, obj):
 		galGen = GalaxyGenerator.GalaxyGenerator()
 		return galGen.getGalaxyTypes()

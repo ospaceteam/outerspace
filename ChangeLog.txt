@@ -6,6 +6,9 @@ Last change:
 - $Author$
 - $Revision$
 
+[2011-11-07]
+- Galaxy booking system now generates galaxies with random placement. [dahaic]
+
 [2011-11-06]
 - Mutant may, from now on, deploy on a free planets of the system owned by someone else. [dahaic]
 - AI from now on checks, whether the build jobs target a non-other-player planets (ie. no more building on neighbours planets) [dahaic]  

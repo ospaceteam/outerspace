@@ -158,8 +158,8 @@ class GalaxyStats:
 
 class GalaxyGenerator:
 	def __init__(self):
-		self.galaxyTypes = {'Circle9P':(9, 'Smaller galaxy for 9 players, without pirate or EDEN. Recommended for new players or those who seek more casual gameplay.'),
-							'Circle42P':(42, 'Original size galaxy for 42 players, place of epic battles, recommended only to the experienced players. May be quite time consuming.')}
+		self.galaxyTypes = {'Circle9P':(9, 'Smaller galaxy for 9 players, without pirate or EDEN. Recommended for new players or those who seek more casual gameplay.', 26.0),
+							'Circle42P':(42, 'Original size galaxy for 42 players, place of epic battles, recommended only to the experienced players. May be quite time consuming.', 50.0)}
 
 	def generateGalaxy(self, galaxyType, fileHandle):
 		if not galaxyType in self.galaxyTypes.keys():
