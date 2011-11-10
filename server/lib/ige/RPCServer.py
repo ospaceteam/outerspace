@@ -172,6 +172,7 @@ def register(game):
 	callMap[game.gameID + '.turnFinished'] = game.turnFinished
 	callMap[game.gameID + '.processTurn'] = game.processTurn
 	callMap[game.gameID + '.backup'] = game.backup
+	callMap[game.gameID + '.commitDatabases'] = game.commitDatabases
 
 def xmlrpcPublish(name, obj):
 	objMap[name] = obj

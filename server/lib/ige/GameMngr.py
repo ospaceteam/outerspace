@@ -221,6 +221,15 @@ class GameMngr:
 		aiList.backup(basename)
 		return True, None
 
+	def commitDatabases(self, sid):
+		session = self.clientMngr.getSession(sid)
+		if session.login != ADMIN_LOGIN:
+			raise SecurityException('You cannot issue this command.')
+		self.db.checkpoint()
+		self.clientMngr.checkpoint()
+		self.msgMngr.checkpoint()
+		return True, None
+
 	def createAdmin(self):
 		""" Return Player object which will act as administrator of the game."""
 		raise NotImplementedError

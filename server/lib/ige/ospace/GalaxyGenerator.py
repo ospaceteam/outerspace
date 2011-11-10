@@ -18,7 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-import random, math, sys
+import os, random, math, sys
 
 class GalaxyStats:
 
@@ -752,7 +752,16 @@ systemNames = []
 def loadSystemNames():
     global systemNames
     names = {}
-    for line in file('data/SystemNames.txt'):
+    filename = os.path.join(
+        os.path.dirname(__file__),
+        "..",
+        "..",
+        "..",
+        "data",
+        "SystemNames.txt",
+    )
+    filename = os.path.abspath(filename)
+    for line in open(filename, "r"):
         names[line.strip()] = None
     systemNames = names.keys()
 

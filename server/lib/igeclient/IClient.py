@@ -134,6 +134,9 @@ class IClient:
 	def backup(self, basename):
 		return apply(IProxy('%s.backup' % self.gameID, None, self), (basename,))
 
+	def commitDatabases(self):
+		return apply(IProxy('%s.commitDatabases' % self.gameID, None, self), ())
+
 	def getTurnData(self):
 		return apply(IProxy('%s.getTurnData' % self.gameID, None, self), ())
 

@@ -27,8 +27,8 @@ from Techs import noop as techDefaultHandler
 ## General
 turnsPerDay = 24
 rotationMod = 384.0
-playerTimeout = 60 * 60 * 24 * 21 # 21 days
-novicePlayerTimeout = 60 * 60 * 24 * 7 # 7 days
+playerTimeout = 60 * 60 * 24 * 28 # 28 days
+novicePlayerTimeout = 60 * 60 * 24 * 14 # 14 days
 messageTimeout = 60 * 60 * 24 * 14 # 14 days
 
 ## New player
@@ -48,7 +48,7 @@ unusedProdMod = 0.75
 envInterval = 1000
 envAutoMod = 10.0
 envMax = 200
-envSelfUpgradeChance = {"H": 5, "C": 1, "B": 500, "m": 100} # in ten thousandths (10 000)
+envSelfUpgradeChance = {"H": 5, "C": 1, "B": 500, "m": 100, "r": 100, "p": 100, "e": 100} # in ten thousandths (10 000)
 planetSpec = {}
 planetSpec[u'A'] = makeIDataHolder(
 	minBio = 0,

@@ -8,6 +8,9 @@ Last change:
 
 [2011-11-10]
 - run_ai.py can be restricted to selected galaxies. [Qark]
+- Added RPC call to commit all databases. [Qark]
+- Extended resignation period. [Qark]
+- System names file location is now relative. [Qark]
 
 [2011-11-07]
 - Galaxy booking system now generates galaxies with random placement. [dahaic]
