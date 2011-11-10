@@ -132,6 +132,12 @@ parser.add_option("",  "--procs", dest = "procs",
 	default = "1",
 	help = "Maximum number of concurrent processes"
 )
+parser.add_option("",  "--galaxy", dest = "galaxies", 
+	metavar = "NAME", 
+	action = "append",
+	default = [],
+	help = "Name of galaxy to enable AI for"
+)
 
 options, args = parser.parse_args()
 
@@ -142,6 +148,8 @@ aiList = AIList(options.configDir)
 procs = []
 procQueue = ProcQueue(int(options.procs))
 for login, (password, ais, galaxy) in aiList.getAll():
+	if options.galaxies and galaxy not in options.galaxies:
+		continue
 	args = shlex.split('python ../client-ai/ai_osc.py --configdir=%s --server=%s --login=%s --password=%s --ai=%s' %\
 		(os.path.join(options.configDir, 'ai_data', galaxy), options.server, login, password, ais))
 	procQueue.addProc(args)

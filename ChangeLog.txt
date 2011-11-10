@@ -6,6 +6,9 @@ Last change:
 - $Author$
 - $Revision$
 
+[2011-11-10]
+- run_ai.py can be restricted to selected galaxies. [Qark]
+
 [2011-11-07]
 - Galaxy booking system now generates galaxies with random placement. [dahaic]
 
