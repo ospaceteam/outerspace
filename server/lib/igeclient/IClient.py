@@ -18,8 +18,8 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-import hashlib
 import ige
+import ige.Authentication
 from ige.IMarshal import IMarshal, IPacket
 from ige import ServerStatusException, log
 import httplib, urllib
@@ -71,7 +71,7 @@ class IClient:
 	def login(self, gameID, login, password):
 		self.gameID = gameID.encode("ascii")
 		# hash password with challenge
-		passwd = hashlib.md5(password + self.challenge).hexdigest()
+		passwd = ige.Authentication.encode(password, self.challenge)
 		#@log.debug(login, password, passwd)
 		try:
 			apply(IProxy('login', None, self), (login, passwd, self.hostID))

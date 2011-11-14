@@ -8,6 +8,7 @@ Last change:
 
 [2011-11-14]
 - Fixed AI scripts deployment issues. [Qark]
+- Added support for different authentication schemes. Supported are PLAIN, MD5 (default), and SHA256. [Qark]
 
 [2011-11-10]
 - run_ai.py can be restricted to selected galaxies. [Qark]

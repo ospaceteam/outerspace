@@ -165,6 +165,7 @@ gameName = 'Alpha'
 
 # open database
 if config.server.dbbackend == "metakit":
+    # Legacy database backend
     log.message("Using metakit database backend")
     from ige.MetakitDatabase import Database, DatabaseString
 else:
@@ -203,7 +204,7 @@ log.message('Initializing game \'%s\'...' % gameName)
 log.debug("Initializing issue manager")
 issueMngr = IssueMngr()
 log.debug("Initializing client manager")
-clientMngr = ClientMngr(clientDB, options.configDir)
+clientMngr = ClientMngr(clientDB, config, options.configDir)
 log.debug("Initializing message manager")
 msgMngr = MsgMngr(msgDB)
 

@@ -25,6 +25,7 @@ import time
 import log
 from ige import SecurityException
 from ige.Const import ADMIN_LOGIN
+import Authentication
 
 class Account:
 
@@ -46,8 +47,11 @@ class Account:
 
 class ClientMngr:
 
-	def __init__(self, database, configDir):
+	def __init__(self, database, config, configDir):
 		self.configDir = configDir
+		self.authMethod = config.server.authmethod
+		if not self.authMethod:
+			self.authMethod = Authentication.defaultMethod
 		self._filename = os.path.join(self.configDir, 'accounts')
 		self.sessions = {}
 		#
@@ -149,10 +153,10 @@ class ClientMngr:
 		login = str(login)
 		# create sort of cookie
 		while 1:
-			sid = hashlib.md5(str(time.time())).hexdigest()[:8]
+			sid = hashlib.sha256(str(random.random())).hexdigest()
 			if not self.sessions.has_key(sid):
 				break
-		challenge = 'IGEServer@%f' % time.time()
+		challenge = Authentication.getWelcomeString(self.authMethod)
 		session = Session(sid)
 		session.challenge = challenge
 		session.clientIdent = clientId
@@ -173,7 +177,7 @@ class ClientMngr:
 
 		account = self.accounts[login]
 		challenge = self.sessions[sid].challenge
-		if hashlib.md5(account.passwd + challenge).hexdigest() != cpasswd:
+		if not Authentication.verify(cpasswd, account.passwd, challenge):
 			raise SecurityException('Wrong login and/or password.')
 		self.sessions[sid].setAttrs(account.login, account.nick, account.email)
 		account.lastLogin = time.time()
