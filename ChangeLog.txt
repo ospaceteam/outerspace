@@ -6,6 +6,9 @@ Last change:
 - $Author$
 - $Revision$
 
+[2011-11-14]
+- Fixed AI scripts deployment issues. [Qark]
+
 [2011-11-10]
 - run_ai.py can be restricted to selected galaxies. [Qark]
 - Added RPC call to commit all databases. [Qark]

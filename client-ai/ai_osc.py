@@ -24,12 +24,15 @@
 import sys
 import os
 
-sys.path.insert(0, "../client-pygame/lib")
-sys.path.insert(0, "../client-pygame/lib/osci")
+basepath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-for item in ("libsrvr", "../server/lib"):
-    if os.path.exists(item):
-        sys.path.insert(0, item)
+sys.path.insert(0, os.path.join(basepath, "client-pygame/lib"))
+sys.path.insert(0, os.path.join(basepath, "client-pygame/lib/osci"))
+
+for item in ("libsrvr", "server/lib"):
+    path = os.path.join(basepath, item)
+    if os.path.exists(path):
+        sys.path.insert(0, path)
         break
 
 #configure gc

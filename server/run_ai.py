@@ -107,10 +107,14 @@ class ProcQueue():
 		return
 
 
-sys.path.insert(0,"../client-ai")
-for item in ("libsrvr", "../server/lib"):
-    if os.path.exists(item):
-        sys.path.insert(0, item)
+basepath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+sys.path.insert(0, os.path.join(basepath, "client-ai"))
+
+for item in ("libsrvr", "server/lib"):
+    path = os.path.join(basepath, item)
+    if os.path.exists(path):
+        sys.path.insert(0, path)
         break
 
 from ai_parser import AIList
@@ -150,8 +154,8 @@ procQueue = ProcQueue(int(options.procs))
 for login, (password, ais, galaxy) in aiList.getAll():
 	if options.galaxies and galaxy not in options.galaxies:
 		continue
-	args = shlex.split('python ../client-ai/ai_osc.py --configdir=%s --server=%s --login=%s --password=%s --ai=%s' %\
-		(os.path.join(options.configDir, 'ai_data', galaxy), options.server, login, password, ais))
+	args = shlex.split('python %s/client-ai/ai_osc.py --configdir=%s --server=%s --login=%s --password=%s --ai=%s' %\
+		(basepath, os.path.join(options.configDir, 'ai_data', galaxy), options.server, login, password, ais))
 	procQueue.addProc(args)
 #	os.system('python ../client-ai/ai_osc.py --configdir=%s --server=%s --login=%s --password=%s --ai=%s' %\
 #		 (options.configDir, options.server, login, password, ais))
