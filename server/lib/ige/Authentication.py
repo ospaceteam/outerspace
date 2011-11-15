@@ -24,7 +24,7 @@ def encode(password, challenge):
     method = getMethod(challenge)
     if method == "plain":
         return password
-    elif method == "md5":
+    elif method == "md5" or challenge.startswith("IGEServer@"):
         return hashlib.md5(password + challenge).hexdigest()
     elif method == "sha256":
         return hashlib.sha256(password + challenge).hexdigest()
@@ -35,7 +35,7 @@ def verify(encodedPassword, password, challenge):
     method = getMethod(challenge)
     if method == "plain":
         return encodedPassword == password
-    elif method == "md5":
+    elif method == "md5" or challenge.startswith("IGEServer@"):
         return hashlib.md5(password + challenge).hexdigest() == encodedPassword
     elif method == "sha256":
         return hashlib.sha256(password + challenge).hexdigest() == encodedPassword
