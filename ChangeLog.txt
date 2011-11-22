@@ -6,6 +6,9 @@ Last change:
 - $Author$
 - $Revision$
 
+[2011-11-22]
+- Added support for RSA authentication. [Qark]
+
 [2011-11-15]
 - MD5 authentication is now backward compatible. [Qark]
 
