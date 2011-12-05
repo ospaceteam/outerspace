@@ -8,6 +8,8 @@ Last change:
 
 [2011-12-05]
 - Fixed galaxy restart issue. [Qark]
+- Game information now exported to json. [Qark]
+- Server welcome page added. [Qark]
 
 [2011-11-14]
 - Fixed AI scripts deployment issues. [Qark]

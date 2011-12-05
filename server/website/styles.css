@@ -1,0 +1,261 @@
+@charset "utf-8";
+
+html {
+    height: 100%;
+}
+
+html,body,ul,ol,li,p,h1,h2,h3,h4,h5,h6,form,a,img {
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+}
+
+ol,ul {
+    padding-left: 2em;
+    
+}
+
+body {
+    height: 100%;
+    font-weight: normal;
+    font: 12px Arial, Helvetica, sans-serif;
+    text-align: justify;
+    width: 100%;
+    background: url(background.jpg) no-repeat center top;
+    background-color: #181829;
+    color: #ffffff;
+}
+
+a {
+color:#8fb6e5;
+text-decoration:underline;
+}
+
+
+a:hover {
+text-decoration:none;
+}
+
+.main {
+    width: 1000px;
+    margin: 0 auto;
+    height: auto;
+    /* border: 1px solid red; */
+}
+
+/* web2py specific */
+div.flash {
+    padding: 5px 15px 5px 15px;
+    margin: 0px 0px 7px 7px;
+    width: 956px;
+    background: url(block_bg.png) repeat;
+    font-weight: bold;
+    text-align: right;
+    color: #e09c43;
+    -moz-border-radius:0px 0px 7px 7px;
+    border-radius:0px 0px 7px 7px;
+    border:1px solid #3d444e;
+}
+
+/* Menu section */
+.topbar {
+    margin-top: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    width: 1000px;
+    height: 45px;
+    background: url(top_bar_bg.png) left top repeat-x;
+    -moz-border-radius:0px 0px 7px 7px;
+    border-radius:0px 0px 7px 7px;
+    text-shadow: 0px 1px 1px #fff;
+    color: #737373;
+}
+
+.topbar a {
+    color: #737373;
+    text-decoration:none;
+}
+
+.topbar a:hover {
+    color: #5C5C5C;
+    text-decoration:none;
+}
+
+.logo {
+    float: left;
+    margin-top: -2px;
+    padding: 0px;
+    border: 0px;
+    height: 45px;
+        /* border: 1px solid red; */
+}
+
+.logo img {
+    padding-top: 2px;
+        /* border: 1px solid red; */
+}
+
+.menu {
+    padding-top: 18px;
+    padding-bottom: 0px;
+    padding-right: 1em;
+    margin: 0px;
+    float: right;
+    height: 20px;
+    font-weight: bold;
+    /* border: 1px solid red; */
+}
+
+.clear {
+    clear: both;
+}
+
+/* About section */
+.about {
+    clear: both;
+    margin-top: 15px;
+    /* border: 1px solid red; */
+}
+
+.about_main {
+    margin-right: 315px;
+    background: url(block_bg.png) repeat;
+    font-size: large;
+    padding: 20px;
+    height: 150px;
+    -moz-border-radius:7px 7px 7px 7px;
+    border-radius:7px 7px 7px 7px;
+    border:1px solid #3d444e;
+}
+
+.about_main img {
+    float: left;
+    padding-right: 20px;
+}
+
+.about_sidebar {
+    float: right;
+    width: 300px;
+    font-size: 40px;
+}
+
+.about_sidebar #button {
+    text-align: left;
+    font-weight: bold;
+    padding: 6px;
+    padding-left: 0.5em;
+    margin-bottom: 5px;
+    background: url(block_bg.png) repeat;
+    border:1px solid #3d444e;
+    border-left:15px solid #a3abb6;
+    -moz-border-radius:0px 7px 7px 0px;
+    border-radius:0px 7px 7px 0px;
+}
+
+.about_sidebar a {
+    color:#d9dbe0;
+    text-decoration:none;
+}
+
+.about_sidebar a:hover {
+    color:#8fb6e5;
+    text-decoration:none;
+}
+
+/* Main part of the page */
+
+.panel {
+    min-height: 900px;
+}
+
+.block {
+    margin-top: 25px;
+    width: 685px;
+    background: url(block_bg.png) repeat;
+    -moz-border-radius:7px 7px 7px 7px;
+    border-radius:7px 7px 7px 7px;
+    border:1px solid #3d444e;
+}
+
+.block-txt {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 15px;
+    line-height: 20px;
+}
+
+.block h1 {
+    padding-left: 15px;
+    padding-top: 5px;
+    width: 670px;
+    height:40px;
+    margin-bottom: 0.5em;
+    line-height: 35px;
+    background: url(top_bar_bg.png) repeat;
+    -moz-border-radius:7px 7px 0px 0px;
+    border-radius:7px 7px 0px 0px;
+    text-shadow: 0px 1px 1px #fff;
+    color: #737373;
+}
+
+.footer {
+    width: 655px;
+    padding: 15px;
+    background: url(block_bg.png) repeat;
+    -moz-border-radius:7px 7px 7px 7px;
+    border-radius:7px 7px 7px 7px;
+    border:1px solid #3d444e;
+    margin-bottom: 45px;
+}
+
+/* Messages and forums */
+.message_footer {
+    margin-top: 0.5em;
+    text-align: right;
+    font-size: smaller;
+}
+
+
+table.forums {
+    width: 100%;
+    border-bottom: 1px solid #888888;
+    border-top: 1px solid #888888;
+}
+
+table.forums th {
+    text-align: left;
+}
+
+table.forums td.name {
+    width: 60%;
+}
+
+table.forums td.posts {
+    width: 20%;
+}
+
+
+table.forums td.lastpost {
+    width: 20%;
+}
+
+table.forums a {
+    display: block;
+    border: 0;
+}
+
+table.forums a:hover {
+}
+
+ul.forums{
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+ul.forums li {
+    border-bottom: 1px dotted #888888;
+    padding-bottom: 0.25em;
+    margin-bottom: 0.25em;
+}

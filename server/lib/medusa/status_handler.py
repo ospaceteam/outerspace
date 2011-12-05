@@ -68,21 +68,29 @@ class status_extension:
 			request.push (
 				'<html>'
 				'<head>'
-				'<title>Medusa Status Reports</title>'
-				'<link rel="STYLESHEET" href="../style.css" type="text/css">'
+				'<title>Outer Space Status Reports</title>'
+				'<link rel="STYLESHEET" href="styles.css" type="text/css">'
 				'</head>'
-				'<body bgcolor="#ffffff">'
-				'<h1>Medusa Status Reports</h1>'
+				'<body>'
+				'<div class="main">'
+				'<div class="panel">'
+				'<div class="block">'
+				'<h1>Outer Space Status Reports</h1>'
+				'<div class="block-txt">'
 				'<b>Up:</b> %s' % up_time
 				)
 			for i in range(len(self.objects)):
 				request.push (self.objects[i].status())
-				request.push ('<hr noshade>\r\n')
 			request.push (
 				# This is dangerous
 				# '<p><a href="%s/channel_list">Channel List</a>'
 				# '<hr noshade>'
 				# '<img src="%s/medusa.gif" align=right width=%d height=%d>'
+				'</div>'
+				'</div>'
+				'<div class="footer">&copy; 2001 - 2011 Ludek Smid, <a href="http://www.ospace.net/">www.ospace.net</a></div>'
+				'</div>'
+				'</div>'
 				'</body></html>' % (
 					# self.statusdir,
 					# self.statusdir,

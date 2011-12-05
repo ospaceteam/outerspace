@@ -18,6 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+import json
 import random, os, time, copy
 
 import ige
@@ -402,60 +403,34 @@ class GameMngr(IGEGameMngr):
 			os.makedirs('website/%s' % self.gameID)
 		except OSError:
 			pass
-		# save info
-		fh = open('website/%s/info_cz.html' % self.gameID, 'w')
+		# create structure to save
+		stats = dict()
 		universe = self.db[OID_UNIVERSE]
-		print >> fh, '<strong><big>&middot;</big></strong>&nbsp;Hracu: <strong>%d</strong><br>' % len(universe.players)
-		turn = universe.turn
-		print >> fh, '<strong><big>&middot;</big></strong>&nbsp;Tah: <strong>%d:%02d</strong><br>' % (turn / 24, turn % 24)
+		stats["players"] = len(universe.players)
+		stats["turn"] = "%d:%02d" % (universe.turn / 24, universe.turn % 24)
+		galaxies = list()
+		stats["galaxies"] = galaxies
 		for galaxyID in universe.galaxies:
 			galaxy = self.db[galaxyID]
-			print >> fh, '<strong><big>&middot;</big></strong>&nbsp;Galaxie <strong>%s</strong> [<a href="http://ospace.net:9080/%s/galaxy%d.html">stats</a>]<br>' % (
-				galaxy.name, self.gameID, galaxyID
+			galaxyStats = dict(
+				name = galaxy.name,
+				url = "http://www.ospace.net:9080/%s/galaxy%d.html" % (self.gameID, galaxyID),
+				freePositions = len(galaxy.startingPos),
+				players = 0,
+				rebels = 0,
+				age = int(((time.time() - galaxy.creationTime) / (24 * 3600))),
+				running = galaxy.timeEnabled and not galaxy.timeStopped,
 			)
-			aiPlayers = 0
 			for playerID in universe.players:
 				player = self.db[playerID]
-				if player.type == T_AIPLAYER and galaxy.oid in player.galaxies \
-					and player.planets:
-					aiPlayers += 1
-			if len(galaxy.startingPos) or aiPlayers:
-				print >> fh, '&nbsp;&nbsp;&nbsp;Volnych pozic: <strong>%d + %d</strong><br>' % (
-					len(galaxy.startingPos),
-					aiPlayers,
-				)
-			print >> fh, '&nbsp;&nbsp;&nbsp;Stari: <strong>%d</strong> dni<br>' % \
-				((time.time() - galaxy.creationTime) / (24 * 3600))
-			if not galaxy.timeEnabled or galaxy.timeStopped:
-				print >> fh, '&nbsp;&nbsp;&nbsp;<strong>Cas zastaven</strong><br>'
-		fh.close()
-		# save info
-		fh = open('website/%s/info_en.html' % self.gameID, 'w')
-		universe = self.db[OID_UNIVERSE]
-		print >> fh, '<strong><big>&middot;</big></strong>&nbsp;Players: <strong>%d</strong><br>' % len(universe.players)
-		turn = universe.turn
-		print >> fh, '<strong><big>&middot;</big></strong>&nbsp;Turn: <strong>%d:%02d</strong><br>' % (turn / 24, turn % 24)
-		for galaxyID in universe.galaxies:
-			galaxy = self.db[galaxyID]
-			print >> fh, '<strong><big>&middot;</big></strong>&nbsp;Galaxy <strong>%s</strong> [<a href="http://ospace.net:9080/%s/galaxy%d.html">stats</a>]<br>' % (
-				galaxy.name, self.gameID, galaxyID
-			)
-			aiPlayers = 0
-			for playerID in universe.players:
-				player = self.db[playerID]
-				if player.type == T_AIPLAYER and galaxy.oid in player.galaxies \
-					and player.planets:
-					aiPlayers += 1
-			if len(galaxy.startingPos) or aiPlayers:
-				print >> fh, '&nbsp;&nbsp;&nbsp;Free positions: <strong>%d + %d</strong><br>' % (
-					len(galaxy.startingPos),
-					aiPlayers,
-				)
-			print >> fh, '&nbsp;&nbsp;&nbsp;Age: <strong>%d</strong> days<br>' % \
-				((time.time() - galaxy.creationTime) / (24 * 3600))
-			if not galaxy.timeEnabled or galaxy.timeStopped:
-				print >> fh, '&nbsp;&nbsp;&nbsp;<strong>Time is stopped.</strong><br>'
-		fh.close()
+				if galaxy.oid not in player.galaxies:
+					continue
+				if player.type == T_PLAYER:
+					galaxyStats["players"] += 1
+				elif player.type == T_AIPLAYER:
+					galaxyStats["rebels"] += 1
+			galaxies.append(galaxyStats)
+		json.dump(stats, open("website/%s/info.json" % self.gameID, "w"))
 
 	def generateStats(self):
 		""" Generate games statistics """
@@ -668,17 +643,16 @@ statsHeader = '''\
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
-	<title>IGE - Outer Space Statistics [Game %s]</title>
-	<link rel="STYLESHEET" href="../old/style.css" type="text/css">
+	<title>Outer Space Statistics for Game %s</title>
+	<link rel="STYLESHEET" href="../styles.css" type="text/css">
 </head>
 <body>
 
 <center>
 
+<h1>Statistics for galaxy %s%s</h1>
+
 <table cellspacing=2 border=0 cellpadding=5 width="80%%" class="main">
-<tr>
-	<td class="header">Statistics for galaxy %s%s</td>
-</tr>
 <tr>
 	<td valign="top">
 <!-- body start -->
