@@ -490,7 +490,7 @@ class IUniverse(IObject):
 		log.debug("Deleting galaxy", galaxyID)
 		self.cmd(galaxy).delete(tran, galaxy)
 		if restart:
-			self.cmd(obj).createNewGalaxy(self, tran, obj, oldX, oldY, oldName)
+			self.cmd(obj).createNewGalaxy(tran, obj, oldX, oldY, oldName)
 
 	restartGalaxy.public = 1
 	restartGalaxy.accLevel = AL_NONE
@@ -516,7 +516,7 @@ class IUniverse(IObject):
 		log.debug("Deleting galaxy", galaxyID)
 		self.cmd(galaxy).delete(tran, galaxy)
 		if restart:
-			self.cmd(obj).createNewGalaxy(self, tran, obj, oldX, oldY, oldName)
+			self.cmd(obj).createNewGalaxy(tran, obj, oldX, oldY, oldName)
 
 	restartGalaxy2.public = 1
 	restartGalaxy2.accLevel = AL_ADMIN

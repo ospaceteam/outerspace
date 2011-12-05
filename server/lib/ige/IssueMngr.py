@@ -35,7 +35,7 @@ class IssueMngr:
 			msg = MIMEText(text)
 			msg["Subject"] = "Outer Space Issue %s" % faultID
 			msg["From"] = "game_alpha@ospace.net"
-			mgs["To"] = "qark@ospace.net"
+			msg["To"] = "qark@ospace.net"
 			smtp = smtplib.SMTP("localhost")
 			smtp.sendmail(
 				"game_alpha@ospace.net",

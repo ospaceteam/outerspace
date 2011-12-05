@@ -6,11 +6,8 @@ Last change:
 - $Author$
 - $Revision$
 
-[2011-11-22]
-- Added support for RSA authentication. [Qark]
-
-[2011-11-15]
-- MD5 authentication is now backward compatible. [Qark]
+[2011-12-05]
+- Fixed galaxy restart issue. [Qark]
 
 [2011-11-14]
 - Fixed AI scripts deployment issues. [Qark]
