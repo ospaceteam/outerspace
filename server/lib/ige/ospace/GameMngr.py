@@ -96,21 +96,21 @@ class GameMngr(IGEGameMngr):
 		return obj
 
 	def createUniverse(self):
-		obj = self.db[OID_UNIVERSE]
-		cmdObj = self.cmdPool[obj.type]
+		universe = self.db[OID_UNIVERSE]
 		tran = Transaction(self, OID_ADMIN)
-		#! TODO this is temporary
-		# create sector index (needed by loadFromXML)
-		galaxy = self.db[cmdObj.createGalaxy(tran, obj)]
-		#self.cmdPool[galaxy.type].loadFromXML(tran, galaxy, 'galaxy-Argo42P.xml', 'Circle42P', 100, 100, 'Argo')
-		self.cmdPool[galaxy.type].loadFromXML(tran, galaxy, 'galaxy-Circle4P.xml', 'Circle4P', 100, 100, 'Galaxy Test')
-		# setup environment
-		self.cmdPool[galaxy.type].setupEnvironment(tran, galaxy)
-		# start time
-		self.cmdPool[galaxy.type].enableTime(tran, galaxy, force = 1)
-		# create 'NATURE' player
-		player = self.cmdPool[T_NATURE].new(T_NATURE)
-		self.registerPlayer(player.login, player, OID_NATURE)
+		self.cmdPool[universe.type].createNewGalaxy(tran, universe, 0, 0, self.config.name)
+		##! TODO this is temporary
+		## create sector index (needed by loadFromXML)
+		#galaxy = self.db[cmdObj.createGalaxy(tran, obj)]
+		##self.cmdPool[galaxy.type].loadFromXML(tran, galaxy, 'galaxy-Argo42P.xml', 'Circle42P', 100, 100, 'Argo')
+		#self.cmdPool[galaxy.type].loadFromXML(tran, galaxy, 'galaxy-Circle4P.xml', 'Circle4P', 100, 100, 'Galaxy Test')
+		## setup environment
+		#self.cmdPool[galaxy.type].setupEnvironment(tran, galaxy)
+		## start time
+		#self.cmdPool[galaxy.type].enableTime(tran, galaxy, force = 1)
+		## create 'NATURE' player
+		#player = self.cmdPool[T_NATURE].new(T_NATURE)
+		#self.registerPlayer(player.login, player, OID_NATURE)
 
 	def getTurnData(self, sid):
 		IGEGameMngr.getTurnData(self, sid)

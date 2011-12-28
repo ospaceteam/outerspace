@@ -6,6 +6,9 @@ Last change:
 - $Author$
 - $Revision$
 
+[2011-12-28]
+- Initial version of support for multiple universes per game server. [Qark]
+
 [2011-12-05]
 - Fixed galaxy restart issue. [Qark]
 - Game information now exported to json. [Qark]

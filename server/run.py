@@ -173,7 +173,7 @@ else:
     from ige.SQLiteDatabase import Database, DatabaseString
 # set type of generated galaxies
 if not config.server.newgalaxytype:
-	config.server.newgalaxytype = 'Circle42P'
+	config.server.newgalaxytype = 'Circle9P'
 
 log.debug("Creating databases...")
 gameDB = Database(os.path.join(options.configDir,"db_data"), "game_%s" % gameName, cache = 15000)
@@ -204,7 +204,7 @@ log.message('Initializing game \'%s\'...' % gameName)
 log.debug("Initializing issue manager")
 issueMngr = IssueMngr()
 log.debug("Initializing client manager")
-clientMngr = ClientMngr(clientDB, config, options.configDir)
+clientMngr = ClientMngr(clientDB, config.server.authmethod, options.configDir)
 log.debug("Initializing message manager")
 msgMngr = MsgMngr(msgDB)
 

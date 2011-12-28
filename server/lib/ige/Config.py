@@ -32,10 +32,13 @@ class Config:
 	existing section an instance of Section class
 	is returned.
 	"""
-	def __init__(self, file):
-		self.__dict__["_config"] = ConfigParser()
+	def __init__(self, file, defaults = dict()):
+		self.__dict__["_config"] = ConfigParser(defaults)
 		self._config.read(file)
 
+	def __getitem__(self, name):
+		return self.__getattr__(name)
+	
 	def __getattr__(self, name):
 		if not self._config.has_section(name):
 			self._config.add_section(name)
@@ -48,6 +51,9 @@ class Config:
 		else:
 			raise AttributeError("Cannot assign value to config section")
 
+	def sections(self):
+		return self._config.sections()
+	
 	def save(self, file):
 		fh = open(file, 'w')
 		self._config.write(fh)

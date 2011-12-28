@@ -550,17 +550,24 @@ class IUniverse(IObject):
 		
 	
 	def createNewGalaxy(self, tran, obj, x, y, galaxyName):
-		log.message("Adding new galaxy '%s' to (%d, %d)" % (galaxyName, x, y))
+		galaxyType = tran.gameMngr.config.galaxytype
+		if type(galaxyType) != str:
+			# old configuration file
+			log.debug("OLD configuration file detected, using server.newgalaxytype!")
+			galaxyType = tran.gameMngr.config.server.newgalaxytype
+			galaxyName = "Legacy Galaxy"
+		assert galaxyType, "galaxytype must be defined in configuration file"
+		print galaxyName
+		log.message("Adding new galaxy '%s' with type '%s' to (%d, %d)" % (galaxyName, galaxyType, x, y))
 		fh, galaxyFileName = tempfile.mkstemp(text = True)
 		log.debug("Generating new galaxy to temporary file", galaxyFileName)
-		strGalaxyID = tran.gameMngr.config.server.newgalaxytype
-		GenerateGalaxy(strGalaxyID, os.fdopen(fh, "w+b"))
+		GenerateGalaxy(galaxyType, os.fdopen(fh, "w+b"))
 		log.debug("Creating new galaxy")
 		newGalaxyID = self.createGalaxy(tran, obj)
 		log.debug("Created new galaxy", newGalaxyID)
 		newGalaxy = tran.db[newGalaxyID]
 		log.debug("Loading new ", newGalaxyID)
-		self.cmd(newGalaxy).loadFromXML(tran, newGalaxy, galaxyFileName, strGalaxyID, x, y, galaxyName)
+		self.cmd(newGalaxy).loadFromXML(tran, newGalaxy, galaxyFileName, galaxyType, x, y, galaxyName)
 		log.debug("Setup Enviroment", newGalaxyID)
 		self.cmd(newGalaxy).setupEnvironment(tran, newGalaxy)
 		log.debug("Sending Announcement Message", newGalaxyID)

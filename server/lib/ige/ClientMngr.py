@@ -1,5 +1,5 @@
 #
-#  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
+#  Copyright 2001 - 2012 Ludek Smid [http://www.ospace.net/]
 #
 #  This file is part of IGE - Outer Space.
 #
@@ -47,9 +47,9 @@ class Account:
 
 class ClientMngr:
 
-	def __init__(self, database, config, configDir):
+	def __init__(self, database, authMethod, configDir):
 		self.configDir = configDir
-		self.authMethod = config.server.authmethod
+		self.authMethod = authMethod
 		if not self.authMethod:
 			self.authMethod = Authentication.defaultMethod
 		self._filename = os.path.join(self.configDir, 'accounts')
