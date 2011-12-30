@@ -28,6 +28,7 @@ from medusa import filesys, default_handler, counter, producers, xmlrpc_handler
 
 callMap = {}
 objMap = {}
+registeredGames = {}
 
 running = 0
 
@@ -46,6 +47,9 @@ def versionHandler(obj):
 	result.update(ige.version.version)
 	result["clientURLs"] = ige.version.clientURLs
 	return result, None
+
+def getRegisteredGamesHandler(obj):
+	return registeredGames, None
 
 ## IGE RPC medusa handler
 class igerpc(igerpc_handler.igerpc_handler):
@@ -159,6 +163,7 @@ def init(clientMngr):
 	callMap['getVersion'] = versionHandler
 	callMap['getToken'] = clientMngr.getToken
 	callMap['getSessionByToken'] = clientMngr.getSessionByToken
+	callMap['getRegisteredGames'] = getRegisteredGamesHandler
 
 def register(game):
 	global callMap
@@ -173,7 +178,10 @@ def register(game):
 	callMap[game.gameID + '.processTurn'] = game.processTurn
 	callMap[game.gameID + '.backup'] = game.backup
 	callMap[game.gameID + '.commitDatabases'] = game.commitDatabases
-
+	
+	global registeredGames
+	registeredGames[game.gameID] = game.gameName
+     
 def xmlrpcPublish(name, obj):
 	objMap[name] = obj
 

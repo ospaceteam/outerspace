@@ -23,8 +23,9 @@ import os.path
 from ige import log
 class IClientDB:
 
-	def __init__(self, cid, turn, dataDir = 'var'):
+	def __init__(self, cid, turn, dataDir = 'var', gameID = "UNDEFINED"):
 		self.playerID = cid
+		self.gameID = gameID
 		self.turn = turn
 		self.dataDir = dataDir
 		self.load()
@@ -52,10 +53,10 @@ class IClientDB:
 
 	def load(self):
 		try:
-			fh = open(os.path.join(self.dataDir, '%d.data' % self.playerID), 'rb')
+			fh = open(os.path.join(self.dataDir, '%s_%d.data' % (self.gameID, self.playerID)), 'rb')
 			self.data = pickle.load(fh)
 			fh.close()
-			fh = open(os.path.join(self.dataDir, '%d.timestamp' % self.playerID), 'rb')
+			fh = open(os.path.join(self.dataDir, '%s_%d.timestamp' % (self.gameID, self.playerID)), 'rb')
 			self.timestamp = pickle.load(fh)
 			fh.close()
 		except:
@@ -63,10 +64,10 @@ class IClientDB:
 			self.timestamp = {}
 
 	def save(self):
-		fh = open(os.path.join(self.dataDir, '%d.data' % self.playerID), 'wb')
+		fh = open(os.path.join(self.dataDir, '%s_%d.data' % (self.gameID, self.playerID)), 'wb')
 		pickle.dump(self.data, fh, 1)
 		fh.close()
-		fh = open(os.path.join(self.dataDir, '%d.timestamp' % self.playerID), 'wb')
+		fh = open(os.path.join(self.dataDir, '%s_%d.timestamp' % (self.gameID, self.playerID)), 'wb')
 		pickle.dump(self.timestamp, fh, 1)
 		fh.close()
 

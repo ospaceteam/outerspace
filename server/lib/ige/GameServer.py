@@ -38,8 +38,7 @@ class GameServer(object):
     def __init__(self, configuration):
         self.loadConfigFile(configuration)
         # inititalization
-        self.issueMngr = IssueMngr()
-        self.initializeClientMngr()
+        self.initializeSharedMngrs()
         # initialize games
         self.games = list()
         for section in self.config.sections():
@@ -68,7 +67,10 @@ class GameServer(object):
         assert self.config.server.datadir, "server.datadir MUST be defined"
         assert self.config.server.dbdir, "server.dbdir MUST be defined"
 
-    def initializeClientMngr(self):
+    def initializeSharedMngrs(self):
+        """Initialize managers that are shared across all game instances"""
+        self.issueMngr = IssueMngr()
+        # client manager
         db = DatabaseString(self.config.server.dbdir, "accounts", cache = 100)
         self.clientMngr = ClientMngr(db, self.config.server.authmethod, self.config.server.datadir)
         
@@ -82,7 +84,7 @@ class GameServer(object):
         gameDB = Database(self.config.server.dbdir, "%s_game" % gameID, cache = 15000)
         msgDB = DatabaseString(self.config.server.dbdir, "%s_msgs" % gameID, cache = 1000)
         msgMngr = MsgMngr(msgDB)
-        gameMngr = GameMngr(gameID, config, self.clientMngr, msgMngr, gameDB, self.config.server.datadir)
+        gameMngr = GameMngr(gameID, config, self.clientMngr, msgMngr, gameDB, self.config.server.datadir, config.name)
         # reset game if Universe does not exist
         if not gameDB.has_key(OID_UNIVERSE):
             log.message('Resetting game \'%s\'...' % gameID)
@@ -99,4 +101,4 @@ class GameServer(object):
     @rpc
     def getConfiguration(self):
         """Return configuration of the server"""
-        return 
+        return

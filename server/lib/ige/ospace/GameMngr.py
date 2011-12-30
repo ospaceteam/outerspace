@@ -45,8 +45,8 @@ class GameMngr(IGEGameMngr):
 	# Reguired methods
 	#
 
-	def __init__(self, gameID, config, clientMngr, msgMngr, database, configDir):
-		IGEGameMngr.__init__(self, gameID, config, clientMngr, msgMngr, database, configDir)
+	def __init__(self, gameID, config, clientMngr, msgMngr, database, configDir, gameName = None):
+		IGEGameMngr.__init__(self, gameID, config, clientMngr, msgMngr, database, configDir, gameName)
 		# register command object
 		self.registerObject(IUniverse.IUniverse)
 		self.registerObject(IPlayer.IPlayer)
@@ -108,9 +108,9 @@ class GameMngr(IGEGameMngr):
 		#self.cmdPool[galaxy.type].setupEnvironment(tran, galaxy)
 		## start time
 		#self.cmdPool[galaxy.type].enableTime(tran, galaxy, force = 1)
-		## create 'NATURE' player
-		#player = self.cmdPool[T_NATURE].new(T_NATURE)
-		#self.registerPlayer(player.login, player, OID_NATURE)
+		# create 'NATURE' player
+		player = self.cmdPool[T_NATURE].new(T_NATURE)
+		self.registerPlayer(player.login, player, OID_NATURE)
 
 	def getTurnData(self, sid):
 		IGEGameMngr.getTurnData(self, sid)

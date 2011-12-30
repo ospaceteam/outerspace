@@ -263,6 +263,9 @@ class Database:
 				id += 1
 			self.nextID = id + 1
 			object.oid = id
+		elif hasattr(object, "oid") and object.oid != id:
+			log.message("Object OID '%s' != forced OID '%s' - FIXING" % (object.oid, id))
+			object.oid = id
 		#@log.debug("OID =", id)
 		if self.has_key(id):
 			raise ige.ServerException("'%s' created twice" % id)

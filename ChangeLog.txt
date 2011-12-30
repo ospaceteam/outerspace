@@ -6,6 +6,12 @@ Last change:
 - $Author$
 - $Revision$
 
+[2011-12-30]
+- ospace-server.py supports multiple Universes now. [Qark]
+- Client now supports Universe selection. [Qark]
+- Client save filename now contains universe ID to prevent conflicts. [Qark]
+- Fixed bug where IUniverse and other objects had oid set to OID_NONE. [Qark]
+ 
 [2011-12-28]
 - Initial version of support for multiple universes per game server. [Qark]
 

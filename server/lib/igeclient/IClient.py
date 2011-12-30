@@ -92,6 +92,9 @@ class IClient:
 	def getVersion(self):
 		return apply(IProxy('getVersion', None, self), ())
 
+	def getRegisteredGames(self):
+		return apply(IProxy('getRegisteredGames', None, self), ())
+
 	def getToken(self):
 		return apply(IProxy('getToken', None, self), ())
 

@@ -34,10 +34,11 @@ from ai_parser import AIList
 
 class GameMngr:
 
-	def __init__(self, gameID, config, clientMngr, msgMngr, database, configDir):
+	def __init__(self, gameID, config, clientMngr, msgMngr, database, configDir, gameName = None):
 		log.debug("Runtime mode", ige.igeRuntimeMode)
 		self.status = GS_INIT
 		self.gameID = gameID
+		self.gameName = gameName or gameID
 		self.clientMngr = clientMngr
 		self.msgMngr = msgMngr
 		self.cmdPool = {}
