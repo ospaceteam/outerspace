@@ -6,6 +6,9 @@ Last change:
 - $Author$
 - $Revision$
 
+[2012-01-02]
+- Client is now backward compatible with 0.5.68 server. [Qark]
+
 [2011-12-30]
 - ospace-server.py supports multiple Universes now. [Qark]
 - Client now supports Universe selection. [Qark]

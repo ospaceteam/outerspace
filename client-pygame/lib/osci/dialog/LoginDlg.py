@@ -40,8 +40,12 @@ class LoginDlg:
 
 	def display(self, caller = None, message = None):
 		self.caller = caller
-		# TODO: get real names from the server
-		self.gameIDs = client.cmdProxy.getRegisteredGames()
+		# get game names from the server
+                try:
+			self.gameIDs = client.cmdProxy.getRegisteredGames()
+		except KeyError:
+			# server does not support this call
+			self.gameIDs = {"Alpha": "Alpha"}
 		# show / hide new account button
 		self.win.vCreate.visible = gdata.config.game.accountcreated == None
 		# fill in default values
