@@ -47,9 +47,10 @@ class Account:
 
 class ClientMngr:
 
-	def __init__(self, database, authMethod, configDir):
+	def __init__(self, database, authMethod, configDir, metaserver = None):
 		self.configDir = configDir
 		self.authMethod = authMethod
+		self.metaserver = metaserver
 		if not self.authMethod:
 			self.authMethod = Authentication.defaultMethod
 		self._filename = os.path.join(self.configDir, 'accounts')
@@ -172,13 +173,29 @@ class ClientMngr:
 			raise SecurityException("Account blocked")
 		log.debug(sid, 'login', repr(login), 'hostid', hostID)
 		login = str(login)
-		if not self.accounts.has_key(login):
-			raise SecurityException('Wrong login and/or password.')
-
-		account = self.accounts[login]
 		challenge = self.sessions[sid].challenge
-		if not Authentication.verify(cpasswd, account.passwd, challenge):
-			raise SecurityException('Wrong login and/or password.')
+		account = None
+		# use metaserver login if metaserver is defined
+		if self.metaserver:
+			result = self.metaserver.verifyPassword(login, Authentication.processUserPassword(cpasswd, challenge))
+			if result:
+				account = Account()
+				account.login = login
+				account.nick = result["nick"]
+				account.email = result["email"]
+				log.debug("User", login, "has valid metaserver account")
+			#else:
+			#	raise SecurityException("Wrong login and/or password.")
+		# local login
+		# TBD: option to disable local login completely
+		if not account:
+			log.debug("Trying local login for user", login)
+			if not self.accounts.has_key(login):
+				raise SecurityException('Wrong login and/or password.')
+			account = self.accounts[login]
+			if not Authentication.verify(cpasswd, account.passwd, challenge):
+				raise SecurityException('Wrong login and/or password.')
+		# setup session
 		self.sessions[sid].setAttrs(account.login, account.nick, account.email)
 		account.lastLogin = time.time()
 		account.addHostID(hostID)

@@ -6,6 +6,10 @@ Last change:
 - $Author$
 - $Revision$
 
+[2012-02-07]
+- Client now handles better situation when server is down. [Qark]
+- Server now supports metaserver accounts with local fallback. [Qark]
+
 [2012-01-02]
 - Client is now backward compatible with 0.5.68 server. [Qark]
 

@@ -27,6 +27,7 @@ from ConfirmDlg import ConfirmDlg
 from OptionsDlg import OptionsDlg
 import binascii
 from ige import log
+from igeclient.IClient import IClientException
 
 class LoginDlg:
 
@@ -41,8 +42,11 @@ class LoginDlg:
 	def display(self, caller = None, message = None):
 		self.caller = caller
 		# get game names from the server
-                try:
+		try:
 			self.gameIDs = client.cmdProxy.getRegisteredGames()
+		except IClientException:
+			# server is probably down, what to do?
+			self.gameIDs = {"UNDEFINED": "Not available"}
 		except KeyError:
 			# server does not support this call
 			self.gameIDs = {"Alpha": "Alpha"}

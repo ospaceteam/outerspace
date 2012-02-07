@@ -79,12 +79,30 @@ def encode(password, challenge):
 def verify(encodedPassword, password, challenge):
     """Verify password based on client encoded password and auth method"""
     method = getMethod(challenge)
+    return processUserPassword(encodedPassword, challenge) == processStoredPassword(password, challenge)
+
+def processUserPassword(password, challenge):
+    """Decode password according to auth method (if possible)"""
+    method = getMethod(challenge)
     if method == "plain":
-        return encodedPassword == password
+        return password
     elif method == "md5" or challenge.startswith("IGEServer@"):
-        return hashlib.md5(password + challenge).hexdigest() == encodedPassword
+        return password
     elif method == "sha256":
-        return hashlib.sha256(password + challenge).hexdigest() == encodedPassword
+        return password
     elif method == "rsa":
-        return rsa.decrypt(binascii.unhexlify(encodedPassword), getPrivateKey()) == password
+        return rsa.decrypt(binascii.unhexlify(password), getPrivateKey())
+    raise SecurityException("Unsupported authentication method %s" % str(method))
+
+def processStoredPassword(password, challenge):
+    """Encode stored password for comparison with user provided password"""
+    method = getMethod(challenge)
+    if method == "plain":
+        return password
+    elif method == "md5" or challenge.startswith("IGEServer@"):
+        return hashlib.md5(password + challenge).hexdigest()
+    elif method == "sha256":
+        return hashlib.sha256(password + challenge).hexdigest()
+    elif method == "rsa":
+        return password
     raise SecurityException("Unsupported authentication method %s" % str(method))

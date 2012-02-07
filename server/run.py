@@ -201,10 +201,16 @@ if options.restore:
 # initialize game
 log.message('Initializing game \'%s\'...' % gameName)
 
+metaserver = None
+if config.wordpressmetaserver.url:
+    from ige.MetaServer import WordpressMetaServer
+    metaserver = WordpressMetaServer(config.wordpressmetaserver.url)
+    assert config.server.authmethod in ("plain", "rsa"), "Only plain and rsa authmethod supported for metaservers"
+
 log.debug("Initializing issue manager")
 issueMngr = IssueMngr()
 log.debug("Initializing client manager")
-clientMngr = ClientMngr(clientDB, config.server.authmethod, options.configDir)
+clientMngr = ClientMngr(clientDB, config.server.authmethod, options.configDir, metaserver)
 log.debug("Initializing message manager")
 msgMngr = MsgMngr(msgDB)
 

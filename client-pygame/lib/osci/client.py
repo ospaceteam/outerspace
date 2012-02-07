@@ -50,6 +50,7 @@ def initialize(aServer, aCallbackObj, anOptions):
 def reinitialize():
 	global cmdProxy
 	cmdProxy = None
+	initCmdProxy(options.heartbeat)
 
 def initCmdProxy(keepAliveTime):
 	global cmdProxy, server
