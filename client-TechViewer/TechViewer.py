@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import wx
 import sys
 import os

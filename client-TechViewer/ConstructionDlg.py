@@ -1,5 +1,6 @@
 import wx
 import string
+import math
 
 import sequip
 	
@@ -247,6 +248,16 @@ class ConstructionDlg(wx.Dialog):
 		box.Add(self.lblConstrPts, 1, wx.GROW | wx.ALIGN_RIGHT, 0)
 		right.AddSizer(box, 0, wx.GROW, 0)
 
+		right.Add(wx.StaticLine(self, -1), 0, wx.EXPAND | wx.TOP | wx.BOTTOM, 4)
+
+		box = wx.BoxSizer(wx.HORIZONTAL)
+		label = wx.StaticText(self, -1, "Effectivity")
+		self.lblEffPts = wx.StaticText(self, -1, "", style = wx.ALIGN_RIGHT)
+		box.Add(label, 0, wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 4)
+		box.Add(self.lblEffPts, 1, wx.GROW | wx.ALIGN_RIGHT, 0)
+		right.AddSizer(box, 0, wx.GROW, 0)
+
+
 		box = wx.BoxSizer(wx.VERTICAL)
 		constrBtnID = wx.NewId()
 		self.constrBtn = wx.Button(self, constrBtnID, "Construct")
@@ -457,6 +468,18 @@ class ConstructionDlg(wx.Dialog):
 			self.lblBaseExp.SetLabel("%d" % self.selectedDesign.baseExp)
 			self.lblMP.SetLabel("%d" % self.selectedDesign.combatPwr)
 			self.designName.SetLabel(self.selectedDesign.name)
+			# effectivity
+			speedEff = 1/(1+math.exp((6 -self.selectedDesign.speed) * 2 - 2))
+			dmg = 0
+			for weaponID in self.selectedDesign.weaponIDs:
+				weapon = Rules.techs[weaponID]
+				dmg += (weapon.weaponDmgMin + weapon.weaponDmgMax) / 2 * weapon.weaponROF * (0.75 + 4 * 0.125)
+			if self.selectedDesign.buildProd:
+				dmgEff = max(1, dmg) / self.selectedDesign.buildProd
+				hpEff = float(self.selectedDesign.maxHP + self.selectedDesign.shieldHP) / self.selectedDesign.buildProd
+			else:
+				dmgEff = hpEff = 0
+			self.lblEffPts.SetLabel("%f" % (speedEff * dmgEff * hpEff))
 			i = 0
 			self.equipment.Freeze()
 			self.equipment.DeleteAllItems()

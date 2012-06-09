@@ -513,6 +513,11 @@ class IPlayer(IObject):
 		for planetID in obj.planets:
 			planet = tran.db[planetID]
 			self.cmd(planet).deleteDesign(tran, planet, designID)
+		# delete from global queues
+		for queueID in xrange(len(obj.prodQueues)):
+			for taskID in xrange(len(queue)):
+				if obj.prodQueues[queueID][taskID].techID == designID:
+					self.cmd(obj).abortGlobalConstruction(queueID, taskID)
 		# clear upgradeTo
 		for tmpDesignID in obj.shipDesigns:
 			spec = obj.shipDesigns[tmpDesignID]

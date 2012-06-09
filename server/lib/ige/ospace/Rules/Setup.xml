@@ -24,6 +24,7 @@
 	<technology id="9000" symbol="RENEGADEBASE" name="Renegade Outpost">
 		<discovery
 			researchMod="1.0 + 0.5"
+			researchRaces="r"
 			level="99"
 		/>
 		<structure
@@ -49,6 +50,7 @@
 	<technology id="9060" symbol="RENEGADEBASE2" name="Renegade Base">
 		<discovery
 			researchMod="1.0 + 0.5"
+			researchRaces="r"
 			level="99"
 		/>
 		<structure
@@ -74,6 +76,7 @@
 	<technology id="9061" symbol="RENEGADEBASE2MINOR" name="Renegade Camp">
 		<discovery
 			researchMod="1.0 + 0.5"
+			researchRaces="r"
 			level="99"
 		/>
 		<structure
@@ -96,6 +99,7 @@
 	<technology id="9062" symbol="RENEGADEBASE3" name="Renegade HQ">
 		<discovery
 			researchMod="1.0 + 0.5"
+			researchRaces="r"
 			level="99"
 		/>
 		<structure
@@ -122,6 +126,7 @@
 	<technology id="9063" symbol="RENEGADEBASE3MINOR" name="Renegade Fort">
 		<discovery
 			researchMod="1.0 + 0.5"
+			researchRaces="r"
 			level="99"
 		/>
 		<structure
@@ -144,6 +149,7 @@
 	<technology id="9064" symbol="RENEGADECOSMODROME" name="Renegade Cosmodrome">
 		<discovery
 			researchMod="1.0 + 0.5"
+			researchRaces="r"
 			level="99"
 		/>
 		<structure
@@ -164,6 +170,7 @@
 	<technology id="9001" symbol="MUTANTBASE" name="Mutant Lodge">
 		<discovery
 			researchMod="1.0 + 0.5"
+			researchRaces="m"
 			level="99"
 		/>
 		<structure
@@ -192,6 +199,7 @@
 	<technology id="9070" symbol="MUTANTBASE2" name="Mutant Den">
 		<discovery
 			researchMod="1.0 + 0.5"
+			researchRaces="m"
 			level="99"
 		/>
 		<structure
@@ -216,6 +224,7 @@
 	<technology id="9071" symbol="MUTANTBASE3" name="Mutant Hub">
 		<discovery
 			researchMod="1.0 + 0.5"
+			researchRaces="m"
 			level="99"
 		/>
 		<structure
@@ -240,6 +249,7 @@
 	<technology id="9072" symbol="MUTANTPP1" name="Geothermal Power Plant">
 		<discovery
 			researchMod="1.0 + 0.5"
+			researchRaces="m"
 			level="99"
 		/>
 		<structure
@@ -254,6 +264,7 @@
 	<technology id="9073" symbol="MUTANTPP2" name="Lightning Power Plant">
 		<discovery
 			researchMod="1.0 + 0.5"
+			researchRaces="m"
 			level="99"
 		/>
 		<structure
@@ -268,6 +279,7 @@
 	<technology id="9074" symbol="MUTANTFACT1" name="Mutant Factory">
 		<discovery
 			researchMod="1.0 + 0.5"
+			researchRaces="m"
 			level="99"
 		/>
 		<structure
@@ -283,6 +295,7 @@
 	<technology id="9075" symbol="MUTANTFACT2" name="Mutant Military Factory">
 		<discovery
 			researchMod="1.0 + 0.5"
+			researchRaces="m"
 			level="99"
 		/>
 		<structure
@@ -304,6 +317,7 @@
 	<technology id="9076" symbol="MUTANTMINES" name="Mutant Mine Field">
 		<discovery
 			researchMod="1.0 + 0.5"
+			researchRaces="m"
 			level="99"
 		/>
 		<structure
@@ -323,6 +337,7 @@
 	<technology id="9077" symbol="MUTANTBASE4" name="Mutant Junction">
 		<discovery
 			researchMod="1.0 + 0.5"
+			researchRaces="m"
 			level="99"
 		/>
 		<structure
@@ -347,8 +362,8 @@
 	<technology id="9079" symbol="MUTANTPOD" name="Mutant planetary pod">
 		<discovery
 			researchMod="1.00 + 0.50"
-			level="99"
 			researchRaces="m"
+			level="99"
 		/>
 		<shipequip
 			subtype="seq_struct"
@@ -366,6 +381,7 @@
 	<technology id="9003" symbol="EDENBASE" name="E.D.E.N. Base">
 		<discovery
 			researchMod="1.0 + 0.5"
+			researchRaces="e"
 			level="99"
 		/>
 		<structure
@@ -419,6 +435,7 @@
 	<technology id="9002" symbol="PIRATEBASE" name="Pirate Base">
 		<discovery
 			researchMod="1.0 + 0.5"
+			researchRaces="p"
 			level="99"
 		/>
 		<structure
@@ -450,6 +467,7 @@
 	<technology id="9006" symbol="PIRATEDEN" name="Pirate Den">
 		<discovery
 			researchMod="1.0 + 0.5"
+			researchRaces="p"
 			level="99"
 		/>
 		<structure
@@ -469,6 +487,7 @@
 	<technology id="9007" symbol="PIRATESD" name="Pirate Shipyards">
 		<discovery
 			researchMod="1.00"
+			researchRaces="p"
 			level="99"
 		/>
 		<structure
@@ -491,6 +510,7 @@
 	<technology id="9008" symbol="PIRATEFTLENG" name="Pirate FTL Engine">
 		<discovery
 			researchMod="1.00 + 1.00"
+			researchRaces="p"
 			level="99"
 		/>
 		<shipequip
@@ -507,6 +527,7 @@
 	<technology id="9009" symbol="PIRCOLONYMOD" name="Pirate Colony Module">
 		<discovery
 			researchMod="1.00 + 0.50"
+			researchRaces="p"
 			level="99"
 		/>
 		<shipequip
@@ -526,6 +547,7 @@
 	<technology id="9010" symbol="PIRGOVERNMENT" name="Main Pirate Base">
 		<discovery
 			researchMod="1.50"
+			researchRaces="p"
 			level="99"
 		/>
 		<structure
@@ -545,7 +567,7 @@
 		<discovery
 			researchMod="1.00"
 			level="99"
-		        researchRaces="B"
+			researchRaces="C"
 			maxImprovement="1"
 		/>
 		<structure
@@ -577,7 +599,7 @@
 		<discovery
 			researchMod="1.00"
 			level="99"
-		        researchRaces="B"
+			researchRaces="B"
 			maxImprovement="1"
 		/>
 		<structure
@@ -610,7 +632,7 @@
 		<discovery
 			researchMod="1.00"
 			level="99"
-		        researchRaces="B"
+			researchRaces="B"
 			maxImprovement="1"
 		/>
 		<structure
@@ -637,6 +659,7 @@
 	<technology id="9020" symbol="EDENSTATION" name="Empire DEfense Network (E.D.E.N.) Flak Platform">
 		<discovery
 			researchMod="1.0 + 0.5"
+			researchRaces="e"
 			level="99"
 		/>
 		<structure
@@ -659,6 +682,7 @@
 	<technology id="9021" symbol="EDENCANNON" name="E.D.E.N. Spacial Disruptor">
 		<discovery
 			researchMod="1.00 + 0.5 + 0.5"
+			researchRaces="e"
 			level="99"
 		/>
 		<shipequip
@@ -679,6 +703,7 @@
 	<technology id="9022" symbol="EDENMISSILE" name="E.D.E.N. Hunter-Seeker">
 		<discovery
 			researchMod="1.00 + 0.5 + 0.5"
+			researchRaces="e"
 			level="99"
 		/>
 		<shipequip
@@ -700,6 +725,7 @@
 	<technology id="9023" symbol="EDENTORP" name="E.D.E.N. Atomizer">
 		<discovery
 			researchMod="1.00 + 0.5 + 0.5"
+			researchRaces="e"
 			level="99"
 		/>
 		<shipequip
@@ -721,6 +747,7 @@
 	<technology id="9024" symbol="EDENBOMB" name="E.D.E.N. Singularity Bomb">
 		<discovery
 			researchMod="1.00 + 0.5 + 0.5"
+			researchRaces="e"
 			level="99"
 		/>
 		<shipequip
@@ -741,6 +768,7 @@
 	<technology id="9030" symbol="PIRATEBREWERY" name="Pirate Brewery">
 		<discovery
 			researchMod="1.0 + 0.5"
+			researchRaces="p"
 			level="99"
 		/>
 		<structure
@@ -760,6 +788,7 @@
 	<technology id="9031" symbol="PIRATEPRISON" name="Pirate Prison">
 		<discovery
 			researchMod="1.0 + 0.5"
+			researchRaces="p"
 			level="99"
 		/>
 		<structure
@@ -777,6 +806,7 @@
 	<technology id="9032" symbol="PIRATESMALLBASE" name="Pirate Small Base">
 		<discovery
 			researchMod="1.0 + 0.5"
+			researchRaces="p"
 			level="99"
 		/>
 		<structure
@@ -808,6 +838,7 @@
 	<technology id="9033" symbol="PIRSMCOLONYMOD" name="Pirate Small Colony Module">
 		<discovery
 			researchMod="1.00 + 0.50"
+			researchRaces="p"
 			level="99"
 		/>
 		<shipequip
@@ -889,6 +920,7 @@
 	<technology id="99001" symbol="COMSCANDEVEL" name="Developer Testing Comm/Scan Center">
 		<discovery
 			researchMod="1.0"
+			researchRaces="#"
 			level="99"
 		/>
 		<structure
@@ -906,6 +938,7 @@
 	<technology id="99002" symbol="FACTORYDEVEL" name="Developer Testing Factory">
 		<discovery
 			researchMod="1.0"
+			researchRaces="#"
 			level="99"
 		/>
 		<structure
@@ -927,6 +960,7 @@
 	<technology id="99003" symbol="FTLDEVEL" name="Developer FTL">
 		<discovery
 			researchMod="1.0"
+			researchRaces="#"
 			level="99"
 		/>
 		<shipequip
@@ -944,6 +978,7 @@
 	<technology id="99004" symbol="SCANNERDEVEL" name="Developer Scanner">
 		<discovery
 			researchMod="1.0"
+			researchRaces="#"
 			level="99"
 		/>
 		<shipequip

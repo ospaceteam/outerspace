@@ -6,6 +6,15 @@ Last change:
 - $Author$
 - $Revision$
 
+[2012-06-09]
+- TechViewer now counts effectivity of ship designs. [dahaic]
+- Twin EM Cannon Turret now costs less, to provide some incentive to research
+  it. [dahaic]
+- All NPC/devel techs has defined allowed races now. [dahaic]
+- fixes for osclient and osclient.py [dahaic]
+- Included list of galaxy names, used by Galaxer [dahaic]
+- Scrapped designs are now correctly removed from global queues [dahaic]
+
 [2012-02-07]
 - Client now handles better situation when server is down. [Qark]
 - Server now supports metaserver accounts with local fallback. [Qark]

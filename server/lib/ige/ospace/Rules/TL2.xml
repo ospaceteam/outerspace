@@ -384,7 +384,7 @@
 			subtype="seq_wpn"
 			slots="2"
 			weight="4"
-			buildProd="608"
+			buildProd="456"
 			weaponDmgMin="3"
 			weaponDmgMax="5"
 			weaponAtt="11"
@@ -393,7 +393,7 @@
 			weaponIgnoreShield="0"
 			minHull="1"
 		/>
-		<preresearch>This flak cannon can be mounted on medium to large ships to help deffend them against fighters.</preresearch>
+		<preresearch>This flak cannon can be mounted on medium to large ships to help defend them against fighters.</preresearch>
 	</technology>
 	<technology id="2801" symbol="NFURANIUM" name="Nuclear Fusion - Uranium">
 		<discovery

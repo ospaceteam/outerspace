@@ -20,14 +20,20 @@
 #
 
 # tweak PYTHONPATH
+import os
 import sys
-sys.path.insert(0, 'lib')
+
+# setup system path
+baseDir = os.path.abspath(os.path.dirname(__file__))
+
+sys.path.insert(0, os.path.join(baseDir, "lib"))
 
 import os
 from igeclient.IClient import IClient
 import pprint, traceback
 from getpass import getpass
 from optparse import OptionParser
+import ige
 from ige import log
 
 def msgHandler(id, data):
@@ -55,8 +61,12 @@ parser.add_option("-b", "--backup", dest = "backup", default = None,
     help = "Backup server databases into BASEFILENAME-<database name>.osbackup")
 parser.add_option("",  "--configdir", dest = "configDir", 
     metavar = "DIRECTORY", default = "var", 
-    help = "Override default configuration directory", 
-)
+    help = "Override default configuration directory",) 
+parser.add_option("", "--game", dest = "game",
+	metavar = "GAME", default = "Alpha",
+	help = "Name of the game")
+
+
 options, args = parser.parse_args()
 
 #s = IClient('ospace.net:9080', None, msgHandler, 'IClient/osc')
@@ -74,7 +84,7 @@ else:
 	password = getpass("Password: ")
 
 s.connect(login)
-s.login('Alpha', login, password)
+s.login(options.game, login, password)
 
 if options.backup:
     s.backup(options.backup)

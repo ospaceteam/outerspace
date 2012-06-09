@@ -503,7 +503,7 @@ if len(args) != 1:
 	print "Usage: osclient [options] LOGIN"
 	sys.exit(1)
 
-login = sys.argv[1]
+login = args[0]
 
 if login == "admin":
 	# get admin login from <configDir>/token
