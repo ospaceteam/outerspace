@@ -6,6 +6,9 @@ Last change:
 - $Author$
 - $Revision$
 
+[2012-06-11]
+- GalaxyNames.txt file needed by Galaxer is now included. [dahaic]
+
 [2012-06-09]
 - TechViewer now counts effectivity of ship designs. [dahaic]
 - Twin EM Cannon Turret now costs less, to provide some incentive to research
