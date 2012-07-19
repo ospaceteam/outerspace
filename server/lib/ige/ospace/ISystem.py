@@ -233,6 +233,8 @@ class ISystem(IObject):
 	def processINITPhase(self, tran, obj, data):
 		obj.scannerPwrs = {}
 
+		return obj.planets
+
 	processINITPhase.public = 1
 	processINITPhase.accLevel = AL_ADMIN
 

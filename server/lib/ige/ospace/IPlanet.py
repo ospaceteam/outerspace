@@ -306,6 +306,15 @@ class IPlanet(IObject):
 	moveStruct.public = 1
 	moveStruct.accLevel = AL_FULL
 
+	def processINITPhase(self, tran, obj, data):
+		# get rid of the NEW states
+		for struct in obj.slots:
+			struct[STRUCT_IDX_STATUS] &= ~STRUCT_STATUS_NEW
+
+	processINITPhase.public = 1
+	processINITPhase.accLevel = AL_ADMIN
+
+
 	def processPRODPhase(self, tran, obj, data):
 		if obj.plType == "A":
 			self.cmd(obj).generateAsteroid(tran, obj)
@@ -368,6 +377,8 @@ class IPlanet(IObject):
 		# reset of "morale modifier by buildings" value
 		obj.moraleModifiers[1] = 0
 		for struct in obj.slots:
+			if struct[STRUCT_IDX_STATUS] & STRUCT_STATUS_NEW:
+				continue
 			tech = Rules.techs[struct[STRUCT_IDX_TECHID]]
 			# compute struct effectivity
 			techEff = Utils.getTechEff(tran, struct[STRUCT_IDX_TECHID], obj.owner)

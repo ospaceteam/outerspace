@@ -6,6 +6,11 @@ Last change:
 - $Author$
 - $Revision$
 
+[2012-07-19]
+- NEW phase of buildings is now correctly respected in all cases.
+  (fix for github issue #1) [dahaic]
+- Removed duplicate entries in the GalaxyNames.txt file. [dahaic]
+
 [2012-06-11]
 - GalaxyNames.txt file needed by Galaxer is now included. [dahaic]
 
