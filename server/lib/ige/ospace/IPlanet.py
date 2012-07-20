@@ -309,7 +309,7 @@ class IPlanet(IObject):
 	def processINITPhase(self, tran, obj, data):
 		# get rid of the NEW states
 		for struct in obj.slots:
-			struct[STRUCT_IDX_STATUS] &= ~STRUCT_STATUS_NEW
+			struct[STRUCT_IDX_STATUS] &= STRUCT_STATUS_RESETFLGS
 
 	processINITPhase.public = 1
 	processINITPhase.accLevel = AL_ADMIN
@@ -377,6 +377,7 @@ class IPlanet(IObject):
 		# reset of "morale modifier by buildings" value
 		obj.moraleModifiers[1] = 0
 		for struct in obj.slots:
+			# skip structure if it was built this turn
 			if struct[STRUCT_IDX_STATUS] & STRUCT_STATUS_NEW:
 				continue
 			tech = Rules.techs[struct[STRUCT_IDX_TECHID]]
@@ -391,7 +392,6 @@ class IPlanet(IObject):
 			if obj.autoMinStor:
 				obj.minBio += tech.operBio * Rules.autoMinStorTurns
 				obj.minEn += tech.operEn * Rules.autoMinStorTurns
-			struct[STRUCT_IDX_STATUS] &= STRUCT_STATUS_RESETFLGS
 			# each structure accomodate it's workers
 			obj.maxPop += tech.operWorkers
 			# produce/consume resources
