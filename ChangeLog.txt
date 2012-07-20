@@ -6,6 +6,10 @@ Last change:
 - $Author$
 - $Revision$
 
+[2012-07-20]
+- Pirate and EDEN now has forced non-aggresion, preventing Pirate from
+  obtaining EDEN technologies. (fix for github issue #5) [dahaic]
+
 [2012-07-19]
 - NEW phase of buildings is now correctly respected in all cases.
   (fix for github issue #1) [dahaic]

@@ -155,6 +155,11 @@ class IAIPiratePlayer(IPlayer):
 		return dipl
 
 	def isPactActive(self, tran, obj, partnerID, pactID):
+		partner = tran.db.get(partnerID, None)
+		if partner.type == T_AIEDENPLAYER:
+			# force the peace!
+			if pactID in (PACT_ALLOW_CIVILIAN_SHIPS, PACT_ALLOW_MILITARY_SHIPS):
+				return PACT_ACTIVE
 		return 0
 
 	def processDIPLPhase(self, tran, obj, data):
