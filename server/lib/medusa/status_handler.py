@@ -1,7 +1,5 @@
 # -*- Mode: Python; tab-width: 4 -*-
 
-VERSION_STRING = "$Id$"
-
 #
 # medusa status extension
 #

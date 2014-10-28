@@ -162,7 +162,7 @@ class UpdateDlg:
             return None
         log.debug("Comparing server and client versions", self.serverVersion, ige.version.version)
         matches = True
-        for i in ("major", "minor", "revision", "status", "svnRevision"):
+        for i in ("major", "minor", "revision", "status"):
             if ige.version.version[i] != self.serverVersion[i]:
                 matches = False
         if matches:

@@ -1,10 +1,9 @@
 ﻿Outer Space Change Log
 ======================
 
-Last change:
-- $Date$
-- $Author$
-- $Revision$
+[2014-10-28]
+- Migration to github [dahaic]
+- removed dependencies on svn keywords [dahaic]
 
 [2012-07-20]
 - Pirate and EDEN now has forced non-aggresion, preventing Pirate from

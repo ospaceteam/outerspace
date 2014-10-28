@@ -34,7 +34,7 @@ import binascii
 from optparse import OptionParser
 
 # log initialization
-log.message("Starting Outer Space Client", ige.version.versionStringFull)
+log.message("Starting Outer Space Client", ige.version.versionString)
 log.debug("sys.path =", sys.path)
 log.debug("os.name =", os.name)
 log.debug("sys.platform =", sys.platform)
@@ -122,7 +122,7 @@ def drawBackground():
     screen.blit(img, (sponsorLogoOffset[0], sponsorLogoOffset[1] - img.get_height() - 2))
     # screen.fill((0x00, 0x00, 0x00))
     # OSCI version
-    img = font.render(_('Outer Space %s') % ige.version.versionStringFull, 1, color)
+    img = font.render(_('Outer Space %s') % ige.version.versionString, 1, color)
     screen.blit(img, (5, screen.get_height() - 4 * img.get_height() - 5))
     # Pygame version
     img = font.render(_('Pygame %s') % pygame.version.ver, 1, color)
@@ -402,8 +402,7 @@ while running:
             fh = StringIO.StringIO()
             exctype, value, tb = sys.exc_info()
             funcs = [entry[2] for entry in traceback.extract_tb(tb)]
-            faultID = "%04d-%06d-%03d" % (
-                ige.version.version["svnRevision"],
+            faultID = "%06d-%03d" % (
                 hash("/".join(funcs)) % 1000000,
                 traceback.extract_tb(tb)[-1][1] % 1000,
             )

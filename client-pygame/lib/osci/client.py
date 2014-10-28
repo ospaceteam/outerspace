@@ -82,7 +82,6 @@ def login(gameid, login, password):
 					minor = result.lastClientVersion[1],
 					revision = result.lastClientVersion[2],
 					status = result.lastClientVersion[3],
-					svnRevision = result.lastClientRevision,
 				)
 		except ige.NoAccountException:
 			callbackObj.createGameAccount()

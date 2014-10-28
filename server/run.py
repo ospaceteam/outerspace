@@ -80,7 +80,7 @@ log.setMessageLog(os.path.join(options.configDir,'logs/messages.log'))
 log.setErrorLog(os.path.join(options.configDir,'logs/errors.log'))
 
 import ige.version
-log.message("Outer Space %s" % ige.version.versionStringFull)
+log.message("Outer Space %s" % ige.version.versionString)
 #~ # standard logger
 #~ import logging, logging.handlers
 #~ log = logging.getLogger()

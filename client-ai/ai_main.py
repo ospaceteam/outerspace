@@ -30,7 +30,7 @@ import re
 from optparse import OptionParser
 
 # log initialization
-log.message("Starting Outer Space Client", ige.version.versionStringFull)
+log.message("Starting Outer Space Client", ige.version.versionString)
 log.debug("sys.path =", sys.path)
 log.debug("os.name =", os.name)
 log.debug("sys.platform =", sys.platform)

@@ -73,7 +73,7 @@ log.setMessageLog(os.path.join(options.configDir, 'logs/messages.log'))
 log.setErrorLog(os.path.join(options.configDir, 'logs/errors.log'))
 
 import ige.version
-log.message("Outer Space %s" % ige.version.versionStringFull)
+log.message("Outer Space %s" % ige.version.versionString)
 
 # record my pid
 pidFd = os.open(os.path.join(options.configDir, "server.pid"), os.O_CREAT | os.O_EXCL | os.O_WRONLY)

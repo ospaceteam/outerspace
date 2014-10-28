@@ -23,28 +23,21 @@ minor = 5
 revision = 68
 # status must be either empty string or must start with a dash
 status = ""
-svnRevision = int("$Revision$"[11:-2])
 
 assert not status or status.startswith("-"), "Status MUST start with dash if set"
 
 version = {
-	"major": major,
-	"minor": minor,
-	"revision": revision,
-	"status": status,
-	"svnRevision": svnRevision,
+    "major": major,
+    "minor": minor,
+    "revision": revision,
+    "status": status,
 }
 
 versionString = "%(major)d.%(minor)d.%(revision)d%(status)s" % version
-versionStringFull = "%(major)d.%(minor)d.%(revision)d%(status)s [SVN Rev: %(svnRevision)d]" % version
 
 clientURLs = {
-	"*": (
-		"browser",
-		"https://sourceforge.net/projects/ospace/files/Client/%(major)d.%(minor)d.%(revision)d%(status)s/" % version,
-	),
-	"nt": (
-		"execute",
-		"http://sourceforge.net/projects/ospace/files/Client/%(major)d.%(minor)d.%(revision)d%(status)s/Outer Space-%(major)d.%(minor)d.%(revision)d%(status)s.exe/download" % version,
-	),
+    "*": (
+        "browser",
+        "https://github.com/ospaceteam/outerspace/releases/tag/%(major)d.%(minor)d.%(revision)d%(status)s" % version,
+    ),
 }

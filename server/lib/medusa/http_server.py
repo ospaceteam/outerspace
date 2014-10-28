@@ -6,8 +6,6 @@
 #						 All Rights Reserved.
 #
 
-RCS_ID =  '$Id$'
-
 # python modules
 import os
 import re
@@ -27,7 +25,7 @@ import producers
 import status_handler
 import logger
 
-VERSION_STRING = string.split(RCS_ID)[2]
+VERSION_STRING = "Outer Space"
 
 from counter import counter
 from urllib import unquote
@@ -523,7 +521,7 @@ class http_channel (asynchat.async_chat):
 
 class http_server (asyncore.dispatcher):
 
-	SERVER_IDENT = 'HTTP Server (V%s)' % VERSION_STRING
+	SERVER_IDENT = 'HTTP Server (%s)' % VERSION_STRING
 
 	channel_class = http_channel
 

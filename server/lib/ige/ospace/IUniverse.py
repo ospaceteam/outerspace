@@ -73,7 +73,6 @@ class IUniverse(IObject):
 			ige.version.revision,
 			ige.version.status,
 		)
-		result.lastClientRevision = ige.version.svnRevision
 		return result
 
 	getIntroInfo.public = 1
