@@ -1,5 +1,10 @@
 *.py[co]
 
+# outerspace specific
+**/Rules/Tech.spf
+**/Rules/checksum
+**/Rules/techs.spf
+
 # Packages
 *.egg
 *.egg-info
@@ -21,7 +26,10 @@ pip-log.txt
 .tox
 
 #Translations
-*.mo
+# it is convenient to leave it in the repo... for now
+# *.mo
 
 #Mr Developer
 .mr.developer.cfg
+
+

@@ -33,6 +33,8 @@ import re
 import binascii
 from optparse import OptionParser
 
+import resources
+
 # log initialization
 log.message("Starting Outer Space Client", ige.version.versionString)
 log.debug("sys.path =", sys.path)
@@ -95,11 +97,11 @@ def drawBackground():
     global sponsorLogo, sponsorLogoOffset
     if not background:
         image = random.choice([
-            'res/bck1_1024x768.jpg',
-            'res/bck2_1024x768.jpg',
-            'res/bck3_1024x768.jpg',
-            'res/bck4_1024x768.jpg',
-            'res/bck5_1024x768.jpg',
+            resources.get('bck1_1024x768.jpg'),
+            resources.get('bck2_1024x768.jpg'),
+            resources.get('bck3_1024x768.jpg'),
+            resources.get('bck4_1024x768.jpg'),
+            resources.get('bck5_1024x768.jpg'),
         ])
         background = pygame.image.load(image).convert_alpha()
         backgroundOffset = (
@@ -107,12 +109,12 @@ def drawBackground():
             (screen.get_height() - background.get_height()) / 2,
         )
     if not sponsorLogo:
-        sponsorLogo = pygame.image.load("res/sponsor_logo.png").convert_alpha()
+        sponsorLogo = pygame.image.load(resources.get('sponsor_logo.png')).convert_alpha()
         sponsorLogoOffset = (
             (screen.get_width() - 5 - sponsorLogo.get_width()),
             (screen.get_height() - 5 - sponsorLogo.get_height()),
         )
-    font = pygame.font.Font('res/fonts/DejaVuLGCSans.ttf', 12)
+    font = pygame.font.Font(resources.get('fonts/DejaVuLGCSans.ttf'), 12)
     font.set_bold(1)
     color = 0x40, 0x70, 0x40
     #
@@ -190,7 +192,7 @@ if gdata.config.defaults.maxplanetsymbolsize == None:
     
 import gettext
 try:
-    tran = gettext.translation('OSPACE', 'res', languages = [language])
+    tran = gettext.translation('OSPACE', resources.get('translations'), languages = [language])
 except IOError:
     log.warning('OSCI', 'Cannot find catalog for', language)
     log.message('OSCI', 'Installing null translations')
@@ -271,10 +273,9 @@ pygame.mouse.set_visible(1)
 pygame.display.set_caption(_('Outer Space %s') % ige.version.versionString)
 
 # set icon
-pygame.display.set_icon(pygame.image.load('res/icon48.png').convert_alpha())
-
+pygame.display.set_icon(pygame.image.load(resources.get('icon48.png')).convert_alpha())
 # load cursor
-cursorImg = pygame.image.load('res/cursor.png').convert_alpha()
+cursorImg = pygame.image.load(resources.get('cursor.png')).convert_alpha()
 
 drawBackground()
 pygame.display.flip()
@@ -287,7 +288,7 @@ if gdata.config.client.theme != None:
     theme = gdata.config.client.theme
 ui.SkinableTheme.enableMusic(gdata.config.defaults.music == "no")
 ui.SkinableTheme.enableSound(gdata.config.defaults.sound == "yes")
-ui.SkinableTheme.setSkin(os.path.join("res/themes", theme))
+ui.SkinableTheme.setSkin(os.path.join(resources.get('themes'), theme))
 ui.SkinableTheme.loadMusic(gdata.config.defaults.mymusic)
 if gdata.config.defaults.musicvolume:
     ui.SkinableTheme.setMusicVolume(float(gdata.config.defaults.musicvolume)/ 100.0)

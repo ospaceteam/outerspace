@@ -18,13 +18,19 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+import glob
+import math
+import os
+import re
+
 import gdata, client
-import glob, math
 import pygame, pygame.image
 from osci import gdata
 from ige.ospace.Const import *
 from ige.ospace import Rules
 from ige import log
+
+import resources
 
 whiteShift = 80000
 redShift = 90000
@@ -44,23 +50,23 @@ icons = {}
 def initialize():
 	# needed for progress dlg
 	global loginLogoImg
-	loginLogoImg = pygame.image.load('res/logo-login.png').convert_alpha()
+	loginLogoImg = pygame.image.load(resources.get('logo-login.png')).convert_alpha()
 
 def loadResources():
 	import dialog
 	dlg = dialog.ProgressDlg(gdata.app)
 	curr = 0
-	max = len(glob.glob('res/galaxy/*.png')) + len(glob.glob('res/techs/*.png')) + \
-		len(glob.glob('res/system/*.png')) + len(glob.glob('res/icons/*.png')) + len(glob.glob('res/buttons/*.png'))
+	max = len(glob.glob(resources.get('galaxy/*.png'))) + len(glob.glob(resources.get('techs/*.png'))) + \
+		len(glob.glob(resources.get('system/*.png'))) + len(glob.glob(resources.get('icons/*.png'))) + len(glob.glob(resources.get('buttons/*.png')))
 	dlg.display(_('Loading resources'), 0, max)
 	# load star imgs
 	global smallStarImgs
 	smallStarImgs = {}
-	for filename in glob.glob('res/galaxy/star_*.png'):
+	for filename in glob.glob(resources.get('galaxy/star_*.png')):
 		curr += 1
 		if curr % 10 == 0:
 			dlg.setProgress(_('Loading resources...'), curr)
-		name = filename[16:-4]
+                name = re.search("star_([^.]+).png", filename).group(1)
 		smallStarImgs[name] = pygame.image.load(filename).convert_alpha()
 	# load tech imgs
 	global techImgs
@@ -71,11 +77,11 @@ def loadResources():
 	red = pygame.Surface((37,37))
 	red.fill((255, 0, 0))
 	red.set_alpha(64)
-	for filename in glob.glob('res/techs/????.png'):
+	for filename in glob.glob(resources.get('techs/????.png')):
 		curr += 1
 		if curr % 10 == 0:
 			dlg.setProgress(_('Loading resources...'), curr)
-		name = filename[10:14]
+		name = os.path.splitext(os.path.basename(filename))[0]
 		imgID = int(name)
 		techImgs[imgID] = pygame.image.load(filename).convert_alpha()
 		copyImg = techImgs[imgID].convert_alpha()
@@ -87,23 +93,24 @@ def loadResources():
 	# load big star imgs
 	global bigStarImgs
 	bigStarImgs = {}
-	for filename in glob.glob('res/system/star_*.png'):
+	for filename in glob.glob(resources.get('system/star_*.png')):
 		curr += 1
 		if curr % 10 == 0:
 			dlg.setProgress(_('Loading resources...'), curr)
-		name = filename[16:-4]
+                name = re.search("star_([^.]+).png", filename).group(1)
 		bigStarImgs[name] = pygame.image.load(filename).convert_alpha()
 	# load planet images
 	global planetImgs
 	global planetImgCnt
 	planetImgs = {}
 	planetImgCnt = {}
-	for filename in glob.glob('res/system/planet_*.png'):
+	for filename in glob.glob(resources.get('system/planet_*.png')):
 		curr += 1
 		if curr % 10 == 0:
 			dlg.setProgress(_('Loading resources...'), curr)
-		name = filename[18:-4]
-		pltype = name[:1]
+                matchobj = re.search("planet_((.)[^.]+).png", filename)
+		name = matchobj.group(1)
+		pltype = matchobj.group(2)
 		if pltype in planetImgCnt:
 			planetImgCnt[pltype] += 1
 		else:
@@ -112,37 +119,37 @@ def loadResources():
 	# load ship imgs
 	global shipImgs
 	shipImgs = {}
-	for filename in glob.glob('res/ships/??.png'):
+	for filename in glob.glob(resources.get('ships/??.png')):
 		curr += 1
 		if curr % 10 == 0:
 			dlg.setProgress(_('Loading resources...'), curr)
-		name = filename[10:-4]
+		name = os.path.splitext(os.path.basename(filename))[0]
 		shipImgs[int(name)] = pygame.image.load(filename).convert_alpha()
 	# load star imgs
 	global icons
 	icons = {}
-	for filename in glob.glob('res/icons/*.png'):
+	for filename in glob.glob(resources.get('icons/*.png')):
 		curr += 1
 		if curr % 10 == 0:
 			dlg.setProgress(_('Loading resources...'), curr)
-		name = filename[10:-4]
+		name = os.path.splitext(os.path.basename(filename))[0]
 		icons[name] = pygame.image.load(filename).convert_alpha()
 	# load buttons
 	global buttonImgs
 	buttonImgs = {}
-	for filename in glob.glob('res/buttons/*.png'):
+	for filename in glob.glob(resources.get('buttons/*.png')):
 		curr += 1
 		if curr % 10 == 0:
 			dlg.setProgress(_('Loading resources...'), curr)
-		name = filename[12:-4]
+		name = os.path.splitext(os.path.basename(filename))[0]
 		buttonImgs[name] = pygame.image.load(filename).convert_alpha()
 	# other icons
 	global cmdInProgressImg
-	cmdInProgressImg = pygame.image.load('res/cmdInProgress.png').convert_alpha()
+	cmdInProgressImg = pygame.image.load(resources.get('cmdInProgress.png')).convert_alpha()
 	global structProblemImg
-	structProblemImg = pygame.image.load('res/struct_problem.png').convert_alpha()
+	structProblemImg = pygame.image.load(resources.get('struct_problem.png')).convert_alpha()
 	global structOffImg
-	structOffImg = pygame.image.load('res/struct_off.png').convert_alpha()
+	structOffImg = pygame.image.load(resources.get('struct_off.png')).convert_alpha()
 	dlg.hide()
 
 def getTechImg(techID):

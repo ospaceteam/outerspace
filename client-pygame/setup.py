@@ -50,7 +50,7 @@ data_files.append(
 )
 
 # resources
-for root, dirs, files in os.walk('res'):
+for root, dirs, files in os.walk('resources'):
     try:
         dirs.remove(".svn")
     except ValueError:
@@ -60,7 +60,7 @@ for root, dirs, files in os.walk('res'):
 
 data_files.append(
     (
-        "res/techspec",
+        "resources/techspec",
         [
             "../server/lib/ige/ospace/Rules/techs.spf",
             "../server/lib/ige/ospace/Rules/Tech.spf",

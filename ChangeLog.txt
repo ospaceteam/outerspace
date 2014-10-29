@@ -1,6 +1,9 @@
 ﻿Outer Space Change Log
 ======================
 
+[2014-10-29]
+- resources directory is module now [dahaic]
+
 [2014-10-28]
 - Migration to github [dahaic]
 - removed dependencies on svn keywords [dahaic]

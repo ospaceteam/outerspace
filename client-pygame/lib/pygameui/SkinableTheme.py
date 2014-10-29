@@ -25,6 +25,7 @@ from Fonts import *
 import os, os.path, sys, ConfigParser
 from ige import log
 import time
+import resources
 
 try:
 	import _winreg
@@ -155,11 +156,12 @@ def createFont():
 			else:
 				continue
 		elif fontType == "ttf":
-			filename = config.get(section, "file")
+			filename = resources.get(config.get(section, "file"))
 		elif fontType == "default":
 			filename = None
 		# load font
 		if filename == None or os.path.exists(filename):
+                        print("inituju!!")
 			initFont('small', filename, config.getint(section, "small"))
 			initFont('small-bold', filename, config.getint(section, "small"), bold = 1)
 			initFont('normal', filename, config.getint(section, "normal"))

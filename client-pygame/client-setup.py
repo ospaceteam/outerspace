@@ -92,7 +92,7 @@ def makeDist(distDir, module):
         open(dest, "wb").write(source)
 
     # copy data files
-    copytree("res", os.path.join(distDir, "res"))
+    copytree("resources", os.path.join(distDir, "resources"))
 
     for filename in glob.glob("../server/lib/ige/ospace/Rules/*.xml"):
         shutil.copy2(filename, os.path.join(distDir, "ige/ospace/Rules"))

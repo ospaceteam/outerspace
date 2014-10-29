@@ -24,6 +24,7 @@ from osci import gdata
 from ige.ospace.Const import *
 import os, os.path
 from ige import log
+import resources
 
 class OptionsDlg:
 	"""Displays options dialog.
@@ -394,7 +395,7 @@ class OptionsDlg:
 
 	def onSelectTheme(self, widget, action, data):
 		items = []
-		themeDir = "res/themes"
+		themeDir = resources.get("themes")
 		for term in os.listdir(themeDir):
 			if os.path.isfile(os.path.join(themeDir, term, "config.ini")) and not term.startswith("."):
 				item = ui.Item(term, tTheme = term)
@@ -413,7 +414,7 @@ class OptionsDlg:
 			return
 		curTheme = self.twin.vThemes.selection[0].tTheme
 		# set theme for ui
-		ui.SkinableTheme.setSkin(os.path.join("res/themes", curTheme))
+		ui.SkinableTheme.setSkin(os.path.join(resources.get("themes"), curTheme))
 		ui.SkinableTheme.loadMusic(gdata.config.defaults.mymusic)
 		ui.SkinableTheme.playMusic()
 		# update foreground colors
@@ -430,7 +431,7 @@ class OptionsDlg:
 	def onSelectLanguage(self, widget, action, data):
 		items = []
 		items.append(ui.Item(self.languages['en'],tLanguage = 'en'))
-		langDir = "res"
+		langDir = resources.get('translations')
 		for term in os.listdir(langDir):
 			if os.path.isfile(os.path.join(langDir, term,"LC_MESSAGES", "OSPACE.mo")) and not term.startswith("."):
 				if self.languages.has_key(term):

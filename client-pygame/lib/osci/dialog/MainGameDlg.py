@@ -42,6 +42,7 @@ import EmpireOverviewDlg
 from ige.ospace.Const import *
 from ige.Const import *
 from ige import log
+import resources
 import webbrowser, pygame
 from pygame.locals import *
 import time
@@ -332,7 +333,7 @@ class MainGameDlg:
 		ui.ActiveLabel(self.win,
 			id = "vSponsor",
 			align = ui.ALIGN_W,
-			icons = [(pygame.image.load("res/sponsor_logo_small.png"), ui.ALIGN_E)],
+			icons = [(pygame.image.load(resources.get("sponsor_logo_small.png")), ui.ALIGN_E)],
 			layout = (lw - 12, lh - 1, 8, 1),
 			action = "onSponsor",
 			statustip = _("Server sponsored by K2 Software"),
