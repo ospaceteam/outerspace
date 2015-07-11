@@ -1,6 +1,12 @@
 ﻿Outer Space Change Log
 ======================
 
+[2015-07-11]
+- joined all executables to one - outerspace.py [dahaic]
+- code should be more stable in respect to different PWDs [dahaic]
+- expanded use of GameName concept to AI [dahaic]
+- fixed some issues within pirate AI, and AI Pirate server evaluation [dahaic]
+
 [2014-10-29]
 - resources directory is module now [dahaic]
 

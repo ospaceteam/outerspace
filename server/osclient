@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python2
 #
 #  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
 #
@@ -60,7 +60,7 @@ parser.add_option("-b", "--backup", dest = "backup", default = None,
     action = "store", type = "string", metavar = "BASEFILENAME",
     help = "Backup server databases into BASEFILENAME-<database name>.osbackup")
 parser.add_option("",  "--configdir", dest = "configDir", 
-    metavar = "DIRECTORY", default = "var", 
+    metavar = "DIRECTORY", default = os.path.join(os.path.expanduser("~"), ".outerspace"),
     help = "Override default configuration directory",) 
 parser.add_option("", "--game", dest = "game",
 	metavar = "GAME", default = "Alpha",

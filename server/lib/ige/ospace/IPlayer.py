@@ -386,7 +386,7 @@ class IPlayer(IObject):
 			# remove AI account from the game, and record in the AI list
 			log.debug("Removing AI account from the AI list", obj.oid)
 			tran.gameMngr.clientMngr.removeAiAccount(obj.login)
-			aiList = AIList(tran.gameMngr.configDir)
+			aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
 			aiList.remove(obj.login)
 		log.debug("Deleting player", obj.oid)
 		# delete relations

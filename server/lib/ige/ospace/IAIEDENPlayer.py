@@ -54,7 +54,7 @@ class IAIEDENPlayer(IPlayer):
 			except CreatePlayerException:
 				counter += 1
 		# after succesfull registration, register it to the AI system
-		aiList = AIList(tran.gameMngr.configDir)
+		aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
 		aiList.add(obj.login, password, 'ais_eden')
 		# grant techs and so on
 		self.cmd(obj).update(tran, obj)

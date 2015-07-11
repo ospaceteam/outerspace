@@ -218,7 +218,7 @@ class GameMngr:
 		self.db.backup(basename)
 		self.clientMngr.backup(basename)
 		self.msgMngr.backup(basename)
-		aiList = AIList(self.configDir)
+		aiList = AIList(self.configDir, self.gameName)
 		aiList.backup(basename)
 		return True, None
 

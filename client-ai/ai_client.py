@@ -159,7 +159,7 @@ def updateDatabaseUnsafe(clearDB = 0, force = 0):
 	# get real turn
 	result = cmdProxy.getIntroInfo(OID_UNIVERSE)
 	if not db:
-		db = IClientDB.IClientDB(result.cid, result.turn, options.configDir)
+		db = IClientDB.IClientDB(result.cid, result.turn, options.configDir, cmdProxy.gameID)
 	if clearDB:
 		db.clear()
 	db.turn = result.turn

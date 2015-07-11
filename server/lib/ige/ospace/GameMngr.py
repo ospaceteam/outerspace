@@ -79,7 +79,7 @@ class GameMngr(IGEGameMngr):
 
 	def reset(self):
 		# remove all AI accounts and their records in AI list
-		aiList = AIList(self.configDir)
+		aiList = AIList(self.configDir, self.gameName)
 		for login in aiList.getLogins():
 			self.clientMngr.removeAiAccount(login)
 		aiList.removeAll()
@@ -174,7 +174,7 @@ class GameMngr(IGEGameMngr):
 		self.cmdPool[T_PLAYER].update(tran, player)
 		# remove AI player account from game and its record from the AIlist
 		self.clientMngr.removeAiAccount(player.login)
-		aiList = AIList(self.configDir)
+		aiList = AIList(self.configDir, self.gameName)
 		aiList.remove(player.login)
 		# reregister player
 		self.removePlayer(player.oid)
@@ -236,7 +236,7 @@ class GameMngr(IGEGameMngr):
 		self.cmdPool[T_PIRPLAYER].update(tran, player)
 		# remove AI player account from game and its record from the AIlist
 		self.clientMngr.removeAiAccount(player.login)
-		aiList = AIList(self.configDir)
+		aiList = AIList(self.configDir, self.gameName)
 		aiList.remove(player.login)
 		# reregister player
 		self.removePlayer(player.oid)

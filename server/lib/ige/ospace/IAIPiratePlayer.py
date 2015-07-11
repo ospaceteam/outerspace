@@ -78,7 +78,7 @@ class IAIPiratePlayer(IPlayer):
 			except CreatePlayerException:
 				counter += 1
 		# after succesfull registration, register it to the AI system
-		aiList = AIList(tran.gameMngr.configDir)
+		aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
 		aiList.add(obj.login, password, 'ais_pirate')
 		# grant techs and so on
 		self.cmd(obj).update(tran, obj)
@@ -100,7 +100,7 @@ class IAIPiratePlayer(IPlayer):
 			except CreatePlayerException:
 				counter += 1
 		# after succesfull registration, register it to the AI system
-		aiList = AIList(tran.gameMngr.configDir)
+		aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
 		aiList.add(obj.login, password, 'ais_pirate')
 		aiList.setGalaxy(obj.login, tran.db[obj.galaxies[0]].name)
 		# grant techs and so on
@@ -155,6 +155,8 @@ class IAIPiratePlayer(IPlayer):
 		return dipl
 
 	def isPactActive(self, tran, obj, partnerID, pactID):
+		if partnerID == OID_NONE:
+			return 0
 		partner = tran.db.get(partnerID, None)
 		if partner.type == T_AIEDENPLAYER:
 			# force the peace!

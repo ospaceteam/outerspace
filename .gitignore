@@ -1,9 +1,11 @@
 *.py[co]
+*.swp
 
 # outerspace specific
 **/Rules/Tech.spf
 **/Rules/checksum
 **/Rules/techs.spf
+website
 
 # Packages
 *.egg

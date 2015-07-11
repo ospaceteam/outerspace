@@ -336,7 +336,7 @@ class IGalaxy(IObject):
 			player.galaxies.append(obj.oid)
 			playerID = player.oid
 			# finish AI list
-			aiList = AIList(tran.gameMngr.configDir)
+			aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
 			aiList.setGalaxy(player.login, obj.name)
 			# TODO tweak more planet's attrs
 			planet = tran.db[positionID]
@@ -424,7 +424,7 @@ class IGalaxy(IObject):
 	def delete(self, tran, obj):
 		log.debug(obj.oid, "GALAXY - delete")
 		universe = tran.db[OID_UNIVERSE]
-		aiList = AIList(tran.gameMngr.configDir)
+		aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
 		aiList.finishGalaxy(obj.name)
 		# delete systems and planets
 		for systemID in obj.systems:
@@ -503,7 +503,7 @@ class IGalaxy(IObject):
 			log.debug("Creating new player", playerType)
 			player = self.new(playerType)
 			self.cmd(player).register(tran, player)
-			aiList = AIList(tran.gameMngr.configDir)
+			aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
 			aiList.setGalaxy(player.login, obj.name)
 			player.galaxies.append(obj.oid)
 			players[playerType] = player

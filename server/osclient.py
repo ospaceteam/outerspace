@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #
 #  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
 #
@@ -491,7 +491,7 @@ def processMenu(inp, objId, s):
 # parse command line arguments
 parser = OptionParser(usage = "usage: %prog [options] login")
 parser.add_option("",  "--configdir", dest = "configDir", 
-    metavar = "DIRECTORY", default = "var", 
+    metavar = "DIRECTORY", default = os.path.join(os.path.expanduser("~"), ".outerspace"),
     help = "Override default configuration directory", 
 )
 options, args = parser.parse_args()

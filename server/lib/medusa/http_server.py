@@ -568,7 +568,7 @@ class http_server (asyncore.dispatcher):
 			self.logger = logger.unresolving_logger (logger_object)
 
 		self.log_info (
-			'Medusa (V%s) started at %s'
+			'Medusa (Version: %s) started at %s'
 			'\n\tHostname: %s'
 			'\n\tPort:%d'
 			'\n' % (

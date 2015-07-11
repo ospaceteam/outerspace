@@ -126,6 +126,9 @@ def tool_parseDB(client, db):
 				continue
 			elif orType == FLACTION_REPEATFROM:
 				continue
+			elif orType == FLACTION_REDIRECT:
+				if orTargID == OID_NONE:
+					continue
 			orTarg = db[orTargID]
 			if orTarg.type == T_SYSTEM:
 				data.unknownSystems -= set([orTargID])
@@ -852,3 +855,4 @@ def dictSubtraction(dict1, dict2):
 	for key in dict1Keys & dict2Keys:
 		result[key] = dict1[key] - dict2[key]
 	return result
+
