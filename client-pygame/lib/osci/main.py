@@ -166,9 +166,14 @@ def runClient(options):
                     gdata.config.defaults.maxplanetsymbolsize = 0
 
             import gettext
-            try:
+            log.debug('OSCI', 'Installing translation for:', language)
+            if language == 'en':
+                log.debug('OSCI', 'English is native - installing null translations')
+                tran = gettext.NullTranslations()
+            else:
+                try:
                     tran = gettext.translation('OSPACE', resources.get('translations'), languages = [language])
-            except IOError:
+                except IOError:
                     log.warning('OSCI', 'Cannot find catalog for', language)
                     log.message('OSCI', 'Installing null translations')
                     tran = gettext.NullTranslations()

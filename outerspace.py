@@ -76,11 +76,9 @@ parser_ai_pool = subparsers.add_parser('ai-pool', help='Batch run of AI players 
 
 # unfortunately, argparser does not support default subcommand (maybe it is
 # messy approach? :( ) so we push 'client' when default should apply
-try:
-    if sys.argv[1] not in ['client', 'galaxer', 'server', 'ai', 'ai-pool', '--help', '-h']:
-        sys.argv = [sys.argv[0]] + ['client'] + sys.argv[1:]
-except IndexError:
-    sys.argv += ['client']
+if len(sys.argv) == 1 or sys.argv[1] not in ['client', 'galaxer', 'server', 'ai', 'ai-pool', '--help', '-h']:
+    sys.argv = [sys.argv[0]] + ['client'] + sys.argv[1:]
+
 subcommand = sys.argv[1]
 
 # common stuff

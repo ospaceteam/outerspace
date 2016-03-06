@@ -1,6 +1,9 @@
 ﻿Outer Space Change Log
 ======================
 
+[2016-03-06]
+- fixed few harmless tracebacks showing up during nominal run. [dahaic]
+
 [2015-07-12]
 - fixed few issues with non-owned planets. [dahaic]
 
