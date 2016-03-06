@@ -211,6 +211,8 @@ class IPiratePlayer(IPlayer):
 				party.diplomacyRels[obj.oid] = diplEDEN
 
 	def isPactActive(self, tran, obj, partnerID, pactID):
+		if partnerID == OID_NONE:
+			return 0
 		partner = tran.db.get(partnerID, None)
 		if partner.type == T_AIEDENPLAYER:
 			# force the peace!

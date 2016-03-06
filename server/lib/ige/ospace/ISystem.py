@@ -243,7 +243,7 @@ class ISystem(IObject):
 		owners = []
 		for planetID in obj.planets:
 			planet = tran.db[planetID]
-			if planet.owner not in owners:
+			if planet.owner not in owners + [OID_NONE]:
 				owners.append(planet.owner)
 		for ownerid in owners:
 			tech,structtech = self.getSystemMineLauncher(tran,obj,ownerid)

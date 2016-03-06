@@ -1,6 +1,9 @@
 ﻿Outer Space Change Log
 ======================
 
+[2015-07-12]
+- fixed few issues with non-owned planets. [dahaic]
+
 [2015-07-11]
 - joined all executables to one - outerspace.py [dahaic]
 - code should be more stable in respect to different PWDs [dahaic]
