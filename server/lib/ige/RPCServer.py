@@ -33,15 +33,6 @@ registeredGames = {}
 running = 0
 
 ## Handlers
-def shutdownHandler(obj, passPhrase):
-	global running
-	if passPhrase == 123456:
-		running = 0
-		#raise asyncore.ExitNow("Shutdown Handler")
-		return 1, None
-	else:
-		return 0, None
-
 def versionHandler(obj):
 	result = {}
 	result.update(ige.version.version)
@@ -157,7 +148,7 @@ def init(clientMngr):
 	callMap['hello'] = clientMngr.hello
 	callMap['createAccount'] = clientMngr.createAccount
 	callMap['changePassword'] = clientMngr.changePassword
-	callMap['shutdown'] = shutdownHandler
+	callMap['shutdown'] = clientMngr.serverShutdown
 	callMap['cleanupSessions'] = clientMngr.cleanupSessions
 	callMap['exportAccounts'] = clientMngr.exportAccounts
 	callMap['getVersion'] = versionHandler

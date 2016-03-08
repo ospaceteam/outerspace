@@ -222,7 +222,7 @@ class ClientMngr:
 	def getSessionByToken(self, sid, token):
 		# check admin
 		session = self.getSession(sid)
-		if session.login != "admin":
+		if session.login != ADMIN_LOGIN:
 			raise SecurityException('You cannot issue this command.')
 		for sid in self.tokens:
 			if self.tokens[sid] == token:
@@ -272,7 +272,7 @@ class ClientMngr:
 	def exportAccounts(self, sid):
 		# check admin
 		session = self.getSession(sid)
-		if session.login != "admin":
+		if session.login != ADMIN_LOGIN:
 			raise SecurityException('You cannot issue this command.')
 		# export accounts
 		f = open(os.path.join(self.configDir,"accounts.txt"), "w")
@@ -287,6 +287,16 @@ class ClientMngr:
 			)
 		f.close()
 		return None, None
+
+	def serverShutdown(self, sid):
+		# check admin
+		session = self.getSession(sid)
+		if session.login != ADMIN_LOGIN:
+			raise SecurityException('You cannot issue this command.')
+		log.message('Shutting down server')
+		import ige.RPCServer
+		ige.RPCServer.running = 0
+		return 1, None
 
 	# new rpc interface wrappers
 	def rpc_hello(self, login, clientId):

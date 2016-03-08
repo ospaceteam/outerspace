@@ -27,6 +27,7 @@ from Database import Database
 from Transaction import Transaction
 from Index import Index
 from Const import *
+from ige.Const import ADMIN_LOGIN
 import os, os.path, time
 import log
 from IObject import IDataHolder
@@ -138,7 +139,7 @@ class GameMngr:
 		self.db.create(Index(), OID_I_LOGIN2OID)
 		self.db.create(Index(), OID_I_NAME2OID)
 		# create admin
-		self.registerPlayer('admin', self.createAdmin(), OID_ADMIN)
+		self.registerPlayer(ADMIN_LOGIN, self.createAdmin(), OID_ADMIN)
 		# create universe
 		self.db.create(self.cmdPool[T_UNIVERSE].new(T_UNIVERSE), OID_UNIVERSE)
 		self.createUniverse()

@@ -86,6 +86,10 @@ class IClient:
 		self.logged = 0
 		return apply(IProxy('logout', None, self), ())
 		
+	def shutdown(self):
+		self.logged = 0
+		return apply(IProxy('shutdown', None, self), ())
+
 	def hello(self, login, clientID):
 		return apply(IProxy('hello', None, self), (login, clientID))
 

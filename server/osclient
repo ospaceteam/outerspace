@@ -54,6 +54,8 @@ parser.add_option("-c", "--cleanup", dest = "cleanup", default = False,
     action = "store_true", help = "Cleanup server sessions")
 parser.add_option("-t", "--turn", dest = "turns", default = 0,
     action = "store_const", const = 1, help = "Process one turn on server")
+parser.add_option("-q", "--quit", dest = "quit", default = 0,
+    action = "store_true", help = "Tells server to quit")
 parser.add_option("--turns", dest = "turns", default = 0,
     action = "store", type = "int", metavar = "N", help = "Process N turns on server")
 parser.add_option("-b", "--backup", dest = "backup", default = None,
@@ -93,7 +95,9 @@ elif options.cleanup:
     s.cleanupSessions()
 elif options.turns > 0:
     s.processTurns(options.turns)
-
+elif options.quit:
+    s.shutdown()
+    sys.exit()
 else:
     # interactive console
     from code import InteractiveConsole
