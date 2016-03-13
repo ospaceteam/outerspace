@@ -48,6 +48,7 @@ echo "Starting server"
 echo "Location of logs: $TEST_DIR"
 pushd ../ > /dev/null
 ./outerspace.py server --configdir=$TEST_DIR &> $TEST_DIR/server.out &
+server_pid=$!
 trap cleanup EXIT
 
 while true; do
@@ -55,6 +56,10 @@ while true; do
 
     ./server/osclient --ping --configdir=$TEST_DIR admin &> /dev/null
     [ $? == 0 ] && break
+    if ! `ps -p $server_pid > /dev/null`; then
+        echo "Server failed to start"
+        exit 1
+    fi
     echo "Waiting for server initialization"
     sleep 5
 done
@@ -67,11 +72,23 @@ for turn in `seq 0 $SKIP $DURATION`; do
     ./server/osclient --turns=$SKIP --configdir=$TEST_DIR admin &>> $TEST_DIR/utils.out
 done
 
+sleep 5 &
+sleep_pid=$!
+echo "Fetching server status"
+wget -O $TEST_DIR/status.out localhost:9080/status &> /dev/null
+wait $sleep_pid
+
 echo "Stopping server"
 ./server/osclient --shutdown --configdir=$TEST_DIR admin &>> $TEST_DIR/utils.out
 
 # start of checks
 failure=false
+# checks that server produces status page
+if ! `grep -q 'Outer Space Status Reports' $TEST_DIR/status.out`; then
+    echo "Status page not valid"
+    failure=true
+fi
+
 # checks that players had some progress at all
 for buildings in `grep ... $TEST_DIR/website/Alpha/json.txt | egrep -v 'galaxyname|E.D.E.N.' | cut -d'"' -f10`;do
     printf '%f' $buildings &> /dev/null || continue # not a number

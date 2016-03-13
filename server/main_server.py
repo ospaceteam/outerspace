@@ -20,6 +20,7 @@
 
 def runServer(options):
 	import os
+	import shutil
 	import sys
 	import time
 
@@ -187,12 +188,14 @@ def runServer(options):
 	log.debug("Initializing game manager")
 	game = GameMngr(gameName, config, clientMngr, msgMngr, gameDB, options.configDir)
 
-        # either forced reset, or uninitialized server
+	# either forced reset, or uninitialized server
 	if options.reset or not gameDB.keys():
 		# reset game
 		log.message('Resetting game \'%s\'...' % gameName)
 		game.reset()
 
+	# prepare web directory
+	shutil.copytree(os.path.join('server', 'website'), os.path.join(options.configDir, 'website'))
 	# normal operations
 	game.init()
 

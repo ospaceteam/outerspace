@@ -1,0 +1,20 @@
+starred steps implemented in (any) test
+
+- clean up server data directory
+- run server *
+- run galaxer
+- run game client
+- create galaxy via galaxer 
+- log in via game client
+- start galaxy time *
+- run 14 days worth of turns with AI *
+- check AI is spreading *
+- stop galaxer
+- stop client
+- stop server *
+- start server
+- run more turns with AI
+- check AI is still spreading
+- build something via game client
+- research something via game client
+

@@ -7,6 +7,8 @@
 - cosmetic changes [dahaic]
 - website directory is part of configDir [dahaic]
 - only scripts ment to be executed have executable flag now [dahaic]
+- website style content copied to reports directory [dahaic]
+- added basic smoke test proposal [dahaic]
 
 [2016-03-08]
 - server is now shuttable via command issued by admin [dahaic]
