@@ -20,10 +20,6 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-# Common (and only supported!) runner for all aplications in Outer Space stack.
-# It either runs headless servers for MMO version, or full client with local
-# servers to deliver singleplayer experience
-
 import argparse
 import multiprocessing
 import os, os.path
@@ -127,7 +123,7 @@ parser_server.add_argument("--restore", dest = "restore",
 )
 parser_server.add_argument("--reset", dest = "reset",
     action = "store_true", default=False,
-    help = "Sets server to reset itself"
+    help = "Server resets itself before starting up"
 )
 parser_server.add_argument("--upgrade", dest = "upgrade",
     action = "store_true", default=False,

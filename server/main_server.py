@@ -187,32 +187,33 @@ def runServer(options):
 	log.debug("Initializing game manager")
 	game = GameMngr(gameName, config, clientMngr, msgMngr, gameDB, options.configDir)
 
-	if options.reset:
+        # either forced reset, or uninitialized server
+	if options.reset or not gameDB.keys():
 		# reset game
 		log.message('Resetting game \'%s\'...' % gameName)
 		game.reset()
-	else:
-		# normal operations
-		game.init()
 
-		if options.upgrade:
-			game.upgrade()
-			msgMngr.upgrade()
+	# normal operations
+	game.init()
 
-		game.start()
+	if options.upgrade:
+		game.upgrade()
+		msgMngr.upgrade()
 
-		server.init(clientMngr)
-		server.register(game)
+	game.start()
 
-		server.xmlrpcPublish('clientmngr', clientMngr)
-		server.xmlrpcPublish('issuemngr', issueMngr)
-		log.message('Initialized. Starting server...')
+	server.init(clientMngr)
+	server.register(game)
 
-		try:
-			import psyco
-			psyco.full()
-			log.message("Using psyco with full acceleration")
-		except ImportError:
-			log.message("NOT using psyco")
-		server.start()
+	server.xmlrpcPublish('clientmngr', clientMngr)
+	server.xmlrpcPublish('issuemngr', issueMngr)
+	log.message('Initialized. Starting server...')
+
+	try:
+		import psyco
+		psyco.full()
+		log.message("Using psyco with full acceleration")
+	except ImportError:
+		log.message("NOT using psyco")
+	server.start()
 

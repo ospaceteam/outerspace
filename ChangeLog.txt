@@ -1,6 +1,11 @@
 ﻿Outer Space Change Log
 ======================
 
+[2016-03-13]
+- server now initialize itself by reset [dahaic]
+- backend smoke test implemented [dahaic]
+- cosmetic changes [dahaic]
+
 [2016-03-08]
 - server is now shuttable via command issued by admin [dahaic]
 - few cosmetic changes related to admin references in the code [dahaic]
