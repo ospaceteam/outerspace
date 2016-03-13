@@ -70,13 +70,21 @@ done
 echo "Stopping server"
 ./server/osclient --shutdown --configdir=$TEST_DIR admin &>> $TEST_DIR/utils.out
 
+# start of checks
+failure=false
 # checks that players had some progress at all
-for buildings in `grep ... website/Alpha/json.txt | egrep -v 'galaxyname|E.D.E.N.' | cut -d'"' -f10`;do
+for buildings in `grep ... $TEST_DIR/website/Alpha/json.txt | egrep -v 'galaxyname|E.D.E.N.' | cut -d'"' -f10`;do
     printf '%f' $buildings &> /dev/null || continue # not a number
     if [[ "$buildings" < "10" ]]; then
         echo "WARNING: Some player has low building count ($buildings)"
+    else
+        positive_outcome=true
     fi
 done
+if ! $positive_outcome; then
+    echo "Error in website data generation"
+    failure=true
+fi
 
 if `egrep -iq 'error|traceback' $TEST_DIR/*.out`; then
     for log in $TEST_DIR/*.out; do
@@ -84,6 +92,12 @@ if `egrep -iq 'error|traceback' $TEST_DIR/*.out`; then
             echo "Errors present in $log"
         fi
     done
+    failure=true
+fi
+
+echo -e "\n---"
+if $failure; then
+    echo "Test failed"
     exit 1
 else
     echo "Test passed"

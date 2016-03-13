@@ -20,6 +20,7 @@
 
 import traceback
 import time
+import os
 import log
 import ige
 import ige.version
@@ -182,7 +183,7 @@ class emptyLogger:
 		pass
 		#log.debug("MEDUSA", data)
 
-def start():
+def start(configDir):
 	global running
 
 	# install signal handler for SIGTERM
@@ -200,7 +201,7 @@ def start():
 	logger = emptyLogger()
 	server = http_server.http_server('', 9080, logger_object = logger)
 
-	fsys = filesys.os_filesystem ('website')
+	fsys = filesys.os_filesystem (os.path.join(configDir, 'website'))
 	default = default_handler.default_handler (fsys)
 	server.install_handler(default)
 

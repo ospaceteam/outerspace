@@ -215,5 +215,5 @@ def runServer(options):
 		log.message("Using psyco with full acceleration")
 	except ImportError:
 		log.message("NOT using psyco")
-	server.start()
+	server.start(options.configDir)
 

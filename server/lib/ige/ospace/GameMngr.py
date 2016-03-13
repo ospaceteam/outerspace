@@ -400,7 +400,7 @@ class GameMngr(IGEGameMngr):
 		"""Generate game related info."""
 		# make directory
 		try:
-			os.makedirs('website/%s' % self.gameID)
+			os.makedirs(os.path.join(self.configDir, 'website/%s' % self.gameID))
 		except OSError:
 			pass
 		# create structure to save
@@ -430,13 +430,13 @@ class GameMngr(IGEGameMngr):
 				elif player.type == T_AIPLAYER:
 					galaxyStats["rebels"] += 1
 			galaxies.append(galaxyStats)
-		json.dump(stats, open("website/%s/info.json" % self.gameID, "w"))
+		json.dump(stats, open(os.path.join(self.configDir, "website/%s/info.json" % self.gameID), "w"))
 
 	def generateStats(self):
 		""" Generate games statistics """
 		# gather stats
 		try:
-			os.makedirs('website/%s' % self.gameID)
+			os.makedirs(os.path.join(self.configDir, 'website/%s' % self.gameID))
 		except OSError:
 			pass
 		stats = {}
@@ -444,7 +444,7 @@ class GameMngr(IGEGameMngr):
 		resolutions = {}
 		universe = self.db[OID_UNIVERSE]
 		jsonComma = False
-		fhjson = open('website/%s/json.txt' % (self.gameID), 'w')
+		fhjson = open(os.path.join(self.configDir, 'website/%s/json.txt' % (self.gameID)), 'w')
 		print >>fhjson, '{"turn":"%s",' % universe.turn
 		for playerID in universe.players:
 			player = self.db[playerID]
@@ -484,7 +484,7 @@ class GameMngr(IGEGameMngr):
 					pStats.prodProd = int(pStats.prodProd * 1000 / prodProd)
 					pStats.prodSci = int(pStats.prodSci * 1000 / prodSci)
 			# generate tables
-			fh = open('website/%s/galaxy%d.html' % (self.gameID, galaxyID), 'w')
+			fh = open(os.path.join(self.configDir, 'website/%s/galaxy%d.html' % (self.gameID, galaxyID)), 'w')
 			galaxy = self.db[galaxyID]
 			if galaxy.imperator != OID_NONE:
 				if self.db[galaxy.imperator].imperator > 1:
@@ -521,7 +521,7 @@ class GameMngr(IGEGameMngr):
 		print >>fhjson, '}'
 		fhjson.close()
 		#write resolutions of clients in use for statistics tracking
-		fhres = open('website/res.txt', 'w')
+		fhres = open(os.path.join(self.configDir, 'website/res.txt'), 'w')
 		print >>fhres, 'Resoltion: Number of users'
 		reskeys = resolutions.keys();
 		reskeys.sort();
