@@ -6,6 +6,7 @@
 - backend smoke test implemented [dahaic]
 - cosmetic changes [dahaic]
 - website directory is part of configDir [dahaic]
+- only scripts ment to be executed have executable flag now [dahaic]
 
 [2016-03-08]
 - server is now shuttable via command issued by admin [dahaic]
