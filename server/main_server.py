@@ -194,8 +194,13 @@ def runServer(options):
 		log.message('Resetting game \'%s\'...' % gameName)
 		game.reset()
 
-	# prepare web directory
-	shutil.copytree(os.path.join('server', 'website'), os.path.join(options.configDir, 'website'))
+	# remote web directory should be populated for the first time
+	# with contents of server/website
+	# but then, no overwrite should happen, as we want customization
+	# to be painless
+	if not os.path.exists(os.path.join(options.configDir, 'website')):
+		log.debug("Populating website directory")
+		shutil.copytree(os.path.join('server', 'website'), os.path.join(options.configDir, 'website'))
 	# normal operations
 	game.init()
 

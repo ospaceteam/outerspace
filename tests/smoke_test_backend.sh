@@ -20,19 +20,101 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-
-
-# creates new server
-# starts time in autocreated legacy galaxy
-# runs for more than two weeks worth of turns (300)
-# checks no exceptions are reported, and all players have evolved somehow
-
-TEST_DIR=$(mktemp -d)
-
 function cleanup() {
     popd > /dev/null
     [ -f $TEST_DIR/server.pid ] && kill $(cat $TEST_DIR/server.pid)
 }
+
+function startServer() {
+    echo "Starting server"
+    ./outerspace.py server --configdir=$TEST_DIR &>> $TEST_DIR/server.out &
+    trap cleanup EXIT
+
+    while true; do
+        ./server/osclient --ping --configdir=$TEST_DIR admin &> /dev/null
+        [ $? == 0 ] && break
+        if [[ ! -f $TEST_DIR/server.pid ]] || [[ ! `ps -p $(cat $TEST_DIR/server.pid)` ]] ; then
+            echo "Server failed to start"
+            exit 1
+        fi
+        echo "Waiting for server initialization"
+        sleep 5
+    done
+}
+
+function stopServer() {
+    echo "Stopping server"
+    ./server/osclient --shutdown --configdir=$TEST_DIR admin &>> $TEST_DIR/utils.out
+    while true; do
+        [[ ! -f $TEST_DIR/server.pid ]] && break
+        sleep 1
+        echo "Waiting for server to stop"
+    done
+}
+
+function startTime() {
+    echo "Starting time"
+    ./server/osclient --starttime --configdir=$TEST_DIR admin &>> $TEST_DIR/utils.out
+}
+
+function doTurns() {
+    local turn
+    for turn in `seq 0 ${2:-$SKIP} ${1:-$DURATION}`; do
+        echo "Turn $turn"
+        ./outerspace.py ai-pool --configdir=$TEST_DIR &> $TEST_DIR/ai.out
+        ./server/osclient --turns=$SKIP --configdir=$TEST_DIR admin &>> $TEST_DIR/utils.out
+    done
+}
+
+function fetchServerStatus() {
+    sleep 5 &
+    local sleep_pid=$!
+    echo "Fetching server status"
+    wget -O $TEST_DIR/status.out localhost:9080/status &> /dev/null
+    wait $sleep_pid
+}
+
+function checkServerStatus() {
+    if ! `grep -q 'Outer Space Status Reports' $TEST_DIR/status.out`; then
+        echo "Status page not valid"
+        FAILURE=true
+    fi
+}
+
+function checkPlayerProgress() {
+    local buildings
+    local positive_outcome
+
+    for buildings in `grep ... $TEST_DIR/website/Alpha/json.txt | egrep -v 'galaxyname|E.D.E.N.' | cut -d'"' -f10`;do
+        printf '%f' $buildings &> /dev/null || continue # not a number
+        if [[ "$buildings" < "10" ]]; then
+            # it is warning only, because this player may be
+            # active, but in process of being conquered
+            echo "WARNING: Some player has low building count ($buildings)"
+        else
+            positive_outcome=true
+        fi
+    done
+    if ! $positive_outcome; then
+        echo "Error in website data generation"
+        FAILURE=true
+    fi
+}
+
+function checkLogs() {
+    local log
+
+    if `egrep -iq 'error|traceback' $TEST_DIR/*.out`; then
+        for log in $TEST_DIR/*.out; do
+            if `egrep -iq 'error|traceback' $log`; then
+                echo "Errors present in $log"
+            fi
+        done
+        FAILURE=true
+    fi
+}
+
+######### GLOBAL VARIABLE DEFINITIONS #############
 
 if [ ${1:-"quick"} == "long" ]; then
     echo "Running long test"
@@ -43,77 +125,36 @@ else
     DURATION=25
     SKIP=5
 fi
+FAILURE=false
+TEST_DIR=$(mktemp -d)
 
-echo "Starting server"
+
+######## START #########
+
 echo "Location of logs: $TEST_DIR"
 pushd ../ > /dev/null
-./outerspace.py server --configdir=$TEST_DIR &> $TEST_DIR/server.out &
-server_pid=$!
-trap cleanup EXIT
 
-while true; do
-    # waiting for server initialization, turns0 is just dummy command
+startServer
+startTime
+doTurns
+fetchServerStatus
+checkServerStatus
+stopServer
+checkPlayerProgress
+### now check restart
 
-    ./server/osclient --ping --configdir=$TEST_DIR admin &> /dev/null
-    [ $? == 0 ] && break
-    if ! `ps -p $server_pid > /dev/null`; then
-        echo "Server failed to start"
-        exit 1
-    fi
-    echo "Waiting for server initialization"
-    sleep 5
-done
+startServer
+doTurns 15
+fetchServerStatus
+checkServerStatus
+stopServer
+checkPlayerProgress
 
-echo "Starting time"
-./server/osclient --starttime --configdir=$TEST_DIR admin &>> $TEST_DIR/utils.out
-for turn in `seq 0 $SKIP $DURATION`; do
-    echo "Turn $turn"
-    ./outerspace.py ai-pool --configdir=$TEST_DIR &> $TEST_DIR/ai.out
-    ./server/osclient --turns=$SKIP --configdir=$TEST_DIR admin &>> $TEST_DIR/utils.out
-done
+checkLogs
 
-sleep 5 &
-sleep_pid=$!
-echo "Fetching server status"
-wget -O $TEST_DIR/status.out localhost:9080/status &> /dev/null
-wait $sleep_pid
-
-echo "Stopping server"
-./server/osclient --shutdown --configdir=$TEST_DIR admin &>> $TEST_DIR/utils.out
-
-# start of checks
-failure=false
-# checks that server produces status page
-if ! `grep -q 'Outer Space Status Reports' $TEST_DIR/status.out`; then
-    echo "Status page not valid"
-    failure=true
-fi
-
-# checks that players had some progress at all
-for buildings in `grep ... $TEST_DIR/website/Alpha/json.txt | egrep -v 'galaxyname|E.D.E.N.' | cut -d'"' -f10`;do
-    printf '%f' $buildings &> /dev/null || continue # not a number
-    if [[ "$buildings" < "10" ]]; then
-        echo "WARNING: Some player has low building count ($buildings)"
-    else
-        positive_outcome=true
-    fi
-done
-if ! $positive_outcome; then
-    echo "Error in website data generation"
-    failure=true
-fi
-
-if `egrep -iq 'error|traceback' $TEST_DIR/*.out`; then
-    for log in $TEST_DIR/*.out; do
-        if `egrep -iq 'error|traceback' $log`; then
-            echo "Errors present in $log"
-        fi
-    done
-    failure=true
-fi
 
 echo -e "\n---"
-if $failure; then
+if $FAILURE; then
     echo "Test failed"
     exit 1
 else

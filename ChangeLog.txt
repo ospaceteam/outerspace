@@ -1,6 +1,10 @@
 ﻿Outer Space Change Log
 ======================
 
+[2016-03-14]
+- fixed website content copy [dahaic]
+- updated test to be less cluttered and to check server restarts [dahaic]
+
 [2016-03-13]
 - server now initialize itself by reset [dahaic]
 - backend smoke test implemented [dahaic]

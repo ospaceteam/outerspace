@@ -12,8 +12,8 @@ starred steps implemented in (any) test
 - stop galaxer
 - stop client
 - stop server *
-- start server
-- run more turns with AI
+- start server *
+- run more turns with AI *
 - check AI is still spreading
 - build something via game client
 - research something via game client
