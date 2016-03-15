@@ -9,20 +9,20 @@ descr = {}
 def cclass2Text(cclass):
     return ["small", "medium", "large", "planet"][cclass]
 def num2Perc(num):
-        return (num*100)
+    return (num*100)
 def num2ZeroPerc(num):
-        val = ((num-1)*100)
-        return val
+    val = ((num-1)*100)
+    return val
 def num2PlusZeroPerc(num): #make it positive without the + sign
-        val = ((num-1)*100)
-        if val < 0:
-            val = -1*val
-        return val
+    val = ((num-1)*100)
+    if val < 0:
+        val = -1*val
+    return val
 
 def add(subtype, detail, attr, text, filter, eff):
-	global descr
-	if subtype not in descr: descr[subtype] = []
-	descr[subtype].append((detail, attr, text, filter, eff))
+    global descr
+    if subtype not in descr: descr[subtype] = []
+    descr[subtype].append((detail, attr, text, filter, eff))
 
 add("*", SHORT, "engPwr", "power %+d", int, 1)
 
@@ -57,36 +57,36 @@ add("*", LONG, "autoRepairPerc", "repair %d%%", num2Perc, 1)
 add("*", LONG, "autoRepairFix", "repair %d", int, 1)
 
 def getShortDescr(techID, myDetail = SHORT, improvement = 3):
-	tech = Rules.techs[techID]
-	techEff = Rules.techImprEff[improvement]
-	result = []
-	# specific
-	if tech.subtype in descr:
-		for detail, attr, text, filter, eff in descr[tech.subtype]:
-			if tech.isDefault(attr):
-				continue
-			if detail <= myDetail:
-				if not filter:
-					result.append(text)
-				elif eff:
-					result.append(text % filter(techEff * getattr(tech, attr)))
-				else:
-					result.append(text % filter(getattr(tech, attr)))
-	# general
-	for detail, attr, text, filter, eff in descr["*"]:
-		if tech.isDefault(attr):
-			continue
-		if detail <= myDetail:
-			if not filter:
-				result.append(text)
-			elif eff:
-				result.append(text % filter(techEff * getattr(tech, attr)))
-			else:
-				result.append(text % filter(getattr(tech, attr)))
-	if result:
-		return string.join(result, ", ")
-	else:
-		return _("N/A")
+    tech = Rules.techs[techID]
+    techEff = Rules.techImprEff[improvement]
+    result = []
+    # specific
+    if tech.subtype in descr:
+        for detail, attr, text, filter, eff in descr[tech.subtype]:
+            if tech.isDefault(attr):
+                continue
+            if detail <= myDetail:
+                if not filter:
+                    result.append(text)
+                elif eff:
+                    result.append(text % filter(techEff * getattr(tech, attr)))
+                else:
+                    result.append(text % filter(getattr(tech, attr)))
+    # general
+    for detail, attr, text, filter, eff in descr["*"]:
+        if tech.isDefault(attr):
+            continue
+        if detail <= myDetail:
+            if not filter:
+                result.append(text)
+            elif eff:
+                result.append(text % filter(techEff * getattr(tech, attr)))
+            else:
+                result.append(text % filter(getattr(tech, attr)))
+    if result:
+        return string.join(result, ", ")
+    else:
+        return _("N/A")
 
 def getLongDescr(techID, improvement = 3):
-	return getShortDescr(techID, LONG, improvement)
+    return getShortDescr(techID, LONG, improvement)

@@ -2,7 +2,8 @@
 ======================
 
 [2016-03-15]
-- fixed smoke test
+- fixed smoke test [dahaic]
+- whitespace pep8-ization of client-TechViewer [dahaic]
 
 [2016-03-14]
 - fixed website content copy [dahaic]

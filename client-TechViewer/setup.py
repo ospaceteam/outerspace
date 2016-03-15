@@ -40,15 +40,15 @@ manifest_template = '''
 RT_MANIFEST = 24
 
 techViewer = Target(script = "TechViewer.py",
-	other_resources = [(RT_MANIFEST, 1, manifest_template % dict(prog = "techViewer"))],
+    other_resources = [(RT_MANIFEST, 1, manifest_template % dict(prog = "techViewer"))],
 )
 
 setup(
-	windows = [techViewer],
-	version = techViewer.version,
-	author = techViewer.company_name,
-	author_email = "ospace@anderuso.net",
-	name = "TechViewer-src",
-	url = "http://sf.net/projects/ospace",
-	description = techViewer.description,
+    windows = [techViewer],
+    version = techViewer.version,
+    author = techViewer.company_name,
+    author_email = "ospace@anderuso.net",
+    name = "TechViewer-src",
+    url = "http://sf.net/projects/ospace",
+    description = techViewer.description,
     )
