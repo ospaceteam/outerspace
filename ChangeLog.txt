@@ -1,6 +1,9 @@
 ﻿Outer Space Change Log
 ======================
 
+[2016-03-15]
+- fixed smoke test
+
 [2016-03-14]
 - fixed website content copy [dahaic]
 - updated test to be less cluttered and to check server restarts [dahaic]

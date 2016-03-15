@@ -33,7 +33,7 @@ function startServer() {
     while true; do
         ./server/osclient --ping --configdir=$TEST_DIR admin &> /dev/null
         [ $? == 0 ] && break
-        if [[ ! -f $TEST_DIR/server.pid ]] || [[ ! `ps -p $(cat $TEST_DIR/server.pid)` ]] ; then
+        if [[ ! -f $TEST_DIR/server.pid ]] || ! ps -p $(cat $TEST_DIR/server.pid) &> /dev/null ; then
             echo "Server failed to start"
             exit 1
         fi
