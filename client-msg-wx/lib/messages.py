@@ -10,68 +10,68 @@ from ige import log
 # Transform routines
 #
 def techID2Name(techID):
-	if techID >= 1000:
-		return _(client.getTechInfo(techID).name.encode())
-	else:
-		return client.getPlayer().shipDesigns[techID].name
+    if techID >= 1000:
+        return _(client.getTechInfo(techID).name.encode())
+    else:
+        return client.getPlayer().shipDesigns[techID].name
 
 def objID2Name(objID):
-	obj = client.get(objID, noUpdate = 0)
-	return getattr(obj, 'name', res.getUnknownName())
+    obj = client.get(objID, noUpdate = 0)
+    return getattr(obj, 'name', res.getUnknownName())
 
 def objIDList2Names(objIDs):
-	names = []
-	for objID in objIDs:
-		obj = client.get(objID, noUpdate = 1)
-		if hasattr(obj, 'owner') and obj.owner != obj.oid:
-			try:
-				owner = _(' (%s)') % client.get(obj.owner, noUpdate = 1).name
-			except AttributeError:
-				owner = ''
-		else:
-			owner = ''
-		text = _('%s%s') % (getattr(obj, 'name', res.getUnknownName()), owner)
-		names.append(text)
-	return string.join(names, ', ')
+    names = []
+    for objID in objIDs:
+        obj = client.get(objID, noUpdate = 1)
+        if hasattr(obj, 'owner') and obj.owner != obj.oid:
+            try:
+                owner = _(' (%s)') % client.get(obj.owner, noUpdate = 1).name
+            except AttributeError:
+                owner = ''
+        else:
+            owner = ''
+        text = _('%s%s') % (getattr(obj, 'name', res.getUnknownName()), owner)
+        names.append(text)
+    return string.join(names, ', ')
 
 def stratID2Name(resID):
-	return _(gdata.stratRes[resID])
+    return _(gdata.stratRes[resID])
 
 def float2percent(number):
-	return int(number * 100)
+    return int(number * 100)
 
 def plType2Name(plType):
-	return gdata.planetTypes[plType]
+    return gdata.planetTypes[plType]
 
 def designID2Name(designID):
-	return client.getPlayer().shipDesigns[designID].name
+    return client.getPlayer().shipDesigns[designID].name
 
 def votes2Txt((votes, voters)):
-	lines = []
-	nominated = votes.keys()
-	nominated.sort(lambda a, b: cmp(votes[b], votes[a]))
-	for playerName in nominated:
-		if playerName == None:
-			continue
-		l = []
-		for name in voters[playerName]:
-			l.append(name)
-		text = "   %s got %d votes from %s." % (
-			playerName,
-			votes[playerName],
-			", ".join(l),
-		)
-		lines.append(text)
-	if None in votes:
-		l = []
-		for name in voters[None]:
-			l.append(name)
-		text = "   %s abstained [%d votes]." % (
-			", ".join(l),
-			votes[None],
-		)
-		lines.append(text)
-	return "\n".join(lines)
+    lines = []
+    nominated = votes.keys()
+    nominated.sort(lambda a, b: cmp(votes[b], votes[a]))
+    for playerName in nominated:
+        if playerName == None:
+            continue
+        l = []
+        for name in voters[playerName]:
+            l.append(name)
+        text = "   %s got %d votes from %s." % (
+            playerName,
+            votes[playerName],
+            ", ".join(l),
+        )
+        lines.append(text)
+    if None in votes:
+        l = []
+        for name in voters[None]:
+            l.append(name)
+        text = "   %s abstained [%d votes]." % (
+            ", ".join(l),
+            votes[None],
+        )
+        lines.append(text)
+    return "\n".join(lines)
 
 #
 # Data
@@ -90,8 +90,8 @@ def N_(msg): return msg
 msgData = {}
 
 def addMsg(msgID, name, transform = None, severity = NONE):
-	global msgData
-	msgData[msgID] = (name, transform, severity)
+    global msgData
+    msgData[msgID] = (name, transform, severity)
 
 addMsg(MSG_COMPLETED_RESEARCH, N_('Research completed: %(1)s'), (techID2Name,), CRI)
 addMsg(MSG_WASTED_SCIPTS, N_('%(1)d research points not used.'), severity = MIN)
@@ -144,75 +144,75 @@ del N_
 #
 
 def getMsgText(msgID, data):
-	msg, transform, severity = msgData.get(msgID, (None, None, None))
-	# create default messages
-	if not msg:
-		return _('ERROR\nMissing text for msg %d: %s') % (msgID, repr(data))
-	# there is message text -> create message
-	# force unicode
-	msg = _(msg)
-	if data == None:
-		return msg
-	try:
-		# tranform data
-		newData = {}
-		if not (type(data) == types.ListType or type(data) == types.TupleType):
-			data = (data,)
-		if transform:
-			index = 1
-			for tranFunc in transform:
-				newData[str(index)] = tranFunc(data[index - 1])
-				index += 1
-		else:
-			index = 1
-			for item in data:
-				newData[str(index)] = item
-				index += 1
-		text = msg % newData
-	except Exception, e:
-		# wrong arguments -> default message
-		log.warning("Erorr while formating message")
-		return _('ERROR\nWrong format for msg %d: %s\nException: %s: %s\nFormat: %s') % (msgID, repr(data), str(e.__class__), str(e), msg)
-	return text
+    msg, transform, severity = msgData.get(msgID, (None, None, None))
+    # create default messages
+    if not msg:
+        return _('ERROR\nMissing text for msg %d: %s') % (msgID, repr(data))
+    # there is message text -> create message
+    # force unicode
+    msg = _(msg)
+    if data == None:
+        return msg
+    try:
+        # tranform data
+        newData = {}
+        if not (type(data) == types.ListType or type(data) == types.TupleType):
+            data = (data,)
+        if transform:
+            index = 1
+            for tranFunc in transform:
+                newData[str(index)] = tranFunc(data[index - 1])
+                index += 1
+        else:
+            index = 1
+            for item in data:
+                newData[str(index)] = item
+                index += 1
+        text = msg % newData
+    except Exception, e:
+        # wrong arguments -> default message
+        log.warning("Erorr while formating message")
+        return _('ERROR\nWrong format for msg %d: %s\nException: %s: %s\nFormat: %s') % (msgID, repr(data), str(e.__class__), str(e), msg)
+    return text
 
 def getMsgSeverity(msgID):
-	return msgData.get(msgID, (None, None, NONE))[2]
+    return msgData.get(msgID, (None, None, NONE))[2]
 
 def getFullMessageText(message):
-	"""Gets full text of automaticaly generated message
+    """Gets full text of automaticaly generated message
 
-	If message has no data to generate, it returns empty
-	string.
-	"""
-	text = ""
-	if message.has_key("data"):
-		sourceID, msgID, locationID, turn, data = message["data"]
-		sev = getMsgSeverity(msgID)
-		currTurn = client.getTurn()
-		player = client.getPlayer()
-		# source
-		if sourceID != OID_NONE and sourceID != player.oid:
-			obj = client.get(sourceID, noUpdate = 1)
-			if obj:
-				source = getattr(obj, 'name', res.getUnknownName())
-			else:
-				source = _('N/A')
-		else:
-			source = _('-')
-		text = '%s%s\n' % (text, _("Source: %s") % source)
-		# location
-		if locationID != OID_NONE:
-			obj = client.get(locationID, noUpdate = 1)
-			location = getattr(obj, 'name', res.getUnknownName())
-		else:
-			location = _('-')
-		text = '%s%s\n' % (text, _("Location: %s") % location)
-		text = '%s%s\n' % (text, _("Severity: %s") % _(gdata.msgSeverity[sev]))
-		text = '%s%s\n' % (text, _("Time: %s [%s]") % (
-			res.formatTime(turn),
-			res.formatTime(turn - currTurn),
-		))
-		text = '%s%s\n' % (text, "")
-		text = '%s%s\n' % (text, getMsgText(msgID, data))
+    If message has no data to generate, it returns empty
+    string.
+    """
+    text = ""
+    if message.has_key("data"):
+        sourceID, msgID, locationID, turn, data = message["data"]
+        sev = getMsgSeverity(msgID)
+        currTurn = client.getTurn()
+        player = client.getPlayer()
+        # source
+        if sourceID != OID_NONE and sourceID != player.oid:
+            obj = client.get(sourceID, noUpdate = 1)
+            if obj:
+                source = getattr(obj, 'name', res.getUnknownName())
+            else:
+                source = _('N/A')
+        else:
+            source = _('-')
+        text = '%s%s\n' % (text, _("Source: %s") % source)
+        # location
+        if locationID != OID_NONE:
+            obj = client.get(locationID, noUpdate = 1)
+            location = getattr(obj, 'name', res.getUnknownName())
+        else:
+            location = _('-')
+        text = '%s%s\n' % (text, _("Location: %s") % location)
+        text = '%s%s\n' % (text, _("Severity: %s") % _(gdata.msgSeverity[sev]))
+        text = '%s%s\n' % (text, _("Time: %s [%s]") % (
+            res.formatTime(turn),
+            res.formatTime(turn - currTurn),
+        ))
+        text = '%s%s\n' % (text, "")
+        text = '%s%s\n' % (text, getMsgText(msgID, data))
 
-	return text
+    return text

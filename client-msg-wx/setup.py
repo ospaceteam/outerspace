@@ -66,11 +66,11 @@ msg_wx = dict(
 zipfile = r"lib\shardlib"
 
 options = {
-	"py2exe": {
-		"compressed": 1,
-		"optimize": 2,
-		"packages": ["encodings"],
-	}
+    "py2exe": {
+        "compressed": 1,
+        "optimize": 2,
+        "packages": ["encodings"],
+    }
 }
 
 ################################################################
@@ -78,12 +78,12 @@ import os
 
 class InnoScript:
     def __init__(self,
-                 name,
-                 lib_dir,
-                 dist_dir,
-                 windows_exe_files = [],
-                 lib_files = [],
-                 version = "1.0"):
+             name,
+             lib_dir,
+             dist_dir,
+             windows_exe_files = [],
+             lib_files = [],
+             version = "1.0"):
         self.lib_dir = lib_dir
         self.dist_dir = dist_dir
         if not self.dist_dir[-1] in "\\/":
@@ -133,17 +133,17 @@ class InnoScript:
             else:
                 print "Ok, using win32api.", self.pathname
                 win32api.ShellExecute(0, "compile",
-                                                self.pathname,
-                                                None,
-                                                None,
-                                                0)
+                            self.pathname,
+                            None,
+                            None,
+                            0)
         else:
             print "Cool, you have ctypes installed."
             res = ctypes.windll.shell32.ShellExecuteA(0, "compile",
-                                                      self.pathname,
-                                                      None,
-                                                      None,
-                                                      0)
+                                  self.pathname,
+                                  None,
+                                  None,
+                                  0)
             if res < 32:
                 raise RuntimeError, "ShellExecute failed, error %d" % res
 
@@ -184,7 +184,7 @@ setup(
     # use out build_installer class as extended py2exe build command
     cmdclass = {"py2exe": build_installer},
     data_files = [('res/techspec',
-    			  ['../server/lib/ige/ospace/Rules/Tech.spf',
-    			   '../server/lib/ige/ospace/Rules/techs.spf']
-    			 )]
+              ['../server/lib/ige/ospace/Rules/Tech.spf',
+               '../server/lib/ige/ospace/Rules/techs.spf']
+             )]
     )

@@ -4,6 +4,7 @@
 [2016-03-16]
 - whitespace pep8-ization of client-console, tools, generators [dahaic]
 - whitespace pep8-ization of oslauncher [dahaic]
+- whitespace pep8-ization of client-msg-wx [dahaic]
 
 
 [2016-03-15]

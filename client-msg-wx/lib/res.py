@@ -13,20 +13,20 @@ structOffImg = None
 icons = {}
 
 def getUnknownName():
-	return _('[Unknown]')
+    return _('[Unknown]')
 
 def getNA():
-	return _('N/A')
+    return _('N/A')
 
 def formatTime(time):
-	time = int(math.ceil(time))
-	sign = ''
-	if time < 0:
-		time = - time
-		sign = '-'
-	days = time / 24
-	hours = time % 24
-	return '%s%d:%02d' % (sign, days, hours)
+    time = int(math.ceil(time))
+    sign = ''
+    if time < 0:
+        time = - time
+        sign = '-'
+    days = time / 24
+    hours = time % 24
+    return '%s%d:%02d' % (sign, days, hours)
 
 def formatBE(b, e):
-	return '%d / %d' % (b, e)
+    return '%d / %d' % (b, e)
