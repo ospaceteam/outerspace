@@ -6,8 +6,8 @@ from igeclient.IClient import IClient
 import pprint, traceback
 
 def msgHandler(id, data):
-	if id >= 0:
-		print 'Message', id, data
+    if id >= 0:
+        print 'Message', id, data
 
 def getPlayer(name):
     u = s.getInfo(1)

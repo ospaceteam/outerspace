@@ -36,17 +36,17 @@ tl2color = {
 }
 
 stratRes = {
-	0: "None",
-	1: "Ur",
-	2: "Ti",
-	3: "Chrom",
-	4: "Silic",
-	5: "Carb",
-	6: "Anti",
-	7: "Plut",
-	8: "Wolf",
-	100: "Mutagen",
-	1000: "Unnilseptium"
+    0: "None",
+    1: "Ur",
+    2: "Ti",
+    3: "Chrom",
+    4: "Silic",
+    5: "Carb",
+    6: "Anti",
+    7: "Plut",
+    8: "Wolf",
+    100: "Mutagen",
+    1000: "Unnilseptium"
 }
 
 race2Name = {

@@ -6,8 +6,8 @@ from igeclient.IClient import IClient
 import pprint, traceback
 
 def msgHandler(id, data):
-	if id >= 0:
-		print 'Message', id, data
+    if id >= 0:
+        print 'Message', id, data
 
 def getPlayer(name):
     u = s.getInfo(1)
@@ -28,17 +28,17 @@ u = s.getInfo(1)
 log = open("log.txt", "wt")
 
 for playerID in u.players:
-	pl = s.getInfo(playerID)
-	for specID in pl.shipDesigns:
-		spec = pl.shipDesigns[specID]
-		if spec.hullID not in pl.techs:
-			if spec.hullID == 2401:
-				print >> log, "!!",
-			print >> log, "Warning - invalid hull (%d) for spec %d (%s), player %d" % (
-				spec.hullID,
-				specID,
-				spec.name,
-				playerID,
-			)
+    pl = s.getInfo(playerID)
+    for specID in pl.shipDesigns:
+        spec = pl.shipDesigns[specID]
+        if spec.hullID not in pl.techs:
+            if spec.hullID == 2401:
+                print >> log, "!!",
+            print >> log, "Warning - invalid hull (%d) for spec %d (%s), player %d" % (
+                spec.hullID,
+                specID,
+                spec.name,
+                playerID,
+            )
 
 s.logout()
