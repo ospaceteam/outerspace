@@ -27,16 +27,16 @@ import math
 
 class Sprite:
     """The object used for Sprites.
-    
+
     <pre>Sprite(ishape,pos)</pre>
-    
+
     <dl>
     <dt>ishape <dd>an image, or an image, rectstyle.  The rectstyle will
                 describe the shape of the image, used for collision
                 detection.
     <dt>pos <dd>initial (x,y) position of the Sprite.
     </dl>
-    
+
     <strong>Attributes</strong>
     <dl>
     <dt>rect <dd>the current position of the Sprite
@@ -65,12 +65,12 @@ class Sprite:
         self.groups = 0
         self.agroups = 0
         self.updated = 1
-        
+
     def setimage(self,ishape):
         """Set the image of the Sprite.
-        
+
         <pre>Sprite.setimage(ishape)</pre>
-        
+
         <dl>
         <dt>ishape <dd>an image, or an image, rectstyle.  The rectstyle will
                   describe the shape of the image, used for collision detection.
@@ -89,15 +89,15 @@ class Sprite:
         self.irect.w,self.irect.h = image.get_width(),image.get_height()
         self.updated = 1
 
-        
+
 class Tile:
     """Tile Object used by TileCollide.
-    
+
     <pre>Tile(image=None)</pre>
     <dl>
     <dt>image <dd>an image for the Tile.
     </dl>
-    
+
     <strong>Attributes</strong>
     <dl>
     <dt>agroups <dd>the groups the Tile can hit in a collision
@@ -107,7 +107,7 @@ class Tile:
     def __init__(self,image=None):
         self.image = image
         self.agroups = 0
-        
+
     def __setattr__(self,k,v):
         if k == 'image' and v != None:
             self.image_h = v.get_height()
@@ -118,21 +118,21 @@ class _Sprites(list):
     def __init__(self):
         list.__init__(self)
         self.removed = []
-        
+
     def append(self,v):
         list.append(self,v)
         v.updated = 1
-        
+
     def remove(self,v):
         list.remove(self,v)
         v.updated = 1
         self.removed.append(v)
-        
+
 class Vid:
     """An engine for rendering Sprites and Tiles.
-    
+
     <pre>Vid()</pre>
-    
+
     <strong>Attributes</strong>
     <dl>
     <dt>sprites <dd>a list of the Sprites to be displayed.  You may append and
@@ -151,7 +151,7 @@ class Vid:
             membership in a group is determined by the bits in an integer)
     </dl>
     """
-    
+
     def __init__(self):
         self.tiles = [None for x in xrange(0,256)]
         self.sprites = _Sprites()
@@ -163,13 +163,13 @@ class Vid:
         self.bounds = None
         self.updates = []
         self.groups = {}
-    
-        
+
+
     def resize(self,size,bg=0):
         """Resize the layers.
-        
+
         <pre>Vid.resize(size,bg=0)</pre>
-        
+
         <dl>        
         <dt>size <dd>w,h in Tiles of the layers
         <dt>bg   <dd>set to 1 if you wish to use both a foreground layer and a
@@ -185,23 +185,23 @@ class Vid:
         if not bg: self.blayer = None
         self.clayer = self.layers[2]
         self.alayer = self.layers[3]
-        
+
         self.view.x, self.view.y = 0,0
         self._view.x, self.view.y = 0,0
         self.bounds = None
-        
+
         self.updates = []
-    
+
     def set(self,pos,v):
         """Set a tile in the foreground to a value.
-        
+
         <p>Use this method to set tiles in the foreground, as it will make
         sure the screen is updated with the change.  Directly changing
         the tlayer will not guarantee updates unless you are using .paint()
         </p>
-        
+
         <pre>Vid.set(pos,v)</pre>
-        
+
         <dl>
         <dt>pos <dd>(x,y) of tile
         <dt>v <dd>value
@@ -211,40 +211,40 @@ class Vid:
         self.tlayer[pos[1]][pos[0]] = v
         self.alayer[pos[1]][pos[0]] = 1
         self.updates.append(pos)
-        
+
     def get(self,pos):
         """Get the tlayer at pos.
-        
+
         <pre>Vid.get(pos): return value</pre>
-        
+
         <dl>
         <dt>pos <dd>(x,y) of tile
         </dl>
         """
         return self.tlayer[pos[1]][pos[0]]
-    
+
     def paint(self,s):
         """Paint the screen.
-        
+
         <pre>Vid.paint(screen): return [updates]</pre>
-        
+
         <dl>
         <dt>screen <dd>a pygame.Surface to paint to
         </dl>
-        
+
         <p>returns the updated portion of the screen (all of it)</p>
         """
         return []
-                
+
     def update(self,s):
         """Update the screen.
-        
+
         <pre>Vid.update(screen): return [updates]</pre>
-        
+
         <dl>
         <dt>screen <dd>a pygame.Rect to update
         </dl>
-        
+
         <p>returns a list of updated rectangles.</p>
         """
         self.updates = []
@@ -252,9 +252,9 @@ class Vid:
 
     def tga_load_level(self,fname,bg=0):
         """Load a TGA level.  
-        
+
         <pre>Vid.tga_load_level(fname,bg=0)</pre>
-        
+
         <dl>
         <dt>g        <dd>a Tilevid instance
         <dt>fname    <dd>tga image to load
@@ -271,12 +271,12 @@ class Vid:
                 self.tlayer[y][x] = t
                 if bg: self.blayer[y][x] = b
                 self.clayer[y][x] = c
-                
+
     def tga_save_level(self,fname):
         """Save a TGA level.
-        
+
         <pre>Vid.tga_save_level(fname)</pre>
-        
+
         <dl>
         <dt>fname <dd>tga image to save to
         </dl>
@@ -294,14 +294,14 @@ class Vid:
                 _a = 0
                 img.set_at((x,y),(t,b,c,_a))
         pygame.image.save(img,fname)
-                
-                
+
+
 
     def tga_load_tiles(self,fname,size,tdata={}):
         """Load a TGA tileset.
-        
+
         <pre>Vid.tga_load_tiles(fname,size,tdata={})</pre>
-        
+
         <dl>
         <dt>g       <dd>a Tilevid instance
         <dt>fname    <dd>tga image to load
@@ -313,7 +313,7 @@ class Vid:
         if type(fname) == str: img = pygame.image.load(fname).convert_alpha()
         else: img = fname
         w,h = img.get_width(),img.get_height()
-        
+
         n = 0
         for y in range(0,h,TH):
             for x in range(0,w,TW):
@@ -330,9 +330,9 @@ class Vid:
 
     def load_images(self,idata):
         """Load images.
-        
+
         <pre>Vid.load_images(idata)</pre>
-        
+
         <dl>
         <dt>idata <dd>a list of (name, fname, shape)
         </dl>
@@ -342,9 +342,9 @@ class Vid:
 
     def run_codes(self,cdata,rect):
         """Run codes.
-        
+
         <pre>Vid.run_codes(cdata,rect)</pre>
-        
+
         <dl>
         <dt>cdata <dd>a dict of code:(handler function, value)
         <dt>rect <dd>a tile rect of the parts of the layer that should have
@@ -365,10 +365,10 @@ class Vid:
                     t.rect = pygame.Rect(x*tw,y*th,tw,th)
                     fnc(self,t,value)
 
-        
+
     def string2groups(self,str):
         """Convert a string to groups.
-        
+
         <pre>Vid.string2groups(str): return groups</pre>
         """
         if str == None: return 0
@@ -414,7 +414,7 @@ class Vid:
         self.loop_spritehits() #no sprites should move
         for s in self.sprites:
             s._rect = pygame.Rect(s.rect)
-        
+
     def loop_sprites(self):
         as = self.sprites[:]
         for s in as:
@@ -430,12 +430,12 @@ class Vid:
         as = self.sprites[:]
         for s in as:
             self._tilehits(s)
-    
+
     def _tilehits(self,s):
         tiles = self.tiles
         tw,th = tiles[0].image.get_width(),tiles[0].image.get_height()
         layer = self.layers[0]
-        
+
         for _z in (0,): 
             if s.groups != 0:
 
@@ -473,12 +473,12 @@ class Vid:
 
                         x += tw
                     y += th
-                
+
                 hits.sort()
                 #if len(hits) > 0: print self.frame,hits
                 for d,t,xx,yy in hits:
                     self.hit(xx,yy,t,s)
-                
+
                 #switching directions...
                 _rect.x = rect.x
                 _rect.w = rect.w
@@ -502,7 +502,7 @@ class Vid:
                             #self.hit(xx,yy,t,s)
                         x += tw
                     y += th
-                
+
                 hits.sort()    
                 #if len(hits) > 0: print self.frame,hits
                 for d,t,xx,yy in hits:
@@ -515,7 +515,7 @@ class Vid:
 
     def loop_spritehits(self):
         as = self.sprites[:]
-        
+
         groups = {}
         for n in range(0,31):
             groups[1<<n] = []
@@ -526,7 +526,7 @@ class Vid:
                 if (g&1)!=0: groups[n].append(s)
                 g >>= 1
                 n <<= 1
-                
+
         for s in as:
             if s.agroups!=0:
                 rect1,rect2 = s.rect,Rect(s.rect)
@@ -550,11 +550,11 @@ class Vid:
         <pre>Vid.screen_to_tile(pos): return pos</pre>
         """
         return pos
-        
+
     def tile_to_screen(self,pos):
         """Convert a tile position to a screen position.
         <pre>Vid.tile_to_screen(pos): return pos</pre>
         """
         return pos
-                    
+
 # vim: set filetype=python sts=4 sw=4 noet si :

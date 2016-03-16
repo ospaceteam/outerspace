@@ -8,20 +8,20 @@ import basic, input, button
 
 class Dialog(table.Table):
     """A dialog window with a title bar and an "close" button on the bar.
-    
+
     <pre>Dialog(title,main)</pre>
-    
+
     <dl>
     <dt>title<dd>title widget, usually a label
     <dt>main<dd>main widget, usually a container
     </dl>
-    
+
     <strong>Example</strong>
     <code>
     title = gui.Label("My Title")
     main = gui.Container()
     #add stuff to the container...
-    
+
     d = gui.Dialog(title,main)
     d.open()
     </code>
@@ -29,18 +29,18 @@ class Dialog(table.Table):
     def __init__(self,title,main,**params):
         params.setdefault('cls','dialog')
         table.Table.__init__(self,**params)
-        
-        
+
+
         self.tr()
         self.td(title,align=-1,cls=self.cls+'.bar')
         clos = button.Icon(self.cls+".bar.close")
         clos.connect(CLICK,self.close,None) 
         self.td(clos,align=1,cls=self.cls+'.bar')
-        
+
         self.tr()
         self.td(main,colspan=2,cls=self.cls+".main")
-        
-        
+
+
 #         self.tr()
 #         
 #         
@@ -59,11 +59,11 @@ class Dialog(table.Table):
 #         self.tr()
 #         self.td(main,cls=self.cls+".main")
 # 
-        
-        
+
+
 class FileDialog(Dialog):
     """A file picker dialog window.
-    
+
     <pre>FileDialog()</pre>
     <p>Some optional parameters:</p>
     <dl>
@@ -72,9 +72,9 @@ class FileDialog(Dialog):
     <dt>path<dd>initial path
     </dl>
     """
-    
+
     def __init__(self, title_txt="File Browser", button_txt="Okay", cls="dialog", path=None):
-        
+
         cls1 = 'filedialog'
         if not path: self.curdir = os.getcwd()
         else: self.curdir = path
@@ -104,7 +104,7 @@ class FileDialog(Dialog):
         self.body.td(self.button_ok, style=td_style)
         self.value = None
         Dialog.__init__(self, self.title, self.body)
-        
+
     def _list_dir_(self):
         self.input_dir.value = self.curdir
         self.input_dir.pos = len(self.curdir)
@@ -120,7 +120,7 @@ class FileDialog(Dialog):
         #if '..' not in dirs: dirs.append('..')
         dirs.sort()
         dirs = ['..'] + dirs
-        
+
         files.sort()
         for i in dirs:
             #item = ListItem(image=self.dir_img, text=i, value=i)
@@ -131,8 +131,8 @@ class FileDialog(Dialog):
         #self.list.resize()
         self.list.set_vertical_scroll(0)
         #self.list.repaintall()
-        
-        
+
+
     def _item_select_changed_(self, arg):
         self.input_file.value = self.list.value
         fname = os.path.abspath(os.path.join(self.curdir, self.input_file.value))
@@ -152,5 +152,5 @@ class FileDialog(Dialog):
                 self._list_dir_()
         else:
             self.value = os.path.join(self.curdir, self.input_file.value)
-	    self.send(CHANGE)
+            self.send(CHANGE)
             self.close()

@@ -42,13 +42,13 @@ class Config:
 
     def __delattr__(self, name):
         self._config.remove_section(name)
-    
+
     def __setattr__(self, name, value):
         raise AttributeError("Cannot assign value to config section")
 
     def __contains__(self, value):
         return self._config.has_section(value)
-    
+
     def add_section(self, name):
         return self._config.add_section(name)
     
@@ -87,4 +87,4 @@ class Section:
 
     def __contains__(self, value):
         return self._config.has_option(self.section, value)
-    
+

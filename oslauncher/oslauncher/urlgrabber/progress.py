@@ -23,7 +23,7 @@ import sys
 import time
 import math
 import thread
-    
+
 class BaseMeter:
     def __init__(self):
         self.update_period = 0.3 # seconds
@@ -37,7 +37,7 @@ class BaseMeter:
         self.last_amount_read = 0
         self.last_update_time = None
         self.re = RateEstimator()
-        
+
     def start(self, filename=None, url=None, basename=None,
               size=None, now=None, text=None):
         self.filename = filename
@@ -55,7 +55,7 @@ class BaseMeter:
         self.last_amount_read = 0
         self.last_update_time = now
         self._do_start(now)
-        
+
     def _do_start(self, now=None):
         pass
 
@@ -82,7 +82,7 @@ class BaseMeter:
 
     def _do_end(self, amount_read, now=None):
         pass
-        
+
 class TextMeter(BaseMeter):
     def __init__(self, fo=sys.stderr):
         BaseMeter.__init__(self)
@@ -161,7 +161,7 @@ class MultiFileMeter:
         self.in_progress_meters = []
         self._lock = thread.allocate_lock()
         self.update_period = 0.3 # seconds
-        
+
         self.numfiles         = None
         self.finished_files   = 0
         self.failed_files     = 0
@@ -193,7 +193,7 @@ class MultiFileMeter:
     def end(self, now=None):
         if now is None: now = time.time()
         self._do_end(now)
-        
+
     def _do_end(self, now):
         pass
 
@@ -206,10 +206,10 @@ class MultiFileMeter:
         newmeter = self.helperclass(self)
         self.meters.append(newmeter)
         return newmeter
-    
+
     def removeMeter(self, meter):
         self.meters.remove(meter)
-        
+
     ###########################################################
     # child functions - these should only be called by helpers
     def start_meter(self, meter, now):
@@ -223,10 +223,10 @@ class MultiFileMeter:
         finally:
             self._lock.release()
         self._do_start_meter(meter, now)
-        
+
     def _do_start_meter(self, meter, now):
         pass
-        
+
     def update_meter(self, meter, now):
         if not meter in self.meters:
             raise ValueError('attempt to use orphaned meter')
@@ -314,7 +314,7 @@ class TextMultiFileMeter(MultiFileMeter):
             ftd = format_number(td) + 'B'
             fdt = format_time(dt, 1)
             ftt = format_time(tt, 1)
-            
+
             out = '%-79.79s' % (format % (df, tf, pf, fdd, ftd, pd, fdt, ftt))
             self.fo.write('\r' + out)
             self.fo.flush()
@@ -331,7 +331,7 @@ class TextMultiFileMeter(MultiFileMeter):
             et = meter.re.elapsed_time()
             fet = format_time(et, 1)
             frate = format_number(size / et) + 'B/s'
-            
+
             out = '%-79.79s' % (format % (fn, fsize, fet, frate))
             self.fo.write('\r' + out + '\n')
         finally:
@@ -368,7 +368,7 @@ class TextMultiFileMeter(MultiFileMeter):
             self.fo.flush()
         finally:
             self._lock.release()
-        
+
 ######################################################################
 # support classes and functions
 
@@ -383,7 +383,7 @@ class RateEstimator:
         self.last_update_time = now
         self.last_amount_read = 0
         self.ave_rate = None
-        
+
     def update(self, amount_read, now=None):
         if now is None: now = time.time()
         if amount_read == 0:
@@ -401,7 +401,7 @@ class RateEstimator:
         self.ave_rate = self._temporal_rolling_ave(\
             time_diff, read_diff, self.ave_rate, self.timescale)
         #print 'results', time_diff, read_diff, self.ave_rate
-        
+
     #####################################################################
     # result methods
     def average_rate(self):
@@ -437,14 +437,14 @@ class RateEstimator:
         epsilon = time_diff / timescale
         if epsilon > 1: epsilon = 1.0
         return self._rolling_ave(time_diff, read_diff, last_ave, epsilon)
-    
+
     def _rolling_ave(self, time_diff, read_diff, last_ave, epsilon):
         """perform a "rolling average" iteration
         a rolling average "folds" new data into an existing average with
         some weight, epsilon.  epsilon must be between 0.0 and 1.0 (inclusive)
         a value of 0.0 means only the old value (initial value) counts,
         and a value of 1.0 means only the newest value is considered."""
-        
+
         try:
             recent_rate = read_diff / time_diff
         except ZeroDivisionError:
@@ -473,7 +473,7 @@ class RateEstimator:
         rt = int(rt)
         if shift <= 0: return rt
         return float(int(rt) >> shift << shift)
-        
+
 
 def format_time(seconds, use_hours=0):
     if seconds is None or seconds < 0:
@@ -489,7 +489,7 @@ def format_time(seconds, use_hours=0):
             return '%02i:%02i:%02i' % (hours, minutes, seconds)
         else:
             return '%02i:%02i' % (minutes, seconds)
-            
+
 def format_number(number, SI=0, space=' '):
     """Turn numbers into human-readable metric-like numbers"""
     symbols = ['',  # (none)
@@ -501,14 +501,14 @@ def format_number(number, SI=0, space=' '):
                'E', # exa
                'Z', # zetta
                'Y'] # yotta
-    
+
     if SI: step = 1000.0
     else: step = 1024.0
 
     thresh = 999
     depth = 0
     max_depth = len(symbols) - 1
-    
+
     # we want numbers between 0 and thresh, but don't exceed the length
     # of our list.  In that event, the formatting will be screwed up,
     # but it'll still show the right number.
@@ -526,5 +526,5 @@ def format_number(number, SI=0, space=' '):
         format = '%.1f%s%s'
     else:
         format = '%.0f%s%s'
-        
+
     return(format % (float(number or 0), space, symbols[depth]))

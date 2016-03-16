@@ -18,15 +18,15 @@ def _ani_load(tv,name,parts,frames,shape):
         for i in xrange(0,n):
             _ani_load(tv,name + ".%d"%i,parts[:],frames[s*i:s*(i+1)],shape)
         return
-    
+
     for i in xrange(0,n):
         tv.images[name+".%d"%i] = frames[i],shape
 
 def ani_load(tv,name,img,size,shape,parts):
     """load an animation from an image
-    
+
     <pre>ani_load(tv,name,image,size,shape,parts)</pre>
-    
+
     <dl>
     <dt>tv<dd>vid to load into
     <dt>name <dd>prefix name to give the images
@@ -37,7 +37,7 @@ def ani_load(tv,name,img,size,shape,parts):
         <br>for example parts = [4,5] would yield 4 animations 5 frames long, 20 total
         <br>for example parts = [a,b,c] would yield ... images['name.a.b.c'] ..., a*b*c total
     </dl>
-    
+
     """
     parts = parts[:]
     parts.reverse()
@@ -47,13 +47,13 @@ def ani_load(tv,name,img,size,shape,parts):
         for x in xrange(0,img.get_width(),w):
             frames.append(img.subsurface(x,y,w,h))
     _ani_load(tv,name,parts,frames,shape)
-    
-    
+
+
 def image_rotate(tv,name,img,shape,angles,diff=0):
     """rotate an image and put it into tv.images
-    
+
     <pre>image_rotate(tv,name,image,shape,angles,diff=0)</pre>
-    
+
     <dl>
     <dt>tv <dd>vid to load into
     <dt>name <dd>prefix name to give the images
@@ -86,5 +86,5 @@ def image_rotate(tv,name,img,shape,angles,diff=0):
         #print r
         #((ww-w)/2,(hh-h)/2,w,h)
         tv.images["%s.%d"%(name,a)] = img2,r
-        
+
 

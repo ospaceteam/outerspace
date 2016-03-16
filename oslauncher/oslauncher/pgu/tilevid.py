@@ -8,24 +8,24 @@ class Tilevid(Vid):
     def paint(self,s):
         sw,sh = s.get_width(),s.get_height()
         self.view.w,self.view.h = sw,sh
-        
+
         tiles = self.tiles
         tw,th = tiles[0].image.get_width(),tiles[0].image.get_height()
         w,h = self.size
-        
+
         if self.bounds != None: self.view.clamp_ip(self.bounds)
-        
+
         ox,oy = self.view.x,self.view.y
         tlayer = self.tlayer
         blayer = self.blayer
         alayer = self.alayer
         sprites = self.sprites
-        
+
         blit = s.blit
         yy = - (self.view.y%th) 
         my = (oy+sh)/th
         if (oy+sh)%th: my += 1
-        
+
         if blayer != None:
             for y in xrange(oy/th,my):
                 if y >=0 and y < h:
@@ -68,15 +68,15 @@ class Tilevid(Vid):
         self.updates = []
         self._view = pygame.Rect(self.view)
         return [Rect(0,0,sw,sh)]
-        
+
     def update(self,s):
         sw,sh = s.get_width(),s.get_height()
         self.view.w,self.view.h = sw,sh
-        
+
         if self.bounds != None: self.view.clamp_ip(self.bounds)
         if self.view.x != self._view.x or self.view.y != self._view.y: 
             return self.paint(s)
-        
+
         ox,oy = self.view.x,self.view.y
         sw,sh = s.get_width(),s.get_height()
         w,h = self.size
@@ -87,11 +87,11 @@ class Tilevid(Vid):
         tw,th = tiles[0].image.get_width(),tiles[0].image.get_height()
         sprites = self.sprites
         blit = s.blit
-        
+
         us = []
-        
+
         #mark places where sprites have moved, or been removed
-        
+
         ss = self.sprites.removed
         self.sprites.removed = []
         ss.extend(sprites)
@@ -129,7 +129,7 @@ class Tilevid(Vid):
                             self.updates.append((x,y))
                         x += 1
                     y += 1
-                    
+
 
         #mark sprites that are not being updated that need to be updated because
         #they are being overwritte by sprites / tiles
@@ -147,7 +147,7 @@ class Tilevid(Vid):
                         x += 1
                     y += 1
 
-        
+
         for u in self.updates:
             x,y=u
             xx,yy=x*tw-ox,y*th-oy
@@ -156,14 +156,14 @@ class Tilevid(Vid):
                 blit(tiles[tlayer[y][x]].image,(xx,yy))
             alayer[y][x]=0
             us.append(Rect(xx,yy,tw,th))
-        
+
         for s in sprites:
             if s.updated:
                 blit(s.image,(s.irect.x-ox, s.irect.y-oy))
                 s.updated=0
                 s._irect = Rect(s.irect)
                 s._image = s.image
-                
+
         self.updates = []
         return us
 
@@ -172,24 +172,24 @@ class Tilevid(Vid):
         tiles = self.tiles
         tw,th = tiles[0].image.get_width(),tiles[0].image.get_height()
         return x/tw,y/th
-        
+
     def tile_to_view(self,pos):
         x,y = pos
         tiles = self.tiles
         tw,th = tiles[0].image.get_width(),tiles[0].image.get_height()
         x,y = x*tw, y*th 
         return x,y
-        
-                    
+
+
     def screen_to_tile(self,pos):
         x,y = pos
         x,y = x+self.view.x,y+self.view.y
         return self.view_to_tile((x,y))
-        
+
     def tile_to_screen(self,pos):
         x,y = pos
         x,y = self.tile_to_view(pos)
         x,y = x - self.view.x, y - self.view.y
         return x,y
-                    
+
 # vim: set filetype=python sts=4 sw=4 noet si :

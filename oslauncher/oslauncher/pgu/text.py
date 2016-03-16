@@ -2,7 +2,7 @@
 """
 def write(s,font,pos,color,text,border=1):
     """write text to a surface with a black border
-    
+
     <pre>write(s,font,pos,color,text,border=1)</pre>
     """
     i = font.render(text,1,(0,0,0))
@@ -14,17 +14,17 @@ def write(s,font,pos,color,text,border=1):
 
 def writec(s,font,color,text,border=1):
     """write centered text to a surface with a black border
-    
+
     <pre>writec(s,font,color,text,border=1)</pre>
     """
     w,h = font.size(text)
     x = (s.get_width()-w)/2
     y = (s.get_height()-h)/2
     write(s,font,(x,y),color,text,border)
-    
+
 def writepre(s,font,rect,color,text):
     """write preformatted text
-    
+
     <pre>writepre(s,font,rect,color,text)</pre>
     """
     r,c,txt = rect,color,text
@@ -40,7 +40,7 @@ def writepre(s,font,rect,color,text):
 
 def writewrap(s,font,rect,color,text):
     """write wrapped text
-    
+
     <pre>writewrap(s,font,rect,color,text)</pre>
     """
     r,c,txt = rect,color,text

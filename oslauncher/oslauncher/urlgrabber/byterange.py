@@ -35,38 +35,38 @@ except ImportError, msg:
 class RangeError(IOError):
     """Error raised when an unsatisfiable range is requested."""
     pass
-    
+
 class HTTPRangeHandler(urllib2.BaseHandler):
     """Handler that enables HTTP Range headers.
-    
+
     This was extremely simple. The Range header is a HTTP feature to
     begin with so all this class does is tell urllib2 that the 
     "206 Partial Content" reponse from the HTTP server is what we 
     expected.
-    
+
     Example:
         import urllib2
         import byterange
-        
+
         range_handler = range.HTTPRangeHandler()
         opener = urllib2.build_opener(range_handler)
-        
+
         # install it
         urllib2.install_opener(opener)
-        
+
         # create Request and set Range header
         req = urllib2.Request('http://www.python.org/')
         req.header['Range'] = 'bytes=30-50'
         f = urllib2.urlopen(req)
     """
-    
+
     def http_error_206(self, req, fp, code, msg, hdrs):
         # 206 Partial Content Response
         r = urllib.addinfourl(fp, hdrs, req.get_full_url())
         r.code = code
         r.msg = msg
         return r
-    
+
     def http_error_416(self, req, fp, code, msg, hdrs):
         # HTTP's Range Not Satisfiable error
         raise RangeError('Requested Range Not Satisfiable')
@@ -77,7 +77,7 @@ class RangeableFileObject:
     specifications for file:// urls. This object effectively makes 
     a file object look like it consists only of a range of bytes in 
     the stream.
-    
+
     Examples:
         # expose 10 bytes, starting at byte position 20, from 
         # /etc/aliases.
@@ -91,7 +91,7 @@ class RangeableFileObject:
         # byte in the range. the following will return only 7 bytes.
         >>> fo.read(30)
     """
-    
+
     def __init__(self, fo, rangetup):
         """Create a RangeableFileObject.
         fo       -- a file like object. only the read() method need be 
@@ -105,7 +105,7 @@ class RangeableFileObject:
         (self.firstbyte, self.lastbyte) = range_tuple_normalize(rangetup)
         self.realpos = 0
         self._do_seek(self.firstbyte)
-        
+
     def __getattr__(self, name):
         """This effectively allows us to wrap at the instance level.
         Any attribute not found in _this_ object will be searched for
@@ -113,7 +113,7 @@ class RangeableFileObject:
         if hasattr(self.fo, name):
             return getattr(self.fo, name)
         raise AttributeError, name
-    
+
     def tell(self):
         """Return the position within the range.
         This is different from fo.seek in that position 0 is the 
@@ -122,7 +122,7 @@ class RangeableFileObject:
         tell() will return 0 when at byte position 500 of the file.
         """
         return (self.realpos - self.firstbyte)
-    
+
     def seek(self,offset,whence=0):
         """Seek within the byte range.
         Positioning is identical to that described under tell().
@@ -135,13 +135,13 @@ class RangeableFileObject:
         elif whence == 2: # absolute from end of file
             # XXX: are we raising the right Error here?
             raise IOError('seek from end of file not supported.')
-        
+
         # do not allow seek past lastbyte in range
         if self.lastbyte and (realoffset >= self.lastbyte):
             realoffset = self.lastbyte
-        
+
         self._do_seek(realoffset - self.realpos)
-        
+
     def read(self, size=-1):
         """Read within the range.
         This method will limit the size read based on the range.
@@ -150,7 +150,7 @@ class RangeableFileObject:
         rslt = self.fo.read(size)
         self.realpos += len(rslt)
         return rslt
-    
+
     def readline(self, size=-1):
         """Read lines within the range.
         This method will limit the size read based on the range.
@@ -159,7 +159,7 @@ class RangeableFileObject:
         rslt = self.fo.readline(size)
         self.realpos += len(rslt)
         return rslt
-    
+
     def _calc_read_size(self, size):
         """Handles calculating the amount of data to read based on
         the range.
@@ -171,7 +171,7 @@ class RangeableFileObject:
             else:
                 size = (self.lastbyte - self.realpos)
         return size
-        
+
     def _do_seek(self,offset):
         """Seek based on whether wrapped object supports seek().
         offset is relative to the current position (self.realpos).
@@ -182,7 +182,7 @@ class RangeableFileObject:
         else:
             self.fo.seek(self.realpos + offset)
         self.realpos+= offset
-        
+
     def _poor_mans_seek(self,offset):
         """Seek by calling the wrapped file objects read() method.
         This is used for file like objects that do not have native
@@ -273,7 +273,7 @@ class FTPRangeHandler(urllib2.FTPHandler):
         host = unquote(host)
         user = unquote(user or '')
         passwd = unquote(passwd or '')
-        
+
         try:
             host = socket.gethostbyname(host)
         except socket.error, msg:
@@ -292,7 +292,7 @@ class FTPRangeHandler(urllib2.FTPHandler):
                 if attr.lower() == 'type' and \
                    value in ('a', 'A', 'i', 'I', 'd', 'D'):
                     type = value.upper()
-            
+
             # -- range support modifications start here
             rest = None
             range_tup = range_header_to_tuple(req.headers.get('Range',None))    
@@ -301,9 +301,9 @@ class FTPRangeHandler(urllib2.FTPHandler):
                 (fb,lb) = range_tup
                 if fb > 0: rest = fb
             # -- range support modifications end here
-            
+
             fp, retrlen = fw.retrfile(file, type, rest)
-            
+
             # -- range support modifications start here
             if range_tup:
                 (fb,lb) = range_tup
@@ -319,7 +319,7 @@ class FTPRangeHandler(urllib2.FTPHandler):
                     retrlen = lb - fb
                     fp = RangeableFileObject(fp, (0,retrlen))
             # -- range support modifications end here
-            
+
             headers = ""
             mtype = mimetypes.guess_type(req.get_full_url())[0]
             if mtype:
@@ -391,17 +391,17 @@ class ftpwrapper(urllib.ftpwrapper):
 _rangere = None
 def range_header_to_tuple(range_header):
     """Get a (firstbyte,lastbyte) tuple from a Range header value.
-    
+
     Range headers have the form "bytes=<firstbyte>-<lastbyte>". This
     function pulls the firstbyte and lastbyte values and returns
     a (firstbyte,lastbyte) tuple. If lastbyte is not specified in
     the header value, it is returned as an empty string in the
     tuple.
-    
+
     Return None if range_header is None
     Return () if range_header does not conform to the range spec 
     pattern.
-    
+
     """
     global _rangere
     if range_header is None: return None
@@ -427,7 +427,7 @@ def range_tuple_to_header(range_tup):
         if range_tup[1]: 
             range_tup = (range_tup[0],range_tup[1] - 1)
         return 'bytes=%s-%s' % range_tup
-    
+
 def range_tuple_normalize(range_tup):
     """Normalize a (first_byte,last_byte) range tuple.
     Return a tuple whose first element is guaranteed to be an int

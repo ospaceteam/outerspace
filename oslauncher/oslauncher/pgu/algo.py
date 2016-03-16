@@ -7,7 +7,7 @@ print 'pgu.algo','This module is alpha, and is subject to change.'
 
 #def dist(a,b):
 #    return abs(a[0]-b[0]) + abs(a[1]-b[1])
-    
+
 class node:
     def __init__(self,prev,pos,dest):
         self.prev,self.pos,self.dest = prev,pos,dest
@@ -19,16 +19,16 @@ class node:
 
 def astar(start,end,layer,_dist):
     """uses the a* algorithm to find a path
-    
+
     <pre>astar(start,end,layer,dist): return [list of positions]</pre>
-    
+
     <dl>
     <dt>start<dd>start position
     <dt>end<dd>end position
     <dt>layer<dd>a grid where zero cells are open and non-zero cells are walls
     <dt>dist<dd>a distance function dist(a,b)
     </dl>
-    
+
     <p>returns a list of positions from start to end</p>
     """
     global dist
@@ -70,43 +70,43 @@ def astar(start,end,layer,_dist):
                 if new.f < opens[mid].f: hi = mid
                 else: lo = mid + 1
             opens.insert(lo,new)
-    
+
     if cur.pos != end: 
         return []
-                    
+
     path = []
     while cur.prev != None:
         path.append(cur.pos)
         cur = cur.prev
     path.reverse()
     return path
-    
+
 
 def getline(a,b):
     """returns a path of points from a to b
-    
+
     <pre>getline(a,b): return [list of points]</pre>
-    
+
     <dl>
     <dt>a<dd>starting point
     <dt>b<dd>ending point
     </dl>
-    
+
     <p>returns a list of points from a to b</p>
     """
-           
+
     path = []
-    
+
     x1,y1 = a
     x2,y2 = b
     dx,dy = abs(x2-x1),abs(y2-y1)
 
     if x2 >= x1: xi1,xi2 = 1,1
     else: xi1,xi2 = -1,-1
-    
+
     if y2 >= y1: yi1,yi2 = 1,1
     else: yi1,yi2 = -1,-1
-    
+
     if dx >= dy:
         xi1,yi2 = 0,0
         d = dx
@@ -119,7 +119,7 @@ def getline(a,b):
         n = dy/2
         a = dx
         p = dy
-        
+
     x,y = x1,y1
     c = 0
     while c <= p:

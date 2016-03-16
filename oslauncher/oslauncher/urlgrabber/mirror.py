@@ -135,7 +135,7 @@ class MirrorGroup:
 
       In addition to the required arguments "grabber" and "mirrors",
       MirrorGroup also takes the following optional arguments:
-      
+
       default_action
 
         A dict that describes the actions to be taken upon failure
@@ -165,7 +165,7 @@ class MirrorGroup:
         or by returning an action dict from the failure_callback
           return {'fail':0}
         in increasing precedence.
-        
+
         If all three of these were done, the net result would be:
               {'increment': 0,         # set in method
                'increment_master': 1,  # class default
@@ -258,18 +258,18 @@ class MirrorGroup:
     # methods, they will be stripped before getting passed on to the
     # grabber
     options = ['default_action', 'failure_callback']
-    
+
     def _process_kwargs(self, kwargs):
         self.failure_callback = kwargs.get('failure_callback')
         self.default_action   = kwargs.get('default_action')
-       
+
     def _parse_mirrors(self, mirrors):
         parsed_mirrors = []
         for m in mirrors:
             if type(m) == type(''): m = {'mirror': m}
             parsed_mirrors.append(m)
         return parsed_mirrors
-    
+
     def _load_gr(self, gr):
         # OVERRIDE IDEAS:
         #   shuffle gr list
@@ -326,7 +326,7 @@ class MirrorGroup:
         urlopen, there's no good way for the mirror group to know that
         an error occurs mid-download (it's already returned and given
         you the file object).
-        
+
         remove  ---  can have several values
            0   do not remove the mirror from the list
            1   remove the mirror for this download only
@@ -348,7 +348,7 @@ class MirrorGroup:
                 self._next += 1
             if self._next >= len(self.mirrors): self._next = 0
         self._lock.release()
-        
+
         if action.get('remove', 1):
             del gr.mirrors[gr._next]
         elif action.get('increment', 1):
@@ -373,7 +373,7 @@ class MirrorGroup:
             return base_url + rel_url
         else:
             return base_url + '/' + rel_url
-        
+
     def _mirror_try(self, func, url, kw):
         gr = GrabRequest()
         gr.func = func
@@ -409,7 +409,7 @@ class MirrorGroup:
         kw['filename'] = filename
         func = 'urlgrab'
         return self._mirror_try(func, url, kw)
-    
+
     def urlopen(self, url, **kwargs):
         kw = dict(kwargs)
         func = 'urlopen'
@@ -420,7 +420,7 @@ class MirrorGroup:
         kw['limit'] = limit
         func = 'urlread'
         return self._mirror_try(func, url, kw)
-            
+
 
 class MGRandomStart(MirrorGroup):
     """A mirror group that starts at a random mirror in the list.

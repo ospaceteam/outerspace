@@ -1,5 +1,5 @@
 """All sliders and scroll bar widgets have the same parameters.
-   
+
 <pre>Slider(value,min,max,size)</pre> 
 <dl>
 <dt>value<dd>initial value
@@ -25,13 +25,13 @@ class _slider(widget.Widget):
         params.setdefault('cls','slider')
         widget.Widget.__init__(self,**params)
         self.min,self.max,self.value,self.orient,self.size,self.step = min,max,value,orient,size,step
-        
-    
+
+
     def paint(self,s):
-        
+
         self.value = self.value
-        
-        
+
+
         r = pygame.rect.Rect(0,0,self.style.width,self.style.height)
         if self.orient == _SLIDER_HORIZONTAL:
             r.x = (self.value-self.min) * (r.w-self.size) / (self.max-self.min);
@@ -39,11 +39,11 @@ class _slider(widget.Widget):
         else:
             r.y = (self.value-self.min) * (r.h-self.size) / (self.max-self.min);
             r.h = self.size;
-            
+
         self.bar = r
-        
+
         app.App.app.theme.render(s,self.style.bar,r)
-    
+
     def event(self,e):
         used = None
         r = pygame.rect.Rect(0,0,self.style.width,self.style.height)
@@ -73,7 +73,7 @@ class _slider(widget.Widget):
                         if d != 0: self.value = self.grab_value + ((self.max-self.min) * rel[1] / d)
                 else:
                     x,y,adj = e.pos[0],e.pos[1],1
-                    
+
         elif e.type is KEYDOWN:
             if self.orient == _SLIDER_HORIZONTAL and e.key == K_LEFT:
                 self.value -= self.step
@@ -95,14 +95,14 @@ class _slider(widget.Widget):
             else:
                 d = self.size/2 - (r.h/(self.max-self.min+1))/2
                 self.value = (y-d) * (self.max-self.min) / (r.h-self.size+1) + self.min
-                
+
         self.pcls = ""
         if self.container.myhover is self: self.pcls = "hover"
         if (self.container.myfocus is self and 1 in pygame.mouse.get_pressed()): self.pcls = "down"
-        
+
         return used
 
-    
+
     def __setattr__(self,k,v):
         if k == 'value':
             v = int(v)
@@ -113,13 +113,13 @@ class _slider(widget.Widget):
         if k == 'value' and _v != NOATTR and _v != v: 
             self.send(CHANGE)
             self.repaint()
-            
+
         if hasattr(self,'size'):
             self.__dict__['size'] = max(self.size,min(self.style.width,self.style.height))
 
 class VSlider(_slider):
     """A verticle slider.
-    
+
     <pre>VSlider(value,min,max,size)</pre>
     """
     def __init__(self,value,min,max,size,step=1,**params):
@@ -128,63 +128,63 @@ class VSlider(_slider):
 
 class HSlider(_slider):
     """A horizontal slider.
-    
+
     <pre>HSlider(value,min,max,size)</pre>
     """
     def __init__(self,value,min,max,size,step=1,**params):
         params.setdefault('cls','hslider')
         _slider.__init__(self,value,_SLIDER_HORIZONTAL,min,max,size,step,**params)
-	
+
 class HScrollBar(table.Table):
     """A horizontal scroll bar.
-    
+
     <pre>HScrollBar(value,min,max,size,step=1)</pre>
     """
     def __init__(self,value,min,max,size,step=1,**params):
         params.setdefault('cls','hscrollbar')
-        
+
         table.Table.__init__(self,**params)
-        
+
         self.slider = _slider(value,_SLIDER_HORIZONTAL,min,max,size,step=step,cls=self.cls+'.slider')
-        
+
         self.minus = basic.Image(self.style.minus)
         self.minus.connect(MOUSEBUTTONDOWN,self._click,-1)
         self.slider.connect(CHANGE,self.send,CHANGE)
-        
+
         self.minus2 = basic.Image(self.style.minus)
         self.minus2.connect(MOUSEBUTTONDOWN,self._click,-1)
-        
+
         self.plus = basic.Image(self.style.plus)
         self.plus.connect(MOUSEBUTTONDOWN,self._click,1)
-        
+
         self.size = size
-        
+
     def _click(self,value):
         self.slider.value += self.slider.step*value
-        
+
     def resize(self,width=None,height=None):
         self.clear()
         self.tr()
-        
+
         w = self.style.width
         h = self.slider.style.height
         ww = 0
-        
+
         if w > (h*2 + self.minus.style.width+self.plus.style.width):
             self.td(self.minus)
             ww += self.minus.style.width
-        
+
         self.td(self.slider)
-        
+
         if w > (h*2 + self.minus.style.width+self.minus2.style.width+self.plus.style.width):
             self.td(self.minus2)
             ww += self.minus2.style.width
-        
+
         if w > (h*2 + self.minus.style.width+self.plus.style.width):
             self.td(self.plus)
             ww += self.plus.style.width
-            
-            
+
+
         #HACK: handle theme sizing properly
         from app import App
         xt,xr,xb,xl = App.app.theme.getspacing(self.slider)
@@ -193,13 +193,13 @@ class HScrollBar(table.Table):
         self.slider.style.width = self.style.width - ww
         setattr(self.slider,'size',self.size * self.slider.style.width / max(1,self.style.width))
         return table.Table.resize(self,width,height)
-        
-        
+
+
     def __setattr__(self,k,v):
         if k in ('min','max','value','step'):
             return setattr(self.slider,k,v)
         self.__dict__[k]=v
-            
+
     def __getattr__(self,k):
         if k in ('min','max','value','step'):
             return getattr(self.slider,k)
@@ -207,57 +207,57 @@ class HScrollBar(table.Table):
 
 class VScrollBar(table.Table):
     """A vertical scroll bar.
-    
+
     <pre>VScrollBar(value,min,max,size,step=1)</pre>
     """
     def __init__(self,value,min,max,size,step=1,**params):
         params.setdefault('cls','vscrollbar')
-        
+
         table.Table.__init__(self,**params)
-        
+
         self.minus = basic.Image(self.style.minus)
         self.minus.connect(MOUSEBUTTONDOWN,self._click,-1)
-        
+
         self.minus2 = basic.Image(self.style.minus)
         self.minus2.connect(MOUSEBUTTONDOWN,self._click,-1)
-        
+
         self.plus = basic.Image(self.style.plus)
         self.plus.connect(MOUSEBUTTONDOWN,self._click,1)
-        
+
         self.slider = _slider(value,_SLIDER_VERTICAL,min,max,size,step=step,cls=self.cls+'.slider')
         self.slider.connect(CHANGE,self.send,CHANGE)
-        
+
         self.size = size
-        
+
     def _click(self,value):
         self.slider.value += self.slider.step*value
-        
+
     def resize(self,width=None,height=None):
         self.clear()
-        
+
         h = self.style.height
         w = self.slider.style.width
         hh = 0
-        
+
         if h > (w*2 + self.minus.style.height+self.plus.style.height):
             self.tr()
             self.td(self.minus)
             hh += self.minus.style.height
-        
+
         self.tr()
         self.td(self.slider)
-        
+
         if h > (w*2 + self.minus.style.height+self.minus2.style.height+self.plus.style.height):
             self.tr()
             self.td(self.minus2)
             hh += self.minus2.style.height
-        
+
         if h > (w*2 + self.minus.style.height+self.plus.style.height):
             self.tr()
             self.td(self.plus)
             hh += self.plus.style.height
-            
-            
+
+
         #HACK: handle theme sizing properly
         from app import App
         xt,xr,xb,xl = App.app.theme.getspacing(self.slider)
@@ -266,12 +266,12 @@ class VScrollBar(table.Table):
         self.slider.style.height = self.style.height - hh
         setattr(self.slider,'size',self.size * self.slider.style.height / max(1,self.style.height))
         return table.Table.resize(self,width,height)
-        
+
     def __setattr__(self,k,v):
         if k in ('min','max','value','step'):
             return setattr(self.slider,k,v)
         self.__dict__[k]=v
-            
+
     def __getattr__(self,k):
         if k in ('min','max','value','step'):
             return getattr(self.slider,k)
