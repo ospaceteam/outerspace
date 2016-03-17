@@ -30,27 +30,27 @@ playerID = None
 player = None
 
 def planetManager():
-	pass
+    pass
 
 def shipDesignManager():
-	# currently no designs for EDEN
-	pass
+    # currently no designs for EDEN
+    pass
 
 def attackManager():
-	pass
-		
+    pass
+
 def run(aclient):
-	global client, db, player, playerID
-	client = aclient
-	db = client.db
-	player = client.getPlayer()
-	playerID = client.getPlayerID()
-	
-	tool_parseDB(client, db)
+    global client, db, player, playerID
+    client = aclient
+    db = client.db
+    player = client.getPlayer()
+    playerID = client.getPlayerID()
 
-	shipDesignManager()	
-	planetManager()
+    tool_parseDB(client, db)
 
-	attackManager()	
-	client.saveDB()
+    shipDesignManager()
+    planetManager()
+
+    attackManager()
+    client.saveDB()
 

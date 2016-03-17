@@ -22,31 +22,31 @@ import gdata
 from ige import log
 
 def onInitConnection():
-	pass
+    pass
 
 def onConnInitialized():
-	pass
+    pass
 
 def onCmdBegin():
-	pass
+    pass
 
 def onCmdEnd():
-	pass
+    pass
 
 def createGameAccount():
-	pass
+    pass
 
 def onUpdateStarting():
-	pass
+    pass
 
 def onUpdateProgress(curr, max, text = None):
-	pass
+    pass
 
 def onUpdateFinished():
-	pass
-	
+    pass
+
 def onNewMessages(number):
-	pass
+    pass
 
 def onWaitingForResponse():
-	pass
+    pass
