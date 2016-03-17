@@ -15,7 +15,7 @@
 # Put your script into your web docs directory (like a cgi-bin
 # script), make sure it has the correct extension [see the overridable
 # script_handler.extension member below].
-# 
+#
 # There's lots of things that can be done to tweak the restricted
 # execution model.  Also, of course you could just use 'execfile'
 # instead (this is now the default, see class variable
@@ -35,181 +35,181 @@ unquote    = default_handler.unquote
 
 class script_handler:
 
-	extension = 'mpy'
-	restricted = 0
+    extension = 'mpy'
+    restricted = 0
 
-	script_regex = re.compile (
-		r'.*/([^/]+\.%s)' % extension,
-		re.IGNORECASE
-		)
+    script_regex = re.compile (
+        r'.*/([^/]+\.%s)' % extension,
+        re.IGNORECASE
+        )
 
-	def __init__ (self, filesystem):
-		self.filesystem = filesystem
-		self.hits = counter.counter()
-		self.exceptions = counter.counter()
+    def __init__ (self, filesystem):
+        self.filesystem = filesystem
+        self.hits = counter.counter()
+        self.exceptions = counter.counter()
 
-	def match (self, request):
-		path, params, query, fragment = request.split_uri()
-		m = self.script_regex.match (path)
-		return (m and (m.end() == len(path)))
+    def match (self, request):
+        path, params, query, fragment = request.split_uri()
+        m = self.script_regex.match (path)
+        return (m and (m.end() == len(path)))
 
-	def handle_request (self, request):
-		
-		path, params, query, fragment = request.split_uri()
+    def handle_request (self, request):
 
-		while path and path[0] == '/':
-			path = path[1:]
+        path, params, query, fragment = request.split_uri()
 
-		if '%' in path:
-			path = unquote (path)
+        while path and path[0] == '/':
+            path = path[1:]
 
-		if not self.filesystem.isfile (path):
-			request.error (404)
-			return
-		else:
+        if '%' in path:
+            path = unquote (path)
 
-			self.hits.increment()
+        if not self.filesystem.isfile (path):
+            request.error (404)
+            return
+        else:
 
-			request.script_filename = self.filesystem.translate (path)
+            self.hits.increment()
 
-			if request.command in ('put', 'post'):
-				# look for a Content-Length header.
-				cl = request.get_header ('content-length')
-				length = int(cl)
-				if not cl:
-					request.error (411)
-				else:
-					collector (self, length, request)
-			else:
-				self.continue_request (
-					request,
-					StringIO.StringIO() # empty stdin
-					)
+            request.script_filename = self.filesystem.translate (path)
 
-	def continue_request (self, request, stdin):
-		temp_files = stdin, StringIO.StringIO(), StringIO.StringIO()
-		old_files = sys.stdin, sys.stdout, sys.stderr
+            if request.command in ('put', 'post'):
+                # look for a Content-Length header.
+                cl = request.get_header ('content-length')
+                length = int(cl)
+                if not cl:
+                    request.error (411)
+                else:
+                    collector (self, length, request)
+            else:
+                self.continue_request (
+                    request,
+                    StringIO.StringIO() # empty stdin
+                    )
 
-		if self.restricted:
-			r = rexec.RExec()
+    def continue_request (self, request, stdin):
+        temp_files = stdin, StringIO.StringIO(), StringIO.StringIO()
+        old_files = sys.stdin, sys.stdout, sys.stderr
 
-		try:
-			sys.request = request
-			sys.stdin, sys.stdout, sys.stderr = temp_files
-			try:
-				if self.restricted:
-					r.s_execfile (request.script_filename)
-				else:
-					execfile (request.script_filename)
-				request.reply_code = 200
-			except:
-				request.reply_code = 500
-				self.exceptions.increment()
-		finally:
-			sys.stdin, sys.stdout, sys.stderr = old_files
-			del sys.request
+        if self.restricted:
+            r = rexec.RExec()
 
-		i,o,e = temp_files
+        try:
+            sys.request = request
+            sys.stdin, sys.stdout, sys.stderr = temp_files
+            try:
+                if self.restricted:
+                    r.s_execfile (request.script_filename)
+                else:
+                    execfile (request.script_filename)
+                request.reply_code = 200
+            except:
+                request.reply_code = 500
+                self.exceptions.increment()
+        finally:
+            sys.stdin, sys.stdout, sys.stderr = old_files
+            del sys.request
 
-		if request.reply_code != 200:
-			s = e.getvalue()
-		else:
-			s = o.getvalue()
+        i,o,e = temp_files
 
-		request['Content-Length'] = len(s)
-		request.push (s)
-		request.done()
+        if request.reply_code != 200:
+            s = e.getvalue()
+        else:
+            s = o.getvalue()
 
-	def status (self):
-		return producer.simple_producer (
-			'<li>Server-Side Script Handler'
-			+ '<ul>'
-			+ '  <li><b>Hits:</b> %s' % self.hits
-			+ '  <li><b>Exceptions:</b> %s' % self.exceptions
-			+ '</ul>'
-			)
+        request['Content-Length'] = len(s)
+        request.push (s)
+        request.done()
+
+    def status (self):
+        return producer.simple_producer (
+            '<li>Server-Side Script Handler'
+            + '<ul>'
+            + '  <li><b>Hits:</b> %s' % self.hits
+            + '  <li><b>Exceptions:</b> %s' % self.exceptions
+            + '</ul>'
+            )
 
 
 class persistent_script_handler:
 
-	def __init__ (self):
-		self.modules = {}
-		self.hits = counter.counter()
-		self.exceptions = counter.counter()
+    def __init__ (self):
+        self.modules = {}
+        self.hits = counter.counter()
+        self.exceptions = counter.counter()
 
-	def add_module (self, name, module):
-		self.modules[name] = module
+    def add_module (self, name, module):
+        self.modules[name] = module
 
-	def del_module (self, name):
-		del self.modules[name]
+    def del_module (self, name):
+        del self.modules[name]
 
-	def match (self, request):
-		[path, params, query, fragment] = request.split_uri()
-		parts = string.split (path, '/')
-		if (len(parts)>1) and self.modules.has_key (parts[1]):
-			module = self.modules[parts[1]]
-			request.module = module
-			return 1
-		else:
-			return 0
+    def match (self, request):
+        [path, params, query, fragment] = request.split_uri()
+        parts = string.split (path, '/')
+        if (len(parts)>1) and self.modules.has_key (parts[1]):
+            module = self.modules[parts[1]]
+            request.module = module
+            return 1
+        else:
+            return 0
 
-	def handle_request (self, request):
-		if request.command in ('put', 'post'):
-			# look for a Content-Length header.
-			cl = request.get_header ('content-length')
-			length = int(cl)
-			if not cl:
-				request.error (411)
-			else:
-				collector (self, length, request)
-		else:
-			self.continue_request (request, StringIO.StringIO())
+    def handle_request (self, request):
+        if request.command in ('put', 'post'):
+            # look for a Content-Length header.
+            cl = request.get_header ('content-length')
+            length = int(cl)
+            if not cl:
+                request.error (411)
+            else:
+                collector (self, length, request)
+        else:
+            self.continue_request (request, StringIO.StringIO())
 
-	def continue_request (self, request, input_data):
-		temp_files = input_data, StringIO.StringIO(), StringIO.StringIO()
-		old_files = sys.stdin, sys.stdout, sys.stderr
+    def continue_request (self, request, input_data):
+        temp_files = input_data, StringIO.StringIO(), StringIO.StringIO()
+        old_files = sys.stdin, sys.stdout, sys.stderr
 
-		try:
-			sys.stdin, sys.stdout, sys.stderr = temp_files
-			# provide a default
-			request['Content-Type'] = 'text/html'
-			try:
-				request.module.main (request)
-				request.reply_code = 200
-			except:
-				request.reply_code = 500
-				self.exceptions.increment()
-		finally:
-			sys.stdin, sys.stdout, sys.stderr = old_files
+        try:
+            sys.stdin, sys.stdout, sys.stderr = temp_files
+            # provide a default
+            request['Content-Type'] = 'text/html'
+            try:
+                request.module.main (request)
+                request.reply_code = 200
+            except:
+                request.reply_code = 500
+                self.exceptions.increment()
+        finally:
+            sys.stdin, sys.stdout, sys.stderr = old_files
 
-		i,o,e = temp_files
+        i,o,e = temp_files
 
-		if request.reply_code != 200:
-			s = e.getvalue()
-		else:
-			s = o.getvalue()
+        if request.reply_code != 200:
+            s = e.getvalue()
+        else:
+            s = o.getvalue()
 
-		request['Content-Length'] = len(s)
-		request.push (s)
-		request.done()
+        request['Content-Length'] = len(s)
+        request.push (s)
+        request.done()
 
 class collector:
 
-	def __init__ (self, handler, length, request):
-		self.handler = handler
-		self.request = request
-		self.request.collector = self
-		self.request.channel.set_terminator (length)
-		self.buffer = StringIO.StringIO()
+    def __init__ (self, handler, length, request):
+        self.handler = handler
+        self.request = request
+        self.request.collector = self
+        self.request.channel.set_terminator (length)
+        self.buffer = StringIO.StringIO()
 
-	def collect_incoming_data (self, data):
-		self.buffer.write (data)
+    def collect_incoming_data (self, data):
+        self.buffer.write (data)
 
-	def found_terminator (self):
-		self.buffer.seek(0)
-		self.request.collector = None
-		self.request.channel.set_terminator ('\r\n\r\n')
-		self.handler.continue_request (
-			self.request,
-			self.buffer
-			)
+    def found_terminator (self):
+        self.buffer.seek(0)
+        self.request.collector = None
+        self.request.channel.set_terminator ('\r\n\r\n')
+        self.handler.continue_request (
+            self.request,
+            self.buffer
+            )
