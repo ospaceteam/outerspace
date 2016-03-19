@@ -34,89 +34,89 @@ from ai_parser import AIList
 
 class IAIRenegadePlayer(IPlayer):
 
-	typeID = T_AIRENPLAYER
-	forums = {"INBOX": 56, "OUTBOX": 56, "EVENTS": 0}
-	
-	def init(self, obj):
-		IPlayer.init(self, obj)
-		#
-		obj.name = u'Renegade'
-		obj.login = '*'
+    typeID = T_AIRENPLAYER
+    forums = {"INBOX": 56, "OUTBOX": 56, "EVENTS": 0}
 
-	def register(self, tran, obj):
-		log.debug("Registering player", obj.oid)
-		counter = 1
-		while 1:
-			try:
-				obj.name = u'Renegade faction %d' % counter
-				obj.login = '*AIP*renegade%d' % counter
-				password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
-				tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
-				tran.db[OID_UNIVERSE].players.append(obj.oid)
-				tran.gameMngr.clientMngr.createAiAccount(None, obj.login, password, obj.name)
-				break
-			except CreatePlayerException:
-				counter += 1
-		# after succesfull registration, register it to the AI system
-		aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
-		aiList.add(obj.login, password, 'ais_renegade')
-		# grant techs and so on
-		self.cmd(obj).update(tran, obj)
+    def init(self, obj):
+        IPlayer.init(self, obj)
+        #
+        obj.name = u'Renegade'
+        obj.login = '*'
 
-	def processINITPhase(self, tran, obj, data):
-		IPlayer.processINITPhase(self, tran, obj, data)
+    def register(self, tran, obj):
+        log.debug("Registering player", obj.oid)
+        counter = 1
+        while 1:
+            try:
+                obj.name = u'Renegade faction %d' % counter
+                obj.login = '*AIP*renegade%d' % counter
+                password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
+                tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
+                tran.db[OID_UNIVERSE].players.append(obj.oid)
+                tran.gameMngr.clientMngr.createAiAccount(None, obj.login, password, obj.name)
+                break
+            except CreatePlayerException:
+                counter += 1
+        # after succesfull registration, register it to the AI system
+        aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
+        aiList.add(obj.login, password, 'ais_renegade')
+        # grant techs and so on
+        self.cmd(obj).update(tran, obj)
 
-		obj.lastLogin = time.time()
-		# delete itself if there are no fleets and planets
-		# delete the account as well
-		# unregister it from the AI system
-		if not obj.fleets and not obj.planets:
-			self.cmd(obj).delete(tran, obj)
+    def processINITPhase(self, tran, obj, data):
+        IPlayer.processINITPhase(self, tran, obj, data)
 
-	def update(self, tran, obj):
-		obj.techLevel = 99
-		obj.race = "r"
-		# grant technologies
-		obj.techs[Rules.Tech.CANNON1] = 3
-		obj.techs[Rules.Tech.SSROCKET] = 3
-		obj.techs[Rules.Tech.RENEGADEBASE] = 3
-		obj.techs[Rules.Tech.RENEGADEBASE2] = 3
-		obj.techs[Rules.Tech.RENEGADEBASE2MINOR] = 3
-		obj.techs[Rules.Tech.RENEGADEBASE3] = 3
-		obj.techs[Rules.Tech.RENEGADEBASE3MINOR] = 3
-		obj.techs[Rules.Tech.RENEGADECOSMODROME] = 3
-		if not len(obj.shipDesigns) == 3:
-			# three basic designs [they use modules not available to the player otherwise
-			# so it has to be done this way]
-			obj.shipDesigns[1] = ShipUtils.makeShipMinSpec(obj, 'Fighter', Rules.Tech.SMALLHULL1,
-				{Rules.Tech.SCOCKPIT1:1, Rules.Tech.CANNON1:1}, [])
-			obj.shipDesigns[2] = ShipUtils.makeShipMinSpec(obj, 'Corvette', Rules.Tech.SMALLHULL1,
-				{Rules.Tech.SCOCKPIT1:1, Rules.Tech.CANNON1:2, Rules.Tech.STEELARM2:1}, [])
-			obj.shipDesigns[3] = ShipUtils.makeShipMinSpec(obj, 'Frigate', Rules.Tech.MEDIUMHULL2,
-				{Rules.Tech.SBRIDGE1:1, Rules.Tech.CANNON1:2, Rules.Tech.SSROCKET:2}, [])
-		# call super method
-		IPlayer.update(self, tran, obj)
+        obj.lastLogin = time.time()
+        # delete itself if there are no fleets and planets
+        # delete the account as well
+        # unregister it from the AI system
+        if not obj.fleets and not obj.planets:
+            self.cmd(obj).delete(tran, obj)
 
-	def getDiplomacyWith(self, tran, obj, playerID):
-		if obj.oid == playerID:
-			return REL_UNITY
-		# renegade battles with overyone
-		# make default
-		dipl = IDataHolder()
-		dipl.type = T_DIPLREL
-		dipl.pacts = {}
-		dipl.relation = REL_ENEMY
-		dipl.relChng = 0
-		dipl.lastContact = tran.db[OID_UNIVERSE].turn
-		dipl.contactType = CONTACT_NONE
-		dipl.stats = None
-		return dipl
+    def update(self, tran, obj):
+        obj.techLevel = 99
+        obj.race = "r"
+        # grant technologies
+        obj.techs[Rules.Tech.CANNON1] = 3
+        obj.techs[Rules.Tech.SSROCKET] = 3
+        obj.techs[Rules.Tech.RENEGADEBASE] = 3
+        obj.techs[Rules.Tech.RENEGADEBASE2] = 3
+        obj.techs[Rules.Tech.RENEGADEBASE2MINOR] = 3
+        obj.techs[Rules.Tech.RENEGADEBASE3] = 3
+        obj.techs[Rules.Tech.RENEGADEBASE3MINOR] = 3
+        obj.techs[Rules.Tech.RENEGADECOSMODROME] = 3
+        if not len(obj.shipDesigns) == 3:
+            # three basic designs [they use modules not available to the player otherwise
+            # so it has to be done this way]
+            obj.shipDesigns[1] = ShipUtils.makeShipMinSpec(obj, 'Fighter', Rules.Tech.SMALLHULL1,
+                {Rules.Tech.SCOCKPIT1:1, Rules.Tech.CANNON1:1}, [])
+            obj.shipDesigns[2] = ShipUtils.makeShipMinSpec(obj, 'Corvette', Rules.Tech.SMALLHULL1,
+                {Rules.Tech.SCOCKPIT1:1, Rules.Tech.CANNON1:2, Rules.Tech.STEELARM2:1}, [])
+            obj.shipDesigns[3] = ShipUtils.makeShipMinSpec(obj, 'Frigate', Rules.Tech.MEDIUMHULL2,
+                {Rules.Tech.SBRIDGE1:1, Rules.Tech.CANNON1:2, Rules.Tech.SSROCKET:2}, [])
+        # call super method
+        IPlayer.update(self, tran, obj)
 
-	def processFINALPhase(self, tran, obj, data):
-		IPlayer.processFINALPhase(self, tran, obj, data)
-		# fix goverment power
-		obj.govPwrCtrlRange = 10000
-        
-	# allow normal pacts
-	#def isPactActive(self, tran, obj, partnerID, pactID):
-	#	return 0
+    def getDiplomacyWith(self, tran, obj, playerID):
+        if obj.oid == playerID:
+            return REL_UNITY
+        # renegade battles with overyone
+        # make default
+        dipl = IDataHolder()
+        dipl.type = T_DIPLREL
+        dipl.pacts = {}
+        dipl.relation = REL_ENEMY
+        dipl.relChng = 0
+        dipl.lastContact = tran.db[OID_UNIVERSE].turn
+        dipl.contactType = CONTACT_NONE
+        dipl.stats = None
+        return dipl
+
+    def processFINALPhase(self, tran, obj, data):
+        IPlayer.processFINALPhase(self, tran, obj, data)
+        # fix goverment power
+        obj.govPwrCtrlRange = 10000
+
+    # allow normal pacts
+    #def isPactActive(self, tran, obj, partnerID, pactID):
+    #    return 0

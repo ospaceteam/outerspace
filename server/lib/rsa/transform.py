@@ -81,7 +81,7 @@ def int2bytes(number, block_size=None):
         if needed_bytes > block_size:
             raise OverflowError('Needed %i bytes for number, but block size '
                 'is %i' % (needed_bytes, block_size))
-    
+
     # Convert the number to bytes.
     bytes = []
     while number > 0:

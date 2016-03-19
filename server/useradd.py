@@ -22,8 +22,8 @@
 import xmlrpclib, sys
 
 if len(sys.argv) != 5:
-	print "Usage: useradd.py login password nick e-mail"
-	sys.exit(1)
+    print "Usage: useradd.py login password nick e-mail"
+    sys.exit(1)
 
 server = xmlrpclib.ServerProxy("http://localhost:9080/RPC2")
 

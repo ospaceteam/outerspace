@@ -22,10 +22,10 @@ from ige import log
 
 class WordpressMetaServer(object):
     """Instance of this class provides metaserver RPC interface"""
-    
+
     def __init__(self, url):
         self.rpc = xmlrpclib.ServerProxy(url)
-    
+
     def verifyPassword(self, login, password):
         """Called by Authentication module, returns 0 if password is valid"""
         try:

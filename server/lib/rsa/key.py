@@ -320,16 +320,16 @@ class PrivateKey(AbstractKey):
         # ASN.1 contents of DER encoded private key:
         #
         # RSAPrivateKey ::= SEQUENCE {
-        #     version           Version, 
+        #     version           Version,
         #     modulus           INTEGER,  -- n
         #     publicExponent    INTEGER,  -- e
         #     privateExponent   INTEGER,  -- d
         #     prime1            INTEGER,  -- p
         #     prime2            INTEGER,  -- q
         #     exponent1         INTEGER,  -- d mod (p-1)
-        #     exponent2         INTEGER,  -- d mod (q-1) 
+        #     exponent2         INTEGER,  -- d mod (q-1)
         #     coefficient       INTEGER,  -- (inverse of q) mod p
-        #     otherPrimeInfos   OtherPrimeInfos OPTIONAL 
+        #     otherPrimeInfos   OtherPrimeInfos OPTIONAL
         # }
 
         if priv[0] != 0:
@@ -410,7 +410,7 @@ def extended_gcd(a, b):
     y = 1
     lx = 1
     ly = 0
-    oa = a                             #Remember original a/b to remove 
+    oa = a                             #Remember original a/b to remove
     ob = b                             #negative values from return results
     while b != 0:
         q = a // b
@@ -423,7 +423,7 @@ def extended_gcd(a, b):
 
 def find_p_q(nbits, accurate=True):
     ''''Returns a tuple of two different primes of nbits bits each.
-    
+
     The resulting p * q has exacty 2 * nbits bits, and the returned p and q
     will not be equal.
 
@@ -444,9 +444,9 @@ def find_p_q(nbits, accurate=True):
     True
     >>> common.bit_size(p * q) > 240
     True
-    
+
     '''
-    
+
     total_bits = nbits * 2
 
     # Make sure that p and q aren't too close or the factoring programs can
@@ -454,7 +454,7 @@ def find_p_q(nbits, accurate=True):
     shift = nbits // 16
     pbits = nbits + shift
     qbits = nbits - shift
-    
+
     # Choose the two initial primes
     log.debug('find_p_q(%i): Finding p', nbits)
     p = rsa.prime.getprime(pbits)
@@ -463,7 +463,7 @@ def find_p_q(nbits, accurate=True):
 
     def is_acceptable(p, q):
         '''Returns True iff p and q are acceptable:
-            
+
             - p and q differ
             - (p * q) has the right nr of bits (when accurate=True)
         '''
@@ -526,7 +526,7 @@ def gen_keys(nbits, accurate=True):
     """Generate RSA keys of nbits bits. Returns (p, q, e, d).
 
     Note: this can take a long time, depending on the key size.
-    
+
     @param nbits: the total number of bits in ``p`` and ``q``. Both ``p`` and
         ``q`` will use ``nbits/2`` bits.
     """
@@ -549,14 +549,14 @@ def newkeys(nbits, accurate=True):
         `n`` may have slightly less bits.
 
     :returns: a tuple (:py:class:`rsa.PublicKey`, :py:class:`rsa.PrivateKey`)
-    
+
     """
 
     if nbits < 16:
         raise ValueError('Key too small')
 
     (p, q, e, d) = gen_keys(nbits)
-    
+
     n = p * q
 
     return (
@@ -568,7 +568,7 @@ __all__ = ['PublicKey', 'PrivateKey', 'newkeys']
 
 if __name__ == '__main__':
     import doctest
-    
+
     try:
         for count in range(100):
             (failures, tests) = doctest.testmod()

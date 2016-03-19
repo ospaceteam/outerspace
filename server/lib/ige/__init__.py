@@ -22,25 +22,25 @@ import log
 
 ## common exceptions
 class SecurityException(Exception):
-	pass
+    pass
 
 class GameException(Exception):
-	pass
+    pass
 
 class CreatePlayerException(Exception):
-	pass
+    pass
 
 class NoAccountException(Exception):
-	pass
+    pass
 
 class ServerException(Exception):
-	pass
+    pass
 
 class ServerStatusException(Exception):
-	pass
+    pass
 
 class NoSuchObjectException(Exception):
-	pass
+    pass
 
 ## global settings
 # runtime mode, currently supported:
@@ -49,7 +49,7 @@ class NoSuchObjectException(Exception):
 igeRuntimeMode = 1
 
 def setRuntimeMode(runtimeMode):
-	global igeRuntimeMode
+    global igeRuntimeMode
 
-	igeRuntimeMode = runtimeMode
-	log.message("Runtime mode changed to", igeRuntimeMode)
+    igeRuntimeMode = runtimeMode
+    log.message("Runtime mode changed to", igeRuntimeMode)

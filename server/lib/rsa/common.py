@@ -43,7 +43,7 @@ def bit_size(number):
 
     if number == 0:
         return 1
-    
+
     # This works, even with very large numbers. When using math.log(number, 2),
     # you'll get rounding errors and it'll fail.
     bits = 0
@@ -56,7 +56,7 @@ def bit_size(number):
 
 def byte_size(number):
     """Returns the number of bytes required to hold a specific long number.
-    
+
     The number of bytes is rounded up.
 
     >>> byte_size(1 << 1023)

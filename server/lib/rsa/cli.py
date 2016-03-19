@@ -35,12 +35,12 @@ def keygen():
     # Parse the CLI options
     parser = OptionParser(usage='usage: %prog [options] keysize',
             description='Generates a new RSA keypair of "keysize" bits.')
-    
+
     parser.add_option('--pubout', type='string',
             help='Output filename for the public key. The public key is '
             'not saved if this option is not present. You can use '
             'pyrsa-priv2pub to create the public key file later.')
-    
+
     parser.add_option('-o', '--out', type='string',
             help='Output filename for the private key. The key is '
             'written to stdout if this option is not present.')
@@ -54,7 +54,7 @@ def keygen():
     if len(cli_args) != 1:
         parser.print_help()
         raise SystemExit(1)
-    
+
     try:
         keysize = int(cli_args[0])
     except ValueError:
@@ -75,7 +75,7 @@ def keygen():
 
     # Save private key
     data = priv_key.save_pkcs1(format=cli.form)
-    
+
     if cli.out:
         print >>sys.stderr, 'Writing private key to %s' % cli.out
         with open(cli.out, 'w') as outfile:
@@ -136,12 +136,12 @@ class CryptoOperation(object):
 
     def parse_cli(self):
         '''Parse the CLI options
-        
+
         :returns: (cli_opts, cli_args)
         '''
 
         parser = OptionParser(usage=self.usage, description=self.description)
-        
+
         parser.add_option('-i', '--input', type='string', help=self.input_help)
 
         if self.has_output:
@@ -167,7 +167,7 @@ class CryptoOperation(object):
             keydata = keyfile.read()
 
         return self.key_class.load_pkcs1(keydata, keyform)
-    
+
     def read_infile(self, inname):
         '''Read the input file'''
 
@@ -245,7 +245,7 @@ class SignOperation(CryptoOperation):
 
         hash_method = cli_args[1]
         if hash_method not in HASH_METHODS:
-            raise SystemExit('Invalid hash method, choose one of %s' % 
+            raise SystemExit('Invalid hash method, choose one of %s' %
                     ', '.join(HASH_METHODS))
 
         return rsa.sign(indata, priv_key, hash_method)
@@ -268,7 +268,7 @@ class VerifyOperation(CryptoOperation):
         '''Decrypts files.'''
 
         signature_file = cli_args[1]
-        
+
         with open(signature_file, 'rb') as sigfile:
             signature = sigfile.read()
 

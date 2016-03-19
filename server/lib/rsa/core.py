@@ -37,7 +37,7 @@ def encrypt_int(message, ekey, n):
 
     if message < 0:
         raise ValueError('Only non-negative numbers are supported')
-         
+
     if message > n:
         raise OverflowError("The message %i is too long for n=%i" % (message, n))
 

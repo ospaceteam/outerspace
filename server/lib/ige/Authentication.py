@@ -29,7 +29,7 @@ def createRSAKeys():
     publicKey, privateKey = rsa.newkeys(2048)
     open("var/public.pem", "w").write(publicKey.save_pkcs1())
     open("var/private.pem", "w").write(privateKey.save_pkcs1())
-    
+
 def getPublicKey():
     """Get current RSA public key"""
     global publicKey
@@ -44,14 +44,14 @@ def getPrivateKey():
         createRSAKeys()
     return privateKey
 
-# 
+#
 def getMethod(challenge):
     return challenge.split(":")[0]
 
 def getWelcomeString(method = "md5"):
     """Return welcome string (typically a challenge)"""
     if method == "plain":
-        return "plain:"       
+        return "plain:"
     elif method == "md5":
         return "md5:" + hashlib.md5(str(time.time())).hexdigest()
     elif method == "sha256":
@@ -73,7 +73,7 @@ def encode(password, challenge):
     elif method == "rsa":
         dummy, n, e = challenge.split(":")
         key = rsa.PublicKey(int(n), int(e))
-        return binascii.hexlify(rsa.encrypt(password, key)) 
+        return binascii.hexlify(rsa.encrypt(password, key))
     raise SecurityException("Unsupported authentication method %s" % str(method))
 
 def verify(encodedPassword, password, challenge):

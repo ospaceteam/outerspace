@@ -106,7 +106,7 @@ def save_pem(contents, pem_marker):
 
     b64 = base64.encodestring(contents).replace('\n', '')
     pem_lines = [pem_start]
-    
+
     for block_start in range(0, len(b64), 64):
         block = b64[block_start:block_start + 64]
         pem_lines.append(block)
@@ -115,4 +115,4 @@ def save_pem(contents, pem_marker):
     pem_lines.append('')
 
     return '\n'.join(pem_lines)
-    
+

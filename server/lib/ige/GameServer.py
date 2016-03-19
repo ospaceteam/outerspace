@@ -34,7 +34,7 @@ def rpc(f):
 class GameServer(object):
     """GameServer object manages one or more GameMngr object representing
     individual games"""
-    
+
     def __init__(self, configuration):
         self.loadConfigFile(configuration)
         # inititalization
@@ -47,7 +47,7 @@ class GameServer(object):
             config = self.config[section]
             log.message("INITIALIZING GAME", config.gameid)
             self.initializeGame(config)
-    
+
     def shutdown(self):
         """Shutdown whole game server"""
         for game in self.games:
@@ -57,7 +57,7 @@ class GameServer(object):
         del self.clientMngr
         self.issueMngr.shutdown()
         del self.issueMngr
-        
+
     def loadConfigFile(self, configuration):
         defaults = dict(
             cwd = os.path.abspath(os.getcwd()),
@@ -73,7 +73,7 @@ class GameServer(object):
         # client manager
         db = DatabaseString(self.config.server.dbdir, "accounts", cache = 100)
         self.clientMngr = ClientMngr(db, self.config.server.authmethod, self.config.server.datadir)
-        
+
     def initializeGame(self, config):
         """Initialize game according to configuration file fragment"""
         gameID = config.gameid

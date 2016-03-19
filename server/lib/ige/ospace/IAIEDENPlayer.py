@@ -31,102 +31,102 @@ from ai_parser import AIList
 
 class IAIEDENPlayer(IPlayer):
 
-	typeID = T_AIEDENPLAYER
+    typeID = T_AIEDENPLAYER
 
-	def init(self, obj):
-		IPlayer.init(self, obj)
-		#
-		obj.name = u'E.D.E.N.'
-		obj.login = '*'
+    def init(self, obj):
+        IPlayer.init(self, obj)
+        #
+        obj.name = u'E.D.E.N.'
+        obj.login = '*'
 
-	def register(self, tran, obj):
-		log.debug("Registering player", obj.oid)
-		counter = 1
-		while 1:
-			try:
-				obj.name = u'E.D.E.N. [%d]' % counter
-				obj.login = '*AIP*eden%d' % counter
-				password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
-				tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
-				tran.db[OID_UNIVERSE].players.append(obj.oid)
-				tran.gameMngr.clientMngr.createAiAccount(None, obj.login, password, obj.name)
-				break
-			except CreatePlayerException:
-				counter += 1
-		# after succesfull registration, register it to the AI system
-		aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
-		aiList.add(obj.login, password, 'ais_eden')
-		# grant techs and so on
-		self.cmd(obj).update(tran, obj)
+    def register(self, tran, obj):
+        log.debug("Registering player", obj.oid)
+        counter = 1
+        while 1:
+            try:
+                obj.name = u'E.D.E.N. [%d]' % counter
+                obj.login = '*AIP*eden%d' % counter
+                password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
+                tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
+                tran.db[OID_UNIVERSE].players.append(obj.oid)
+                tran.gameMngr.clientMngr.createAiAccount(None, obj.login, password, obj.name)
+                break
+            except CreatePlayerException:
+                counter += 1
+        # after succesfull registration, register it to the AI system
+        aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
+        aiList.add(obj.login, password, 'ais_eden')
+        # grant techs and so on
+        self.cmd(obj).update(tran, obj)
 
-	def update(self, tran, obj):
-		obj.techLevel = 3
-		obj.race = "e"
-		# grant technologies
-		obj.techs[Rules.Tech.LASCANNONTUR3] = Rules.techMaxImprovement
-		obj.techs[Rules.Tech.SSROCKET2] = Rules.techMaxImprovement
-		obj.techs[Rules.Tech.TORPEDO] = Rules.techMaxImprovement
-		# call super method
-		IPlayer.update(self, tran, obj)
-		#add TL99 techs
-		obj.techLevel = 99
-		obj.techs[Rules.Tech.EDENCANNON] = Rules.techMaxImprovement
-		obj.techs[Rules.Tech.EDENMISSILE] = Rules.techMaxImprovement
-		obj.techs[Rules.Tech.EDENTORP] = Rules.techMaxImprovement
-		obj.techs[Rules.Tech.EDENBOMB] = Rules.techMaxImprovement
-		obj.techs[Rules.Tech.EDENSTATION] = Rules.techMaxImprovement
+    def update(self, tran, obj):
+        obj.techLevel = 3
+        obj.race = "e"
+        # grant technologies
+        obj.techs[Rules.Tech.LASCANNONTUR3] = Rules.techMaxImprovement
+        obj.techs[Rules.Tech.SSROCKET2] = Rules.techMaxImprovement
+        obj.techs[Rules.Tech.TORPEDO] = Rules.techMaxImprovement
+        # call super method
+        IPlayer.update(self, tran, obj)
+        #add TL99 techs
+        obj.techLevel = 99
+        obj.techs[Rules.Tech.EDENCANNON] = Rules.techMaxImprovement
+        obj.techs[Rules.Tech.EDENMISSILE] = Rules.techMaxImprovement
+        obj.techs[Rules.Tech.EDENTORP] = Rules.techMaxImprovement
+        obj.techs[Rules.Tech.EDENBOMB] = Rules.techMaxImprovement
+        obj.techs[Rules.Tech.EDENSTATION] = Rules.techMaxImprovement
 
-	def processINITPhase(self, tran, obj, data):
-		IPlayer.processINITPhase(self, tran, obj, data)
-		obj.lastLogin = time.time()
-		# delete itself if there are no fleets and planets
-		# delete the account as well
-		# unregister it from the AI system
-		if not obj.fleets and not obj.planets:
-			self.cmd(obj).delete(tran, obj)
+    def processINITPhase(self, tran, obj, data):
+        IPlayer.processINITPhase(self, tran, obj, data)
+        obj.lastLogin = time.time()
+        # delete itself if there are no fleets and planets
+        # delete the account as well
+        # unregister it from the AI system
+        if not obj.fleets and not obj.planets:
+            self.cmd(obj).delete(tran, obj)
 
-	def getDiplomacyWith(self, tran, obj, playerID):
-		if obj.oid == playerID:
-			return REL_UNITY
-		player = tran.db.get(playerID, None)
-		if player.type in (T_AIPIRPLAYER, T_PIRPLAYER):
-			dipl = obj.diplomacyRels.get(playerID, None)
-			if not dipl:
-				# make default
-				dipl = IDataHolder()
-				dipl.type = T_DIPLREL
-				dipl.pacts = {
-						PACT_ALLOW_CIVILIAN_SHIPS: [PACT_ACTIVE, PACT_ALLOW_CIVILIAN_SHIPS],
-						PACT_ALLOW_MILITARY_SHIPS: [PACT_ACTIVE, PACT_ALLOW_MILITARY_SHIPS]
-				}
-				dipl.relation = REL_FRIENDLY
-				dipl.relChng = 0
-				dipl.lastContact = tran.db[OID_UNIVERSE].turn
-				dipl.contactType = CONTACT_NONE
-				dipl.stats = None
-				if playerID != obj.oid:
-					obj.diplomacyRels[playerID] = dipl
-				else:
-					log.debug("getDiplomacyWith myself", obj.oid)
-			return dipl
-		# this AI battles with overyone
-		# make default
-		dipl = IDataHolder()
-		dipl.type = T_DIPLREL
-		dipl.pacts = {}
-		dipl.relation = REL_ENEMY
-		dipl.relChng = 0
-		dipl.lastContact = tran.db[OID_UNIVERSE].turn
-		dipl.contactType = CONTACT_NONE
-		dipl.stats = None
-		return dipl
+    def getDiplomacyWith(self, tran, obj, playerID):
+        if obj.oid == playerID:
+            return REL_UNITY
+        player = tran.db.get(playerID, None)
+        if player.type in (T_AIPIRPLAYER, T_PIRPLAYER):
+            dipl = obj.diplomacyRels.get(playerID, None)
+            if not dipl:
+                # make default
+                dipl = IDataHolder()
+                dipl.type = T_DIPLREL
+                dipl.pacts = {
+                        PACT_ALLOW_CIVILIAN_SHIPS: [PACT_ACTIVE, PACT_ALLOW_CIVILIAN_SHIPS],
+                        PACT_ALLOW_MILITARY_SHIPS: [PACT_ACTIVE, PACT_ALLOW_MILITARY_SHIPS]
+                }
+                dipl.relation = REL_FRIENDLY
+                dipl.relChng = 0
+                dipl.lastContact = tran.db[OID_UNIVERSE].turn
+                dipl.contactType = CONTACT_NONE
+                dipl.stats = None
+                if playerID != obj.oid:
+                    obj.diplomacyRels[playerID] = dipl
+                else:
+                    log.debug("getDiplomacyWith myself", obj.oid)
+            return dipl
+        # this AI battles with overyone
+        # make default
+        dipl = IDataHolder()
+        dipl.type = T_DIPLREL
+        dipl.pacts = {}
+        dipl.relation = REL_ENEMY
+        dipl.relChng = 0
+        dipl.lastContact = tran.db[OID_UNIVERSE].turn
+        dipl.contactType = CONTACT_NONE
+        dipl.stats = None
+        return dipl
 
-	def isPactActive(self, tran, obj, partnerID, pactID):
-		if partnerID == OID_NONE:
-			return 0
-		partner = tran.db.get(partnerID, None)
-		if partner.type in (T_AIPIRPLAYER, T_PIRPLAYER):
-			# force the peace!
-			if pactID in (PACT_ALLOW_CIVILIAN_SHIPS, PACT_ALLOW_MILITARY_SHIPS):
-				return PACT_ACTIVE
-		return 0
+    def isPactActive(self, tran, obj, partnerID, pactID):
+        if partnerID == OID_NONE:
+            return 0
+        partner = tran.db.get(partnerID, None)
+        if partner.type in (T_AIPIRPLAYER, T_PIRPLAYER):
+            # force the peace!
+            if pactID in (PACT_ALLOW_CIVILIAN_SHIPS, PACT_ALLOW_MILITARY_SHIPS):
+                return PACT_ACTIVE
+        return 0

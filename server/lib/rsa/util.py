@@ -74,4 +74,4 @@ def private_to_public():
             cli.outform
         sys.stdout.write(out_data)
 
-    
+

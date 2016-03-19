@@ -31,7 +31,7 @@ def gcd(p, q):
         if p < q: (p,q) = (q,p)
         (p,q) = (q, p % q)
     return p
-    
+
 
 def jacobi(a, b):
     """Calculates the value of the Jacobi symbol (a/b) where both a and b are
@@ -76,7 +76,7 @@ def randomized_primality_testing(n, k):
     for _ in range(k):
         x = rsa.randnum.randint(n-1)
         if jacobi_witness(x, n): return False
-    
+
     return True
 
 def is_prime(number):
@@ -100,11 +100,11 @@ def getprime(nbits):
     True
     >>> is_prime(p+1)
     False
-    
+
     >>> from rsa import common
     >>> common.bit_size(p) <= 128
     True
-    
+
     """
 
     while True:
@@ -132,17 +132,17 @@ def are_relatively_prime(a, b):
 
     d = gcd(a, b)
     return (d == 1)
-    
+
 if __name__ == '__main__':
     print 'Running doctests 1000x or until failure'
     import doctest
-    
+
     for count in range(1000):
         (failures, tests) = doctest.testmod()
         if failures:
             break
-        
+
         if count and count % 100 == 0:
             print '%i times' % count
-    
+
     print 'Doctests done'

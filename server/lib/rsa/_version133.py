@@ -67,7 +67,7 @@ def bytes2int(bytes):
 
 def int2bytes(number):
     """Converts a number to a string of bytes
-    
+
     >>> bytes2int(int2bytes(123456789))
     123456789
     """
@@ -80,7 +80,7 @@ def int2bytes(number):
     while number > 0:
         string = "%s%s" % (chr(number & 0xFF), string)
         number /= 256
-    
+
     return string
 
 def fast_exponentiation(a, p, n):
@@ -108,7 +108,7 @@ def ceil(x):
     """ceil(x) -> int(math.ceil(x))"""
 
     return int(math.ceil(x))
-    
+
 def randint(minvalue, maxvalue):
     """Returns a random integer x with minvalue <= x <= maxvalue"""
 
@@ -124,10 +124,10 @@ def randint(minvalue, maxvalue):
 
     # Convert to bits, but make sure it's always at least min_nbits*2
     rangebits = max(rangebytes * 8, min_nbits * 2)
-    
+
     # Take a random number of bits between min_nbits and rangebits
     nbits = random.randint(min_nbits, rangebits)
-    
+
     return (read_random_int(nbits) % range) + minvalue
 
 def fermat_little_theorem(p):
@@ -181,7 +181,7 @@ def randomized_primality_testing(n, k):
     for i in range(t+1):
         x = randint(1, n-1)
         if jacobi_witness(x, n): return False
-    
+
     return True
 
 def is_prime(number):
@@ -202,11 +202,11 @@ def is_prime(number):
     if randomized_primality_testing(number, 5):
         # Prime, according to Jacobi
         return True
-    
+
     # Not prime
     return False
 
-    
+
 def getprime(nbits):
     """Returns a prime number of max. 'math.ceil(nbits/8)*8' bits. In
     other words: nbits is rounded up to whole bytes.
@@ -255,7 +255,7 @@ def find_p_q(nbits):
     while True:
         q = getprime(nbits)
         if not q == p: break
-    
+
     return (p, q)
 
 def extended_euclid_gcd(a, b):
@@ -319,7 +319,7 @@ def gen_pubpriv_keys(nbits):
     The public key consists of a dict {e: ..., , n: ....). The private
     key consists of a dict {d: ...., p: ...., q: ....).
     """
-    
+
     (p, q, e, d) = gen_keys(nbits)
 
     return ( {'e': e, 'n': p*q}, {'d': d, 'p': p, 'q': q} )
@@ -386,7 +386,7 @@ def chopstring(message, key, n, funcref):
         blocks += 1
 
     cypher = []
-    
+
     for bindex in range(blocks):
         offset = bindex * nbytes
         block = message[offset:offset+nbytes]
@@ -404,21 +404,21 @@ def gluechops(chops, key, n, funcref):
     message = ""
 
     chops = unpicklechops(chops)
-    
+
     for cpart in chops:
         mpart = funcref(cpart, key, n)
         message += int2bytes(mpart)
-    
+
     return message
 
 def encrypt(message, key):
     """Encrypts a string 'message' with the public key 'key'"""
-    
+
     return chopstring(message, key['e'], key['n'], encrypt_int)
 
 def sign(message, key):
     """Signs a string 'message' with the private key 'key'"""
-    
+
     return chopstring(message, key['d'], key['p']*key['q'], decrypt_int)
 
 def decrypt(cypher, key):

@@ -22,11 +22,11 @@ from Const import *
 
 class Transaction:
 
-	def __init__(self, gameMngr, cid = OID_NONE, session = None):
-		self.gameMngr = gameMngr
-		self.db = gameMngr.db
-		self.cid = cid
-		self.session = session
+    def __init__(self, gameMngr, cid = OID_NONE, session = None):
+        self.gameMngr = gameMngr
+        self.db = gameMngr.db
+        self.cid = cid
+        self.session = session
 
-	def commit(self):
-		self.db.commit()
+    def commit(self):
+        self.db.commit()

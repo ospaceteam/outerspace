@@ -28,49 +28,49 @@ import math, time
 
 class INature(IPlayer):
 
-	typeID = T_NATURE
+    typeID = T_NATURE
 
-	def init(self, obj):
-		IPlayer.init(self, obj)
-		#
-		obj.name = u'NATURE'
-		obj.login = '*NATURE*'
+    def init(self, obj):
+        IPlayer.init(self, obj)
+        #
+        obj.name = u'NATURE'
+        obj.login = '*NATURE*'
 
-	def processINITPhase(self, tran, obj, data):
-		IPlayer.processINITPhase(self, tran, obj, data)
-		obj.lastLogin = time.time()
-		log.debug("NATURE - asteroids", len(obj.fleets), obj.fleets)
+    def processINITPhase(self, tran, obj, data):
+        IPlayer.processINITPhase(self, tran, obj, data)
+        obj.lastLogin = time.time()
+        log.debug("NATURE - asteroids", len(obj.fleets), obj.fleets)
 
-	processINITPhase.public = 1
-	processINITPhase.accLevel = AL_ADMIN
+    processINITPhase.public = 1
+    processINITPhase.accLevel = AL_ADMIN
 
-	def processPRODPhase(self, tran, obj, data):
-		return None
+    def processPRODPhase(self, tran, obj, data):
+        return None
 
-	processPRODPhase.public = 1
-	processPRODPhase.accLevel = AL_ADMIN
+    processPRODPhase.public = 1
+    processPRODPhase.accLevel = AL_ADMIN
 
-	def processBATTLEPhase(self, tran, obj, data):
-		return None
+    def processBATTLEPhase(self, tran, obj, data):
+        return None
 
-	processBATTLEPhase.public = 1
-	processBATTLEPhase.accLevel = AL_ADMIN
+    processBATTLEPhase.public = 1
+    processBATTLEPhase.accLevel = AL_ADMIN
 
-	def getDiplomacyWith(self, tran, obj, playerID):
-		# this AI battles with overyone
-		# make default
-		dipl = IDataHolder()
-		dipl.type = T_DIPLREL
-		dipl.pacts = {}
-		if obj.oid == playerID:
-			dipl.relation = REL_UNITY
-		else:
-			dipl.relation = REL_ENEMY
-		dipl.relChng = 0
-		dipl.lastContact = tran.db[OID_UNIVERSE].turn
-		dipl.contactType = CONTACT_NONE
-		dipl.stats = None
-		return dipl
+    def getDiplomacyWith(self, tran, obj, playerID):
+        # this AI battles with overyone
+        # make default
+        dipl = IDataHolder()
+        dipl.type = T_DIPLREL
+        dipl.pacts = {}
+        if obj.oid == playerID:
+            dipl.relation = REL_UNITY
+        else:
+            dipl.relation = REL_ENEMY
+        dipl.relChng = 0
+        dipl.lastContact = tran.db[OID_UNIVERSE].turn
+        dipl.contactType = CONTACT_NONE
+        dipl.stats = None
+        return dipl
 
-	def isPactActive(self, tran, obj, partnerID, pactID):
-		return 0
+    def isPactActive(self, tran, obj, partnerID, pactID):
+        return 0

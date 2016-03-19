@@ -306,7 +306,7 @@ def finishProjectShiftPlUp(tran, source, target, tech):
 def OLDgetPirateFameMod(tran, player, system):
     mod = 1.0
     for planetID in system.planets:
-        planet = tran.db[planetID]        
+        planet = tran.db[planetID]
         if planet.owner == player.oid:
             # minimum reached, don't check rest
             return 0.0
@@ -315,31 +315,31 @@ def OLDgetPirateFameMod(tran, player, system):
     return mod
 
 def distToNearestPiratePlanet(tran,obj,srcObj):
-	# srcObj can be Planet or System type
-	dist = sys.maxint
-	for objID in obj.planets:
-		pirPl = tran.db[objID]
-		d = math.hypot(srcObj.x - pirPl.x, srcObj.y - pirPl.y)
-		if d < dist:
-			dist = d
-	return dist
+    # srcObj can be Planet or System type
+    dist = sys.maxint
+    for objID in obj.planets:
+        pirPl = tran.db[objID]
+        d = math.hypot(srcObj.x - pirPl.x, srcObj.y - pirPl.y)
+        if d < dist:
+            dist = d
+    return dist
 
 def getPirateFameMod(tran, player, system):
-	mod = 1.0
-	for planetID in system.planets:
-		planet = tran.db[planetID]        
-		if getattr(planet, 'owner', OID_NONE) == player.oid:
-			# minimum reached, don't check rest
-			return 0.0
-		elif getattr(planet, 'plStratRes', None) in (SR_TL3A, SR_TL3B, SR_TL3C):
-			mod = min(mod, Rules.pirateTL3StratResColonyCostMod)
-	dist = distToNearestPiratePlanet(tran, player, system)
-	if Rules.pirateGainFamePropability(dist) > 0:
-		mod = Rules.pirateColonyFameZoneCost(dist)
-	else:
-		mod = Rules.pirateColonyPlayerZoneCost(dist)
-	return mod
-    
+    mod = 1.0
+    for planetID in system.planets:
+        planet = tran.db[planetID]
+        if getattr(planet, 'owner', OID_NONE) == player.oid:
+            # minimum reached, don't check rest
+            return 0.0
+        elif getattr(planet, 'plStratRes', None) in (SR_TL3A, SR_TL3B, SR_TL3C):
+            mod = min(mod, Rules.pirateTL3StratResColonyCostMod)
+    dist = distToNearestPiratePlanet(tran, player, system)
+    if Rules.pirateGainFamePropability(dist) > 0:
+        mod = Rules.pirateColonyFameZoneCost(dist)
+    else:
+        mod = Rules.pirateColonyPlayerZoneCost(dist)
+    return mod
+
 def validateStructPIROUTPOST(tran, source, target, tech):
     player = tran.db[source.owner]
     if source.type == T_FLEET and target.owner != player.oid:

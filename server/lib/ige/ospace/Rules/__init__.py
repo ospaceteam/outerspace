@@ -51,64 +51,64 @@ envMax = 200
 envSelfUpgradeChance = {"H": 5, "C": 1, "B": 500, "m": 100, "r": 100, "p": 100, "e": 100} # in ten thousandths (10 000)
 planetSpec = {}
 planetSpec[u'A'] = makeIDataHolder(
-	minBio = 0,
-	maxBio = 0,
-	upgradeTo = None,
-	downgradeTo = None,
+    minBio = 0,
+    maxBio = 0,
+    upgradeTo = None,
+    downgradeTo = None,
 )
 planetSpec[u'G'] = makeIDataHolder(
-	minBio = 0,
-	maxBio = 0,
-	upgradeTo = None,
-	downgradeTo = None,
+    minBio = 0,
+    maxBio = 0,
+    upgradeTo = None,
+    downgradeTo = None,
 )
 planetSpec[u'C'] = makeIDataHolder(
-	minBio = 0,
-	maxBio = 6,
-	upgradeTo = u'D',
-	upgradeEnReqs = (5, 180),
-	downgradeTo = None,
+    minBio = 0,
+    maxBio = 6,
+    upgradeTo = u'D',
+    upgradeEnReqs = (5, 180),
+    downgradeTo = None,
 )
 planetSpec[u'R'] = makeIDataHolder(
-	minBio = 0,
-	maxBio = 6,
-	upgradeTo = u'D',
-	upgradeEnReqs = (5, 180),
-	downgradeTo = None,
+    minBio = 0,
+    maxBio = 6,
+    upgradeTo = u'D',
+    upgradeEnReqs = (5, 180),
+    downgradeTo = None,
 )
 planetSpec[u'D'] = makeIDataHolder(
-	minBio = 6,
-	maxBio = 12,
-	upgradeTo = u'H',
-	upgradeEnReqs = (25, 150),
-	downgradeTo = u'R',
+    minBio = 6,
+    maxBio = 12,
+    upgradeTo = u'H',
+    upgradeEnReqs = (25, 150),
+    downgradeTo = u'R',
 )
 planetSpec[u'H'] = makeIDataHolder(
-	minBio = 12,
-	maxBio = 25,
-	upgradeTo = u'M',
-	upgradeEnReqs = (50, 125),
-	downgradeTo = u'D',
+    minBio = 12,
+    maxBio = 25,
+    upgradeTo = u'M',
+    upgradeEnReqs = (50, 125),
+    downgradeTo = u'D',
 )
 planetSpec[u'M'] = makeIDataHolder(
-	minBio = 25,
-	maxBio = 75,
-	upgradeTo = u'E',
-	upgradeEnReqs = (50, 100),
-	downgradeTo = u'H',
+    minBio = 25,
+    maxBio = 75,
+    upgradeTo = u'E',
+    upgradeEnReqs = (50, 100),
+    downgradeTo = u'H',
 )
 planetSpec[u'E'] = makeIDataHolder(
-	minBio = 75,
-	maxBio = 125,
-	upgradeTo = u"I",
-	upgradeEnReqs = (50, 100),
-	downgradeTo = u'M',
+    minBio = 75,
+    maxBio = 125,
+    upgradeTo = u"I",
+    upgradeEnReqs = (50, 100),
+    downgradeTo = u'M',
 )
 planetSpec[u"I"] = makeIDataHolder( # gaia
-	minBio = 125,
-	maxBio = 200,
-	upgradeTo = None,
-	downgradeTo = u"E",
+    minBio = 125,
+    maxBio = 200,
+    upgradeTo = None,
+    downgradeTo = u"E",
 )
 
 ## New colony settings
@@ -179,12 +179,12 @@ shipDecayRatio = 0.04
 maxDamageAbsorb = 5 # max absorbed damage for tech "damageAbsorb" property.
 # max seq_mod equipments of equipType; anything not in list is unlimited
 maxEquipType = {
-	'ECM' : 1, # +Missile DEF
-        'Combat Bonuses' : 1, # +%ATT, +%DEF
-        'Combat Modifiers' : 1, # +ATT, +DEF
-        'Shields' : 1, # not hardshields
-        'Stealth' : 1,
-        'Auto Repair' : 1,
+    'ECM' : 1, # +Missile DEF
+    'Combat Bonuses' : 1, # +%ATT, +%DEF
+    'Combat Modifiers' : 1, # +ATT, +DEF
+    'Shields' : 1, # not hardshields
+    'Stealth' : 1,
+    'Auto Repair' : 1,
 }
 
 ## Buildings
@@ -205,48 +205,48 @@ ratioNeededForImp = 0.6666
 
 pactDescrs = {}
 pactDescrs[PACT_ALLOW_CIVILIAN_SHIPS] = makeIDataHolder(
-	targetRel = 500,
-	relChng = 10,
-	validityInterval = (0, 10000),
+    targetRel = 500,
+    relChng = 10,
+    validityInterval = (0, 10000),
 )
 pactDescrs[PACT_ALLOW_MILITARY_SHIPS] = makeIDataHolder(
-	targetRel = 750,
-	relChng = 8,
-	validityInterval = (0, 10000),
+    targetRel = 750,
+    relChng = 8,
+    validityInterval = (0, 10000),
 )
 pactDescrs[PACT_ALLOW_TANKING] = makeIDataHolder(
-	targetRel = 750,
-	relChng = 7,
-	validityInterval = (0, 10000),
+    targetRel = 750,
+    relChng = 7,
+    validityInterval = (0, 10000),
 )
 pactDescrs[PACT_MINOR_CP_COOP] = makeIDataHolder(
-	targetRel = 1000,
-	relChng = 6,
-	effectivity = 0.05,
-	validityInterval = (625, 10000),
+    targetRel = 1000,
+    relChng = 6,
+    effectivity = 0.05,
+    validityInterval = (625, 10000),
 )
 pactDescrs[PACT_MAJOR_CP_COOP] = makeIDataHolder(
-	targetRel = 1000,
-	relChng = 1,
-	effectivity = 0.05,
-	validityInterval = (875, 10000),
+    targetRel = 1000,
+    relChng = 1,
+    effectivity = 0.05,
+    validityInterval = (875, 10000),
 )
 pactDescrs[PACT_SHARE_SCANNER] = makeIDataHolder(
-	targetRel = 1000,
-	relChng = 1,
-	validityInterval = (625, 10000),
+    targetRel = 1000,
+    relChng = 1,
+    validityInterval = (625, 10000),
 )
 pactDescrs[PACT_MINOR_SCI_COOP] = makeIDataHolder(
-	targetRel = 750,
-	relChng = 1,
-	effectivity = 0.05,
-	validityInterval = (625, 10000),
+    targetRel = 750,
+    relChng = 1,
+    effectivity = 0.05,
+    validityInterval = (625, 10000),
 )
 pactDescrs[PACT_MAJOR_SCI_COOP] = makeIDataHolder(
-	targetRel = 1000,
-	relChng = 1,
-	effectivity = 0.05,
-	validityInterval = (875, 10000),
+    targetRel = 1000,
+    relChng = 1,
+    effectivity = 0.05,
+    validityInterval = (875, 10000),
 )
 
 ## Morale
@@ -299,7 +299,7 @@ shipImprovementMod = 1.05
 shipMaxImprovements = 5
 shipMaxDesigns = 40
 shipExpToLevel = {0:1, 1:2, 2:2, 3:3, 4:3, 5:3, 6:3, 7:4, 8:4, 9:4, 10:4, 11:4,
-	12:4, 13:4, 15:5}
+    12:4, 13:4, 15:5}
 shipDefLevel = 5
 shipLevelEff = {1:0.50, 2:0.75, 3:1.00, 4:1.25, 5:1.50}
 shipBaseExpMod = 20
@@ -317,32 +317,32 @@ emrMaxDuration = 60
 emrPeriod = 576
 emrSeasons = [None, None, None, None]
 emrSeasons[0] = makeIDataHolder(
-	name = "spring",
-	startTime = 0,
-	endTime = 143,
-	emrLevelMin = 0.75,
-	emrLevelMax = 1.25,
+    name = "spring",
+    startTime = 0,
+    endTime = 143,
+    emrLevelMin = 0.75,
+    emrLevelMax = 1.25,
 )
 emrSeasons[1] = makeIDataHolder(
-	name = "summer",
-	startTime = 144,
-	endTime = 287,
-	emrLevelMin = 0.50,
-	emrLevelMax = 1.00,
+    name = "summer",
+    startTime = 144,
+    endTime = 287,
+    emrLevelMin = 0.50,
+    emrLevelMax = 1.00,
 )
 emrSeasons[2] = makeIDataHolder(
-	name = "fall",
-	startTime = 287,
-	endTime = 431,
-	emrLevelMin = 0.50,
-	emrLevelMax = 1.50,
+    name = "fall",
+    startTime = 287,
+    endTime = 431,
+    emrLevelMin = 0.50,
+    emrLevelMax = 1.50,
 )
 emrSeasons[3] = makeIDataHolder(
-	name = "winter",
-	startTime = 432,
-	endTime = 575,
-	emrLevelMin = 1.00,
-	emrLevelMax = 1.50,
+    name = "winter",
+    startTime = 432,
+    endTime = 575,
+    emrLevelMin = 1.00,
+    emrLevelMax = 1.50,
 )
 
 ## Pirates
@@ -367,12 +367,12 @@ pirateGrantHSE = 60*24*3600     #60 days; AI only
 pirateGrantASSEM = 105*24*3600  #105 days; AI only
 pirateGrantCOND = 105*24*3600   #105 days; AI only
 ##   Timed events (not implemented)
-pirateTimerMod = 3*24*3600               # +/- up to 3 days for each grant
-pirateTimerRum = 20*24*3600              #20 days; grant Brewery, Rum strategic resource, and Drunken Factory (110% Pirate Prison; requires Rum)
+pirateTimerMod = 3*24*3600           # +/- up to 3 days for each grant
+pirateTimerRum = 20*24*3600          #20 days; grant Brewery, Rum strategic resource, and Drunken Factory (110% Pirate Prison; requires Rum)
 pirateTimerEnslavement = 60*24*3600      #60 days; grant Prison
 pirateTimerEDENStructure = 120*24*3600   #120 days; grant EDEN Factory (you have discovered a prototype factory...; 135% Pirate Prison; requires Rum)
-pirateTimerBerserk = 150*24*3600          #150 days; grant "Berserk" ship module (major defense penalty; major ATT bonus; requires Rum)
-pirateTimerSlaveMine = 180*24*3600        #180 days; grant Slave Mine (mining facility with hamster wheel for power; 160% Pirate Prison; requires Rum)
+pirateTimerBerserk = 150*24*3600      #150 days; grant "Berserk" ship module (major defense penalty; major ATT bonus; requires Rum)
+pirateTimerSlaveMine = 180*24*3600    #180 days; grant Slave Mine (mining facility with hamster wheel for power; 160% Pirate Prison; requires Rum)
 
 
 ## Bonuses

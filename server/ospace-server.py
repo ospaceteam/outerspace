@@ -51,7 +51,7 @@ parser.add_option("", "--restore", dest="restore",
 )
 parser.add_option("", "--reset", dest="reset",
     action="store_true", default=False,
-    help="Sets server to reset itself" 
+    help="Sets server to reset itself"
 )
 parser.add_option("", "--upgrade", dest="upgrade",
     action="store_true", default=False,

@@ -96,7 +96,7 @@ def write_varint(outfile, value):
 
 def yield_varblocks(infile):
     '''Generator, yields each block in the input file.
-    
+
     @param infile: file to read, is expected to have the VARBLOCK format as
         described in the module's docstring.
     @yields the contents of each block.

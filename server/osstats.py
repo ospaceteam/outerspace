@@ -10,9 +10,9 @@ from ige.MetakitDatabase import MetakitDatabase, MetakitDatabaseString
 
 # parse command line arguments
 parser = OptionParser(usage = "usage: %prog [--configdir=]")
-parser.add_option("",  "--configdir", dest = "configDir", 
-    metavar = "DIRECTORY", default = "var", 
-    help = "Override default configuration directory", 
+parser.add_option("",  "--configdir", dest = "configDir",
+    metavar = "DIRECTORY", default = "var",
+    help = "Override default configuration directory",
 )
 options, args = parser.parse_args()
 
