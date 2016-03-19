@@ -24,78 +24,78 @@ from Widget import Widget, registerWidget
 
 class ScrollSlider(Widget):
 
-	def __init__(self, parent, **kwargs):
-		Widget.__init__(self, parent)
-		# data
-		self.action = None
-		self.min = 0.0
-		self.max = 100.0
-		self.position = 0.0
-		self.shown = 10
-		self.dragging = 0
-		self._handler = None
-		# flags
-		self.processKWArguments(kwargs)
-		parent.registerWidget(self)
+    def __init__(self, parent, **kwargs):
+        Widget.__init__(self, parent)
+        # data
+        self.action = None
+        self.min = 0.0
+        self.max = 100.0
+        self.position = 0.0
+        self.shown = 10
+        self.dragging = 0
+        self._handler = None
+        # flags
+        self.processKWArguments(kwargs)
+        parent.registerWidget(self)
 
-	def draw(self, surface):
-		self._handler = self.theme.drawScrollSlider(surface, self)
-		return self.rect
+    def draw(self, surface):
+        self._handler = self.theme.drawScrollSlider(surface, self)
+        return self.rect
 
-	def processMB1Down(self, evt):
-		if self._handler and self._handler.collidepoint(evt.pos):
-			self.dragging = 1
-		return NoEvent
+    def processMB1Down(self, evt):
+        if self._handler and self._handler.collidepoint(evt.pos):
+            self.dragging = 1
+        return NoEvent
 
-	def processMB1Up(self, evt):
-		self.dragging = 0
-		return NoEvent
+    def processMB1Up(self, evt):
+        self.dragging = 0
+        return NoEvent
 
-	def processMB1UpMissed(self, evt):
-		self.dragging = 0
-		return NoEvent
+    def processMB1UpMissed(self, evt):
+        self.dragging = 0
+        return NoEvent
 
-	def processMMotion(self, evt):
-		if self.dragging and evt.buttons[0] == 1:
-			if self.rect.width > self.rect.height:
-				ratio = float(self.max - self.min) / (self.rect.width - self._handler.width)
-				self.position += evt.rel[0] * ratio
-			else:
-				ratio = float(self.max - self.min) / (self.rect.height - self._handler.height)
-				self.position += evt.rel[1] * ratio
-		elif self.dragging:
-			self.dragging = 0
+    def processMMotion(self, evt):
+        if self.dragging and evt.buttons[0] == 1:
+            if self.rect.width > self.rect.height:
+                ratio = float(self.max - self.min) / (self.rect.width - self._handler.width)
+                self.position += evt.rel[0] * ratio
+            else:
+                ratio = float(self.max - self.min) / (self.rect.height - self._handler.height)
+                self.position += evt.rel[1] * ratio
+        elif self.dragging:
+            self.dragging = 0
 
-		if self.position < self.min:
-			self.position = self.min
-		if self.position + self.shown > self.max:
-			self.position = self.max - self.shown
-		# if shown is greater then max, then position is negative
-		if self.position < self.min:
-			self.position = self.min
+        if self.position < self.min:
+            self.position = self.min
+        if self.position + self.shown > self.max:
+            self.position = self.max - self.shown
+        # if shown is greater then max, then position is negative
+        if self.position < self.min:
+            self.position = self.min
 
-		if self.dragging and evt.buttons[0] == 1:
-			self.processAction(self.action)
+        if self.dragging and evt.buttons[0] == 1:
+            self.processAction(self.action)
 
-		return NoEvent
+        return NoEvent
 
-	def processMWUp(self, evt):
-		self.position -= 3
-		if self.position < self.min:
-			self.position = self.min
+    def processMWUp(self, evt):
+        self.position -= 3
+        if self.position < self.min:
+            self.position = self.min
 
-		self.processAction(self.action)
-		return NoEvent
+        self.processAction(self.action)
+        return NoEvent
 
-	def processMWDown(self, evt):
-		self.position += 3
-		if self.position + self.shown > self.max:
-			self.position = self.max - self.shown
-		# if shown is greater then max, then position is negative
-		if self.position < self.min:
-			self.position = self.min
+    def processMWDown(self, evt):
+        self.position += 3
+        if self.position + self.shown > self.max:
+            self.position = self.max - self.shown
+        # if shown is greater then max, then position is negative
+        if self.position < self.min:
+            self.position = self.min
 
-		self.processAction(self.action)
-		return NoEvent
+        self.processAction(self.action)
+        return NoEvent
 
 registerWidget(ScrollSlider, 'scrollslider')

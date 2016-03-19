@@ -25,14 +25,14 @@ from Button import Button
 
 class TitleButton(Button):
 
-	def __init__(self, parent, **kwargs):
-		Button.__init__(self, parent)
-		# data
-		# flags
-		self.processKWArguments(kwargs)
-		parent.registerWidget(self)
+    def __init__(self, parent, **kwargs):
+        Button.__init__(self, parent)
+        # data
+        # flags
+        self.processKWArguments(kwargs)
+        parent.registerWidget(self)
 
-	def draw(self, surface):
-		self.theme.drawTitleButton(surface, self)
+    def draw(self, surface):
+        self.theme.drawTitleButton(surface, self)
 
 registerWidget(TitleButton, 'titlebutton')

@@ -25,11 +25,11 @@ from Button import Button
 
 class ActiveLabel(Button):
 
-	def draw(self, surface):
-		if self.mouseOver:
-			self.theme.drawLabel(surface, self, 1)
-		else:
-			self.theme.drawLabel(surface, self, 0)
-		return self.rect
+    def draw(self, surface):
+        if self.mouseOver:
+            self.theme.drawLabel(surface, self, 1)
+        else:
+            self.theme.drawLabel(surface, self, 0)
+        return self.rect
 
 registerWidget(ActiveLabel, 'activelabel')

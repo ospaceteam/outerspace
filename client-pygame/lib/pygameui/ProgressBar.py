@@ -24,18 +24,18 @@ from Widget import Widget, registerWidget
 
 class ProgressBar(Widget):
 
-	def __init__(self, parent, **kwargs):
-		Widget.__init__(self, parent)
-		# data
-		self.min = 0
-		self.max = 100
-		self.value = 0
-		# flags
-		self.processKWArguments(kwargs)
-		parent.registerWidget(self)
+    def __init__(self, parent, **kwargs):
+        Widget.__init__(self, parent)
+        # data
+        self.min = 0
+        self.max = 100
+        self.value = 0
+        # flags
+        self.processKWArguments(kwargs)
+        parent.registerWidget(self)
 
-	def draw(self, surface):
-		self.theme.drawProgressBar(surface, self)
-		return self.rect
+    def draw(self, surface):
+        self.theme.drawProgressBar(surface, self)
+        return self.rect
 
 registerWidget(ProgressBar, 'progressbar')

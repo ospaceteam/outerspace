@@ -19,5 +19,5 @@
 #
 
 class ResourceException(Exception):
-	pass
+    pass
 

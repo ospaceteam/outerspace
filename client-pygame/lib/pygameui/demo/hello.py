@@ -37,51 +37,51 @@ pygame.display.update()
 import pygameui as ui
 
 def actionHandler(widget, action, data):
-	if action == 'action1':
-		win.idButton.text = 'Thank you'
-		win.idButton.tooltip = 'Press ESC to quit.'
-		win.idButton.action = 'action2'
-	else:
-		win.idButton.text = 'Oh, thank you'
-		win.idButton.tooltip = 'Press ESC to quit.'
-		win.idButton.action = 'action1'
+    if action == 'action1':
+        win.idButton.text = 'Thank you'
+        win.idButton.tooltip = 'Press ESC to quit.'
+        win.idButton.action = 'action2'
+    else:
+        win.idButton.text = 'Oh, thank you'
+        win.idButton.tooltip = 'Press ESC to quit.'
+        win.idButton.action = 'action1'
 
 ui.SkinableTheme.setSkin("../OSSkin")
 app = ui.Application()
 
 win = ui.Window(app,
-	title = 'Hello',
-	rect = Rect(0, 0, 170, 120),
-	layoutManager = ui.SimpleGridLM(),
-	rightButtonClose = 1
+    title = 'Hello',
+    rect = Rect(0, 0, 170, 120),
+    layoutManager = ui.SimpleGridLM(),
+    rightButtonClose = 1
 )
 ui.Button(win,
-		id = 'idButton',
-		text = 'Press Me',
-		layout = (1, 1, 6, 1),
-		tooltip = 'This is tooltip.',
-		action = 'action1'
-	)
+        id = 'idButton',
+        text = 'Press Me',
+        layout = (1, 1, 6, 1),
+        tooltip = 'This is tooltip.',
+        action = 'action1'
+    )
 ui.Label(win,
-	text = 'Press ESC to quit.',
-	layout = (1, 3, 6, 1),
+    text = 'Press ESC to quit.',
+    layout = (1, 3, 6, 1),
 )
 win.subscribeAction('*', actionHandler)
 win.show()
 
 # event loop
 while 1:
-	evt = pygame.event.wait()
+    evt = pygame.event.wait()
 
-	evt = app.processEvent(evt)
+    evt = app.processEvent(evt)
 
-	if evt.type == QUIT:
-		break
-	if evt.type == KEYUP and evt.key == K_ESCAPE:
-		break
-	if app.needsUpdate():
-		screen.fill((0, 0, 0))
-		rects = app.draw(screen)
-		print "UPDATE", rects
-		#pygame.display.update()
-		pygame.display.update(rects)
+    if evt.type == QUIT:
+        break
+    if evt.type == KEYUP and evt.key == K_ESCAPE:
+        break
+    if app.needsUpdate():
+        screen.fill((0, 0, 0))
+        rects = app.draw(screen)
+        print "UPDATE", rects
+        #pygame.display.update()
+        pygame.display.update(rects)

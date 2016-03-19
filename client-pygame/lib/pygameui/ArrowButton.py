@@ -25,19 +25,19 @@ from Button import Button
 
 class ArrowButton(Button):
 
-	def __init__(self, parent, **kwargs):
-		Button.__init__(self, parent)
-		# data
-		self.direction = ALIGN_N
-		# del
-		del self.text
-		del self.icons
-		# flags
-		self.processKWArguments(kwargs)
-		parent.registerWidget(self)
+    def __init__(self, parent, **kwargs):
+        Button.__init__(self, parent)
+        # data
+        self.direction = ALIGN_N
+        # del
+        del self.text
+        del self.icons
+        # flags
+        self.processKWArguments(kwargs)
+        parent.registerWidget(self)
 
-	def draw(self, surface):
-		self.theme.drawArrowButton(surface, self)
-		return self.rect
+    def draw(self, surface):
+        self.theme.drawArrowButton(surface, self)
+        return self.rect
 
 registerWidget(ArrowButton, 'arrowbutton')

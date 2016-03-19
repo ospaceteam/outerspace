@@ -24,14 +24,14 @@ from Widget import Widget, registerWidget
 
 class Tooltip(Widget):
 
-	def __init__(self, parent, **kwargs):
-		Widget.__init__(self, parent)
-		# data
-		self.text = None
-		self.icon = None
-		self.icons = []
-		# flags
-		self.processKWArguments(kwargs)
+    def __init__(self, parent, **kwargs):
+        Widget.__init__(self, parent)
+        # data
+        self.text = None
+        self.icon = None
+        self.icons = []
+        # flags
+        self.processKWArguments(kwargs)
 
-	def drawWidget(self, surface):
-		self.theme.drawTooltip(surface, self)
+    def drawWidget(self, surface):
+        self.theme.drawTooltip(surface, self)

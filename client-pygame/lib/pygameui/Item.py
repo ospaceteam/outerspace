@@ -22,32 +22,32 @@ from types import StringType, UnicodeType
 
 class Item:
 
-	def __init__(self, text, **kwargs):
-		self.text = text
-		self.align = 0
-		self.selected = 0
-		self.icons = []
-		self.font = None
-		self.children = []
-		self.expanded = 0
-		self.tooltip = None
-		self.statustip = None
-		self.hotkey = None
-		self.hotkeymod = None
-		self.foreground = None
-		self.background = None
-		self.index = None
-		self.enabled = 1
-		for key, value in kwargs.items():
-			setattr(self, key, value)
+    def __init__(self, text, **kwargs):
+        self.text = text
+        self.align = 0
+        self.selected = 0
+        self.icons = []
+        self.font = None
+        self.children = []
+        self.expanded = 0
+        self.tooltip = None
+        self.statustip = None
+        self.hotkey = None
+        self.hotkeymod = None
+        self.foreground = None
+        self.background = None
+        self.index = None
+        self.enabled = 1
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
-	def getAsString(self, key):
-		if hasattr(self, key):
-			value = getattr(self, key)
-			valType = type(value)
-			if valType == StringType or valType == UnicodeType:
-				return value
-			else:
-				return str(value)
-		else:
-			raise AttributeError(key)
+    def getAsString(self, key):
+        if hasattr(self, key):
+            value = getattr(self, key)
+            valType = type(value)
+            if valType == StringType or valType == UnicodeType:
+                return value
+            else:
+                return str(value)
+        else:
+            raise AttributeError(key)

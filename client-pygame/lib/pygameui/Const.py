@@ -24,11 +24,11 @@ import pygame.locals
 
 TIMEREVENT = pygame.locals.USEREVENT
 if TIMEREVENT >= pygame.locals.NUMEVENTS:
-	raise 'Cannot create TIMEREVENT.'
+    raise 'Cannot create TIMEREVENT.'
 
 USEREVENT = TIMEREVENT + 1
 if USEREVENT >= pygame.locals.NUMEVENTS:
-	raise 'Cannot create USEREVENT.'
+    raise 'Cannot create USEREVENT.'
 
 NoEvent = pygame.event.Event(pygame.locals.NOEVENT)
 
@@ -49,7 +49,7 @@ F_EDITABLE = 0x10
 
 # Special value
 class NoValue:
-	pass
+    pass
 
 # Class of Rect
 RectType = type(pygame.locals.Rect(0, 0, 0, 0))

@@ -3,6 +3,7 @@
 
 [2016-03-19]
 - whitespace pep8-ization of server [dahaic]
+- whitespace pep8-ization of pygameui [dahaic]
 
 [2016-03-17]
 - whitespace pep8-ization of client-ai [dahaic]

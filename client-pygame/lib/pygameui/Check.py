@@ -24,62 +24,62 @@ from Widget import Widget, registerWidget
 
 class Check(Widget):
 
-	def __init__(self, parent, **kwargs):
-		Widget.__init__(self, parent)
-		# data
-		self.__dict__['text'] = None
-		self.__dict__['icons'] = []
-		# flags
-		self.__dict__['action'] = None
-		self.__dict__['rmbAction'] = None
-		self.__dict__['checked'] = 0
-		self.__dict__['_processingMB1'] = 0
-		self.__dict__['_processingMB3'] = 0
-		self.align = ALIGN_W
-		self.processKWArguments(kwargs)
-		parent.registerWidget(self)
+    def __init__(self, parent, **kwargs):
+        Widget.__init__(self, parent)
+        # data
+        self.__dict__['text'] = None
+        self.__dict__['icons'] = []
+        # flags
+        self.__dict__['action'] = None
+        self.__dict__['rmbAction'] = None
+        self.__dict__['checked'] = 0
+        self.__dict__['_processingMB1'] = 0
+        self.__dict__['_processingMB3'] = 0
+        self.align = ALIGN_W
+        self.processKWArguments(kwargs)
+        parent.registerWidget(self)
 
-	def draw(self, surface):
-		self.theme.drawCheck(surface, self)
-		return self.rect
+    def draw(self, surface):
+        self.theme.drawCheck(surface, self)
+        return self.rect
 
-	def processMB1Down(self, evt):
-		self.checked = not self.checked
-		self._processingMB1 = 1
-		return NoEvent
+    def processMB1Down(self, evt):
+        self.checked = not self.checked
+        self._processingMB1 = 1
+        return NoEvent
 
-	def processMB1Up(self, evt):
-		self.processAction(self.action)
-		self._processingMB1 = 0
-		return NoEvent
+    def processMB1Up(self, evt):
+        self.processAction(self.action)
+        self._processingMB1 = 0
+        return NoEvent
 
-	def processMB1UpMissed(self, evt):
-		self._processingMB1 = 0
-		return Widget.processMB1UpMissed(self, evt)
+    def processMB1UpMissed(self, evt):
+        self._processingMB1 = 0
+        return Widget.processMB1UpMissed(self, evt)
 
-	def onMouseOut(self):
-		if self._processingMB1:
-			self.checked = not self.checked
-		return Widget.onMouseOut(self)
+    def onMouseOut(self):
+        if self._processingMB1:
+            self.checked = not self.checked
+        return Widget.onMouseOut(self)
 
-	def onMouseOver(self):
-		if self._processingMB1:
-			self.checked = not self.checked
-		return Widget.onMouseOver(self)
+    def onMouseOver(self):
+        if self._processingMB1:
+            self.checked = not self.checked
+        return Widget.onMouseOver(self)
 
-	def onFocusLost(self):
-		self._processingMB1 = 0
-		self._processingMB3 = 0
-		return Widget.onFocusLost(self)
+    def onFocusLost(self):
+        self._processingMB1 = 0
+        self._processingMB3 = 0
+        return Widget.onFocusLost(self)
 
-	def processMB3Down(self, evt):
-		self._processingMB3 = 1
-		return NoEvent
+    def processMB3Down(self, evt):
+        self._processingMB3 = 1
+        return NoEvent
 
-	def processMB3Up(self, evt):
-		if self._processingMB3:
-			self.processAction(self.rmbAction)
-		self._processingMB3 = 0
-		return NoEvent
+    def processMB3Up(self, evt):
+        if self._processingMB3:
+            self.processAction(self.rmbAction)
+        self._processingMB3 = 0
+        return NoEvent
 
 registerWidget(Check, 'check')

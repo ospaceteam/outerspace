@@ -24,17 +24,17 @@ from Widget import Widget, registerWidget
 
 class Title(Widget):
 
-	def __init__(self, parent, **kwargs):
-		Widget.__init__(self, parent)
-		# data
-		self.text = None
-		self.icons = []
-		# flags
-		self.processKWArguments(kwargs)
-		parent.registerWidget(self)
+    def __init__(self, parent, **kwargs):
+        Widget.__init__(self, parent)
+        # data
+        self.text = None
+        self.icons = []
+        # flags
+        self.processKWArguments(kwargs)
+        parent.registerWidget(self)
 
-	def draw(self, surface):
-		self.theme.drawTitle(surface, self)
-		return self.rect
+    def draw(self, surface):
+        self.theme.drawTitle(surface, self)
+        return self.rect
 
 registerWidget(Title, 'title')

@@ -82,7 +82,7 @@ def getIdxFromColumn(words, cursorColumn):
     i and i + 1, (i, i + 1) is returned.
     """
     if len(words) == 0 or cursorColumn < 0:
-    	return (-1, -1)
+        return (-1, -1)
 
     #cursor is before first word
     if words[0][1] >= cursorColumn:
