@@ -1,6 +1,10 @@
 ﻿Outer Space Change Log
 ======================
 
+[2016-03-21]
+- smoke test rewritten to python [dahaic]
+- updated game to be runnable from arbitrary CWD [dahaic]
+
 [2016-03-20]
 - whitespace pep8-ization of client-pygame [dahaic]
 

@@ -200,7 +200,8 @@ def runServer(options):
     # to be painless
     if not os.path.exists(os.path.join(options.configDir, 'website')):
         log.debug("Populating website directory")
-        shutil.copytree(os.path.join('server', 'website'), os.path.join(options.configDir, 'website'))
+        actual_dir = os.path.dirname(os.path.realpath(__file__))
+        shutil.copytree(os.path.join(actual_dir, 'website'), os.path.join(options.configDir, 'website'))
     # normal operations
     game.init()
 

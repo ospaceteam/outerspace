@@ -26,12 +26,13 @@ import os, os.path
 import sys
 import time
 
+relative_path = os.path.dirname(os.path.realpath(__file__))
 # tweak PYTHONPATH
-sys.path.insert(0, os.path.join("client-pygame","lib"))
-sys.path.insert(0, "client-pygame")
-sys.path.insert(0, "server")
-sys.path.insert(0, "client-ai")
-sys.path.insert(0, os.path.join("server","lib"))
+sys.path.insert(0, os.path.join(relative_path, "client-pygame","lib"))
+sys.path.insert(0, os.path.join(relative_path, "client-pygame"))
+sys.path.insert(0, os.path.join(relative_path, "server"))
+sys.path.insert(0, os.path.join(relative_path, "client-ai"))
+sys.path.insert(0, os.path.join(relative_path, "server","lib"))
 
 
 # parse command line parameters
