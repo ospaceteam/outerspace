@@ -25,62 +25,62 @@ from OptionsDlg import OptionsDlg
 
 class MainMenuDlg:
 
-	def __init__(self, app):
-		self.app = app
-		self.createUI()
+    def __init__(self, app):
+        self.app = app
+        self.createUI()
 
-	def display(self):
-		self.win.show()
+    def display(self):
+        self.win.show()
 
-	def hide(self):
-		self.win.hide()
+    def hide(self):
+        self.win.hide()
 
-	def onLogin(self, widget, action, data):
-		self.hide()
-		dlg = LoginDlg(self.app).display(self)
+    def onLogin(self, widget, action, data):
+        self.hide()
+        dlg = LoginDlg(self.app).display(self)
 
-	def onCreateAccount(self, widget, action, data):
-		self.hide()
-		dlg = CreateAccountDlg(self.app).display(self)
+    def onCreateAccount(self, widget, action, data):
+        self.hide()
+        dlg = CreateAccountDlg(self.app).display(self)
 
-	def onOptions(self, widget, action, data):
-		self.hide()
-		dlg = OptionsDlg(self.app).display(self)
+    def onOptions(self, widget, action, data):
+        self.hide()
+        dlg = OptionsDlg(self.app).display(self)
 
-	def onQuit(self, widget, action, data):
-		self.hide()
-		self.app.exit()
+    def onQuit(self, widget, action, data):
+        self.hide()
+        self.app.exit()
 
-	def createUI(self):
-		self.win = ui.Window(self.app,
-			modal = 1,
-			movable = 0,
-			rect = ui.Rect(300, 200, 206, 230),
-			layoutManager = ui.SimpleGridLM(),
-		)
-		self.win.subscribeAction('*', self)
-		ui.Label(self.win,
-			font = 'large-bold',
-			layout = (1, 1, 8, 1),
-			text = 'Main Menu',
-		)
-		ui.Button(self.win,
-			layout = (1, 3, 8, 1),
-			text = 'Login',
-			action = 'onLogin',
-		)
-		ui.Button(self.win,
-			layout = (1, 5, 8, 1),
-			text = 'Create Account',
-			action = 'onCreateAccount'
-		)
-		ui.Button(self.win,
-			layout = (1, 7, 8, 1),
-			text = 'Options',
-			action = 'onOptions',
-		)
-		ui.Button(self.win,
-			layout = (1, 9, 8, 1),
-			text = 'Quit',
-			action = 'onQuit',
-		)
+    def createUI(self):
+        self.win = ui.Window(self.app,
+            modal = 1,
+            movable = 0,
+            rect = ui.Rect(300, 200, 206, 230),
+            layoutManager = ui.SimpleGridLM(),
+        )
+        self.win.subscribeAction('*', self)
+        ui.Label(self.win,
+            font = 'large-bold',
+            layout = (1, 1, 8, 1),
+            text = 'Main Menu',
+        )
+        ui.Button(self.win,
+            layout = (1, 3, 8, 1),
+            text = 'Login',
+            action = 'onLogin',
+        )
+        ui.Button(self.win,
+            layout = (1, 5, 8, 1),
+            text = 'Create Account',
+            action = 'onCreateAccount'
+        )
+        ui.Button(self.win,
+            layout = (1, 7, 8, 1),
+            text = 'Options',
+            action = 'onOptions',
+        )
+        ui.Button(self.win,
+            layout = (1, 9, 8, 1),
+            text = 'Quit',
+            action = 'onQuit',
+        )

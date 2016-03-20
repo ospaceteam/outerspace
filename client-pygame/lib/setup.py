@@ -22,15 +22,15 @@ from distutils.core import setup
 import py2exe
 
 setup(
-	name='Pygame.UI',
-	version='0.4',
-	description = 'Pluggable GUI library for Pygame.',
-	maintainer = 'Ludek Smid',
-	maintainer_email = 'qark@seznam.cz',
-	url = 'http://www.ospace.net/',
-	packages =['pygameui', 'pygameui.demo'],
-	data_files = [
-		['pygameui/demo', ['pygameui/demo/img.png', 'pygameui/demo/reddot.png']],
-		['pygameui', ['pygameui/LICENSE.txt', 'pygameui/README.txt']],
-	],
+    name='Pygame.UI',
+    version='0.4',
+    description = 'Pluggable GUI library for Pygame.',
+    maintainer = 'Ludek Smid',
+    maintainer_email = 'qark@seznam.cz',
+    url = 'http://www.ospace.net/',
+    packages =['pygameui', 'pygameui.demo'],
+    data_files = [
+        ['pygameui/demo', ['pygameui/demo/img.png', 'pygameui/demo/reddot.png']],
+        ['pygameui', ['pygameui/LICENSE.txt', 'pygameui/README.txt']],
+    ],
 )

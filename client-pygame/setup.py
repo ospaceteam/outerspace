@@ -97,7 +97,7 @@ else:
     extraArgs = dict(
         scripts = ["osc.py"]
     )
-        
+
 setup(
     name = 'Outer Space',
     version = '%(major)s.%(minor)s.%(revision)s' % ige.version.version,

@@ -61,7 +61,7 @@ def makeDist(distDir, module):
     if os.path.exists(distDir):
         shutil.rmtree(distDir)
     os.makedirs(distDir)
-    
+
     # find relevant modules
     path = ["lib", "../server/lib"]
 
@@ -157,15 +157,15 @@ if __name__ == "__main__":
     parser.add_option("--module", action = "store", type = "string",
         dest = "module", help = "Module to import to start application")
     options, args = parser.parse_args()
-    
+
     if len(args) != 1:
         parser.error("directory not specified")
     if not options.name:
-        parser.error("--name must be specified") 
+        parser.error("--name must be specified")
     if not options.longname:
-        parser.error("--longname must be specified") 
+        parser.error("--longname must be specified")
     if not options.version:
-        parser.error("--version must be specified") 
+        parser.error("--version must be specified")
     if not options.module:
         parser.error("--module must be specified")
     # make distribution

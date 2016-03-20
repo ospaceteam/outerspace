@@ -27,26 +27,26 @@ LONG = 2
 descr = {}
 
 def id2Class(id):
-	return gdata.shipClasses[id]
+    return gdata.shipClasses[id]
 
 def num2Perc(num):
-        return (num*100)
+    return (num*100)
 
 def num2ZeroPerc(num):
-        val = ((num-1)*100)
-        return val
+    val = ((num-1)*100)
+    return val
 
 def num2PlusZeroPerc(num): #make it positive without the + sign
-        val = ((num-1)*100)
-        if val < 0:
-            val = -1*val
-        return val
+    val = ((num-1)*100)
+    if val < 0:
+        val = -1*val
+    return val
 
 
 def add(subtype, detail, attr, text, filter, eff):
-	global descr
-	if subtype not in descr: descr[subtype] = []
-	descr[subtype].append((detail, attr, text, filter, eff))
+    global descr
+    if subtype not in descr: descr[subtype] = []
+    descr[subtype].append((detail, attr, text, filter, eff))
 
 # i18n (delayed translation)
 def N_(msg): return msg
@@ -88,36 +88,36 @@ add("*", LONG, "autoRepairFix", N_("repair %d"), int, 1)
 del N_
 
 def getShortDescr(techID, myDetail = SHORT):
-	tech = client.getFullTechInfo(techID)
-	techEff = Rules.techImprEff[client.getPlayer().techs.get(techID, Rules.techBaseImprovement)]
-	result = []
-	# specific
-	if tech.subtype in descr:
-		for detail, attr, text, filter, eff in descr[tech.subtype]:
-			if tech.isDefault(attr):
-				continue
-			if detail <= myDetail:
-				if not filter:
-					result.append(_(text))
-				elif eff:
-					result.append(_(text) % filter(techEff * getattr(tech, attr)))
-				else:
-					result.append(_(text) % filter(getattr(tech, attr)))
-	# general
-	for detail, attr, text, filter, eff in descr["*"]:
-		if tech.isDefault(attr):
-			continue
-		if detail <= myDetail:
-			if not filter:
-				result.append(_(text))
-			elif eff:
-				result.append(_(text) % filter(techEff * getattr(tech, attr)))
-			else:
-				result.append(_(text) % filter(getattr(tech, attr)))
-	if result:
-		return string.join(result, ", ")
-	else:
-		return _("N/A")
+    tech = client.getFullTechInfo(techID)
+    techEff = Rules.techImprEff[client.getPlayer().techs.get(techID, Rules.techBaseImprovement)]
+    result = []
+    # specific
+    if tech.subtype in descr:
+        for detail, attr, text, filter, eff in descr[tech.subtype]:
+            if tech.isDefault(attr):
+                continue
+            if detail <= myDetail:
+                if not filter:
+                    result.append(_(text))
+                elif eff:
+                    result.append(_(text) % filter(techEff * getattr(tech, attr)))
+                else:
+                    result.append(_(text) % filter(getattr(tech, attr)))
+    # general
+    for detail, attr, text, filter, eff in descr["*"]:
+        if tech.isDefault(attr):
+            continue
+        if detail <= myDetail:
+            if not filter:
+                result.append(_(text))
+            elif eff:
+                result.append(_(text) % filter(techEff * getattr(tech, attr)))
+            else:
+                result.append(_(text) % filter(getattr(tech, attr)))
+    if result:
+        return string.join(result, ", ")
+    else:
+        return _("N/A")
 
 def getLongDescr(techID):
-	return getShortDescr(techID, LONG)
+    return getShortDescr(techID, LONG)

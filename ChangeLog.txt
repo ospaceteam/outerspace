@@ -1,6 +1,9 @@
 ﻿Outer Space Change Log
 ======================
 
+[2016-03-20]
+- whitespace pep8-ization of client-pygame [dahaic]
+
 [2016-03-19]
 - whitespace pep8-ization of server [dahaic]
 - whitespace pep8-ization of pygameui [dahaic]

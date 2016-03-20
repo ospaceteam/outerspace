@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # Originally written by Barry Warsaw <barry@zope.com>
 #
-# Minimally patched to make it even more xgettext compatible 
+# Minimally patched to make it even more xgettext compatible
 # by Peter Funk <pf@artcom-gmbh.de>
 
 """pygettext -- Python equivalent of xgettext(1)
@@ -306,7 +306,7 @@ class TokenEater:
     def __openseen(self, ttype, tstring, lineno):
         if ttype == tokenize.OP and tstring == ')':
             # We've seen the last of the translatable strings.  Record the
-            # line number of the first line of the strings and update the list 
+            # line number of the first line of the strings and update the list
             # of messages seen.  Reset state for the next batch.  If there
             # were no strings inside _(), then just ignore this entry.
             if self.__data:

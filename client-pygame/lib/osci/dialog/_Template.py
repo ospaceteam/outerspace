@@ -25,52 +25,52 @@ from ige.ospace.Const import *
 
 class MessagesDlg:
 
-	def __init__(self, app):
-		self.app = app
-		self.createUI()
+    def __init__(self, app):
+        self.app = app
+        self.createUI()
 
-	def display(self):
-		self.show()
-		self.win.show()
-		# register for updates
-		if self not in gdata.updateDlgs:
-			gdata.updateDlgs.append(self)
+    def display(self):
+        self.show()
+        self.win.show()
+        # register for updates
+        if self not in gdata.updateDlgs:
+            gdata.updateDlgs.append(self)
 
-	def hide(self):
-		self.win.hide()
-		# unregister updates
-		if self in gdata.updateDlgs:
-			gdata.updateDlgs.remove(self)
+    def hide(self):
+        self.win.hide()
+        # unregister updates
+        if self in gdata.updateDlgs:
+            gdata.updateDlgs.remove(self)
 
-	def update(self):
-		self.show()
+    def update(self):
+        self.show()
 
-	def show(self):
-		pass
+    def show(self):
+        pass
 
-	def onEvent(self, widget, action, data):
-		pass
+    def onEvent(self, widget, action, data):
+        pass
 
-	def onCancel(self, widget, action, data):
-		self.hide()
+    def onCancel(self, widget, action, data):
+        self.hide()
 
-	def onClose(self, widget, action, data):
-		self.hide()
+    def onClose(self, widget, action, data):
+        self.hide()
 
-	def createUI(self):
-		self.win = ui.Window(self.app,
-			modal = 1,
-			escKeyClose = 1,
-			titleOnly = 1,
-			movable = 0,
-			title = _('Split Fleet'),
-			rect = ui.Rect(0, 0, 800, 580),
-			layoutManager = ui.SimpleGridLM(),
-		)
-		self.win.subscribeAction('*', self)
-		# original fleet
-		# status bar + submit/cancel
-		ui.TitleButton(self.win, layout = (35, 27, 5, 1), text = _('Close'), action = 'onClose')
-		ui.TitleButton(self.win, layout = (30, 27, 5, 1), text = _('Cancel'), action = 'onCancel')
-		ui.Title(self.win, id = 'vStatusBar', layout = (0, 27, 30, 1), align = ui.ALIGN_W)
-		self.win.statusBar = self.win.vStatusBar
+    def createUI(self):
+        self.win = ui.Window(self.app,
+            modal = 1,
+            escKeyClose = 1,
+            titleOnly = 1,
+            movable = 0,
+            title = _('Split Fleet'),
+            rect = ui.Rect(0, 0, 800, 580),
+            layoutManager = ui.SimpleGridLM(),
+        )
+        self.win.subscribeAction('*', self)
+        # original fleet
+        # status bar + submit/cancel
+        ui.TitleButton(self.win, layout = (35, 27, 5, 1), text = _('Close'), action = 'onClose')
+        ui.TitleButton(self.win, layout = (30, 27, 5, 1), text = _('Cancel'), action = 'onCancel')
+        ui.Title(self.win, id = 'vStatusBar', layout = (0, 27, 30, 1), align = ui.ALIGN_W)
+        self.win.statusBar = self.win.vStatusBar

@@ -73,7 +73,7 @@ class UpdateDlg:
         if gdata.config.proxy.http != None:
             proxies['http'] = gdata.config.proxy.http
         log.debug('Using proxies', proxies)
-        # get file 
+        # get file
         try:
             # open URL
             opener = urllib2.build_opener(urllib2.ProxyHandler(proxies))
@@ -123,7 +123,7 @@ class UpdateDlg:
         self.win.vCancel.text = ""
         self.win.vConfirm.text = _("OK")
         self.win.vConfirm.action = "onCancel"
-        
+
     def setProgress(self, text, current = None, max = None):
         self.win.vProgress.visible = 1
         if text:
@@ -170,7 +170,7 @@ class UpdateDlg:
             return False
         log.message("Version do not match, update is needed")
         return True
-    
+
     def setUpdateAction(self):
         # check if update URL exists
         action, self.url = self.serverVersion["clientURLs"].get(sys.platform, self.serverVersion["clientURLs"]["*"])

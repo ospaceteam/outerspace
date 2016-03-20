@@ -28,55 +28,55 @@ from ige import log
 progressDlg = None
 
 def onInitConnection():
-	pass
+    pass
 
 def onConnInitialized():
-	pass
+    pass
 
 def onCmdBegin():
-	if gdata.mainGameDlg:
-		gdata.mainGameDlg.onCmdInProgress(1)
-	else:
-		gdata.cmdInProgress = 1
-	gdata.app.update()
+    if gdata.mainGameDlg:
+        gdata.mainGameDlg.onCmdInProgress(1)
+    else:
+        gdata.cmdInProgress = 1
+    gdata.app.update()
 
 def onCmdEnd():
-	if gdata.mainGameDlg:
-		gdata.mainGameDlg.onCmdInProgress(0)
-	else:
-		gdata.cmdInProgress = 0
-	gdata.app.update()
+    if gdata.mainGameDlg:
+        gdata.mainGameDlg.onCmdInProgress(0)
+    else:
+        gdata.cmdInProgress = 0
+    gdata.app.update()
 
 def createGameAccount():
-	dlg = NewAccountDlg.NewAccountDlg(gdata.app)
-	dlg.display()
+    dlg = NewAccountDlg.NewAccountDlg(gdata.app)
+    dlg.display()
 
 def onUpdateStarting():
-	global progressDlg
-	log.debug("onUpdateStarting")
-	if not progressDlg:
-		progressDlg = ProgressDlg(gdata.app)
-	progressDlg.display(_('Updating OSCI database...'), 0, 1)
+    global progressDlg
+    log.debug("onUpdateStarting")
+    if not progressDlg:
+        progressDlg = ProgressDlg(gdata.app)
+    progressDlg.display(_('Updating OSCI database...'), 0, 1)
 
 def onUpdateProgress(curr, max, text = None):
-	global progressDlg
-	log.debug("onUpdateProgress")
-	progressDlg.setProgress(text, curr, max)
+    global progressDlg
+    log.debug("onUpdateProgress")
+    progressDlg.setProgress(text, curr, max)
 
 def onUpdateFinished():
-	global progressDlg
-	log.debug("onUpdateFinished")
-	try:
-		progressDlg.hide()
-	except:
-		log.warning("Cannot delete progressDlg window")
-	for dialog in gdata.updateDlgs:
-		dialog.update()
+    global progressDlg
+    log.debug("onUpdateFinished")
+    try:
+        progressDlg.hide()
+    except:
+        log.warning("Cannot delete progressDlg window")
+    for dialog in gdata.updateDlgs:
+        dialog.update()
 
 def onNewMessages(number):
-	gdata.mainGameDlg.messagesDlg.update()
+    gdata.mainGameDlg.messagesDlg.update()
 
 def onWaitingForResponse():
-	#pygame.event.pump()
-	while pygame.event.poll().type != pygame.NOEVENT:
-		pass
+    #pygame.event.pump()
+    while pygame.event.poll().type != pygame.NOEVENT:
+        pass
