@@ -1,6 +1,14 @@
 ﻿Outer Space Change Log
 ======================
 
+[2016-03-26]
+- removal of unmaintaned and/or obsolete code [dahaic]: 
+  client-TechViewer 
+  client-console 
+  client-msg-wx 
+  generators 
+  oslauncher 
+
 [2016-03-21]
 - smoke test rewritten to python [dahaic]
 - updated game to be runnable from arbitrary CWD [dahaic]

@@ -1,6 +1,0 @@
-include ChangeLog
-include COPYING
-recursive-include fedora *
-recursive-include oslauncher/res *
-prune *.svn
-prune *pyc
