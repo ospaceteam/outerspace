@@ -26,8 +26,7 @@ def runAIClient(options):
     # tweak PYTHONPATH
     basepath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-    sys.path.insert(0, os.path.join(basepath, "client-pygame/lib"))
-    sys.path.insert(0, os.path.join(basepath, "client-pygame/lib/osci"))
+    sys.path.insert(0, os.path.join(basepath, "client/osci"))
 
     for item in ("libsrvr", "server/lib"):
         path = os.path.join(basepath, item)

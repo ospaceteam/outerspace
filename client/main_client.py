@@ -30,13 +30,13 @@ import pygame, pygame.image, pygame.font, pygame.time, pygame.version
 import pygame.transform
 from pygame.locals import *
 
-from config import Config
-import gdata
+from osci.config import Config
+import osci.gdata as gdata
 import ige.version
 from ige import log
 import osci
 import resources
-import res
+import osci.res
 
 
 
@@ -97,7 +97,7 @@ def update():
         drawBackground()
     rects = gdata.app.draw(gdata.screen)
     if gdata.cmdInProgress:
-        img = res.cmdInProgressImg
+        img = osci.res.cmdInProgressImg
         wx, wy = gdata.screen.get_size()
         x, y = img.get_size()
         gdata.screen.blit(img, (wx - x, 0))
@@ -133,7 +133,7 @@ def runClient(options):
                     reload(osci)
             # parse configuration
             if first:
-                    import gdata
+                    import osci.gdata as gdata
             else:
                     reload(gdata)
             #from ConfigParser import ConfigParser
@@ -293,28 +293,28 @@ def runClient(options):
             gdata.app = app
 
             # resources
-            import res
+            import osci.res
 
-            res.initialize()
+            osci.res.initialize()
 
             # load resources
-            res.loadResources()
+            osci.res.loadResources()
 
 
             # client
             if first:
-                    import client, handler
+                    import osci.client, osci.handler
                     from igeclient.IClient import IClientException
             else:
-                    reload(client)
-                    reload(handler)
-            client.initialize(gdata.config.game.server, handler, options)
+                    reload(osci.client)
+                    reload(osci.handler)
+            osci.client.initialize(gdata.config.game.server, osci.handler, options)
 
             # create initial dialogs
             if first:
-                    import dialog
+                    import osci.dialog
             else:
-                    reload(dialog)
+                    reload(osci.dialog)
             gdata.savePassword = gdata.config.game.lastpasswordcrypted != None
 
             if options.login and options.password:
@@ -330,8 +330,8 @@ def runClient(options):
 
 
 
-            loginDlg = dialog.LoginDlg(gdata.app)
-            updateDlg = dialog.UpdateDlg(gdata.app)
+            loginDlg = osci.dialog.LoginDlg(gdata.app)
+            updateDlg = osci.dialog.UpdateDlg(gdata.app)
 
             # event loop
             update()
@@ -379,7 +379,7 @@ def runClient(options):
                                     needsRefresh = False
                                     update()
                             # keep alive connection
-                            client.keepAlive(forceKeepAlive)
+                            osci.client.keepAlive(forceKeepAlive)
 
                             # save DB every 4 hours in case of a computer crash
                             # using "counter" to limit calls to time.clock() to approximately every 10-15 minutes
@@ -389,11 +389,11 @@ def runClient(options):
                                     if time.clock() - lastSave > 14400:
                                             saveDB = True
                             if saveDB:
-                                    client.saveDB()
+                                    osci.client.saveDB()
                                     lastSave = time.clock();
 
                     except IClientException, e:
-                            client.reinitialize()
+                            osci.client.reinitialize()
                             gdata.app.setStatus(e.args[0])
                             loginDlg.display(message = e.args[0])
                     except Exception, e:
@@ -418,7 +418,7 @@ def runClient(options):
                                     print >>fh, "--- EXCEPTION DATA ---"
                                     # dump exception
                                     traceback.print_exc(file = fh)
-                                    excDlg = dialog.ExceptionDlg(gdata.app)
+                                    excDlg = osci.dialog.ExceptionDlg(gdata.app)
                                     excDlg.display(faultID, fh.getvalue())
                                     del excDlg # reference to the dialog holds app's intance
                                     fh.close()
@@ -449,7 +449,7 @@ def runClient(options):
             gdata.config.save()
 
             # logout
-            client.logout()
+            osci.client.logout()
 
     log.debug("Shut down")
-    return client
+    return osci.client

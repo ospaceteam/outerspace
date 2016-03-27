@@ -1,6 +1,9 @@
 ﻿Outer Space Change Log
 ======================
 
+[2016-03-28]
+- reorganized client directory [dahaic]
+
 [2016-03-27]
 - included profiling option of common executable [dahaic]
 - removal of files used to run server and client separately [dahaic]

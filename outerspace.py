@@ -28,8 +28,7 @@ import time
 
 relative_path = os.path.dirname(os.path.realpath(__file__))
 # tweak PYTHONPATH
-sys.path.insert(0, os.path.join(relative_path, "client-pygame","lib"))
-sys.path.insert(0, os.path.join(relative_path, "client-pygame"))
+sys.path.insert(0, os.path.join(relative_path, "client"))
 sys.path.insert(0, os.path.join(relative_path, "server"))
 sys.path.insert(0, os.path.join(relative_path, "client-ai"))
 sys.path.insert(0, os.path.join(relative_path, "server","lib"))
@@ -204,7 +203,7 @@ elif subcommand == 'ai-pool':
 
 # basically default (as we force it in case of nonexistent subcommand
 elif subcommand == 'client':
-    from osci.main import runClient
+    from main_client import runClient
     task = runClient
 
 if __name__ == '__main__':
