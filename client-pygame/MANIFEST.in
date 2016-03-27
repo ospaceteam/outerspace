@@ -1,5 +1,0 @@
-recursive-include res *
-recursive-include lib *
-recursive-include libsrvr *
-prune *.svn
-prune *pyc

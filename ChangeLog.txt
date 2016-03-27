@@ -4,6 +4,10 @@
 [2016-03-27]
 - included profiling option of common executable [dahaic]
 - removal of files used to run server and client separately [dahaic]
+- removal of distutils setup files [dahaic]
+  client-pygame
+  pygameui
+  server
 
 [2016-03-26]
 - removal of unmaintaned and/or obsolete code [dahaic]: 
