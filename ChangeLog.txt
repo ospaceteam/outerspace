@@ -3,6 +3,7 @@
 
 [2016-03-27]
 - included profiling option of common executable [dahaic]
+- removal of files used to run server and client separately [dahaic]
 
 [2016-03-26]
 - removal of unmaintaned and/or obsolete code [dahaic]: 

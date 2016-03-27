@@ -207,18 +207,19 @@ elif subcommand == 'client':
     from osci.main import runClient
     task = runClient
 
-if options.profile:
-    import cProfile
-    profiling_output = '{0}.raw'.format(options.profile)
-    cProfile.run('task(options)', profiling_output )
-    import pstats
-    with open(options.profile, 'w') as pro_file:
-        stats = pstats.Stats(profiling_output, stream=pro_file)
-        stats.strip_dirs()
-        stats.sort_stats('time')
-        stats.print_stats()
-else:
-    task(options)
+if __name__ == '__main__':
+    if options.profile:
+        import cProfile
+        profiling_output = '{0}.raw'.format(options.profile)
+        cProfile.run('task(options)', profiling_output )
+        import pstats
+        with open(options.profile, 'w') as pro_file:
+            stats = pstats.Stats(profiling_output, stream=pro_file)
+            stats.strip_dirs()
+            stats.sort_stats('time')
+            stats.print_stats()
+    else:
+        task(options)
 
 exit()
 
