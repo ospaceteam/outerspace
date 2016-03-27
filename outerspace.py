@@ -63,6 +63,10 @@ common_parser.add_argument("--local", dest = "local",
     default = False,
     help = "Setting on local mode (connections are made to localhost)"
 )
+common_parser.add_argument("--profile", dest = "profile",
+    default=False,
+    help = "Run with profiling enabled"
+)
 subparsers = parser.add_subparsers(help='Subcommands: client (default), galaxer, server, ai, ai-pool')
 
 parser_client = subparsers.add_parser('client', help='Game client of Outer Space', parents=[common_parser])
@@ -184,24 +188,37 @@ options = parser.parse_args()
 
 if subcommand == 'galaxer':
     from main_galaxer import runGalaxer
-    runGalaxer(options)
+    task = runGalaxer
 
 elif subcommand == 'server':
     from main_server import runServer
-    runServer(options)
+    task = runServer
 
 elif subcommand == 'ai':
     from main_ai import runAIClient
-    runAIClient(options)
+    task = runAIClient
 
 elif subcommand == 'ai-pool':
     from main_ai_pool import runAIPool
-    runAIPool(options)
+    task = runAIPool
 
 # basically default (as we force it in case of nonexistent subcommand
 elif subcommand == 'client':
     from osci.main import runClient
-    clientConnection = runClient(options)
+    task = runClient
+
+if options.profile:
+    import cProfile
+    profiling_output = '{0}.raw'.format(options.profile)
+    cProfile.run('task(options)', profiling_output )
+    import pstats
+    with open(options.profile, 'w') as pro_file:
+        stats = pstats.Stats(profiling_output, stream=pro_file)
+        stats.strip_dirs()
+        stats.sort_stats('time')
+        stats.print_stats()
+else:
+    task(options)
 
 exit()
 
