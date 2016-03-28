@@ -1,3 +1,6 @@
+#!/usr/bin/env python2
+
+import os
 import sys
 from optparse import OptionParser
 sys.path.insert(0,"lib")
@@ -6,18 +9,18 @@ import types
 from ige.Const import *
 from ige.ospace.Const import *
 from ige.IDataHolder import IDataHolder
-from ige.MetakitDatabase import MetakitDatabase, MetakitDatabaseString
+from ige.SQLiteDatabase import Database, DatabaseString
 
 # parse command line arguments
 parser = OptionParser(usage = "usage: %prog [--configdir=]")
 parser.add_option("",  "--configdir", dest = "configDir",
-    metavar = "DIRECTORY", default = "var",
+    metavar = "DIRECTORY", default = os.path.join(os.path.expanduser("~"), ".outerspace"),
     help = "Override default configuration directory",
 )
 options, args = parser.parse_args()
 
-gameDB = MetakitDatabase(os.path.join(options.configDir, "db_data"), "game_Alpha", cache = 15000)
-#~ gameDB = MetakitDatabaseString("var/db_data", "messages", cache = 15000)
+gameDB = Database(os.path.join(options.configDir, "db_data"), "game_Alpha", cache = 15000)
+#~ gameDB = DatabaseString("var/db_data", "messages", cache = 15000)
 
 def typeIdToString(obj):
     if not isinstance(obj, IDataHolder):
@@ -66,8 +69,7 @@ count = {}
 total = {}
 maxval = {}
 
-for i in range(0, len(gameDB.view)):
-    oid = gameDB.view[i].oid
+for oid in gameDB.keys():
     t = typeIdToString(gameDB[oid])
     #~ print oid, t, gameDB.view.itemsize(gameDB.view.data, i)
     if t not in count:
@@ -75,8 +77,8 @@ for i in range(0, len(gameDB.view)):
         total[t] = 0
         maxval[t] = 0
     count[t] += 1
-    total[t] += gameDB.view.itemsize(gameDB.view.data, i)
-    maxval[t] = max(maxval[t], gameDB.view.itemsize(gameDB.view.data, i))
+    total[t] += gameDB.getItemLength(oid)
+    maxval[t] = max(maxval[t], gameDB.getItemLength(oid))
 
 print "%15s %10s %10s %10s %10s" % ("TYPE", "COUNT", "TOTAL", "AVG", "MAX")
 print 59 * "-"

@@ -3,6 +3,9 @@
 
 [2016-03-28]
 - reorganized client directory [dahaic]
+- fixed indentation errors in osclient.py [dahaic]
+- removed useradd utility and added functionality to osclient [dahaic]
+- fixed osstats utility [dahaic]
 
 [2016-03-27]
 - included profiling option of common executable [dahaic]

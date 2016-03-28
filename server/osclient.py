@@ -323,7 +323,7 @@ def giveStratRes(objID):
 
     if (resID == 'a'):
         for stratResID in range(1,9):
-        giveStratResNum(objID,stratResID,quantity)
+            giveStratResNum(objID,stratResID,quantity)
     else:
         giveStratResNum(objID,stratResID,quantity)
     return objID
@@ -367,7 +367,7 @@ def startGalaxy():
     for galaxyID in un.galaxies:
         print galaxyID
         if galaxyID==newObjID:
-        galaxyObj = newObjID
+            galaxyObj = newObjID
     if galaxyObj == 0:
         print "Not a galaxy"
     else:
@@ -416,7 +416,7 @@ def showMenu(objID):
     print "Current object: %s" % objID
     print
     print "1. Set current object      10. Create Galaxy"
-    print "2. Show Players        11. Start Galaxy Time (does not need Obj set)"
+    print "2. Show Players            11. Start Galaxy Time (does not need Obj set)"
     print "3. Show Galaxies           12. Delete Galaxy (does not need Obj set)"
     print "4. Advance to level        13. Init Developer race (all techs, 50 each strat res)"
     print "5. Make imperator          14. Give Fame to a Pirate Player"
