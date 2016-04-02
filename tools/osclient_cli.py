@@ -25,8 +25,7 @@ import sys
 
 # setup system path
 baseDir = os.path.abspath(os.path.dirname(__file__))
-
-sys.path.insert(0, os.path.join(baseDir, "lib"))
+sys.path.insert(0, os.path.join(baseDir, '..', 'server', "lib"))
 
 import os
 from igeclient.IClient import IClient

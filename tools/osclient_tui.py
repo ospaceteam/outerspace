@@ -23,7 +23,8 @@
 import sys, string, re
 import os
 from optparse import OptionParser
-sys.path.insert(0, 'lib')
+baseDir = os.path.abspath(os.path.dirname(__file__))
+sys.path.insert(0, os.path.join(baseDir, '..', 'server', "lib"))
 
 from igeclient.IClient import IClient
 import pprint, traceback
@@ -500,7 +501,7 @@ options, args = parser.parse_args()
 s = IClient('localhost:9080', None, msgHandler, None, 'IClient/osc')
 
 if len(args) != 1:
-    print "Usage: osclient [options] LOGIN"
+    print "Usage: osclient_tui.py [options] LOGIN"
     sys.exit(1)
 
 login = args[0]

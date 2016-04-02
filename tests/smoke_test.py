@@ -73,7 +73,7 @@ def startServer():
     time.sleep(1) # give server process enough time to initialize
     start_time=time.time()
     while True:
-        args=[os.path.join(CODE_ROOT, 'server', 'osclient'),
+        args=[os.path.join(CODE_ROOT, 'tools', 'osclient_cli.py'),
               '--ping',
               '--configdir=' + TEMP_DIR,
               'admin']
@@ -97,7 +97,7 @@ def startServer():
 
 def stopServer():
     log.info('Stopping server')
-    args=[os.path.join(CODE_ROOT, 'server', 'osclient'),
+    args=[os.path.join(CODE_ROOT, 'tools', 'osclient_cli.py'),
           '--shutdown',
           '--configdir=' + TEMP_DIR,
           'admin']
@@ -115,7 +115,7 @@ def stopServer():
     log.info('Server has been stopped')
 
 def startServerTime():
-    args=[os.path.join(CODE_ROOT, 'server', 'osclient'),
+    args=[os.path.join(CODE_ROOT, 'tools', 'osclient_cli.py'),
           '--starttime',
           '--configdir=' + TEMP_DIR,
           'admin']
@@ -125,7 +125,7 @@ def startServerTime():
     log.info('Time has been started')
 
 def doTurns(amount=TURN_AMOUNT, skip=TURN_SKIP):
-    args_osclient=[os.path.join(CODE_ROOT, 'server', 'osclient'),
+    args_osclient=[os.path.join(CODE_ROOT, 'tools', 'osclient_cli.py'),
           '--turns={0}'.format(skip),
           '--configdir=' + TEMP_DIR,
           'admin']

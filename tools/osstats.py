@@ -3,7 +3,8 @@
 import os
 import sys
 from optparse import OptionParser
-sys.path.insert(0,"lib")
+baseDir = os.path.abspath(os.path.dirname(__file__))
+sys.path.insert(0, os.path.join(baseDir, '..', 'server', "lib"))
 
 import types
 from ige.Const import *
