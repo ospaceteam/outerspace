@@ -1,7 +1,7 @@
 #
-#  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
+#  Copyright 2001 - 2016 Ludek Smid [http://www.ospace.net/]
 #
-#  This file is part of IGE - Outer Space.
+#  This file is part of Outer Space.
 #
 #  IGE - Outer Space is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -74,7 +74,7 @@ class KeyModHelp:
         )
         # creating dialog window
         self.win.subscribeAction('*', self)
-        
+
         t = ui.Text(self.win, id = 'vText',
             align = ui.ALIGN_W,
             layout = (0, 0, cols - 1, rows - 2),

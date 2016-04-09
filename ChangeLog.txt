@@ -1,6 +1,10 @@
 ﻿Outer Space Change Log
 ======================
 
+[2016-04-09]
+- updated copyright headers [dahaic]
+- fixed few crlf-ed files [dahaic]
+
 [2016-04-03]
 - consolidated tools in tools directory [dahaic]
 
@@ -121,7 +125,7 @@
 - Client now supports Universe selection. [Qark]
 - Client save filename now contains universe ID to prevent conflicts. [Qark]
 - Fixed bug where IUniverse and other objects had oid set to OID_NONE. [Qark]
- 
+
 [2011-12-28]
 - Initial version of support for multiple universes per game server. [Qark]
 

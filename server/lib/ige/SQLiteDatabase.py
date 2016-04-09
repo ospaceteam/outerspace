@@ -1,7 +1,7 @@
 #
-#  Copyright 2001 - 2010 Ludek Smid [http://www.ospace.net/]
+#  Copyright 2001 - 2016 Ludek Smid [http://www.ospace.net/]
 #
-#  This file is part of IGE - Outer Space.
+#  This file is part of Outer Space.
 #
 #  Outer Space is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by

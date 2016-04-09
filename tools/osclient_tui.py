@@ -1,8 +1,8 @@
 #!/usr/bin/env python2
 #
-#  Copyright 2001 - 2006 Ludek Smid [http://www.ospace.net/]
+#  Copyright 2001 - 2016 Ludek Smid [http://www.ospace.net/]
 #
-#  This file is part of IGE - Outer Space.
+#  This file is part of Outer Space.
 #
 #  IGE - Outer Space is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
