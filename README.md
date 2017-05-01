@@ -47,11 +47,6 @@ python2 ./outerspace.py server
 ```
 which will start server listening to default TCP port 9080 on all networks.
 
-*NOTE:* if you are running it for the first time, you have to prepare database with
-```
-python2 ./outerspace.py server --reset
-```
-and then run it again without the ```--reset``` flag.
 
 #### Galaxer
 Next step is to run Galaxer, in very similar fashion. Most common scenario is Galaxer running on the same machine as main server, in which case no arguments are necessary.
