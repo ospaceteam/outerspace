@@ -22,39 +22,36 @@ import os, random, math, sys
 
 class GalaxyStats:
 
-    def __init__(self, galaxyID=None):
+    def __init__(self, galaxyType=None):
         self.activeGalaxy = 'self.circle42P'
         self.galaxies = {
-                    'Circle4P' : self.circle4P,
+                    'Circle1P' : self.circle1P,
                     'Circle9P' : self.circle9P,
                     'Circle42P' : self.circle42P,
                     'Circle65P' : self.circle65P
         }
-        self.makeStats(galaxyID)
+        self.makeStats(galaxyType)
 
-    def circle4P(self):
-        self.galaxyMinPlanets = 0
-        self.galaxyMaxPlanets = 99999
-        self.galaxyCenter = (20.0, 20.0)
+    def circle1P(self):
+        self.galaxyMinPlanets = 100
+        self.galaxyMaxPlanets = 150
+        self.galaxyCenter = (50.0, 50.0)
         self.galaxyRadius = 15.0
-        self.galaxyStartR = (14.0, 16.0)
-        self.galaxyPlayers = 4
-        self.galaxyPlayerGroup = 4
-        self.galaxyGroupDist = 1
-        self.galaxyMinR = 5
-        self.galaxyDensity = {5: 3, 10: 3.5, 20: 4}
+        self.galaxyStartR = (11.0, 13.0)
+        self.galaxyPlayers = 1
+        self.galaxyPlayerGroup = 1
+        self.galaxyGroupDist = 4
+        self.galaxyMinR = 1
+        self.galaxyDensity = {1: 3, 5: 4, 10: 5}
         self.galaxyResources = {
             # format resourceID : (minDist, maxDist, number of resources)
-            1 : (12, 15, 2), # TL 1 + 2
-            2 : (12, 15, 2), # TL 1 + 2
-            3 : (8, 11, 1), # TL 3 + 4
-            4 : (8, 11, 1), # TL 3 + 4
-            5 : (8, 11, 1), # TL 3 + 4
-            6 : (5, 6, 1), # TL 5
-            7 : (5, 6, 1), # TL 5
-            8 : (5, 6, 1), # TL 5
+            1 : (13, 15, 2), # TL 1 + 2
+            2 : (13, 15, 2), # TL 1 + 2
         }
-        self.galaxyDiseases = {}
+        self.galaxyDiseases = {
+            # format diseaseID : (minDist, maxDist, number of diseases)
+            3 : (2, 4, 3), # TL 3 + 4
+        }
 
     def circle9P(self):
         self.galaxyMinPlanets = 500
@@ -150,15 +147,16 @@ class GalaxyStats:
             8 : (0, 5, 1), # TL 5
         }
 
-    def makeStats(self, galaxyID=None):
-        if galaxyID in self.galaxies.keys():
-            self.activeGalaxy = self.galaxies[galaxyID]
+    def makeStats(self, galaxyType=None):
+        if galaxyType in self.galaxies.keys():
+            self.activeGalaxy = self.galaxies[galaxyType]
         self.activeGalaxy()
 
 
 class GalaxyGenerator:
     def __init__(self):
-        self.galaxyTypes = {'Circle9P':(9, 'Smaller galaxy for 9 players, without pirate or EDEN. Recommended for new players or those who seek more casual gameplay.', 26.0),
+        self.galaxyTypes = {'Circle1P':(1, 'Single player galaxy to enjoy freebuilding. Mutant is the only enemy. Endless game.', 15.0),
+                            'Circle9P':(9, 'Smaller galaxy for 9 players, without pirate or EDEN. Recommended for new players or those who seek more casual gameplay.', 26.0),
                             'Circle42P':(42, 'Original size galaxy for 42 players, place of epic battles, recommended only to the experienced players. May be quite time consuming.', 50.0)}
 
     def generateGalaxy(self, galaxyType, fileHandle):
@@ -170,18 +168,6 @@ class GalaxyGenerator:
 
     def getGalaxyTypes(self):
         return self.galaxyTypes
-
-# galaxy specification for GalaxyGenerator() [not used anymore]
-sectorSize = [10, 10]
-sectorsOffset = [0, 0]
-
-galaxyID = 'Center90'
-sectorsSpec = [
-    [ 5,  5,  5],
-    [ 5, 50,  5],
-    [ 5,  5,  5],
-]
-
 
 
 
@@ -242,9 +228,9 @@ def generateGalaxy(galaxy):
             secY += 1
         secX += 1
 
-def generateGalaxy2(galaxyID=None):
+def generateGalaxy2(galaxyType=None):
     galaxy = Galaxy()
-    stats = GalaxyStats(galaxyID)
+    stats = GalaxyStats(galaxyType)
     galaxy.centerX = stats.galaxyCenter[0]
     galaxy.centerY = stats.galaxyCenter[1]
     galaxy.radius = stats.galaxyRadius
@@ -425,7 +411,7 @@ def generateGalaxy2(galaxyID=None):
         noOfPlanets += len(system.planets)
     if noOfPlanets < stats.galaxyMinPlanets or noOfPlanets > stats.galaxyMaxPlanets:
         print 'There was {0} planets.\nStarting new generation...'.format(noOfPlanets)
-        return generateGalaxy2(galaxyID)
+        return generateGalaxy2(galaxyType)
     else:
         return galaxy
 
@@ -708,7 +694,7 @@ def getInfo(galaxy):
 ## fh - handle of file where galaxy will be saved -
 ##        must be os.open() filelike object and must be opened.
 ##        function calls close() method
-def saveGalaxy(id, galaxy, fh):
+def saveGalaxy(galaxyType, galaxy, fh):
     print 'Saving...'
     # names
     loadSystemNames()
@@ -716,7 +702,7 @@ def saveGalaxy(id, galaxy, fh):
     print >>fh, '<?xml version="1.0" encoding="UTF-8"?>'
     print >>fh, '<universe>'
     print >>fh, '\t<galaxy id="%s" x="%.2f" y="%.2f">' % (
-        id, galaxy.centerX, galaxy.centerY
+        galaxyType, galaxy.centerX, galaxy.centerY
     )
     print >>fh, '\t\t<properties radius="%.2f"/>' % galaxy.radius
     for system in galaxy.systems:
@@ -769,8 +755,16 @@ def loadSystemNames():
 ## fh - handle of file where galaxy will be saved -
 ##        must be os.open() filelike object and must be opened.
 ##        function calls close() method
-def GenerateGalaxy(galaxyID, fh):
-    galaxy = generateGalaxy2(galaxyID)
+def GenerateGalaxy(galaxyType, fh):
+    while True:
+        try:
+            galaxy = generateGalaxy2(galaxyType)
+            break
+        except IndexError:
+            # this happens, if generator fails to place special
+            # planet - easier than handling it inside is to roll
+            # dice again
+            continue
     step = 0
     while step < 25:
         min, max = shiftSystems(galaxy, 1.5, 5.0, 0.25)
@@ -778,4 +772,12 @@ def GenerateGalaxy(galaxyID, fh):
             break
         step += 1
     print fh
-    saveGalaxy(galaxyID, galaxy, fh)
+    saveGalaxy(galaxyType, galaxy, fh)
+
+if __name__ == '__main__':
+    import sys
+
+    galaxyType = sys.argv[1]
+    targetFile = sys.argv[2]
+    with open(targetFile, 'w') as fileHandle:
+        GenerateGalaxy(galaxyType, fileHandle)
