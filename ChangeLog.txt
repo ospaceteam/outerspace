@@ -1,6 +1,9 @@
 ﻿Outer Space Change Log
 ======================
 
+[2017-05-07]
+- Added possibility to have singleplayer galaxies [dahaic]
+
 [2016-04-09]
 - updated copyright headers [dahaic]
 - fixed few crlf-ed files [dahaic]

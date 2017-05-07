@@ -540,7 +540,9 @@ class IUniverse(IObject):
     endSingleplayerGalaxy.accLevel = AL_ADMIN
 
     def createNewSubscribedGalaxy(self, tran, obj, x, y, galaxyName, galaxyType, listOfPlayers):
-        log.message("Adding new galaxy '%s' to (%d, %d)" % (galaxyName, x, y))
+        # even though galaxyName has been decided by Galaxer, we will use
+        # this opportunity to rename Singleplayer galaxies to generic name
+        log.message("Adding new galaxy '%s' to (%d, %d)" % (galaxyType, x, y))
         fileHandle, galaxyFileName = tempfile.mkstemp(text = True)
         log.debug("Generating new galaxy to temporary file", galaxyFileName)
         galGen = GalaxyGenerator.GalaxyGenerator()
@@ -551,6 +553,12 @@ class IUniverse(IObject):
         newGalaxy = tran.db[newGalaxyID]
         log.debug("Loading new ", newGalaxyID)
         self.cmd(newGalaxy).loadFromXML(tran, newGalaxy, galaxyFileName, galaxyType, x, y, galaxyName)
+        if newGalaxy.isSingle:
+            # Singleplayer galaxies are not worthy having their own name
+            # let's name them after the player
+            # the only record, and second record is NICK
+            lonePlayerNick = listOfPlayers[0][1]
+            newGalaxy.name = "Single - %s" % (lonePlayerNick,)
         log.debug("Running scripts specific to booked galaxies", newGalaxyID)
         self.cmd(newGalaxy).bookedInit(tran, newGalaxy)
         log.debug("Setup Enviroment", newGalaxyID)
