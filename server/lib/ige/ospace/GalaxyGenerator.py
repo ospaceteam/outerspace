@@ -234,6 +234,7 @@ def generateGalaxy2(galaxyType=None):
     galaxy.centerX = stats.galaxyCenter[0]
     galaxy.centerY = stats.galaxyCenter[1]
     galaxy.radius = stats.galaxyRadius
+    galaxy.isSingle = 1 if stats.galaxyPlayers == 1 else 0
     r = stats.galaxyMinR + random.uniform(0, 0.5)
     dkeys = stats.galaxyDensity.keys()
     dkeys.sort()
@@ -701,10 +702,11 @@ def saveGalaxy(galaxyType, galaxy, fh):
     # save
     print >>fh, '<?xml version="1.0" encoding="UTF-8"?>'
     print >>fh, '<universe>'
-    print >>fh, '\t<galaxy id="%s" x="%.2f" y="%.2f">' % (
+    print >>fh, '\t<galaxy galaxyType="%s" x="%.2f" y="%.2f">' % (
         galaxyType, galaxy.centerX, galaxy.centerY
     )
-    print >>fh, '\t\t<properties radius="%.2f"/>' % galaxy.radius
+    print >>fh, '\t\t<properties radius="%.2f" isSingle="%s"/>' % (galaxy.radius, galaxy.isSingle)
+    #print >>fh, '\t\t<properties radius="%.2f"/>' % galaxy.radius
     for system in galaxy.systems:
         saveSystem(fh, system)
     print >>fh, '\t</galaxy>'

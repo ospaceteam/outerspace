@@ -56,6 +56,7 @@ class IGalaxy(IObject):
         obj.bookedCreation = False
         obj.imperator = OID_NONE
         obj.description = ""
+        obj.isSingle = 0 # instead of False, because we load it from DOM
         # electromagnetic radiation
         obj.emrLevel = 1.0
         obj.emrTrend = 1.0
@@ -87,6 +88,8 @@ class IGalaxy(IObject):
         # TODO remove after 0.5.69
         if not hasattr(obj, 'bookedCreation'):
             obj.bookedCreation = False
+        if not hasattr(obj, 'isSingle'):
+            obj.isSingle = 0
 
     update.public = 0
 
@@ -235,18 +238,18 @@ class IGalaxy(IObject):
     processFINAL2Phase.accLevel = AL_ADMIN
 
 
-    def loadFromXML(self, tran, obj, file, galID, x, y, name):
+    def loadFromXML(self, tran, obj, file, galaxyType, x, y, name):
         log.message('IGalaxy', 'Parsing XML file...')
         dom = parse(os.path.join('data', file))
         log.message('IGalaxy', 'XML file parsed.')
         assert dom.documentElement.tagName == 'universe'
         for node in dom.documentElement.childNodes:
             if node.nodeType == Node.ELEMENT_NODE and node.tagName == 'galaxy':
-                if node.getAttribute('id') == galID:
+                if node.getAttribute('galaxyType') == galaxyType:
                     self.loadDOMNode(tran, obj, node, x, y, name)
                     self.connectWormHoles(tran, obj)
                     return SUCC
-        raise GameException('No such id %s in resource' % galID)
+        raise GameException('No such id %s in resource' % galaxyType)
 
     loadFromXML.public = 1
     loadFromXML.accLevel = AL_ADMIN
@@ -321,8 +324,10 @@ class IGalaxy(IObject):
             if not obj.startingPos and not obj.bookedCreation:
                 log.debug("All positions taken, starting galaxy")
                 canRun = 1
-            if obj.creationTime < time.time() - 2 * 24 * 3600:
+            elif obj.creationTime < time.time() - 2 * 24 * 3600:
                 log.debug("Two days passed", obj.creationTime, time.time() - 2 * 24 * 3600)
+                canRun = 1
+            elif obj.isSingle:
                 canRun = 1
             if not canRun:
                 return 0

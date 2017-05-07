@@ -238,7 +238,7 @@ class IUniverse(IObject):
         if (turn + 2 * Rules.turnsPerDay) % Rules.voteForImpPeriod == 0:
             for galaxyID in obj.galaxies:
                 galaxy = tran.db[galaxyID]
-                if not galaxy.timeEnabled:
+                if not galaxy.timeEnabled or galaxy.isSingle:
                     # skip this galaxy
                     continue
                 message = {
@@ -302,6 +302,15 @@ class IUniverse(IObject):
                         voters[voteFor].append(player.name)
                     else:
                         voters[voteFor] = [player.name]
+
+                # now singleplayer galaxy will be handled, as we finally know whether it is
+                # deserted or not
+                if activePlayerCount == 0 \
+                           and galaxy.isSingle \
+                           and tran.gameMngr.config.server.mode == "normal":
+                    self.endSingleplayerGalaxy(tran, obj, galaxyID)
+
+
                 # check winner
                 nominated = votesID.keys()
                 nominated.sort(lambda a, b: cmp(votesID[b], votesID[a]))
@@ -354,7 +363,8 @@ class IUniverse(IObject):
                         "topic": "EVENT",
                     }
                     self.cmd(galaxy).sendMsg(tran, galaxy, message)
-                # check one player win conditions, but only in normal mode (not development)
+                # check win conditions, but only in normal mode
+                # development mode does not end galaxies
                 if activePlayerCount <= 1 and tran.gameMngr.config.server.mode == "normal":
                     log.message("AUTO RESTARTING GALAXY", galaxyID)
                     if activePlayerCount == 0:
@@ -519,6 +529,15 @@ class IUniverse(IObject):
 
     restartGalaxy2.public = 1
     restartGalaxy2.accLevel = AL_ADMIN
+
+    def endSingleplayerGalaxy(self, tran, obj, galaxyID):
+        # singleplayer galaxy is removed silently
+        log.debug("Deleting Singleplayer galaxy", galaxyID)
+        galaxy = tran.db[galaxyID]
+        self.cmd(galaxy).delete(tran, galaxy)
+
+    endSingleplayerGalaxy.public = 1
+    endSingleplayerGalaxy.accLevel = AL_ADMIN
 
     def createNewSubscribedGalaxy(self, tran, obj, x, y, galaxyName, galaxyType, listOfPlayers):
         log.message("Adding new galaxy '%s' to (%d, %d)" % (galaxyName, x, y))
