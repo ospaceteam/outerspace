@@ -155,7 +155,7 @@ def runGalaxer(options):
         types = s.getPossibleGalaxyTypes(ige.Const.OID_UNIVERSE)
         for galType, count in query:
             galCap, galInfo, radius = types[galType]
-            if galCap * options.threshold <= count or options.local:
+            if galCap * options.threshold <= count:
                 return createNewGalaxy(galType, galCap, radius)
 
     def createNewGalaxy(galType, galCap, radius):
@@ -260,13 +260,6 @@ def runGalaxer(options):
     def test():
         return True
 
-    def logout():
-        global isRunning
-        if options.local:
-            isRunning = False
-            return True
-        return False
-
     def initDatabase():
         db = sqlite3.connect(os.path.join(options.configDir, 'galaxer.db'))
         rows = db.execute('SELECT name FROM sqlite_master WHERE type = "table"')
@@ -290,13 +283,11 @@ def runGalaxer(options):
         return db
 
 
-    # record my pid
-    if not options.local:
-        pidFd = os.open(os.path.join(options.configDir,"galaxer.pid"), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
-        os.write(pidFd, str(os.getpid()))
+    pidFd = os.open(os.path.join(options.configDir,"galaxer.pid"), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+    os.write(pidFd, str(os.getpid()))
 
     # define and register exit function
-    def _cleanup():
+    def _cleanup(pidFd):
         global isRunning
         isRunning = False
         db.commit()
@@ -305,13 +296,7 @@ def runGalaxer(options):
         os.close(pidFd)
         os.remove(os.path.join(options.configDir,"galaxer.pid"))
 
-    def _cleanupLocal():
-        global isRunning
-        isRunning = False
-        db.commit()
-        _adminLogout(s)
-
-    atexit.register(_cleanup)
+    atexit.register(_cleanup, pidFd)
     signal.signal(signal.SIGTERM, _cleanup)
     match_obj = re.search('([^:]+):(\d+)', options.galaxer)
     address, strPort = match_obj.group(1,2)
@@ -327,7 +312,6 @@ def runGalaxer(options):
     server.register_function(setPlayerPreference, 'setPlayerPreference')
     server.register_function(getDataForPlayer, 'getDataForPlayer')
     server.register_function(test, 'test')
-    server.register_function(logout, 'logout')
 
     isRunning = True
 
