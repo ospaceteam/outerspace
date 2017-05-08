@@ -21,12 +21,20 @@ For proper function of game client, ```pygame``` library is also required, in ve
 #### Getting the Outer Space code
 The Outer Space itself has no specific needs, all you have to do is to clone git repository, or download [ZIP file with the latest version](https://github.com/dahaic/outerspace/archive/master.zip) and unpack it in directory of you choice.
 
+### Running Outer Space
 
-### Running a game client
-In case the server is running on ```remote machine```, you need to know IP address of the server, and ports on which the Server and Galaxer listen. Then you run the game with command
+For playing on official (default) server, all you have to do is to run ```outerspace.py``` script without any parameters. On *Windows*, it should be enough to execute the script from file browser.
 
 ```
-python2 ./outerspace.py client --server HOSTNAME:PORT_SERVER --galaxer http://HOSTNAME:PORT_GALAXER
+python2 ./outerspace.py
+```
+
+## Non-default configuration
+### Running a game client
+In case the server is running on ```non-default remote machine```, you need to know IP address of the server, and ports on which the Server and Galaxer listen. Then you run the game with command
+
+```
+python2 ./outerspace.py client --server HOSTNAME:PORT_SERVER --galaxer HOSTNAME:PORT_GALAXER
 ```
 
 By default both of these parameters points to localhost, so in case you want to login to your local Server and local Galaxer,

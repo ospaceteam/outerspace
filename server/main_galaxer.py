@@ -60,10 +60,7 @@ def runGalaxer(options):
                 time.sleep(1)
                 tries -= 1
         password = open(os.path.join(options.configDir, "token"), "r").read()
-        if options.local:
-            gameName = ige.Const.SINGLE_GAME
-        else:
-            gameName = 'Alpha'
+        gameName = 'Alpha'
         s.login(gameName, login, password)
         return s
 
@@ -316,12 +313,17 @@ def runGalaxer(options):
 
     atexit.register(_cleanup)
     signal.signal(signal.SIGTERM, _cleanup)
+    match_obj = re.search('([^:]+):(\d+)', options.galaxer)
+    address, strPort = match_obj.group(1,2)
+    port = int(strPort)
+    if options.local:
+        address  = "localhost"
+        port     = 9081
+        options.server = "localhost:9080"
     db = initDatabase()
     s = _adminLogin()
-    match_obj = re.search('([^:]+)://([^:]+):(\d+)', options.galaxer)
-    protocol, address, strPort = match_obj.group(1,2,3)
-    port = int(strPort)
-    server = SimpleXMLRPCServer((address, port))
+    # to work properly, galaxer needs to listen to 0.0.0.0:PORT anyway
+    server = SimpleXMLRPCServer(('0.0.0.0', port))
     server.register_function(setPlayerPreference, 'setPlayerPreference')
     server.register_function(getDataForPlayer, 'getDataForPlayer')
     server.register_function(test, 'test')

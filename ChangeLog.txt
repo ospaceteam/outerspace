@@ -1,6 +1,10 @@
 ﻿Outer Space Change Log
 ======================
 
+[2017-05-08]
+- Introduce new default server [dahaic]
+- Fix various galaxer issues [dahaic]
+
 [2017-05-07]
 - Added possibility to have singleplayer galaxies [dahaic]
 

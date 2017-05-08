@@ -18,6 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+import socket
 import xmlrpclib
 
 from igeclient import IClient, IClientDB
@@ -43,7 +44,12 @@ def initialize(aServer, aCallbackObj, anOptions):
     global callbackObj, server, options, galaxer
     callbackObj = aCallbackObj
     server = aServer
-    galaxer = xmlrpclib.ServerProxy(gdata.config.galaxer.server)
+    try:
+        galaxer = xmlrpclib.ServerProxy('http://' + gdata.config.galaxer.server)
+        galaxer.test()
+    except socket.error, e:
+        log.warning('Galaxer is not available')
+
     options = anOptions
     initCmdProxy(options.heartbeat)
 
