@@ -303,12 +303,16 @@ class IUniverse(IObject):
                     else:
                         voters[voteFor] = [player.name]
 
-                # now singleplayer galaxy will be handled, as we finally know whether it is
+                # now singleplayer galaxy can be handled, as we finally know whether it is
                 # deserted or not
-                if activePlayerCount == 0 \
-                           and galaxy.isSingle \
-                           and tran.gameMngr.config.server.mode == "normal":
-                    self.endSingleplayerGalaxy(tran, obj, galaxyID)
+                if galaxy.isSingle:
+                    if activePlayerCount == 0 \
+                               and tran.gameMngr.config.server.mode == "normal":
+                        self.endSingleplayerGalaxy(tran, obj, galaxyID)
+                    else:
+                        # singleplayer galaxies do not need voting stuff, so there's nothing
+                        # more to do
+                        continue
 
 
                 # check winner
