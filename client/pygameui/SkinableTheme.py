@@ -161,7 +161,6 @@ def createFont():
             filename = None
         # load font
         if filename == None or os.path.exists(filename):
-            print("inituju!!")
             initFont('small', filename, config.getint(section, "small"))
             initFont('small-bold', filename, config.getint(section, "small"), bold = 1)
             initFont('normal', filename, config.getint(section, "normal"))

@@ -49,12 +49,12 @@ common_parser.add_argument("--configdir", dest = "configDir",
 )
 common_parser.add_argument("--server", dest = "server",
     metavar = "HOSTNAME:PORT",
-    default = "localhost:9080",
+    default = "pichu.dahaic.net:9080",
     help = "Outer Space server location"
 )
 common_parser.add_argument("--galaxer", dest = "galaxer",
-    metavar = "PROTOCOL://HOSTNAME:PORT",
-    default = "http://localhost:9081",
+    metavar = "HOSTNAME:PORT",
+    default = "pichu.dahaic.net:9081",
     help = "Outer Space galaxy booking system location"
 )
 common_parser.add_argument("--local", dest = "local",
@@ -183,6 +183,10 @@ parser_ai_pool.add_argument("--game", dest = "game",
 )
 
 options = parser.parse_args()
+if options.local:
+    # we will set localhost as a connections
+    options.server = 'localhost:9080'
+    options.galaxer= 'localhost:9081'
 
 
 if subcommand == 'galaxer':

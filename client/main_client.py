@@ -140,13 +140,8 @@ def runClient(options):
 
             gdata.config = Config(os.path.join(options.configDir, options.configFilename))
 
-            # default configuration
-            if not options.local:
-                    gdata.config.game.server = options.server
-                    gdata.config.galaxer.server = options.galaxer
-            else:
-                    gdata.config.game.server = "localhost:9080"
-                    gdata.config.galaxer.server = "http://localhost:9081"
+            gdata.config.game.server = options.server
+            gdata.config.galaxer.server = options.galaxer
 
             if gdata.config.client.language == None:
                     gdata.config.client.language = 'en'
