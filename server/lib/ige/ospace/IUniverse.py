@@ -37,9 +37,7 @@ class IUniverse(IObject):
 
     forums = {
         # Official English forums
-        "NEWS": 112, "QA": 112, "IDEAS": 112, "PUBLIC": 112, "ISSUES": 112,
-        # Czech forums
-        "CZ_PUBLIC": 112, "CZ_QA": 112, "CZ_IDEAS": 112,
+        "NEWS": 112, "PUBLIC": 112,
     }
 
     def init(self, obj):
@@ -461,13 +459,7 @@ class IUniverse(IObject):
     canGetMsgs.public = 0
 
     def canSendMsg(self, tran, obj, oid, forum):
-        if forum.endswith("QA"):
-            return 1
-        elif forum.endswith("PUBLIC"):
-            return 1
-        elif forum.endswith("IDEAS"):
-            return 1
-        elif forum.endswith("ISSUES"):
+        if forum.endswith("PUBLIC"):
             return 1
         elif forum.endswith("NEWS"):
             return 1

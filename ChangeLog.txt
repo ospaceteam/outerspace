@@ -1,6 +1,11 @@
 ﻿Outer Space Change Log
 ======================
 
+[2017-05-11]
+- Removed most of the global channels
+  Issues and ideas should go to github project, and more general questions
+  might be discussed on Public channel. (Or social media)
+
 [2017-05-08]
 - Introduce new default server [dahaic]
 - Fix various galaxer issues [dahaic]
