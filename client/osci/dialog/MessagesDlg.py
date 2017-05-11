@@ -120,7 +120,7 @@ class MessagesDlg:
                 tType = T_GALAXY, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
             items.append(item)
         # universe
-        item = ui.Item(_("English channels"), tObjID = OID_NONE, tForum = "", tMsgs = "", foreground = colors[0])
+        item = ui.Item(_("Outer Space"), tObjID = OID_NONE, tForum = "", tMsgs = "", foreground = colors[0])
         items.append(item)
         # news
         msgs, new = self.getMsgsNumber(OID_UNIVERSE, "NEWS")
@@ -134,51 +134,6 @@ class MessagesDlg:
         self.newMsgs += new
         spec = gdata.mailboxSpec[T_UNIVERSE, "PUBLIC"]
         item = ui.Item("   %s" % _(spec[0]), tObjID = OID_UNIVERSE, tForum = "PUBLIC",
-            tType = T_UNIVERSE, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
-        items.append(item)
-        # qa
-        msgs, new = self.getMsgsNumber(OID_UNIVERSE, "QA",'universe')
-        self.newMsgs += new
-        spec = gdata.mailboxSpec[T_UNIVERSE, "QA"]
-        item = ui.Item("   %s" % _(spec[0]), tObjID = OID_UNIVERSE, tForum = "QA",
-            tType = T_UNIVERSE, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
-        items.append(item)
-        # ideas
-        msgs, new = self.getMsgsNumber(OID_UNIVERSE, "IDEAS",'universe')
-        self.newMsgs += new
-        spec = gdata.mailboxSpec[T_UNIVERSE, "IDEAS"]
-        item = ui.Item("   %s" % _(spec[0]), tObjID = OID_UNIVERSE, tForum = "IDEAS",
-            tType = T_UNIVERSE, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
-        items.append(item)
-        # issues
-        msgs, new = self.getMsgsNumber(OID_UNIVERSE, "ISSUES",'universe')
-        self.newMsgs += new
-        spec = gdata.mailboxSpec[T_UNIVERSE, "ISSUES"]
-        item = ui.Item("   %s" % _(spec[0]), tObjID = OID_UNIVERSE, tForum = "ISSUES",
-            tType = T_UNIVERSE, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
-        items.append(item)
-        # universe (CZ)
-        item = ui.Item(_("Czech channels"), tObjID = OID_NONE, tForum = "", tMsgs = "", foreground = colors[0])
-        items.append(item)
-        # public
-        msgs, new = self.getMsgsNumber(OID_UNIVERSE, "CZ_PUBLIC",'universe')
-        self.newMsgs += new
-        spec = gdata.mailboxSpec[T_UNIVERSE, "PUBLIC"]
-        item = ui.Item("   %s" % _(spec[0]), tObjID = OID_UNIVERSE, tForum = "CZ_PUBLIC",
-            tType = T_UNIVERSE, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
-        items.append(item)
-        # qa
-        msgs, new = self.getMsgsNumber(OID_UNIVERSE, "CZ_QA",'universe')
-        self.newMsgs += new
-        spec = gdata.mailboxSpec[T_UNIVERSE, "QA"]
-        item = ui.Item("   %s" % _(spec[0]), tObjID = OID_UNIVERSE, tForum = "CZ_QA",
-            tType = T_UNIVERSE, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
-        items.append(item)
-        # ideas
-        msgs, new = self.getMsgsNumber(OID_UNIVERSE, "CZ_IDEAS",'universe')
-        self.newMsgs += new
-        spec = gdata.mailboxSpec[T_UNIVERSE, "IDEAS"]
-        item = ui.Item("   %s" % _(spec[0]), tObjID = OID_UNIVERSE, tForum = "CZ_IDEAS",
             tType = T_UNIVERSE, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
         items.append(item)
         #
