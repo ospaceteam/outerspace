@@ -11,12 +11,10 @@ The ```outerspace``` project consists of two big parts. One is graphic client, p
 * ```pygame-1.9.1``` (for game client only)
 
 #### Python
-Outerspace is written in Python2, specifically ```Python 2.7``` is the supported version. You can grab it on [official pages](https://www.python.org/downloads/release/python-2713/), or in the repositories of you linux distributions.
-
-*NOTE (Windows):* It is highly advisable to follow steps described in [Using Python on Windows guide](https://docs.python.org/2.7/using/windows.html).
+Outerspace is written in Python2, ```Python 2.7``` to be more specific. You can grab it on [official pages](https://www.python.org/downloads/release/python-2713/), or in the repositories of you linux distributions. 
 
 #### PyGame
-For proper function of game client, ```pygame``` library is also required, in version at least```pygame-1.9.1```. You can install it following a [GettingStarted guide](https://www.pygame.org/wiki/GettingStarted#Pygame%20Installation). Python3 used in the guide is not mandatory - you can use Python2 instead.
+*Outer Space client is able to install the PyGame requirement automatically. It will be installed  for active user only, so no administrator rights are needed.*
 
 #### Getting the Outer Space code
 The Outer Space itself has no specific needs, all you have to do is to clone git repository, or download [ZIP file with the latest version](https://github.com/dahaic/outerspace/archive/master.zip) and unpack it in directory of you choice.
@@ -29,7 +27,17 @@ For playing on official (default) server, all you have to do is to run ```outers
 python2 ./outerspace.py
 ```
 
+*NOTE:* If Outer Space fails during installation of ```PyGame``` (might occur during first run), it is most likely caused by ```pip``` package being too old. You can update it with command
+
+```
+python2 -m pip install -U pip
+```
+this will require administrator access, though.
+
 ## Non-default configuration
+
+*NOTE (Windows):* It is highly advisable to follow steps described in [Using Python on Windows guide](https://docs.python.org/2.7/using/windows.html).
+
 ### Running a game client
 In case the server is running on ```non-default remote machine```, you need to know IP address of the server, and ports on which the Server and Galaxer listen. Then you run the game with command
 

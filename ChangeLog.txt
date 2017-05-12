@@ -1,6 +1,9 @@
 ﻿Outer Space Change Log
 ======================
 
+[2017-05-12]
+- PyGame is now installed automatically [dahaic]
+
 [2017-05-11]
 - Removed most of the global channels
   Issues and ideas should go to github project, and more general questions

@@ -26,7 +26,29 @@ import re
 import time
 import sys
 
-import pygame, pygame.image, pygame.font, pygame.time, pygame.version
+"""
+To save people trouble with installing PyGame, which might be a bit of
+a challenge for non-technical users, we will install it ourselves.
+Even though it is mentioned in the Installation guide, we want to make
+sure user agrees with the installation.
+"""
+try:
+    import pygame
+except ImportError:
+    import pip
+    print("Outer Space client requires PyGame to work properly.")
+    print("PyGame will be installed in 10 seconds")
+    print("You can cancel the installation by pressing CTRL+C or by closing a window")
+    for i in xrange(10,0,-1):
+        print i
+        time.sleep(1)
+    pip.main(['install','pygame','--user'])
+    # reload needs to happen, so we can import right away
+    import site
+    reload(site)
+    import pygame
+
+import pygame.image, pygame.font, pygame.time, pygame.version
 import pygame.transform
 from pygame.locals import *
 
