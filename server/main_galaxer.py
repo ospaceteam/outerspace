@@ -158,35 +158,76 @@ def runGalaxer(options):
             if galCap * options.threshold <= count:
                 return createNewGalaxy(galType, galCap, radius)
 
-    def createNewGalaxy(galType, galCap, radius):
+
+    def findSpotForGalaxy(newGalRadius):
+        """ We start with sum of surfaces of active galaxies (with borders) with this,
+            we count the hypothetical square all galaxies should fit together. We then
+            increase the size a bit, and try to place the new galaxy there randomly.
+            If not successful, increase again and repeat.
+        """
         actualGalaxies = _getActualGalaxies()
-        # using sqlite to provide rtree, as it is part of the standard library
-        # but not all versions have it, so the check is necessary
-        try:
-            tempdb = sqlite3.connect(':memory:')
-            tempdb.execute('CREATE VIRTUAL TABLE galaxies_positions USING rtree(id INTEGER PRIMARY KEY, x_min, x_max, y_min, y_max)')
-        except sqlite3.OperationalError:
-            # rtree is not compiled in the python
-            tempdb = None
-        galNames = set([])
-        maxRadius = radius
-        # reserve is half of the minimal range of the galaxies
-        reserve = 50.0
-        galRadius = radius + reserve
-        # fill list of possible galaxy names
-        names = []
-        for name in open(os.path.join(baseDir, 'data', 'GalaxyNames.txt')):
-            names.append(name.strip())
+
+        attemptsAmount = 10000 # number of placement attempts within one resize
+        magicConstant = 1.1
+        magicConstantStep = 0.1
+        border = 50
+
+        # count surface required
+        wholeSurface = 0
         for galaxyID in actualGalaxies:
             galName, galX, galY, galRadius = actualGalaxies[galaxyID]
-            galNames.add(galName)
-            maxRadius = max(maxRadius, galRadius)
-            if tempdb:
-                galRadius += reserve
-                tempdb.execute('INSERT INTO galaxies_positions VALUES (?, ?, ?, ?, ?)',
-                        (galaxyID, galX-galRadius, galX+galRadius, galY-galRadius, galY+galRadius))
-        # get list of booked players, and delete
-        # their records from the booking system
+            # border is counted only once as it can overlap
+            wholeSurface += (galRadius * 2 + border) ** 2
+        # adding wholeSurface of the galaxy currently processed
+        wholeSurface += (newGalRadius * 2 + border) ** 2
+
+        search = True
+        attempts = attemptsAmount
+        lowLimit = newGalRadius # only positive coordinates
+        while search:
+            highLimit = math.ceil(wholeSurface ** 0.5 * magicConstant)
+            attempts -= 1
+            posX = int(random.randrange(lowLimit, highLimit))
+            posY = int(random.randrange(lowLimit, highLimit))
+            isBlocked = False
+            for galaxyID in actualGalaxies:
+                galName, galX, galY, galRadius = actualGalaxies[galaxyID]
+                neededSpace = galRadius + border + newGalRadius
+                if abs(galX - posX) < neededSpace and abs(galY - posY) < neededSpace:
+                    isBlocked = True
+                    break
+            search = isBlocked
+            if not attempts:
+                magicConstant += magicConstantStep
+                attempts = attemptsAmount
+        return (posX, posY)
+
+    def findNameForGalaxy():
+        allNames = []
+        namesInUse = set([])
+        for name in open(os.path.join(baseDir, 'data', 'GalaxyNames.txt')):
+            allNames.append(name.strip())
+        actualGalaxies = _getActualGalaxies()
+        for galaxyID in actualGalaxies:
+            galName, galX, galY, galRadius = actualGalaxies[galaxyID]
+            namesInUse.add(galName)
+
+        for name in allNames:
+            if name in namesInUse:
+                continue
+            return name
+        # no name available
+        return None
+
+    def createNewGalaxy(galType, galCap, radius):
+        # first check if there is a galaxy name available
+        name = findNameForGalaxy()
+        if name is None:
+            return False
+        # now to get position for it - this cannot fail
+        posX, posY = findSpotForGalaxy(radius)
+
+        # get list of players
         query = db.execute('SELECT login, nick, email FROM players\
                             WHERE galType=? ORDER BY time ASC',
                             (galType,)).fetchall()
@@ -194,55 +235,17 @@ def runGalaxer(options):
         for playerInfo in query[:galCap]:
             nick = playerInfo[1]
             listOfPlayers.append(playerInfo)
+        # trigger the creation
+        s.createNewSubscribedGalaxy(ige.Const.OID_UNIVERSE, posX, posY, name, galType, listOfPlayers)
+
+        # now, as the galaxy has been created, remove booked players from galaxer database
+        for playerInfo in listOfPlayers:
+            nick = playerInfo[1]
             db.execute('DELETE FROM players\
                         WHERE nick=?',
                         (nick,))
-        # now we need to find the place for it
-        search = True
-        # we don't want to have negative coordinates
-        lowLimit = int(math.ceil(radius))
-        if tempdb:
-            # surface of biggest galaxy is multiplied by number of galaxies to get
-            # filled surface. By adding the surface of new galaxy, we get the surface of
-            # hypothetical square. 4.4 is magic constant that multiply length of side to
-            # ensure that the new galaxy will fit in all cases (actually 4.3 should be
-            # sufficient according to 10000 run Monte Carlo simulation)
-            highLimit = int(math.ceil(((maxRadius ** 2 ) * len(actualGalaxies) + galRadius ** 2) ** 0.5 * 4.4 + radius))
-            while search:
-                posX = random.randrange(lowLimit, highLimit)
-                posY = random.randrange(lowLimit, highLimit)
-                search = bool(tempdb.execute('SELECT id FROM galaxies_positions WHERE\
-                                    x_min<? AND x_max>? AND y_min<? AND y_max>?',
-                                    (posX+galRadius, posX-galRadius, posY+galRadius, posY-galRadius)).fetchall())
-        else:
-            # fallback
-            # do it less strict and slower, in case of no r*tree available
-            highLimit = int(math.ceil(((maxRadius ** 2) * len(actualGalaxies) + galRadius ** 2) ** 0.5 * 6 + radius))
-            while search:
-                posX = random.randrange(lowLimit, highLimit)
-                posY = random.randrange(lowLimit, highLimit)
-                isBlocked = False
-                for galaxyID in actualGalaxies:
-                    galName, galX, galY, galRadius = actualGalaxies[galaxyID]
-                    neededSpace = galRadius + reserve
-                    if abs(galX - posX) < neededSpace * 2 or abs(galY - posY) < neededSpace * 2:
-                        isBlocked = True
-                        break
-                search = isBlocked
-        # searching for free name for the galaxy
-        nameFound = False
-        for name in names:
-            if name in galNames:
-                continue
-            nameFound = True
-            break
-        if not nameFound:
-            # cannot be created, no free name
-            # TODO: report it
-            return False
-        # create the galaxy
-        s.createNewSubscribedGalaxy(ige.Const.OID_UNIVERSE, posX, posY, name, galType, listOfPlayers)
-        # record the creation time
+
+        # and record the creation time
         query = db.execute('SELECT lastCreation FROM galaxies\
                             WHERE galType=?',
                             (galType,)).fetchone()
