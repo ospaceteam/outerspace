@@ -3,6 +3,7 @@
 
 [2017-05-21]
 - Once again new self-updating mechanism [dahaic]
+- Revision bump [dahaic]
 
 [2017-05-12]
 - PyGame is now installed automatically [dahaic]
