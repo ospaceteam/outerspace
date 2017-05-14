@@ -22,10 +22,13 @@ from ige import log
 import ige.version
 import os
 from osci import client, gdata, res
+import pygame
 import pygameui as ui
+import re
+import shutil
 import sys
 import urllib2
-import webbrowser
+import tarfile
 
 class UpdateDlg:
 
@@ -59,14 +62,9 @@ class UpdateDlg:
         self.win.vStatusBar.text = _("Updating client...")
         # self.win.hide()
 
-    def onLaunchBrowser(self, widget, action, data):
-        """Launch web browser with download page."""
-        log.debug("Launching browser", self.url)
-        webbrowser.open(self.url)
-        self.app.exit()
-
-    def onDownloadAndInstall(self, widget, action, data):
-        """Download and run installer of the new version"""
+    def performDownload(self, updateDirectory):
+        """Download zip with new version"""
+        log.debug('Downloading new version')
         self.setProgress('Preparing download...', 0, 1)
         # setup proxies
         proxies = {}
@@ -77,16 +75,22 @@ class UpdateDlg:
         try:
             # open URL
             opener = urllib2.build_opener(urllib2.ProxyHandler(proxies))
-            ifh = opener.open(self.url)
-            log.debug("Retrieving URL", ifh.geturl())
-            # download file
-            total = int(ifh.info()["Content-Length"])
-            basename = os.path.basename(ifh.geturl())
+            # it unfortunately is not completely reliable
+            for i in xrange(1,5):
+                try:
+                    ifh = opener.open(self.url)
+                    log.debug("Retrieving URL", ifh.geturl())
+                    # download file
+                    total = int(ifh.info()["content-length"])
+                    basename = re.search('(?<=filename=).*', ifh.info()["content-disposition"]).group(0)
+                    break
+                except KeyError:
+                    pygame.time.wait(1)
             if not basename:
                 log.message("URL is not a file")
                 self.reportFailure(_("Error: URL does not point to a file."))
                 return
-            filename = os.path.join(self.options.configDir, basename)
+            filename = os.path.join(updateDirectory, basename)
             log.debug("Downloading file %s of size %d" % (filename, total) )
             ofh = open(filename, "wb")
             # download and report progress
@@ -101,21 +105,58 @@ class UpdateDlg:
                 self.setProgress("Downloading update...", downloaded, total)
             ifh.close()
             ofh.close()
+            return filename
         except urllib2.URLError, e:
             log.warning("Cannot download file")
             self.reportFailure(_("Cannot finish download: %(s)") % str(e.reason))
-            return
-        self.setProgress('Finishing update...')
-        # now somehow handle file we downloaded
-        if hasattr(os, "startfile"):
-            # win32 has startfile defined
-            log.debug("Starting file", filename)
-            os.startfile(os.path.normpath(filename))
-            self.app.exit()
-        else:
-            # other systems
-            log.debug("Don't know what to do with", filename)
-            self.reportFailure(_("Cannot run %s." % filename))
+            return None
+
+    def performUpdate(self, updateDirectory, filename):
+        log.debug('Updating game to the new version')
+        """Extract new version, and replace current directory with it"""
+        self.setProgress('Preparing update...', 0, 3)
+        # we expect archive contains one common prefix
+        version = "%(major)s.%(minor)s.%(revision)s%(status)s" % self.serverVersion
+        expectedDir = 'outerspace-' + version
+        # now extraction!
+        archive = tarfile.open(filename, 'r:gz')
+        for member in archive.getnames():
+            if not re.match('^{0}'.format(expectedDir), member):
+                log.error("That archive is suspicious, because of file {0}".format(member))
+                log.debug("Expected prefix directory is {0}".format(expectedDir))
+                sys.exit(1)
+        log.debug('Archive has expected directory structure')
+        self.setProgress('Extracting new version...', 1, 3)
+        archive.extractall(updateDirectory)
+        log.debug('Update extracted to temporary directory')
+
+        self.setProgress('Replacing versions...', 2, 3)
+        # move current directory to temporary location
+        actualDir = os.path.dirname(os.path.abspath(sys.argv[0]))
+        actualDirTrgt = os.path.join(updateDirectory, os.path.basename(actualDir))
+        if os.path.exists(actualDirTrgt):
+            shutil.rmtree(actualDirTrgt)
+        shutil.move(actualDir, actualDirTrgt)
+        log.debug('Old version backuped to {0}'.format(actualDirTrgt))
+
+
+        # move newly extracted directory to original location
+        shutil.move(os.path.join(updateDirectory, expectedDir), actualDir)
+        self.setProgress('Restarting game...', 3, 3)
+        log.debug('Restarting game')
+        os.execl(sys.executable, sys.executable, *sys.argv)
+
+
+    def onDownloadAndInstall(self, widget, action, data):
+        updateDirectory = os.path.join(self.options.configDir, 'Update')
+        if not os.path.isdir(updateDirectory):
+            log.debug("Creating update directory")
+            os.mkdir(updateDirectory)
+        filename = self.performDownload(updateDirectory)
+        if filename is None:
+            self.onQuit(widget, action, data)
+        self.performUpdate(updateDirectory, filename)
+
 
     def reportFailure(self, reason):
         self.win.vProgress.visible = 0
@@ -140,26 +181,21 @@ class UpdateDlg:
         if self.caller:
             self.caller.display(message = data or _("Update skipped."))
 
+    def onQuit(self, widget, action, data):
+        self.win.hide()
+        self.app.exit()
+
     def isUpdateAvailable(self):
         """Check if client version matches server version and update client
         if neccessary"""
         log.message("Checking for update...")
-        if "oslauncher" in sys.modules:
-            log.message("Application launched from Outer Space Launcher -- will not update")
-            return False
         updateMode = gdata.config.client.updatemode or "normal"
         # quit if update is disabled
         if updateMode == 'never':
             return False
         # compare server and client versions
         log.message("Retrieving server version")
-        try:
-            self.serverVersion = client.cmdProxy.getVersion()
-        except KeyError:
-            # call is not supported on older server versions
-            log.debug("getVersion call not supported")
-            self.reportFailure(_("Server does not support update feature yet. Check for updates manually, please."))
-            return None
+        self.serverVersion = client.cmdProxy.getVersion()
         log.debug("Comparing server and client versions", self.serverVersion, ige.version.version)
         matches = True
         for i in ("major", "minor", "revision", "status"):
@@ -172,23 +208,36 @@ class UpdateDlg:
         return True
 
     def setUpdateAction(self):
-        # check if update URL exists
-        action, self.url = self.serverVersion["clientURLs"].get(sys.platform, self.serverVersion["clientURLs"]["*"])
-        version = "%(major)s.%(minor)s.%(revision)s%(status)s" % self.serverVersion
-        text = [
-            _("Server requires client version %s. It is recommended to update your client.") % version,
-        ]
-        if action == "browser":
-            # open webbrowser with given url
-            text.append(_("Do you want to display download page?"))
-            self.win.vConfirm.action = "onLaunchBrowser"
-        elif action == "execute":
-            # download and run binary installer
-            text.append(_("Do you want to download and install new version?"))
-            self.win.vConfirm.action = "onDownloadAndInstall"
+        response = self.serverVersion["clientURLs"].get(sys.platform, self.serverVersion["clientURLs"]["*"])
+        if len(response) == 1:
+            self.url = response
         else:
-            log.message("Unsupported update action", action)
-            self.onCancel(None, None, _("Unsupported update type."))
+            # compatibility reasons in 0.5.69, TODO remove
+            action, self.url = response
+        # if the game resides in git repository, leave it on user, otherwise volunteer to perform update
+        gameDirectory = os.path.realpath(os.path.dirname(sys.argv[0]))
+        gitDir = os.path.join(gameDirectory, '.git')
+        if os.path.isdir(gitDir):
+            version = "%(major)s.%(minor)s.%(revision)s%(status)s" % self.serverVersion
+            text = [
+                _("Server requires client version %s. It is recommended to update your client.") % version,
+                "",
+                _('Please update your git repo to tag "%s"') % version
+            ]
+            self.win.vConfirm.action = "onQuit"
+            self.win.vConfirm.text = _("OK")
+            self.win.vStatusBar.layout = (0, 5, 17,1)
+            self.win.vCancel.visible = 0
+        else:
+            version = "%(major)s.%(minor)s.%(revision)s%(status)s" % self.serverVersion
+            text = [
+                _("Server requires client version %s. It is necessary to update your client.") % version,
+                "",
+                _("Do you want Outer Space to perform update?")
+            ]
+            self.win.vConfirm.action = "onDownloadAndInstall"
+            self.win.vCancel.action = "onQuit"
+            self.win.vCancel.text = _("Quit")
         self.win.vText.text = text
 
     def createUI(self):
@@ -197,13 +246,13 @@ class UpdateDlg:
             modal = 1,
             movable = 0,
             title = _('Outer Space Update Available'),
-            rect = ui.Rect((w - 424) / 2, (h - 124) / 2, 424, 124),
+            rect = ui.Rect((w - 424) / 2, (h - 144) / 2, 424, 144),
             layoutManager = ui.SimpleGridLM(),
         )
         self.win.subscribeAction('*', self)
-        ui.Text(self.win, layout = (5, 0, 16, 3), id = 'vText', background = self.win.app.theme.themeBackground, editable = 0)
-        ui.ProgressBar(self.win, layout = (5, 3, 16, 1), id = 'vProgress')
+        ui.Text(self.win, layout = (5, 0, 16, 4), id = 'vText', background = self.win.app.theme.themeBackground, editable = 0)
+        ui.ProgressBar(self.win, layout = (0, 4, 21, 1), id = 'vProgress')
         ui.Label(self.win, layout = (0, 0, 5, 4), icons = ((res.loginLogoImg, ui.ALIGN_W),))
-        ui.Title(self.win, layout = (0, 4, 13, 1), id = 'vStatusBar', align = ui.ALIGN_W)
-        ui.TitleButton(self.win, layout = (13, 4, 4, 1), id = 'vCancel', text = _("No"), action = 'onCancel')
-        ui.TitleButton(self.win, layout = (17, 4, 4, 1), id = 'vConfirm', text = _("Yes"), action = 'onConfirm')
+        ui.Title(self.win, layout = (0, 5, 13, 1), id = 'vStatusBar', align = ui.ALIGN_W)
+        ui.TitleButton(self.win, layout = (13, 5, 4, 1), id = 'vCancel', text = _("No"), action = 'onCancel')
+        ui.TitleButton(self.win, layout = (17, 5, 4, 1), id = 'vConfirm', text = _("Yes"), action = 'onConfirm')
