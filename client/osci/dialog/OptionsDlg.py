@@ -209,7 +209,7 @@ class OptionsDlg:
         if gdata.config.defaults.sound != None:
             val = gdata.config.defaults.sound
         else:
-            val = "yes"
+            val = "no"
         self.win.vSoundEnabled.checked = val == "yes"
         self.win.vSoundVolume.slider.min = 0
         self.win.vSoundVolume.slider.max = 110
@@ -218,11 +218,14 @@ class OptionsDlg:
         else:
             val = 100
         self.win.vSoundVolume.slider.position = val
+        # disabled because of a bug in pygame
+        self.win.vSoundEnabled.enabled = False
+        self.win.vSoundVolume.enabled = False
 
         if gdata.config.defaults.music != None:
             val = gdata.config.defaults.music
         else:
-            val = "yes"
+            val = "no"
         self.win.vMusicEnabled.checked = val == "yes"
         self.win.vMusicVolume.slider.min = 0
         self.win.vMusicVolume.slider.max = 110
@@ -231,6 +234,9 @@ class OptionsDlg:
         else:
             val = 100
         self.win.vMusicVolume.slider.position = val
+        # disabled because of a bug in pygame
+        self.win.vMusicEnabled.enabled = False
+        self.win.vMusicVolume.enabled = False
 
     def onCancel(self, widget, action, data):
         self.hide()
