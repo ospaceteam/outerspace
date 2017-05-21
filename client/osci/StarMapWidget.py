@@ -81,7 +81,8 @@ class StarMapWidget(Widget):
         self._actBuoyAreas = {}
         self.currX = 0.0
         self.currY = 0.0
-        self.scale = 35.0
+        self.scale = 50.0
+        self.textSize = 'normal'
         self.activeObjID = OID_NONE
         self.activeObjIDs = []
         self.pressedObjIDs = []
@@ -839,14 +840,14 @@ class StarMapWidget(Widget):
                 if name:
                     if self.overlayMode != gdata.OVERLAY_OWNER:
                         namecolor = res.fadeColor(namecolor)
-                    img = renderText('small', name, 1, namecolor)
+                    img = renderText(self.textSize, name, 1, namecolor)
                     self._mapSurf.blit(img, (sx - img.get_width() / 2, sy + h / 2))
                 buoy = self.getBuoy(objID)
                 if buoy != None and not self.alternativeViewMode:
                     if not name: #if name not set and there is a bouy, set "?" as the name
                         if self.overlayMode != gdata.OVERLAY_OWNER:
                             namecolor = res.fadeColor(namecolor)
-                        img = renderText('small', '[ ? ]', 1, namecolor)
+                        img = renderText(self.textSize, '[ ? ]', 1, namecolor)
                         self._mapSurf.blit(img, (sx - img.get_width() / 2, sy + h / 2))
                         nSy = sy + h / 2 + img.get_height()
                     nSy = sy + h / 2 + img.get_height()
@@ -862,7 +863,7 @@ class StarMapWidget(Widget):
                             bouycolor = buoyColors[buoy[1] - 1]
                         else:
                             bouycolor = res.fadeColor(buoyColors[buoy[1] - 1])
-                        img = renderText('small', line, 1, bouycolor)
+                        img = renderText(self.textSize, line, 1, bouycolor)
                         maxW = max(img.get_width(), maxW)
                         self._mapSurf.blit(img, (sx - img.get_width() / 2, nSy + hh))
                         hh += img.get_height()
@@ -874,10 +875,10 @@ class StarMapWidget(Widget):
                     alternative = name
                     nSy = sy + h / 2 + img.get_height()
                     if constPoints != 0 or sciPoints != 0:
-                        img = renderText('small', u"CP: %d RP: %d" % (constPoints, sciPoints), 1, namecolor)
+                        img = renderText(self.textSize, u"CP: %d RP: %d" % (constPoints, sciPoints), 1, namecolor)
                         self._mapSurf.blit(img, (sx - img.get_width() / 2, nSy))
                     if isGovCentral:
-                        img = renderText('small', u"Central system", 1, (255, 255, 255))
+                        img = renderText(self.textSize, u"Central system", 1, (255, 255, 255))
                         self._mapSurf.blit(img, (sx - img.get_width() / 2, nSy + img.get_height()))
                 for icon in icons:
                     self._mapSurf.blit(icon, (x, y))
@@ -897,7 +898,7 @@ class StarMapWidget(Widget):
                 if name and scale > 15:
                     if self.overlayMode != gdata.OVERLAY_OWNER:
                         namecolor = res.fadeColor(namecolor)
-                    img = renderText('small', name, 1, namecolor)
+                    img = renderText(self.textSize, name, 1, namecolor)
                     self._mapSurf.blit(img, (sx - img.get_width() / 2, sy + 6 / 2))
                     buoy = self.getBuoy(objID)
                     if buoy != None:
@@ -908,7 +909,7 @@ class StarMapWidget(Widget):
                         for line in lines:
                             if len(line) == 0:
                                 break
-                            img = renderText('small', line, 1, buoyColors[buoy[1] - 1])
+                            img = renderText(self.textSize, line, 1, buoyColors[buoy[1] - 1])
                             maxW = max(img.get_width(), maxW)
                             self._mapSurf.blit(img, (sx - img.get_width() / 2, nSy + hh))
                             hh += img.get_height()
@@ -1029,7 +1030,7 @@ class StarMapWidget(Widget):
                 pygame.draw.polygon(self._mapSurf, color,
                     (actRect.midleft, actRect.midtop, actRect.midright, actRect.midbottom), 0)
                 if eta and scale > 15:
-                    img = renderText('small', eta, 1, color)
+                    img = renderText(self.textSize, eta, 1, color)
                     self._mapSurf.blit(img, actRect.topright)
                 actRect.move_ip(self.rect.left, self.rect.top)
                 self._actAreas[objID] = actRect
@@ -1054,7 +1055,7 @@ class StarMapWidget(Widget):
                     centralY = maxY - (int((centralPlanet.y - currY) * scale) + centerY)
                     radius = int((107.5 - step) * govPCR / 37.5 * scale)
                     pygame.draw.circle(self._mapSurf, moraleColor, (centralX, centralY), radius, 1)
-                    text = renderText('small', step, 1, moraleColor)
+                    text = renderText(self.textSize, step, 1, moraleColor)
                     #maxW = max(text.get_width(), maxW)
                     self._mapSurf.blit(text, (centralX + radius, centralY))
 
@@ -1178,7 +1179,7 @@ class StarMapWidget(Widget):
                         rng = int(i * speed * self.scale)
                         if rng > 1:
                             pygame.draw.circle(surface, (0x70, 0x70, 0x80), (sx, sy), rng, 1)
-                            textSrfc = renderText('small', res.formatTime(i * 6), 1, (0x70, 0x70, 0x80), (0x00, 0x00, 0x00))
+                            textSrfc = renderText(self.textSize, res.formatTime(i * 6), 1, (0x70, 0x70, 0x80), (0x00, 0x00, 0x00))
                             surface.blit(textSrfc, (sx - rng, sy - textSrfc.get_height() / 2))
                             surface.blit(textSrfc, (sx + rng, sy - textSrfc.get_height() / 2))
                             surface.blit(textSrfc, (sx - textSrfc.get_width() / 2, sy - rng))
@@ -1223,7 +1224,7 @@ class StarMapWidget(Widget):
                     height = 0
                     # pygame.draw.line(surface, fg, (x1, y1), (x, y), 1)
                     for item in info:
-                        w, h = getTextSize('small', item)
+                        w, h = getTextSize('normal', item)
                         width = max(width, w)
                         height += h
                     if not moreIDs:
@@ -1235,7 +1236,7 @@ class StarMapWidget(Widget):
                     x += 1
                     tmpY = y + 1
                     for item in info:
-                        textSrfc = renderText('small', item, 1, fg)
+                        textSrfc = renderText('normal', item, 1, fg)
                         surface.blit(textSrfc, (x, tmpY))
                         tmpY += textSrfc.get_height()
                     x += width + 2
@@ -1310,7 +1311,7 @@ class StarMapWidget(Widget):
         if self.overlayMode == gdata.OVERLAY_MORALE:
             mode = mode + _("Morale")
 
-        textSrfc = renderText('small', mode, 1, (0x70, 0x70, 0x80))
+        textSrfc = renderText(self.textSize, mode, 1, (0x70, 0x70, 0x80))
         self._overlayZone.blit(textSrfc, (
             6,
             4 )
@@ -1337,7 +1338,7 @@ class StarMapWidget(Widget):
                 pygame.draw.line(self._mapSurf, (0x00, 0x00, 0x90),
                     (x, rect.top), (x, rect.bottom), 1)
                 if self.showCoords:
-                    textSrfc = renderText('small', int(value), 1, (0x70, 0x70, 0x80))
+                    textSrfc = renderText(self.textSize, int(value), 1, (0x70, 0x70, 0x80))
                     self._mapSurf.blit(textSrfc, (x + 2, rect.height - textSrfc.get_height()))
             else:
                 pygame.draw.line(self._mapSurf, (0x33, 0x33, 0x66),
@@ -1351,7 +1352,7 @@ class StarMapWidget(Widget):
             if value % 5 == 0:
                 pygame.draw.line(self._mapSurf, (0x00, 0x00, 0x90),
                     (rect.left, yScrn), (rect.right, yScrn), 1)
-                textSrfc = renderText('small', int(value), 1, (0x70, 0x70, 0x80))
+                textSrfc = renderText(self.textSize, int(value), 1, (0x70, 0x70, 0x80))
                 self._mapSurf.blit(textSrfc, (0, yScrn))
             else:
                 pygame.draw.line(self._mapSurf, (0x33, 0x33, 0x66),
@@ -1383,7 +1384,7 @@ class StarMapWidget(Widget):
             self._mapSurf.blit(img,(left+button[2],top+15+button[3]))
         if self._tempOverlayHotbutton:
             text = self._hotbuttons[self._tempOverlayHotbutton][7]
-            textSrfc = renderText('small', text, 1, (0xEF, 0xEF, 0xEF))
+            textSrfc = renderText(self.textSize, text, 1, (0xEF, 0xEF, 0xEF))
             self._mapSurf.blit(textSrfc, (left+2,top+1))
 
     def initHotbuttons(self):
@@ -1631,13 +1632,20 @@ class StarMapWidget(Widget):
             self.miniMap.moveRect(self.currX, self.currY, rect.width / self.scale, rect.height / self.scale)
 
     def processMWUp(self, evt):
-        x, y = evt.pos
-        centerX, centerY = self._mapSurf.get_rect().center
-        self.currX -= float(centerX - x) * (1/ self.scale - 1 / (self.scale+5))
-        self.currY += float(centerY - y) * (1/ self.scale - 1 / (self.scale+5))
-        self.scale += 5
-        self.repaintMap = 1
-        self.processMiniMapRect()
+        if self.scale < 80:
+            x, y = evt.pos
+            centerX, centerY = self._mapSurf.get_rect().center
+            self.currX -= float(centerX - x) * (1/ self.scale - 1 / (self.scale+5))
+            self.currY += float(centerY - y) * (1/ self.scale - 1 / (self.scale+5))
+            self.scale += 5
+            if self.scale > 60:
+                self.textSize = 'large'
+            elif self.scale > 40:
+                self.textSize = 'normal'
+            else:
+                self.textSize = 'small'
+            self.repaintMap = 1
+            self.processMiniMapRect()
         return ui.NoEvent
 
     def processMWDown(self, evt):
@@ -1647,6 +1655,12 @@ class StarMapWidget(Widget):
             self.currX += float(centerX - x) * (1/ self.scale - 1 / (self.scale+5))
             self.currY -= float(centerY - y) * (1/ self.scale - 1 / (self.scale+5))
             self.scale -= 5
+            if self.scale > 60:
+                self.textSize = 'large'
+            elif self.scale > 40:
+                self.textSize = 'normal'
+            else:
+                self.textSize = 'small'
             self.repaintMap = 1
             self.processMiniMapRect()
         return ui.NoEvent
