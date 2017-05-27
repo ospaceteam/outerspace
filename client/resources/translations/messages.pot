@@ -1,92 +1,90 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Outer Space 0.5\n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: Sun May 28 00:20:44 2017\n"
-"PO-Revision-Date: 2010-09-15 18:53+0100\n"
-"Last-Translator: Qark <qark@ospace.net>\n"
-"Language-Team: IGE <qark@seznam.cz>\n"
-"Language: cs"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Language: Czech\n"
-"X-Poedit-Basepath: ../../..\n"
-"X-Poedit-KeywordsList: N_\n"
-"X-Poedit-SearchPath-0: lib\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: ENCODING\n"
+"Generated-By: pygettext.py 1.4\n"
+
 
 #: client-ai/ai_client.py:181 client/osci/client.py:205
 msgid "Deleting obsolete data..."
-msgstr "Mažu zastaralá data..."
+msgstr ""
 
 #: client-ai/ai_client.py:201 client/osci/client.py:225
 msgid "Downloading player data..."
-msgstr "Stahuji data hráče..."
+msgstr ""
 
 #: client-ai/ai_client.py:206 client/osci/client.py:230
 msgid "Updating scanner..."
-msgstr "Aktualizuji skener..."
+msgstr ""
 
 #: client-ai/ai_client.py:212 client/osci/client.py:236
 msgid "Downloading planets and fleets data..."
-msgstr "Nahrávám data o planetách a flotilách..."
+msgstr ""
 
 #: client-ai/ai_client.py:242
-#, fuzzy
 msgid "Skipping messages..."
-msgstr "Nahrávám zprávy..."
+msgstr ""
 
 #: client-ai/ai_client.py:246
 msgid "Clearing data on the server..."
-msgstr "Mažu data na serveru..."
+msgstr ""
 
 #: client/main_client.py:98
 msgid "Server sponsored by:"
-msgstr "Server sponzorován"
+msgstr ""
 
 #: client/main_client.py:102 client/main_client.py:271
-#, fuzzy
 msgid "Outer Space %s"
-msgstr "Outer Space"
+msgstr ""
 
 #: client/main_client.py:105
 msgid "Pygame %s"
-msgstr "Pygame %s"
+msgstr ""
 
 #: client/main_client.py:108
 msgid "Python %s"
-msgstr "Python %s"
+msgstr ""
 
 #: client/main_client.py:113
 msgid "Video Driver: %s [%dx%dx%d]"
-msgstr "Video ovladač: %s [%dx%dx%d]"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:120
 msgid "Select object"
-msgstr "Vyber objekt"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:386 client/osci/StarMapWidget.py:1568
 msgid "System: %s [ID: %d]"
-msgstr "Soustava: %s [ID: %d]"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:387 client/osci/StarMapWidget.py:422
 #: client/osci/StarMapWidget.py:517 client/osci/StarMapWidget.py:628
 msgid "Coordinates: [%.2f, %.2f]"
-msgstr "Souřadnice: [%.2f, %.2f]"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:388 client/osci/StarMapWidget.py:479
 #: client/osci/StarMapWidget.py:516 client/osci/StarMapWidget.py:538
 #: client/osci/StarMapWidget.py:626
 msgid "Scan pwr: %d"
-msgstr "Síla senzorů: %d"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:389
 msgid "Star Class: %s"
-msgstr "Třída hvězdy : %s"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:390
 msgid "Star Type: %s"
-msgstr "Typ hvězdy: %s"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:393 client/osci/StarMapWidget.py:485
 msgid "Fame to Colonize: %d"
@@ -94,210 +92,209 @@ msgstr ""
 
 #: client/osci/StarMapWidget.py:395
 msgid "Refuel: %d %%/turn [%d %% max]"
-msgstr "Tankování: %d %%/tah [%d %% max]"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:397
 msgid "Repair ratio: %d %%/turn"
-msgstr "Rychlost oprav: %d %%/tah"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:399
 msgid "Upgrade points: %d/turn"
-msgstr "Modernizační body: %d/tah"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:401
 msgid "Fleet speed: +%d %%"
-msgstr "Rychlost flotily: +%d %%"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:403 client/osci/StarMapWidget.py:434
 msgid "Pirate get fame chance: %d %%"
-msgstr "Šance piráta získat slávu: %d %%"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:421 client/osci/StarMapWidget.py:1571
 msgid "Worm hole: %s [ID: %d]"
-msgstr "Červí díra: %s [ID: %d]"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:427
 msgid "Destination: %s [ID: %d]"
-msgstr "Cíl: %s [ID: %d]"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:428
 msgid "Dest. Coords: [%.2f, %.2f]"
-msgstr "Souř. cíle: [%.2f, %.2f]"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:431
 msgid "Destination: ? [ID: ?]"
-msgstr "Cíl: ? [ID: ?]"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:432
 msgid "Dest. Coords: [?, ?]"
-msgstr "Cíl. souřadnice: [?, ?]"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:478 client/osci/StarMapWidget.py:1574
 msgid "Planet: %s [ID: %d]"
-msgstr "Planeta: %s [ID: %d]"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:480 client/osci/StarMapWidget.py:627
 msgid "Scanner pwr: %d"
-msgstr "Síla skeneru: %d"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:482
 msgid "Type: %s"
-msgstr "Typ: %s"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:486
 msgid "Environment: %d"
-msgstr "Životní prostř.: %d"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:487
 msgid "Minerals: %d"
-msgstr "Minerály: %d"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:488
 msgid "Energy: %d"
-msgstr "Energie: %d"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:489
 msgid "Slots: %d"
-msgstr "slotů: %d"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:491
 msgid "Strat. resource: %s"
-msgstr "Strategický zdroj: %s"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:494 client/osci/StarMapWidget.py:526
 #: client/osci/StarMapWidget.py:637
 msgid "Owner: %s [ID: %s]"
-msgstr "Vlastník: %s [ID: %s]"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:515 client/osci/StarMapWidget.py:1583
 msgid "Asteroid: %s [ID: %d]"
-msgstr "Asteroid: %s [ID: %d]"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:518 client/osci/StarMapWidget.py:629
 msgid "Signature: %d"
-msgstr "Signatura: %d"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:519
 msgid "Diameter: %d"
-msgstr "Průměr: %d"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:520
 msgid "HP: %d"
-msgstr "HP: %d"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:521
 msgid "Speed: %.2f"
-msgstr "Rychlost: %.2f"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:523 client/osci/StarMapWidget.py:634
 msgid "ETA: %s"
-msgstr "ETA: %s"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:536 client/osci/StarMapWidget.py:1585
 msgid "Unknown object [ID: %d]"
-msgstr "Neznámý objekt [ID: %d]"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:625 client/osci/StarMapWidget.py:1580
 msgid "Fleet: %s [ID: %d]"
-msgstr "Flotila: %s [ID: %d]"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:630 client/osci/StarMapWidget.py:632
-#, fuzzy
 msgid "Speed: %3.2f"
-msgstr "Rychlost: %.2f"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:644
 msgid "Tanks: %d / %d [%d %%]"
-msgstr "Nádrže: %d / %d [%d %%]"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:645
 msgid "Support (fuel): %d/turn"
-msgstr "Podpora (palivo): %d/tah"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:646
 msgid "Support (const. pts): %d/turn"
-msgstr "Podpora (konst. body): %d/tah"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:648
 msgid "Military power: %d"
-msgstr "Vojenská síla: %d"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:655
 msgid "Operational time: %s"
-msgstr "Provozní čas: %s"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:660
 msgid "Target: %s"
-msgstr "Cíl: %s"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:663 client/osci/StarMapWidget.py:683
 msgid "Ships:"
-msgstr "Lodě:"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:676
 msgid "  %d x %s   [%d, %d, %d, %d, %d]"
-msgstr "  %d x %s   [%d, %d, %d, %d, %d]"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:686
 msgid "military"
-msgstr "vojenská"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:688
 msgid "civilian"
-msgstr "civilní"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:689
 msgid "  %d x %s [%s %s ship]"
-msgstr "  %d x %s [%s %s loď]"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:701
 msgid "Command: %s %s"
-msgstr "Příkaz: %s %s"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:1294
 msgid "Overlay Mode: "
-msgstr "Překrytí mapy: "
+msgstr ""
 
 #: client/osci/StarMapWidget.py:1296
 msgid "Normal"
-msgstr "Normální"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:1298
 msgid "Diplomatic"
-msgstr "Diplomacie"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:1300 client/osci/dialog/MapOverlayDlg.py:135
 #: client/osci/dialog/StarSystemDlg.py:1281
 msgid "Environment"
-msgstr "Prostředí"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:1302 client/osci/dialog/MapOverlayDlg.py:147
 msgid "Pirate Fame"
-msgstr "Pověst pirátů"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:1304 client/osci/dialog/MapOverlayDlg.py:137
 msgid "Minerals"
-msgstr "Minerály"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:1306 client/osci/dialog/MapOverlayDlg.py:139
 #: client/osci/dialog/TechInfoDlg.py:155
 msgid "Slots"
-msgstr "Sloty"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:1308 client/osci/dialog/MapOverlayDlg.py:141
 msgid "Fleet Acceleration"
-msgstr "Zrychlení flotily"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:1310
 msgid "Refuel and Repair"
-msgstr "Tankování a opravy"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:1312 client/osci/dialog/MapOverlayDlg.py:145
 #: client/osci/dialog/NewTaskDlg.py:430
 #: client/osci/dialog/StarSystemDlg.py:1350
 #: client/osci/dialog/StructTaskDlg.py:367
 msgid "Morale"
-msgstr "Morálka"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:1394
 msgid "Player Zones (CTRL-P)"
@@ -308,18 +305,16 @@ msgid "Civilian Ships (CTRL-H)"
 msgstr ""
 
 #: client/osci/StarMapWidget.py:1396
-#, fuzzy
 msgid "Fleet Lines (CTRL-L)"
-msgstr "Flotily"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:1397
 msgid "Redirect Arrows (CTRL-R)"
 msgstr ""
 
 #: client/osci/StarMapWidget.py:1398
-#, fuzzy
 msgid "Scanners (CTRL-S)"
-msgstr "Sdílení skeneru"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:1399
 msgid "Grid (CTRL-G)"
@@ -330,55 +325,48 @@ msgid "Alternate View (CTRL-A)"
 msgstr ""
 
 #: client/osci/StarMapWidget.py:1401
-#, fuzzy
 msgid "Overlay: Diplomacy"
-msgstr "Diplomacie"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:1402
-#, fuzzy
 msgid "Overlay: Minerals"
-msgstr "Překrytí mapy: "
+msgstr ""
 
 #: client/osci/StarMapWidget.py:1403
-#, fuzzy
 msgid "Overlay: Environment"
-msgstr "Prostředí"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:1404
-#, fuzzy
 msgid "Overlay: Slots"
-msgstr "Překrytí mapy: "
+msgstr ""
 
 #: client/osci/StarMapWidget.py:1405
-#, fuzzy
 msgid "Overlay: Morale"
-msgstr "Překrytí mapy: "
+msgstr ""
 
 #: client/osci/StarMapWidget.py:1406
-#, fuzzy
 msgid "Overlay: Fuel and Repair"
-msgstr "Tankování a opravy"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:1407
 msgid "Overlay: Star Gate Speed"
 msgstr ""
 
 #: client/osci/StarMapWidget.py:1408
-#, fuzzy
 msgid "Overlay: Pirate Fame"
-msgstr "Pověst pirátů"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:1592
 msgid "Buoy on system: %s [ID: %d]"
-msgstr "Bójka na soustavě: %s [ID: %d]"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:1595
 msgid "Buoy on worm hole: %s [ID: %d]"
-msgstr "Bójka na červí díře: %s [ID: %d]"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:1597
 msgid "Buoy on unknown object [ID: %d]"
-msgstr "Bójka na neznámém objektu [ID: %d]"
+msgstr ""
 
 #: client/osci/StarMapWidget.py:1715
 msgid "Select object to hotkey. ESC to cancel."
@@ -404,14 +392,16 @@ msgstr ""
 #: client/osci/dialog/FleetsOverviewDlg.py:46
 #: client/osci/dialog/GalaxyRestartDlg.py:46
 #: client/osci/dialog/GlobalQueuesDlg.py:62 client/osci/dialog/LocateDlg.py:51
-#: client/osci/dialog/MainGameDlg.py:369 client/osci/dialog/MapOverlayDlg.py:54
-#: client/osci/dialog/MessagesDlg.py:62 client/osci/dialog/MinefieldDlg.py:58
+#: client/osci/dialog/MainGameDlg.py:369
+#: client/osci/dialog/MapOverlayDlg.py:54 client/osci/dialog/MessagesDlg.py:62
+#: client/osci/dialog/MinefieldDlg.py:58
 #: client/osci/dialog/NewGlobalTaskDlg.py:61
 #: client/osci/dialog/NewMessageDlg.py:64 client/osci/dialog/NewTaskDlg.py:72
 #: client/osci/dialog/OptionsDlg.py:63
 #: client/osci/dialog/PlanetsAnalysisDlg.py:44
 #: client/osci/dialog/PlanetsOverviewDlg.py:47
-#: client/osci/dialog/ProblemsDlg.py:44 client/osci/dialog/RenameFleetDlg.py:59
+#: client/osci/dialog/ProblemsDlg.py:44
+#: client/osci/dialog/RenameFleetDlg.py:59
 #: client/osci/dialog/RenameSysDlg.py:43 client/osci/dialog/ResearchDlg.py:51
 #: client/osci/dialog/SearchDlg.py:54 client/osci/dialog/ShowBuoyDlg.py:58
 #: client/osci/dialog/StarSystemDlg.py:110
@@ -419,31 +409,31 @@ msgstr ""
 #: client/osci/dialog/SystemOverviewDlg.py:48
 #: client/osci/dialog/TechInfoDlg.py:195
 msgid "Ready."
-msgstr "Připraven."
+msgstr ""
 
 #: client/osci/client.py:266
 msgid "Downloading messages..."
-msgstr "Nahrávám zprávy..."
+msgstr ""
 
 #: client/osci/dialog/BuoyDlg.py:85 client/osci/dialog/StarSystemDlg.py:640
 msgid "Edit buoy"
-msgstr "Editovat bójku"
+msgstr ""
 
 #: client/osci/dialog/BuoyDlg.py:93
 msgid "Buoy text:"
-msgstr "Text bójky"
+msgstr ""
 
 #: client/osci/dialog/BuoyDlg.py:98
 msgid "Visible to:"
-msgstr "Viditelná pro:"
+msgstr ""
 
 #: client/osci/dialog/BuoyDlg.py:103
 msgid "Allies"
-msgstr "Spojence"
+msgstr ""
 
 #: client/osci/dialog/BuoyDlg.py:111
 msgid "Scanner Share"
-msgstr "Sdílení skeneru"
+msgstr ""
 
 #: client/osci/dialog/BuoyDlg.py:126 client/osci/dialog/ChangeQtyDlg.py:87
 #: client/osci/dialog/ColorDefinitionDlg.py:147
@@ -452,19 +442,20 @@ msgstr "Sdílení skeneru"
 #: client/osci/dialog/FleetCommandDlg.py:332
 #: client/osci/dialog/FleetRedirectionDlg.py:125
 #: client/osci/dialog/FleetSplitDlg.py:590
-#: client/osci/dialog/GalaxyRestartDlg.py:92 client/osci/dialog/LocateDlg.py:81
-#: client/osci/dialog/NewAccDlg.py:140
+#: client/osci/dialog/GalaxyRestartDlg.py:92
+#: client/osci/dialog/LocateDlg.py:81 client/osci/dialog/NewAccDlg.py:140
 #: client/osci/dialog/NewGlobalTaskDlg.py:312
 #: client/osci/dialog/NewMessageDlg.py:196
-#: client/osci/dialog/NewMessageDlg.py:220 client/osci/dialog/NewTaskDlg.py:450
-#: client/osci/dialog/OptionsDlg.py:552 client/osci/dialog/OptionsDlg.py:584
-#: client/osci/dialog/OptionsDlg.py:610 client/osci/dialog/OptionsDlg.py:685
+#: client/osci/dialog/NewMessageDlg.py:220
+#: client/osci/dialog/NewTaskDlg.py:450 client/osci/dialog/OptionsDlg.py:552
+#: client/osci/dialog/OptionsDlg.py:584 client/osci/dialog/OptionsDlg.py:610
+#: client/osci/dialog/OptionsDlg.py:685
 #: client/osci/dialog/RenameFleetDlg.py:139
 #: client/osci/dialog/RenameSysDlg.py:114 client/osci/dialog/SearchDlg.py:128
 #: client/osci/dialog/StarSystemDlg.py:1525
 #: client/osci/dialog/StructTaskDlg.py:387 client/osci/dialog/_Template.py:74
 msgid "Cancel"
-msgstr "Storno"
+msgstr ""
 
 #: client/osci/dialog/BuoyDlg.py:127 client/osci/dialog/ChangeQtyDlg.py:88
 #: client/osci/dialog/ColorDefinitionDlg.py:148
@@ -473,74 +464,75 @@ msgstr "Storno"
 #: client/osci/dialog/OptionsDlg.py:686 client/osci/dialog/ShowBuoyDlg.py:96
 #: client/osci/dialog/UpdateDlg.py:165 client/osci/dialog/UpdateDlg.py:228
 msgid "OK"
-msgstr "OK"
+msgstr ""
 
 #: client/osci/dialog/ChangeQtyDlg.py:53
 #: client/osci/dialog/NewGlobalTaskDlg.py:202
-#: client/osci/dialog/NewTaskDlg.py:299 client/osci/dialog/StructTaskDlg.py:238
+#: client/osci/dialog/NewTaskDlg.py:299
+#: client/osci/dialog/StructTaskDlg.py:238
 msgid "Specify quantity (1, 2, 3, ...)."
-msgstr "Zadejte množství (1, 2, 3, ...)"
+msgstr ""
 
 #: client/osci/dialog/ChangeQtyDlg.py:69
 msgid "Change quantity"
-msgstr "Změnit množství"
+msgstr ""
 
 #: client/osci/dialog/ChangeQtyDlg.py:77
 msgid "New quantity:"
-msgstr "Nové množství:"
+msgstr ""
 
 #: client/osci/dialog/ColorDefinitionDlg.py:101
 msgid "Values must be hexa numbers between 0x00 - 0xff"
-msgstr "Hodnoty musí být šestnáctková čísla v rozsahu 0x00 - 0xff"
+msgstr ""
 
 #: client/osci/dialog/ColorDefinitionDlg.py:122
 msgid "Color Definition"
-msgstr "Definice barvy"
+msgstr ""
 
 #: client/osci/dialog/ColorDefinitionDlg.py:131
 msgid "Red:"
-msgstr "Červená:"
+msgstr ""
 
 #: client/osci/dialog/ColorDefinitionDlg.py:135
 msgid "Green:"
-msgstr "Zelená:"
+msgstr ""
 
 #: client/osci/dialog/ColorDefinitionDlg.py:139
 msgid "Blue:"
-msgstr "Modrá:"
+msgstr ""
 
 #: client/osci/dialog/ConfirmDlg.py:64 client/osci/dialog/ProgressDlg.py:56
 msgid "Question"
-msgstr "Otázka"
+msgstr ""
 
 #: client/osci/dialog/ConstrSelTechDlg.py:34
 msgid "Engine"
-msgstr "Motor"
+msgstr ""
 
 #: client/osci/dialog/ConstrSelTechDlg.py:35
 msgid "Anti-small"
-msgstr "proti malým"
+msgstr ""
 
 #: client/osci/dialog/ConstrSelTechDlg.py:36
 msgid "Anti-medium"
-msgstr "proti středním"
+msgstr ""
 
 #: client/osci/dialog/ConstrSelTechDlg.py:37
 msgid "Anti-large"
-msgstr "proti velkým"
+msgstr ""
 
 #: client/osci/dialog/ConstrSelTechDlg.py:38
 msgid "Anti-planet"
-msgstr "planetární"
+msgstr ""
 
 #: client/osci/dialog/ConstrSelTechDlg.py:39
 #: client/osci/dialog/SystemOverviewDlg.py:217
 msgid "Other"
-msgstr "Ostatní"
+msgstr ""
 
 #: client/osci/dialog/ConstrSelTechDlg.py:149
 msgid "Select component"
-msgstr "Vyberte komponentu"
+msgstr ""
 
 #: client/osci/dialog/ConstrSelTechDlg.py:157
 #: client/osci/dialog/ConstrUpgradeDlg.py:131
@@ -554,11 +546,12 @@ msgstr "Vyberte komponentu"
 #: client/osci/dialog/NewGlobalTaskDlg.py:266
 #: client/osci/dialog/NewTaskDlg.py:380
 #: client/osci/dialog/RenameFleetDlg.py:128
-#: client/osci/dialog/RenameSysDlg.py:106 client/osci/dialog/ResearchDlg.py:377
-#: client/osci/dialog/ResearchDlg.py:397 client/osci/dialog/ResearchDlg.py:410
+#: client/osci/dialog/RenameSysDlg.py:106
+#: client/osci/dialog/ResearchDlg.py:377 client/osci/dialog/ResearchDlg.py:397
+#: client/osci/dialog/ResearchDlg.py:410
 #: client/osci/dialog/StructTaskDlg.py:376
 msgid "Name"
-msgstr "Jméno"
+msgstr ""
 
 #: client/osci/dialog/ConstrSelTechDlg.py:158
 #: client/osci/dialog/MinefieldDlg.py:121
@@ -566,31 +559,32 @@ msgstr "Jméno"
 #: client/osci/dialog/StarSystemDlg.py:1230
 #: client/osci/dialog/StructTaskDlg.py:372
 msgid "Type"
-msgstr "Typ"
+msgstr ""
 
 #: client/osci/dialog/ConstrSelTechDlg.py:159
-#: client/osci/dialog/ConstructionDlg.py:451 client/osci/dialog/FleetDlg.py:452
-#: client/osci/dialog/TechInfoDlg.py:388
+#: client/osci/dialog/ConstructionDlg.py:451
+#: client/osci/dialog/FleetDlg.py:452 client/osci/dialog/TechInfoDlg.py:388
 msgid "Data"
-msgstr "Data"
+msgstr ""
 
 #: client/osci/dialog/ConstrSelTechDlg.py:178
 #: client/osci/dialog/ConstrUpgradeDlg.py:138
 #: client/osci/dialog/NewAccountDlg.py:139
-#: client/osci/dialog/NewMessageDlg.py:219 client/osci/dialog/OptionsDlg.py:551
-#: client/osci/dialog/OptionsDlg.py:583 client/osci/dialog/OptionsDlg.py:609
+#: client/osci/dialog/NewMessageDlg.py:219
+#: client/osci/dialog/OptionsDlg.py:551 client/osci/dialog/OptionsDlg.py:583
+#: client/osci/dialog/OptionsDlg.py:609
 #: client/osci/dialog/StarSystemDlg.py:1524
 msgid "Select"
-msgstr "Vyber"
+msgstr ""
 
 #: client/osci/dialog/ConstrUpgradeDlg.py:99
 #: client/osci/dialog/ConstrUpgradeDlg.py:123
 msgid "Select design to upgrade to"
-msgstr "Vyber návrh lodě"
+msgstr ""
 
 #: client/osci/dialog/ConstrUpgradeDlg.py:103
 msgid "Executing UPGRADE SHIP DESIGN command..."
-msgstr "Vykonávám příkaz ZMODERNIZUJ LODĚ..."
+msgstr ""
 
 #: client/osci/dialog/ConstrUpgradeDlg.py:107
 #: client/osci/dialog/ConstructionDlg.py:261
@@ -600,10 +594,11 @@ msgstr "Vykonávám příkaz ZMODERNIZUJ LODĚ..."
 #: client/osci/dialog/DiplomacyDlg.py:295
 #: client/osci/dialog/DiplomacyDlg.py:306 client/osci/dialog/EventsDlg.py:116
 #: client/osci/dialog/EventsDlg.py:126
-#: client/osci/dialog/FleetCommandDlg.py:266 client/osci/dialog/FleetDlg.py:229
-#: client/osci/dialog/FleetDlg.py:244 client/osci/dialog/FleetDlg.py:260
-#: client/osci/dialog/FleetDlg.py:279 client/osci/dialog/FleetDlg.py:290
-#: client/osci/dialog/FleetDlg.py:322 client/osci/dialog/FleetDlg.py:340
+#: client/osci/dialog/FleetCommandDlg.py:266
+#: client/osci/dialog/FleetDlg.py:229 client/osci/dialog/FleetDlg.py:244
+#: client/osci/dialog/FleetDlg.py:260 client/osci/dialog/FleetDlg.py:279
+#: client/osci/dialog/FleetDlg.py:290 client/osci/dialog/FleetDlg.py:322
+#: client/osci/dialog/FleetDlg.py:340
 #: client/osci/dialog/FleetMassRedirectionDlg.py:82
 #: client/osci/dialog/FleetRedirectionDlg.py:88
 #: client/osci/dialog/FleetRedirectionDlg.py:101
@@ -617,7 +612,8 @@ msgstr "Vykonávám příkaz ZMODERNIZUJ LODĚ..."
 #: client/osci/dialog/NewAccountDlg.py:97
 #: client/osci/dialog/NewAccountDlg.py:108
 #: client/osci/dialog/NewGlobalTaskDlg.py:209
-#: client/osci/dialog/NewMessageDlg.py:162 client/osci/dialog/NewTaskDlg.py:317
+#: client/osci/dialog/NewMessageDlg.py:162
+#: client/osci/dialog/NewTaskDlg.py:317
 #: client/osci/dialog/RenameFleetDlg.py:77
 #: client/osci/dialog/RenameFleetDlg.py:92
 #: client/osci/dialog/RenameSysDlg.py:82 client/osci/dialog/ResearchDlg.py:255
@@ -639,49 +635,43 @@ msgstr "Vykonávám příkaz ZMODERNIZUJ LODĚ..."
 #: client/osci/dialog/StarSystemDlg.py:1189
 #: client/osci/dialog/StructTaskDlg.py:278
 msgid "Command has been executed."
-msgstr "Příkaz byl úspěšně vykonán."
+msgstr ""
 
 #: client/osci/dialog/ConstrUpgradeDlg.py:115
-msgid ""
-"Constructions queues on planets have not been updated, because new design "
-"uses different (amount of) strategic resources than old design. You have to "
-"fix them manually."
+msgid "Constructions queues on planets have not been updated, because new design uses different (amount of) strategic resources than old design. You have to fix them manually."
 msgstr ""
-"Fronty konstrukcí na planetách nebyly aktualizovány, protože nový návrh "
-"používá jiné množství strategické suroviny než původní. Musíte si to opravit "
-"manuálně."
 
 #: client/osci/dialog/ConstrUpgradeDlg.py:132
 msgid "Per ship"
-msgstr "1 loď"
+msgstr ""
 
 #: client/osci/dialog/ConstrUpgradeDlg.py:133
 #: client/osci/dialog/StarSystemDlg.py:1237
 msgid "Total"
-msgstr "Celkem"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:101
 #: client/osci/dialog/StructTaskDlg.py:157
 #: client/osci/dialog/StructTaskDlg.py:158
 msgid "TL"
-msgstr "TL"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:125
 #: client/osci/dialog/ConstructionDlg.py:145
 #: client/osci/dialog/ConstructionDlg.py:503
 #: client/osci/dialog/SystemOverviewDlg.py:225
 msgid "Upgrade"
-msgstr "Modernizace"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:148
 msgid "Cancel Upgrd"
-msgstr "Stornuj Mod."
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:167
 #: client/osci/dialog/ConstructionDlg.py:172
 #: client/osci/dialog/NewMessageDlg.py:83
 msgid "[Click to select]"
-msgstr "[Klikni pro výběr]"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:192
 #: client/osci/dialog/ConstructionDlg.py:197
@@ -702,9 +692,10 @@ msgstr "[Klikni pro výběr]"
 #: client/osci/dialog/StarSystemDlg.py:805
 #: client/osci/dialog/StarSystemDlg.py:806
 #: client/osci/dialog/StarSystemDlg.py:810
-#: client/osci/dialog/StarSystemDlg.py:814 client/osci/dialog/TechInfoDlg.py:40
+#: client/osci/dialog/StarSystemDlg.py:814
+#: client/osci/dialog/TechInfoDlg.py:40
 msgid "%d"
-msgstr "%d"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:193
 #: client/osci/dialog/ConstructionDlg.py:213 client/osci/dialog/FleetDlg.py:99
@@ -712,14 +703,15 @@ msgstr "%d"
 #: client/osci/dialog/FleetSplitDlg.py:303
 #: client/osci/dialog/FleetSplitDlg.py:327
 msgid "%.2f"
-msgstr "%.2f"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:195
 msgid "%d - %d"
-msgstr "%d - %d"
+msgstr ""
 
-#: client/osci/dialog/ConstructionDlg.py:199 client/osci/dialog/FleetDlg.py:144
-#: client/osci/dialog/FleetDlg.py:163 client/osci/dialog/FleetSplitDlg.py:300
+#: client/osci/dialog/ConstructionDlg.py:199
+#: client/osci/dialog/FleetDlg.py:144 client/osci/dialog/FleetDlg.py:163
+#: client/osci/dialog/FleetSplitDlg.py:300
 #: client/osci/dialog/MessagesDlg.py:86 client/osci/dialog/MessagesDlg.py:93
 #: client/osci/dialog/MessagesDlg.py:100 client/osci/dialog/MessagesDlg.py:113
 #: client/osci/dialog/MessagesDlg.py:120 client/osci/dialog/MessagesDlg.py:130
@@ -732,7 +724,7 @@ msgstr "%d - %d"
 #: client/osci/dialog/StarSystemDlg.py:720
 #: client/osci/dialog/StarSystemDlg.py:788
 msgid "%d / %d"
-msgstr "%d / %d"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:203
 #: client/osci/dialog/ConstructionDlg.py:207
@@ -756,7 +748,8 @@ msgstr "%d / %d"
 #: client/osci/dialog/DiplomacyDlg.py:173
 #: client/osci/dialog/DiplomacyDlg.py:187 client/osci/dialog/EventsDlg.py:70
 #: client/osci/dialog/FleetCommandDlg.py:146
-#: client/osci/dialog/FleetCommandDlg.py:148 client/osci/dialog/FleetDlg.py:111
+#: client/osci/dialog/FleetCommandDlg.py:148
+#: client/osci/dialog/FleetDlg.py:111
 #: client/osci/dialog/FleetScoutBloomDlg.py:116
 #: client/osci/dialog/FleetScoutBloomDlg.py:118
 #: client/osci/dialog/GalaxerDlg.py:51
@@ -778,7 +771,7 @@ msgstr "%d / %d"
 #: client/osci/dialog/StructTaskDlg.py:146 client/osci/messages.py:253
 #: client/osci/res.py:183 client/osci/sequip.py:120
 msgid "N/A"
-msgstr "N/A"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:215
 #: client/osci/dialog/DiplomacyDlg.py:118
@@ -786,15 +779,15 @@ msgstr "N/A"
 #: client/osci/dialog/StarSystemDlg.py:741 client/osci/gdata.py:66
 #: client/osci/gdata.py:78
 msgid "None"
-msgstr "Žádný"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:245
 msgid "Enter name of the design."
-msgstr "Vložte jméno návrhu:"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:256
 msgid "Executing ADD SHIP DESIGN command..."
-msgstr "Vykonávám příkaz PŘIDEJ NÁVRH LODĚ..."
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:307
 #: client/osci/dialog/ConstructionDlg.py:314
@@ -810,107 +803,110 @@ msgstr "Vykonávám příkaz PŘIDEJ NÁVRH LODĚ..."
 #: client/osci/dialog/MessagesDlg.py:241 client/osci/dialog/MessagesDlg.py:251
 #: client/osci/dialog/MessagesDlg.py:398 client/osci/gdata.py:144
 msgid " "
-msgstr "  "
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:361
 msgid "Deletion of this design dismantle %d ship(s). Are you sure to scrap it?"
 msgstr ""
-"Smazání tohoto návrhu způsobí rozebrání %d lodí. Jste si jistý, že jej "
-"chcete zrušit?"
 
-#: client/osci/dialog/ConstructionDlg.py:361 client/osci/dialog/FleetDlg.py:309
-#: client/osci/dialog/FleetDlg.py:313 client/osci/dialog/GlobalQueuesDlg.py:195
+#: client/osci/dialog/ConstructionDlg.py:361
+#: client/osci/dialog/FleetDlg.py:309 client/osci/dialog/FleetDlg.py:313
+#: client/osci/dialog/GlobalQueuesDlg.py:195
 #: client/osci/dialog/LoginDlg.py:129 client/osci/dialog/MainGameDlg.py:181
 #: client/osci/dialog/MainGameDlg.py:184 client/osci/dialog/MessagesDlg.py:319
 #: client/osci/dialog/MinefieldDlg.py:81 client/osci/dialog/NewTaskDlg.py:310
 #: client/osci/dialog/ResearchDlg.py:310
 #: client/osci/dialog/StarSystemDlg.py:967
 #: client/osci/dialog/StarSystemDlg.py:1022
-#: client/osci/dialog/StructTaskDlg.py:246 client/osci/dialog/TechInfoDlg.py:48
-#: client/osci/dialog/UpdateDlg.py:258
+#: client/osci/dialog/StructTaskDlg.py:246
+#: client/osci/dialog/TechInfoDlg.py:48 client/osci/dialog/UpdateDlg.py:258
 msgid "Yes"
-msgstr "Ano"
+msgstr ""
 
-#: client/osci/dialog/ConstructionDlg.py:362 client/osci/dialog/FleetDlg.py:309
-#: client/osci/dialog/FleetDlg.py:313 client/osci/dialog/GalaxyRestartDlg.py:50
-#: client/osci/dialog/GlobalQueuesDlg.py:195 client/osci/dialog/LoginDlg.py:129
-#: client/osci/dialog/MainGameDlg.py:180 client/osci/dialog/MainGameDlg.py:185
-#: client/osci/dialog/MessagesDlg.py:319 client/osci/dialog/MinefieldDlg.py:83
-#: client/osci/dialog/NewTaskDlg.py:310 client/osci/dialog/ResearchDlg.py:310
+#: client/osci/dialog/ConstructionDlg.py:362
+#: client/osci/dialog/FleetDlg.py:309 client/osci/dialog/FleetDlg.py:313
+#: client/osci/dialog/GalaxyRestartDlg.py:50
+#: client/osci/dialog/GlobalQueuesDlg.py:195
+#: client/osci/dialog/LoginDlg.py:129 client/osci/dialog/MainGameDlg.py:180
+#: client/osci/dialog/MainGameDlg.py:185 client/osci/dialog/MessagesDlg.py:319
+#: client/osci/dialog/MinefieldDlg.py:83 client/osci/dialog/NewTaskDlg.py:310
+#: client/osci/dialog/ResearchDlg.py:310
 #: client/osci/dialog/StarSystemDlg.py:967
 #: client/osci/dialog/StarSystemDlg.py:1022
-#: client/osci/dialog/StructTaskDlg.py:246 client/osci/dialog/TechInfoDlg.py:50
-#: client/osci/dialog/UpdateDlg.py:257
+#: client/osci/dialog/StructTaskDlg.py:246
+#: client/osci/dialog/TechInfoDlg.py:50 client/osci/dialog/UpdateDlg.py:257
 msgid "No"
-msgstr "Ne"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:367
 msgid "Executing SCRAP SHIP DESIGN command..."
-msgstr "Vykonávám přikaz ODSTRA"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:392
 msgid "Executing CANCEL UPGRADE SHIP DESIGN command..."
-msgstr "Vykonávám přikaz ZRUŠ ZMODERNIZACI LODÍ..."
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:408
 msgid "Construction Centre"
-msgstr "Konstrukční centrum"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:414
 msgid "Ship Designs"
-msgstr "Návrhy lodí"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:418
-#: client/osci/dialog/ConstructionDlg.py:449 client/osci/dialog/FleetDlg.py:394
-#: client/osci/dialog/FleetSplitDlg.py:516
+#: client/osci/dialog/ConstructionDlg.py:449
+#: client/osci/dialog/FleetDlg.py:394 client/osci/dialog/FleetSplitDlg.py:516
 #: client/osci/dialog/FleetSplitDlg.py:554
 #: client/osci/dialog/MessagesDlg.py:393
 msgid "#"
-msgstr "#"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:419
 msgid "B"
-msgstr "Výr."
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:421
-#: client/osci/dialog/ConstructionDlg.py:468 client/osci/dialog/FleetDlg.py:375
-#: client/osci/dialog/FleetDlg.py:430 client/osci/dialog/FleetSpecsDlg.py:262
+#: client/osci/dialog/ConstructionDlg.py:468
+#: client/osci/dialog/FleetDlg.py:375 client/osci/dialog/FleetDlg.py:430
+#: client/osci/dialog/FleetSpecsDlg.py:262
 #: client/osci/dialog/FleetSplitDlg.py:519
 #: client/osci/dialog/FleetSplitDlg.py:557
 msgid "Class"
-msgstr "Třída"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:425
 msgid "New design"
-msgstr "Nový návrh"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:427
 msgid "Dupl. design"
-msgstr "Dupl. návrh"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:430
 msgid "Design"
-msgstr "Návrh"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:437
 msgid "Hull type"
-msgstr "Typ trupu"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:441
 msgid "Control unit"
-msgstr "Kontrolní jednotka"
+msgstr ""
 
-#: client/osci/dialog/ConstructionDlg.py:445 client/osci/dialog/FleetDlg.py:448
+#: client/osci/dialog/ConstructionDlg.py:445
+#: client/osci/dialog/FleetDlg.py:448
 msgid "Equipment"
-msgstr "Vybavení"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:455
 msgid "++"
-msgstr "++"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:457
 msgid "+"
-msgstr "+"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:459
 #: client/osci/dialog/DiplomacyDlg.py:102 client/osci/dialog/EventsDlg.py:72
@@ -923,99 +919,100 @@ msgstr "+"
 #: client/osci/dialog/StarSystemDlg.py:558 client/osci/messages.py:255
 #: client/osci/messages.py:262
 msgid "-"
-msgstr "-"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:461
 msgid "--"
-msgstr "--"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:463
 msgid "Add"
-msgstr "Přidat"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:465
 msgid "Remove"
-msgstr "Odstranit"
+msgstr ""
 
-#: client/osci/dialog/ConstructionDlg.py:470 client/osci/dialog/FleetDlg.py:388
-#: client/osci/dialog/FleetDlg.py:442
+#: client/osci/dialog/ConstructionDlg.py:470
+#: client/osci/dialog/FleetDlg.py:388 client/osci/dialog/FleetDlg.py:442
 msgid "Signature"
-msgstr "Signatura"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:472
 msgid "Speed"
-msgstr "Rychlost"
+msgstr ""
 
-#: client/osci/dialog/ConstructionDlg.py:474 client/osci/dialog/FleetDlg.py:376
-#: client/osci/dialog/FleetSplitDlg.py:520
+#: client/osci/dialog/ConstructionDlg.py:474
+#: client/osci/dialog/FleetDlg.py:376 client/osci/dialog/FleetSplitDlg.py:520
 #: client/osci/dialog/FleetSplitDlg.py:558
 msgid "HP"
-msgstr "HP"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:476
 msgid "Base attack"
-msgstr "Zákl. útok"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:478
 msgid "Base defence"
-msgstr "Obrana"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:480
 #: client/osci/dialog/EmpireOverviewDlg.py:126
 msgid "Military power"
-msgstr "Vojenská síla"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:482
 msgid "Base exp pts"
-msgstr "Zákl. zkuš. body"
+msgstr ""
 
-#: client/osci/dialog/ConstructionDlg.py:484 client/osci/dialog/FleetDlg.py:440
-#: client/osci/dialog/FleetSplitDlg.py:542
+#: client/osci/dialog/ConstructionDlg.py:484
+#: client/osci/dialog/FleetDlg.py:440 client/osci/dialog/FleetSplitDlg.py:542
 #: client/osci/dialog/FleetSplitDlg.py:580
 msgid "Tanks"
-msgstr "Nádrže"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:486
 msgid "Support (fuel)"
-msgstr "Podpora (palivo)"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:488
 msgid "Support (const. pts)"
-msgstr "Podpora (konst. body)"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:490
 msgid "Max. range"
-msgstr "Max. dolet"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:492
 msgid "Unused payload"
-msgstr "Zbývá zátěže"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:494
 msgid "Free slots"
-msgstr "Volné sloty:"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:496
 msgid "Constr. pts"
-msgstr "Konstr. body"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:498
 msgid "Upgrade to"
-msgstr "Modernizovat na"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:501
 msgid "Design Actions"
-msgstr "Tvorba designu"
+msgstr ""
 
-#: client/osci/dialog/ConstructionDlg.py:505 client/osci/dialog/FleetDlg.py:426
+#: client/osci/dialog/ConstructionDlg.py:505
+#: client/osci/dialog/FleetDlg.py:426
 msgid "Scrap"
-msgstr "Odstranit"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:507
 #: client/osci/dialog/NewGlobalTaskDlg.py:313
 #: client/osci/dialog/NewTaskDlg.py:451
 msgid "Construct"
-msgstr "Vyrobit"
+msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:510
 #: client/osci/dialog/DiplomacyDlg.py:422
@@ -1026,7 +1023,8 @@ msgstr "Vyrobit"
 #: client/osci/dialog/FleetsOverviewDlg.py:263
 #: client/osci/dialog/GlobalQueuesDlg.py:286
 #: client/osci/dialog/MapOverlayDlg.py:153
-#: client/osci/dialog/MessagesDlg.py:422 client/osci/dialog/MinefieldDlg.py:129
+#: client/osci/dialog/MessagesDlg.py:422
+#: client/osci/dialog/MinefieldDlg.py:129
 #: client/osci/dialog/PlanetsAnalysisDlg.py:152
 #: client/osci/dialog/PlanetsOverviewDlg.py:277
 #: client/osci/dialog/ProblemsDlg.py:524 client/osci/dialog/ResearchDlg.py:370
@@ -1034,79 +1032,81 @@ msgstr "Vyrobit"
 #: client/osci/dialog/SystemOverviewDlg.py:240
 #: client/osci/dialog/TechInfoDlg.py:413 client/osci/dialog/_Template.py:73
 msgid "Close"
-msgstr "Zavřít"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:77
 msgid "%s +"
-msgstr "%s +"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:79
 msgid "%s -"
-msgstr "%s -"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:81
 #: client/osci/dialog/StarSystemDlg.py:264
 msgid "%s"
-msgstr "%s"
+msgstr ""
 
-#: client/osci/dialog/DiplomacyDlg.py:83 client/osci/dialog/DiplomacyDlg.py:126
+#: client/osci/dialog/DiplomacyDlg.py:83
+#: client/osci/dialog/DiplomacyDlg.py:126
 msgid "%s [elect]"
-msgstr "%s [Volím]"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:102
 #: client/osci/dialog/DiplomacyDlg.py:118
 msgid "Mobile"
-msgstr "Mobilní"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:102
 #: client/osci/dialog/DiplomacyDlg.py:118
 msgid "Static"
-msgstr "Statický"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:104
 #: client/osci/dialog/DiplomacyDlg.py:105
 msgid "Relation %d, change %+d"
-msgstr "Vztah %d, změna %+d"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:230
 msgid "Enable"
-msgstr "Zapnout"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:233
 msgid "Disable"
-msgstr "Vypnout"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:244
 msgid "Required"
-msgstr "Nezbytné"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:245
 msgid "Conditions for pact: %s"
-msgstr "Podmínky uzavření paktu: %s"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:278
 msgid "Executing CHANGE PACT CONDITIONS command..."
-msgstr "Vykonávám příkaz NASTAV PODMÍNKY PAKTU..."
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:291
 #: client/osci/dialog/DiplomacyDlg.py:303
 msgid "Executing ELECT command..."
-msgstr "Vykonávám přikaz VOLIT..."
+msgstr ""
 
-#: client/osci/dialog/DiplomacyDlg.py:361 client/osci/dialog/MainGameDlg.py:353
+#: client/osci/dialog/DiplomacyDlg.py:361
+#: client/osci/dialog/MainGameDlg.py:353
 #: client/osci/dialog/MapOverlayDlg.py:133
 msgid "Diplomacy"
-msgstr "Diplomacie"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:372
 msgid "Relation"
-msgstr "Vztah"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:373
 #: client/osci/dialog/EmpireOverviewDlg.py:115
 #: client/osci/dialog/StarSystemDlg.py:1300
 msgid "Population"
-msgstr "Populace"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:374
 #: client/osci/dialog/EmpireOverviewDlg.py:120
@@ -1114,167 +1114,166 @@ msgstr "Populace"
 #: client/osci/dialog/MainGameDlg.py:357 client/osci/dialog/MainGameDlg.py:394
 #: client/osci/dialog/ProblemsDlg.py:507
 msgid "Planets"
-msgstr "Planety"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:375
 #: client/osci/dialog/EmpireOverviewDlg.py:121
 #: client/osci/dialog/PlanetsAnalysisDlg.py:132
 #: client/osci/dialog/StarSystemDlg.py:1262
 msgid "Structures"
-msgstr "Budovy"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:376
 msgid "Production"
-msgstr "Produkce"
+msgstr ""
 
-#: client/osci/dialog/DiplomacyDlg.py:377 client/osci/dialog/MainGameDlg.py:351
-#: client/osci/dialog/ProblemsDlg.py:418 client/osci/dialog/ProblemsDlg.py:429
-#: client/osci/dialog/ProblemsDlg.py:511 client/osci/dialog/ResearchDlg.py:363
-#: client/osci/dialog/ResearchDlg.py:400
+#: client/osci/dialog/DiplomacyDlg.py:377
+#: client/osci/dialog/MainGameDlg.py:351 client/osci/dialog/ProblemsDlg.py:418
+#: client/osci/dialog/ProblemsDlg.py:429 client/osci/dialog/ProblemsDlg.py:511
+#: client/osci/dialog/ResearchDlg.py:363 client/osci/dialog/ResearchDlg.py:400
 msgid "Research"
-msgstr "Výzkum"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:378
 msgid "Military pwr"
-msgstr "Vojenská síla"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:379
 msgid "Contact"
-msgstr "Kontakt"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:384
 msgid "Elect"
-msgstr "Hlasovat pro"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:386
 msgid "Abstain"
-msgstr "Nehlasovat"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:389
 msgid "Highlights On"
-msgstr "Zapnout zvýraznění"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:391
 msgid "Highligh Off"
-msgstr "Vypnout zvýraznění"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:394
 msgid "Pacts"
-msgstr "Pakty"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:398
 #: client/osci/dialog/DiplomacyDlg.py:411
 msgid "I"
-msgstr "Já"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:399
 #: client/osci/dialog/DiplomacyDlg.py:412
 msgid "Partner"
-msgstr "Partner"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:400
 #: client/osci/dialog/DiplomacyDlg.py:413
 msgid "Pact"
-msgstr "Pakt"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:404
 msgid "On"
-msgstr "Zapnuto/Na"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:407
 msgid "Conditions"
-msgstr "Podminky"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:417
 #: client/osci/dialog/StarSystemDlg.py:1324
 msgid "Change"
-msgstr "Změna"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:419
 msgid "Reset"
-msgstr "Reset"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:426
 msgid "Highligh actions"
-msgstr "Zvýraznit akce"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:428
 msgid "Define color"
-msgstr "Definuj barvu"
+msgstr ""
 
 #: client/osci/dialog/DiplomacyDlg.py:429
 msgid "Disable highlight"
-msgstr "Vypnout zvýraznění"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:60
 msgid "No data available"
-msgstr "Nedostupná data"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:69
 msgid "You are LEADER of the galaxy."
-msgstr "Jsi VŮDCEM galaxie."
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:72
 #: client/osci/dialog/EmpireOverviewDlg.py:75
 msgid "You are IMPERATOR of the galaxy."
-msgstr "Jsi IMPERÁTOREM galaxie."
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:76
 msgid "You have the right to end this galaxy."
-msgstr "Máš právo ukončit tuto galaxii."
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:89
 msgid "Strategic resources:"
-msgstr "Strategické zdroje:"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:114
 msgid "Statistics:"
-msgstr "Statistiky:"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:117
 msgid "unused"
-msgstr "nevyužito"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:117
 #: client/osci/dialog/EmpireOverviewDlg.py:119
 msgid "Gov. power"
-msgstr "Síla vlády"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:122
 #: client/osci/dialog/EmpireOverviewDlg.py:148
 #: client/osci/dialog/EmpireOverviewDlg.py:176
 msgid "Raw production"
-msgstr "Čistá produkce"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:123
 #: client/osci/dialog/EmpireOverviewDlg.py:170
 msgid "Total production"
-msgstr "Celková produkce"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:124
 msgid "Raw research"
-msgstr "Čistý výzkum"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:125
 msgid "Total reseach"
-msgstr "Celkem výzkum"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:129
 msgid "Fame"
-msgstr "Sláva"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:132
 msgid "production eff."
-msgstr "efektivita produkce"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:135
 msgid "New colony on planet with TL3 resouce cost"
-msgstr "Nová kolonie na planetě s TL3 surovinou stojí"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:139
-#, fuzzy
 msgid "New colony cost multiplier"
-msgstr "Cena nové kolonie"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:143
 msgid "(hover over system/planet to view actual cost)"
@@ -1282,123 +1281,123 @@ msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:147
 msgid "Production:"
-msgstr "Produkce:"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:152
 msgid "Unused production"
-msgstr "Nevyužitá produkce"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:152
 #: client/osci/dialog/EmpireOverviewDlg.py:167
 msgid "effectivity"
-msgstr "efektivita"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:161
 msgid "Fleet support"
-msgstr "Podpora flotil"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:163
 msgid "first"
-msgstr "prvních"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:165
 msgid "CP is free"
-msgstr "KB je zdarma"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:169
 #: client/osci/dialog/EmpireOverviewDlg.py:174
 msgid "Empire effectivity"
-msgstr "Výkonnost říše"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:173
 msgid "Research:"
-msgstr "Výzkum:"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:177
 msgid "Real production"
-msgstr "Reálná produkce"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:182
 msgid "Population support"
-msgstr "Podpora obyvatel"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:183
 msgid "From pacts"
-msgstr "Z paktů"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:184
 msgid "Total research"
-msgstr "Celkový výzkum"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:199
 msgid "Fleet:"
-msgstr "Flotila:"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:200
 msgid "CP to support"
-msgstr "KB pro podporu"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:200
 msgid "Upgrade Pool"
-msgstr "Modernizační fond"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:201
 msgid "Small ships"
-msgstr "Malé lodě"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:201
 #: client/osci/dialog/EmpireOverviewDlg.py:202
 #: client/osci/dialog/EmpireOverviewDlg.py:203
 msgid "civ"
-msgstr "civ"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:201
 #: client/osci/dialog/EmpireOverviewDlg.py:202
 #: client/osci/dialog/EmpireOverviewDlg.py:203
 msgid "mil"
-msgstr "voj"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:201
 #: client/osci/dialog/EmpireOverviewDlg.py:202
 #: client/osci/dialog/EmpireOverviewDlg.py:203
 #: client/osci/dialog/FleetsOverviewDlg.py:242
 msgid "MP"
-msgstr "VS"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:202
 msgid "Medium ships"
-msgstr "Střední lodě"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:203
 msgid "Large ships"
-msgstr "Velké lodě"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:261
 msgid "Empire Overview"
-msgstr "Přehled říše"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:276
 #: client/osci/dialog/MainGameDlg.py:390 client/osci/dialog/MainGameDlg.py:400
 msgid "Analysis"
-msgstr "Analýza"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:280
 msgid "Field of analysis"
-msgstr "Oblast analýzy"
+msgstr ""
 
 #: client/osci/dialog/EmpireOverviewDlg.py:284
 #: client/osci/dialog/MainGameDlg.py:359 client/osci/dialog/MainGameDlg.py:386
 #: client/osci/dialog/ProblemsDlg.py:509
 msgid "Fleets"
-msgstr "Flotily"
+msgstr ""
 
 #: client/osci/dialog/EventsDlg.py:110
 msgid "Executing DELETE MESSAGES command..."
-msgstr "Vykonávám příkaz VYMAŽ ZPRÁVY..."
+msgstr ""
 
 #: client/osci/dialog/EventsDlg.py:120
 msgid "Executing DELETE ALL MESSAGES command..."
-msgstr "Vykonávám příkaz VYMAŽ VŠECHNY ZPRÁVY..."
+msgstr ""
 
 #: client/osci/dialog/EventsDlg.py:146 client/osci/dialog/EventsDlg.py:158
 #: client/osci/dialog/FleetsAnalysisDlg.py:111
@@ -1411,105 +1410,105 @@ msgstr "Vykonávám příkaz VYMAŽ VŠECHNY ZPRÁVY..."
 #: client/osci/dialog/SystemOverviewDlg.py:181
 #: client/osci/dialog/SystemOverviewDlg.py:191
 msgid "Cannot show location"
-msgstr "Místo nelze zobrazit"
+msgstr ""
 
 #: client/osci/dialog/EventsDlg.py:170 client/osci/gdata.py:121
 msgid "Events"
-msgstr "Události"
+msgstr ""
 
 #: client/osci/dialog/EventsDlg.py:177
 msgid "Source"
-msgstr "Zdroj"
+msgstr ""
 
 #: client/osci/dialog/EventsDlg.py:177
 msgid "Time"
-msgstr "Čas"
+msgstr ""
 
 #: client/osci/dialog/EventsDlg.py:178
 #: client/osci/dialog/FleetsOverviewDlg.py:236
 msgid "Location"
-msgstr "Místo"
+msgstr ""
 
 #: client/osci/dialog/EventsDlg.py:178 client/osci/dialog/NewMessageDlg.py:189
 msgid "Message"
-msgstr "Zpráva"
+msgstr ""
 
 #: client/osci/dialog/EventsDlg.py:181 client/osci/dialog/EventsDlg.py:199
 #: client/osci/dialog/MessagesDlg.py:413 client/osci/dialog/MessagesDlg.py:432
 msgid "Delete"
-msgstr "Vymaž"
+msgstr ""
 
 #: client/osci/dialog/EventsDlg.py:183 client/osci/dialog/FleetDlg.py:403
 msgid "Delete All"
-msgstr "Vymaž vše"
+msgstr ""
 
 #: client/osci/dialog/EventsDlg.py:185
 msgid "Minor msgs"
-msgstr "Méně důležité zprávy"
+msgstr ""
 
 #: client/osci/dialog/EventsDlg.py:187
 msgid "Info msgs"
-msgstr "Informace"
+msgstr ""
 
 #: client/osci/dialog/EventsDlg.py:193 client/osci/dialog/MessagesDlg.py:426
 msgid "Message actions"
-msgstr "Zprávy"
+msgstr ""
 
 #: client/osci/dialog/EventsDlg.py:195 client/osci/dialog/MessagesDlg.py:428
 msgid "Show location"
-msgstr "Ukaž místo"
+msgstr ""
 
 #: client/osci/dialog/EventsDlg.py:196 client/osci/dialog/MessagesDlg.py:429
 msgid "Show source"
-msgstr "Ukaž zdroj"
+msgstr ""
 
 #: client/osci/dialog/EventsDlg.py:197 client/osci/dialog/MessagesDlg.py:430
 msgid "Show location and delete msg"
-msgstr "Jdi na místo a smaž zprávu"
+msgstr ""
 
 #: client/osci/dialog/EventsDlg.py:198 client/osci/dialog/MessagesDlg.py:431
 msgid "Show source and delete msg"
-msgstr "Ukaž zdroj a smaž zprávu"
+msgstr ""
 
 #: client/osci/dialog/ExceptionDlg.py:33
 msgid "Unhandled exception: %s"
-msgstr "Neošetřená výjimka: %s"
+msgstr ""
 
 #: client/osci/dialog/ExceptionDlg.py:84
 msgid "Unhandled exception"
-msgstr "Neošetřená výjimka"
+msgstr ""
 
 #: client/osci/dialog/ExceptionDlg.py:95
 msgid "Continue"
-msgstr "Pokračovat"
+msgstr ""
 
 #: client/osci/dialog/ExceptionDlg.py:97
 msgid "Close Application"
-msgstr "Ukončit aplikaci"
+msgstr ""
 
 #: client/osci/dialog/ExceptionDlg.py:99
 msgid "Abort Application"
-msgstr "Zabít aplikaci"
+msgstr ""
 
 #: client/osci/dialog/ExceptionDlg.py:101
 msgid "Send to server"
-msgstr "Odeslat na server"
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:89
 #: client/osci/dialog/FleetScoutBloomDlg.py:82
 msgid "No target selected"
-msgstr "Nevybral jste cíl."
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:98
 msgid "No planet selected"
-msgstr "Nevybral jste planetu."
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:104
 msgid "No commander specified."
-msgstr "Není vybrán žádný velitel."
+msgstr ""
 
-#: client/osci/dialog/FleetCommandDlg.py:106 client/osci/dialog/FleetDlg.py:118
-#: client/osci/dialog/StarSystemDlg.py:427
+#: client/osci/dialog/FleetCommandDlg.py:106
+#: client/osci/dialog/FleetDlg.py:118 client/osci/dialog/StarSystemDlg.py:427
 #: client/osci/dialog/StarSystemDlg.py:465
 #: client/osci/dialog/StarSystemDlg.py:489
 #: client/osci/dialog/StarSystemDlg.py:688
@@ -1517,199 +1516,199 @@ msgstr "Není vybrán žádný velitel."
 #: client/osci/dialog/StarSystemDlg.py:690
 #: client/osci/dialog/StarSystemDlg.py:691
 #: client/osci/dialog/StarSystemDlg.py:692
-#: client/osci/dialog/StarSystemDlg.py:693 client/osci/dialog/TechInfoDlg.py:41
+#: client/osci/dialog/StarSystemDlg.py:693
+#: client/osci/dialog/TechInfoDlg.py:41
 msgid "?"
-msgstr "?"
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:210
 #: client/osci/dialog/FleetCommandDlg.py:215
 msgid "Select target, please."
-msgstr "Zvolte cíl, prosím."
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:219
 msgid "Can only traverse wormholes."
-msgstr "Překračovat lze pouze červí díry."
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:224
 msgid "Select object with valid owner, please."
-msgstr "Vyberte objekt s platným vlastníkem, prosím."
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:230
 msgid "Select target planet, please."
-msgstr "Zvolte cílovou planetu, prosím."
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:234
 msgid "You can build on planets only."
-msgstr "Lze budovat jen na planetách."
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:241
 msgid "Enter number into \"Turns\" field."
-msgstr "Vlož číslo do pole \"Tahů\" ."
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:244
 msgid "\"Turns\" must be 1 or greater."
-msgstr "Pole \"Tahů\" musí být 1 nebo větší."
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:251
 msgid "Enter number into \"Start from command #\" field."
-msgstr "Vlož číslo do pole \"Začni od příkazu #\"."
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:254
 msgid "\"Start from command #\" must be 1 or greater"
-msgstr "Pole \"Pole začni od příkazu #\" musí být 1 nebo větší"
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:259
 msgid "Command not supported yet."
-msgstr "Příkaz není podporován."
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:262
 msgid "Executing ISSUE COMMAND command..."
-msgstr "Vykonávám příkaz ZADEJ PŘÍKAZ..."
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:280
 msgid "New Command"
-msgstr "Nový příkaz"
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:289
 msgid "Select command"
-msgstr "Vyberte příkaz"
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:291
 msgid "Move"
-msgstr "Přesun"
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:293 client/osci/gdata.py:71
 msgid "Refuel at"
-msgstr "Natankuj na"
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:295
 msgid "Deploy"
-msgstr "Umístit"
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:297 client/osci/gdata.py:73
 msgid "Wait"
-msgstr "Čekat"
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:299
 msgid "Declare War"
-msgstr "Vyhlásit válku"
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:301
 #: client/osci/dialog/ResearchDlg.py:423
 msgid "Repeat"
-msgstr "Opakuj"
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:303
 msgid "Use Wormhole"
-msgstr "Použij červí díru"
+msgstr ""
 
-#: client/osci/dialog/FleetCommandDlg.py:306 client/osci/dialog/FleetDlg.py:395
+#: client/osci/dialog/FleetCommandDlg.py:306
+#: client/osci/dialog/FleetDlg.py:395
 msgid "Target"
-msgstr "Cíl"
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:308
 msgid "At commander"
-msgstr "Veliteli"
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:314
 msgid "Turns"
-msgstr "Tahů"
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:319
 #: client/osci/dialog/FleetScoutBloomDlg.py:212
 msgid "Ship"
-msgstr "Loď"
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:324
 msgid "Start from command #"
-msgstr "Začni od příkazu"
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:326
 #: client/osci/dialog/NewGlobalTaskDlg.py:274
-#: client/osci/dialog/NewTaskDlg.py:390 client/osci/dialog/StructTaskDlg.py:338
+#: client/osci/dialog/NewTaskDlg.py:390
+#: client/osci/dialog/StructTaskDlg.py:338
 msgid "1"
-msgstr "1"
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:328
 #: client/osci/dialog/FleetScoutBloomDlg.py:217
 msgid "ETA:"
-msgstr "Přílet:"
+msgstr ""
 
 #: client/osci/dialog/FleetCommandDlg.py:331
 msgid "Order"
-msgstr "OK"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:76 client/osci/dialog/FleetDlg.py:78
 msgid "Fleet: %s"
-msgstr "Flotila: %s"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:86 client/osci/dialog/FleetDlg.py:169
 #: client/osci/dialog/FleetDlg.py:176
 msgid "%d + %d"
-msgstr "%d + %d"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:114
 msgid "Base speed %.2f, speed boost %.2f"
-msgstr "Základní rychlost %.2f,  bonus k rychlosti %.2f"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:142
 msgid "Command #%d"
-msgstr "Příkaz č.%d"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:170
 msgid "Support: %d energy and %d contruction points per turn."
-msgstr "Podpora: %d energie a %d konstrukčních bodů na tah."
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:190 client/osci/dialog/StarSystemDlg.py:556
 msgid "%d x %s"
-msgstr "%d x %s"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:219
 msgid "Select command to delete."
-msgstr "Vyberte příkaz k vymazání."
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:223
 msgid "Executing DELETE COMMAND command..."
-msgstr "Vykonávám příkaz VYMAŽ PŘÍKAZ..."
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:252
 msgid "Select command to activate."
-msgstr "Vyberte příkaz k aktivaci."
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:256
 msgid "Executing ACTIVATE COMMAND command..."
-msgstr "Vykonávám příkaz AKTIVUJ PŘÍKAZ..."
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:271
 msgid "Executing MOVE ACTION command..."
-msgstr "Vykonávám příkaz PŘESUŇ ÚKOL..."
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:287
 msgid "Executing CLEAR PROCESSED ACTIONS command..."
-msgstr "Vykonávám příkaz OBSAĎ VZBOUŘENECKOU FRAKCI..."
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:308
-#, fuzzy
 msgid "Really scrap this fleet?"
-msgstr "Skutečně sešrotovat tuto loď?"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:312
 msgid "Really scrap this ship?"
-msgstr "Skutečně sešrotovat tuto loď?"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:319
 msgid "Executing SCRAP SHIP command..."
-msgstr "Vykonávám příkaz SEŠROTOVAT LOĎ..."
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:338
-#, fuzzy
 msgid "Executing SCRAP FLEET command..."
-msgstr "Vykonávám příkaz ROZDĚL FLOTILU..."
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:366 client/osci/dialog/StarSystemDlg.py:1224
-#, fuzzy
 msgid "Locate"
-msgstr "Místo"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:374 client/osci/dialog/FleetSplitDlg.py:518
 #: client/osci/dialog/FleetSplitDlg.py:556
@@ -1717,39 +1716,40 @@ msgstr "Místo"
 #: client/osci/dialog/NewTaskDlg.py:380 client/osci/dialog/ResearchDlg.py:377
 #: client/osci/dialog/ResearchDlg.py:397 client/osci/dialog/ResearchDlg.py:411
 msgid "Lvl"
-msgstr "Úrvň"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:377 client/osci/dialog/FleetSplitDlg.py:521
 #: client/osci/dialog/FleetSplitDlg.py:559
 msgid "Exp"
-msgstr "Zkuš."
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:378 client/osci/dialog/FleetSplitDlg.py:522
 #: client/osci/dialog/FleetSplitDlg.py:560
 msgid "Spd"
-msgstr "Rychlost:"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:382
 msgid "Coordinates"
-msgstr "Souřadnice"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:384
 msgid "Orbiting"
-msgstr "Orbita"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:386 client/osci/dialog/FleetDlg.py:436
 msgid "Max speed"
-msgstr "Max. rychlost"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:391
 msgid "Commands"
-msgstr "Příkazy"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:394
 msgid "Command"
-msgstr "Příkaz"
+msgstr ""
 
-#: client/osci/dialog/FleetDlg.py:395 client/osci/dialog/GlobalQueuesDlg.py:279
+#: client/osci/dialog/FleetDlg.py:395
+#: client/osci/dialog/GlobalQueuesDlg.py:279
 #: client/osci/dialog/NewGlobalTaskDlg.py:292
 #: client/osci/dialog/NewTaskDlg.py:408 client/osci/dialog/ProblemsDlg.py:520
 #: client/osci/dialog/ResearchDlg.py:384 client/osci/dialog/ResearchDlg.py:402
@@ -1757,121 +1757,117 @@ msgstr "Příkaz"
 #: client/osci/dialog/StarSystemDlg.py:1429
 #: client/osci/dialog/StarSystemDlg.py:1500 client/osci/gdata.py:161
 msgid "Info"
-msgstr "Informace"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:397
 msgid "New cmd"
-msgstr "Nový přík."
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:399
 msgid "Set active"
-msgstr "Nastav akt."
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:401
 msgid "Delete cmd"
-msgstr "Vymaž přík."
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:409
 msgid "Other commands"
-msgstr "Ostatní příkazy"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:411
 msgid "Split fleet"
-msgstr "Rozděl flotilu"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:413
 msgid "Rename fleet"
-msgstr "Přejmenuj flotilu"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:415
 msgid "Fleet Specs"
-msgstr "Specifikace flotily"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:417
 msgid "Auto delete"
-msgstr "Automatické mazání"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:419
-#, fuzzy
 msgid "Scout wave"
-msgstr "Nastav akt."
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:421
-#, fuzzy
 msgid "Scrap fleet"
-msgstr "Rozděl flotilu"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:424
 msgid "Ship Data"
-msgstr "Specifikace lodě"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:432
 msgid "Attack eff"
-msgstr "Efekt. útoku"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:434
 msgid "Defence eff"
-msgstr "Efekt. obrn"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:438
 msgid "Scanner Pwr"
-msgstr "Síla skeneru"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:444
 msgid "Support"
-msgstr "Podpora"
+msgstr ""
 
 #: client/osci/dialog/FleetDlg.py:446
 msgid "Max HP"
-msgstr "Max HP"
+msgstr ""
 
 #: client/osci/dialog/FleetMassRedirectionDlg.py:71
 msgid "Select systems, please."
-msgstr "Zvolte systémy, prosím."
+msgstr ""
 
 #: client/osci/dialog/FleetMassRedirectionDlg.py:75
 #: client/osci/dialog/FleetRedirectionDlg.py:83
 msgid "Executing REDIRECT FLEETS command..."
-msgstr "Vykonávám příkaz PŘESMĚRUJ FLOTILY..."
+msgstr ""
 
 #: client/osci/dialog/FleetMassRedirectionDlg.py:102
 msgid "Mass Redirect Fleets to This System"
-msgstr "Přesměruj flotily na tento systém"
+msgstr ""
 
 #: client/osci/dialog/FleetMassRedirectionDlg.py:110
 #: client/osci/dialog/FleetScoutBloomDlg.py:222
 msgid "Done"
-msgstr "Hotovo"
+msgstr ""
 
 #: client/osci/dialog/FleetRedirectionDlg.py:71
 msgid "Select system, please."
-msgstr "Zvolte systém, prosím."
+msgstr ""
 
 #: client/osci/dialog/FleetRedirectionDlg.py:96
 msgid "Executing REDIRECT FLEETS OFF command..."
-msgstr "Vykonávám příkaz VYPNI PŘESMĚROVÁNÍ FLOTIL..."
+msgstr ""
 
 #: client/osci/dialog/FleetRedirectionDlg.py:115
 msgid "Redirect Fleets"
-msgstr "Přesměruj flotilu"
+msgstr ""
 
 #: client/osci/dialog/FleetRedirectionDlg.py:123
 msgid "Redirect"
-msgstr "Přesměruj"
+msgstr ""
 
 #: client/osci/dialog/FleetRedirectionDlg.py:124
 msgid "Redirect OFF"
-msgstr "Vypnout přesměrování"
+msgstr ""
 
 #: client/osci/dialog/FleetScoutBloomDlg.py:126
 #: client/osci/dialog/FleetScoutBloomDlg.py:131
-#, fuzzy
 msgid "No ships found."
-msgstr "Nenalezen žádný systém"
+msgstr ""
 
 #: client/osci/dialog/FleetScoutBloomDlg.py:155
-msgid ""
-"You cannot order a ship to the same system twice in one Scout Wave command"
+msgid "You cannot order a ship to the same system twice in one Scout Wave command"
 msgstr ""
 
 #: client/osci/dialog/FleetScoutBloomDlg.py:166
@@ -1892,399 +1888,397 @@ msgstr ""
 
 #: client/osci/dialog/FleetScoutBloomDlg.py:219
 msgid "Target:"
-msgstr "Cíl:"
+msgstr ""
 
 #: client/osci/dialog/FleetSpecsDlg.py:57
 msgid "Design Details"
-msgstr "Detaily designu"
+msgstr ""
 
 #: client/osci/dialog/FleetSpecsDlg.py:72
 msgid "Fleet Details: %s"
-msgstr "Podrobnosti flotily: %s"
+msgstr ""
 
 #: client/osci/dialog/FleetSpecsDlg.py:186
 #: client/osci/dialog/FleetSpecsDlg.py:210
 msgid "Dmg vs Small (min)"
-msgstr "Pošk. malých (min)"
+msgstr ""
 
 #: client/osci/dialog/FleetSpecsDlg.py:187
 #: client/osci/dialog/FleetSpecsDlg.py:211
 msgid "Dmg vs Small (max)"
-msgstr "Pošk. malých (max)"
+msgstr ""
 
 #: client/osci/dialog/FleetSpecsDlg.py:189
 #: client/osci/dialog/FleetSpecsDlg.py:213
 msgid "Dmg vs Medium (min)"
-msgstr "Pošk. středních (min)"
+msgstr ""
 
 #: client/osci/dialog/FleetSpecsDlg.py:192
 #: client/osci/dialog/FleetSpecsDlg.py:214
 msgid "Dmg vs Medium (max)"
-msgstr "Pošk. středních (max)"
+msgstr ""
 
 #: client/osci/dialog/FleetSpecsDlg.py:196
 #: client/osci/dialog/FleetSpecsDlg.py:216
 msgid "Dmg vs Large (min)"
-msgstr "Pošk. velkých (min)"
+msgstr ""
 
 #: client/osci/dialog/FleetSpecsDlg.py:199
 #: client/osci/dialog/FleetSpecsDlg.py:217
 msgid "Dmg vs Large (max)"
-msgstr "Pošk. velkých (max)"
+msgstr ""
 
 #: client/osci/dialog/FleetSpecsDlg.py:203
 #: client/osci/dialog/FleetSpecsDlg.py:219
 msgid "Dmg vs Planet (min)"
-msgstr "Pošk. planet (min)"
+msgstr ""
 
 #: client/osci/dialog/FleetSpecsDlg.py:206
 #: client/osci/dialog/FleetSpecsDlg.py:220
 msgid "Dmg vs Planet (max)"
-msgstr "Pošk. planet (max)"
+msgstr ""
 
 #: client/osci/dialog/FleetSpecsDlg.py:222
 msgid "Total Ships"
-msgstr "Celkem lodí"
+msgstr ""
 
 #: client/osci/dialog/FleetSpecsDlg.py:223
 msgid "Total HPs"
-msgstr "Celkem HP"
+msgstr ""
 
 #: client/osci/dialog/FleetSpecsDlg.py:224
 msgid "Total Shields"
-msgstr "Celkem štíty"
+msgstr ""
 
 #: client/osci/dialog/FleetSpecsDlg.py:229
 msgid "Average ATT"
-msgstr "Průměrný útok"
+msgstr ""
 
 #: client/osci/dialog/FleetSpecsDlg.py:230
 msgid "Average DEF"
-msgstr "Průměrná obrana"
+msgstr ""
 
 #: client/osci/dialog/FleetSpecsDlg.py:231
 msgid "Average Missile DEF"
-msgstr "Prům. obrana proti střelám"
+msgstr ""
 
 #: client/osci/dialog/FleetSpecsDlg.py:255
 msgid "Fleet Details"
-msgstr "Informace o flotily"
+msgstr ""
 
 #: client/osci/dialog/FleetSpecsDlg.py:263
 #: client/osci/dialog/NewGlobalTaskDlg.py:295
 #: client/osci/dialog/NewTaskDlg.py:433
 msgid "Small"
-msgstr "malá"
+msgstr ""
 
 #: client/osci/dialog/FleetSpecsDlg.py:264
 #: client/osci/dialog/NewGlobalTaskDlg.py:297
 #: client/osci/dialog/NewTaskDlg.py:435
 msgid "Medium"
-msgstr "střední"
+msgstr ""
 
 #: client/osci/dialog/FleetSpecsDlg.py:265
 #: client/osci/dialog/NewGlobalTaskDlg.py:299
 #: client/osci/dialog/NewTaskDlg.py:437
 msgid "Large"
-msgstr "velká"
+msgstr ""
 
 #: client/osci/dialog/FleetSpecsDlg.py:267
 msgid "Use Dmg Inheritance"
-msgstr "Použij dědičnost pošk."
+msgstr ""
 
 #: client/osci/dialog/FleetSpecsDlg.py:269
 msgid "Use Max HPs"
-msgstr "Použij max. HP"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:39
 msgid "0"
-msgstr "0"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:40
 msgid "0 - 4"
-msgstr "0 - 4"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:41
 msgid "4 - 5"
-msgstr "4 -5"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:42
 msgid "5 - 6"
-msgstr "5 - 6"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:43
 msgid "6 - 7"
-msgstr "6 - 7"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:44
 msgid "7 - 8"
-msgstr "7 - 8"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:45
 msgid "> 8"
-msgstr "> 8"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:49
 msgid "0% - 33%"
-msgstr "0% - 33%"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:50
 msgid "34% - 66%"
-msgstr "34% - 66%"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:51
 msgid "67% - 99%"
-msgstr "67% - 99%"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:52
 msgid "100%"
-msgstr "100%"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:268
 #: client/osci/dialog/FleetSplitDlg.py:281
 msgid "/ %d"
-msgstr "/ %d"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:344
 msgid "Executing SPLIT FLEET command..."
-msgstr "Vykonávám příkaz ROZDĚL FLOTILU..."
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:402
 msgid "Enter a number."
-msgstr "Vložte číslo."
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:505
 #: client/osci/dialog/TechInfoDlg.py:382 client/osci/dialog/_Template.py:66
 msgid "Split Fleet"
-msgstr "Rozdělit flotilu"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:512
 msgid "Original fleet"
-msgstr "Původní flotila"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:527
 #: client/osci/dialog/FleetSplitDlg.py:564
 msgid "Group by"
-msgstr "Seskupit"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:529
 #: client/osci/dialog/FleetSplitDlg.py:567
 msgid "design"
-msgstr "návrh"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:531
 #: client/osci/dialog/FleetSplitDlg.py:569
 msgid "class"
-msgstr "třída"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:533
 #: client/osci/dialog/FleetSplitDlg.py:571
 msgid "damage"
-msgstr "poškození"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:535
 #: client/osci/dialog/FleetSplitDlg.py:573
 msgid "experience"
-msgstr "zkušenost"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:537
 #: client/osci/dialog/FleetSplitDlg.py:575
 msgid "level"
-msgstr "úroveň"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:539
 #: client/osci/dialog/FleetSplitDlg.py:577
 msgid "speed"
-msgstr "rychlost"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:544
 #: client/osci/dialog/FleetSplitDlg.py:582
 msgid "Fuel"
-msgstr "Palivo"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:550
 msgid "New fleet"
-msgstr "Nová flotila"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:566
 msgid "Clear"
-msgstr "Zrušit"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:589
 msgid "Split"
-msgstr "Rozděl"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:591
 msgid "Move right"
-msgstr "Přesuň vpravo"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:595
 #: client/osci/dialog/FleetSplitDlg.py:612
 msgid "1 ship"
-msgstr "1 loď"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:596
 #: client/osci/dialog/FleetSplitDlg.py:613
 msgid "5 ships"
-msgstr "5 lodí"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:597
 #: client/osci/dialog/FleetSplitDlg.py:614
 msgid "10 ships"
-msgstr "10 lodí"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:598
 #: client/osci/dialog/FleetSplitDlg.py:615
 msgid "50 ships"
-msgstr "50 lodí"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:599
 #: client/osci/dialog/FleetSplitDlg.py:616
 msgid "100 ships"
-msgstr "100 lodí"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:600
 #: client/osci/dialog/FleetSplitDlg.py:617
 msgid "1/2 of ships"
-msgstr "1/2 lodí"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:601
 #: client/osci/dialog/FleetSplitDlg.py:618
 msgid "1/3 of ships"
-msgstr "1/3 lodí"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:602
 #: client/osci/dialog/FleetSplitDlg.py:619
 msgid "1/4 of ships"
-msgstr "1/4 lodí"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:603
 #: client/osci/dialog/FleetSplitDlg.py:620
 msgid "All ships"
-msgstr "Všechny lodě"
+msgstr ""
 
 #: client/osci/dialog/FleetSplitDlg.py:608
 msgid "Move left"
-msgstr "Přesuň vlevo"
+msgstr ""
 
 #: client/osci/dialog/FleetsAnalysisDlg.py:85
 msgid "Fleets contains design %s"
-msgstr "Flotily obsahující loď %s"
+msgstr ""
 
 #: client/osci/dialog/FleetsAnalysisDlg.py:126
 msgid "Fleets analysis"
-msgstr "Analýza flotil"
+msgstr ""
 
 #: client/osci/dialog/FleetsAnalysisDlg.py:135
 msgid "Ship designs"
-msgstr "Návrhy lodí"
+msgstr ""
 
 #: client/osci/dialog/FleetsAnalysisDlg.py:139
 msgid "Design name"
-msgstr "Jméno lodi"
+msgstr ""
 
 #: client/osci/dialog/FleetsAnalysisDlg.py:140
 msgid "# fleets"
-msgstr "č. flotily"
+msgstr ""
 
 #: client/osci/dialog/FleetsAnalysisDlg.py:148
 msgid "Fleet name"
-msgstr "Jméno flotily"
+msgstr ""
 
 #: client/osci/dialog/FleetsAnalysisDlg.py:149
 #: client/osci/dialog/NewGlobalTaskDlg.py:270
 #: client/osci/dialog/NewTaskDlg.py:386
 msgid "Ships"
-msgstr "Lodě"
+msgstr ""
 
 #: client/osci/dialog/FleetsAnalysisDlg.py:150
 msgid "Fleet size"
-msgstr "Velikost flotily"
+msgstr ""
 
 #: client/osci/dialog/FleetsOverviewDlg.py:118
 msgid "%s (dst)"
-msgstr "%s (cíl)"
+msgstr ""
 
 #: client/osci/dialog/FleetsOverviewDlg.py:227
 msgid "Fleets Overview"
-msgstr "Přehled flotil"
+msgstr ""
 
 #: client/osci/dialog/FleetsOverviewDlg.py:235
 msgid "Fleet"
-msgstr "Flotila"
+msgstr ""
 
 #: client/osci/dialog/FleetsOverviewDlg.py:237
 msgid "Current order"
-msgstr "Aktuální příkaz"
+msgstr ""
 
 #: client/osci/dialog/FleetsOverviewDlg.py:238
 msgid "ETA"
-msgstr "ETA"
+msgstr ""
 
 #: client/osci/dialog/FleetsOverviewDlg.py:239
 msgid "Fuel %"
-msgstr "Palivo %"
+msgstr ""
 
 #: client/osci/dialog/FleetsOverviewDlg.py:240
 msgid "Op. time"
-msgstr "Op. čas"
+msgstr ""
 
 #: client/osci/dialog/FleetsOverviewDlg.py:241
 msgid "Range"
-msgstr "Dolet"
+msgstr ""
 
 #: client/osci/dialog/FleetsOverviewDlg.py:243
 msgid "Sign"
-msgstr "Signatura:"
+msgstr ""
 
 #: client/osci/dialog/FleetsOverviewDlg.py:244
 msgid "Last upgr."
-msgstr "Naposledy vylep."
+msgstr ""
 
 #: client/osci/dialog/FleetsOverviewDlg.py:248
 #: client/osci/dialog/SystemOverviewDlg.py:216
 msgid "Mine"
-msgstr "Moje"
+msgstr ""
 
 #: client/osci/dialog/FleetsOverviewDlg.py:250 client/osci/gdata.py:91
 msgid "Enemy"
-msgstr "Nepřítel"
+msgstr ""
 
 #: client/osci/dialog/FleetsOverviewDlg.py:252 client/osci/gdata.py:91
 msgid "Unfriendly"
-msgstr "Nepřátelský"
+msgstr ""
 
 #: client/osci/dialog/FleetsOverviewDlg.py:254 client/osci/gdata.py:91
 #: client/osci/gdata.py:92
 msgid "Neutral"
-msgstr "Neutrální"
+msgstr ""
 
 #: client/osci/dialog/FleetsOverviewDlg.py:256 client/osci/gdata.py:92
 msgid "Friendly"
-msgstr "Přítel"
+msgstr ""
 
 #: client/osci/dialog/FleetsOverviewDlg.py:258 client/osci/gdata.py:92
 msgid "Allied"
-msgstr "Spojenec"
+msgstr ""
 
 #: client/osci/dialog/FleetsOverviewDlg.py:260
 #: client/osci/dialog/OptionsDlg.py:640
 msgid "Show redirects"
-msgstr "Včetně přesměrování"
+msgstr ""
 
 #: client/osci/dialog/GalaxerDlg.py:49
-#, fuzzy
 msgid "%m-%d-%y %H:%M"
-msgstr "%m-%d %H:%M"
+msgstr ""
 
 #: client/osci/dialog/GalaxerDlg.py:99
 msgid "Select, which galaxy types do you want to play"
 msgstr ""
 
 #: client/osci/dialog/GalaxerDlg.py:105
-#, fuzzy
 msgid "Galaxy type"
-msgstr "Galaxie"
+msgstr ""
 
 #: client/osci/dialog/GalaxerDlg.py:106
 msgid "Capacity"
@@ -2295,9 +2289,8 @@ msgid "Queue"
 msgstr ""
 
 #: client/osci/dialog/GalaxerDlg.py:108
-#, fuzzy
 msgid "Last start"
-msgstr "Naposledy vylep."
+msgstr ""
 
 #: client/osci/dialog/GalaxerDlg.py:115
 msgid "Toggle booking"
@@ -2306,62 +2299,58 @@ msgstr ""
 #: client/osci/dialog/GalaxerDlg.py:117 client/osci/dialog/LoginDlg.py:230
 #: client/osci/dialog/NewAccountDlg.py:138
 msgid "Exit"
-msgstr "Konec"
+msgstr ""
 
 #: client/osci/dialog/GalaxyRestartDlg.py:50
 msgid "Are you really really sure you want to restart this galaxy?"
-msgstr "Jsi si opravdu jist, že chceš restartovat tuto galaxii?"
+msgstr ""
 
 #: client/osci/dialog/GalaxyRestartDlg.py:74
 #: client/osci/dialog/MainGameDlg.py:377
 msgid "Galaxy restart"
-msgstr "Restart galaxie"
+msgstr ""
 
 #: client/osci/dialog/GalaxyRestartDlg.py:82
 msgid "If you are sure to restart this galaxy, click on Restart button."
 msgstr ""
-"Pokud jsi si jist, že chceš restartovat tuto galaxii, klikni na tlačítko "
-"Restart."
 
 #: client/osci/dialog/GalaxyRestartDlg.py:83
 msgid "You can enter message visible in restart announcement below."
-msgstr "Dole můžete vložit text viditelný v oznámení o restartu."
+msgstr ""
 
 #: client/osci/dialog/GalaxyRestartDlg.py:91
 msgid "Restart"
-msgstr "Restartovat"
+msgstr ""
 
 #: client/osci/dialog/GlobalQueuesDlg.py:99
 #: client/osci/dialog/StarSystemDlg.py:275
 msgid "New"
-msgstr "Nový"
+msgstr ""
 
 #: client/osci/dialog/GlobalQueuesDlg.py:130
 #: client/osci/dialog/GlobalQueuesDlg.py:152
 #: client/osci/dialog/StarSystemDlg.py:988
 #: client/osci/dialog/StarSystemDlg.py:1009
 msgid "Executing MOVE TASK command..."
-msgstr "Vykonávám příkaz PŘESUŇ ÚKOL..."
+msgstr ""
 
 #: client/osci/dialog/GlobalQueuesDlg.py:171
 #: client/osci/dialog/StarSystemDlg.py:1032
 msgid "Executing CHANGE TASK command..."
-msgstr "Vykonávám příkaz ZMĚŇ ÚKOL..."
+msgstr ""
 
 #: client/osci/dialog/GlobalQueuesDlg.py:194
 #: client/osci/dialog/StarSystemDlg.py:1021
 msgid "Abort this construction task?"
-msgstr "Zrušit tento konstrukční projekt?"
+msgstr ""
 
 #: client/osci/dialog/GlobalQueuesDlg.py:200
-#, fuzzy
 msgid "Executing ABORT CONSTRUCTION command..."
-msgstr "Vykonávám příkaz NOVÝ KONSTRUKČNÍ ÚKOL..."
+msgstr ""
 
 #: client/osci/dialog/GlobalQueuesDlg.py:229
-#, fuzzy
 msgid "Global production queues"
-msgstr "Celková produkce"
+msgstr ""
 
 #: client/osci/dialog/GlobalQueuesDlg.py:234
 msgid "Default global queue"
@@ -2379,7 +2368,7 @@ msgstr ""
 #: client/osci/dialog/StarSystemDlg.py:1334
 #: client/osci/dialog/StarSystemDlg.py:1469
 msgid "Construction pts"
-msgstr "Konstrukční body"
+msgstr ""
 
 #: client/osci/dialog/GlobalQueuesDlg.py:260
 #: client/osci/dialog/GlobalQueuesDlg.py:276
@@ -2389,130 +2378,116 @@ msgstr "Konstrukční body"
 #: client/osci/dialog/StarSystemDlg.py:1497
 #: client/osci/dialog/StructTaskDlg.py:381
 msgid "Quantity"
-msgstr "Množství"
+msgstr ""
 
 #: client/osci/dialog/GlobalQueuesDlg.py:264
 #: client/osci/dialog/StarSystemDlg.py:1414
 #: client/osci/dialog/StarSystemDlg.py:1485
 msgid "<<"
-msgstr "<<"
+msgstr ""
 
 #: client/osci/dialog/GlobalQueuesDlg.py:266
 #: client/osci/dialog/StarSystemDlg.py:1487
 msgid "Move task to first position in queue"
-msgstr "Posunout úkol na začátek fronty"
+msgstr ""
 
 #: client/osci/dialog/GlobalQueuesDlg.py:267
 #: client/osci/dialog/StarSystemDlg.py:1417
 #: client/osci/dialog/StarSystemDlg.py:1488
 msgid "<"
-msgstr "<"
+msgstr ""
 
 #: client/osci/dialog/GlobalQueuesDlg.py:269
 #: client/osci/dialog/StarSystemDlg.py:1490
 msgid "Move task to previous position in queue"
-msgstr "Posunout úkol ve frontě dopředu"
+msgstr ""
 
 #: client/osci/dialog/GlobalQueuesDlg.py:270
 #: client/osci/dialog/StarSystemDlg.py:1420
 #: client/osci/dialog/StarSystemDlg.py:1491
 msgid ">"
-msgstr ">"
+msgstr ""
 
 #: client/osci/dialog/GlobalQueuesDlg.py:272
 #: client/osci/dialog/StarSystemDlg.py:1493
 msgid "Move task to next position in queue"
-msgstr "Posunout úkol ve frontě dozadu"
+msgstr ""
 
 #: client/osci/dialog/GlobalQueuesDlg.py:273
 #: client/osci/dialog/StarSystemDlg.py:1423
 #: client/osci/dialog/StarSystemDlg.py:1494
 msgid ">>"
-msgstr ">>"
+msgstr ""
 
 #: client/osci/dialog/GlobalQueuesDlg.py:275
 #: client/osci/dialog/StarSystemDlg.py:1496
 msgid "Move task to last position in queue"
-msgstr "Posunout úkol na konec fronty"
+msgstr ""
 
 #: client/osci/dialog/GlobalQueuesDlg.py:278
 #: client/osci/dialog/StarSystemDlg.py:1499
 msgid "Change task quantity"
-msgstr "Změnit prioritu úkolu"
+msgstr ""
 
 #: client/osci/dialog/GlobalQueuesDlg.py:281
 #: client/osci/dialog/StarSystemDlg.py:1502
 msgid "Show task informations"
-msgstr "Zobrazit informace o úkolu"
+msgstr ""
 
 #: client/osci/dialog/GlobalQueuesDlg.py:282
 #: client/osci/dialog/ResearchDlg.py:426
 #: client/osci/dialog/StarSystemDlg.py:1503
 msgid "Abort"
-msgstr "Zrušit"
+msgstr ""
 
 #: client/osci/dialog/GlobalQueuesDlg.py:284
 #: client/osci/dialog/StarSystemDlg.py:1505
 msgid "Abort task construction"
-msgstr "Zrušit úkol"
+msgstr ""
 
 #: client/osci/dialog/KeyModHelp.py:45
-msgid ""
-"You have pressed 'Ctrl+Number.' This allows you to set a control key. Click "
-"on a system, planet, or fleet on the starmap after closing this dialog to "
-"set the number key that you pressed to access that object. You can always "
-"cancel this action with the ESCAPE key while on the Star Map."
+msgid "You have pressed 'Ctrl+Number.' This allows you to set a control key. Click on a system, planet, or fleet on the starmap after closing this dialog to set the number key that you pressed to access that object. You can always cancel this action with the ESCAPE key while on the Star Map."
 msgstr ""
-"Stisknul jsi 'CTRL+číslo'. Toto ti umožní nastavit kontrolní klávesu. Po "
-"zavření tohoto dialogu klikni na systém, planetu nebo flotilu na hvězdné "
-"mapě pro nastavení klávesové zkratky k tomuto objektu. Můžeš kdykoliv zrušit "
-"tuto akci stisknutím ESCAPE klávesy nad hvězdnou mapou."
 
 #: client/osci/dialog/KeyModHelp.py:47
 msgid "Once you have selected an object:"
-msgstr "Po zvolení objektu:"
+msgstr ""
 
 #: client/osci/dialog/KeyModHelp.py:48
 msgid "- Pressing 'Number' will open that object's dialog."
-msgstr "- Zmáčknutí 'čísla' otevře dialog tohoto objektu."
+msgstr ""
 
 #: client/osci/dialog/KeyModHelp.py:49
 msgid "- Pressing 'Shift+Number' will center the starmap on that object."
 msgstr ""
-"- Zmáčknutí 'čísla se shiftem' vycentruje hvězdnou mapu na tento objekt."
 
 #: client/osci/dialog/KeyModHelp.py:71
 msgid "Key Command Help"
-msgstr "Nápověda klávesových zkratek"
+msgstr ""
 
 #: client/osci/dialog/KeyModHelp.py:88
 msgid "Do not show help/tooltip again"
-msgstr "Příště nápovědu nezobrazovat"
+msgstr ""
 
 #: client/osci/dialog/LoginDlg.py:84
 msgid "Auto-login in progress ..."
-msgstr "Probíhá automatické přihlašování ..."
+msgstr ""
 
 #: client/osci/dialog/LoginDlg.py:95
 msgid "Login in progress ..."
-msgstr "Probíhá přihlášení..."
+msgstr ""
 
 #: client/osci/dialog/LoginDlg.py:123
-#, fuzzy
-msgid ""
-"Your client version does not match server version %d.%d.%d%s. Do you want to "
-"continue?"
+msgid "Your client version does not match server version %d.%d.%d%s. Do you want to continue?"
 msgstr ""
-"Váš klient je starší než dostupná nová verze (%d.%d.%d%s) [Revize %d]. "
-"Chcete pokračovat?"
 
 #: client/osci/dialog/LoginDlg.py:141
 msgid "Wrong login and/or password"
-msgstr "Chybné jméno a/nebo heslo"
+msgstr ""
 
 #: client/osci/dialog/LoginDlg.py:189
 msgid "Outer Space Login"
-msgstr "Přihlášení do hry"
+msgstr ""
 
 #: client/osci/dialog/LoginDlg.py:196
 msgid "Universe"
@@ -2521,22 +2496,22 @@ msgstr ""
 #: client/osci/dialog/LoginDlg.py:206 client/osci/dialog/LoginDlg.py:231
 #: client/osci/dialog/NewAccDlg.py:98
 msgid "Login"
-msgstr "Login"
+msgstr ""
 
 #: client/osci/dialog/LoginDlg.py:216 client/osci/dialog/NewAccDlg.py:108
 msgid "Password"
-msgstr "Heslo"
+msgstr ""
 
 #: client/osci/dialog/LoginDlg.py:226 client/osci/dialog/MainGameDlg.py:378
 #: client/osci/dialog/NewGlobalTaskDlg.py:306
 #: client/osci/dialog/NewTaskDlg.py:444 client/osci/dialog/OptionsDlg.py:520
 #: client/osci/dialog/StructTaskDlg.py:379
 msgid "Options"
-msgstr "Nastavení"
+msgstr ""
 
 #: client/osci/dialog/LoginDlg.py:227
 msgid "New account"
-msgstr "Nový účet"
+msgstr ""
 
 #: client/osci/dialog/LoginDlg.py:235
 msgid "Universes"
@@ -2544,395 +2519,399 @@ msgstr ""
 
 #: client/osci/dialog/MainGameDlg.py:104
 msgid "Logging out and exitting..."
-msgstr "Provádí se ohlašování..."
+msgstr ""
 
 #: client/osci/dialog/MainGameDlg.py:111
 msgid "Cannot select object on map"
-msgstr "Nelze vybrat objekt na mapě"
+msgstr ""
 
 #: client/osci/dialog/MainGameDlg.py:180
 msgid "Are you sure to resign current game?"
-msgstr "Jste si jistý(á), že chcete vzdát hru?"
+msgstr ""
 
 #: client/osci/dialog/MainGameDlg.py:184
 msgid "Save the current starmap view as an image?"
-msgstr "Uložit aktuální hvězdnou mapu jako obrázek?"
+msgstr ""
 
 #: client/osci/dialog/MainGameDlg.py:191
 msgid "File saved as %s"
-msgstr "Soubor uložen do %s"
+msgstr ""
 
 #: client/osci/dialog/MainGameDlg.py:203
 msgid "Galaxy restart in progress..."
-msgstr "Probíhá restart galaxie..."
+msgstr ""
 
 #: client/osci/dialog/MainGameDlg.py:265
 msgid "Only imperator elected three times and more can restart galaxy."
-msgstr "Pouze imperátor zvolený třikrát a více může restartovat galaxii."
+msgstr ""
 
 #: client/osci/dialog/MainGameDlg.py:339
 msgid "Server sponsored by K2 Software"
-msgstr "Server sponzoruje K2 software"
+msgstr ""
 
 #: client/osci/dialog/MainGameDlg.py:349
 msgid "Messages"
-msgstr "Zprávy"
+msgstr ""
 
 #: client/osci/dialog/MainGameDlg.py:355
 #: client/osci/dialog/NewGlobalTaskDlg.py:267
 #: client/osci/dialog/NewTaskDlg.py:381
 msgid "Constr"
-msgstr "Konstr."
+msgstr ""
 
 #: client/osci/dialog/MainGameDlg.py:361
 msgid "Overview"
-msgstr "Přehled"
+msgstr ""
 
 #: client/osci/dialog/MainGameDlg.py:364
 #: client/osci/dialog/StarSystemDlg.py:1390
 msgid "Problems"
-msgstr "Problémy"
+msgstr ""
 
 #: client/osci/dialog/MainGameDlg.py:366 client/osci/dialog/MainGameDlg.py:371
 msgid "Menu"
-msgstr "Menu"
+msgstr ""
 
 #: client/osci/dialog/MainGameDlg.py:374
 msgid "Find system"
-msgstr "Hledat soustavu"
+msgstr ""
 
 #: client/osci/dialog/MainGameDlg.py:375
 msgid "Statistics"
-msgstr "Statistiky"
+msgstr ""
 
 #: client/osci/dialog/MainGameDlg.py:376
 msgid "Save Starmap"
-msgstr "Ulož hvězdnou mapu"
+msgstr ""
 
 #: client/osci/dialog/MainGameDlg.py:379 client/osci/dialog/MainGameDlg.py:381
 msgid "--------"
-msgstr "--------"
+msgstr ""
 
 #: client/osci/dialog/MainGameDlg.py:380
 msgid "Resign"
-msgstr "Vzdát se"
+msgstr ""
 
 #: client/osci/dialog/MainGameDlg.py:382 client/osci/dialog/UpdateDlg.py:240
 msgid "Quit"
-msgstr "Konec"
+msgstr ""
 
 #: client/osci/dialog/MainGameDlg.py:389
 msgid "Fleet List"
-msgstr "Flotily"
+msgstr ""
 
 #: client/osci/dialog/MainGameDlg.py:397
 msgid "Planet List"
-msgstr "Planety"
+msgstr ""
 
 #: client/osci/dialog/MainGameDlg.py:398
 msgid "System List"
-msgstr "Soustavy"
+msgstr ""
 
 #: client/osci/dialog/MainGameDlg.py:399
-#, fuzzy
 msgid "Global queues"
-msgstr "Fronta úkolů"
+msgstr ""
 
 #: client/osci/dialog/MapOverlayDlg.py:125
 msgid "Set Map Overlay:"
-msgstr "Typ zobrazované mapy:"
+msgstr ""
 
 #: client/osci/dialog/MapOverlayDlg.py:131
 msgid "Standard"
-msgstr "Standardní"
+msgstr ""
 
 #: client/osci/dialog/MapOverlayDlg.py:143
 msgid "Refuel and Upgrade"
-msgstr "Tankování a upgrade"
+msgstr ""
 
 #: client/osci/dialog/MapOverlayDlg.py:149
 msgid "Pirate Colony Cost"
-msgstr "Cena pirátské kolonie"
+msgstr ""
 
 #: client/osci/dialog/MessagesDlg.py:106
 msgid "Galaxy %s"
-msgstr "Galaxie %s"
+msgstr ""
 
 #: client/osci/dialog/MessagesDlg.py:123
-#, fuzzy
 msgid "Outer Space"
-msgstr "Outer Space"
+msgstr ""
 
 #: client/osci/dialog/MessagesDlg.py:236 client/osci/messages.py:249
-#, fuzzy
 msgid "\"%s\""
-msgstr "%s"
+msgstr ""
 
 #: client/osci/dialog/MessagesDlg.py:243 client/osci/dialog/MessagesDlg.py:254
 msgid "N"
-msgstr "N"
+msgstr ""
 
 #: client/osci/dialog/MessagesDlg.py:249 client/osci/dialog/ResearchDlg.py:409
 msgid "R"
-msgstr "R"
+msgstr ""
 
 #: client/osci/dialog/MessagesDlg.py:255
 msgid "%m-%d %H:%M"
-msgstr "%m-%d %H:%M"
+msgstr ""
 
 #: client/osci/dialog/MessagesDlg.py:318
 msgid "Delete all messages in this mailbox?"
-msgstr "Smazat všechny zprávy ve schránce?"
+msgstr ""
 
 #: client/osci/dialog/MessagesDlg.py:352 client/osci/dialog/MessagesDlg.py:363
 msgid "Research completed:"
-msgstr "Výzkum dokončen:"
+msgstr ""
 
 #: client/osci/dialog/MessagesDlg.py:386
 msgid "Messages and events"
-msgstr "Zprávy a události"
+msgstr ""
 
 #: client/osci/dialog/MessagesDlg.py:393
 msgid "Channel"
-msgstr "Kanál"
+msgstr ""
 
 #: client/osci/dialog/MessagesDlg.py:399
 msgid "Date"
-msgstr "Datum"
+msgstr ""
 
 #: client/osci/dialog/MessagesDlg.py:400
 msgid "Sender"
-msgstr "Odesílatel"
+msgstr ""
 
 #: client/osci/dialog/MessagesDlg.py:401
 #: client/osci/dialog/NewMessageDlg.py:187
 msgid "Subject"
-msgstr "Předmět"
+msgstr ""
 
 #: client/osci/dialog/MessagesDlg.py:407
 msgid "New subject"
-msgstr "Nové téma"
+msgstr ""
 
 #: client/osci/dialog/MessagesDlg.py:409
 msgid "Reply"
-msgstr "Odpověď"
+msgstr ""
 
 #: client/osci/dialog/MessagesDlg.py:411
 msgid "Read all"
-msgstr "Přečíst vše"
+msgstr ""
 
 #: client/osci/dialog/MessagesDlg.py:415
 msgid "Delete all"
-msgstr "Vymaž vše"
+msgstr ""
 
 #: client/osci/dialog/MessagesDlg.py:421
 msgid "Refresh"
-msgstr "Obnovit"
+msgstr ""
 
 #: client/osci/dialog/MinefieldDlg.py:114
 msgid "Mine Field Details"
-msgstr "Detaily minového pole"
+msgstr ""
 
 #: client/osci/dialog/MinefieldDlg.py:122
 msgid "Number"
-msgstr "Počet"
+msgstr ""
 
 #: client/osci/dialog/MinefieldDlg.py:123
 msgid "Min Dmg"
-msgstr "Min pošk."
+msgstr ""
 
 #: client/osci/dialog/MinefieldDlg.py:124
 msgid "Max Dmg"
-msgstr "Max pošk."
+msgstr ""
 
 #: client/osci/dialog/MinefieldDlg.py:125
 msgid "Attack"
-msgstr "Útok"
+msgstr ""
 
 #: client/osci/dialog/MinefieldDlg.py:126
 msgid "Ign. Shld"
-msgstr "Ign. štíty"
+msgstr ""
 
 #: client/osci/dialog/NewAccDlg.py:52
 msgid "Passwords do not match."
-msgstr "Hesla se neshodují."
+msgstr ""
 
 #: client/osci/dialog/NewAccDlg.py:81
 msgid "Create account"
-msgstr "Vytvořit účet"
+msgstr ""
 
 #: client/osci/dialog/NewAccDlg.py:88
 msgid "Nick"
-msgstr "Přezdívka"
+msgstr ""
 
 #: client/osci/dialog/NewAccDlg.py:120
 msgid "Confirm"
-msgstr "Potvrdit"
+msgstr ""
 
 #: client/osci/dialog/NewAccDlg.py:131
 msgid "E-mail"
-msgstr "E-mail"
+msgstr ""
 
 #: client/osci/dialog/NewAccDlg.py:141
 msgid "Create"
-msgstr "Vytvořit"
+msgstr ""
 
 #: client/osci/dialog/NewAccountDlg.py:36
 msgid "No free starting position"
-msgstr "Není žádná volná počáteční pozice"
+msgstr ""
 
 #: client/osci/dialog/NewAccountDlg.py:52
 msgid "Independent player"
-msgstr "Nezávislý hráč"
+msgstr ""
 
 #: client/osci/dialog/NewAccountDlg.py:54
 msgid "Rebel faction"
-msgstr "Vzbouřenecká frakce"
+msgstr ""
 
 #: client/osci/dialog/NewAccountDlg.py:56
 msgid "Pirate faction [VIP password needed]"
-msgstr "Pirát [vyžaduje VIP heslo]"
+msgstr ""
 
 #: client/osci/dialog/NewAccountDlg.py:58
 msgid "Unknown. You cannot use this."
-msgstr "Neznámé. Tohle nemůžeš použít."
+msgstr ""
 
 #: client/osci/dialog/NewAccountDlg.py:65
 msgid "Select position."
-msgstr "Vyberte pozici."
+msgstr ""
 
 #: client/osci/dialog/NewAccountDlg.py:69
 msgid "Executing CREATE NEW PLAYER command..."
-msgstr "Vykonávám příkaz VYTVOŘ NOVÉHO HRÁČE..."
+msgstr ""
 
 #: client/osci/dialog/NewAccountDlg.py:78
 msgid "Executing TAKE OVER REBEL FACTION command..."
-msgstr "Vykonávám příkaz OBSAĎ VZBOUŘENECKOU FRAKCI..."
+msgstr ""
 
 #: client/osci/dialog/NewAccountDlg.py:89
 msgid "Supply VIP password, please."
-msgstr "Zadejte VIP heslo, prosím."
+msgstr ""
 
 #: client/osci/dialog/NewAccountDlg.py:91
 msgid "Executing TAKE OVER PIRATE FACTION command..."
-msgstr "Vykonávám příkaz OBSAĎ PIRÁTSKOU FRAKCI..."
+msgstr ""
 
 #: client/osci/dialog/NewAccountDlg.py:95
 msgid "Supply valid VIP password."
-msgstr "Zadejte platné VIP heslo."
+msgstr ""
 
 #: client/osci/dialog/NewAccountDlg.py:111
-#, fuzzy
 msgid "Galaxer not present."
-msgstr "Probíhá restart galaxie..."
+msgstr ""
 
 #: client/osci/dialog/NewAccountDlg.py:125
 msgid "Select starting position"
-msgstr "Vyberte počáteční pozici"
+msgstr ""
 
 #: client/osci/dialog/NewAccountDlg.py:131
 msgid "Galaxy"
-msgstr "Galaxie"
+msgstr ""
 
 #: client/osci/dialog/NewAccountDlg.py:131
 msgid "Position"
-msgstr "Pozice"
+msgstr ""
 
 #: client/osci/dialog/NewAccountDlg.py:134
 msgid "VIP Password:"
-msgstr "VIP Heslo:"
+msgstr ""
 
 #: client/osci/dialog/NewAccountDlg.py:136
-#, fuzzy
 msgid "Book position"
-msgstr "Pozice"
+msgstr ""
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:164
 #: client/osci/dialog/NewTaskDlg.py:242
 msgid "Free slot"
-msgstr "Volný slot"
+msgstr ""
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:197
-#: client/osci/dialog/NewTaskDlg.py:291 client/osci/dialog/StructTaskDlg.py:229
+#: client/osci/dialog/NewTaskDlg.py:291
+#: client/osci/dialog/StructTaskDlg.py:229
 msgid "Select technology to construct."
-msgstr "Vyberte technologii, kterou chcete postavit."
+msgstr ""
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:205
-#: client/osci/dialog/NewTaskDlg.py:313 client/osci/dialog/StructTaskDlg.py:249
+#: client/osci/dialog/NewTaskDlg.py:313
+#: client/osci/dialog/StructTaskDlg.py:249
 msgid "Executing START CONSTRUCTION command..."
-msgstr "Vykonávám příkaz NOVÝ KONSTRUKČNÍ ÚKOL..."
+msgstr ""
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:257
-#, fuzzy
 msgid "Select new global task"
-msgstr "Vyberte nový úkol"
+msgstr ""
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:263
 #: client/osci/dialog/NewTaskDlg.py:377
 msgid "Technology"
-msgstr "Technologie"
+msgstr ""
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:272
 #: client/osci/dialog/NewTaskDlg.py:388
 msgid "Misc"
-msgstr "Různé"
+msgstr ""
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:276
-#: client/osci/dialog/NewTaskDlg.py:392 client/osci/dialog/StructTaskDlg.py:340
+#: client/osci/dialog/NewTaskDlg.py:392
+#: client/osci/dialog/StructTaskDlg.py:340
 msgid "2"
-msgstr "2"
+msgstr ""
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:278
-#: client/osci/dialog/NewTaskDlg.py:394 client/osci/dialog/StructTaskDlg.py:342
+#: client/osci/dialog/NewTaskDlg.py:394
+#: client/osci/dialog/StructTaskDlg.py:342
 msgid "3"
-msgstr "3"
+msgstr ""
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:280
-#: client/osci/dialog/NewTaskDlg.py:396 client/osci/dialog/StructTaskDlg.py:344
+#: client/osci/dialog/NewTaskDlg.py:396
+#: client/osci/dialog/StructTaskDlg.py:344
 msgid "4"
-msgstr "4"
+msgstr ""
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:282
-#: client/osci/dialog/NewTaskDlg.py:398 client/osci/dialog/StructTaskDlg.py:346
+#: client/osci/dialog/NewTaskDlg.py:398
+#: client/osci/dialog/StructTaskDlg.py:346
 msgid "5"
-msgstr "5"
+msgstr ""
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:284
-#: client/osci/dialog/NewTaskDlg.py:400 client/osci/dialog/StructTaskDlg.py:348
+#: client/osci/dialog/NewTaskDlg.py:400
+#: client/osci/dialog/StructTaskDlg.py:348
 msgid "6"
-msgstr "6"
+msgstr ""
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:286
-#: client/osci/dialog/NewTaskDlg.py:402 client/osci/dialog/StructTaskDlg.py:350
+#: client/osci/dialog/NewTaskDlg.py:402
+#: client/osci/dialog/StructTaskDlg.py:350
 msgid "7"
-msgstr "7"
+msgstr ""
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:288
-#: client/osci/dialog/NewTaskDlg.py:404 client/osci/dialog/StructTaskDlg.py:352
+#: client/osci/dialog/NewTaskDlg.py:404
+#: client/osci/dialog/StructTaskDlg.py:352
 msgid "8"
-msgstr "8"
+msgstr ""
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:290
-#: client/osci/dialog/NewTaskDlg.py:406 client/osci/dialog/StructTaskDlg.py:354
+#: client/osci/dialog/NewTaskDlg.py:406
+#: client/osci/dialog/StructTaskDlg.py:354
 msgid "9"
-msgstr "9"
+msgstr ""
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:301
 #: client/osci/dialog/NewTaskDlg.py:439
 msgid "Civilian"
-msgstr "civilní"
+msgstr ""
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:303
 #: client/osci/dialog/NewTaskDlg.py:428 client/osci/dialog/NewTaskDlg.py:441
 #: client/osci/dialog/StructTaskDlg.py:365
 msgid "Military"
-msgstr "vojenská"
+msgstr ""
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:310
 #: client/osci/dialog/NewTaskDlg.py:448 client/osci/dialog/OptionsDlg.py:628
 #: client/osci/dialog/StructTaskDlg.py:383
 msgid "Report finalization"
-msgstr "Hlásit dokončení"
+msgstr ""
 
 #: client/osci/dialog/NewMessageDlg.py:79
 #: client/osci/dialog/NewMessageDlg.py:114
@@ -2941,23 +2920,23 @@ msgstr "Hlásit dokončení"
 #: client/osci/dialog/StarSystemDlg.py:577
 #: client/osci/dialog/StarSystemDlg.py:581
 msgid "%s / %s"
-msgstr "%s / %s"
+msgstr ""
 
 #: client/osci/dialog/NewMessageDlg.py:123
 msgid "Select a recipient, please."
-msgstr "Zvolte příjemce, prosím."
+msgstr ""
 
 #: client/osci/dialog/NewMessageDlg.py:126
 msgid "Specify a topic, please."
-msgstr "Zvolte nadpis/téma, prosím."
+msgstr ""
 
 #: client/osci/dialog/NewMessageDlg.py:129
 msgid "Type a message, please."
-msgstr "Napište zprávu, prosím."
+msgstr ""
 
 #: client/osci/dialog/NewMessageDlg.py:132
 msgid "Executing SEND MESSAGE command..."
-msgstr "Vykonávám příkaz POŠLI ZPRÁVU..."
+msgstr ""
 
 #: client/osci/dialog/NewMessageDlg.py:155
 msgid ""
@@ -2965,43 +2944,41 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"%s / %s:\n"
-"\n"
-"%s"
 
 #: client/osci/dialog/NewMessageDlg.py:178
 msgid "New message"
-msgstr "Nová zpráva"
+msgstr ""
 
 #: client/osci/dialog/NewMessageDlg.py:185
 msgid "Recipient"
-msgstr "Příjemce"
+msgstr ""
 
 #: client/osci/dialog/NewMessageDlg.py:197
 msgid "Send"
-msgstr "Odešli"
+msgstr ""
 
 #: client/osci/dialog/NewMessageDlg.py:210
 msgid "Select recipient"
-msgstr "Vybrat příjemce"
+msgstr ""
 
 #: client/osci/dialog/NewTaskDlg.py:210
 #: client/osci/dialog/PlanetsOverviewDlg.py:96
 #: client/osci/dialog/StarSystemDlg.py:548
 msgid "[Nobody]"
-msgstr "[Nikdo]"
+msgstr ""
 
 #: client/osci/dialog/NewTaskDlg.py:294
 msgid "Select planet to construct on."
-msgstr "Vyberte planetu, na kterou se má stavět."
+msgstr ""
 
-#: client/osci/dialog/NewTaskDlg.py:309 client/osci/dialog/StructTaskDlg.py:245
+#: client/osci/dialog/NewTaskDlg.py:309
+#: client/osci/dialog/StructTaskDlg.py:245
 msgid "Do you want to issue relocation of your government?"
 msgstr ""
 
 #: client/osci/dialog/NewTaskDlg.py:371
 msgid "Select new task"
-msgstr "Vyberte nový úkol"
+msgstr ""
 
 #: client/osci/dialog/NewTaskDlg.py:381
 #: client/osci/dialog/PlanetsOverviewDlg.py:264
@@ -3009,176 +2986,174 @@ msgstr "Vyberte nový úkol"
 #: client/osci/dialog/ResearchDlg.py:413
 #: client/osci/dialog/StarSystemDlg.py:1465
 msgid "ETC"
-msgstr "ETC"
+msgstr ""
 
 #: client/osci/dialog/NewTaskDlg.py:384
 msgid "Stucts"
-msgstr "Budovy"
+msgstr ""
 
 #: client/osci/dialog/NewTaskDlg.py:411
 #: client/osci/dialog/StarSystemDlg.py:1477
 msgid "Target planet"
-msgstr "Cílová planeta"
+msgstr ""
 
 #: client/osci/dialog/NewTaskDlg.py:414
 msgid "Owner"
-msgstr "Vlastník"
+msgstr ""
 
 #: client/osci/dialog/NewTaskDlg.py:414
 #: client/osci/dialog/PlanetsOverviewDlg.py:251
 #: client/osci/dialog/StarSystemDlg.py:1230
 msgid "Planet"
-msgstr "Planeta"
+msgstr ""
 
 #: client/osci/dialog/NewTaskDlg.py:417
 msgid "Target slots"
-msgstr "Cílový slot"
+msgstr ""
 
-#: client/osci/dialog/NewTaskDlg.py:420 client/osci/dialog/StructTaskDlg.py:357
+#: client/osci/dialog/NewTaskDlg.py:420
+#: client/osci/dialog/StructTaskDlg.py:357
 msgid "Bio production"
-msgstr "Bio produkce"
+msgstr ""
 
-#: client/osci/dialog/NewTaskDlg.py:422 client/osci/dialog/StructTaskDlg.py:359
+#: client/osci/dialog/NewTaskDlg.py:422
+#: client/osci/dialog/StructTaskDlg.py:359
 msgid "En production"
-msgstr "Produkce energie"
+msgstr ""
 
-#: client/osci/dialog/NewTaskDlg.py:424 client/osci/dialog/StructTaskDlg.py:361
+#: client/osci/dialog/NewTaskDlg.py:424
+#: client/osci/dialog/StructTaskDlg.py:361
 msgid "CP production"
-msgstr "Produkce"
+msgstr ""
 
-#: client/osci/dialog/NewTaskDlg.py:426 client/osci/dialog/StructTaskDlg.py:363
+#: client/osci/dialog/NewTaskDlg.py:426
+#: client/osci/dialog/StructTaskDlg.py:363
 msgid "RP production"
-msgstr "Výzkum"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:47
 msgid "English"
-msgstr "Anglicky"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:48
 msgid "Czech"
-msgstr "Česky"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:49
 msgid "French"
-msgstr "Francouzsky"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:50
 msgid "German"
 msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:92
-#, fuzzy
 msgid "Select Mode"
-msgstr "Vyber objekt"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:137
 msgid "Select Theme"
-msgstr "Vyber téma"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:466
 msgid "You have to restart client to change the language."
-msgstr "Musíte restartovat klienta pro změnu jazyka."
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:487
 msgid "The mode you selected is not properly formatted."
 msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:491
-#, fuzzy
 msgid "You have to restart client to change the resolution."
-msgstr "Musíte restartovat klienta pro změnu jazyka."
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:530
 msgid "Resolution"
-msgstr "Rozlišení"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:542
-#, fuzzy
 msgid "Select resolution"
-msgstr "Vyberte pozici."
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:556
 msgid "Language"
-msgstr "Jazyk"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:563
 msgid "Select Language"
-msgstr "Vyberte jazyk"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:574
 msgid "Select language"
-msgstr "Vyberte jazyk"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:588
 msgid "Themes"
-msgstr "Témata"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:599
 msgid "Select theme"
-msgstr "Vyber téma"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:614
 msgid "Display flags"
-msgstr "Volby zobrazení"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:616
 msgid "Fullscreen"
-msgstr "Celá obrazovka"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:618
 msgid "Double buf."
-msgstr "Dvojitý buf."
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:620
 msgid "HW surface"
-msgstr "HW povrch"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:622
 msgid "SW surface"
-msgstr "SW povrch"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:626
 msgid "Default settings"
-msgstr "Výchozí nastavení"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:630
 msgid "Display help/tooltip"
-msgstr "Zobrazovat nápovědu"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:632
 msgid "Show coordinates"
-msgstr "Zobraz souřadnice"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:634
 msgid "Players highlight"
-msgstr "Zvýraznění hráčů"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:636
 msgid "Show minimap"
-msgstr "Ukázat minimapu"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:638
-#, fuzzy
 msgid "Show gate systems"
-msgstr "Přejmenuj soustavu"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:641
 msgid "Starmap hotkey: CTRL-R"
 msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:642
-#, fuzzy
 msgid "Show map grid"
-msgstr "Ukázat minimapu"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:643
 msgid "Starmap hotkey: CTRL-G"
 msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:644
-#, fuzzy
 msgid "Alternate system info"
-msgstr "Přejmenuj soustavu"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:645
 msgid "Starmap hotkey: CTRL-A"
@@ -3193,18 +3168,16 @@ msgid "Starmap hotkey: CTRL-S"
 msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:648
-#, fuzzy
 msgid "Show fleet lines"
-msgstr "Ukaž místo"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:649
 msgid "Starmap hotkey: CTRL-L"
 msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:650
-#, fuzzy
 msgid "Show player zones"
-msgstr "Ukaž místo"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:651
 msgid "Starmap hotkey: CTRL-P"
@@ -3212,675 +3185,639 @@ msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:654
 msgid "Login settings"
-msgstr "Nastavení přihlášení"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:656
 msgid "Auto-login"
-msgstr "Automatický login"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:658
 msgid "Remember password"
-msgstr "Zapamatovat heslo"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:662
 msgid "Proxy"
-msgstr "Proxy"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:663
 msgid "Host:"
-msgstr "Hostitel:"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:665
 msgid "Port:"
-msgstr "Port:"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:667
 msgid "Username:"
-msgstr "Uživ. jméno:"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:669
 msgid "Password:"
-msgstr "Heslo:"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:673
 msgid "Sound / Music"
-msgstr "Zvuky/muzika"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:674
 msgid "Sounds"
-msgstr "Zvuky"
+msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:678
 msgid "Music"
-msgstr "Hudba"
+msgstr ""
 
 #: client/osci/dialog/PlanetsAnalysisDlg.py:88
 msgid "Planets with structure %s"
-msgstr "Planety s budovou %s"
+msgstr ""
 
 #: client/osci/dialog/PlanetsAnalysisDlg.py:123
 msgid "Planets analysis"
-msgstr "Analýza planet"
+msgstr ""
 
 #: client/osci/dialog/PlanetsAnalysisDlg.py:136
 msgid "Structure name"
-msgstr "Název budovy"
+msgstr ""
 
 #: client/osci/dialog/PlanetsAnalysisDlg.py:137
 msgid "Total #"
-msgstr "Celkem #"
+msgstr ""
 
 #: client/osci/dialog/PlanetsAnalysisDlg.py:145
 msgid "Planet name"
-msgstr "Jméno planety"
+msgstr ""
 
 #: client/osci/dialog/PlanetsAnalysisDlg.py:146
 msgid "# of structs"
-msgstr "# budov"
+msgstr ""
 
 #: client/osci/dialog/PlanetsOverviewDlg.py:244
 msgid "Planets Overview"
-msgstr "Přehled planet"
+msgstr ""
 
 #: client/osci/dialog/PlanetsOverviewDlg.py:253
 #: client/osci/dialog/StarSystemDlg.py:1231
 msgid "Env"
-msgstr "Prostř."
+msgstr ""
 
 #: client/osci/dialog/PlanetsOverviewDlg.py:254
 #: client/osci/dialog/StarSystemDlg.py:1231
 msgid "Min"
-msgstr "Min"
+msgstr ""
 
 #: client/osci/dialog/PlanetsOverviewDlg.py:255
 #: client/osci/dialog/StarSystemDlg.py:1231
 #: client/osci/dialog/SystemOverviewDlg.py:220
 msgid "En"
-msgstr "En"
+msgstr ""
 
 #: client/osci/dialog/PlanetsOverviewDlg.py:256
 #: client/osci/dialog/SystemOverviewDlg.py:219
 msgid "Bio+-"
-msgstr "Bio+-"
+msgstr ""
 
 #: client/osci/dialog/PlanetsOverviewDlg.py:257
 #: client/osci/dialog/SystemOverviewDlg.py:221
 msgid "En+-"
-msgstr "En+-"
+msgstr ""
 
 #: client/osci/dialog/PlanetsOverviewDlg.py:258
 msgid "Free"
-msgstr "Volných"
+msgstr ""
 
 #: client/osci/dialog/PlanetsOverviewDlg.py:259
 msgid "Sl."
-msgstr "Sl."
+msgstr ""
 
 #: client/osci/dialog/PlanetsOverviewDlg.py:260
 msgid "D."
-msgstr "Pr."
+msgstr ""
 
 #: client/osci/dialog/PlanetsOverviewDlg.py:261
 msgid "Mrl"
-msgstr "Mrl"
+msgstr ""
 
 #: client/osci/dialog/PlanetsOverviewDlg.py:262
 #: client/osci/dialog/StructTaskDlg.py:157
 #: client/osci/dialog/StructTaskDlg.py:158
 msgid "CP"
-msgstr "KB"
+msgstr ""
 
 #: client/osci/dialog/PlanetsOverviewDlg.py:263
 msgid "RP"
-msgstr "VB"
+msgstr ""
 
 #: client/osci/dialog/PlanetsOverviewDlg.py:265
 msgid "Tot.ETC"
-msgstr "Cel.ETC"
+msgstr ""
 
 #: client/osci/dialog/PlanetsOverviewDlg.py:266
 #: client/osci/dialog/StarSystemDlg.py:1235
 msgid "Constructing"
-msgstr "Buduje se"
+msgstr ""
 
 #: client/osci/dialog/PlanetsOverviewDlg.py:268
 msgid "My planets"
-msgstr "Moje planety"
+msgstr ""
 
 #: client/osci/dialog/PlanetsOverviewDlg.py:270
 msgid "Other cmdrs"
-msgstr "Ostatní velitelé"
+msgstr ""
 
 #: client/osci/dialog/PlanetsOverviewDlg.py:272
 #: client/osci/dialog/SystemOverviewDlg.py:233
 msgid "Colonizable"
-msgstr "Kolonizovatelné"
+msgstr ""
 
 #: client/osci/dialog/PlanetsOverviewDlg.py:274
 #: client/osci/dialog/SystemOverviewDlg.py:235
 msgid "Uncolonizable"
-msgstr "Nekolonizovat."
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:189
 msgid "Structure (%s) is off and will be destroyed in %s turns."
-msgstr "Budova (%s) je vypnutá a bude zničena za %s tahů."
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:192
 msgid "is deteriorating and will be destroyed in %s turns"
-msgstr "se rozpadá a bude zničena za %s tahů."
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:196
-#, fuzzy
 msgid "has insufficient supply of biomatter"
-msgstr "má nedostatek biohmoty"
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:200
-#, fuzzy
 msgid "has insufficient supply of energy"
-msgstr "má nedostatek energie"
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:204
-#, fuzzy
 msgid "has insufficient supply of workers"
-msgstr "má nedostatek dělníků"
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:208
 msgid "is repairing"
-msgstr "se opravuje"
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:214
 msgid "Structure (%s) %s."
-msgstr "Budova (%s) %s."
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:226
 msgid "There is no space for all constructed buildings on %s."
-msgstr "Není dostatek místa pro všechny stavěné budovy na %s."
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:243
 msgid "Bio decreasing - last turn change %d, surplus %d (%s)."
-msgstr "Bio klesá - poslední tah změna o %d, zásoby %d (%s)."
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:246
 msgid "Bio decreasing - last turn change %d, surplus %d."
-msgstr "Bio klesá - poslední tah změna o %d, zásoby %d."
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:263
 msgid "Energy decreasing - last turn change %d, surplus %d (%s)."
-msgstr "Energie klesá - poslední tah změna o %d, zásoby %d (%s)."
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:266
 msgid "Energy decreasing - last turn change %d, surplus %d."
-msgstr "Energie klesá - poslední tah změna o %d, zásoby %d."
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:275
 msgid " and IS NOT refueling"
-msgstr "a NETANKUJE"
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:295
 msgid " and IS refueling"
-msgstr "a TANKUJE"
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:297
 msgid " and CAN refuel, but reach planet maximum refuel amount"
 msgstr ""
-"a MŮŽE tankovat, ale dosáhla maximálního množství natankování na planetě"
 
 #: client/osci/dialog/ProblemsDlg.py:325
 msgid "Fleet \"%s\" has full fuel tanks."
-msgstr "Flotila \"%s\" má plné palivové nádrže."
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:328
 msgid "Fleet \"%s\" is low on fuel [%d %%]%s."
-msgstr "Flotile \"%s\" dochází palivo [%d %%]%s."
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:354
 msgid "Production queue is empty."
-msgstr "Výrobní fronta je prázdná."
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:365
-#, fuzzy
-msgid ""
-"Production queue may end in {0} turns ({1} directly in planet queue), {2} "
-"item(s) on list."
-msgstr "Výrobní fronta končí za % s tahů, %d položek na seznamu."
+msgid "Production queue may end in {0} turns ({1} directly in planet queue), {2} item(s) on list."
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:373 client/osci/dialog/ProblemsDlg.py:385
-#, fuzzy
 msgid "Global queue "
-msgstr "Fronta úkolů"
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:375
 msgid "Global production queue {0} used by {1} planet(s) is empty."
 msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:386
-msgid ""
-"Global production queue {0} used by {1} planet(s) runs out in {2} turns."
+msgid "Global production queue {0} used by {1} planet(s) runs out in {2} turns."
 msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:419
 msgid "Research queue is empty."
-msgstr "Výzkumná fronta je prázdná."
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:430
 msgid "Research queue ends in %s turns, %d item(s) on list."
-msgstr "Výzkumná fronta končí za %s tahů, %d položek na seznamu."
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:457 client/osci/dialog/ProblemsDlg.py:469
 msgid "Cannot show location."
-msgstr "Místo nelze zobrazit."
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:488
 msgid "Problems Locator"
-msgstr "Vyhledávač problémů"
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:499
 #: client/osci/dialog/SystemOverviewDlg.py:214
 msgid "System"
-msgstr "Systém"
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:500
 msgid "Problem description"
-msgstr "Popis problému"
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:505
 msgid "Systems"
-msgstr "Systémy"
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:514 client/osci/gdata.py:158
 msgid "Critical"
-msgstr "Kritická"
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:516 client/osci/gdata.py:159
 msgid "Major"
-msgstr "Velká"
+msgstr ""
 
 #: client/osci/dialog/ProblemsDlg.py:518 client/osci/gdata.py:160
 msgid "Minor"
-msgstr "Malá"
+msgstr ""
 
 #: client/osci/dialog/RenameFleetDlg.py:71
 msgid "Executing RENAME FLEET command..."
-msgstr "Vykonávám příkaz PŘEJMENUJ FLOTILY..."
+msgstr ""
 
 #: client/osci/dialog/RenameFleetDlg.py:86
 msgid "Executing DELETE CUSTOM FLEET NAME command..."
-msgstr "Vykonávám příkaz VYMAŽ UŽIVATELSKÉ JMÉNO FLOTILY ..."
+msgstr ""
 
 #: client/osci/dialog/RenameFleetDlg.py:122
 msgid "Rename Fleet"
-msgstr "Přejmenuj flotilu"
+msgstr ""
 
 #: client/osci/dialog/RenameFleetDlg.py:130
 msgid "Retain name during fleet joins"
-msgstr "Uchovej jméno během spojování flotil"
+msgstr ""
 
 #: client/osci/dialog/RenameFleetDlg.py:132
 msgid "Prevent all fleet joins"
-msgstr "Zabraň spojování flotil"
+msgstr ""
 
 #: client/osci/dialog/RenameFleetDlg.py:134
 msgid " Note: Retaining name will prevent two"
-msgstr "Pozn.: Ponechání jména zabrání sloučení"
+msgstr ""
 
 #: client/osci/dialog/RenameFleetDlg.py:135
 msgid " retain name fleets from joining."
-msgstr "dvou pojmenovaných flotil. "
+msgstr ""
 
 #: client/osci/dialog/RenameFleetDlg.py:137
 #: client/osci/dialog/RenameSysDlg.py:113
 #: client/osci/dialog/StarSystemDlg.py:1245
 msgid "Rename"
-msgstr "Přejmenuj"
+msgstr ""
 
 #: client/osci/dialog/RenameFleetDlg.py:138
 msgid "Delete Name"
-msgstr "Vymaž jméno"
+msgstr ""
 
 #: client/osci/dialog/RenameSysDlg.py:56
 msgid "Alpha, Beta, ..."
-msgstr "Alfa, Beta, ..."
+msgstr ""
 
 #: client/osci/dialog/RenameSysDlg.py:57
 msgid "I, II, III, ..."
-msgstr "I, II, III, ..."
+msgstr ""
 
 #: client/osci/dialog/RenameSysDlg.py:58
 msgid "Prime, Secundus, ..."
-msgstr "Prima, Sekunda, ..."
+msgstr ""
 
 #: client/osci/dialog/RenameSysDlg.py:59
 msgid "A, B, C, D, E, ..."
-msgstr "A, B, C, D, E, ..."
+msgstr ""
 
 #: client/osci/dialog/RenameSysDlg.py:60
 msgid "1, 2, 3, 4, 5, ..."
-msgstr "1, 2, 3, 4, 5, ..."
+msgstr ""
 
 #: client/osci/dialog/RenameSysDlg.py:67
 msgid "Select planet numbering type, please."
-msgstr "Vyberte si typ číslování planet, prosím."
+msgstr ""
 
 #: client/osci/dialog/RenameSysDlg.py:72
 msgid "Executing RENAME SYSTEM command..."
-msgstr "Vykonávám příkaz PŘEJMENUJ SOUSTAVU..."
+msgstr ""
 
 #: client/osci/dialog/RenameSysDlg.py:98
 msgid "Rename system"
-msgstr "Přejmenuj soustavu"
+msgstr ""
 
 #: client/osci/dialog/RenameSysDlg.py:104
 msgid "System name"
-msgstr "Soustava: %s"
+msgstr ""
 
 #: client/osci/dialog/RenameSysDlg.py:108
 msgid "Planet numbering"
-msgstr "Číslování planet"
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:64
 msgid "Research queue [%d pts/turn]"
-msgstr "Fronta výzkumu [%d bodů/tah]"
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:67
 msgid "Research [TL%d]"
-msgstr "Výzkum [TL%d]"
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:128
 msgid "Research points %d/%d, change %d pts/turn."
-msgstr "Výzkumné body %d/%d, změna %d bodů/tah."
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:133
 #: client/osci/dialog/StarSystemDlg.py:410
 #: client/osci/dialog/StarSystemDlg.py:816
 msgid "%d %%"
-msgstr "%d %%"
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:147
 msgid "[%s]"
-msgstr "[%s]"
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:155
 msgid "%d-%d"
-msgstr "%d-%d"
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:247
 msgid "Select technology to research."
-msgstr "Vyberte technologii, kterou chcete vyzkoumat."
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:252 client/osci/dialog/ResearchDlg.py:268
 msgid "Executing START RESEARCH command..."
-msgstr "Vykonávám příkaz ZAČÍT VÝZKUM..."
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:263
 msgid "Select technology to improve."
-msgstr "Vyberte technologii, kterou chcete zlepšit."
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:278
 msgid "Executing MOVE RESEARCH command..."
-msgstr "Vykonávám příkaz PŘESUŇ VÝZKUM..."
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:293
 msgid "Executing EDIT RESEARCH command..."
-msgstr "Vykonávám příkaz ZMĚŇ VÝZKUM..."
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:309
 msgid "Abort this research task?"
-msgstr "Zrušit tento výzkumný projekt?"
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:313
 msgid "Executing ABORT RESEARCH command..."
-msgstr "Vykonávám příkaz ZRUŠ VÝZKUM..."
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:322
-#, fuzzy
 msgid "Select technology to obsolete."
-msgstr "Vyberte technologii, kterou chcete postavit."
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:327
-#, fuzzy
 msgid "Executing OBSOLETTE command..."
-msgstr "Vykonávám přikaz VOLIT..."
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:338
-#, fuzzy
 msgid "Select technology to un-obsolete."
-msgstr "Vyberte technologii, kterou chcete postavit."
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:343
-#, fuzzy
 msgid "Executing UN-OBSOLETTE command..."
-msgstr "Vykonávám přikaz VOLIT..."
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:374
 msgid "Known technologies"
-msgstr "Známé technologie"
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:378 client/osci/dialog/ResearchDlg.py:398
 msgid "Sh"
-msgstr "Lď"
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:378 client/osci/dialog/ResearchDlg.py:398
 msgid "Str"
-msgstr "Bud"
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:380
 msgid "Improve"
-msgstr "Vylepšit"
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:382
 msgid "Show completed"
-msgstr "Zobr. dokončené"
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:387
 msgid "Un-Obsolete"
 msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:389
-#, fuzzy
 msgid "Obsolete"
-msgstr "Dokončeno"
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:391
-#, fuzzy
 msgid "Show obsolete"
-msgstr "Zobr. dokončené"
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:394
 msgid "Researchable technologies"
-msgstr "Přístupné technologie"
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:405
 msgid "Research queue"
-msgstr "Výzkumná fronta"
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:412
 msgid "Progress"
-msgstr "Hotovo"
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:416
 msgid "TOP"
-msgstr "TOP"
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:418
 msgid "Move selected technology to the top of the queue."
-msgstr "Posune vybranou technologii na vrchol fronty."
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:425
-msgid ""
-"Repeat research of this technology until the technology is fully improved."
-msgstr "Opakovat výzkum této technologie dokud nebude plně vylepšena."
+msgid "Repeat research of this technology until the technology is fully improved."
+msgstr ""
 
 #: client/osci/dialog/ResearchDlg.py:431
 msgid "Total amount of time needed to research all technologies in the queue"
-msgstr "Celková doba potřebná k vynalezení všech technologií ve frontě."
+msgstr ""
 
 #: client/osci/dialog/SearchDlg.py:96
 msgid "No system found"
-msgstr "Nenalezen žádný systém"
+msgstr ""
 
 #: client/osci/dialog/SearchDlg.py:111
 msgid "Search for system"
-msgstr "Hledám systém"
+msgstr ""
 
 #: client/osci/dialog/SearchDlg.py:119
 msgid "Use wildcard search as with files (*ese* finds Presere and Shesed)"
-msgstr "Vyhledávání s pomocnými znaky(*ra* nalezne Praha i Strakonice)"
+msgstr ""
 
 #: client/osci/dialog/SearchDlg.py:120
 msgid "* matches everything, ? matches any single character"
-msgstr "* znamená cokoliv, ? znamená jeden libovolný znak"
+msgstr ""
 
 #: client/osci/dialog/SearchDlg.py:121
 msgid "System name:"
-msgstr "Název soustavy:"
+msgstr ""
 
 #: client/osci/dialog/SearchDlg.py:126
 msgid "Find"
-msgstr "Hledat"
+msgstr ""
 
 #: client/osci/dialog/SearchDlg.py:127
 msgid "Next"
-msgstr "Další"
+msgstr ""
 
 #: client/osci/dialog/ShowBuoyDlg.py:35
 msgid "Private buoy text"
-msgstr "Text soukromé bójky"
+msgstr ""
 
 #: client/osci/dialog/ShowBuoyDlg.py:37
 msgid " (visible to allies)"
-msgstr "(zobrazit spojencům)"
+msgstr ""
 
 #: client/osci/dialog/ShowBuoyDlg.py:45
 msgid "Buoy texts from allies:"
-msgstr "Texty bójky spojence:"
+msgstr ""
 
 #: client/osci/dialog/ShowBuoyDlg.py:48
 msgid "(Author: %s)"
-msgstr "(Autor: %s)"
+msgstr ""
 
 #: client/osci/dialog/ShowBuoyDlg.py:80
 msgid "Show buoy text"
-msgstr "Zobraz texty bójky"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:121
 msgid "System: %s [%.02f, %.02f]"
-msgstr "Soustava: %s [%.02f, %.02f]"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:123
 msgid "System: %s"
-msgstr "Systém: %s"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:161
 msgid "Planet %s: POPULATION IS REVOLTING"
-msgstr "Planeta %s: OBYVATELÉ SE BOUŘÍ"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:165
 msgid "Planet %s: %s"
-msgstr "Planeta %s: %s"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:168
 msgid "Planet %s"
-msgstr "Planeta %s"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:288
-msgid ""
-"Planet downgrade limit %d, upgrade limit %d, can be terraformed to a %s."
+msgid "Planet downgrade limit %d, upgrade limit %d, can be terraformed to a %s."
 msgstr ""
-"Limit pro znehodnocení planety je %d, limit pro vylepšení je %d, planeta "
-"může být terraformována na %s."
 
 #: client/osci/dialog/StarSystemDlg.py:294
-msgid ""
-"Planet downgrade limit %d, upgrade limit %d, can terraformed to a %s in the "
-"future."
+msgid "Planet downgrade limit %d, upgrade limit %d, can terraformed to a %s in the future."
 msgstr ""
-"Limit pro znehodnocení planety je %d, limit pro vylepšení je %d, planeta "
-"může být v budoucnu terraformována na %s."
 
 #: client/osci/dialog/StarSystemDlg.py:300
 msgid "Planet downgrade limit %d, upgrade limit %d."
-msgstr "Limit pro znehodnocení planety je %d, limit pro vylepšení je %d."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:307
 msgid "Energy abundance for average EMR level is %s."
-msgstr "Množství energie pro průměrnou úroveň EMR je %s."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:319
 msgid "Planet has %s free, %s usable out of maximum %s slots ."
-msgstr "Planeta má %s volných, %s použitelných, z maxima %s slotů ."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:329
 msgid "Population: %s (max. %s, %+d last turn)"
-msgstr "Populace: %s (max. %s, %+d za poslední tah)"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:340
 msgid "1000 units of population consumes %s bio, and %s en."
-msgstr "1000 obyvatel spotřebuje %s biohmoty a %s energie."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:348
 msgid "Biomatter reserve: %s (max. %s, %+d last turn)"
-msgstr "Rezerva biohmoty: %s (max. %s, %+d za poslední tah)"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:357
 msgid "Energy reserve: %s (max. %s, %+d last turn)"
-msgstr "Energetická rezerva: %s (max. %s, %+d za poslední tah)"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:372
-msgid ""
-"Effective / raw construction points. Empire efficiency %+d %%, %+d %% "
-"because of morale."
+msgid "Effective / raw construction points. Empire efficiency %+d %%, %+d %% because of morale."
 msgstr ""
-"Efektivní / surové konstrukční body. Výkonnost říše %+d %%, %+d %% kvůli "
-"morálce."
 
 #: client/osci/dialog/StarSystemDlg.py:386
-msgid ""
-"Effective / raw research points. Empire efficiency %+d %%, %+d %% because of "
-"morale."
+msgid "Effective / raw research points. Empire efficiency %+d %%, %+d %% because of morale."
 msgstr ""
-"Efektivní / surové výzkumné body. Výkonnost říše %+d%%, %d+ %%. kvůli "
-"morálce."
 
 #: client/osci/dialog/StarSystemDlg.py:398
 msgid "Enviroment (%d / %d) is improving (%d per turn), %s turns to improve."
 msgstr ""
-"Životní prostředí (%d / %d) se zlepšuje (%d na tah), za %s tahů dojde ke "
-"zlepšení."
 
 #: client/osci/dialog/StarSystemDlg.py:403
-msgid ""
-"Enviroment (%d / %d) is deteriorating (%d per turn), %s turns to deteriorate."
+msgid "Enviroment (%d / %d) is deteriorating (%d per turn), %s turns to deteriorate."
 msgstr ""
-"Životní prostředí (%d / %d) se zhoršuje (%d na tah), za %s tahů dojde ke "
-"zhoršení."
 
 #: client/osci/dialog/StarSystemDlg.py:407
 msgid "Enviroment (%d / %d) is stable."
-msgstr "Životní prostředí (%d / %d) je stabilní."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:412
 msgid "0 %"
-msgstr "0 %"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:437
 msgid "Shield (%d/%d) charged by %+d last turn."
-msgstr "Štíty (%d/%d) byly nabity o %+d v posledním kole."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:443
 msgid "Shield (%d/%d) was damaged by %+d last turn."
-msgstr "Štíty (%d/%d) byly poničeny o %+d v posledním kole."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:449
 msgid "Shield (%d/%d) is unable to charge."
-msgstr "Štíty (%d/%d) se nemohou dobít."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:454
 msgid "Shield (%d/%d) is fully charged."
-msgstr "Štíty (%d/%d) jsou plně nabity."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:459
 msgid "Shield (%d/unknown)"
-msgstr "Štíty (%d/neznámo)"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:472
 msgid "M rise %+d, Base %d + Build %d + Pop %d = %d, revolt under %d."
@@ -3891,428 +3828,424 @@ msgid "M fall %+d, Base %d + Build %d + Pop %d = %d, revolt under %d."
 msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:480
-#, fuzzy
 msgid "Morale is stable. Base %d + Build. %d + Pop. %d = %d, revolt under %d."
-msgstr "Morálka je stabilní (%d / %d), práh vzpoury je %d."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:494
 msgid "Minimal storage %d."
-msgstr "Minimálně skladem %d."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:498
 msgid "Minimal storage %d"
-msgstr "Minimálně skladem %d"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:519
 msgid "System overview for star %s [%s]"
-msgstr "Přehled soustavy hvězdy %s [%s]"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:524
 msgid "System overview"
-msgstr "Přehled soustavy"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:625 client/osci/res.py:180
 msgid "[Unknown]"
-msgstr "[Neznámý]"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:626
 msgid "Redirect to %s"
-msgstr "Přesměrovat do %s"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:630
 #: client/osci/dialog/StarSystemDlg.py:634
 #: client/osci/dialog/StarSystemDlg.py:1249
 msgid "Redirection OFF"
-msgstr "Přesměrování VYPNUTO"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:643
 #: client/osci/dialog/StarSystemDlg.py:1253
 msgid "Add buoy"
-msgstr "Přidej bójku"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:663
 msgid "Planet Upgrade/Downgrade Data"
-msgstr "Data o zlepšení/zhoršení planety"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:671
 #: client/osci/dialog/StarSystemDlg.py:680
 msgid "%d - %d EN"
-msgstr "%d - %d EN"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:684
 msgid "0 - 200 EN"
-msgstr "0 - 200 en"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:706
 msgid "Task info: %s"
-msgstr "Informace o úkolu: %s"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:711
 msgid "%d %% [%+d %%]"
-msgstr "%d %% [%+d %%]"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:739
 msgid "Slot info: %s"
-msgstr "Informace o budově: %s"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:742
 msgid "No problems."
-msgstr "Žádný problém."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:745
 msgid "Switched OFF"
-msgstr "VYPNUTÁ"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:746
 msgid "Structure is switched OFF."
-msgstr "Budova je vypnutá."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:755
 msgid "Insufficient biomatter, "
-msgstr "Nedostatek biohmoty, "
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:756
 msgid "Bio/"
-msgstr "Bio/"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:758
 msgid "Insufficient energy, "
-msgstr "Nedostatek energie,"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:759
 msgid "En/"
-msgstr "En/"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:761
 msgid "Insufficient workers, "
-msgstr "Nedostatek dělníků,"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:762
 msgid "Wrk/"
-msgstr "Zam/"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:764
 msgid "Deteriorating, "
-msgstr "Se rozpadá,"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:765
 msgid "Deter/"
-msgstr "Rozpad/"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:767
 msgid "Repairing, "
-msgstr "Opravuje se,"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:768
 msgid "Rep/"
-msgstr "Opr/"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:770
 msgid "New structure, "
-msgstr "Nová budova, "
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:771
 msgid "New/"
-msgstr "Nový/"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:790
 msgid "%d / ?"
-msgstr "%d / ?"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:817
 msgid "Operational status of the structure."
-msgstr "Provozní stav budovy."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:920
 #: client/osci/dialog/StarSystemDlg.py:933
 msgid "Executing MOVE STRUCTURE command..."
-msgstr "Vykonávám příkaz PŘESUŇ BUDOVU..."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:953
 msgid "Executing SWITCH STRUCTURE ON/OFF command..."
-msgstr "Vykonávám příkaz ZAPNI/VYPNI BUDOVU..."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:966
 msgid "Demolish this structure?"
-msgstr "Zničit tuto budovu?"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:971
 msgid "Executing DEMOLISH STRUCTURE command..."
-msgstr "Vykonávám příkaz ZBOUREJ BUDOVU..."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1046
 msgid "Executing ABORT TASK command..."
-msgstr "Vykonávám příkaz ZRUŠ ÚKOL..."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1088
 #: client/osci/dialog/StarSystemDlg.py:1090
 msgid "Destination not explored"
-msgstr "Cíl není prozkoumán"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1104
 msgid "Executing ADD BUOY command..."
-msgstr "Vykonávám příkaz PŘIDAT BÓJKU..."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1117
 msgid "Executing DELETE BUOY command..."
-msgstr "Vykonávám příkaz ODSTRAŇ BÓJKU..."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1135
 msgid "Enter number into biomatter min. reserve field."
-msgstr "Vložte číslo do pole minimální rezerva biohmoty."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1140
 msgid "Enter number into energy min. reserve field."
-msgstr "Vložte číslo do pole minimální rezerva energie."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1143
 msgid "Executing CHANGE RESERVES LIMITS command..."
-msgstr "Vykonávám příkaz ZMĚŇ MIN. REZERVU..."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1157
 msgid "Executing SWITCH AUTOMATIC REGULATION command..."
-msgstr "Vykonávám příkaz ZMĚŇ AUTOMATICKOU REGULACI..."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1184
-#, fuzzy
 msgid "Executing CHANGE PLANETS GLOBAL QUEUE command..."
-msgstr "Vykonávám příkaz ZMĚŇ ÚKOL..."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1232
 #: client/osci/dialog/StarSystemDlg.py:1233
 msgid "+/-"
-msgstr "+/-"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1232
 #: client/osci/dialog/StarSystemDlg.py:1308
 #: client/osci/dialog/SystemOverviewDlg.py:218
 msgid "Biomatter"
-msgstr "Biohmota"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1233
 #: client/osci/dialog/StarSystemDlg.py:1316
 msgid "Energy"
-msgstr "Energie"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1234
 msgid "Con / Res"
-msgstr "Konstr / Výzkum"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1234
 msgid "Space"
-msgstr "Vesmír"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1247
 msgid "Find Wormhole Exit"
-msgstr "Najdi výstup z červí díry"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1251
 msgid "Mass Redirect"
-msgstr "Hromadné přesměrování"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1255
 msgid "Delete buoy"
-msgstr "Odstraň bójku"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1257
 msgid "View Minefield"
-msgstr "Ukázat miny"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1266
 #: client/osci/dialog/StarSystemDlg.py:1269
 msgid "Task queue"
-msgstr "Fronta úkolů"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1273
 msgid "Planet type"
-msgstr "Typ planety"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1277
 msgid "Diameter"
-msgstr "Průměr"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1285
 msgid "Min. abundance"
-msgstr "Min. množství"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1289
 msgid "En. abundance"
-msgstr "Množství energie"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1293
 msgid "Available space"
-msgstr "Volné místo"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1298
 msgid "Colony data"
-msgstr "Údaje o kolonii"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1304
 msgid "Pop. support"
-msgstr "Podpora obyvatel"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1312
 #: client/osci/dialog/StarSystemDlg.py:1320
 msgid "Min. reserve"
-msgstr "Min. rezerva"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1326
 msgid "A"
-msgstr "A"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1328
 #: client/osci/dialog/StarSystemDlg.py:1329
 msgid "Automatic regulation on/off."
-msgstr "Zapnutí/Vypnutí automatické regulace."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1330
 msgid "Free workers"
-msgstr "Nezaměstnaní"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1338
 #: client/osci/dialog/StarSystemDlg.py:1406
 msgid "Research pts"
-msgstr "Výzkumné body"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1342
 msgid "Env. status"
-msgstr "Stav živ. prostř."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1346
 msgid "Strat. resource"
-msgstr "Strategický zdroj"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1354
 #: client/osci/dialog/TechInfoDlg.py:131
 msgid "Planetary shield"
-msgstr "Planetární štít"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1358
 msgid "Show Terraforming Data"
-msgstr "Ukázat data o terraformování"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1360
 msgid "System data"
-msgstr "Data o soustavě"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1362
 msgid "Net Bio +/-"
-msgstr "Změna Bio+-"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1366
 msgid "Net Energy +/-"
-msgstr "Změna Energie p/s"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1370
 msgid "Net Construction"
-msgstr "Čistá výroba"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1374
 msgid "Net Research"
-msgstr "Čistý výzkum"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1382
 #: client/osci/dialog/TechInfoDlg.py:128
 msgid "Hit points"
-msgstr "Zásahové body"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1386
 msgid "Status"
-msgstr "Status"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1394
 msgid "Biomatter p/c"
-msgstr "Biohmota p/s"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1398
 msgid "Energy p/c"
-msgstr "Energie p/s"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1402
 msgid "Constr pts"
-msgstr "Konstr. body"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1410
 msgid "Workers"
-msgstr "Pracovníků"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1416
 msgid "Move structure to first slot"
-msgstr "Posunout budovu do prvního slotu"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1419
 msgid "Move structure to previous slot"
-msgstr "Posunout budovu do předchozího slotu"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1422
 msgid "Move structure to next slot"
-msgstr "Posunout budovu do dalšího slotu"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1425
 msgid "Move structure to last slot"
-msgstr "Posunout budovu do posledního slotu"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1426
 msgid "ON/OFF"
-msgstr "Zapnuto/Vypnuto"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1428
 msgid "Switch structure ON or OFF"
-msgstr "Zapnout/vypnout budovu"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1431
 msgid "Show structure information"
-msgstr "Zobrazit informace o budově"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1432
 msgid "Demolish"
-msgstr "Zbourat"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1434
 msgid "Demolish structure"
-msgstr "Zničit budovu"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1436
 msgid "Class Range En. Abundance"
-msgstr "Energie je pro třídu"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1440
 msgid "Upgrade Range En. Abund."
-msgstr "Rozsah energie pro zlepšení"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1444
 msgid "Downgrade Env."
-msgstr "Zhoršení prostř."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1448
 msgid "Upgrade Env."
-msgstr "Zlepšení prostř."
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1452
 msgid "Downgrade To?"
-msgstr "Zhoršení na?"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1456
 msgid "Upgrade To?"
-msgstr "Zlepšení na?"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1461
 msgid "Complete"
-msgstr "Dokončeno"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1481
 msgid "Target slot"
-msgstr "Cílový slot"
+msgstr ""
 
 #: client/osci/dialog/StarSystemDlg.py:1515
-#, fuzzy
 msgid "Select global queue"
-msgstr "Vyberte jazyk"
+msgstr ""
 
 #: client/osci/dialog/StructTaskDlg.py:258
-#, fuzzy
 msgid "You do not own required strategic resource(s)"
-msgstr "Požadované strategické zdroje:"
+msgstr ""
 
 #: client/osci/dialog/StructTaskDlg.py:266
 msgid "Queue is full"
@@ -4320,499 +4253,496 @@ msgstr ""
 
 #: client/osci/dialog/StructTaskDlg.py:316
 msgid "Select structure to construct"
-msgstr "Vyberte budovu, kterou chcete postavit."
+msgstr ""
 
 #: client/osci/dialog/StructTaskDlg.py:323
 msgid "Production planet"
-msgstr "Výrobní planeta"
+msgstr ""
 
 #: client/osci/dialog/StructTaskDlg.py:328
 msgid "Structures to construct"
-msgstr "Budovy k postavení"
+msgstr ""
 
 #: client/osci/dialog/StructTaskDlg.py:330
 msgid "(right click for technology info)"
-msgstr "(pravé tlačítko pro informace o technologii)"
+msgstr ""
 
 #: client/osci/dialog/StructTaskDlg.py:335
 msgid "Filters"
-msgstr "Filtry"
+msgstr ""
 
 #: client/osci/dialog/StructTaskDlg.py:337
 msgid "Technology levels:"
-msgstr "Technologie:"
+msgstr ""
 
 #: client/osci/dialog/StructTaskDlg.py:370
 msgid "Sort"
-msgstr "Seřaď"
+msgstr ""
 
 #: client/osci/dialog/StructTaskDlg.py:374
-#, fuzzy
 msgid "Tech Level"
-msgstr "Technologie:"
+msgstr ""
 
 #: client/osci/dialog/SystemOverviewDlg.py:207
 msgid "Systems Overview"
-msgstr "Přehled soustav"
+msgstr ""
 
 #: client/osci/dialog/SystemOverviewDlg.py:215
 msgid "# Pl"
-msgstr "pl."
+msgstr ""
 
 #: client/osci/dialog/SystemOverviewDlg.py:222
 msgid "%Fuel"
-msgstr "%pal."
+msgstr ""
 
 #: client/osci/dialog/SystemOverviewDlg.py:223
 msgid "%Max"
-msgstr "%max"
+msgstr ""
 
 #: client/osci/dialog/SystemOverviewDlg.py:224
 msgid "%Repair"
-msgstr "%opr."
+msgstr ""
 
 #: client/osci/dialog/SystemOverviewDlg.py:226
 msgid "+Gate %"
-msgstr "+Brána %"
+msgstr ""
 
 #: client/osci/dialog/SystemOverviewDlg.py:227
 msgid "Strat Res"
-msgstr "Str. s."
+msgstr ""
 
 #: client/osci/dialog/SystemOverviewDlg.py:229
 msgid "My Systems"
-msgstr "Mé systémy"
+msgstr ""
 
 #: client/osci/dialog/SystemOverviewDlg.py:231
 msgid "Other Cmdrs"
-msgstr "Ostatní velitelé"
+msgstr ""
 
 #: client/osci/dialog/SystemOverviewDlg.py:237
 msgid "Show Problems"
-msgstr "Ukaž problémy"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:28 client/osci/gdata.py:59
 msgid "small"
-msgstr "malá"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:28 client/osci/gdata.py:60
 msgid "medium"
-msgstr "střední"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:28 client/osci/gdata.py:61
 msgid "large"
-msgstr "velká"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:28 client/osci/gdata.py:62
 msgid "planet"
-msgstr "planeta"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:39
 msgid ", "
-msgstr ", "
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:41
 msgid "L"
-msgstr "V"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:41
 msgid "M"
-msgstr "S"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:41
 msgid "P"
-msgstr "P"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:41
 msgid "S"
-msgstr "M"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:53 client/osci/dialog/TechInfoDlg.py:62
 msgid "%d%%"
-msgstr "%d%%"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:58
 msgid "%+d%%"
-msgstr "%+d%%"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:70 client/osci/dialog/TechInfoDlg.py:79
 #: client/osci/gdata.py:45
 msgid "Unknown"
-msgstr "Neznámý"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:82
 msgid "%d Turns"
-msgstr "%d tahů"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:96
 msgid "Not specified"
-msgstr "Nespecifikováno"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:103
 msgid "Constr. reqs - construction points"
-msgstr "Stavba vyžaduje - konstrukční body"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:105
 msgid "Operational reqs - biomatter"
-msgstr "Provozní požadavky - biohmota"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:106
 msgid "Operational reqs - minerals"
-msgstr "Provozní požadavky - minerály"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:107
 msgid "Operational reqs - energy"
-msgstr "Provozní požadavky - energie"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:108
 msgid "Operational reqs - workers"
-msgstr "Provozní požadavky - pracovníci"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:110
 msgid "Production - biomatter"
-msgstr "Produkce - biohmota"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:111
 msgid "Production - minerals"
-msgstr "Produkce - minerály"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:112
 msgid "Production - energy"
-msgstr "Produkce - energie"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:113
 msgid "Production - population"
-msgstr "Produkce - populace"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:114
 msgid "Production - constr. points"
-msgstr "Produkce - konstrukční body"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:115
 msgid "Production - research points"
-msgstr "Produkce - výzkumné body"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:116
 msgid "Production - env. effect"
-msgstr "Produkce - dopad na prostředí"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:118
 msgid "Orbital Shift Effect"
-msgstr "Přesun orbity"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:120
 msgid "Storage - biomatter"
-msgstr "Uskladnění - biohmota"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:121
 msgid "Storage - minerals"
-msgstr "Uskladnění - minerály"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:122
 msgid "Storage - energy"
-msgstr "Uskladnění - energie"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:123
 msgid "Accommodate population"
-msgstr "Kapacita populace"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:125
 msgid "Lowers revolt threshold by"
-msgstr "Snižuje práh revoluce o"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:126
 msgid "Increases max morale by"
-msgstr "Zvyšuje maximum morálky na"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:127
 msgid "Government power"
-msgstr "Síla vlády"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:130
 msgid "Scanner power"
-msgstr "Síla skeneru"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:132
 msgid "Fleet attack (bonus)"
-msgstr "Útok letky (bonus)"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:133
 msgid "Fleet defense (bonus)"
-msgstr "Obrana letky (bonus)"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:134
 msgid "Maximum refuel percent"
-msgstr "Maximální procento natankování"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:135
 msgid "Refuel increase percent"
-msgstr "Procento tankování"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:136
 msgid "Exp. points per turn"
-msgstr "Zkušeností za tah"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:137
 msgid "Exp. cap (base exp multiple)"
-msgstr "Max. zkušeností (multiplikátor základních zkušeností)"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:138
 msgid "Boost speed of fleets"
-msgstr "Zvýšení rychlosti flotil"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:139
 msgid "Weapons"
-msgstr "Zbraně"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:141
 msgid "Target class"
-msgstr "Cílová třída"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:142
 msgid "Weapon minimum damage"
-msgstr "Minimální poškození"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:143
 msgid "Weapon maximum damage"
-msgstr "Maximální poškození"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:144
 msgid "Missile weapon (ECM counts)"
-msgstr "Rak. zbraně (počet ECM)"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:145
 msgid "Weapon ignore shield"
-msgstr "ignoruje štíty"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:146
 msgid "Weapon attack"
-msgstr "Útok zbraně"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:147
 msgid "Weapon Rate Of Fire"
-msgstr "Četnost střelby (ROF)"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:149
 msgid "Mine Class Deployed"
-msgstr "Rozmístěna třída min"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:150
 msgid "Maximum Supported Mines"
-msgstr "Maximum podporovaných min"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:151
 msgid "Mine Rate of Deploy"
-msgstr "Rychlost rozbalení min"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:153
 msgid "Minimum required hull"
-msgstr "Požadovaný trup minimálně"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:154
 msgid "Weight"
-msgstr "Váha"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:156
 msgid "Maximum payload"
-msgstr "Maximální zátěž"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:157
 msgid "Engine power"
-msgstr "Síla motoru"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:159
 msgid "Scan signature"
-msgstr "Signatura"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:160 client/osci/dialog/TechInfoDlg.py:161
 msgid "Signature visibility"
-msgstr "Viditelnost signatury"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:162
 msgid "Min. signature"
-msgstr "Min. signatura"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:164
 msgid "Combat defence"
-msgstr "Obrana v boji"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:165
 msgid "Combat attack"
-msgstr "Útok v boji"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:166
 msgid "Missile defence"
-msgstr "Raketová obrana"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:167
 msgid "Combat defense (extra)"
-msgstr "Obrana v boji (extra)"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:168
 msgid "Combat attack (extra)"
-msgstr "Útok v boji (extra)"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:169
 msgid "Missile defence (extra)"
-msgstr "Raketová obrana (extra)"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:171
 msgid "Shield strength"
-msgstr "Síla štítů"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:172
 msgid "Shield recharge fixed"
-msgstr "Dobíjení štítů opraveno"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:173
 msgid "Shield recharge percent"
-msgstr "Procento dobíjení štítů"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:174
 msgid "Armor damage absorbstion"
-msgstr "Absorbce poškození brněním"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:176
 msgid "Device MP"
-msgstr "VS jednotky"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:208
 msgid "Technology: %s (TL%d)"
-msgstr "Technologie: %s (TL%d)"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:215
 msgid "Research costs: %d"
-msgstr "Cena výzkumu: %d"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:218
 msgid "Improvement costs: %d"
-msgstr "Cena vylepšení: %d"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:222
 msgid "Research requires:"
-msgstr "Vynález vyžaduje:"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:225
 msgid " - %s improvement %d (TL%d)"
-msgstr " - %s vylepšení %d (TS%d)"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:228
 msgid " - %s (strategic resource)"
-msgstr " - %s (strategický zdroj)"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:231
 msgid "Research disables:"
-msgstr "Vynalezení znepřístupní:"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:234
 msgid " - %s (TL%d)"
-msgstr " - %s (TL%d)"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:238
 msgid "Estimated use:"
-msgstr "Odhadované využití:"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:255
 msgid ", only for %s"
-msgstr ", pouze pro %s"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:257
 msgid " - %s (with improvement %d, on TL%d%s)"
-msgstr " - %s (s vylepšením %d, na TL%d%s)"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:259
 msgid "Research/Improvement enables:"
-msgstr "Vynalezení/vylepšení zpřístupní:"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:264
 msgid "Bio production depends:"
-msgstr "Produkce biohmoty závisí:"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:265 client/osci/dialog/TechInfoDlg.py:272
 #: client/osci/dialog/TechInfoDlg.py:279 client/osci/dialog/TechInfoDlg.py:286
 msgid " - %d %% on planet's environment"
-msgstr " - %d %% na životním prostředí planety"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:266 client/osci/dialog/TechInfoDlg.py:273
 #: client/osci/dialog/TechInfoDlg.py:280 client/osci/dialog/TechInfoDlg.py:287
 msgid " - %d %% on planet's min. abundance"
-msgstr " - %d %% na minerální bohatosti planety"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:267 client/osci/dialog/TechInfoDlg.py:274
 #: client/osci/dialog/TechInfoDlg.py:281 client/osci/dialog/TechInfoDlg.py:288
 msgid " - %d %% on planet's en. abundance"
-msgstr " - %d %% na energetické úrovni planety"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:268 client/osci/dialog/TechInfoDlg.py:275
 #: client/osci/dialog/TechInfoDlg.py:282 client/osci/dialog/TechInfoDlg.py:289
 msgid " - %d %% is not dependent on any planet's attribute"
-msgstr " - %d %% nezávisí na žádném atributu planety"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:271
 msgid "Energy production depends:"
-msgstr "Produkce energie závisí:"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:278
 msgid "Constr. points production depends:"
-msgstr "Produkce konstrukčních bodů závisí:"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:285
-#, fuzzy
 msgid "Research points production depends:"
-msgstr "Produkce konstrukčních bodů závisí:"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:295
 msgid "Required strategic resources:"
-msgstr "Požadované strategické zdroje:"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:297
 msgid " - for building: %s"
-msgstr "- pro budovu: %s"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:299
 msgid " - for research: %s"
-msgstr "- pro výzkum: %s"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:304
 msgid "Description:"
-msgstr "Popis:"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:311
 msgid "Rumours:"
-msgstr "Zvěsti:"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:315
-#, fuzzy
 msgid "No information available"
-msgstr "Nedostupná data"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:391
 msgid "Property"
-msgstr "Majetek"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:392
 msgid "Value"
-msgstr "Hodnota"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:394
 msgid "Structure"
-msgstr "Struktura"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:396
 msgid "Ship Hull"
-msgstr "Lodní trup"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:398
 msgid "Ship Eq."
-msgstr "Vybavení lodí"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:400
 msgid "Project"
-msgstr "Projekt"
+msgstr ""
 
 #: client/osci/dialog/TechInfoDlg.py:407
 msgid "Description"
-msgstr "Popis"
+msgstr ""
 
 #: client/osci/dialog/UpdateDlg.py:51
 msgid "Client is up-to-date"
@@ -4820,7 +4750,7 @@ msgstr ""
 
 #: client/osci/dialog/UpdateDlg.py:62
 msgid "Updating client..."
-msgstr "Aktualizuji klienta..."
+msgstr ""
 
 #: client/osci/dialog/UpdateDlg.py:91
 msgid "Error: URL does not point to a file."
@@ -4835,8 +4765,7 @@ msgid "Update skipped."
 msgstr ""
 
 #: client/osci/dialog/UpdateDlg.py:223
-msgid ""
-"Server requires client version %s. It is recommended to update your client."
+msgid "Server requires client version %s. It is recommended to update your client."
 msgstr ""
 
 #: client/osci/dialog/UpdateDlg.py:225
@@ -4844,8 +4773,7 @@ msgid "Please update your git repo to tag \"%s\""
 msgstr ""
 
 #: client/osci/dialog/UpdateDlg.py:234
-msgid ""
-"Server requires client version %s. It is necessary to update your client."
+msgid "Server requires client version %s. It is necessary to update your client."
 msgstr ""
 
 #: client/osci/dialog/UpdateDlg.py:236
@@ -4858,252 +4786,251 @@ msgstr ""
 
 #: client/osci/gdata.py:36
 msgid "Asteroid"
-msgstr "Asteroid"
+msgstr ""
 
 #: client/osci/gdata.py:37
 msgid "Gas Giant"
-msgstr "Plynný obr"
+msgstr ""
 
 #: client/osci/gdata.py:38
 msgid "Rock"
-msgstr "Skalnatá"
+msgstr ""
 
 #: client/osci/gdata.py:39
 msgid "Cold"
-msgstr "Ledová"
+msgstr ""
 
 #: client/osci/gdata.py:40
 msgid "Desert"
-msgstr "Pouštní"
+msgstr ""
 
 #: client/osci/gdata.py:41
 msgid "Hostile"
-msgstr "Nepříznivá"
+msgstr ""
 
 #: client/osci/gdata.py:42
 msgid "Marginal"
-msgstr "Neúrodná"
+msgstr ""
 
 #: client/osci/gdata.py:43
 msgid "Terrestrial"
-msgstr "Pozemská"
+msgstr ""
 
 #: client/osci/gdata.py:44
 msgid "Gaia"
-msgstr "Gaia"
+msgstr ""
 
 #: client/osci/gdata.py:49
 msgid "Super giant"
-msgstr "Veleobr"
+msgstr ""
 
 #: client/osci/gdata.py:50
 msgid "Giant"
-msgstr "Obr"
+msgstr ""
 
 #: client/osci/gdata.py:51
 msgid "Main sequence"
-msgstr "Hlavní sekvence"
+msgstr ""
 
 #: client/osci/gdata.py:52
 msgid "Dwarf"
-msgstr "Trpaslík"
+msgstr ""
 
 #: client/osci/gdata.py:53
 msgid "Black hole"
-msgstr "Černá díra"
+msgstr ""
 
 #: client/osci/gdata.py:54
 msgid "Neutron star"
-msgstr "Neutronová hvězda"
+msgstr ""
 
 #: client/osci/gdata.py:55
 msgid "Worm hole"
-msgstr "Červí díra"
+msgstr ""
 
 #: client/osci/gdata.py:67
 msgid "Move to"
-msgstr "Přesun"
+msgstr ""
 
 #: client/osci/gdata.py:68
 msgid "Declare War at"
-msgstr "Vyhlaš válku"
+msgstr ""
 
 #: client/osci/gdata.py:69
 msgid "Deploy Ship"
-msgstr "Rozlož loď"
+msgstr ""
 
 #: client/osci/gdata.py:70
 msgid "Redirect to"
-msgstr "Přesměrovat do"
+msgstr ""
 
 #: client/osci/gdata.py:72
 msgid "Repeat from"
-msgstr "Opakovat od"
+msgstr ""
 
 #: client/osci/gdata.py:74
 msgid "Enter Wormhole at"
-msgstr "Vstup do červí díry v"
+msgstr ""
 
 #: client/osci/gdata.py:79
 msgid "Uranium"
-msgstr "Uran"
+msgstr ""
 
 #: client/osci/gdata.py:80
 msgid "Titanium"
-msgstr "Titan"
+msgstr ""
 
 #: client/osci/gdata.py:81
 msgid "Chromium"
-msgstr "Chrom"
+msgstr ""
 
 #: client/osci/gdata.py:82
 msgid "Silicium"
-msgstr "Silicium"
+msgstr ""
 
 #: client/osci/gdata.py:83
 msgid "Carboneum"
-msgstr "Carboneum"
+msgstr ""
 
 #: client/osci/gdata.py:84
 msgid "Antimatter"
-msgstr "Antihmota"
+msgstr ""
 
 #: client/osci/gdata.py:85
 msgid "Plutonium"
-msgstr "Plutonium"
+msgstr ""
 
 #: client/osci/gdata.py:86
 msgid "Wolframium"
-msgstr "Wolframium"
+msgstr ""
 
 #: client/osci/gdata.py:87
 msgid "Mutagen"
-msgstr "Mutagen"
+msgstr ""
 
 #: client/osci/gdata.py:88
 msgid "Unnilseptium"
-msgstr "Unnilseptium"
+msgstr ""
 
 #: client/osci/gdata.py:95
 msgid "Passage for civilian ships"
-msgstr "Přelet pro civilní lodě"
+msgstr ""
 
 #: client/osci/gdata.py:96
 msgid "Passage for military ships"
-msgstr "Přelet pro válečné lodě"
+msgstr ""
 
 #: client/osci/gdata.py:97
 msgid "Permission to tank ships"
-msgstr "Povolení doplňovat palivo pro lodě"
+msgstr ""
 
 #: client/osci/gdata.py:98
 msgid "Limited trade agreement"
-msgstr "Omezený obchodní pakt"
+msgstr ""
 
 #: client/osci/gdata.py:99
 msgid "Unlimited trade agreement"
-msgstr "Neomezený obchodní pakt"
+msgstr ""
 
 #: client/osci/gdata.py:100
 msgid "Scanner map exchange"
-msgstr "Výměna hvězdných map ze skeneru"
+msgstr ""
 
 #: client/osci/gdata.py:101
 msgid "Research information exchange"
-msgstr "Výměna informací z výzkumu"
+msgstr ""
 
 #: client/osci/gdata.py:102
 msgid "Research cooperation"
-msgstr "Spolupráce při výzkumu"
+msgstr ""
 
 #: client/osci/gdata.py:116
 msgid "Active"
-msgstr "Aktivní"
+msgstr ""
 
 #: client/osci/gdata.py:116
 msgid "Enabled"
-msgstr "Zapnuto"
+msgstr ""
 
 #: client/osci/gdata.py:116 client/osci/gdata.py:162
 msgid "Disabled"
-msgstr "Vypnuto"
+msgstr ""
 
 #: client/osci/gdata.py:119
 msgid "Mailbox"
-msgstr "Schránka"
+msgstr ""
 
 #: client/osci/gdata.py:120
 msgid "Sent"
-msgstr "Odesláno"
+msgstr ""
 
 #: client/osci/gdata.py:122 client/osci/gdata.py:125
 msgid "News"
-msgstr "Novinky"
+msgstr ""
 
 #: client/osci/gdata.py:123 client/osci/gdata.py:124
 msgid "Public"
-msgstr "Veřejný kanál"
+msgstr ""
 
 #: client/osci/gdata.py:137 client/osci/gdata.py:138 client/osci/gdata.py:139
 msgid "MORALE IS TERRIBLE"
-msgstr "MORÁLKA JE HROZNÁ"
+msgstr ""
 
 #: client/osci/gdata.py:140
 msgid "MORALE IS BAD"
-msgstr "MORÁLKA JE ŠPATNÁ"
+msgstr ""
 
 #: client/osci/gdata.py:141
 msgid "MORALE IS VERY LOW"
-msgstr "MORÁLKA JE VELMI NÍZKÁ"
+msgstr ""
 
 #: client/osci/gdata.py:142
 msgid "MORALE IS LOW"
-msgstr "MORÁLKA JE NÍZKÁ"
+msgstr ""
 
 #: client/osci/gdata.py:143
 msgid "MORALE IS BELOW AVERAGE"
-msgstr "MORÁLKA JE PODPRŮMĚRNÁ"
+msgstr ""
 
 #: client/osci/gdata.py:145
 msgid "MORALE IS HIGH"
-msgstr "MORÁLKA JE VYSOKÁ"
+msgstr ""
 
 #: client/osci/gdata.py:146
 msgid "MORALE IS SUPERB"
-msgstr "MORÁLKA JE VÝBORNÁ"
+msgstr ""
 
 #: client/osci/handler.py:59
 msgid "Updating OSCI database..."
-msgstr "Aktualizuji databázi..."
+msgstr ""
 
 #: client/osci/messages.py:48
 msgid " (%s)"
-msgstr " (%s)"
+msgstr ""
 
 #: client/osci/messages.py:53
 msgid "%s%s"
-msgstr "%s%s"
+msgstr ""
 
 #: client/osci/messages.py:62
-msgid ""
-"%d of the %s detonated, causing %d damage, killing %d ships in the process."
+msgid "%d of the %s detonated, causing %d damage, killing %d ships in the process."
 msgstr ""
 
 #: client/osci/messages.py:134
 msgid "Research completed: %(1)s"
-msgstr "Výzkum dokončen: %(1)s"
+msgstr ""
 
 #: client/osci/messages.py:135
 msgid "%(1)d research points not used."
-msgstr "%(1)d výzkumných bodů nevyužito."
+msgstr ""
 
 #: client/osci/messages.py:136
 msgid "Cannot build on planet - ship may be lost."
-msgstr "Nelze stavět na planetě - loď může být ztracena."
+msgstr ""
 
 #: client/osci/messages.py:137
 msgid "Cannot build on planet - no free slot."
-msgstr "Nelze budovat na planetě - žádné volné místo."
+msgstr ""
 
 #: client/osci/messages.py:139
 msgid ""
@@ -5111,188 +5038,159 @@ msgid ""
 "\n"
 "%(1)d construction points were not used because there was no task to fulfill."
 msgstr ""
-"Problém při stavbě: žádný úkol\n"
-"\n"
-"%(1)d konstrukčních bodů nebylo použito, protože nebyl zadán žádný úkol."
 
 #: client/osci/messages.py:140
 msgid "Planet lost."
-msgstr "Ztratil jste planetu."
+msgstr ""
 
 #: client/osci/messages.py:141
 msgid "Structure completed: %(1)s"
-msgstr "Budova dokončena: %(1)s"
+msgstr ""
 
 #: client/osci/messages.py:142
 msgid "A deployment of %(1)s was completed"
-msgstr "Umístění %(1)s bylo dokončeno"
+msgstr ""
 
 #: client/osci/messages.py:143
 msgid "Ship completed: %(1)s"
-msgstr "Loď dokončena: %(1)s"
+msgstr ""
 
 #: client/osci/messages.py:144
 msgid "New planet."
-msgstr "Získal jste planetu."
+msgstr ""
 
 #: client/osci/messages.py:145
 msgid ""
 "Combat with: %(4)s. HP lost: we %(1)d, they %(2)d.\n"
 "\n"
-"Enemy lost %(2)d HP, we lost %(1)d HP and %(3)d ships/structures. We "
-"attacked/were attacked by %(4)s."
+"Enemy lost %(2)d HP, we lost %(1)d HP and %(3)d ships/structures. We attacked/were attacked by %(4)s."
 msgstr ""
-"Boj s: %(4)s. Ztráta HP: my %(1)d, oni %(2)d.\n"
-"\n"
-"Nepřítel přišel o %(2)d HP, my jsme přišli o %(1)d HP a %(3)d lodí/budov. "
-"Napadl nás %(4)s."
 
 #: client/osci/messages.py:146
 msgid "Battle lost: we were defeated by %(1)s."
-msgstr "Bitva prohrána. Porazil nás %(1)s."
+msgstr ""
 
 #: client/osci/messages.py:147
 msgid "Fleet destroyed."
-msgstr "Flotila zničena."
+msgstr ""
 
 #: client/osci/messages.py:148
 msgid "Battle won: we defeated %(1)s."
-msgstr "Bitva vyhrána. Porazili jsme %(1)s."
+msgstr ""
 
 #: client/osci/messages.py:149
 msgid "A new government center established."
-msgstr "Bylo zřízeno nové vládní centrum."
+msgstr ""
 
 #: client/osci/messages.py:150
 msgid "Planet revolt started - production halved for the next turns."
 msgstr ""
-"Začala planetární vzpoura - úroveň produkce pro další tahy klesla na "
-"polovinu."
 
 #: client/osci/messages.py:151
 msgid "Planet revolt ended - production restored."
 msgstr ""
-"Planetární vzpoura skončila - úroveň produkce se vrátila na normální úroveň."
 
 #: client/osci/messages.py:152
 msgid "Construction of %(1)s is not valid - construction suspended."
-msgstr "Konstrukce %(1)s není platná - byla zrušena."
+msgstr ""
 
 #: client/osci/messages.py:153
 msgid ""
 "Population decreased.\n"
 "\n"
-"Population of this planet has decreased. Build more facilities producing "
-"food."
+"Population of this planet has decreased. Build more facilities producing food."
 msgstr ""
-"Populace snížena.\n"
-"\n"
-"Populace této planety se snížila. Postavte více budov produkujících jídlo."
 
 #: client/osci/messages.py:154
 msgid "Project finished: %(1)s"
-msgstr "Projekt byl dokončen: %(1)s"
+msgstr ""
 
 #: client/osci/messages.py:155
 msgid "Time in galaxy started to run..."
-msgstr "V galaxii se rozběhl čas..."
+msgstr ""
 
 #: client/osci/messages.py:156
 msgid "Strategic resource missing: %(1)s"
-msgstr "Chybí strategický zdroj: %(1)s"
+msgstr ""
 
 #: client/osci/messages.py:157
 msgid "Research task deleted: %(1)s"
-msgstr "Výzkumný projekt byl smazán: %(1)s"
+msgstr ""
 
 #: client/osci/messages.py:158
 msgid "Strategic resource extracted: %(1)s"
-msgstr "Strategický zdroj byl vytěžen: %(1)s"
+msgstr ""
 
 #: client/osci/messages.py:159
 msgid "Strategic resource synthesized: 4 units of %(1)s"
-msgstr "Strategický zdroj syntetizován: 4 jednotky %(1)s"
+msgstr ""
 
 #: client/osci/messages.py:160
 msgid "Planet downgraded to: %(1)s"
-msgstr "Planeta se znehodnotila : %(1)s"
+msgstr ""
 
 #: client/osci/messages.py:161
 msgid "Planet upgraded to: %(1)s"
-msgstr "Planeta byla vylepšena na: %(1)s"
+msgstr ""
 
 #: client/osci/messages.py:162
 msgid "Ship upgraded from %(1)s to %(2)s"
-msgstr "Loď zmodernizována z %(1)s na %(2)s"
+msgstr ""
 
 #: client/osci/messages.py:163
 msgid "Obsolete ship design deleted: %(1)s"
-msgstr "Zastaralý návrh lodě smazán: %(1)s"
+msgstr ""
 
 #: client/osci/messages.py:164
 msgid ""
 "Cannot upgrade ship from %(1)s to %(2)s\n"
 "\n"
-"Cannot upgrade ship from %(1)s to %(2)s because of we have not enough of "
-"%(3)s."
+"Cannot upgrade ship from %(1)s to %(2)s because of we have not enough of %(3)s."
 msgstr ""
-"Nelze zmodernizovat loď z %(1)s na %(2)s\n"
-"\n"
-"Nelze zmodernizovat loď z %(1)s na %(2)s protože nemáme dost strategické "
-"suroviny: %(3)s."
 
 #: client/osci/messages.py:165
 msgid ""
 "Malfunctional Star Gate, lost %(1)d %% HP\n"
 "\n"
-"Our fleet has arrived at system with no or malfunctional Star Gate or Comm/"
-"Scann Center. Every ship lost %(1)d %% hitpoints due to intensive "
-"deceleration."
+"Our fleet has arrived at system with no or malfunctional Star Gate or Comm/Scann Center. Every ship lost %(1)d %% hitpoints due to intensive deceleration."
 msgstr ""
-"Nefunkční Hvězdná brána, ztraceno %(1)d %% HP\n"
-"\n"
-"Naše flotila dorazila do systému, který neobsahuje žádnou funkční Hvězdnou "
-"bránu nebo Comm/Scann Center. Každá loď ztratila  %(1)d %% HP kvůli prudkému "
-"zbrzdění."
 
 #: client/osci/messages.py:166
 msgid "Gained %(1)d fame."
-msgstr "Získáno %(1)d bod slávy."
+msgstr ""
 
 #: client/osci/messages.py:167
 msgid "Lost %(1)d fame."
-msgstr "%(1)d slávy ztracen."
+msgstr ""
 
 #: client/osci/messages.py:168
 msgid "Gained %(1)s technology at sublevel %(2)d."
-msgstr "Získána technologie %(1)s na dílčí úrovni %(2)d."
+msgstr ""
 
 #: client/osci/messages.py:169
 msgid "Your fleet entered a wormhole at %(1)s and exited at %(2)s."
-msgstr "Tvá flotila vstoupila do červí díry v %(1)s a vystoupila z ní v %(2)s."
+msgstr ""
 
 #: client/osci/messages.py:170
 msgid "Cannot enter wormhole - ship may be lost."
-msgstr "Nelze vstoupit do červí díry - loď může být ztracena."
+msgstr ""
 
 #: client/osci/messages.py:171
 msgid "You have located a wormhole"
-msgstr "Lokalizoval jsi červí díru"
+msgstr ""
 
 #: client/osci/messages.py:172
 msgid ""
 "Fleet lost.\n"
 "\n"
-" We lost contact with the %(1)s after they ran out of fuel in the system "
-"%(2)s."
+" We lost contact with the %(1)s after they ran out of fuel in the system %(2)s."
 msgstr ""
 
 #: client/osci/messages.py:173
 msgid ""
 "Fleet lost.\n"
 "\n"
-" We lost contact with the %(1)s after they ran out of fuel en route to the "
-"system %(2)s."
+" We lost contact with the %(1)s after they ran out of fuel en route to the system %(2)s."
 msgstr ""
 
 #: client/osci/messages.py:174
@@ -5315,136 +5213,75 @@ msgstr ""
 msgid ""
 "Hostile minefield triggered: HP / ships lost: %(1)s / %(2)s.\n"
 "\n"
-"Our fleet triggered enemy minefield, losing %(1)s HP resulting in "
-"destruction of %(2)s ships."
+"Our fleet triggered enemy minefield, losing %(1)s HP resulting in destruction of %(2)s ships."
 msgstr ""
 
 #: client/osci/messages.py:179
 msgid ""
 "EMR Forecast\n"
 "\n"
-"Level of the electromagnetic radiation is believed to be about %(1)d %% of "
-"the average level for the next %(2)s turns"
+"Level of the electromagnetic radiation is believed to be about %(1)d %% of the average level for the next %(2)s turns"
 msgstr ""
-"EMR předpověď\n"
-"\n"
-"Předpokládáme, že úroveň elektromagnetického záření bude kolem %(1)d %% "
-"průměrné úrovně po dalších %(2)s tahů"
 
 #: client/osci/messages.py:180
 msgid ""
 "EMR Forecast\n"
 "\n"
-"Current level of the electromagnetic radiation is about %(1)d %% of the "
-"average level."
+"Current level of the electromagnetic radiation is about %(1)d %% of the average level."
 msgstr ""
-"EMR předpověď\n"
-"\n"
-"Současná úroveň elektromagnetického záření je  %(1)d %% průměrné úrovně."
 
 #: client/osci/messages.py:181
 msgid ""
 "Elections!\n"
 "\n"
-"It's 2:00 turns before elections! Don't hesitate and vote for the best "
-"commander!"
+"It's 2:00 turns before elections! Don't hesitate and vote for the best commander!"
 msgstr ""
-"Volby !\n"
-"\n"
-"Je 2:00 tahů před volbami! Neváhejte a hlasujte pro nejlepšího velitele!"
 
 #: client/osci/messages.py:182
 msgid ""
 "Election results! Nobody won...\n"
 "\n"
-"The results from the last elections have been published. Nobody was strong "
-"enough to be elected as a leader of our galaxy. Can we find such person "
-"another day?\n"
+"The results from the last elections have been published. Nobody was strong enough to be elected as a leader of our galaxy. Can we find such person another day?\n"
 "\n"
 "The official election results follow:\n"
 "\n"
 "%(1)s\n"
 "\n"
 msgstr ""
-"Výsledky voleb! Nikdo nevyhrál...\n"
-"\n"
-"Výsledky posledních voleb byly zveřejněny. Nikdo nebyl dost silný na to, aby "
-"byl zvolen jako vůdce pro vaši galaxii. Můžeme někoho takového najít jiný "
-"den?\n"
-"\n"
-"Následují oficiální výsledky voleb:\n"
-"\n"
-"%(1)s\n"
-"\n"
 
 #: client/osci/messages.py:183
 msgid ""
 "Election results! Leader elected!\n"
 "\n"
-"The results from the last elections have been published. %(1)s has proved to "
-"be the most supported person and has been elected as our Leader. May be, "
-"%(1)s can become an Imperator one day.\n"
+"The results from the last elections have been published. %(1)s has proved to be the most supported person and has been elected as our Leader. May be, %(1)s can become an Imperator one day.\n"
 "\n"
 "The official election results follow:\n"
 "\n"
 "%(2)s\n"
 "\n"
 msgstr ""
-"Výsledky voleb! Byl zvolen vůdce!\n"
-"\n"
-"Byly zveřejněny výsledky posledních voleb. %(1)s získal největší podporu a "
-"byl zvolen jako náš Vůdce. Možná, že jednou se %(1)s stane Imperátorem.\n"
-"\n"
-"Následují oficiální výsledky voleb:\n"
-"\n"
-"%(2)s\n"
-"\n"
 
 #: client/osci/messages.py:184
 msgid ""
 "Election results! Imperator elected!\n"
 "\n"
-"The results from the last elections have been published. %(1)s has proved to "
-"be the most supported person and has been elected as our glorified "
-"Imperator. Congratulations - you proved to be the best of all of us!\n"
+"The results from the last elections have been published. %(1)s has proved to be the most supported person and has been elected as our glorified Imperator. Congratulations - you proved to be the best of all of us!\n"
 "\n"
 "The official election results follow:\n"
 "\n"
 "%(2)s\n"
 "\n"
 msgstr ""
-"Výsledky voleb! Byl zvolen imperátor!\n"
-"\n"
-"Výsledky posledních voleb byly zveřejněny. %(1)s získal největší podporu a "
-"byl zvolen jako náš slavný Imperátor. Blahopřejeme - prokázal jsi, že jsi "
-"nejlepší z nás všech!\n"
-"\n"
-"Následují oficiální výsledky voleb:\n"
-"\n"
-"%(2)s\n"
-"\n"
 
 #: client/osci/messages.py:186
-#, fuzzy
 msgid ""
 "Galaxy %(2)s knows its winner - Imperator %(1)s\n"
 "\n"
-"Today the galaxy %(2)s has been united and the peace has been restored. "
-"Majority of commanders voted for Imperator %(1)s as their supreme leader. "
-"Congratulations, Imperator, you were brave and wise!\n"
+"Today the galaxy %(2)s has been united and the peace has been restored. Majority of commanders voted for Imperator %(1)s as their supreme leader. Congratulations, Imperator, you were brave and wise!\n"
 "\n"
 "Message from imperator:\n"
 "%(3)s"
 msgstr ""
-"Galaxie %(2)s zná svého vítěze - Imperátor %(1)s!\n"
-"\n"
-"Dnes byla galaxie %(2)s sjednocena a byl opět nastolen mír. Většina velitelů "
-"zvolila Imperátora %(1)s jako  nejvyššího velitele.  Blahopřejeme "
-"Imperátorovi, byl jsi statečný a moudrý!\n"
-"\n"
-"Zpráva od imperátora:\n"
-"\n"
-"%(3)s"
 
 #: client/osci/messages.py:187
 msgid ""
@@ -5452,9 +5289,6 @@ msgid ""
 "\n"
 "%(2)s"
 msgstr ""
-"Galaxie %(1)s byla vytvořena. Specifikace galaxie:\n"
-"\n"
-"%(2)s"
 
 #: client/osci/messages.py:188
 msgid ""
@@ -5465,20 +5299,12 @@ msgid ""
 "Reason:\n"
 "%(2)s"
 msgstr ""
-"Galaxie %(1)s skončila\n"
-"\n"
-"Dnes byla galaxie %(1)s automaticky ukončena.\n"
-"\n"
-"Důvod:\n"
-"%(2)s"
 
 #: client/osci/messages.py:201
 msgid ""
 "ERROR\n"
 "Missing text for msg %d: %s"
 msgstr ""
-"CHYBA\n"
-"Chybí text pro msg %d: %s"
 
 #: client/osci/messages.py:226
 msgid ""
@@ -5487,185 +5313,138 @@ msgid ""
 "Exception: %s: %s\n"
 "Format: %s"
 msgstr ""
-"CHYBA\n"
-"Špatný formát zprávy %d: %s\n"
-"Výjimka: %s: %s\n"
-"Formát: %s"
 
 #: client/osci/messages.py:256
 msgid "Source: %s"
-msgstr "Zdroj: %s"
+msgstr ""
 
 #: client/osci/messages.py:263
 msgid "Location: %s"
-msgstr "Místo: %s"
+msgstr ""
 
 #: client/osci/messages.py:264
 msgid "Severity: %s"
-msgstr "Závažnost: %s"
+msgstr ""
 
 #: client/osci/messages.py:265
 msgid "Time: %s [%s]"
-msgstr "Čas: %s [%s]"
+msgstr ""
 
 #: client/osci/res.py:61
 msgid "Loading resources"
-msgstr "Inicializuji klienta"
+msgstr ""
 
 #: client/osci/res.py:68 client/osci/res.py:83 client/osci/res.py:99
 #: client/osci/res.py:110 client/osci/res.py:125 client/osci/res.py:134
 #: client/osci/res.py:143
 msgid "Loading resources..."
-msgstr "Nahrávám..."
+msgstr ""
 
 #: client/osci/sequip.py:54
 msgid "power %+d"
-msgstr "energie %+d"
+msgstr ""
 
 #: client/osci/sequip.py:56
 msgid "wpn att %+d"
-msgstr "zbrň útk %+d"
+msgstr ""
 
 #: client/osci/sequip.py:58
 msgid "min dmg %d"
-msgstr "min pošk %d"
+msgstr ""
 
 #: client/osci/sequip.py:59
 msgid "max dmg %d"
-msgstr "max pošk %d"
+msgstr ""
 
 #: client/osci/sequip.py:60
 msgid "ROF %.1f"
-msgstr "ROF %.1f"
+msgstr ""
 
 #: client/osci/sequip.py:61
 msgid "ignores shield"
-msgstr "ignoruje štíty"
+msgstr ""
 
 #: client/osci/sequip.py:63
 msgid "scanner %d"
-msgstr "skener: %d"
+msgstr ""
 
 #: client/osci/sequip.py:65
 msgid "min hull %s"
-msgstr "min trup %s"
+msgstr ""
 
 #: client/osci/sequip.py:66
 msgid "max hull %s"
-msgstr "max trup %s"
+msgstr ""
 
 #: client/osci/sequip.py:67
 msgid "max %s"
-msgstr "max %s"
+msgstr ""
 
 #: client/osci/sequip.py:68
 msgid "HP %+d"
-msgstr "HP %+d"
+msgstr ""
 
 #: client/osci/sequip.py:69
 msgid "slots %d"
-msgstr "slotů: %d"
+msgstr ""
 
 #: client/osci/sequip.py:70
 msgid "weight %d"
-msgstr "váha %d"
+msgstr ""
 
 #: client/osci/sequip.py:71
 msgid "att %+d"
-msgstr "útok  %+d"
+msgstr ""
 
 #: client/osci/sequip.py:72
 msgid "def %+d"
-msgstr "obrn %+d"
+msgstr ""
 
 #: client/osci/sequip.py:73
 msgid "mis. def %+d"
-msgstr "rakt. obrana  %+d"
+msgstr ""
 
 #: client/osci/sequip.py:74
 msgid "sign. %+d"
-msgstr "sign. %+d"
+msgstr ""
 
 #: client/osci/sequip.py:75
 msgid "%d%% cloaking"
-msgstr "%d%% maskování"
+msgstr ""
 
 #: client/osci/sequip.py:76
 msgid "visibility %+d%%"
-msgstr "viditelnost %+d%%"
+msgstr ""
 
 #: client/osci/sequip.py:77
 msgid "att %+d%%"
-msgstr "útok  %+d%%"
+msgstr ""
 
 #: client/osci/sequip.py:78
 msgid "def %+d%%"
-msgstr "obrn %+d%%"
+msgstr ""
 
 #: client/osci/sequip.py:79
 msgid "mis. def %+d%%"
-msgstr "rakt. obrana  %+d%%"
+msgstr ""
 
 #: client/osci/sequip.py:80
 msgid "shield %d%%"
-msgstr "štíty %d%%"
+msgstr ""
 
 #: client/osci/sequip.py:81
 msgid "hard shield %d%%"
-msgstr "pevné štíty %d%%"
+msgstr ""
 
 #: client/osci/sequip.py:82
 msgid "absorb dmg %d"
-msgstr "pohltí pošk %d"
+msgstr ""
 
 #: client/osci/sequip.py:83
 msgid "repair %d%%"
-msgstr "oprava %d%%"
+msgstr ""
 
 #: client/osci/sequip.py:84
 msgid "repair %d"
-msgstr "Opravuje se %d,"
+msgstr ""
 
-#~ msgid "Questions"
-#~ msgstr "Otázky"
-
-#~ msgid "Issues"
-#~ msgstr "Chyby"
-
-#~ msgid "Suggestions"
-#~ msgstr "Návrhy"
-
-#, fuzzy
-#~ msgid "Speed: <%3.2f – %3.2f>"
-#~ msgstr "Rychlost: %.2f"
-
-#, fuzzy
-#~ msgid "Speed: <%3.2f – ∞>"
-#~ msgstr "Rychlost: %.2f"
-
-#~ msgid ""
-#~ "We are sorry, but there are no starting positions available at this "
-#~ "moment. Please, try again later."
-#~ msgstr ""
-#~ "Litujeme, ale v této chvíli nejsou k dispozici žádné startovní posice. "
-#~ "Zkuste později, prosím."
-
-#~ msgid "English channels"
-#~ msgstr "Anglický kanál"
-
-#~ msgid "Czech channels"
-#~ msgstr "České kanály"
-
-#~ msgid "Morale is increasing (%+d last turn) to %d, revolt threshold is %d."
-#~ msgstr ""
-#~ "Morálka se zvyšuje (%+d za poslední tah) na celkových %d, práh vzpoury je "
-#~ "%d."
-
-#~ msgid "Morale is decreasing (%+d last turn), revolt threshold is %d."
-#~ msgstr "Morálka se snižuje (%+d za poslední tah), práh vzpoury je %d."
-
-#~ msgid "OSCI %s"
-#~ msgstr "OSCI %s"
-
-#~ msgid "QA channel"
-#~ msgstr "Otázky/Odpovědi"

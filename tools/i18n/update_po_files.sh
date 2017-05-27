@@ -20,6 +20,6 @@ find ./ -name "*.py" |  sed 's#^\./##' | grep -v "^tools" | xargs python2 ${I18_
     for translation in $TRANSLATION_DIR/*/LC_MESSAGES/*.po; do
         msgmerge -U $translation $MESSAGES
         # as we are on git, no need for backups
-        rm ${translation}~
+        rm ${translation}~ &> /dev/null
     done
 popd > /dev/null
