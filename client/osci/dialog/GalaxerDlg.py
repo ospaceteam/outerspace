@@ -106,7 +106,7 @@ class GalaxerDlg:
                         (_('Capacity'), 'tPos', 3, ui.ALIGN_NONE),
                         (_('Queue'), 'tCur', 3, ui.ALIGN_NONE),
                         (_('Last start'), 'tTime', 8, ui.ALIGN_E),
-                        (_(''), 'tChoice', 1, ui.ALIGN_NONE)),
+                        ('', 'tChoice', 1, ui.ALIGN_NONE)),
                         columnLabels = 1, action = 'onSelect')
         self.win.subscribeAction('*', self)
         scrollBar = ui.Scrollbar(self.win, layout = (20, 6, 1, 4))

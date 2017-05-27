@@ -42,7 +42,7 @@ class UpdateDlg:
         self.options = options
         if self.checkedForUpdate:
             log.debug("Update already checked this session, skipping it")
-            self.onCancel(None, None, _(""))
+            self.onCancel(None, None, '')
             return
         update = self.isUpdateAvailable()
         # check for new version only once per session

@@ -1,4 +1,5 @@
-#! /usr/bin/env python
+#! /usr/bin/env python2
+# -*- coding: utf-8 -*-
 
 # Written by Martin v. Löwis <loewis@informatik.hu-berlin.de>
 
