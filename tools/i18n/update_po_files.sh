@@ -13,7 +13,7 @@ if ! type msgmerge &> /dev/null;then
 fi
 
 TRANSLATION_DIR=$PROJECT_ROOT/client/resources/translations/
-MESSAGES=${TRANSLATION_DIR}/messages.pot
+MESSAGES=${TRANSLATION_DIR}/OSPACE.pot
 
 pushd $PROJECT_ROOT > /dev/null
 find ./ -name "*.py" |  sed 's#^\./##' | grep -v "^tools" | xargs python2 ${I18_DIR}/pygettext.py -k N_ -o $MESSAGES && \
