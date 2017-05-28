@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Outer Space 0.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: Sun May 28 00:20:44 2017\n"
+"POT-Creation-Date: Sun May 28 17:29:29 2017\n"
 "PO-Revision-Date: 2010-09-15 18:53+0100\n"
 "Last-Translator: Qark <qark@ospace.net>\n"
 "Language-Team: IGE <qark@seznam.cz>\n"
@@ -44,7 +44,7 @@ msgstr "Mažu data na serveru..."
 msgid "Server sponsored by:"
 msgstr "Server sponzorován"
 
-#: client/main_client.py:102 client/main_client.py:271
+#: client/main_client.py:102 client/main_client.py:272
 #, fuzzy
 msgid "Outer Space %s"
 msgstr "Outer Space"
@@ -408,7 +408,7 @@ msgstr ""
 #: client/osci/dialog/MessagesDlg.py:62 client/osci/dialog/MinefieldDlg.py:58
 #: client/osci/dialog/NewGlobalTaskDlg.py:61
 #: client/osci/dialog/NewMessageDlg.py:64 client/osci/dialog/NewTaskDlg.py:72
-#: client/osci/dialog/OptionsDlg.py:63
+#: client/osci/dialog/OptionsDlg.py:67
 #: client/osci/dialog/PlanetsAnalysisDlg.py:44
 #: client/osci/dialog/PlanetsOverviewDlg.py:47
 #: client/osci/dialog/ProblemsDlg.py:44 client/osci/dialog/RenameFleetDlg.py:59
@@ -457,8 +457,8 @@ msgstr "Sdílení skeneru"
 #: client/osci/dialog/NewGlobalTaskDlg.py:312
 #: client/osci/dialog/NewMessageDlg.py:196
 #: client/osci/dialog/NewMessageDlg.py:220 client/osci/dialog/NewTaskDlg.py:450
-#: client/osci/dialog/OptionsDlg.py:552 client/osci/dialog/OptionsDlg.py:584
-#: client/osci/dialog/OptionsDlg.py:610 client/osci/dialog/OptionsDlg.py:685
+#: client/osci/dialog/OptionsDlg.py:561 client/osci/dialog/OptionsDlg.py:591
+#: client/osci/dialog/OptionsDlg.py:617 client/osci/dialog/OptionsDlg.py:692
 #: client/osci/dialog/RenameFleetDlg.py:139
 #: client/osci/dialog/RenameSysDlg.py:114 client/osci/dialog/SearchDlg.py:128
 #: client/osci/dialog/StarSystemDlg.py:1525
@@ -470,7 +470,7 @@ msgstr "Storno"
 #: client/osci/dialog/ColorDefinitionDlg.py:148
 #: client/osci/dialog/ConstrUpgradeDlg.py:115
 #: client/osci/dialog/KeyModHelp.py:87 client/osci/dialog/MainGameDlg.py:191
-#: client/osci/dialog/OptionsDlg.py:686 client/osci/dialog/ShowBuoyDlg.py:96
+#: client/osci/dialog/OptionsDlg.py:693 client/osci/dialog/ShowBuoyDlg.py:96
 #: client/osci/dialog/UpdateDlg.py:165 client/osci/dialog/UpdateDlg.py:228
 msgid "OK"
 msgstr "OK"
@@ -577,8 +577,8 @@ msgstr "Data"
 #: client/osci/dialog/ConstrSelTechDlg.py:178
 #: client/osci/dialog/ConstrUpgradeDlg.py:138
 #: client/osci/dialog/NewAccountDlg.py:139
-#: client/osci/dialog/NewMessageDlg.py:219 client/osci/dialog/OptionsDlg.py:551
-#: client/osci/dialog/OptionsDlg.py:583 client/osci/dialog/OptionsDlg.py:609
+#: client/osci/dialog/NewMessageDlg.py:219 client/osci/dialog/OptionsDlg.py:560
+#: client/osci/dialog/OptionsDlg.py:590 client/osci/dialog/OptionsDlg.py:616
 #: client/osci/dialog/StarSystemDlg.py:1524
 msgid "Select"
 msgstr "Vyber"
@@ -2268,7 +2268,7 @@ msgid "Allied"
 msgstr "Spojenec"
 
 #: client/osci/dialog/FleetsOverviewDlg.py:260
-#: client/osci/dialog/OptionsDlg.py:640
+#: client/osci/dialog/OptionsDlg.py:647
 msgid "Show redirects"
 msgstr "Včetně přesměrování"
 
@@ -2529,7 +2529,7 @@ msgstr "Heslo"
 
 #: client/osci/dialog/LoginDlg.py:226 client/osci/dialog/MainGameDlg.py:378
 #: client/osci/dialog/NewGlobalTaskDlg.py:306
-#: client/osci/dialog/NewTaskDlg.py:444 client/osci/dialog/OptionsDlg.py:520
+#: client/osci/dialog/NewTaskDlg.py:444 client/osci/dialog/OptionsDlg.py:529
 #: client/osci/dialog/StructTaskDlg.py:379
 msgid "Options"
 msgstr "Nastavení"
@@ -2929,7 +2929,7 @@ msgid "Military"
 msgstr "vojenská"
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:310
-#: client/osci/dialog/NewTaskDlg.py:448 client/osci/dialog/OptionsDlg.py:628
+#: client/osci/dialog/NewTaskDlg.py:448 client/osci/dialog/OptionsDlg.py:635
 #: client/osci/dialog/StructTaskDlg.py:383
 msgid "Report finalization"
 msgstr "Hlásit dokončení"
@@ -3050,207 +3050,204 @@ msgstr "Produkce"
 msgid "RP production"
 msgstr "Výzkum"
 
-#: client/osci/dialog/OptionsDlg.py:47
+#: client/osci/dialog/OptionsDlg.py:51
 msgid "English"
 msgstr "Anglicky"
 
-#: client/osci/dialog/OptionsDlg.py:48
+#: client/osci/dialog/OptionsDlg.py:52
 msgid "Czech"
 msgstr "Česky"
 
-#: client/osci/dialog/OptionsDlg.py:49
+#: client/osci/dialog/OptionsDlg.py:53
 msgid "French"
 msgstr "Francouzsky"
 
-#: client/osci/dialog/OptionsDlg.py:50
+#: client/osci/dialog/OptionsDlg.py:54
 msgid "German"
 msgstr ""
 
-#: client/osci/dialog/OptionsDlg.py:92
+#: client/osci/dialog/OptionsDlg.py:96
 #, fuzzy
 msgid "Select Mode"
 msgstr "Vyber objekt"
 
-#: client/osci/dialog/OptionsDlg.py:137
+#: client/osci/dialog/OptionsDlg.py:141
 msgid "Select Theme"
 msgstr "Vyber téma"
 
-#: client/osci/dialog/OptionsDlg.py:466
-msgid "You have to restart client to change the language."
+#: client/osci/dialog/OptionsDlg.py:475
+#, fuzzy
+msgid "You should restart client to change the language."
 msgstr "Musíte restartovat klienta pro změnu jazyka."
 
-#: client/osci/dialog/OptionsDlg.py:487
+#: client/osci/dialog/OptionsDlg.py:496
 msgid "The mode you selected is not properly formatted."
 msgstr ""
 
-#: client/osci/dialog/OptionsDlg.py:491
+#: client/osci/dialog/OptionsDlg.py:500
 #, fuzzy
 msgid "You have to restart client to change the resolution."
 msgstr "Musíte restartovat klienta pro změnu jazyka."
 
-#: client/osci/dialog/OptionsDlg.py:530
+#: client/osci/dialog/OptionsDlg.py:539
 msgid "Resolution"
 msgstr "Rozlišení"
 
-#: client/osci/dialog/OptionsDlg.py:542
+#: client/osci/dialog/OptionsDlg.py:551
 #, fuzzy
 msgid "Select resolution"
 msgstr "Vyberte pozici."
 
-#: client/osci/dialog/OptionsDlg.py:556
+#: client/osci/dialog/OptionsDlg.py:565
 msgid "Language"
 msgstr "Jazyk"
 
-#: client/osci/dialog/OptionsDlg.py:563
-msgid "Select Language"
-msgstr "Vyberte jazyk"
-
-#: client/osci/dialog/OptionsDlg.py:574
+#: client/osci/dialog/OptionsDlg.py:581
 msgid "Select language"
 msgstr "Vyberte jazyk"
 
-#: client/osci/dialog/OptionsDlg.py:588
+#: client/osci/dialog/OptionsDlg.py:595
 msgid "Themes"
 msgstr "Témata"
 
-#: client/osci/dialog/OptionsDlg.py:599
+#: client/osci/dialog/OptionsDlg.py:606
 msgid "Select theme"
 msgstr "Vyber téma"
 
-#: client/osci/dialog/OptionsDlg.py:614
+#: client/osci/dialog/OptionsDlg.py:621
 msgid "Display flags"
 msgstr "Volby zobrazení"
 
-#: client/osci/dialog/OptionsDlg.py:616
+#: client/osci/dialog/OptionsDlg.py:623
 msgid "Fullscreen"
 msgstr "Celá obrazovka"
 
-#: client/osci/dialog/OptionsDlg.py:618
+#: client/osci/dialog/OptionsDlg.py:625
 msgid "Double buf."
 msgstr "Dvojitý buf."
 
-#: client/osci/dialog/OptionsDlg.py:620
+#: client/osci/dialog/OptionsDlg.py:627
 msgid "HW surface"
 msgstr "HW povrch"
 
-#: client/osci/dialog/OptionsDlg.py:622
+#: client/osci/dialog/OptionsDlg.py:629
 msgid "SW surface"
 msgstr "SW povrch"
 
-#: client/osci/dialog/OptionsDlg.py:626
+#: client/osci/dialog/OptionsDlg.py:633
 msgid "Default settings"
 msgstr "Výchozí nastavení"
 
-#: client/osci/dialog/OptionsDlg.py:630
+#: client/osci/dialog/OptionsDlg.py:637
 msgid "Display help/tooltip"
 msgstr "Zobrazovat nápovědu"
 
-#: client/osci/dialog/OptionsDlg.py:632
+#: client/osci/dialog/OptionsDlg.py:639
 msgid "Show coordinates"
 msgstr "Zobraz souřadnice"
 
-#: client/osci/dialog/OptionsDlg.py:634
+#: client/osci/dialog/OptionsDlg.py:641
 msgid "Players highlight"
 msgstr "Zvýraznění hráčů"
 
-#: client/osci/dialog/OptionsDlg.py:636
+#: client/osci/dialog/OptionsDlg.py:643
 msgid "Show minimap"
 msgstr "Ukázat minimapu"
 
-#: client/osci/dialog/OptionsDlg.py:638
+#: client/osci/dialog/OptionsDlg.py:645
 #, fuzzy
 msgid "Show gate systems"
 msgstr "Přejmenuj soustavu"
 
-#: client/osci/dialog/OptionsDlg.py:641
+#: client/osci/dialog/OptionsDlg.py:648
 msgid "Starmap hotkey: CTRL-R"
 msgstr ""
 
-#: client/osci/dialog/OptionsDlg.py:642
+#: client/osci/dialog/OptionsDlg.py:649
 #, fuzzy
 msgid "Show map grid"
 msgstr "Ukázat minimapu"
 
-#: client/osci/dialog/OptionsDlg.py:643
+#: client/osci/dialog/OptionsDlg.py:650
 msgid "Starmap hotkey: CTRL-G"
 msgstr ""
 
-#: client/osci/dialog/OptionsDlg.py:644
+#: client/osci/dialog/OptionsDlg.py:651
 #, fuzzy
 msgid "Alternate system info"
 msgstr "Přejmenuj soustavu"
 
-#: client/osci/dialog/OptionsDlg.py:645
+#: client/osci/dialog/OptionsDlg.py:652
 msgid "Starmap hotkey: CTRL-A"
 msgstr ""
 
-#: client/osci/dialog/OptionsDlg.py:646
+#: client/osci/dialog/OptionsDlg.py:653
 msgid "Show map scanners"
 msgstr ""
 
-#: client/osci/dialog/OptionsDlg.py:647
+#: client/osci/dialog/OptionsDlg.py:654
 msgid "Starmap hotkey: CTRL-S"
 msgstr ""
 
-#: client/osci/dialog/OptionsDlg.py:648
+#: client/osci/dialog/OptionsDlg.py:655
 #, fuzzy
 msgid "Show fleet lines"
 msgstr "Ukaž místo"
 
-#: client/osci/dialog/OptionsDlg.py:649
+#: client/osci/dialog/OptionsDlg.py:656
 msgid "Starmap hotkey: CTRL-L"
 msgstr ""
 
-#: client/osci/dialog/OptionsDlg.py:650
+#: client/osci/dialog/OptionsDlg.py:657
 #, fuzzy
 msgid "Show player zones"
 msgstr "Ukaž místo"
 
-#: client/osci/dialog/OptionsDlg.py:651
+#: client/osci/dialog/OptionsDlg.py:658
 msgid "Starmap hotkey: CTRL-P"
 msgstr ""
 
-#: client/osci/dialog/OptionsDlg.py:654
+#: client/osci/dialog/OptionsDlg.py:661
 msgid "Login settings"
 msgstr "Nastavení přihlášení"
 
-#: client/osci/dialog/OptionsDlg.py:656
+#: client/osci/dialog/OptionsDlg.py:663
 msgid "Auto-login"
 msgstr "Automatický login"
 
-#: client/osci/dialog/OptionsDlg.py:658
+#: client/osci/dialog/OptionsDlg.py:665
 msgid "Remember password"
 msgstr "Zapamatovat heslo"
 
-#: client/osci/dialog/OptionsDlg.py:662
+#: client/osci/dialog/OptionsDlg.py:669
 msgid "Proxy"
 msgstr "Proxy"
 
-#: client/osci/dialog/OptionsDlg.py:663
+#: client/osci/dialog/OptionsDlg.py:670
 msgid "Host:"
 msgstr "Hostitel:"
 
-#: client/osci/dialog/OptionsDlg.py:665
+#: client/osci/dialog/OptionsDlg.py:672
 msgid "Port:"
 msgstr "Port:"
 
-#: client/osci/dialog/OptionsDlg.py:667
+#: client/osci/dialog/OptionsDlg.py:674
 msgid "Username:"
 msgstr "Uživ. jméno:"
 
-#: client/osci/dialog/OptionsDlg.py:669
+#: client/osci/dialog/OptionsDlg.py:676
 msgid "Password:"
 msgstr "Heslo:"
 
-#: client/osci/dialog/OptionsDlg.py:673
+#: client/osci/dialog/OptionsDlg.py:680
 msgid "Sound / Music"
 msgstr "Zvuky/muzika"
 
-#: client/osci/dialog/OptionsDlg.py:674
+#: client/osci/dialog/OptionsDlg.py:681
 msgid "Sounds"
 msgstr "Zvuky"
 
-#: client/osci/dialog/OptionsDlg.py:678
+#: client/osci/dialog/OptionsDlg.py:685
 msgid "Music"
 msgstr "Hudba"
 
@@ -5625,6 +5622,9 @@ msgstr "oprava %d%%"
 #: client/osci/sequip.py:84
 msgid "repair %d"
 msgstr "Opravuje se %d,"
+
+#~ msgid "Select Language"
+#~ msgstr "Vyberte jazyk"
 
 #~ msgid "Questions"
 #~ msgstr "Otázky"
