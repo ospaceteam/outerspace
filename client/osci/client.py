@@ -125,6 +125,9 @@ def saveDB():
 def getGalaxerData():
     global cmdProxy, galaxer
     token = cmdProxy.getToken()
+
+    galaxer.test()
+    log.debug("Fetching data from Galaxer")
     galaxerData = galaxer.getDataForPlayer(token)
     return galaxerData
 

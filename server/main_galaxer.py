@@ -32,6 +32,14 @@ def runGalaxer(options):
     import sqlite3
     from SimpleXMLRPCServer import SimpleXMLRPCServer
 
+    from ige import log
+    log.setMessageLog(os.path.join(options.configDir,'logs/galaxer-messages.log'))
+    log.setErrorLog(os.path.join(options.configDir,'logs/galaxer-errors.log'))
+
+    import ige.version
+    log.message("Outer Space Galaxer %s" % ige.version.versionString)
+
+
 
     # setup system path
     baseDir = os.path.abspath(os.path.dirname(__file__))
@@ -50,6 +58,7 @@ def runGalaxer(options):
 
     def _adminLogin():
         tries = 10
+        log.debug("Attept to connect to server")
         while tries > 0:
             s = IClient(options.server, None, msgHandler, None, 'IClient/osc')
             login = 'admin'
@@ -61,6 +70,7 @@ def runGalaxer(options):
                 tries -= 1
         password = open(os.path.join(options.configDir, "token"), "r").read()
         gameName = 'Alpha'
+        log.debug("Attept to login to server as the admin")
         s.login(gameName, login, password)
         return s
 
@@ -68,6 +78,7 @@ def runGalaxer(options):
         s.logout()
 
     def _getActualGalaxies():
+        log.debug("Fetching list of actual galaxies")
         un = s.getInfo(ige.Const.OID_UNIVERSE)
         galaxies = {}
         response = ''
@@ -77,6 +88,7 @@ def runGalaxer(options):
         return galaxies
 
     def _getActivePlayers():
+        log.debug("Retrieving list of active players")
         return s.getActivePlayers(ige.Const.OID_UNIVERSE)
 
     def _removePlayingPlayers():
@@ -87,6 +99,7 @@ def runGalaxer(options):
             bookingPlayers.append(nick)
         zombiePlayers = set(bookingPlayers) & set(activePlayers)
         for nick in zombiePlayers:
+            log.debug("Removing already playing player {0}".format(nick))
             db.execute('DELETE FROM players\
                         WHERE nick=?',
                         (nick,))
@@ -102,10 +115,12 @@ def runGalaxer(options):
                                 WHERE nick=? AND galType=?',
                                 (session.nick, galType)).fetchone()
             if query:
+                log.debug("Removing preference of player {0} for galType {1}".format(session.nick, galType))
                 db.execute('DELETE FROM players\
                             WHERE nick=? AND galType=?',
                             (session.nick, galType))
             else:
+                log.debug("Adding preference of player {0} for galType {1}".format(session.nick, galType))
                 db.execute('INSERT INTO players (nick, login, email, time, galType)\
                             VALUES (?, ?, ?, ?, ?)',
                             (session.nick, session.login, session.email, time.time(), galType))
@@ -119,11 +134,13 @@ def runGalaxer(options):
     def getDataForPlayer(token):
         global db
         session = s.getSessionByToken(token)
+        log.debug("Fetching possible galaxy types")
         types = s.getPossibleGalaxyTypes(ige.Const.OID_UNIVERSE)
         finalInfo = {}
         if session:
             playerNick = session.nick
             for galType in types:
+                log.debug("Fetching information about galaxy type {0}".format(galType))
                 playerCapacity, infoText, radius = types[galType]
                 query = db.execute('SELECT COUNT(*), galType\
                                     FROM players GROUP BY galType\
@@ -150,6 +167,7 @@ def runGalaxer(options):
     def testBooking():
         global db
         _removePlayingPlayers()
+        log.debug("Checking whether we already have enough players to start galaxy")
         query = db.execute('SELECT galType, COUNT(*) FROM players\
                             GROUP BY galType', ()).fetchall()
         types = s.getPossibleGalaxyTypes(ige.Const.OID_UNIVERSE)
@@ -165,6 +183,7 @@ def runGalaxer(options):
             increase the size a bit, and try to place the new galaxy there randomly.
             If not successful, increase again and repeat.
         """
+        log.debug("Seeking position for new galaxy")
         actualGalaxies = _getActualGalaxies()
 
         attemptsAmount = 10000 # number of placement attempts within one resize
@@ -203,6 +222,7 @@ def runGalaxer(options):
         return (posX, posY)
 
     def findNameForGalaxy():
+        log.debug("Searching for available galaxy name")
         allNames = []
         namesInUse = set([])
         for name in open(os.path.join(baseDir, 'data', 'GalaxyNames.txt')):
@@ -220,6 +240,7 @@ def runGalaxer(options):
         return None
 
     def createNewGalaxy(galType, galCap, radius):
+        log.message("New galaxy is going to be created")
         # first check if there is a galaxy name available
         name = findNameForGalaxy()
         if name is None:
@@ -235,7 +256,7 @@ def runGalaxer(options):
         for playerInfo in query[:galCap]:
             nick = playerInfo[1]
             listOfPlayers.append(playerInfo)
-        # trigger the creation
+        log.debug("Triggering creation of new galaxy")
         s.createNewSubscribedGalaxy(ige.Const.OID_UNIVERSE, posX, posY, name, galType, listOfPlayers)
 
         # now, as the galaxy has been created, remove booked players from galaxer database
@@ -264,12 +285,14 @@ def runGalaxer(options):
         return True
 
     def initDatabase():
+        log.message("Initializing database...")
         db = sqlite3.connect(os.path.join(options.configDir, 'galaxer.db'))
         rows = db.execute('SELECT name FROM sqlite_master WHERE type = "table"')
         tables = set([])
         for row in rows.fetchall():
             tables.add(row[0])
         if not 'players' in tables:
+            log.debug("Preparing player table")
             db.execute('CREATE TABLE players (login,\
                                                 nick,\
                                                 email,\
@@ -279,6 +302,7 @@ def runGalaxer(options):
                                                             galType))\
                                                 ')
         if not 'galaxies' in tables:
+            log.debug("Preparing galaxies table")
             db.execute('CREATE TABLE galaxies (galType,\
                                                 lastCreation,\
                                                 PRIMARY KEY (galType))\
@@ -293,8 +317,14 @@ def runGalaxer(options):
     def _cleanup(pidFd):
         global isRunning
         isRunning = False
-        db.commit()
-        _adminLogout(s)
+        try:
+            db.commit()
+        except NameError:
+            log.debug("Skipping DB commit, as DB has not been initialized yet")
+        try:
+            _adminLogout(s)
+        except NameError:
+            log.debug("Skipping admin logout, as connection has not been established yet")
         # delete my pid
         os.close(pidFd)
         os.remove(os.path.join(options.configDir,"galaxer.pid"))
