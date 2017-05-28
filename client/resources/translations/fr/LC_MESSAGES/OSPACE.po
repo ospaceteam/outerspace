@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Outer Space 0.5\n"
-"POT-Creation-Date: Sun May 28 00:20:44 2017\n"
+"POT-Creation-Date: Sun May 28 17:29:29 2017\n"
 "PO-Revision-Date: 2007-07-19 13:44+0100\n"
 "Last-Translator: Yann Cantin <yann.cantin@laposte.net>\n"
 "Language-Team: IGE <qark@seznam.cz>\n"
@@ -44,7 +44,7 @@ msgstr "Nettoyage des données sur le serveur..."
 msgid "Server sponsored by:"
 msgstr "Serveur sponsorisé par :"
 
-#: client/main_client.py:102 client/main_client.py:271
+#: client/main_client.py:102 client/main_client.py:272
 #, fuzzy
 msgid "Outer Space %s"
 msgstr "Outer Space"
@@ -418,7 +418,7 @@ msgstr ""
 #: client/osci/dialog/MessagesDlg.py:62 client/osci/dialog/MinefieldDlg.py:58
 #: client/osci/dialog/NewGlobalTaskDlg.py:61
 #: client/osci/dialog/NewMessageDlg.py:64 client/osci/dialog/NewTaskDlg.py:72
-#: client/osci/dialog/OptionsDlg.py:63
+#: client/osci/dialog/OptionsDlg.py:67
 #: client/osci/dialog/PlanetsAnalysisDlg.py:44
 #: client/osci/dialog/PlanetsOverviewDlg.py:47
 #: client/osci/dialog/ProblemsDlg.py:44 client/osci/dialog/RenameFleetDlg.py:59
@@ -467,8 +467,8 @@ msgstr "Partage de scanner"
 #: client/osci/dialog/NewGlobalTaskDlg.py:312
 #: client/osci/dialog/NewMessageDlg.py:196
 #: client/osci/dialog/NewMessageDlg.py:220 client/osci/dialog/NewTaskDlg.py:450
-#: client/osci/dialog/OptionsDlg.py:552 client/osci/dialog/OptionsDlg.py:584
-#: client/osci/dialog/OptionsDlg.py:610 client/osci/dialog/OptionsDlg.py:685
+#: client/osci/dialog/OptionsDlg.py:561 client/osci/dialog/OptionsDlg.py:591
+#: client/osci/dialog/OptionsDlg.py:617 client/osci/dialog/OptionsDlg.py:692
 #: client/osci/dialog/RenameFleetDlg.py:139
 #: client/osci/dialog/RenameSysDlg.py:114 client/osci/dialog/SearchDlg.py:128
 #: client/osci/dialog/StarSystemDlg.py:1525
@@ -480,7 +480,7 @@ msgstr "Annuler"
 #: client/osci/dialog/ColorDefinitionDlg.py:148
 #: client/osci/dialog/ConstrUpgradeDlg.py:115
 #: client/osci/dialog/KeyModHelp.py:87 client/osci/dialog/MainGameDlg.py:191
-#: client/osci/dialog/OptionsDlg.py:686 client/osci/dialog/ShowBuoyDlg.py:96
+#: client/osci/dialog/OptionsDlg.py:693 client/osci/dialog/ShowBuoyDlg.py:96
 #: client/osci/dialog/UpdateDlg.py:165 client/osci/dialog/UpdateDlg.py:228
 msgid "OK"
 msgstr "Ok"
@@ -592,8 +592,8 @@ msgstr "Données"
 #: client/osci/dialog/ConstrSelTechDlg.py:178
 #: client/osci/dialog/ConstrUpgradeDlg.py:138
 #: client/osci/dialog/NewAccountDlg.py:139
-#: client/osci/dialog/NewMessageDlg.py:219 client/osci/dialog/OptionsDlg.py:551
-#: client/osci/dialog/OptionsDlg.py:583 client/osci/dialog/OptionsDlg.py:609
+#: client/osci/dialog/NewMessageDlg.py:219 client/osci/dialog/OptionsDlg.py:560
+#: client/osci/dialog/OptionsDlg.py:590 client/osci/dialog/OptionsDlg.py:616
 #: client/osci/dialog/StarSystemDlg.py:1524
 msgid "Select"
 msgstr "Choisir"
@@ -2375,7 +2375,7 @@ msgstr "Allié"
 # - checkbox (FleetsOverviewDlg.py) enlarge ?
 # best trad ?
 #: client/osci/dialog/FleetsOverviewDlg.py:260
-#: client/osci/dialog/OptionsDlg.py:640
+#: client/osci/dialog/OptionsDlg.py:647
 msgid "Show redirects"
 msgstr "Voir redirections"
 
@@ -2650,7 +2650,7 @@ msgstr "Password"
 
 #: client/osci/dialog/LoginDlg.py:226 client/osci/dialog/MainGameDlg.py:378
 #: client/osci/dialog/NewGlobalTaskDlg.py:306
-#: client/osci/dialog/NewTaskDlg.py:444 client/osci/dialog/OptionsDlg.py:520
+#: client/osci/dialog/NewTaskDlg.py:444 client/osci/dialog/OptionsDlg.py:529
 #: client/osci/dialog/StructTaskDlg.py:379
 msgid "Options"
 msgstr "Préférences"
@@ -3070,7 +3070,7 @@ msgstr "Militaire"
 # Best trad ?
 # enlarge checkbox label in NewTaskDlg.py ?
 #: client/osci/dialog/NewGlobalTaskDlg.py:310
-#: client/osci/dialog/NewTaskDlg.py:448 client/osci/dialog/OptionsDlg.py:628
+#: client/osci/dialog/NewTaskDlg.py:448 client/osci/dialog/OptionsDlg.py:635
 #: client/osci/dialog/StructTaskDlg.py:383
 msgid "Report finalization"
 msgstr "Rapport final"
@@ -3199,62 +3199,63 @@ msgstr "Production PC"
 msgid "RP production"
 msgstr "Production RP"
 
-#: client/osci/dialog/OptionsDlg.py:47
+#: client/osci/dialog/OptionsDlg.py:51
 msgid "English"
 msgstr "Anglais"
 
-#: client/osci/dialog/OptionsDlg.py:48
+#: client/osci/dialog/OptionsDlg.py:52
 msgid "Czech"
 msgstr "Tchèque"
 
-#: client/osci/dialog/OptionsDlg.py:49
+#: client/osci/dialog/OptionsDlg.py:53
 msgid "French"
 msgstr "Français"
 
-#: client/osci/dialog/OptionsDlg.py:50
+#: client/osci/dialog/OptionsDlg.py:54
 msgid "German"
 msgstr ""
 
-#: client/osci/dialog/OptionsDlg.py:92
+#: client/osci/dialog/OptionsDlg.py:96
 #, fuzzy
 msgid "Select Mode"
 msgstr "Sélectionner cet objet"
 
-#: client/osci/dialog/OptionsDlg.py:137
+#: client/osci/dialog/OptionsDlg.py:141
 msgid "Select Theme"
 msgstr "Choisir"
 
 # wip
 # best trad ?
-#: client/osci/dialog/OptionsDlg.py:466
-msgid "You have to restart client to change the language."
+#: client/osci/dialog/OptionsDlg.py:475
+#, fuzzy
+msgid "You should restart client to change the language."
 msgstr ""
 "Vous devez redémarrer le client pour que le changement de langue soit pris "
 "en compte."
 
-#: client/osci/dialog/OptionsDlg.py:487
+#: client/osci/dialog/OptionsDlg.py:496
 msgid "The mode you selected is not properly formatted."
 msgstr ""
 
 # wip
 # best trad ?
-#: client/osci/dialog/OptionsDlg.py:491
+#: client/osci/dialog/OptionsDlg.py:500
 #, fuzzy
 msgid "You have to restart client to change the resolution."
 msgstr ""
 "Vous devez redémarrer le client pour que le changement de langue soit pris "
 "en compte."
 
-#: client/osci/dialog/OptionsDlg.py:530
+#: client/osci/dialog/OptionsDlg.py:539
 msgid "Resolution"
 msgstr "Résolution"
 
-#: client/osci/dialog/OptionsDlg.py:542
+#: client/osci/dialog/OptionsDlg.py:551
 #, fuzzy
 msgid "Select resolution"
 msgstr "Sélectionner une position."
 
-#: client/osci/dialog/OptionsDlg.py:556
+#: client/osci/dialog/OptionsDlg.py:565
 msgid "Language"
 msgstr "Langue"
 
@@ -3263,163 +3264,153 @@ msgstr "Langue"
 # - win title : ok
 # - button : too small
 # Change button text to "Select" ?
-#: client/osci/dialog/OptionsDlg.py:563
-#, fuzzy
-msgid "Select Language"
-msgstr "Choisir la langue"
-
-# wip
-# 2 contexts :
-# - win title : ok
-# - button : too small
-# Change button text to "Select" ?
-#: client/osci/dialog/OptionsDlg.py:574
+#: client/osci/dialog/OptionsDlg.py:581
 msgid "Select language"
 msgstr "Choisir la langue"
 
-#: client/osci/dialog/OptionsDlg.py:588
+#: client/osci/dialog/OptionsDlg.py:595
 msgid "Themes"
 msgstr "Apparence"
 
-#: client/osci/dialog/OptionsDlg.py:599
+#: client/osci/dialog/OptionsDlg.py:606
 msgid "Select theme"
 msgstr "Choix de l'apparence"
 
-#: client/osci/dialog/OptionsDlg.py:614
+#: client/osci/dialog/OptionsDlg.py:621
 msgid "Display flags"
 msgstr "Options"
 
-#: client/osci/dialog/OptionsDlg.py:616
+#: client/osci/dialog/OptionsDlg.py:623
 msgid "Fullscreen"
 msgstr "Plein écran"
 
-#: client/osci/dialog/OptionsDlg.py:618
+#: client/osci/dialog/OptionsDlg.py:625
 msgid "Double buf."
 msgstr "Double buf."
 
-#: client/osci/dialog/OptionsDlg.py:620
+#: client/osci/dialog/OptionsDlg.py:627
 msgid "HW surface"
 msgstr "Surface HW"
 
-#: client/osci/dialog/OptionsDlg.py:622
+#: client/osci/dialog/OptionsDlg.py:629
 msgid "SW surface"
 msgstr "Surface SW"
 
-#: client/osci/dialog/OptionsDlg.py:626
+#: client/osci/dialog/OptionsDlg.py:633
 msgid "Default settings"
 msgstr "Paramètres par défaut"
 
-#: client/osci/dialog/OptionsDlg.py:630
+#: client/osci/dialog/OptionsDlg.py:637
 msgid "Display help/tooltip"
 msgstr "Montrer les infobulles"
 
-#: client/osci/dialog/OptionsDlg.py:632
+#: client/osci/dialog/OptionsDlg.py:639
 msgid "Show coordinates"
 msgstr "Voir les coordonnées"
 
-#: client/osci/dialog/OptionsDlg.py:634
+#: client/osci/dialog/OptionsDlg.py:641
 msgid "Players highlight"
 msgstr "Souligner les joueurs"
 
-#: client/osci/dialog/OptionsDlg.py:636
+#: client/osci/dialog/OptionsDlg.py:643
 msgid "Show minimap"
 msgstr "Voir minimap"
 
-#: client/osci/dialog/OptionsDlg.py:638
+#: client/osci/dialog/OptionsDlg.py:645
 #, fuzzy
 msgid "Show gate systems"
 msgstr "Renommer le système"
 
-#: client/osci/dialog/OptionsDlg.py:641
+#: client/osci/dialog/OptionsDlg.py:648
 msgid "Starmap hotkey: CTRL-R"
 msgstr ""
 
-#: client/osci/dialog/OptionsDlg.py:642
+#: client/osci/dialog/OptionsDlg.py:649
 #, fuzzy
 msgid "Show map grid"
 msgstr "Voir minimap"
 
-#: client/osci/dialog/OptionsDlg.py:643
+#: client/osci/dialog/OptionsDlg.py:650
 msgid "Starmap hotkey: CTRL-G"
 msgstr ""
 
-#: client/osci/dialog/OptionsDlg.py:644
+#: client/osci/dialog/OptionsDlg.py:651
 #, fuzzy
 msgid "Alternate system info"
 msgstr "Renommer le système"
 
-#: client/osci/dialog/OptionsDlg.py:645
+#: client/osci/dialog/OptionsDlg.py:652
 msgid "Starmap hotkey: CTRL-A"
 msgstr ""
 
-#: client/osci/dialog/OptionsDlg.py:646
+#: client/osci/dialog/OptionsDlg.py:653
 msgid "Show map scanners"
 msgstr ""
 
-#: client/osci/dialog/OptionsDlg.py:647
+#: client/osci/dialog/OptionsDlg.py:654
 msgid "Starmap hotkey: CTRL-S"
 msgstr ""
 
-#: client/osci/dialog/OptionsDlg.py:648
+#: client/osci/dialog/OptionsDlg.py:655
 #, fuzzy
 msgid "Show fleet lines"
 msgstr "Montrer le lieu"
 
-#: client/osci/dialog/OptionsDlg.py:649
+#: client/osci/dialog/OptionsDlg.py:656
 msgid "Starmap hotkey: CTRL-L"
 msgstr ""
 
-#: client/osci/dialog/OptionsDlg.py:650
+#: client/osci/dialog/OptionsDlg.py:657
 #, fuzzy
 msgid "Show player zones"
 msgstr "Montrer le lieu"
 
-#: client/osci/dialog/OptionsDlg.py:651
+#: client/osci/dialog/OptionsDlg.py:658
 msgid "Starmap hotkey: CTRL-P"
 msgstr ""
 
-#: client/osci/dialog/OptionsDlg.py:654
+#: client/osci/dialog/OptionsDlg.py:661
 msgid "Login settings"
 msgstr "Paramètres d'identification"
 
-#: client/osci/dialog/OptionsDlg.py:656
+#: client/osci/dialog/OptionsDlg.py:663
 msgid "Auto-login"
 msgstr "Identification auto."
 
 # wip ; enlarge label ?
-#: client/osci/dialog/OptionsDlg.py:658
+#: client/osci/dialog/OptionsDlg.py:665
 msgid "Remember password"
 msgstr "Mémoriser le passwd."
 
-#: client/osci/dialog/OptionsDlg.py:662
+#: client/osci/dialog/OptionsDlg.py:669
 msgid "Proxy"
 msgstr "Mandataire"
 
-#: client/osci/dialog/OptionsDlg.py:663
+#: client/osci/dialog/OptionsDlg.py:670
 msgid "Host:"
 msgstr "Serveur :"
 
-#: client/osci/dialog/OptionsDlg.py:665
+#: client/osci/dialog/OptionsDlg.py:672
 msgid "Port:"
 msgstr "Port :"
 
-#: client/osci/dialog/OptionsDlg.py:667
+#: client/osci/dialog/OptionsDlg.py:674
 msgid "Username:"
 msgstr "Utilisateur :"
 
-#: client/osci/dialog/OptionsDlg.py:669
+#: client/osci/dialog/OptionsDlg.py:676
 msgid "Password:"
 msgstr "Password :"
 
-#: client/osci/dialog/OptionsDlg.py:673
+#: client/osci/dialog/OptionsDlg.py:680
 msgid "Sound / Music"
 msgstr "Son / Musique"
 
-#: client/osci/dialog/OptionsDlg.py:674
+#: client/osci/dialog/OptionsDlg.py:681
 msgid "Sounds"
 msgstr "Sons"
 
-#: client/osci/dialog/OptionsDlg.py:678
+#: client/osci/dialog/OptionsDlg.py:685
 msgid "Music"
 msgstr "Musique"
 
@@ -5906,6 +5897,15 @@ msgstr "réparation %d%%"
 #: client/osci/sequip.py:84
 msgid "repair %d"
 msgstr "réparation %d"
+
+# wip
+# 2 contexts :
+# - win title : ok
+# - button : too small
+# Change button text to "Select" ?
+#, fuzzy
+#~ msgid "Select Language"
+#~ msgstr "Choisir la langue"
 
 #~ msgid "OSCI %s"
 #~ msgstr "OSCI %s"

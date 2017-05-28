@@ -183,6 +183,7 @@ parser_ai_pool.add_argument("--game", dest = "game",
 )
 
 options = parser.parse_args()
+options.configDir = os.path.expanduser(options.configDir)
 if options.local:
     # we will set localhost as a connections
     options.server = 'localhost:9080'

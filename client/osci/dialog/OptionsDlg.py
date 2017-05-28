@@ -18,11 +18,15 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+import os
+import os.path
+import gettext
+import re
+
+import pygame
 import pygameui as ui
-import re, pygame
 from osci import gdata
 from ige.ospace.Const import *
-import os, os.path
 from ige import log
 import resources
 
@@ -96,9 +100,9 @@ class OptionsDlg:
         if gdata.config.client.language != None:
             lang = gdata.config.client.language
             try:
-                self.win.vLanguage.title = self.languages[lang]
+                self.win.vLangSel.text = self.languages[lang]
             except:
-                self.win.vLanguage.title = lang
+                self.win.vLangSel.text = lang
 
         # reading proxy settings
         if gdata.config.proxy.http != None:
@@ -458,12 +462,17 @@ class OptionsDlg:
         if not self.lwin.vLanguages.selection:
             return
         self.curLang = self.lwin.vLanguages.selection[0].tLanguage
-        try:
-            self.win.vLanguage.text = self.languages[self.curLang]
-        except:
-            self.win.vLanguage.text = self.curLang
         self.lwin.hide()
-        self.win.setStatus(_("You have to restart client to change the language."))
+        if self.curLang == 'en':
+            tran = gettext.NullTranslations()
+        else:
+            tran = gettext.translation('OSPACE', resources.get('translations'), languages = [self.curLang])
+        tran.install(unicode = 1)
+        try:
+            self.win.vLangSel.text = self.languages[self.curLang]
+        except:
+            self.win.vLangSel.text = self.curLang
+        self.win.setStatus(_("You should restart client to change the language."))
 
 
     def onSelectResolution(self, widget, action, data):
@@ -559,9 +568,7 @@ class OptionsDlg:
             longLang = self.languages[self.curLang]
         except:
             longLang = self.curLang
-        #ui.Button(self.win, layout = (1, 8, 5, 1), text = longLang, id = 'vLanguage')
-        ui.Button(self.win, layout = (1, 6, 5, 1), text = _('Select Language'), id = 'vLangSel', action = 'onSelectLanguage')
-        ui.ActiveLabel(self.win, layout = (1, 7, 5, 1), text = longLang,  id = "vLanguage")
+        ui.Button(self.win, layout = (1, 6, 5, 1), text = longLang, id = 'vLangSel', action = 'onSelectLanguage')
         lcols = 12
         lrows = 6
         width = lcols * 20 + 4
