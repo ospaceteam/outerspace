@@ -515,6 +515,7 @@ class IPlayer(IObject):
             self.cmd(planet).deleteDesign(tran, planet, designID)
         # delete from global queues
         for queueID in xrange(len(obj.prodQueues)):
+            queue = obj.prodQueues[queueID]
             for taskID in xrange(len(queue)):
                 if obj.prodQueues[queueID][taskID].techID == designID:
                     self.cmd(obj).abortGlobalConstruction(queueID, taskID)
