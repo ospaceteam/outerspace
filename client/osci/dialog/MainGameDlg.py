@@ -172,9 +172,6 @@ class MainGameDlg:
             )
             webbrowser.open(url, new = 1)
 
-    def onSponsor(self, widget, action, data):
-        webbrowser.open("http://www.k2.cz/", new = 1)
-
     def onResign(self, widget, action, data):
         # swap yes and no
         self.confirmDlg.display(_('Are you sure to resign current game?'), _('No'),
@@ -329,14 +326,6 @@ class MainGameDlg:
             id = 'vStatus',
             align = ui.ALIGN_W,
             layout = (0, lh - 1, lw - 16, 1),
-        )
-        ui.ActiveLabel(self.win,
-            id = "vSponsor",
-            align = ui.ALIGN_W,
-            icons = [(pygame.image.load(resources.get("sponsor_logo_small.png")), ui.ALIGN_E)],
-            layout = (lw - 12, lh - 1, 8, 1),
-            action = "onSponsor",
-            statustip = _("Server sponsored by K2 Software"),
         )
         ui.Label(self.win,
             id = 'vTurn',

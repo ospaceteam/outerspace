@@ -64,12 +64,9 @@ import osci.res
 
 background = None
 backgroundOffset = None
-sponsorLogo = None
-sponsorLogoOffset = None
 
 def drawBackground():
     global background, backgroundOffset
-    global sponsorLogo, sponsorLogoOffset
     if not background:
         image = random.choice([
             resources.get('bck1_1024x768.jpg'),
@@ -83,20 +80,11 @@ def drawBackground():
             (gdata.screen.get_width() - background.get_width()) / 2,
             (gdata.screen.get_height() - background.get_height()) / 2,
         )
-    if not sponsorLogo:
-        sponsorLogo = pygame.image.load(resources.get("sponsor_logo.png")).convert_alpha()
-        sponsorLogoOffset = (
-            (gdata.screen.get_width() - 5 - sponsorLogo.get_width()),
-            (gdata.screen.get_height() - 5 - sponsorLogo.get_height()),
-        )
     font = pygame.font.Font(resources.get('fonts/DejaVuLGCSans.ttf'), 12)
     font.set_bold(1)
     color = 0x40, 0x70, 0x40
     #
     gdata.screen.blit(background, backgroundOffset)
-    gdata.screen.blit(sponsorLogo, sponsorLogoOffset)
-    img = font.render(_("Server sponsored by:"), 1, (0xc0, 0xc0, 0xc0))
-    gdata.screen.blit(img, (sponsorLogoOffset[0], sponsorLogoOffset[1] - img.get_height() - 2))
     # screen.fill((0x00, 0x00, 0x00))
     # OSCI version
     img = font.render(_('Outer Space %s') % ige.version.versionString, 1, color)
