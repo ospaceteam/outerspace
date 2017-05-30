@@ -24,8 +24,11 @@ from Widget import Widget, registerWidget
 
 # keys mapping
 mapping = {
-    K_KP0: '0', K_KP1: '1', K_KP2: '2', K_KP3: '3', K_KP4: '4',
-    K_KP5: '5', K_KP6: '6', K_KP7: '7', K_KP8: '8', K_KP9: '9',
+    K_KP0: K_0, K_KP1: K_1, K_KP2: K_2, K_KP3: K_3, K_KP4: K_4,
+    K_KP5: K_5, K_KP6: K_6, K_KP7: K_7, K_KP8: K_8, K_KP9: K_9,
+    K_KP_DIVIDE: K_SLASH, K_KP_MULTIPLY: K_ASTERISK,
+    K_KP_MINUS: K_MINUS, K_KP_PLUS: K_PLUS, K_KP_PERIOD: K_PERIOD,
+    K_KP_ENTER: K_RETURN, K_KP_EQUALS: K_EQUALS,
 }
 
 class Entry(Widget):
@@ -54,6 +57,13 @@ class Entry(Widget):
         Widget.onCursorChanged(self)
 
     def processKeyDown(self, evt):
+        try:
+            # this is done to translate keypad codes to normal ones as
+            # we don't have any special meaning for these
+            evt.key = mapping[evt.key]
+        except KeyError:
+            pass
+
         if evt.key == K_BACKSPACE:
             if self.cursorPos > 0:
                 self.text = '%s%s' % (self.text[:self.cursorPos - 1], self.text[self.cursorPos:])
@@ -85,11 +95,6 @@ class Entry(Widget):
                 )
             else:
                 self.text = char
-            self.cursorPos += 1
-        elif mapping.has_key(evt.key):
-            self.text = u'%s%c%s' % (
-                self.text[:self.cursorPos], mapping[evt.key], self.text[self.cursorPos:]
-            )
             self.cursorPos += 1
         if (self.reportValueChanged):
             self.processAction("onValueChanged")
