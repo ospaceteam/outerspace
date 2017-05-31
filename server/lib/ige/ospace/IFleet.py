@@ -521,6 +521,7 @@ class IFleet(IObject):
             else:
                 systemID = targetID
             owner = tran.db[obj.owner]
+            targetSystem = tran.db[systemID]
             # validate that the player has actually scanned this system
             if systemID not in owner.validSystems:
                 raise GameException('You cannot find this system (never scanned).')
@@ -529,6 +530,11 @@ class IFleet(IObject):
             galaxy = tran.db[owner.galaxies[0]]
             if systemID not in galaxy.systems:
                 raise GameException('The target system is not in your galaxy.')
+            # because of universal visibility, fleets cannot target black holes
+            # it would make exploration too easy
+            if targetSystem.starClass[0] == 'b':
+                raise GameException('It would be too dangerous to go there.')
+
         obj.actions.insert(index, (action, targetID, aData))
         if index <= obj.actionIndex:
             obj.actionIndex += 1
