@@ -471,7 +471,7 @@
 	</technology>
 	<technology id="2990" symbol="BIONICTL3" name="Human Body Enhancements">
 		<discovery
-			researchMod="1.00 + 1.00 + 3.00"
+			researchMod="1.00 + 1.00 + 5.00 + 1.00"
 			finishResearchHandler="finishResTLAdvance"
 			level="2"
 			data="B"
@@ -483,7 +483,7 @@
 	</technology>
 	<technology id="2991" symbol="HUMANTL3" name="Brain Enhancements">
 		<discovery
-			researchMod="1.00 + 1.00 + 3.00"
+			researchMod="1.00 + 1.00 + 5.00 + 1.00"
 			finishResearchHandler="finishResTLAdvance"
 			level="2"
 			data="H"
@@ -495,7 +495,7 @@
 	</technology>
 	<technology id="2992" symbol="ROBOTTL3" name="Cyber Implants">
 		<discovery
-			researchMod="1.00 + 1.00 + 3.00"
+			researchMod="1.00 + 1.00 + 5.00 + 1.00"
 			finishResearchHandler="finishResTLAdvance"
 			level="2"
 			data="C"

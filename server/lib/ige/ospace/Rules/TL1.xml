@@ -417,7 +417,7 @@
 	</technology>
 	<technology id="1990" symbol="BIONICTL2" name="DNA Manipulation">
 		<discovery
-			researchMod="1.00 + 1.00 + 3.00"
+			researchMod="1.00 + 1.00 + 5.00"
 			finishResearchHandler="finishResTLAdvance"
 			level="1"
 			data="B"
@@ -429,7 +429,7 @@
 	</technology>
 	<technology id="1991" symbol="HUMANTL2" name="Human Brain Improvements">
 		<discovery
-			researchMod="1.00 + 1.00 + 3.00"
+			researchMod="1.00 + 1.00 + 5.00"
 			finishResearchHandler="finishResTLAdvance"
 			level="1"
 			data="H"
@@ -441,7 +441,7 @@
 	</technology>
 	<technology id="1992" symbol="ROBOTTL2" name="Advanced Robotics">
 		<discovery
-			researchMod="1.00 + 1.00 + 3.00"
+			researchMod="1.00 + 1.00 + 5.00"
 			finishResearchHandler="finishResTLAdvance"
 			level="1"
 			data="C"

@@ -1031,7 +1031,7 @@
     </technology>
     <technology id="4990" symbol="BIONICTL5" name="Selective Mutations">
         <discovery
-            researchMod="1.00 + 1.00 + 3.00"
+            researchMod="1.00 + 1.00 + 5.00"
             finishResearchHandler="finishResTLAdvance"
             level="4"
             data="B"
@@ -1043,7 +1043,7 @@
     </technology>
     <technology id="4991" symbol="HUMANTL5" name="Super Human">
         <discovery
-            researchMod="1.00 + 1.00 + 3.00"
+            researchMod="1.00 + 1.00 + 5.00"
             finishResearchHandler="finishResTLAdvance"
             level="4"
             data="H"
@@ -1055,7 +1055,7 @@
     </technology>
     <technology id="4992" symbol="ROBOTTL5" name="Artificial Brain Software">
         <discovery
-            researchMod="1.00 + 1.00 + 3.00"
+            researchMod="1.00 + 1.00 + 5.00"
             finishResearchHandler="finishResTLAdvance"
             level="4"
             data="C"
