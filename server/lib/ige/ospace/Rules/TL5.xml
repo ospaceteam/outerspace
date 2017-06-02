@@ -1455,7 +1455,7 @@
 	</technology>
     <technology id="5990" symbol="BIONICTL6" name="Self Pollination">
         <discovery
-            researchMod="1.00 + 1.00 + 3.00"
+            researchMod="1.00 + 1.00 + 5.00"
             finishResearchHandler="finishResTLAdvance"
             level="5"
             data="B"
@@ -1468,7 +1468,7 @@
     </technology>
     <technology id="5991" symbol="HUMANTL6" name="Mental Chameleonism">
         <discovery
-            researchMod="1.00 + 1.00 + 3.00"
+            researchMod="1.00 + 1.00 + 5.00"
             finishResearchHandler="finishResTLAdvance"
             level="5"
             data="H"
@@ -1481,7 +1481,7 @@
     </technology>
     <technology id="5992" symbol="ROBOTTL6" name="High Energy Robotic Brains">
         <discovery
-            researchMod="1.00 + 1.00 + 3.00"
+            researchMod="1.00 + 1.00 + 5.00"
             finishResearchHandler="finishResTLAdvance"
             level="5"
             data="C"

@@ -744,7 +744,7 @@
 	</technology>
 	<technology id="3990" symbol="BIONICTL4" name="DNA Synthesis">
 		<discovery
-			researchMod="1.00 + 1.00 + 3.00"
+			researchMod="1.00 + 1.00 + 5.00"
 			finishResearchHandler="finishResTLAdvance"
 			level="3"
 			data="B"
@@ -756,7 +756,7 @@
 	</technology>
 	<technology id="3991" symbol="HUMANTL4" name="Mind Linking">
 		<discovery
-			researchMod="1.00 + 1.00 + 3.00"
+			researchMod="1.00 + 1.00 + 5.00"
 			finishResearchHandler="finishResTLAdvance"
 			level="3"
 			data="H"
@@ -768,7 +768,7 @@
 	</technology>
 	<technology id="3992" symbol="ROBOTTL4" name="Artificial Inteligence">
 		<discovery
-			researchMod="1.00 + 1.00 + 3.00"
+			researchMod="1.00 + 1.00 + 5.00"
 			finishResearchHandler="finishResTLAdvance"
 			level="3"
 			data="C"
