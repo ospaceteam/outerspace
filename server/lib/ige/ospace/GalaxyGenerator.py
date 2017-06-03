@@ -361,6 +361,13 @@ def generateGalaxy2(galaxyType=None):
                 if planet.type in ("D", "R", "C"):
                     planets.append(planet)
             planet = random.choice(planets)
+            # now make sure resources are placed on big enough planets
+            # to promote more strategic and less tactical fights over them
+            # and ensure some minimal barrier is there for player to
+            # overcome
+            planet.diameter = dice(1, 6, 12) * 1000
+            planet.maxSlots = int(planet.diameter / 1000.)
+            planet.slots = dice(1, 2, 7)
             planet.strategicRes = key
             system = planet.compOf
             system.hasSR = 1
