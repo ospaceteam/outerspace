@@ -284,8 +284,8 @@
 		/>
 		<shipequip
 			subtype="seq_mod"
-			buildProd="180"
-			maxHP="4"
+			buildProd="205"
+			maxHP="6"
 			slots="0"
 			weight="1"
 		/>
