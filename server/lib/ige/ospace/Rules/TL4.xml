@@ -856,8 +856,8 @@
         />
         <shipequip
             subtype="seq_mod"
-            buildProd="720"
-            maxHP="16"
+            buildProd="1005"
+            maxHP="24"
             slots="0"
             weight="1"
         />
@@ -872,8 +872,8 @@
         />
         <shipequip
             subtype="seq_mod"
-            buildProd="720"
-            maxHP="16"
+            buildProd="1005"
+            maxHP="24"
             slots="0"
             weight="1"
         />
