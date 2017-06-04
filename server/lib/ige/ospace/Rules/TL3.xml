@@ -506,7 +506,7 @@
 		<shipequip
 			subtype="seq_struct"
 			buildProd="2880"
-			buildSRes="SR_BIO1"
+			buildSRes="SR_BIO1:SR_AMOUNT_BIG"
 
 			storEn="960"
 			operEn="10"

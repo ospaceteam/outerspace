@@ -24,6 +24,7 @@ from ige import log
 from ige.IDataHolder import IDataHolder
 from Const import *
 import random
+import copy
 
 
 def makeShipMinSpec(player, name, hullID, eqIDs, improvements,
@@ -85,7 +86,7 @@ def makeShipFullSpec(player, name, hullID, eqIDs, improvements, raiseExs = True)
     ship.combatClass = hull.combatClass
     ship.improvements = improvements
     ship.buildProd = hull.buildProd
-    ship.buildSRes = hull.buildSRes[:] # we need copy
+    ship.buildSRes = copy.copy(hull.buildSRes) # we need copy
     ship.operEn = hull.operEn
     ship.storEn = hull.storEn * techEff
     ship.weight = hull.weight
@@ -165,7 +166,12 @@ def makeShipFullSpec(player, name, hullID, eqIDs, improvements, raiseExs = True)
             # add values
             ship.level = max(ship.level, tech.level)
             ship.buildProd += tech.buildProd
-            ship.buildSRes.extend(tech.buildSRes)
+            # merging dictionaries
+            for resource in tech.buildSRes:
+                try:
+                    ship.buildSRes[resource] += tech.buildSRes[resource]
+                except KeyError:
+                    ship.buildSRes[resource] = tech.buildSRes[resource]
             ship.storEn += tech.storEn * techEff
             if (tech.weight > 0):
                 ship.weight += tech.weight

@@ -268,9 +268,10 @@ class IPlayer(IObject):
                 raise GameException('You cannot construct targeted project.')
         neededSR = {}
         for sr in tech.buildSRes:
-            if player.stratRes.get(sr, 0) < neededSR.get(sr, 0) + quantity:
+            nSR = neededSR.get(sr, 0) + tech.buildSRes[sr] * quantity
+            if player.stratRes.get(sr, 0) < nSR:
                 raise GameException("You do not own required strategic resource(s)")
-            neededSR[sr] = neededSR.get(sr, 0) + quantity
+            neededSR[sr] = nSR
         # consume strategic resources
         for sr in neededSR:
             player.stratRes[sr] -= neededSR[sr]
@@ -305,9 +306,10 @@ class IPlayer(IObject):
 
         neededSR = {}
         for sr in tech.buildSRes:
-            if player.stratRes.get(sr, 0) < neededSR.get(sr, 0) + quantityChange:
+            nSR = neededSR.get(sr, 0) + tech.buildSRes[sr] * quantityChange
+            if player.stratRes.get(sr, 0) < nSR:
                 raise GameException("You do not own required strategic resource(s)")
-            neededSR[sr] = neededSR.get(sr, 0) + quantityChange
+            neededSR[sr] = nSR
         # consume strategic resources
         for sr in neededSR:
             player.stratRes[sr] += (-1 * neededSR[sr])
@@ -332,7 +334,7 @@ class IPlayer(IObject):
         else:
             tech = Rules.techs[item.techID]
         for sr in tech.buildSRes:
-            player.stratRes[sr] += item.quantity
+            player.stratRes[sr] += item.quantity * tech.buildSRes[sr]
         player.prodQueues[queue].pop(index)
         return player.prodQueues[queue], player.stratRes
 
@@ -561,9 +563,9 @@ class IPlayer(IObject):
         # compute strat res difference
         stratRes = {}
         for sr in oldSpec.buildSRes:
-            stratRes[sr] = stratRes.get(sr, 0) - 1
+            stratRes[sr] = stratRes.get(sr, 0) - oldSpec.buildSRes[sr]
         for sr in newSpec.buildSRes:
-            stratRes[sr] = stratRes.get(sr, 0) + 1
+            stratRes[sr] = stratRes.get(sr, 0) + newSpec.buildSRes[sr]
             if stratRes[sr] == 0:
                 del stratRes[sr]
         log.debug("upgradeShipDesign", obj.oid, stratRes)

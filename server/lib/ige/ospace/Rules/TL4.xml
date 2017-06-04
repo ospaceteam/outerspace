@@ -50,7 +50,7 @@
         <structure
             subtype="str300"
             buildProd="1550"
-            buildSRes="SR_TL3A"
+            buildSRes="SR_TL3A:SR_AMOUNT_BIG"
             operEn="100"
             operWorkers="1500"
             prodProd="60"
@@ -71,7 +71,7 @@
         <structure
             subtype="str500"
             buildProd="1550"
-            buildSRes="SR_TL3B"
+            buildSRes="SR_TL3B:SR_AMOUNT_BIG"
             operEn="60"
             operWorkers="2000"
             prodSci="80"
@@ -90,7 +90,7 @@
         <structure
             subtype="str105"
             buildProd="1550"
-            buildSRes="SR_TL3C"
+            buildSRes="SR_TL3C:SR_AMOUNT_BIG"
             operWorkers="1500"
             prodProd="32"
             prodProdMod="1.0,0.0,0.0,0.0"
@@ -150,7 +150,7 @@
         <structure
             subtype="str500"
             buildProd="1550"
-            buildSRes="SR_TL3B"
+            buildSRes="SR_TL3B:SR_AMOUNT_BIG"
             storEn="720"
             operEn="60"
             operWorkers="2000"
@@ -171,7 +171,7 @@
         <structure
             subtype="str105"
             buildProd="1550"
-            buildSRes="SR_TL3C"
+            buildSRes="SR_TL3C:SR_AMOUNT_BIG"
             operWorkers="2500"
             prodProd="25"
             prodProdMod="0.0,0.5,0.5,0.0"
@@ -198,7 +198,7 @@
         <structure
             subtype="str300"
             buildProd="1550"
-            buildSRes="SR_TL3A"
+            buildSRes="SR_TL3A:SR_AMOUNT_BIG"
             operEn="60"
             operWorkers="2000"
             prodProd="42"
