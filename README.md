@@ -17,7 +17,7 @@ Outerspace is written in Python2, ```Python 2.7``` to be more specific. You can 
 *Outer Space client is able to install the PyGame requirement automatically. It will be installed  for active user only, so no administrator rights are needed.*
 
 #### Getting the Outer Space code
-The Outer Space itself has no specific needs, all you have to do is to clone git repository, or download [ZIP file with the latest version](https://github.com/dahaic/outerspace/archive/master.zip) and unpack it in directory of you choice.
+The Outer Space itself has no specific needs, all you have to do is to clone git repository, or download [ZIP file with the latest version](https://github.com/ospaceteam/outerspace/releases/latest) and unpack it in directory of you choice.
 
 ### Running Outer Space
 
