@@ -365,7 +365,7 @@
         <structure
             subtype="str640"
             buildProd="19200"
-            buildSRes="SR_TL3B"
+            buildSRes="SR_TL3B:SR_AMOUNT_BIG"
             operEn="350"
             operWorkers="3500"
             maxHP="2400"
@@ -501,7 +501,7 @@
         <shipequip
             subtype="seq_struct"
             buildProd="48000"
-            buildSRes="SR_BIO1"
+            buildSRes="SR_BIO1:SR_AMOUNT_BIG"
 
             storEn="960"
             operEn="10"
@@ -616,7 +616,7 @@
         <shipequip
             subtype="seq_mod"
             buildProd="120"
-            buildSRes="SR_TL1B"
+            buildSRes="SR_TL1B:SR_AMOUNT_BIG"
             maxHP="32"
             damageAbsorb="1"
             slots="0"
@@ -756,6 +756,7 @@
         <shipequip
             subtype="seq_wpn"
             buildProd="24000"
+            buildSRes="SR_TL3B:SR_AMOUNT_SMALL"
             slots="144"
             weight="216"
             weaponDmgMin="18000"
@@ -878,7 +879,7 @@
         />
         <shiphull
             buildProd="4320"
-            buildSRes="SR_TL5C"
+            buildSRes="SR_TL5C:SR_AMOUNT_SMALL"
             storEn="8864"
             operEn="20"
             maxHP="1440"

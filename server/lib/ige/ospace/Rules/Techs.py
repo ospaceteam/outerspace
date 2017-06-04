@@ -28,6 +28,7 @@ from ige.ospace import TechHandlers
 from xml.sax.handler import ContentHandler
 from ige.IDataHolder import IDataHolder
 import xml.sax
+import copy
 
 def noop(*args, **kwargs):
     return 1
@@ -51,7 +52,7 @@ attrs = {
     # construction costs & conditions
     'buildProd' : 0,
     'buildTurns' : 1,
-    'buildSRes': ['resource'],
+    'buildSRes': {'resource' : 'amount'},
     # operation costs
     'operBio' : 0,
     'operEn' : 0,
@@ -199,11 +200,40 @@ class Technology:
                 elif itemType == types.FloatType:
                     convertFunc = float
                 else:
-                    raise 'Unsupported attribute type %s' % repr(attrType)
+                    raise 'Unsupported attribute type %s' % repr(itemType)
                 result = []
                 for item in value.split(','):
                     if item:
                         result.append(convertFunc(item))
+                value = result
+            elif attrType == types.DictType:
+                # format is key:value,key2:value2
+                dict_key, dict_value = copy.copy(attrs[key]).popitem()
+                keyType = type(dict_key)
+                if keyType == types.IntType:
+                    convertFuncKey = int
+                elif keyType == types.StringType:
+                    convertFuncKey = str
+                elif keyType == types.FloatType:
+                    convertFuncKey = float
+                else:
+                    raise 'Unsupported attribute type %s' % repr(keyType)
+                valueType = type(dict_value)
+                if valueType == types.IntType:
+                    convertFuncValue = int
+                elif valueType == types.StringType:
+                    convertFuncValue = str
+                elif valueType == types.FloatType:
+                    convertFuncValue = float
+                else:
+                    raise 'Unsupported attribute type %s' % repr(valueType)
+                # let's parse!
+                result = {}
+                for pair in value.split(','):
+                    pair_key, pair_value = pair.split(':')
+                    pair_key = convertFuncKey(pair_key)
+                    pair_value = convertFuncValue(pair_value)
+                    result[pair_key] = pair_value
                 value = result
             else:
                 raise 'Unsupported attribute type %s' % repr(attrType)
@@ -399,6 +429,10 @@ else:
         if type(attrs[key]) == types.ListType and len(attrs[key]) == 1:
             log.debug("Cleaning up", key)
             attrs[key] = []
+        elif type(attrs[key]) == types.DictType and len(attrs[key]) == 1:
+            log.debug("Cleaning up", key)
+            attrs[key] = {}
+
 
     # link tech tree using researchRequires fields
     # construct researchEnables fields
@@ -427,15 +461,20 @@ else:
             tech.unpackStruct = getattr(Tech, tech.unpackStruct)
         else:
             tech.unpackStruct = 0
+
         # strat. resources
         stratRes = []
         for sr in tech.researchReqSRes:
             stratRes.append(getattr(Const, sr))
         tech.researchReqSRes = stratRes
-        stratRes = []
-        for sr in tech.buildSRes:
-            stratRes.append(getattr(Const, sr))
+        # build requirements with quantities
+        stratRes = {}
+        for resource in tech.buildSRes:
+            resource_id = getattr(Const, resource)
+            resource_amount = getattr(Const, tech.buildSRes[resource])
+            stratRes[resource_id] = resource_amount
         tech.buildSRes = stratRes
+
         # evaluate researchMod
         if tech.researchMod == "expr":
             tech.researchMod = 1.0

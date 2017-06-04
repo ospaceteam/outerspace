@@ -1,6 +1,12 @@
 ﻿Outer Space Change Log
 ======================
 
+[2017-06-05]
+- Granularity of strategic resources [dahaic]
+  Strategic resources can now be used on more granular level. All ship
+  equipment (exception being structure-building pods) now costs only one tenth
+  of weekly produce.
+
 [2017-05-21]
 - Once again new self-updating mechanism [dahaic]
 - Revision bump [dahaic]

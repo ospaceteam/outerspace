@@ -124,9 +124,10 @@ class IPlanet(IObject):
                 raise GameException('Conditions for construction are not satisfied.')
         neededSR = {}
         for sr in tech.buildSRes:
-            if player.stratRes.get(sr, 0) < neededSR.get(sr, 0) + quantity:
-                raise GameException("You do not own required strategic resource(s)")
-            neededSR[sr] = neededSR.get(sr, 0) + quantity
+            nSR = neededSR.get(sr, 0) + quantity * tech.buildSRes[sr]
+            if player.stratRes.get(sr, 0) < nSR:
+                raise GameException("You do not own enough of required strategic resource(s)")
+            neededSR[sr] = nSR
         # consume strategic resources
         for sr in neededSR:
             player.stratRes[sr] -= neededSR[sr]
@@ -166,12 +167,13 @@ class IPlanet(IObject):
 
         neededSR = {}
         for sr in tech.buildSRes:
-            if player.stratRes.get(sr, 0) < neededSR.get(sr, 0) + quantityChange:
-                raise GameException("You do not own required strategic resource(s)")
-            neededSR[sr] = neededSR.get(sr, 0) + quantityChange
+            nSR = neededSR.get(sr, 0) + quantityChange * tech.buildSRes[sr]
+            if player.stratRes.get(sr, 0) < nSR:
+                raise GameException("You do not own enough of required strategic resource(s)")
+            neededSR[sr] = nSR
         # consume strategic resources
         for sr in neededSR:
-            player.stratRes[sr] += (-1 * neededSR[sr])
+            player.stratRes[sr] -= neededSR[sr]
 
         obj.prodQueue[index].quantity = quantity
         return obj.prodQueue, player.stratRes
@@ -190,7 +192,7 @@ class IPlanet(IObject):
         else:
             tech = Rules.techs[item.techID]
         for sr in tech.buildSRes:
-            player.stratRes[sr] = player.stratRes.get(sr, 0) + item.quantity
+            player.stratRes[sr] = player.stratRes.get(sr, 0) + item.quantity * tech.buildSRes[sr]
         # delete task
         del obj.prodQueue[index]
         return obj.prodQueue, player.stratRes
@@ -352,7 +354,7 @@ class IPlanet(IObject):
         if owner and obj.plStratRes != SR_NONE:
             turn = tran.db[OID_UNIVERSE].turn
             if turn % Rules.stratResRate == 0:
-                owner.stratRes[obj.plStratRes] = owner.stratRes.get(obj.plStratRes, 0) + 1
+                owner.stratRes[obj.plStratRes] = owner.stratRes.get(obj.plStratRes, 0) + SR_AMOUNT_BIG
                 Utils.sendMessage(tran, obj, MSG_EXTRACTED_STRATRES, obj.oid, obj.plStratRes)
         # compute base morale
         if owner:

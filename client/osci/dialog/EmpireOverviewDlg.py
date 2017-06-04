@@ -83,7 +83,7 @@ class EmpireOverviewDlg:
             planet = client.get(planetID)
             if planet.plStratRes:
                 sr = planet.plStratRes
-                srChange[sr] = srChange.get(sr, 0) + 1
+                srChange[sr] = srChange.get(sr, 0) + SR_AMOUNT_BIG
 
         if player.stratRes or srChange:
             text.append(_("Strategic resources:"))
@@ -94,10 +94,12 @@ class EmpireOverviewDlg:
                     srList.append(sr)
             srList.sort()
             for sr in srList:
+                # srChange is printed as integer - assumption is there are only
+                # full generators of special resources (i.e. planets)
                 text.append(u'    %s: %s (+%d)' % (
                     gdata.stratRes[sr],
-                    player.stratRes.get(sr, 0),
-                    srChange.get(sr, 0),
+                    player.stratRes.get(sr, 0) / float(SR_AMOUNT_BIG),
+                    srChange.get(sr, 0) / float(SR_AMOUNT_BIG),
                 ))
             text.append('')
         # statistics
