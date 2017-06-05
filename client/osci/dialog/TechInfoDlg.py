@@ -355,12 +355,21 @@ class TechInfoDlg:
         self.win.vData.itemsChanged()
 
     def getStrategicResourcesText(self, tech, attr):
-        requiredStrategicResources = ""
-        for res in getattr(tech, attr, [0]):
-            requiredStrategicResources += gdata.stratRes[res]
-            requiredStrategicResources += ", "
-
-        return requiredStrategicResources[:-2]
+        try:
+            resourceDict = getattr(tech, attr)
+        except AttributeError:
+            return ""
+        requiredStrategicResources = []
+        for res in resourceDict:
+            try:
+                amount = resourceDict[res] / float(SR_AMOUNT_BIG)
+            except IndexError:
+                # this is case of research resources - it's pure list, not a dictionary
+                requiredStrategicResources += [gdata.stratRes[res]]
+            else:
+                # continuation of build resources
+                requiredStrategicResources += ['{0} ({1})'.format(gdata.stratRes[res], amount)]
+        return ', '.join(requiredStrategicResources)
 
     def onShowType(self, widget, action, data):
         self.techType = widget.data
