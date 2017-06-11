@@ -11,7 +11,7 @@ The ```outerspace``` project consists of two big parts. One is graphic client, p
 * ```pygame-1.9.1``` (for game client only)
 
 #### Python
-Outerspace is written in Python2, ```Python 2.7``` to be more specific. You can grab it on [official pages](https://www.python.org/downloads/release/python-2713/), or in the repositories of you linux distributions. 
+Outerspace is written in Python2, ```Python 2.7``` to be more specific. You can grab it on [official pages](https://www.python.org/downloads/release/python-2713/), or in the repositories of you linux distributions. While selecting components during installation, make sure to have ```pip``` component enabled. On Windows machines, for advanced use of ```outerspace```, it is also helpful to select ```Add python.exe to Path```.
 
 #### PyGame
 *Outer Space client is able to install the PyGame requirement automatically. It will be installed  for active user only, so no administrator rights are needed.*
