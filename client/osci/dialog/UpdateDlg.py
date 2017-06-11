@@ -114,7 +114,7 @@ class UpdateDlg:
     def performUpdate(self, updateDirectory, filename):
         log.debug('Updating game to the new version')
         """Extract new version, and replace current directory with it"""
-        self.setProgress('Preparing update...', 0, 3)
+        self.setProgress('Preparing update...', 0, 4)
         # we expect archive contains one common prefix
         version = "%(major)s.%(minor)s.%(revision)s%(status)s" % self.serverVersion
         expectedDir = 'outerspace-' + version
@@ -126,24 +126,47 @@ class UpdateDlg:
                 log.debug("Expected prefix directory is {0}".format(expectedDir))
                 sys.exit(1)
         log.debug('Archive has expected directory structure')
-        self.setProgress('Extracting new version...', 1, 3)
+        self.setProgress('Extracting new version...', 1, 4)
         archive.extractall(updateDirectory)
         log.debug('Update extracted to temporary directory')
 
-        self.setProgress('Replacing versions...', 2, 3)
+        self.setProgress('Backing up old version...', 2, 4)
         # move current directory to temporary location
         actualDir = os.path.dirname(os.path.abspath(sys.argv[0]))
         actualDirTrgt = os.path.join(updateDirectory, os.path.basename(actualDir))
         if os.path.exists(actualDirTrgt):
             shutil.rmtree(actualDirTrgt)
-        shutil.move(actualDir, actualDirTrgt)
+        # we have to clear out of CWD, as it might get deleted
+        # and python does not like that situation
+        savedCWD = os.getcwd()
+        os.chdir(updateDirectory)  # this is ensured to exist
+        shutil.copytree(actualDir, actualDirTrgt)
+        # ignore_errors is set because of windows
+        # they prohibit removing of directory, if user browse it.
+        # result is empty actualDir
+        shutil.rmtree(actualDir, ignore_errors=True)
         log.debug('Old version backuped to {0}'.format(actualDirTrgt))
 
+        # windows crash on this [fonts file is no longer accessible]
+        #self.setProgress('Applying new version...', 3, 4)
 
         # move newly extracted directory to original location
-        shutil.move(os.path.join(updateDirectory, expectedDir), actualDir)
-        self.setProgress('Restarting game...', 3, 3)
+        extractedDir = os.path.join(updateDirectory, expectedDir)
+        if os.path.exists(actualDir):
+            # most likely due to Windows issue described above
+            # as normally this directory should have been removed
+            log.debug('Moving new version item by item')
+            for item in os.listdir(extractedDir):
+                shutil.move(os.path.join(extractedDir, item), os.path.join(actualDir, item))
+            os.rmdir(extractedDir)
+        else:
+            log.debug('Moving new version in bulk')
+            # simple version, non-windows
+            shutil.move(extractedDir, actualDir)
+        # windows crash on this [fonts file is no longer accessible]
+        #self.setProgress('Restarting game...', 4, 4)
         log.debug('Restarting game')
+        os.chdir(savedCWD)
         os.execl(sys.executable, sys.executable, *sys.argv)
 
 
