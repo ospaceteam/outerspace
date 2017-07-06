@@ -21,7 +21,7 @@ The Outer Space itself has no specific needs, all you have to do is to clone git
 
 ### Running Outer Space
 
-For playing on official (default) server, all you have to do is to run ```outerspace.py``` script without any parameters. On *Windows*, it should be enough to execute the script from file browser.
+For playing on official (default) server, all you have to do is to run ```outerspace.py``` script without any parameters (On *Windows*, it should be enough to execute the script from a file browser.) In case of running game from command line, all needed is
 
 ```
 python2 ./outerspace.py
