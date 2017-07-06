@@ -147,8 +147,7 @@ class UpdateDlg:
         shutil.rmtree(actualDir, ignore_errors=True)
         log.debug('Old version backuped to {0}'.format(actualDirTrgt))
 
-        # windows crash on this [fonts file is no longer accessible]
-        #self.setProgress('Applying new version...', 3, 4)
+        self.setProgress('Applying new version...', 3, 4)
 
         # move newly extracted directory to original location
         extractedDir = os.path.join(updateDirectory, expectedDir)
@@ -163,14 +162,32 @@ class UpdateDlg:
             log.debug('Moving new version in bulk')
             # simple version, non-windows
             shutil.move(extractedDir, actualDir)
-        # windows crash on this [fonts file is no longer accessible]
-        #self.setProgress('Restarting game...', 4, 4)
-        log.debug('Restarting game')
         os.chdir(savedCWD)
-        os.execl(sys.executable, sys.executable, *sys.argv)
+        self.setProgress('Update complete', 4, 4)
+        log.debug('Game prepared for restart')
+
+
+    def performRestart(self, widget, action, data):
+        text = [
+            _("Game will now restart itself.")
+        ]
+        self.win.vConfirm.action = "onRestart"
+        self.win.vConfirm.text = _("Restart")
+        self.win.vCancel.text = ""
+        self.win.vCancel.enabled = False
+        self.win.vText.text = text
+        self.win.title = _("Outer Space Update Complete")
+
+    def onRestart(self, widget, action, data):
+        if os.name == 'nt':
+            quoted = map(lambda x: '"' + str(x) + '"', sys.argv)
+            os.execl(sys.executable, sys.executable, *quoted)
+        else:
+            os.execl(sys.executable, sys.executable, *sys.argv)
 
 
     def onDownloadAndInstall(self, widget, action, data):
+
         updateDirectory = os.path.join(self.options.configDir, 'Update')
         if not os.path.isdir(updateDirectory):
             log.debug("Creating update directory")
@@ -179,6 +196,7 @@ class UpdateDlg:
         if filename is None:
             self.onQuit(widget, action, data)
         self.performUpdate(updateDirectory, filename)
+        self.performRestart(widget, action, data)
 
 
     def reportFailure(self, reason):
