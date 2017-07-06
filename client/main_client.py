@@ -80,7 +80,13 @@ def drawBackground():
             (gdata.screen.get_width() - background.get_width()) / 2,
             (gdata.screen.get_height() - background.get_height()) / 2,
         )
-    font = pygame.font.Font(resources.get('fonts/DejaVuLGCSans.ttf'), 12)
+    try:
+        font = pygame.font.Font(resources.get('fonts/DejaVuLGCSans.ttf'), 12)
+    except IOError:
+        # this can happen on windows during update process, when directory
+        # is moved already
+        # TODO: proper fix is to use pygameui and caching
+        font = pygame.font.Font(None, 12)
     font.set_bold(1)
     color = 0x40, 0x70, 0x40
     #
