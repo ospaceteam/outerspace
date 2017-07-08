@@ -503,25 +503,25 @@ class IGalaxy(IObject):
                 if planet.plStratRes in (SR_TL1A, SR_TL1B) and planet.owner == OID_NONE:
                     try:
                         vacant_planets[T_AIRENPLAYER] += [planetID]
-                    except IndexError:
+                    except KeyError:
                         vacant_planets[T_AIRENPLAYER] = [planetID]
                 # pirates
                 if planet.plStratRes in (SR_TL3A, SR_TL3B, SR_TL3C) and planet.owner == OID_NONE:
                     try:
                         vacant_planets[T_AIPIRPLAYER] += [planetID]
-                    except IndexError:
+                    except KeyError:
                         vacant_planets[T_AIPIRPLAYER] = [planetID]
                 # EDEN
                 if planet.plStratRes in (SR_TL5A, SR_TL5B, SR_TL5C) and planet.owner == OID_NONE:
                     try:
                         vacant_planets[T_AIEDENPLAYER] += [planetID]
-                    except IndexError:
+                    except KeyError:
                         vacant_planets[T_AIEDENPLAYER] = [planetID]
                 # mutants
                 if planet.plDisease != 0 and planet.owner == OID_NONE:
                     try:
                         vacant_planets[T_AIMUTPLAYER] += [planetID]
-                    except IndexError:
+                    except KeyError:
                         vacant_planets[T_AIMUTPLAYER] = [planetID]
         # iterate over types, create players if needed (it should be) and fill in vacant planets
         for playerType in vacant_planets:
