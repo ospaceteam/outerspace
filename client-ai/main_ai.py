@@ -99,10 +99,3 @@ def runAIClient(options):
     else:
         return False
 
-
-    # event loop
-    client.updateDatabase()
-    ai.run(client)
-    client.logout()
-    log.debug("Shut down")
-

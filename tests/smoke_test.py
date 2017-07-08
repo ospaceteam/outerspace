@@ -131,7 +131,9 @@ def doTurns(amount=TURN_AMOUNT, skip=TURN_SKIP):
           'admin']
     args_ai=[os.path.join(CODE_ROOT, 'outerspace.py'),
           'ai-pool',
-          '--configdir=' + TEMP_DIR]
+          '--configdir=' + TEMP_DIR,
+          '--procs=1',
+          '--local']
     for turn in range(0, amount, skip):
         subprocess.call(args_ai, stdout=UTILS_OUT,
                                  stderr=subprocess.STDOUT)
