@@ -83,7 +83,7 @@ class StarSystemDlg:
         self.plInfoData = None
         #
         self.win.vSystemMap.systemID = self.systemID
-        self.win.vSystemMap.selectedObjID = objID
+        self.win.vSystemMap.activeObjID = objID
         self.win.vSystemMap.precompute()
 
         # check, if player owns at least one planet in system
@@ -513,7 +513,7 @@ class StarSystemDlg:
         self.win.setTagAttr('sys', 'visible', 1)
         self.win.setTagAttr('hidden', 'visible', 0)
         system = client.get(self.systemID, noUpdate = 1)
-        self.win.vSystemMap.selectedObjID = self.systemID
+        self.win.vSystemMap.activeObjID = self.systemID
         # star info
         if hasattr(system, 'starClass'):
             title = _('System overview for star %s [%s]') % (
