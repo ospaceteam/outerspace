@@ -45,6 +45,8 @@ class SystemMapWidget(Widget):
         self._actAreas = {}
         self._starImg = None
         self._planetImgs = []
+        self.ObjID = OID_NONE
+        self.activeObjID = OID_NONE
         self.selectedObjID = OID_NONE
         self.systemID = OID_NONE
         self.unknown_mines = 0
@@ -167,16 +169,18 @@ class SystemMapWidget(Widget):
                 py = height - text.get_height()
                 px = x + img.get_width() / 2 - text.get_width() / 2 + nameWidth
                 surface.blit(text, (px, py))
-            if planetID == self.selectedObjID:
+            if planetID in [self.activeObjID, self.selectedObjID]:
+                if planetID == self.selectedObjID: style = 0
+                elif planetID == self.activeObjID: style = 2
                 gx, gy = self.theme.getGridParams()
                 gx = gx / 2
                 gy = gy / 2
                 rect = Rect((x + img.get_width() / 2 - gx / 2, y + img.get_height() / 2), (gx, gy))
                 pygame.draw.polygon(surface, self.theme.themeForeground,
-                    (rect.bottomleft, rect.midtop, rect.bottomright), 0)
+                    (rect.bottomleft, rect.midtop, rect.bottomright), style)
                 rect = Rect((x + img.get_width() / 2 - gx / 2, y - img.get_height() / 2 - gy), (gx, gy))
                 pygame.draw.polygon(surface, self.theme.themeForeground,
-                    (rect.topleft, rect.midbottom, rect.topright), 0)
+                    (rect.topleft, rect.midbottom, rect.topright), style)
             x += int(img.get_width() * 1.25) + 10
 
     def getFreeSlots(self, planetID):
@@ -203,6 +207,17 @@ class SystemMapWidget(Widget):
 
         return freeSlots
 
+    def processMMotion(self, evt):
+        pos = evt.pos
+        for objID in self._actAreas.keys():
+            rect = self._actAreas[objID]
+            if rect.collidepoint(pos) and self.action:
+                self.processAction(self.action, objID)
+                return ui.NoEvent
+        if self.selectedObjID:
+            self.processAction(self.action, self.selectedObjID)
+        return ui.NoEvent
+
     def processMB1Down(self, evt):
         pos = evt.pos
         for objID in self._actAreas.keys():
@@ -210,7 +225,6 @@ class SystemMapWidget(Widget):
             if rect.collidepoint(pos):
                 self.pressedObjID = objID
                 return ui.NoEvent
-        self.activeObjID = OID_NONE
         return ui.NoEvent
 
     def processMB1Up(self, evt):
@@ -219,11 +233,12 @@ class SystemMapWidget(Widget):
             rect = self._actAreas[objID]
             if rect.collidepoint(pos):
                 if self.pressedObjID == objID and self.action:
+                    self.pressedObjID = OID_NONE
+                    self.selectedObjID = objID
                     self.processAction(self.action, objID)
-                self.pressedObjID = OID_NONE
-                self.selectedObjID = objID
                 return ui.NoEvent
-        self.activeObjID = OID_NONE
+        if self.selectedObjID:
+            self.processAction(self.action, self.selectedObjID)
         return ui.NoEvent
 
 registerWidget(SystemMapWidget, 'systemmapwidget')
