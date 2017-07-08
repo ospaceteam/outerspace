@@ -491,54 +491,79 @@ class IGalaxy(IObject):
     getPublicInfo.accLevel = AL_NONE
 
     def setupEnvironment(self, tran, obj):
-        # check required players
         universe = tran.db[OID_UNIVERSE]
-        players = {}
-        for playerType in (T_AIRENPLAYER, T_AIMUTPLAYER, T_AIPIRPLAYER, T_AIEDENPLAYER):
-            found = 0
-            for playerID in universe.players:
-                player = tran.db[playerID]
-                if obj.oid in player.galaxies and player.type == playerType:
-                    players[playerType] = player
-                    found = 1
-                    break
-            if found:
-                continue
-            # create new player
-            log.debug("Creating new player", playerType)
-            player = self.new(playerType)
-            self.cmd(player).register(tran, player)
-            aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
-            aiList.setGalaxy(player.login, obj.name)
-            player.galaxies.append(obj.oid)
-            players[playerType] = player
-        # great we have all players - scan planets
+        # we will first scan galaxy, to determine which environments are available
+        # this way, we will create only players that are needed, and not all types
+        vacant_planets = {}
         for systemID in obj.systems:
             system = tran.db[systemID]
             for planetID in system.planets:
                 planet = tran.db[planetID]
                 # renegades
                 if planet.plStratRes in (SR_TL1A, SR_TL1B) and planet.owner == OID_NONE:
+                    try:
+                        vacant_planets[T_AIRENPLAYER] += [planetID]
+                    except IndexError:
+                        vacant_planets[T_AIRENPLAYER] = [planetID]
+                # pirates
+                if planet.plStratRes in (SR_TL3A, SR_TL3B, SR_TL3C) and planet.owner == OID_NONE:
+                    try:
+                        vacant_planets[T_AIPIRPLAYER] += [planetID]
+                    except IndexError:
+                        vacant_planets[T_AIPIRPLAYER] = [planetID]
+                # EDEN
+                if planet.plStratRes in (SR_TL5A, SR_TL5B, SR_TL5C) and planet.owner == OID_NONE:
+                    try:
+                        vacant_planets[T_AIEDENPLAYER] += [planetID]
+                    except IndexError:
+                        vacant_planets[T_AIEDENPLAYER] = [planetID]
+                # mutants
+                if planet.plDisease != 0 and planet.owner == OID_NONE:
+                    try:
+                        vacant_planets[T_AIMUTPLAYER] += [planetID]
+                    except IndexError:
+                        vacant_planets[T_AIMUTPLAYER] = [planetID]
+        # iterate over types, create players if needed (it should be) and fill in vacant planets
+        for playerType in vacant_planets:
+            found = 0
+            for playerID in universe.players:
+                player = tran.db[playerID]
+                if obj.oid in player.galaxies and player.type == playerType:
+                    found = 1
+                    break
+            if not found:
+                # create new player
+                log.debug("Creating new player", playerType)
+                player = self.new(playerType)
+                self.cmd(player).register(tran, player)
+                aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
+                aiList.setGalaxy(player.login, obj.name)
+                player.galaxies.append(obj.oid)
+            # now we have a player, let's iterate over vacant planets and set them up
+            for planetID in vacant_planets[playerType]:
+                planet = tran.db[planetID]
+                # renegades
+                if playerType == T_AIRENPLAYER:
                     # populate planet
                     log.debug("Adding renegades", planetID)
-                    self.cmd(planet).changeOwner(tran, planet, players[T_AIRENPLAYER].oid, 1)
+                    self.cmd(planet).changeOwner(tran, planet, player.oid, 1)
                     planet.slots.append(Utils.newStructure(tran, Rules.Tech.RENEGADEBASE, planet.owner))
                     planet.storPop = 3000
                 # pirates
-                if planet.plStratRes in (SR_TL3A, SR_TL3B, SR_TL3C) and planet.owner == OID_NONE:
+                elif playerType == T_AIPIRPLAYER:
                     # populate planet
                     log.debug("Adding pirates", planetID)
-                    self.cmd(planet).changeOwner(tran, planet, players[T_AIPIRPLAYER].oid, 1)
+                    self.cmd(planet).changeOwner(tran, planet, player.oid, 1)
                     planet.slots.append(Utils.newStructure(tran, Rules.Tech.PIRATEBASE, planet.owner))
                     planet.storPop = 5000
                     if planet.plSlots > 1:
                         planet.slots.append(Utils.newStructure(tran, Rules.Tech.PIRATEDEN, planet.owner))
                         planet.storPop += 1000
                 # EDEN
-                if planet.plStratRes in (SR_TL5A, SR_TL5B, SR_TL5C) and planet.owner == OID_NONE:
+                elif playerType == T_AIEDENPLAYER:
                     # populate planet
                     log.debug("Adding EDEN", planetID)
-                    self.cmd(planet).changeOwner(tran, planet, players[T_AIEDENPLAYER].oid, 1)
+                    self.cmd(planet).changeOwner(tran, planet, player.oid, 1)
                     if planet.plSlots < 2:
                         planet.plSlots = 2
                         if planet.plMaxSlots < 2:
@@ -549,10 +574,10 @@ class IGalaxy(IObject):
                     planet.slots.append(Utils.newStructure(tran, Rules.Tech.EDENSTATION, planet.owner))
                     planet.storPop = 3000
                 # mutants
-                if planet.plDisease != 0 and planet.owner == OID_NONE:
+                elif playerType == T_AIMUTPLAYER:
                     # populate planet
                     log.debug("Adding mutants", planetID)
-                    self.cmd(planet).changeOwner(tran, planet, players[T_AIMUTPLAYER].oid, 1)
+                    self.cmd(planet).changeOwner(tran, planet, player.oid, 1)
                     planet.slots.append(Utils.newStructure(tran, Rules.Tech.MUTANTBASE, planet.owner))
                     planet.storPop = 3000
 

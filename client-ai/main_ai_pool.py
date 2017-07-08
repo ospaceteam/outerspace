@@ -30,14 +30,6 @@ def runAIPool(options):
     import re
     import copy
 
-    basepath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-    for item in ("libsrvr", "server/lib"):
-        path = os.path.join(basepath, item)
-        if os.path.exists(path):
-            sys.path.insert(0, path)
-            break
-
     from ai_parser import AIList
 
 
@@ -51,6 +43,7 @@ def runAIPool(options):
 
     aiPool = multiprocessing.Pool(processes = options.procs)
 
+    ai_accounts_unavailable = []
     for gameName in games:
         aiList = AIList(options.configDir, gameName)
         for record in aiList.getAll():
@@ -62,7 +55,14 @@ def runAIPool(options):
             optAI.password = record.password
             optAI.ai = record.aiType
             optAI.game = gameName
-            aiPool.apply_async(runAIClient, [optAI])
+            if options.cleanup:
+                optAI.test = True
+                if not runAIClient(optAI):
+                    print('Removing {0} {1}'.format(optAI.login, optAI.password))
+                    aiList.remove(optAI.login, optAI.password)
+            else:
+                optAI.test = False
+                aiPool.apply_async(runAIClient, [optAI])
     aiPool.close()
     aiPool.join()
     sys.exit()
