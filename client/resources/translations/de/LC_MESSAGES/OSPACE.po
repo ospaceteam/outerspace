@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Outer Space 0.5\n"
-"POT-Creation-Date: Sun May 28 17:29:29 2017\n"
+"POT-Creation-Date: Sat Jul  8 18:50:33 2017\n"
 "PO-Revision-Date: 2007-08-21 23:59+0100\n"
 "Last-Translator: PeS <pes@sandbox.cz>\n"
 "Language-Team: IGE <qark@seznam.cz>\n"
@@ -15,19 +15,19 @@ msgstr ""
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: lib\n"
 
-#: client-ai/ai_client.py:181 client/osci/client.py:205
+#: client-ai/ai_client.py:181 client/osci/client.py:208
 msgid "Deleting obsolete data..."
 msgstr "Lösche veraltete Daten..."
 
-#: client-ai/ai_client.py:201 client/osci/client.py:225
+#: client-ai/ai_client.py:201 client/osci/client.py:228
 msgid "Downloading player data..."
 msgstr "Herunterladen der Spielerdaten..."
 
-#: client-ai/ai_client.py:206 client/osci/client.py:230
+#: client-ai/ai_client.py:206 client/osci/client.py:233
 msgid "Updating scanner..."
 msgstr "Aktualisieren des Scanners..."
 
-#: client-ai/ai_client.py:212 client/osci/client.py:236
+#: client-ai/ai_client.py:212 client/osci/client.py:239
 msgid "Downloading planets and fleets data..."
 msgstr "Herunterladen der Planeten- und Flottendaten..."
 
@@ -40,24 +40,20 @@ msgstr "Herunterladen der Nachrichten..."
 msgid "Clearing data on the server..."
 msgstr "Löschen der Daten auf dem Server..."
 
-#: client/main_client.py:98
-msgid "Server sponsored by:"
-msgstr "Server gesponsert von:"
-
-#: client/main_client.py:102 client/main_client.py:272
+#: client/main_client.py:96 client/main_client.py:266
 #, fuzzy
 msgid "Outer Space %s"
 msgstr "Outer Space"
 
-#: client/main_client.py:105
+#: client/main_client.py:99
 msgid "Pygame %s"
 msgstr "Pygame %s"
 
-#: client/main_client.py:108
+#: client/main_client.py:102
 msgid "Python %s"
 msgstr "Python %s"
 
-#: client/main_client.py:113
+#: client/main_client.py:107
 msgid "Video Driver: %s [%dx%dx%d]"
 msgstr "Video Treiber: %s [%dx%dx%d]"
 
@@ -408,7 +404,7 @@ msgstr ""
 #: client/osci/dialog/FleetsOverviewDlg.py:46
 #: client/osci/dialog/GalaxyRestartDlg.py:46
 #: client/osci/dialog/GlobalQueuesDlg.py:62 client/osci/dialog/LocateDlg.py:51
-#: client/osci/dialog/MainGameDlg.py:369 client/osci/dialog/MapOverlayDlg.py:54
+#: client/osci/dialog/MainGameDlg.py:358 client/osci/dialog/MapOverlayDlg.py:54
 #: client/osci/dialog/MessagesDlg.py:62 client/osci/dialog/MinefieldDlg.py:58
 #: client/osci/dialog/NewGlobalTaskDlg.py:61
 #: client/osci/dialog/NewMessageDlg.py:64 client/osci/dialog/NewTaskDlg.py:72
@@ -425,7 +421,7 @@ msgstr ""
 msgid "Ready."
 msgstr "Fertig."
 
-#: client/osci/client.py:266
+#: client/osci/client.py:269
 msgid "Downloading messages..."
 msgstr "Herunterladen der Nachrichten..."
 
@@ -473,9 +469,9 @@ msgstr "Abbruch"
 #: client/osci/dialog/BuoyDlg.py:127 client/osci/dialog/ChangeQtyDlg.py:88
 #: client/osci/dialog/ColorDefinitionDlg.py:148
 #: client/osci/dialog/ConstrUpgradeDlg.py:115
-#: client/osci/dialog/KeyModHelp.py:87 client/osci/dialog/MainGameDlg.py:191
+#: client/osci/dialog/KeyModHelp.py:87 client/osci/dialog/MainGameDlg.py:188
 #: client/osci/dialog/OptionsDlg.py:693 client/osci/dialog/ShowBuoyDlg.py:96
-#: client/osci/dialog/UpdateDlg.py:165 client/osci/dialog/UpdateDlg.py:228
+#: client/osci/dialog/UpdateDlg.py:206 client/osci/dialog/UpdateDlg.py:269
 msgid "OK"
 msgstr "Ok"
 
@@ -574,7 +570,7 @@ msgstr "Typ"
 
 #: client/osci/dialog/ConstrSelTechDlg.py:159
 #: client/osci/dialog/ConstructionDlg.py:451 client/osci/dialog/FleetDlg.py:452
-#: client/osci/dialog/TechInfoDlg.py:388
+#: client/osci/dialog/TechInfoDlg.py:397
 msgid "Data"
 msgstr "Daten"
 
@@ -825,27 +821,27 @@ msgstr ""
 
 #: client/osci/dialog/ConstructionDlg.py:361 client/osci/dialog/FleetDlg.py:309
 #: client/osci/dialog/FleetDlg.py:313 client/osci/dialog/GlobalQueuesDlg.py:195
-#: client/osci/dialog/LoginDlg.py:129 client/osci/dialog/MainGameDlg.py:181
-#: client/osci/dialog/MainGameDlg.py:184 client/osci/dialog/MessagesDlg.py:319
+#: client/osci/dialog/LoginDlg.py:129 client/osci/dialog/MainGameDlg.py:178
+#: client/osci/dialog/MainGameDlg.py:181 client/osci/dialog/MessagesDlg.py:319
 #: client/osci/dialog/MinefieldDlg.py:81 client/osci/dialog/NewTaskDlg.py:310
 #: client/osci/dialog/ResearchDlg.py:310
 #: client/osci/dialog/StarSystemDlg.py:967
 #: client/osci/dialog/StarSystemDlg.py:1022
 #: client/osci/dialog/StructTaskDlg.py:246 client/osci/dialog/TechInfoDlg.py:48
-#: client/osci/dialog/UpdateDlg.py:258
+#: client/osci/dialog/UpdateDlg.py:299
 msgid "Yes"
 msgstr "Ja"
 
 #: client/osci/dialog/ConstructionDlg.py:362 client/osci/dialog/FleetDlg.py:309
 #: client/osci/dialog/FleetDlg.py:313 client/osci/dialog/GalaxyRestartDlg.py:50
 #: client/osci/dialog/GlobalQueuesDlg.py:195 client/osci/dialog/LoginDlg.py:129
-#: client/osci/dialog/MainGameDlg.py:180 client/osci/dialog/MainGameDlg.py:185
+#: client/osci/dialog/MainGameDlg.py:177 client/osci/dialog/MainGameDlg.py:182
 #: client/osci/dialog/MessagesDlg.py:319 client/osci/dialog/MinefieldDlg.py:83
 #: client/osci/dialog/NewTaskDlg.py:310 client/osci/dialog/ResearchDlg.py:310
 #: client/osci/dialog/StarSystemDlg.py:967
 #: client/osci/dialog/StarSystemDlg.py:1022
 #: client/osci/dialog/StructTaskDlg.py:246 client/osci/dialog/TechInfoDlg.py:50
-#: client/osci/dialog/UpdateDlg.py:257
+#: client/osci/dialog/UpdateDlg.py:298
 msgid "No"
 msgstr "Nein"
 
@@ -969,7 +965,7 @@ msgid "Base defence"
 msgstr "Basis Vert Wert"
 
 #: client/osci/dialog/ConstructionDlg.py:480
-#: client/osci/dialog/EmpireOverviewDlg.py:126
+#: client/osci/dialog/EmpireOverviewDlg.py:128
 msgid "Military power"
 msgstr "Militärische Stärke"
 
@@ -1027,7 +1023,7 @@ msgstr "Erstellen"
 
 #: client/osci/dialog/ConstructionDlg.py:510
 #: client/osci/dialog/DiplomacyDlg.py:422
-#: client/osci/dialog/EmpireOverviewDlg.py:277
+#: client/osci/dialog/EmpireOverviewDlg.py:279
 #: client/osci/dialog/EventsDlg.py:190 client/osci/dialog/FleetDlg.py:368
 #: client/osci/dialog/FleetSpecsDlg.py:272
 #: client/osci/dialog/FleetsAnalysisDlg.py:156
@@ -1040,7 +1036,7 @@ msgstr "Erstellen"
 #: client/osci/dialog/ProblemsDlg.py:524 client/osci/dialog/ResearchDlg.py:370
 #: client/osci/dialog/StarSystemDlg.py:1222
 #: client/osci/dialog/SystemOverviewDlg.py:240
-#: client/osci/dialog/TechInfoDlg.py:413 client/osci/dialog/_Template.py:73
+#: client/osci/dialog/TechInfoDlg.py:422 client/osci/dialog/_Template.py:73
 msgid "Close"
 msgstr "Schließen"
 
@@ -1101,7 +1097,7 @@ msgstr "Ausführen des ÄNDERE PAKT BEDINGUNGEN Kommandos..."
 msgid "Executing ELECT command..."
 msgstr "Ausführen des WÄHLE Kommandos..."
 
-#: client/osci/dialog/DiplomacyDlg.py:361 client/osci/dialog/MainGameDlg.py:353
+#: client/osci/dialog/DiplomacyDlg.py:361 client/osci/dialog/MainGameDlg.py:342
 #: client/osci/dialog/MapOverlayDlg.py:133
 msgid "Diplomacy"
 msgstr "Diplomatie"
@@ -1111,21 +1107,21 @@ msgid "Relation"
 msgstr "Beziehung"
 
 #: client/osci/dialog/DiplomacyDlg.py:373
-#: client/osci/dialog/EmpireOverviewDlg.py:115
+#: client/osci/dialog/EmpireOverviewDlg.py:117
 #: client/osci/dialog/StarSystemDlg.py:1300
 msgid "Population"
 msgstr "Bevölkerung"
 
 #: client/osci/dialog/DiplomacyDlg.py:374
-#: client/osci/dialog/EmpireOverviewDlg.py:120
-#: client/osci/dialog/EmpireOverviewDlg.py:283
-#: client/osci/dialog/MainGameDlg.py:357 client/osci/dialog/MainGameDlg.py:394
+#: client/osci/dialog/EmpireOverviewDlg.py:122
+#: client/osci/dialog/EmpireOverviewDlg.py:285
+#: client/osci/dialog/MainGameDlg.py:346 client/osci/dialog/MainGameDlg.py:383
 #: client/osci/dialog/ProblemsDlg.py:507
 msgid "Planets"
 msgstr "Planeten"
 
 #: client/osci/dialog/DiplomacyDlg.py:375
-#: client/osci/dialog/EmpireOverviewDlg.py:121
+#: client/osci/dialog/EmpireOverviewDlg.py:123
 #: client/osci/dialog/PlanetsAnalysisDlg.py:132
 #: client/osci/dialog/StarSystemDlg.py:1262
 msgid "Structures"
@@ -1135,7 +1131,7 @@ msgstr "Gebäude"
 msgid "Production"
 msgstr "Produktion"
 
-#: client/osci/dialog/DiplomacyDlg.py:377 client/osci/dialog/MainGameDlg.py:351
+#: client/osci/dialog/DiplomacyDlg.py:377 client/osci/dialog/MainGameDlg.py:340
 #: client/osci/dialog/ProblemsDlg.py:418 client/osci/dialog/ProblemsDlg.py:429
 #: client/osci/dialog/ProblemsDlg.py:511 client/osci/dialog/ResearchDlg.py:363
 #: client/osci/dialog/ResearchDlg.py:400
@@ -1235,169 +1231,169 @@ msgstr "Sie haben das Recht die Galaxie zu beenden."
 msgid "Strategic resources:"
 msgstr "Strategische Ressourcen:"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:114
+#: client/osci/dialog/EmpireOverviewDlg.py:116
 msgid "Statistics:"
 msgstr "Statistik:"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:117
+#: client/osci/dialog/EmpireOverviewDlg.py:119
 msgid "unused"
 msgstr "ungenutzt"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:117
 #: client/osci/dialog/EmpireOverviewDlg.py:119
+#: client/osci/dialog/EmpireOverviewDlg.py:121
 msgid "Gov. power"
 msgstr "Macht der Regierung"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:122
-#: client/osci/dialog/EmpireOverviewDlg.py:148
-#: client/osci/dialog/EmpireOverviewDlg.py:176
+#: client/osci/dialog/EmpireOverviewDlg.py:124
+#: client/osci/dialog/EmpireOverviewDlg.py:150
+#: client/osci/dialog/EmpireOverviewDlg.py:178
 msgid "Raw production"
 msgstr "Brutto Produktion"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:123
-#: client/osci/dialog/EmpireOverviewDlg.py:170
+#: client/osci/dialog/EmpireOverviewDlg.py:125
+#: client/osci/dialog/EmpireOverviewDlg.py:172
 msgid "Total production"
 msgstr "Gesamtproduktion"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:124
+#: client/osci/dialog/EmpireOverviewDlg.py:126
 msgid "Raw research"
 msgstr "Brutto Forschung"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:125
+#: client/osci/dialog/EmpireOverviewDlg.py:127
 msgid "Total reseach"
 msgstr "Gesamtforschung"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:129
+#: client/osci/dialog/EmpireOverviewDlg.py:131
 msgid "Fame"
 msgstr "Ruhm"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:132
+#: client/osci/dialog/EmpireOverviewDlg.py:134
 msgid "production eff."
 msgstr "Produktion eff."
 
 # ??? stimmt das ?
 # Don't know if this translation is right...
-#: client/osci/dialog/EmpireOverviewDlg.py:135
+#: client/osci/dialog/EmpireOverviewDlg.py:137
 msgid "New colony on planet with TL3 resouce cost"
 msgstr "Kosten für eine neue Kolonie auf einem Planeten mit TL3 Ressource"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:139
+#: client/osci/dialog/EmpireOverviewDlg.py:141
 #, fuzzy
 msgid "New colony cost multiplier"
 msgstr "Kosten für neue Kolonien"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:143
+#: client/osci/dialog/EmpireOverviewDlg.py:145
 msgid "(hover over system/planet to view actual cost)"
 msgstr ""
 
-#: client/osci/dialog/EmpireOverviewDlg.py:147
+#: client/osci/dialog/EmpireOverviewDlg.py:149
 msgid "Production:"
 msgstr "Produktion:"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:152
+#: client/osci/dialog/EmpireOverviewDlg.py:154
 msgid "Unused production"
 msgstr "Ungenützte Produktion"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:152
-#: client/osci/dialog/EmpireOverviewDlg.py:167
+#: client/osci/dialog/EmpireOverviewDlg.py:154
+#: client/osci/dialog/EmpireOverviewDlg.py:169
 msgid "effectivity"
 msgstr "Effektivität"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:161
+#: client/osci/dialog/EmpireOverviewDlg.py:163
 msgid "Fleet support"
 msgstr "Flotten Unterhalt"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:163
+#: client/osci/dialog/EmpireOverviewDlg.py:165
 msgid "first"
 msgstr "die ersten"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:165
+#: client/osci/dialog/EmpireOverviewDlg.py:167
 msgid "CP is free"
 msgstr "PP sind frei"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:169
-#: client/osci/dialog/EmpireOverviewDlg.py:174
+#: client/osci/dialog/EmpireOverviewDlg.py:171
+#: client/osci/dialog/EmpireOverviewDlg.py:176
 msgid "Empire effectivity"
 msgstr "Effektivität des Imperiums"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:173
+#: client/osci/dialog/EmpireOverviewDlg.py:175
 msgid "Research:"
 msgstr "Forschung:"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:177
+#: client/osci/dialog/EmpireOverviewDlg.py:179
 msgid "Real production"
 msgstr "Reelle Produktion"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:182
+#: client/osci/dialog/EmpireOverviewDlg.py:184
 msgid "Population support"
 msgstr "Bev. Unterhalt"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:183
+#: client/osci/dialog/EmpireOverviewDlg.py:185
 msgid "From pacts"
 msgstr "Aus Päkten"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:184
+#: client/osci/dialog/EmpireOverviewDlg.py:186
 msgid "Total research"
 msgstr "Gesamtforschung"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:199
+#: client/osci/dialog/EmpireOverviewDlg.py:201
 msgid "Fleet:"
 msgstr "Flotte :"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:200
+#: client/osci/dialog/EmpireOverviewDlg.py:202
 msgid "CP to support"
 msgstr "PP für Unterhalt"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:200
+#: client/osci/dialog/EmpireOverviewDlg.py:202
 msgid "Upgrade Pool"
 msgstr "Aufstufungs Pool"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:201
+#: client/osci/dialog/EmpireOverviewDlg.py:203
 msgid "Small ships"
 msgstr "Kleine Schiffe"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:201
-#: client/osci/dialog/EmpireOverviewDlg.py:202
 #: client/osci/dialog/EmpireOverviewDlg.py:203
+#: client/osci/dialog/EmpireOverviewDlg.py:204
+#: client/osci/dialog/EmpireOverviewDlg.py:205
 msgid "civ"
 msgstr "ziv."
 
-#: client/osci/dialog/EmpireOverviewDlg.py:201
-#: client/osci/dialog/EmpireOverviewDlg.py:202
 #: client/osci/dialog/EmpireOverviewDlg.py:203
+#: client/osci/dialog/EmpireOverviewDlg.py:204
+#: client/osci/dialog/EmpireOverviewDlg.py:205
 msgid "mil"
 msgstr "mil."
 
-#: client/osci/dialog/EmpireOverviewDlg.py:201
-#: client/osci/dialog/EmpireOverviewDlg.py:202
 #: client/osci/dialog/EmpireOverviewDlg.py:203
+#: client/osci/dialog/EmpireOverviewDlg.py:204
+#: client/osci/dialog/EmpireOverviewDlg.py:205
 #: client/osci/dialog/FleetsOverviewDlg.py:242
 msgid "MP"
 msgstr "MP"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:202
+#: client/osci/dialog/EmpireOverviewDlg.py:204
 msgid "Medium ships"
 msgstr "Mittelgroße Schiffe"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:203
+#: client/osci/dialog/EmpireOverviewDlg.py:205
 msgid "Large ships"
 msgstr "Große Schiffe"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:261
+#: client/osci/dialog/EmpireOverviewDlg.py:263
 msgid "Empire Overview"
 msgstr "Imperiumsübersicht"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:276
-#: client/osci/dialog/MainGameDlg.py:390 client/osci/dialog/MainGameDlg.py:400
+#: client/osci/dialog/EmpireOverviewDlg.py:278
+#: client/osci/dialog/MainGameDlg.py:379 client/osci/dialog/MainGameDlg.py:389
 msgid "Analysis"
 msgstr "Analyse"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:280
+#: client/osci/dialog/EmpireOverviewDlg.py:282
 msgid "Field of analysis"
 msgstr "Analyseauswahl"
 
-#: client/osci/dialog/EmpireOverviewDlg.py:284
-#: client/osci/dialog/MainGameDlg.py:359 client/osci/dialog/MainGameDlg.py:386
+#: client/osci/dialog/EmpireOverviewDlg.py:286
+#: client/osci/dialog/MainGameDlg.py:348 client/osci/dialog/MainGameDlg.py:375
 #: client/osci/dialog/ProblemsDlg.py:509
 msgid "Fleets"
 msgstr "Flotten"
@@ -2066,7 +2062,7 @@ msgid "Enter a number."
 msgstr "Zahl eintragen."
 
 #: client/osci/dialog/FleetSplitDlg.py:505
-#: client/osci/dialog/TechInfoDlg.py:382 client/osci/dialog/_Template.py:66
+#: client/osci/dialog/TechInfoDlg.py:391 client/osci/dialog/_Template.py:66
 msgid "Split Fleet"
 msgstr "Teile Flotte"
 
@@ -2328,7 +2324,7 @@ msgid "Are you really really sure you want to restart this galaxy?"
 msgstr "Wollen Sie wirklich die Galaxie neu starten?"
 
 #: client/osci/dialog/GalaxyRestartDlg.py:74
-#: client/osci/dialog/MainGameDlg.py:377
+#: client/osci/dialog/MainGameDlg.py:366
 msgid "Galaxy restart"
 msgstr "Galaxie Neustart"
 
@@ -2345,6 +2341,7 @@ msgstr ""
 "eingeben."
 
 #: client/osci/dialog/GalaxyRestartDlg.py:91
+#: client/osci/dialog/UpdateDlg.py:175
 msgid "Restart"
 msgstr "Neustart"
 
@@ -2548,7 +2545,7 @@ msgstr "Anmelden"
 msgid "Password"
 msgstr "Passwort"
 
-#: client/osci/dialog/LoginDlg.py:226 client/osci/dialog/MainGameDlg.py:378
+#: client/osci/dialog/LoginDlg.py:226 client/osci/dialog/MainGameDlg.py:367
 #: client/osci/dialog/NewGlobalTaskDlg.py:306
 #: client/osci/dialog/NewTaskDlg.py:444 client/osci/dialog/OptionsDlg.py:529
 #: client/osci/dialog/StructTaskDlg.py:379
@@ -2571,33 +2568,29 @@ msgstr "Abmelden und Beenden..."
 msgid "Cannot select object on map"
 msgstr "Kann Objekt auf der Karte nicht auswählen"
 
-#: client/osci/dialog/MainGameDlg.py:180
+#: client/osci/dialog/MainGameDlg.py:177
 msgid "Are you sure to resign current game?"
 msgstr "Sind Sie sicher, daß sie das aktuelle Spiel aufgeben wollen?"
 
-#: client/osci/dialog/MainGameDlg.py:184
+#: client/osci/dialog/MainGameDlg.py:181
 msgid "Save the current starmap view as an image?"
 msgstr "Speichere das aktuelle Sternenbild als Image?"
 
-#: client/osci/dialog/MainGameDlg.py:191
+#: client/osci/dialog/MainGameDlg.py:188
 msgid "File saved as %s"
 msgstr "Datei gespeichert als %s"
 
-#: client/osci/dialog/MainGameDlg.py:203
+#: client/osci/dialog/MainGameDlg.py:200
 msgid "Galaxy restart in progress..."
 msgstr "Galaxieneustart in Durchführung..."
 
-#: client/osci/dialog/MainGameDlg.py:265
+#: client/osci/dialog/MainGameDlg.py:262
 msgid "Only imperator elected three times and more can restart galaxy."
 msgstr ""
 "Nur ein Imperator, der drei mal oder öfter gewählt wurde kann die Galaxie "
 "neu starten."
 
-#: client/osci/dialog/MainGameDlg.py:339
-msgid "Server sponsored by K2 Software"
-msgstr "Server gesponsert von K2 Software"
-
-#: client/osci/dialog/MainGameDlg.py:349
+#: client/osci/dialog/MainGameDlg.py:338
 msgid "Messages"
 msgstr "Nachrichten"
 
@@ -2605,62 +2598,62 @@ msgstr "Nachrichten"
 # Konstruktion bzw Design
 # Konstr. Punkte
 # Kompromiss : Erstellen
-#: client/osci/dialog/MainGameDlg.py:355
+#: client/osci/dialog/MainGameDlg.py:344
 #: client/osci/dialog/NewGlobalTaskDlg.py:267
 #: client/osci/dialog/NewTaskDlg.py:381
 msgid "Constr"
 msgstr "Erstellen"
 
-#: client/osci/dialog/MainGameDlg.py:361
+#: client/osci/dialog/MainGameDlg.py:350
 msgid "Overview"
 msgstr "Übersicht"
 
-#: client/osci/dialog/MainGameDlg.py:364
+#: client/osci/dialog/MainGameDlg.py:353
 #: client/osci/dialog/StarSystemDlg.py:1390
 msgid "Problems"
 msgstr "Probleme"
 
-#: client/osci/dialog/MainGameDlg.py:366 client/osci/dialog/MainGameDlg.py:371
+#: client/osci/dialog/MainGameDlg.py:355 client/osci/dialog/MainGameDlg.py:360
 msgid "Menu"
 msgstr "Menü"
 
-#: client/osci/dialog/MainGameDlg.py:374
+#: client/osci/dialog/MainGameDlg.py:363
 msgid "Find system"
 msgstr "System finden"
 
-#: client/osci/dialog/MainGameDlg.py:375
+#: client/osci/dialog/MainGameDlg.py:364
 msgid "Statistics"
 msgstr "Statistik"
 
-#: client/osci/dialog/MainGameDlg.py:376
+#: client/osci/dialog/MainGameDlg.py:365
 msgid "Save Starmap"
 msgstr "Sternenbild"
 
-#: client/osci/dialog/MainGameDlg.py:379 client/osci/dialog/MainGameDlg.py:381
+#: client/osci/dialog/MainGameDlg.py:368 client/osci/dialog/MainGameDlg.py:370
 msgid "--------"
 msgstr "--------"
 
-#: client/osci/dialog/MainGameDlg.py:380
+#: client/osci/dialog/MainGameDlg.py:369
 msgid "Resign"
 msgstr "Aufgeben"
 
-#: client/osci/dialog/MainGameDlg.py:382 client/osci/dialog/UpdateDlg.py:240
+#: client/osci/dialog/MainGameDlg.py:371 client/osci/dialog/UpdateDlg.py:281
 msgid "Quit"
 msgstr "Beenden"
 
-#: client/osci/dialog/MainGameDlg.py:389
+#: client/osci/dialog/MainGameDlg.py:378
 msgid "Fleet List"
 msgstr "Flottenliste"
 
-#: client/osci/dialog/MainGameDlg.py:397
+#: client/osci/dialog/MainGameDlg.py:386
 msgid "Planet List"
 msgstr "Planetenliste"
 
-#: client/osci/dialog/MainGameDlg.py:398
+#: client/osci/dialog/MainGameDlg.py:387
 msgid "System List"
 msgstr "Systemliste"
 
-#: client/osci/dialog/MainGameDlg.py:399
+#: client/osci/dialog/MainGameDlg.py:388
 #, fuzzy
 msgid "Global queues"
 msgstr "Liste der Vorgänge"
@@ -4835,31 +4828,31 @@ msgstr "Gerüchte:"
 msgid "No information available"
 msgstr "Keine Daten verfügbar"
 
-#: client/osci/dialog/TechInfoDlg.py:391
+#: client/osci/dialog/TechInfoDlg.py:400
 msgid "Property"
 msgstr "Eigentum"
 
-#: client/osci/dialog/TechInfoDlg.py:392
+#: client/osci/dialog/TechInfoDlg.py:401
 msgid "Value"
 msgstr "Wert"
 
-#: client/osci/dialog/TechInfoDlg.py:394
+#: client/osci/dialog/TechInfoDlg.py:403
 msgid "Structure"
 msgstr "Gebäude"
 
-#: client/osci/dialog/TechInfoDlg.py:396
+#: client/osci/dialog/TechInfoDlg.py:405
 msgid "Ship Hull"
 msgstr "Schiffsklasse"
 
-#: client/osci/dialog/TechInfoDlg.py:398
+#: client/osci/dialog/TechInfoDlg.py:407
 msgid "Ship Eq."
 msgstr "Schiffs Eq."
 
-#: client/osci/dialog/TechInfoDlg.py:400
+#: client/osci/dialog/TechInfoDlg.py:409
 msgid "Project"
 msgstr "Projekt"
 
-#: client/osci/dialog/TechInfoDlg.py:407
+#: client/osci/dialog/TechInfoDlg.py:416
 msgid "Description"
 msgstr "Erklärung"
 
@@ -4880,29 +4873,37 @@ msgstr ""
 msgid "Cannot finish download: %(s)"
 msgstr ""
 
-#: client/osci/dialog/UpdateDlg.py:182
-msgid "Update skipped."
+#: client/osci/dialog/UpdateDlg.py:172
+msgid "Game will now restart itself."
+msgstr ""
+
+#: client/osci/dialog/UpdateDlg.py:179
+msgid "Outer Space Update Complete"
 msgstr ""
 
 #: client/osci/dialog/UpdateDlg.py:223
+msgid "Update skipped."
+msgstr ""
+
+#: client/osci/dialog/UpdateDlg.py:264
 msgid ""
 "Server requires client version %s. It is recommended to update your client."
 msgstr ""
 
-#: client/osci/dialog/UpdateDlg.py:225
+#: client/osci/dialog/UpdateDlg.py:266
 msgid "Please update your git repo to tag \"%s\""
 msgstr ""
 
-#: client/osci/dialog/UpdateDlg.py:234
+#: client/osci/dialog/UpdateDlg.py:275
 msgid ""
 "Server requires client version %s. It is necessary to update your client."
 msgstr ""
 
-#: client/osci/dialog/UpdateDlg.py:236
+#: client/osci/dialog/UpdateDlg.py:277
 msgid "Do you want Outer Space to perform update?"
 msgstr ""
 
-#: client/osci/dialog/UpdateDlg.py:248
+#: client/osci/dialog/UpdateDlg.py:289
 msgid "Outer Space Update Available"
 msgstr ""
 
@@ -5686,6 +5687,12 @@ msgstr "reparieren %d%%"
 #: client/osci/sequip.py:84
 msgid "repair %d"
 msgstr "Reparatur %d"
+
+#~ msgid "Server sponsored by:"
+#~ msgstr "Server gesponsert von:"
+
+#~ msgid "Server sponsored by K2 Software"
+#~ msgstr "Server gesponsert von K2 Software"
 
 #, fuzzy
 #~ msgid "Select Language"

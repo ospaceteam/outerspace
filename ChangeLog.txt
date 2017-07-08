@@ -1,6 +1,9 @@
 ﻿Outer Space Change Log
 ======================
 
+[2017-07-08]
+- Revision bump to 0.5.70 [dahaic]
+
 [2017-06-05]
 - Granularity of strategic resources [dahaic]
   Strategic resources can now be used on more granular level. All ship
