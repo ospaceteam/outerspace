@@ -87,12 +87,22 @@ def runAIClient(options):
     else:
         raise Exception, 'You have to provide password.'
 
-    client.login(options.game, login, password)
+    if client.login(options.game, login, password):
+        if options.test:
+            client.logout()
+            return True
+        # event loop
+        client.updateDatabase()
+        ai.run(client)
+        client.logout()
+        log.debug("Shut down")
+    else:
+        return False
+
+
     # event loop
     client.updateDatabase()
     ai.run(client)
-
     client.logout()
-
     log.debug("Shut down")
 

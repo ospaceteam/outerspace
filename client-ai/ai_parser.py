@@ -34,6 +34,15 @@ class AIRecord:
     def __repr__(self):
         return str(self.__dict__)
 
+    def __str__(self):
+        return str(self.__dict__)
+
+    def __hash__(self):
+        return hash(str(self))
+
+    def __eq__(self, other):
+        return hash(self) == hash(other)
+
 class AIRecordEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, AIRecord):
@@ -84,6 +93,10 @@ class AIList:
         because game doesn't know yet, to which galaxy will the player go.
 
         """
+        if login in self.getLogins():
+            # this way, we make sure login is unique key
+            # removal of obviously obsolete record
+            self.remove(login)
         record = AIRecord()
         record.login = login
         record.password = password
@@ -91,12 +104,17 @@ class AIList:
         self.records.append(record)
         self._save()
 
-    def remove(self, login):
+    def remove(self, login, password=None):
         """ Removes the line associated with login.
 
         """
         for record in self.records[:]:
-            if record.gameName == self.gameName and record.login == login:
+            if record.login == login:
+                if password and record.password != password:
+                    # this shouldn't happen in fully automated environment
+                    continue
+                log.debug("Removing record of {0} in {1}".format(record.login,
+                                                                 self.gameName))
                 self.records.remove(record)
         self._save()
 
@@ -104,7 +122,7 @@ class AIList:
         return self.records
 
     def getLogins(self):
-        return self.records
+        return map(lambda x: x.login, self.records)
 
     def removeAll(self):
         self.records = []
