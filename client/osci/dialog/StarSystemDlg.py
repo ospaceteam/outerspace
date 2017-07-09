@@ -333,16 +333,6 @@ class StarSystemDlg:
         )
         self.win.vPCPop.tooltip = tip
         self.win.vPCPop.statustip = tip
-        self.win.vPCConsumes.text = _('%s / %s') % (
-            str(getattr(planet, 'popEatBio', '?')),
-            str(getattr(planet, 'popEatEn', '?')),
-        )
-        tip =_('1000 units of population consumes %s bio, and %s en.') % (
-            str(getattr(planet, 'popEatBio', '?')),
-            str(getattr(planet, 'popEatEn', '?')),
-        )
-        self.win.vPCConsumes.tooltip = tip
-        self.win.vPCConsumes.statustip = tip
         # bio
         self.win.vPCStorBio.text = getattr(planet, 'storBio', '?')
         tip = _('Biomatter reserve: %s (max. %s, %+d last turn)') % (
@@ -426,6 +416,10 @@ class StarSystemDlg:
         else:
             self.win.vPCMorale.text = _('?')
         if hasattr(planet, 'shield'):
+            if not planet.shield:
+                self.win.vPCShield.visible = False
+            else:
+                self.win.vPCShield.visible = True
             self.win.vPCShield.text = _('%d') % planet.shield
             shieldTip = True
             if hasattr(planet,'prevShield'):
@@ -484,7 +478,11 @@ class StarSystemDlg:
             self.win.vPCMorale.statustip = info
         # strategic resource
         if hasattr(planet, "plStratRes"):
-            self.win.vPCSRes.text = _(gdata.stratRes[planet.plStratRes])
+            if planet.plStratRes:
+                self.win.vPCSRes.visible = True
+                self.win.vPCSRes.text = _(gdata.stratRes[planet.plStratRes])
+            else:
+                self.win.vPCSRes.visible = False
         else:
             self.win.vPCSRes.text = _("?")
         # show info
@@ -1225,88 +1223,92 @@ class StarSystemDlg:
             align = ui.ALIGN_W, tags = ['pl'])
         ui.Label(self.win, layout = (15, 11, 5, 1), id = 'vPDiameter',
             align = ui.ALIGN_E, tags = ['pl'])
-        ui.Label(self.win, layout = (0, 12, 5, 1), text = _('Environment'),
-            align = ui.ALIGN_W, tags = ['pl'])
-        ui.Label(self.win, layout = (5, 12, 5, 1), id = 'vPBioAbund',
+        # environment
+        ui.Label(self.win, layout = (0, 12, 4, 2), id = 'vPBioAbund',
+            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            tooltip=_("Environment"),
             align = ui.ALIGN_E, tags = ['pl'])
-        ui.Label(self.win, layout = (10, 12, 5, 1), text = _('Min. abundance'),
-            align = ui.ALIGN_W, tags = ['pl'])
-        ui.Label(self.win, layout = (15, 12, 5, 1), id = 'vPMinAbund',
+        # minerals
+        ui.Label(self.win, layout = (5, 12, 4, 2), id = 'vPMinAbund',
+            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            tooltip=_("Mineral abundance"),
             align = ui.ALIGN_E, tags = ['pl'])
-        ui.Label(self.win, layout = (0, 13, 6, 1), text = _('En. abundance'),
-            align = ui.ALIGN_W, tags = ['pl'])
-        ui.Label(self.win, layout = (5, 13, 5, 1), id = 'vPEnAbund',
+        # en. abundance
+        ui.Label(self.win, layout = (10, 12, 4, 2), id = 'vPEnAbund',
+            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            tooltip=_("Energy abundance"),
             align = ui.ALIGN_E, tags = ['pl'])
-        ui.Label(self.win, layout = (10, 13, 5, 1), text = _('Available space'),
-            align = ui.ALIGN_W, tags = ['pl'])
-        ui.Label(self.win, layout = (15, 13, 5, 1), id = 'vPSlotsAbund',
+        # available space
+        ui.Label(self.win, layout = (15, 12, 5, 2), id = 'vPSlotsAbund',
+            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            tooltip=_("Available space"),
             align = ui.ALIGN_E, tags = ['pl'])
         ## colony data
         ui.Title(self.win, layout = (0, 14, 20, 1), text = _('Colony data'),
             align = ui.ALIGN_W, font = 'normal-bold', tags = ['pl'])
-        ui.Label(self.win, layout = (0, 15, 5, 1), text = _('Population'),
-            align = ui.ALIGN_W, tags = ['pl'])
-        ui.Label(self.win, layout = (5, 15, 5, 1), id = 'vPCPop',
+        ui.Label(self.win, layout = (0, 15, 5, 2), id = 'vPCPop',
+            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            tooltip=_("Population"),
             align = ui.ALIGN_E, tags = ['pl'])
-        ui.Label(self.win, layout = (10, 15, 6, 1), text = _('Pop. support'),
-            align = ui.ALIGN_W, tags = ['pl'])
-        ui.Label(self.win, layout = (15, 15, 5, 1), id = 'vPCConsumes',
+        ui.Label(self.win, layout = (5, 15, 5, 2), id = 'vPCUnempl',
+            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            tooltip=_("Free workers"),
             align = ui.ALIGN_E, tags = ['pl'])
-        ui.Label(self.win, layout = (0, 16, 5, 1), text = _('Biomatter'),
-            align = ui.ALIGN_W, tags = ['pl'])
-        ui.Label(self.win, layout = (5, 16, 5, 1), id = 'vPCStorBio',
+        ui.Label(self.win, layout = (10, 15, 5, 2), id = 'vPCStorBio',
+            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            tooltip=_("Biomatter"),
             align = ui.ALIGN_E, tags = ['pl'])
-        ui.Label(self.win, layout = (0, 17, 5, 1), text = _('Energy'),
-            align = ui.ALIGN_W, tags = ['pl'])
-        ui.Label(self.win, layout = (5, 17, 5, 1), id = 'vPCStorEn',
+        ui.Label(self.win, layout = (15, 15, 5, 2), id = 'vPCStorEn',
+            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            tooltip=_("Energy"),
             align = ui.ALIGN_E, tags = ['pl'])
-        ui.Label(self.win, layout = (0, 19, 5, 1), text = _('Free workers'),
-            align = ui.ALIGN_W, tags = ['pl'])
-        ui.Label(self.win, layout = (5, 19, 5, 1), id = 'vPCUnempl',
+
+
+        ui.Label(self.win, layout = (0, 18, 7, 2), id = 'vPCProd',
+            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            tooltip=_("Construction pts"),
             align = ui.ALIGN_E, tags = ['pl'])
-        ui.Label(self.win, layout = (0, 20, 5, 1), text = _('Construction pts'),
-            align = ui.ALIGN_W, tags = ['pl'])
-        ui.Label(self.win, layout = (5, 20, 5, 1), id = 'vPCProd',
+        ui.Label(self.win, layout = (7, 18, 7, 2), id = 'vPCSci',
+            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            tooltip=_("Research pts"),
             align = ui.ALIGN_E, tags = ['pl'])
-        ui.Label(self.win, layout = (0, 21, 5, 1), text = _('Research pts'),
-            align = ui.ALIGN_W, tags = ['pl'])
-        ui.Label(self.win, layout = (5, 21, 5, 1), id = 'vPCSci',
+        ui.Label(self.win, layout = (14, 18, 6, 2), id = 'vPCMorale',
+            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            tooltip=_("Morale"),
             align = ui.ALIGN_E, tags = ['pl'])
-        ui.Label(self.win, layout = (0, 22, 5, 1), text = _('Env. status'),
-            align = ui.ALIGN_W, tags = ['pl'])
-        ui.Label(self.win, layout = (5, 22, 5, 1), id = 'vPCEnvStatus',
+
+
+        ui.Label(self.win, layout = (0, 21, 7, 2), id = 'vPCEnvStatus',
+            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            tooltip=_("Environment status"),
             align = ui.ALIGN_E, tags = ['pl'])
-        ui.Label(self.win, layout = (10, 20, 5, 1), text = _('Strat. resource'),
-            align = ui.ALIGN_W, tags = ['pl'])
-        ui.Label(self.win, layout = (15, 20, 5, 1), id = 'vPCSRes',
+        ui.Label(self.win, layout = (7, 21, 7, 2), id = 'vPCShield',
+            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            tooltip=_("Planetary shield"),
             align = ui.ALIGN_E, tags = ['pl'])
-        ui.Label(self.win, layout = (10, 19, 5, 1), text = _('Morale'),
-            align = ui.ALIGN_W, tags = ['pl'])
-        ui.Label(self.win, layout = (15, 19, 5, 1), id = 'vPCMorale',
+        ui.Label(self.win, layout = (14, 21, 6, 2), id = 'vPCSRes',
+            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            tooltip=_("Strategic resource"),
             align = ui.ALIGN_E, tags = ['pl'])
-        ui.Label(self.win, layout = (10, 21, 5, 1), text = _('Planetary shield'),
-            align = ui.ALIGN_W, tags = ['pl'])
-        ui.Label(self.win, layout = (15, 21, 5, 1), id = 'vPCShield',
-            align = ui.ALIGN_E, tags = ['pl'])
-        ui.Button(self.win, layout = (10, 22, 10, 1), text = _('Show Terraforming Data'),
+        ui.Button(self.win, layout = (10, 23, 10, 1), text = _('Show Terraforming Data'),
             tags = ['pl'], action = 'onTerraformDataSelect')
         ui.Title(self.win, layout = (0, 24, 20, 1), text = _('System data'),
             align = ui.ALIGN_W, font = 'normal-bold', tags = ['pl'])
-        ui.Label(self.win, layout = (0, 25, 5, 1), text = _('Net Bio +/-'),
-            align = ui.ALIGN_W, tags = ['pl'])
-        ui.Label(self.win, layout = (5, 25, 5, 1), id = 'vSTPBio',
+        ui.Label(self.win, layout = (0, 25, 5, 2), id = 'vSTPBio',
+            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            tooltip=_("Net Bio +/-"),
             align = ui.ALIGN_E, tags = ['pl'])
-        ui.Label(self.win, layout = (10, 25, 5, 1), text = _('Net Energy +/-'),
-            align = ui.ALIGN_W, tags = ['pl'])
-        ui.Label(self.win, layout = (15, 25, 5, 1), id = 'vSTPEn',
+        ui.Label(self.win, layout = (5, 25, 5, 2), id = 'vSTPEn',
+            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            tooltip=_("Net Energy +/-"),
             align = ui.ALIGN_E, tags = ['pl'])
-        ui.Label(self.win, layout = (0, 26, 5, 1), text = _('Net Construction'),
-            align = ui.ALIGN_W, tags = ['pl'])
-        ui.Label(self.win, layout = (5, 26, 5, 1), id = 'vSTPProd',
+        ui.Label(self.win, layout = (10, 25, 5, 2), id = 'vSTPProd',
+            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            tooltip=_("Net Construction"),
             align = ui.ALIGN_E, tags = ['pl'])
-        ui.Label(self.win, layout = (10, 26, 5, 1), text = _('Net Research'),
-            align = ui.ALIGN_W, tags = ['pl'])
-        ui.Label(self.win, layout = (15, 26, 5, 1), id = 'vSTPSci',
+        ui.Label(self.win, layout = (15, 25, 5, 2), id = 'vSTPSci',
+            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            tooltip=_("Net Research"),
             align = ui.ALIGN_E, tags = ['pl'])
         ## info
         ui.Title(self.win, layout = (20, 20, 20, 1), id = 'vITitle',
