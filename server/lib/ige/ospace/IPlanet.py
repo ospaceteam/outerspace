@@ -251,24 +251,6 @@ class IPlanet(IObject):
     changeOwner.public = 1
     changeOwner.accLevel = AL_ADMIN
 
-    def setMinStorage(self, tran, obj, bio, en):
-        if bio < 0 or en < 0:
-            raise GameException('Values must be equal or greater than zero.')
-        obj.minBio = bio
-        obj.minEn = en
-
-    setMinStorage.public = 1
-    setMinStorage.accLevel = AL_FULL
-
-    def setAutoMinStorage(self, tran, obj, on):
-        if on != 0 and on != 1:
-            raise GameException('Must be 0 or 1')
-        obj.autoMinStor = on
-        return obj.autoMinStor
-
-    setAutoMinStorage.public = 1
-    setAutoMinStorage.accLevel = AL_FULL
-
     def setStructOn(self, tran, obj, slotIdx, on):
         if slotIdx >= len(obj.slots) or slotIdx < 0:
             raise GameException('No such structure.')
@@ -891,6 +873,9 @@ class IPlanet(IObject):
     def update(self, tran, obj):
         # clean up negative build queues and fix missing demolishStruct keys
         loopAgain = True
+        # 0.5.70 -> 0.5.71 removing option to set reserves, auto reserve only option
+        obj.autoMinStor = 1
+
         while loopAgain:
             deletedKey = False
             for key in range(0,len(obj.prodQueue)):

@@ -487,24 +487,6 @@ class StarSystemDlg:
             self.win.vPCSRes.text = _(gdata.stratRes[planet.plStratRes])
         else:
             self.win.vPCSRes.text = _("?")
-        # min storage
-        # auto storage regulation?
-        if hasattr(planet, 'minBio'):
-            self.win.setTagAttr('minStor', 'visible', 1)
-            text = _("Minimal storage %d.") % planet.minBio
-            self.win.vPCMinBio.text = str(planet.minBio)
-            self.win.vPCMinBio.tooltip = text
-            self.win.vPCMinBio.statustip = text
-            text = _("Minimal storage %d") % planet.minEn
-            self.win.vPCMinEn.text = str(planet.minEn)
-            self.win.vPCMinEn.tooltip = text
-            self.win.vPCMinEn.statustip = text
-            self.win.vPCAutoMinStor.enabled = 1
-            self.win.vPCAutoMinStor.pressed = planet.autoMinStor
-        else:
-            self.win.setTagAttr('minStor', 'visible', 0)
-            self.win.vPCAutoMinStor.enabled = 0
-            self.win.vPCAutoMinStor.pressed = 0
         # show info
         self.showPlInfo()
 
@@ -1128,41 +1110,6 @@ class StarSystemDlg:
     def onViewMinefield(self, widget, action, data):
         self.minefieldDlg.display(self.systemID)
 
-    def onChangeMinStorage(self, widget, action, data):
-        try:
-            bio = int(self.win.vPCMinBio.text)
-        except ValueError:
-            self.win.setStatus(_('Enter number into biomatter min. reserve field.'))
-            return
-        try:
-            en = int(self.win.vPCMinEn.text)
-        except ValueError:
-            self.win.setStatus(_('Enter number into energy min. reserve field.'))
-            return
-        try:
-            self.win.setStatus(_('Executing CHANGE RESERVES LIMITS command...'))
-            planet = client.get(self.planetID, noUpdate = 1)
-            client.cmdProxy.setMinStorage(self.planetID, bio, en)
-            planet.minBio = bio
-            planet.minMin = min
-            planet.minEn = en
-            self.showPlanet()
-            self.win.setStatus(_('Command has been executed.'))
-        except ige.GameException, e:
-            self.win.setStatus(e.args[0])
-            return
-
-    def onAutoMinStorage(self, widget, action, data):
-        try:
-            self.win.setStatus(_('Executing SWITCH AUTOMATIC REGULATION command...'))
-            planet = client.get(self.planetID, noUpdate = 1)
-            planet.autoMinStor = client.cmdProxy.setAutoMinStorage(self.planetID, not planet.autoMinStor)
-            self.showPlanet()
-            self.win.setStatus(_('Command has been executed.'))
-        except ige.GameException, e:
-            self.win.setStatus(e.args[0])
-            return
-
     def onLocateSystem(self, widget, action, data):
         self.locateDlg.display(self.systemID, self)
 
@@ -1309,24 +1256,10 @@ class StarSystemDlg:
             align = ui.ALIGN_W, tags = ['pl'])
         ui.Label(self.win, layout = (5, 16, 5, 1), id = 'vPCStorBio',
             align = ui.ALIGN_E, tags = ['pl'])
-        ui.Label(self.win, layout = (10, 16, 5, 1), text = _('Min. reserve'),
-            align = ui.ALIGN_W, tags = ['pl', 'minStor'])
-        ui.Entry(self.win, layout = (15, 16, 5, 1), id = 'vPCMinBio',
-            align = ui.ALIGN_E, tags = ['pl', 'minStor'])
         ui.Label(self.win, layout = (0, 17, 5, 1), text = _('Energy'),
             align = ui.ALIGN_W, tags = ['pl'])
         ui.Label(self.win, layout = (5, 17, 5, 1), id = 'vPCStorEn',
             align = ui.ALIGN_E, tags = ['pl'])
-        ui.Label(self.win, layout = (10, 17, 5, 1), text = _('Min. reserve'),
-            align = ui.ALIGN_W, tags = ['pl', 'minStor'])
-        ui.Entry(self.win, layout = (15, 17, 5, 1), id = 'vPCMinEn',
-            align = ui.ALIGN_E, tags = ['pl', 'minStor'])
-        ui.Button(self.win, layout = (15, 18, 4, 1), text = _('Change'),
-            tags = ['pl', 'minStor'], action = 'onChangeMinStorage')
-        ui.Button(self.win, layout = (19, 18, 1, 1), text = _('A'),
-            tags = ['pl', 'minStor'], action = 'onAutoMinStorage', toggle = 1,
-            tooltip = _('Automatic regulation on/off.'), id = 'vPCAutoMinStor',
-            statustip = _('Automatic regulation on/off.'))
         ui.Label(self.win, layout = (0, 19, 5, 1), text = _('Free workers'),
             align = ui.ALIGN_W, tags = ['pl'])
         ui.Label(self.win, layout = (5, 19, 5, 1), id = 'vPCUnempl',
