@@ -3,6 +3,11 @@
 
 [2017-07-09]
 - Hovering over planets in system dialog shows detailed info [dahaic]
+- Option to manually set bio/en reserves disabled. [dahaic]
+  This feature was too micromanagerial to do any good. And for new players
+  it usually meant to shoot themselves in a foot when they tried to use it.
+  From now on only automated reserve will be supported, which means 6 turns
+  of consumption.
 
 [2017-07-08]
 - Revision bump to 0.5.70 [dahaic]
