@@ -349,7 +349,7 @@ def drawButton(surface, widget):
         s2 = "focused"
     else:
         s2 = "enabled"
-    if widget.pressed:
+    if widget.pressed or widget.highlighted:
         s3 = "down"
     else:
         s3 = "up"

@@ -32,8 +32,10 @@ class Button(Widget):
         # flags
         self.__dict__['toggle'] = 0
         self.__dict__['pressed'] = 0
+        self.__dict__['highlighted'] = 0
         self.__dict__['action'] = None
         self.__dict__['rmbAction'] = None
+        self.__dict__['hoverAction'] = None
         self.__dict__['_processingMB1'] = 0
         self.__dict__['_processingMB3'] = 0
         self.processKWArguments(kwargs)
@@ -68,12 +70,18 @@ class Button(Widget):
         if (self.pressed or self.toggle) and self._processingMB1:
             self.theme.playButtonSound(self)
             self.pressed = not self.pressed
+        else:
+            self.highlighted = 0
+            self.processAction(self.hoverAction, self.highlighted)
         return Widget.onMouseOut(self)
 
     def onMouseOver(self):
         if self._processingMB1:
             self.theme.playButtonSound(self)
             self.pressed = not self.pressed
+        else:
+            self.highlighted = 1
+            self.processAction(self.hoverAction, self.highlighted)
         return Widget.onMouseOver(self)
 
     def onFocusLost(self):

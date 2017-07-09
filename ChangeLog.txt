@@ -8,6 +8,9 @@
   information useful to player.
 - Slightly better handling of fonts (kerning support) [dahaic]
 
+[2017-07-10]
+- Hovering over buildings and tasks in system dialog shows detailed info [dahaic]
+
 [2017-07-09]
 - Hovering over planets in system dialog shows detailed info [dahaic]
 - Option to manually set bio/en reserves disabled. [dahaic]
