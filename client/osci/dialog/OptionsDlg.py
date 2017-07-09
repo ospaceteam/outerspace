@@ -25,7 +25,7 @@ import re
 
 import pygame
 import pygameui as ui
-from osci import gdata
+from osci import gdata, res
 from ige.ospace.Const import *
 from ige import log
 import resources
@@ -425,6 +425,7 @@ class OptionsDlg:
         curTheme = self.twin.vThemes.selection[0].tTheme
         # set theme for ui
         ui.SkinableTheme.setSkin(os.path.join(resources.get("themes"), curTheme))
+        res.prepareUIIcons(ui.SkinableTheme.themeIcons)
         ui.SkinableTheme.loadMusic(gdata.config.defaults.mymusic)
         ui.SkinableTheme.playMusic()
         # update foreground colors

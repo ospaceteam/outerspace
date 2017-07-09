@@ -311,6 +311,7 @@ def runClient(options):
 
             # load resources
             osci.res.loadResources()
+            osci.res.prepareUIIcons(ui.SkinableTheme.themeIcons)
 
 
             # client

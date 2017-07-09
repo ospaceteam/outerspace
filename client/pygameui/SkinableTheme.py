@@ -117,9 +117,10 @@ def setSkin(directory = skinDir):
     # basic colors
     global themeForeground, themeBackground, themeTitleLine1, themeTitleLine2
     global themeHighlightbck, themeHighlightfrg, themeCritical, themeMajor
-    global themeMinor, themeNone, themeDisabled
+    global themeMinor, themeNone, themeDisabled, themeIcons
     global themeMusic
     themeForeground = hex2color(config.get("general", "foreground"))
+    themeIcons = hex2color(config.get("general", "icons"))
     themeBackground = hex2color(config.get("general", "background"))
     themeTitleLine1 = hex2color(config.get("general", "line1"))
     themeTitleLine2 = hex2color(config.get("general", "line2"))

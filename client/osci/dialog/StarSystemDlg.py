@@ -1225,69 +1225,69 @@ class StarSystemDlg:
             align = ui.ALIGN_E, tags = ['pl'])
         # environment
         ui.Label(self.win, layout = (0, 12, 4, 2), id = 'vPBioAbund',
-            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            icons=[(res.getUIIcon('planet_biomatter'), ui.ALIGN_W)],
             tooltip=_("Environment"),
             align = ui.ALIGN_E, tags = ['pl'])
         # minerals
         ui.Label(self.win, layout = (5, 12, 4, 2), id = 'vPMinAbund',
-            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            icons=[(res.getUIIcon('planet_minerals'), ui.ALIGN_W)],
             tooltip=_("Mineral abundance"),
             align = ui.ALIGN_E, tags = ['pl'])
         # en. abundance
         ui.Label(self.win, layout = (10, 12, 4, 2), id = 'vPEnAbund',
-            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            icons=[(res.getUIIcon('planet_energy'), ui.ALIGN_W)],
             tooltip=_("Energy abundance"),
             align = ui.ALIGN_E, tags = ['pl'])
         # available space
         ui.Label(self.win, layout = (15, 12, 5, 2), id = 'vPSlotsAbund',
-            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            icons=[(res.getUIIcon('planet_free_slots'), ui.ALIGN_W)],
             tooltip=_("Available space"),
             align = ui.ALIGN_E, tags = ['pl'])
         ## colony data
         ui.Title(self.win, layout = (0, 14, 20, 1), text = _('Colony data'),
             align = ui.ALIGN_W, font = 'normal-bold', tags = ['pl'])
         ui.Label(self.win, layout = (0, 15, 5, 2), id = 'vPCPop',
-            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            icons=[(res.getUIIcon('population'), ui.ALIGN_W)],
             tooltip=_("Population"),
             align = ui.ALIGN_E, tags = ['pl'])
         ui.Label(self.win, layout = (5, 15, 5, 2), id = 'vPCUnempl',
-            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            icons=[(res.getUIIcon('unemployed'), ui.ALIGN_W)],
             tooltip=_("Free workers"),
             align = ui.ALIGN_E, tags = ['pl'])
         ui.Label(self.win, layout = (10, 15, 5, 2), id = 'vPCStorBio',
-            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            icons=[(res.getUIIcon('bio_stored'), ui.ALIGN_W)],
             tooltip=_("Biomatter"),
             align = ui.ALIGN_E, tags = ['pl'])
         ui.Label(self.win, layout = (15, 15, 5, 2), id = 'vPCStorEn',
-            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            icons=[(res.getUIIcon('en_stored'), ui.ALIGN_W)],
             tooltip=_("Energy"),
             align = ui.ALIGN_E, tags = ['pl'])
 
 
         ui.Label(self.win, layout = (0, 18, 7, 2), id = 'vPCProd',
-            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            icons=[(res.getUIIcon('planet_cp_production'), ui.ALIGN_W)],
             tooltip=_("Construction pts"),
             align = ui.ALIGN_E, tags = ['pl'])
         ui.Label(self.win, layout = (7, 18, 7, 2), id = 'vPCSci',
-            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            icons=[(res.getUIIcon('planet_rp_production'), ui.ALIGN_W)],
             tooltip=_("Research pts"),
             align = ui.ALIGN_E, tags = ['pl'])
         ui.Label(self.win, layout = (14, 18, 6, 2), id = 'vPCMorale',
-            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            icons=[(res.getUIIcon('morale'), ui.ALIGN_W)],
             tooltip=_("Morale"),
             align = ui.ALIGN_E, tags = ['pl'])
 
 
         ui.Label(self.win, layout = (0, 21, 7, 2), id = 'vPCEnvStatus',
-            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            icons=[(res.getUIIcon('environment_status'), ui.ALIGN_W)],
             tooltip=_("Environment status"),
             align = ui.ALIGN_E, tags = ['pl'])
         ui.Label(self.win, layout = (7, 21, 7, 2), id = 'vPCShield',
-            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            icons=[(res.getUIIcon('planetary_shield'), ui.ALIGN_W)],
             tooltip=_("Planetary shield"),
             align = ui.ALIGN_E, tags = ['pl'])
         ui.Label(self.win, layout = (14, 21, 6, 2), id = 'vPCSRes',
-            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            icons=[(res.getUIIcon('strategic_resource'), ui.ALIGN_W)],
             tooltip=_("Strategic resource"),
             align = ui.ALIGN_E, tags = ['pl'])
         ui.Button(self.win, layout = (10, 23, 10, 1), text = _('Show Terraforming Data'),
@@ -1295,19 +1295,19 @@ class StarSystemDlg:
         ui.Title(self.win, layout = (0, 24, 20, 1), text = _('System data'),
             align = ui.ALIGN_W, font = 'normal-bold', tags = ['pl'])
         ui.Label(self.win, layout = (0, 25, 5, 2), id = 'vSTPBio',
-            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            icons=[(res.getUIIcon('system_biomatter'), ui.ALIGN_W)],
             tooltip=_("Net Bio +/-"),
             align = ui.ALIGN_E, tags = ['pl'])
         ui.Label(self.win, layout = (5, 25, 5, 2), id = 'vSTPEn',
-            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            icons=[(res.getUIIcon('system_energy'), ui.ALIGN_W)],
             tooltip=_("Net Energy +/-"),
             align = ui.ALIGN_E, tags = ['pl'])
         ui.Label(self.win, layout = (10, 25, 5, 2), id = 'vSTPProd',
-            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            icons=[(res.getUIIcon('system_cp_production'), ui.ALIGN_W)],
             tooltip=_("Net Construction"),
             align = ui.ALIGN_E, tags = ['pl'])
         ui.Label(self.win, layout = (15, 25, 5, 2), id = 'vSTPSci',
-            icons=[(res.getTechImg(1), ui.ALIGN_W)],
+            icons=[(res.getUIIcon('system_rp_production'), ui.ALIGN_W)],
             tooltip=_("Net Research"),
             align = ui.ALIGN_E, tags = ['pl'])
         ## info
