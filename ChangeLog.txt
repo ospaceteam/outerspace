@@ -1,6 +1,13 @@
 ﻿Outer Space Change Log
 ======================
 
+[2017-07-16]
+- Update of tooltips [dahaic]
+  Tooltips are now multilined, also distinguishing between title
+  which should contain description of the field, and body, which contains
+  information useful to player.
+- Slightly better handling of fonts (kerning support) [dahaic]
+
 [2017-07-09]
 - Hovering over planets in system dialog shows detailed info [dahaic]
 - Option to manually set bio/en reserves disabled. [dahaic]

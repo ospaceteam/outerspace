@@ -154,6 +154,7 @@ class StructTaskDlg:
                 icons = ((res.getTechImg(techID), ui.ALIGN_N),),
                 font = "small-bold",
                 align = ui.ALIGN_S,
+                tooltipTitle = _("Details"),
                 tooltip = "%s, %d %s, %s %d" % (tech.name, tech.buildProd,_("CP"),_("TL"), tech.level),
                 statustip = "%s, %d %s, %s %d" % (tech.name, tech.buildProd,_("CP"),_("TL"), tech.level),
             )

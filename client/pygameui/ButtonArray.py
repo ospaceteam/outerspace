@@ -120,6 +120,7 @@ class ButtonArray(MetaWidget):
                 button.align = item.align
                 button.icons = item.icons
                 button.tooltip = item.tooltip
+                button.tooltipTitle = item.tooltipTitle
                 button.statustip = item.statustip
                 button.font = item.font
                 button.data = item

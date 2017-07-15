@@ -31,6 +31,7 @@ class Item:
         self.children = []
         self.expanded = 0
         self.tooltip = None
+        self.tooltipTitle = None
         self.statustip = None
         self.hotkey = None
         self.hotkeymod = None

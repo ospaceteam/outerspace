@@ -18,6 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+import string
 import pygame
 from pygame.locals import *
 from Const import *
@@ -164,10 +165,13 @@ def createFont():
         if filename == None or os.path.exists(filename):
             initFont('small', filename, config.getint(section, "small"))
             initFont('small-bold', filename, config.getint(section, "small"), bold = 1)
+            initFont('small-italic', filename, config.getint(section, "small"), italic = 1)
             initFont('normal', filename, config.getint(section, "normal"))
             initFont('normal-bold', filename, config.getint(section, "normal"), bold = 1)
+            initFont('normal-italic', filename, config.getint(section, "normal"), italic = 1)
             initFont('large', filename, config.getint(section, "large"))
             initFont('large-bold', filename, config.getint(section, "large"), bold = 1)
+            initFont('large-italic', filename, config.getint(section, "large"), italic = 1)
             return
 
 def createBox(section):
@@ -404,6 +408,7 @@ themeHighlightfrg = 0x40, 0xf0, 0x40
 #themeGaugecolor = 0x00, 0x80, 0x00
 themeDefaultFont = 'normal'
 themeBoldFont = 'normal-bold'
+themeItalicFont = 'normal-italic'
 #themeSelectionFrg = 0x00, 0xd0, 0x00
 #themeSelectionBck = 0x40, 0x80, 0x40
 themeTitleLine1 = 0x30, 0x50, 0x30
@@ -751,30 +756,109 @@ def drawScrollSlider(surface, widget):
     return r
 
 def drawTooltip(surface, widget):
-    rect = getDRect(widget.rect)
+    # position rectangle is used only for fetching position
+    pos_r = getDRect(widget.rect)
+
+    # to know what we are dealing with, we have to render all the text first
     foreground = widget.foreground or themeForeground
-    font = widget.font or themeDefaultFont
-    # text
-    img = renderText(font, widget.text, 1, foreground)
-    r = getDRect(rect)
-    r.left += 20
-    screenWidth, screenHeight = pygame.display.get_surface().get_size()
-    if r.left + img.get_width() > screenWidth:
-        r.left = screenWidth - img.get_width() - 6
-    if r.left < 0:
-        r.left = 0
-    r.width = img.get_width() + 4
-    r.height = img.get_height() + 4
-    changed = Rect(r)
-    changed.width += 1
-    changed.height += 1
-    surface.fill(themeBackground, r)
-    pygame.draw.lines(surface, themeForeground, 1,
-        (r.topleft, r.topright, r.bottomright, r.bottomleft))
-    r.left += 2
-    r.top += 2
-    surface.blit(img, r)
-    return changed
+    title_font = widget.font or "small"
+    body_font = widget.font or themeDefaultFont
+    if not body_font.endswith('-italic'):
+        body_font = body_font + "-italic"
+
+    if widget.title:
+        title_img = renderText(title_font, widget.title, 1, foreground)
+        title_width = title_img.get_width()
+        title_height = title_img.get_height()
+        max_width = title_width
+        max_height = title_height
+    else:
+        title_width = 0
+        title_height = 0
+        max_width = 0
+        max_height = 0
+
+    text_images = []
+    if widget.text:
+        for line in string.split(widget.text, '\n'):
+            line_img = renderText(body_font, line, 1, foreground)
+            text_images += [line_img]
+            max_height += line_img.get_height()
+            max_width = max(max_width, line_img.get_width())
+
+    # now we have to decide how to fit the tooltip fully into the window
+    screen_width, screen_height = pygame.display.get_surface().get_size()
+    pos_r.left += 20
+    if pos_r.left + max_width > screen_width:
+        pos_r.left = max(0, screen_width - max_width)
+    if pos_r.top + max_height > screen_height:
+        pos_r.top = max(0, screen_height - max_height)
+
+    # title
+    title_r = getDRect(pos_r)
+    title_text_r = getDRect(title_r)
+    if widget.title:
+        title_text_r.width = title_width
+        title_text_r.height = title_height
+        # making 2 pixel free space around text
+        title_text_r.top += 2
+        title_text_r.left += 2
+        title_r.width = title_text_r.width + 4
+        title_r.height = title_text_r.height + 4
+
+    # body tooltip
+    body_r = getDRect(pos_r)
+    if widget.text:
+        body_r.top += title_r.height
+    body_text_r = getDRect(body_r)
+    body_height = 0
+    body_width = 0
+    for line_img in text_images:
+        body_height += line_img.get_height()
+        body_width = max(body_width, line_img.get_width())
+    body_text_r.height = body_height
+    body_text_r.width = body_width
+    # making 2 pixel free space around text
+    body_text_r.top += 2
+    body_text_r.left += 2
+    body_r.width = body_text_r.width + 4
+    body_r.height = body_text_r.height + 4
+
+    # let's draw!
+    # title
+    if widget.title:
+        surface.fill(themeBackground, title_r)
+        pygame.draw.lines(surface, themeForeground, 0,
+            (title_r.bottomleft, title_r.topleft, title_r.topright, title_r.bottomright))
+        surface.blit(title_img, title_text_r)
+
+    # body
+    if text_images:
+        surface.fill(themeBackground, body_r)
+        pygame.draw.lines(surface, themeForeground, 0,
+            (body_r.topright, body_r.bottomright, body_r.bottomleft, body_r.topleft))
+        for img in text_images:
+            surface.blit(img, body_text_r)
+            body_text_r.top += img.get_height()
+            body_text_r.height -= img.get_height()
+
+    # finishing touches
+    if text_images and widget.title:
+        pygame.draw.line(surface, themeForeground, body_r.topright, title_r.bottomright)
+    else:
+        # one of them is missing
+        # we have to close gap at the bottom of label rectangle
+        pygame.draw.line(surface, themeForeground, title_r.bottomleft, title_r.bottomright)
+        # explanation below
+
+
+    # there is probably bug in pygameui, having one pixel off evaluation of rects
+    title_r.height += 1
+    title_r.width += 1
+    body_r.width += 1
+    body_r.height += 1
+
+    return title_r, body_r
 
 def drawScrollbar(surface, widget):
     r = Rect(widget.rect)

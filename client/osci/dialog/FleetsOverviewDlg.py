@@ -73,6 +73,7 @@ class FleetsOverviewDlg:
             # shall be shown?
             fgColor = None
 
+            ownerTipTitle = ""
             ownerName = ""
             ownerNameTip = ""
 
@@ -101,6 +102,7 @@ class FleetsOverviewDlg:
                     owner = getattr(client.get(fleet.owner, noUpdate = 1), "name", res.getUnknownName())
                     ownerName = " (%s)" % owner
                     ownerNameTip = owner
+                    ownerTipTitle = _("Owner")
             else:
                 # asteroids has no owner
                 fgColor = res.getFFColorCode(0) #enemy
@@ -166,6 +168,7 @@ class FleetsOverviewDlg:
             # create ListBox Item for fleet
             item = ui.Item(
                 "%s %s" % (fleetname, ownerName),
+                tooltipTitle = ownerTipTitle,
                 tooltip = ownerNameTip,
                 tLocation = systemName,
                 tOrder = order,

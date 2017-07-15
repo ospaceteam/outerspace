@@ -118,6 +118,7 @@ class FleetDlg:
             text = _("?")
             info = None
         self.win.vFMaxSpeed.text = text
+        self.win.vFMaxSpeed.tooltipTitle = _("Details")
         self.win.vFMaxSpeed.tooltip = info
         self.win.vFMaxSpeed.statustip = info
         self.win.vFSignature.text =  getattr(fleet, 'signature', '?')

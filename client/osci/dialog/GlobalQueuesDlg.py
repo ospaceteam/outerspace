@@ -88,7 +88,7 @@ class GlobalQueuesDlg:
             else:
                 tech = client.getFullTechInfo(task.techID)
                 icons = ((res.getTechImg(task.techID), ui.ALIGN_NONE),)
-            item = ui.Item(text = str(task.quantity), font = 'small', align = ui.ALIGN_NE, icons = icons, tooltip = tech.name, statustip = tech.name, index = index, const = tech.buildProd*task.quantity)
+            item = ui.Item(text = str(task.quantity), font = 'small', align = ui.ALIGN_NE, icons = icons, tooltipTitle = "", tooltip = tech.name, statustip = tech.name, index = index, const = tech.buildProd*task.quantity)
             if task.isShip:
                 item.background = None
             else:
@@ -119,7 +119,7 @@ class GlobalQueuesDlg:
             task = self.vPQueues[self.activeQueue].items[data.index]
             self.activeIndex = data.index
             self.win.setTagAttr('data', 'visible', True)
-            self.win.vTaskName.text = task.tooltip
+            self.win.vTaskName.text = task.tooltipTitle
             self.win.vTaskQuantity.text = task.text
             self.win.vTaskConstPoints.text = task.const
 
@@ -211,7 +211,7 @@ class GlobalQueuesDlg:
 
         if self.activeIndex:
             task = self.vPQueues[self.activeQueue].items[self.activeIndex]
-            self.win.vTaskName.text = task.tooltip
+            self.win.vTaskName.text = task.tooltipTitle
             self.win.vTaskQuantity.text = task.text
             self.win.vTaskConstPoints.text = task.const
         self.update()
@@ -263,25 +263,25 @@ class GlobalQueuesDlg:
             tags = ['queue', 'data'])
         ui.Button(self.win, layout = (0, 18, 2, 1), id = 'vITFirst', text = _('<<'),
             tags = ['queue'], action = 'onMoveTaskFirstLast',
-            tooltip = _('Move task to first position in queue'), data = -1)
+            tooltipTitle = _('Move task to first position in queue'), data = -1)
         ui.Button(self.win, layout = (2, 18, 2, 1), id = 'vITPrev', text = _('<'),
             tags = ['queue'], action = 'onMoveTask', data = -1,
-            tooltip = _('Move task to previous position in queue'))
+            tooltipTitle = _('Move task to previous position in queue'))
         ui.Button(self.win, layout = (4, 18, 2, 1), id = 'vITNext', text = _('>'),
             tags = ['queue'], action = 'onMoveTask', data = 1,
-            tooltip = _('Move task to next position in queue'))
+            tooltipTitle = _('Move task to next position in queue'))
         ui.Button(self.win, layout = (6, 18, 2, 1), id = 'vITLast', text = _('>>'),
             tags = ['queue'], action = 'onMoveTaskFirstLast',
-            tooltip = _('Move task to last position in queue'), data = 1)
+            tooltipTitle = _('Move task to last position in queue'), data = 1)
         ui.Button(self.win, layout = (8, 18, 4, 1), text = _('Quantity'),
             tags = ['queue'], action = 'onQtyTask',
-            tooltip = _('Change task quantity'))
+            tooltipTitle = _('Change task quantity'))
         ui.Button(self.win, layout = (12, 18, 4, 1), text = _('Info'), id = "vITInfo",
             tags = ['queue'], action = 'onTaskInfo',
-            tooltip = _('Show task informations'))
+            tooltipTitle = _('Show task informations'))
         ui.Button(self.win, layout = (16, 18, 4, 1), text = _('Abort'),
             tags = ['queue'], action = 'onAbortTask',
-            tooltip = _('Abort task construction'))
+            tooltipTitle = _('Abort task construction'))
         # status bar + submit/cancel
         ui.TitleButton(self.win, layout = (15, 19, 5, 1), text = _('Close'), action = 'onClose')
         ui.Title(self.win, id = 'vStatusBar', layout = (0, 19, 15, 1), align = ui.ALIGN_W)

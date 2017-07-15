@@ -646,17 +646,17 @@ class OptionsDlg:
         ui.Check(self.win, layout = (23, 9, 8, 1), text = _('Show gate systems'), id = 'vShowGateSystems',
             checked = 1)
         ui.Check(self.win, layout = (7, 10, 8, 1), text = _('Show redirects'), id = 'vRedirects',
-            checked = 1, tooltip = _('Starmap hotkey: CTRL-R'))
+            checked = 1, tooltipTitle = _('Starmap hotkey:'), tooltip = _('CTRL-R'))
         ui.Check(self.win, layout = (15, 10, 8, 1), text = _('Show map grid'), id = 'vShowMapGrid',
-            checked = 1, tooltip = _('Starmap hotkey: CTRL-G'))
+            checked = 1, tooltipTitle = _('Starmap hotkey'), tooltip = _('CTRL-G'))
         ui.Check(self.win, layout = (23, 10, 8, 1), text = _('Alternate system info'), id = 'vShowAlternateView',
-            checked = 0, tooltip = _('Starmap hotkey: CTRL-A'))
+            checked = 0, tooltipTitle = _('Starmap hotkey'), tooltip = _('CTRL-A'))
         ui.Check(self.win, layout = (7, 11, 8, 1), text = _('Show map scanners'), id = 'vShowMapScanners',
-            checked = 1, tooltip = _('Starmap hotkey: CTRL-S'))
+            checked = 1, tooltipTitle = _('Starmap hotkey'), tooltip = _('CTRL-S'))
         ui.Check(self.win, layout = (15, 11, 8, 1), text = _('Show fleet lines'), id = 'vShowMapFleetLines',
-            checked = 1, tooltip = _('Starmap hotkey: CTRL-L'))
+            checked = 1, tooltipTitle = _('Starmap hotkey'), tooltip = _('CTRL-L'))
         ui.Check(self.win, layout = (23, 11, 8, 1), text = _('Show player zones'), id = 'vShowPlayerZones',
-            checked = 0, tooltip = _('Starmap hotkey: CTRL-P'))
+            checked = 0, tooltipTitle = _('Starmap hotkey'), tooltip = _('CTRL-P'))
 
         # Login settings
         ui.Title(self.win, layout = (7,13, 15, 1), text = _('Login settings'),

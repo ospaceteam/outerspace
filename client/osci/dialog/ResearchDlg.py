@@ -125,6 +125,7 @@ class ResearchDlg:
             if task.improveToMax and task.improvement < maxImprovement:
                 for impr in range(task.improvement+1,maxImprovement+1):
                     maxImpTotalSci += Utils.getTechRCost(player, task.techID, impr)
+            item.tooltipTitle = _("Details")
             item.tooltip = _("Research points %d/%d, change %d pts/turn.") % (task.currSci, researchSci, task.changeSci)
             item.statustip = item.tooltip
             item.tImpToMax = ["", "*"][task.improveToMax]

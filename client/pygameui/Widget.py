@@ -46,6 +46,7 @@ class Widget:
         self.__dict__['font'] = None
         self.__dict__['align'] = ALIGN_NONE
         self.__dict__['tooltip'] = None
+        self.__dict__['tooltipTitle'] = None
         self.__dict__['statustip'] = None
         self.__dict__['visible'] = 0
         self.__dict__['enabled'] = 1

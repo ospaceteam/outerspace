@@ -101,6 +101,7 @@ class DiplomacyDlg:
                     tFleetPwr = dipl.stats.fleetPwr,
                     tContact = (_("-"), _("Mobile"), _("Static"))[dipl.contactType],
                     foreground = colortemp,
+                    tooltipTitle = _("Relation"),
                     tooltip = _("Relation %d, change %+d") % (dipl.relation, dipl.relChng),
                     statustip = _("Relation %d, change %+d") % (dipl.relation, dipl.relChng),
                 )

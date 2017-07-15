@@ -48,7 +48,7 @@ except ImportError:
     reload(site)
     import pygame
 
-import pygame.image, pygame.font, pygame.time, pygame.version
+import pygame.image, pygame.ftfont, pygame.time, pygame.version
 import pygame.transform
 from pygame.locals import *
 
@@ -81,12 +81,12 @@ def drawBackground():
             (gdata.screen.get_height() - background.get_height()) / 2,
         )
     try:
-        font = pygame.font.Font(resources.get('fonts/DejaVuLGCSans.ttf'), 12)
+        font = pygame.ftfont.Font(resources.get('fonts/DejaVuLGCSans.ttf'), 12)
     except IOError:
         # this can happen on windows during update process, when directory
         # is moved already
         # TODO: proper fix is to use pygameui and caching
-        font = pygame.font.Font(None, 12)
+        font = pygame.ftfont.Font(None, 12)
     font.set_bold(1)
     color = 0x40, 0x70, 0x40
     #
@@ -225,7 +225,7 @@ def runClient(options):
 
             # step by step initialization
             #pygame.display.init()
-            #pygame.font.init()
+            #pygame.ftfont.init()
 
             # flags = HWSURFACE | DOUBLEBUF | FULLSCREEN
             # flags = HWSURFACE | FULLSCREEN

@@ -178,7 +178,7 @@ class ConstructionDlg:
             short = sequip.getShortDescr(eqID)
             long = sequip.getLongDescr(eqID)
             item = ui.Item(tech.name, techID = eqID, tNumber = self.eqIDs[eqID],
-                tData = short, tooltip = long, statustip = long)
+                tData = short, tooltipTitle = _("Details"), tooltip = long, statustip = long)
             if eqID == self.selectedEqID:
                 selected = item
             items.append(item)
