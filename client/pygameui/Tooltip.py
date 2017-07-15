@@ -28,6 +28,7 @@ class Tooltip(Widget):
         Widget.__init__(self, parent)
         # data
         self.text = None
+        self.title = None
         self.icon = None
         self.icons = []
         # flags

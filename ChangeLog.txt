@@ -1,6 +1,13 @@
 ﻿Outer Space Change Log
 ======================
 
+[2017-07-16]
+- Update of tooltips [dahaic]
+  Tooltips are now multilined, also distinguishing between title
+  which should contain description of the field, and body, which contains
+  information useful to player.
+- Slightly better handling of fonts (kerning support) [dahaic]
+
 [2017-07-09]
 - Hovering over planets in system dialog shows detailed info [dahaic]
 - Option to manually set bio/en reserves disabled. [dahaic]
@@ -8,6 +15,12 @@
   it usually meant to shoot themselves in a foot when they tried to use it.
   From now on only automated reserve will be supported, which means 6 turns
   of consumption.
+- Star system dialog got iconified [dahaic]
+  Presented values are now accompanied by icons, instead of text labels.
+  This should help readability of the dialog by removing big percentage of
+  text. It also makes dialog much easier to translate, as the translation
+  is no longer limited by length (As most of the text is in the tooltip)
+- Introduction of UI icons which are colored based on theme [dahaic]
 
 [2017-07-08]
 - Revision bump to 0.5.70 [dahaic]

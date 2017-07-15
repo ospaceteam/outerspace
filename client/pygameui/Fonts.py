@@ -18,7 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-from pygame.font import Font
+from pygame.ftfont import Font
 from types import StringType, UnicodeType
 
 __all__ = ['initFont', 'renderText', 'getTextSize', 'getLineSize']

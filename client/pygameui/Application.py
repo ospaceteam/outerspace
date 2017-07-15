@@ -82,9 +82,10 @@ class Application:
         elif evt.type == TIMEREVENT:
             # tooltips
             self.mouseOverCount += 1
-            if self.mouseOverCount == 15:
+            if self.mouseOverCount == 3:
                 # show tooltip
                 if self.mouseOverWidget:
+                    self.tooltip.title = self.mouseOverWidget.tooltipTitle
                     self.tooltip.text = self.mouseOverWidget.tooltip
                     self.tooltip.rect = Rect(pygame.mouse.get_pos(), (100, 100))
             # cursor
@@ -237,12 +238,14 @@ class Application:
             if self.mouseOverWidget:
                 self.mouseOverWidget.onMouseOut()
                 self.tooltip.text = None
+                self.tooltip.title = None
                 self.performFullUpdate()
             self.mouseOverWidget = widget
             self.mouseOverCount = 0
             if widget:
                 widget.onMouseOver()
                 self.tooltip.text = None
+                self.tooltip.title = None
                 self.performFullUpdate()
                 widget.parent.setTempStatus(widget.statustip)
                 return
@@ -274,9 +277,10 @@ class Application:
             else:
                 #@print " ", window, "invisible"
                 pass
-        if self.tooltip.text:
-            rect = self.theme.drawTooltip(surface, self.tooltip)
-            changed.append(rect)
+        if self.tooltip.title or self.tooltip.text:
+            title, body = self.theme.drawTooltip(surface, self.tooltip)
+            changed.append(title)
+            changed.append(body)
         self.tooltip.__dict__['_changeReported'] = 0
         self.redrawWidgets = {}
         #@print "CHANGED", changed

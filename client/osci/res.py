@@ -46,6 +46,7 @@ loginLogoImg = None
 structProblemImg = None
 structOffImg = None
 icons = {}
+ui_icons = {}
 
 def initialize():
     # needed for progress dlg
@@ -128,12 +129,21 @@ def loadResources():
     # load star imgs
     global icons
     icons = {}
-    for filename in glob.glob(resources.get('icons/*.png')):
+    for filename in glob.glob(resources.get('icons/[!ui_]*.png')):
         curr += 1
         if curr % 10 == 0:
             dlg.setProgress(_('Loading resources...'), curr)
         name = os.path.splitext(os.path.basename(filename))[0]
         icons[name] = pygame.image.load(filename).convert_alpha()
+    # load UI icons
+    global ui_icons
+    ui_icons = {}
+    for filename in glob.glob(resources.get('icons/ui_*.png')):
+        curr += 1
+        if curr % 10 == 0:
+            dlg.setProgress(_('Loading resources...'), curr)
+        name = os.path.splitext(os.path.basename(filename))[0]
+        ui_icons[name] = pygame.image.load(filename).convert_alpha()
     # load buttons
     global buttonImgs
     buttonImgs = {}
@@ -151,6 +161,14 @@ def loadResources():
     global structOffImg
     structOffImg = pygame.image.load(resources.get('struct_off.png')).convert_alpha()
     dlg.hide()
+
+def prepareUIIcons(color):
+    for image in ui_icons.values():
+        image.fill((0, 0, 0, 255), None, pygame.BLEND_RGBA_MULT)
+        image.fill(color[0:3] + (0,), None, pygame.BLEND_RGBA_ADD)
+
+def getUIIcon(icon_name):
+    return ui_icons["ui_" + str(icon_name)]
 
 def getTechImg(techID):
     return techImgs.get(techID, techImgs[0])

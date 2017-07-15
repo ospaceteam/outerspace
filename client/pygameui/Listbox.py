@@ -228,6 +228,7 @@ class Listbox(MetaWidget):
                 label = self.labels[index][index2]
                 label.text = item.getAsString(name)
                 label.tooltip = item.tooltip
+                label.tooltipTitle = item.tooltipTitle
                 label.statustip = item.statustip
                 label.font = item.font
                 label.foreground = item.foreground
@@ -273,6 +274,7 @@ class Listbox(MetaWidget):
                     label = self.labels[index][index2]
                     label.text = item.getAsString(name)
                     label.tooltip = item.tooltip
+                    label.tooltipTitle = item.tooltipTitle
                     label.statustip = item.statustip
                     label.font = item.font
                     label.enabled = 1
@@ -293,6 +295,7 @@ class Listbox(MetaWidget):
                 label.icons = None
                 label.data = None
                 label.tooltip = None
+                label.tooltipTitle = None
                 label.statustip = None
                 label.foreground = None
                 label.background = None
