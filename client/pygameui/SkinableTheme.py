@@ -776,8 +776,6 @@ def drawTooltip(surface, widget):
         max_width = title_width
         max_height = title_height
     else:
-        title_width = 0
-        title_height = 0
         max_width = 0
         max_height = 0
 
@@ -808,6 +806,10 @@ def drawTooltip(surface, widget):
         title_text_r.left += 2
         title_r.width = title_text_r.width + 4
         title_r.height = title_text_r.height + 4
+    else:
+        # have to zero the widget
+        title_r.width = 0
+        title_r.height = 0
 
     # body tooltip
     body_r = getDRect(pos_r)
@@ -848,11 +850,12 @@ def drawTooltip(surface, widget):
     # finishing touches
     if text_images and widget.title:
         pygame.draw.line(surface, themeForeground, body_r.topright, title_r.bottomright)
-    else:
-        # one of them is missing
-        # we have to close gap at the bottom of label rectangle
+    elif widget.title:
+        # closing bottom of title
         pygame.draw.line(surface, themeForeground, title_r.bottomleft, title_r.bottomright)
-        # explanation below
+    elif text_images:
+        # closing top of body
+        pygame.draw.line(surface, themeForeground, body_r.topleft, body_r.topright)
 
 
     # there is probably bug in pygameui, having one pixel off evaluation of rects
