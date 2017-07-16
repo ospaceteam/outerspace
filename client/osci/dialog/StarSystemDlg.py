@@ -1164,6 +1164,9 @@ class StarSystemDlg:
         self.queueWin.hide()
 
     def onCloseDlg(self, widget, action, data):
+        self.win.vSystemMap.systemID = None
+        self.win.vSystemMap.activeObjID = None
+        self.win.vSystemMap.selectedObjID = None
         self.hide()
 
     def createUI(self):
