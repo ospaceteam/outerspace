@@ -55,6 +55,7 @@ class Application:
         self.activeWidget = None
         self.mouseOverWidget = None
         self.mouseOverCount = 0
+        self.mouseOverThreshold = 2
         self.mouseLMBDouble = 0
         self.mouseRMBDouble = 0
         self.keyEvt = None
@@ -82,7 +83,7 @@ class Application:
         elif evt.type == TIMEREVENT:
             # tooltips
             self.mouseOverCount += 1
-            if self.mouseOverCount == 3:
+            if self.mouseOverCount == self.mouseOverThreshold:
                 # show tooltip
                 if self.mouseOverWidget:
                     self.tooltip.title = self.mouseOverWidget.tooltipTitle
@@ -149,6 +150,9 @@ class Application:
                     return self.focusedWindow.processMB3Up(evt)
             return evt
         elif evt.type == MOUSEMOTION:
+            if self.mouseOverCount < self.mouseOverThreshold:
+                # just moving across widget does not trigger tooltip
+                self.mouseOverCount = 0
             self.cursorPos = evt.pos
             if self.focusedWindow:
                 return self.focusedWindow.processMMotion(evt)
