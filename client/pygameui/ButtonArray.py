@@ -34,8 +34,11 @@ class ButtonArray(MetaWidget):
         self.buttons = []
         self.action = None
         self.rmbAction = None
+        self.hoverAction = None
         self.selected = None
         self.selectedButton = None
+        self.highlighted = None
+        self.highlightedButton = None
         self.buttonSize = (1, 1)
         self.rows = 0
         self.columns = 0
@@ -63,7 +66,7 @@ class ButtonArray(MetaWidget):
             for column in xrange(0, self.columns):
                 x = column * gx * bwidth
                 y = row * gy * bheight
-                button = Button(self, action = 'onButtonPressed', rmbAction = 'onRButtonPressed', toggle = 1)
+                button = Button(self, action = 'onButtonPressed', rmbAction = 'onRButtonPressed', hoverAction = 'onButtonHighlighted', toggle = 1)
                 button.subscribeAction('*', self)
                 button.rect = Rect(x, y, bwidth * gx, bheight * gy)
                 self.buttons.append(button)
@@ -100,6 +103,11 @@ class ButtonArray(MetaWidget):
 
     def onRButtonPressed(self, widget, action, data):
         self.processAction(self.rmbAction, widget.data)
+
+    def onButtonHighlighted(self, widget, action, data):
+        self.highlighted = widget.data
+        self.highlightedButton = widget
+        self.processAction(self.hoverAction, self.highlighted if data else None)
 
     def itemsChanged(self):
         if self.columns == 0 or self.rows == 0:

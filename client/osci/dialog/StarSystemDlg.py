@@ -79,8 +79,10 @@ class StarSystemDlg:
                 self.win.vSRedirect.tags=['hidden']
         else:
             raise 'Unsupported type of object %d' % obj.type
-        self.plInfoType = 0
+        self.plInfoType = INFO_PLANET
+        self.plInfoTypeSelected = INFO_PLANET
         self.plInfoData = None
+        self.plInfoDataSelected = None
         #
         self.win.vSystemMap.systemID = self.systemID
         self.win.vSystemMap.activeObjID = objID
@@ -636,7 +638,7 @@ class StarSystemDlg:
             self.win.setTagAttr('terra', 'visible', 0)
             self.win.setTagAttr('slot', 'visible', 0)
             self.win.vITitle.text = _('N/A')
-        elif self.plInfoType == INFO_PLANET:
+        if self.plInfoType == INFO_PLANET:
             self.win.setTagAttr('task', 'visible', 0)
             self.win.setTagAttr('terra', 'visible', 1)
             self.win.setTagAttr('slot', 'visible', 0)
@@ -837,22 +839,30 @@ class StarSystemDlg:
         if data.planetID != OID_NONE:
             self.display(data.planetID)
 
+    def onSlotHighlighted(self, widget, action, data):
+        if not data or data.index is None:
+            self.plInfoType = self.plInfoTypeSelected
+            self.plInfoData = self.plInfoDataSelected
+        else:
+            self.plInfoType = INFO_SLOT
+            self.plInfoData = data.index
+        self.showPlInfo()
+
     def onSlotSelected(self, widget, action, data):
         self.win.vPQueue.selectItem(None)
         if not data:
-            self.plInfoType = INFO_NONE
-            self.plInfoData = None
+            self.plInfoType = self.plInfoTypeSelected = INFO_NONE
+            self.plInfoData = self.plInfoDataSelected = None
         elif data.index != None:
-            self.plInfoType = INFO_SLOT
-            self.plInfoData = data.index
+            self.plInfoType = self.plInfoTypeSelected = INFO_SLOT
+            self.plInfoData = self.plInfoDataSelected = data.index
         else:
-            self.plInfoType = INFO_NONE
-            self.plInfoData = None
+            self.plInfoType = self.plInfoTypeSelected = INFO_NONE
+            self.plInfoData = self.plInfoDataSelected = None
             if self.playerOwnsSomePlanet:
                 # display task dialog (select stuctures only)
                 self.structTaskDlg.display(self, self.planetID, data.extraSlot)
                 self.win.vPSlots.selectItem(None)
-
         self.showPlInfo()
 
     def onSlotRSelected(self, widget, action, data):
@@ -869,28 +879,41 @@ class StarSystemDlg:
         self.plIndoData = None
         self.showPlInfo()
 
-    def onQueueItemSelected(self, widget, action, data):
+    def onQueueItemHighlighted(self, widget, action, data):
         # unselect structure
-        self.win.vPSlots.selectItem(None)
-        if not data:
-            # unselected
-            self.plInfoType = INFO_NONE
-            self.plInfoData = None
-        elif data.index == None:
-            # new task
-            self.plInfoType = INFO_NONE
-            self.plInfoData = None
-            self.win.vPQueue.selectItem(None)
-            planet = client.get(self.planetID, noUpdate = 1)
-            self.newTaskDlg.display(self, planet.effProdProd)
+        if not data or data.index is None:
+            # unselected or new task
+            self.plInfoType = self.plInfoTypeSelected
+            self.plInfoData = self.plInfoDataSelected
         else:
             # info about task
             self.plInfoType = INFO_TASK
             self.plInfoData = data.index
         self.showPlInfo()
 
+    def onQueueItemSelected(self, widget, action, data):
+        # unselect structure
+        self.win.vPSlots.selectItem(None)
+        if not data:
+            # unselected
+            self.plInfoType = self.plInfoTypeSelected = INFO_NONE
+            self.plInfoData = self.plInfoDataSelected = None
+        elif data.index == None:
+            # new task
+            self.plInfoType = self.plInfoTypeSelected = INFO_NONE
+            self.plInfoData = self.plInfoDataSelected = None
+            self.win.vPQueue.selectItem(None)
+            planet = client.get(self.planetID, noUpdate = 1)
+            self.newTaskDlg.display(self, planet.effProdProd)
+        else:
+            # info about task
+            self.plInfoType = self.plInfoTypeSelected = INFO_TASK
+            self.plInfoData = self.plInfoDataSelected = data.index
+        self.showPlInfo()
+
     def onTerraformDataSelect(self, widget, action, data):
         self.plInfoType = INFO_PLANET
+        self.plInfoTypeSelected = INFO_PLANET
         self.plInfoData = None
         self.win.vPQueue.selectItem(None)
         self.showPlInfo()
@@ -1207,14 +1230,14 @@ class StarSystemDlg:
         ui.Title(self.win, layout = (20, 10, 20, 1), text = _('Structures'),
             align = ui.ALIGN_W, font = 'normal-bold', tags = ['pl'])
         ui.ButtonArray(self.win, layout = (20, 11, 20, 6), id = 'vPSlots',
-            buttonSize = (2, 2), showSlider = 0, tags = ['pl'], action = 'onSlotSelected', rmbAction = 'onSlotRSelected')
+            buttonSize = (2, 2), showSlider = 0, tags = ['pl'], action = 'onSlotSelected', rmbAction = 'onSlotRSelected', hoverAction = 'onSlotHighlighted')
         ui.Title(self.win, layout = (20, 17, 12, 1), id = 'vTaskTitleWithQueue', text = _('Task queue'),
             align = ui.ALIGN_W, font = 'normal-bold', tags = ['pl'])
         ui.TitleButton(self.win, layout = (32, 17, 8, 1), id = 'vQueueSelector', align = ui.ALIGN_W, font = 'normal-bold', tags = ['pl'], action = 'onGlobalQueuesMenu')
         ui.Title(self.win, layout = (20, 17, 20, 1), id = 'vTaskTitleNoQueue', text = _('Task queue'),
             align = ui.ALIGN_W, font = 'normal-bold', tags = ['pl'])
         ui.ButtonArray(self.win, layout = (20, 18, 20, 2), id = 'vPQueue',
-            buttonSize = (2, 2), showSlider = 0, tags = ['pl'], action = 'onQueueItemSelected')
+            buttonSize = (2, 2), showSlider = 0, tags = ['pl'], action = 'onQueueItemSelected', hoverAction = 'onQueueItemHighlighted')
         ui.Label(self.win, layout = (0, 11, 5, 1), text = _('Planet type'),
             align = ui.ALIGN_W, tags = ['pl'])
         ui.Label(self.win, layout = (5, 11, 5, 1), id = 'vPPType',
