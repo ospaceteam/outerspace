@@ -127,8 +127,7 @@ bioBaseStor = 4800
 minBaseStor = 4800
 enBaseStor = 4800
 
-autoMinStorTurns = 6
-autoReqStorTurns = 1
+autoMinStorTurns = 2
 
 maxPopReserve = 1.125
 tlPopReserve = 250
