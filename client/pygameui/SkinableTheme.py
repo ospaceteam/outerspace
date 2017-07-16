@@ -335,6 +335,7 @@ def drawTextAndIcons(surface, widget, style):
         surface.blit(img, r)
     surface.set_clip(oldClip)
 
+
 def playButtonSound(widget):
     if widget.pressed:
         style = "%s-up" % (widget.style or "button")
@@ -349,8 +350,10 @@ def drawButton(surface, widget):
         s2 = "focused"
     else:
         s2 = "enabled"
-    if widget.pressed or widget.highlighted:
+    if widget.pressed:
         s3 = "down"
+    elif widget.highlighted and widget.enabled:
+        s3 = "highlighted"
     else:
         s3 = "up"
     if widget.toggle:
