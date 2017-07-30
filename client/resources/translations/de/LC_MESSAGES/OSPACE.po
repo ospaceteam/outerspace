@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Outer Space 0.5\n"
-"POT-Creation-Date: Sat Jul  8 18:50:33 2017\n"
+"POT-Creation-Date: Sun Jul 30 17:49:46 2017\n"
 "PO-Revision-Date: 2007-08-21 23:59+0100\n"
 "Last-Translator: PeS <pes@sandbox.cz>\n"
 "Language-Team: IGE <qark@seznam.cz>\n"
@@ -267,7 +267,7 @@ msgid "Diplomatic"
 msgstr "Diplomatie"
 
 #: client/osci/StarMapWidget.py:1300 client/osci/dialog/MapOverlayDlg.py:135
-#: client/osci/dialog/StarSystemDlg.py:1281
+#: client/osci/dialog/StarSystemDlg.py:1248
 msgid "Environment"
 msgstr "Umwelt"
 
@@ -294,8 +294,8 @@ msgstr "Auftanken und Reparieren"
 
 #: client/osci/StarMapWidget.py:1312 client/osci/dialog/MapOverlayDlg.py:145
 #: client/osci/dialog/NewTaskDlg.py:430
-#: client/osci/dialog/StarSystemDlg.py:1350
-#: client/osci/dialog/StructTaskDlg.py:367
+#: client/osci/dialog/StarSystemDlg.py:1296
+#: client/osci/dialog/StructTaskDlg.py:368
 msgid "Morale"
 msgstr "Moral"
 
@@ -414,7 +414,7 @@ msgstr ""
 #: client/osci/dialog/ProblemsDlg.py:44 client/osci/dialog/RenameFleetDlg.py:59
 #: client/osci/dialog/RenameSysDlg.py:43 client/osci/dialog/ResearchDlg.py:51
 #: client/osci/dialog/SearchDlg.py:54 client/osci/dialog/ShowBuoyDlg.py:58
-#: client/osci/dialog/StarSystemDlg.py:110
+#: client/osci/dialog/StarSystemDlg.py:112
 #: client/osci/dialog/StructTaskDlg.py:67
 #: client/osci/dialog/SystemOverviewDlg.py:48
 #: client/osci/dialog/TechInfoDlg.py:195
@@ -425,7 +425,7 @@ msgstr "Fertig."
 msgid "Downloading messages..."
 msgstr "Herunterladen der Nachrichten..."
 
-#: client/osci/dialog/BuoyDlg.py:85 client/osci/dialog/StarSystemDlg.py:640
+#: client/osci/dialog/BuoyDlg.py:85 client/osci/dialog/StarSystemDlg.py:622
 msgid "Edit buoy"
 msgstr "Boje editieren"
 
@@ -457,12 +457,12 @@ msgstr "Scanneraustausch"
 #: client/osci/dialog/NewGlobalTaskDlg.py:312
 #: client/osci/dialog/NewMessageDlg.py:196
 #: client/osci/dialog/NewMessageDlg.py:220 client/osci/dialog/NewTaskDlg.py:450
-#: client/osci/dialog/OptionsDlg.py:561 client/osci/dialog/OptionsDlg.py:591
-#: client/osci/dialog/OptionsDlg.py:617 client/osci/dialog/OptionsDlg.py:692
+#: client/osci/dialog/OptionsDlg.py:562 client/osci/dialog/OptionsDlg.py:592
+#: client/osci/dialog/OptionsDlg.py:618 client/osci/dialog/OptionsDlg.py:693
 #: client/osci/dialog/RenameFleetDlg.py:139
 #: client/osci/dialog/RenameSysDlg.py:114 client/osci/dialog/SearchDlg.py:128
-#: client/osci/dialog/StarSystemDlg.py:1525
-#: client/osci/dialog/StructTaskDlg.py:387 client/osci/dialog/_Template.py:74
+#: client/osci/dialog/StarSystemDlg.py:1479
+#: client/osci/dialog/StructTaskDlg.py:388 client/osci/dialog/_Template.py:74
 msgid "Cancel"
 msgstr "Abbruch"
 
@@ -470,14 +470,14 @@ msgstr "Abbruch"
 #: client/osci/dialog/ColorDefinitionDlg.py:148
 #: client/osci/dialog/ConstrUpgradeDlg.py:115
 #: client/osci/dialog/KeyModHelp.py:87 client/osci/dialog/MainGameDlg.py:188
-#: client/osci/dialog/OptionsDlg.py:693 client/osci/dialog/ShowBuoyDlg.py:96
+#: client/osci/dialog/OptionsDlg.py:694 client/osci/dialog/ShowBuoyDlg.py:96
 #: client/osci/dialog/UpdateDlg.py:206 client/osci/dialog/UpdateDlg.py:269
 msgid "OK"
 msgstr "Ok"
 
 #: client/osci/dialog/ChangeQtyDlg.py:53
 #: client/osci/dialog/NewGlobalTaskDlg.py:202
-#: client/osci/dialog/NewTaskDlg.py:299 client/osci/dialog/StructTaskDlg.py:238
+#: client/osci/dialog/NewTaskDlg.py:299 client/osci/dialog/StructTaskDlg.py:239
 msgid "Specify quantity (1, 2, 3, ...)."
 msgstr "Geben Sie die Anzahl an (1, 2, 3, ...)."
 
@@ -547,29 +547,29 @@ msgstr "Wähle Komponente aus"
 #: client/osci/dialog/ConstructionDlg.py:420
 #: client/osci/dialog/ConstructionDlg.py:433
 #: client/osci/dialog/ConstructionDlg.py:450
-#: client/osci/dialog/DiplomacyDlg.py:371 client/osci/dialog/FleetDlg.py:373
-#: client/osci/dialog/FleetDlg.py:428 client/osci/dialog/FleetDlg.py:451
+#: client/osci/dialog/DiplomacyDlg.py:372 client/osci/dialog/FleetDlg.py:374
+#: client/osci/dialog/FleetDlg.py:429 client/osci/dialog/FleetDlg.py:452
 #: client/osci/dialog/FleetSplitDlg.py:517
 #: client/osci/dialog/FleetSplitDlg.py:555
 #: client/osci/dialog/NewGlobalTaskDlg.py:266
 #: client/osci/dialog/NewTaskDlg.py:380
 #: client/osci/dialog/RenameFleetDlg.py:128
-#: client/osci/dialog/RenameSysDlg.py:106 client/osci/dialog/ResearchDlg.py:377
-#: client/osci/dialog/ResearchDlg.py:397 client/osci/dialog/ResearchDlg.py:410
-#: client/osci/dialog/StructTaskDlg.py:376
+#: client/osci/dialog/RenameSysDlg.py:106 client/osci/dialog/ResearchDlg.py:378
+#: client/osci/dialog/ResearchDlg.py:398 client/osci/dialog/ResearchDlg.py:411
+#: client/osci/dialog/StructTaskDlg.py:377
 msgid "Name"
 msgstr "Name"
 
 #: client/osci/dialog/ConstrSelTechDlg.py:158
 #: client/osci/dialog/MinefieldDlg.py:121
 #: client/osci/dialog/PlanetsOverviewDlg.py:252
-#: client/osci/dialog/StarSystemDlg.py:1230
-#: client/osci/dialog/StructTaskDlg.py:372
+#: client/osci/dialog/StarSystemDlg.py:1194
+#: client/osci/dialog/StructTaskDlg.py:373
 msgid "Type"
 msgstr "Typ"
 
 #: client/osci/dialog/ConstrSelTechDlg.py:159
-#: client/osci/dialog/ConstructionDlg.py:451 client/osci/dialog/FleetDlg.py:452
+#: client/osci/dialog/ConstructionDlg.py:451 client/osci/dialog/FleetDlg.py:453
 #: client/osci/dialog/TechInfoDlg.py:397
 msgid "Data"
 msgstr "Daten"
@@ -577,9 +577,9 @@ msgstr "Daten"
 #: client/osci/dialog/ConstrSelTechDlg.py:178
 #: client/osci/dialog/ConstrUpgradeDlg.py:138
 #: client/osci/dialog/NewAccountDlg.py:139
-#: client/osci/dialog/NewMessageDlg.py:219 client/osci/dialog/OptionsDlg.py:560
-#: client/osci/dialog/OptionsDlg.py:590 client/osci/dialog/OptionsDlg.py:616
-#: client/osci/dialog/StarSystemDlg.py:1524
+#: client/osci/dialog/NewMessageDlg.py:219 client/osci/dialog/OptionsDlg.py:561
+#: client/osci/dialog/OptionsDlg.py:591 client/osci/dialog/OptionsDlg.py:617
+#: client/osci/dialog/StarSystemDlg.py:1478
 msgid "Select"
 msgstr "Auswahl"
 
@@ -596,22 +596,22 @@ msgstr "Ausführen des STUFE SCHIFFSMODELL AUF Kommandos..."
 #: client/osci/dialog/ConstructionDlg.py:261
 #: client/osci/dialog/ConstructionDlg.py:373
 #: client/osci/dialog/ConstructionDlg.py:395
-#: client/osci/dialog/DiplomacyDlg.py:282
-#: client/osci/dialog/DiplomacyDlg.py:295
-#: client/osci/dialog/DiplomacyDlg.py:306 client/osci/dialog/EventsDlg.py:116
+#: client/osci/dialog/DiplomacyDlg.py:283
+#: client/osci/dialog/DiplomacyDlg.py:296
+#: client/osci/dialog/DiplomacyDlg.py:307 client/osci/dialog/EventsDlg.py:116
 #: client/osci/dialog/EventsDlg.py:126
-#: client/osci/dialog/FleetCommandDlg.py:266 client/osci/dialog/FleetDlg.py:229
-#: client/osci/dialog/FleetDlg.py:244 client/osci/dialog/FleetDlg.py:260
-#: client/osci/dialog/FleetDlg.py:279 client/osci/dialog/FleetDlg.py:290
-#: client/osci/dialog/FleetDlg.py:322 client/osci/dialog/FleetDlg.py:340
+#: client/osci/dialog/FleetCommandDlg.py:266 client/osci/dialog/FleetDlg.py:230
+#: client/osci/dialog/FleetDlg.py:245 client/osci/dialog/FleetDlg.py:261
+#: client/osci/dialog/FleetDlg.py:280 client/osci/dialog/FleetDlg.py:291
+#: client/osci/dialog/FleetDlg.py:323 client/osci/dialog/FleetDlg.py:341
 #: client/osci/dialog/FleetMassRedirectionDlg.py:82
 #: client/osci/dialog/FleetRedirectionDlg.py:88
 #: client/osci/dialog/FleetRedirectionDlg.py:101
 #: client/osci/dialog/FleetSplitDlg.py:357 client/osci/dialog/GalaxerDlg.py:80
-#: client/osci/dialog/GlobalQueuesDlg.py:142
-#: client/osci/dialog/GlobalQueuesDlg.py:156
-#: client/osci/dialog/GlobalQueuesDlg.py:174
-#: client/osci/dialog/GlobalQueuesDlg.py:202
+#: client/osci/dialog/GlobalQueuesDlg.py:144
+#: client/osci/dialog/GlobalQueuesDlg.py:159
+#: client/osci/dialog/GlobalQueuesDlg.py:178
+#: client/osci/dialog/GlobalQueuesDlg.py:207
 #: client/osci/dialog/NewAccountDlg.py:71
 #: client/osci/dialog/NewAccountDlg.py:80
 #: client/osci/dialog/NewAccountDlg.py:97
@@ -620,24 +620,22 @@ msgstr "Ausführen des STUFE SCHIFFSMODELL AUF Kommandos..."
 #: client/osci/dialog/NewMessageDlg.py:162 client/osci/dialog/NewTaskDlg.py:317
 #: client/osci/dialog/RenameFleetDlg.py:77
 #: client/osci/dialog/RenameFleetDlg.py:92
-#: client/osci/dialog/RenameSysDlg.py:82 client/osci/dialog/ResearchDlg.py:255
-#: client/osci/dialog/ResearchDlg.py:271 client/osci/dialog/ResearchDlg.py:289
-#: client/osci/dialog/ResearchDlg.py:301 client/osci/dialog/ResearchDlg.py:318
-#: client/osci/dialog/ResearchDlg.py:330 client/osci/dialog/ResearchDlg.py:346
-#: client/osci/dialog/StarSystemDlg.py:926
-#: client/osci/dialog/StarSystemDlg.py:946
-#: client/osci/dialog/StarSystemDlg.py:960
-#: client/osci/dialog/StarSystemDlg.py:976
-#: client/osci/dialog/StarSystemDlg.py:1002
-#: client/osci/dialog/StarSystemDlg.py:1015
-#: client/osci/dialog/StarSystemDlg.py:1039
-#: client/osci/dialog/StarSystemDlg.py:1053
-#: client/osci/dialog/StarSystemDlg.py:1110
-#: client/osci/dialog/StarSystemDlg.py:1123
+#: client/osci/dialog/RenameSysDlg.py:82 client/osci/dialog/ResearchDlg.py:256
+#: client/osci/dialog/ResearchDlg.py:272 client/osci/dialog/ResearchDlg.py:290
+#: client/osci/dialog/ResearchDlg.py:302 client/osci/dialog/ResearchDlg.py:319
+#: client/osci/dialog/ResearchDlg.py:331 client/osci/dialog/ResearchDlg.py:347
+#: client/osci/dialog/StarSystemDlg.py:921
+#: client/osci/dialog/StarSystemDlg.py:941
+#: client/osci/dialog/StarSystemDlg.py:955
+#: client/osci/dialog/StarSystemDlg.py:972
+#: client/osci/dialog/StarSystemDlg.py:998
+#: client/osci/dialog/StarSystemDlg.py:1012
+#: client/osci/dialog/StarSystemDlg.py:1034
+#: client/osci/dialog/StarSystemDlg.py:1049
+#: client/osci/dialog/StarSystemDlg.py:1106
+#: client/osci/dialog/StarSystemDlg.py:1119
 #: client/osci/dialog/StarSystemDlg.py:1150
-#: client/osci/dialog/StarSystemDlg.py:1161
-#: client/osci/dialog/StarSystemDlg.py:1189
-#: client/osci/dialog/StructTaskDlg.py:278
+#: client/osci/dialog/StructTaskDlg.py:279
 msgid "Command has been executed."
 msgstr "Kommando wurde ausgeführt."
 
@@ -656,13 +654,13 @@ msgid "Per ship"
 msgstr "Pro Schiff"
 
 #: client/osci/dialog/ConstrUpgradeDlg.py:133
-#: client/osci/dialog/StarSystemDlg.py:1237
+#: client/osci/dialog/StarSystemDlg.py:1201
 msgid "Total"
 msgstr "Gesamt"
 
 #: client/osci/dialog/ConstructionDlg.py:101
-#: client/osci/dialog/StructTaskDlg.py:157
 #: client/osci/dialog/StructTaskDlg.py:158
+#: client/osci/dialog/StructTaskDlg.py:159
 msgid "TL"
 msgstr "TL"
 
@@ -683,6 +681,13 @@ msgstr "Abbruch Aufstuf."
 msgid "[Click to select]"
 msgstr "[Klicken für Auswahl]"
 
+#: client/osci/dialog/ConstructionDlg.py:181 client/osci/dialog/FleetDlg.py:121
+#: client/osci/dialog/ResearchDlg.py:128
+#: client/osci/dialog/StructTaskDlg.py:157
+#, fuzzy
+msgid "Details"
+msgstr "Flottendetails"
+
 #: client/osci/dialog/ConstructionDlg.py:192
 #: client/osci/dialog/ConstructionDlg.py:197
 #: client/osci/dialog/ConstructionDlg.py:198
@@ -694,21 +699,21 @@ msgstr "[Klicken für Auswahl]"
 #: client/osci/dialog/ConstructionDlg.py:217
 #: client/osci/dialog/ConstructionDlg.py:218
 #: client/osci/dialog/ConstructionDlg.py:219 client/osci/dialog/FleetDlg.py:89
-#: client/osci/dialog/FleetDlg.py:173 client/osci/dialog/FleetDlg.py:181
+#: client/osci/dialog/FleetDlg.py:174 client/osci/dialog/FleetDlg.py:182
+#: client/osci/dialog/StarSystemDlg.py:417
 #: client/osci/dialog/StarSystemDlg.py:425
-#: client/osci/dialog/StarSystemDlg.py:429
-#: client/osci/dialog/StarSystemDlg.py:721
-#: client/osci/dialog/StarSystemDlg.py:802
-#: client/osci/dialog/StarSystemDlg.py:805
-#: client/osci/dialog/StarSystemDlg.py:806
-#: client/osci/dialog/StarSystemDlg.py:810
-#: client/osci/dialog/StarSystemDlg.py:814 client/osci/dialog/TechInfoDlg.py:40
+#: client/osci/dialog/StarSystemDlg.py:698
+#: client/osci/dialog/StarSystemDlg.py:779
+#: client/osci/dialog/StarSystemDlg.py:782
+#: client/osci/dialog/StarSystemDlg.py:783
+#: client/osci/dialog/StarSystemDlg.py:787
+#: client/osci/dialog/StarSystemDlg.py:791 client/osci/dialog/TechInfoDlg.py:40
 msgid "%d"
 msgstr "%d"
 
 #: client/osci/dialog/ConstructionDlg.py:193
 #: client/osci/dialog/ConstructionDlg.py:213 client/osci/dialog/FleetDlg.py:99
-#: client/osci/dialog/FleetDlg.py:113 client/osci/dialog/FleetDlg.py:167
+#: client/osci/dialog/FleetDlg.py:113 client/osci/dialog/FleetDlg.py:168
 #: client/osci/dialog/FleetSplitDlg.py:303
 #: client/osci/dialog/FleetSplitDlg.py:327
 msgid "%.2f"
@@ -718,19 +723,19 @@ msgstr "%.2f"
 msgid "%d - %d"
 msgstr "%d - %d"
 
-#: client/osci/dialog/ConstructionDlg.py:199 client/osci/dialog/FleetDlg.py:144
-#: client/osci/dialog/FleetDlg.py:163 client/osci/dialog/FleetSplitDlg.py:300
+#: client/osci/dialog/ConstructionDlg.py:199 client/osci/dialog/FleetDlg.py:145
+#: client/osci/dialog/FleetDlg.py:164 client/osci/dialog/FleetSplitDlg.py:300
 #: client/osci/dialog/MessagesDlg.py:86 client/osci/dialog/MessagesDlg.py:93
 #: client/osci/dialog/MessagesDlg.py:100 client/osci/dialog/MessagesDlg.py:113
 #: client/osci/dialog/MessagesDlg.py:120 client/osci/dialog/MessagesDlg.py:130
 #: client/osci/dialog/MessagesDlg.py:137
-#: client/osci/dialog/StarSystemDlg.py:368
-#: client/osci/dialog/StarSystemDlg.py:382
-#: client/osci/dialog/StarSystemDlg.py:422
-#: client/osci/dialog/StarSystemDlg.py:594
-#: client/osci/dialog/StarSystemDlg.py:621
-#: client/osci/dialog/StarSystemDlg.py:720
-#: client/osci/dialog/StarSystemDlg.py:788
+#: client/osci/dialog/StarSystemDlg.py:360
+#: client/osci/dialog/StarSystemDlg.py:374
+#: client/osci/dialog/StarSystemDlg.py:414
+#: client/osci/dialog/StarSystemDlg.py:576
+#: client/osci/dialog/StarSystemDlg.py:603
+#: client/osci/dialog/StarSystemDlg.py:697
+#: client/osci/dialog/StarSystemDlg.py:765
 msgid "%d / %d"
 msgstr "%d / %d"
 
@@ -754,8 +759,8 @@ msgstr "%d / %d"
 #: client/osci/dialog/ConstructionDlg.py:238
 #: client/osci/dialog/ConstructionDlg.py:239
 #: client/osci/dialog/ConstructionDlg.py:240
-#: client/osci/dialog/DiplomacyDlg.py:173
-#: client/osci/dialog/DiplomacyDlg.py:187 client/osci/dialog/EventsDlg.py:70
+#: client/osci/dialog/DiplomacyDlg.py:174
+#: client/osci/dialog/DiplomacyDlg.py:188 client/osci/dialog/EventsDlg.py:70
 #: client/osci/dialog/FleetCommandDlg.py:146
 #: client/osci/dialog/FleetCommandDlg.py:148 client/osci/dialog/FleetDlg.py:111
 #: client/osci/dialog/FleetScoutBloomDlg.py:116
@@ -766,25 +771,24 @@ msgstr "%d / %d"
 #: client/osci/dialog/NewTaskDlg.py:128 client/osci/dialog/NewTaskDlg.py:164
 #: client/osci/dialog/PlanetsOverviewDlg.py:137
 #: client/osci/dialog/PlanetsOverviewDlg.py:139
-#: client/osci/dialog/ResearchDlg.py:91 client/osci/dialog/ResearchDlg.py:168
-#: client/osci/dialog/ResearchDlg.py:191
-#: client/osci/dialog/StarSystemDlg.py:266
-#: client/osci/dialog/StarSystemDlg.py:658
-#: client/osci/dialog/StarSystemDlg.py:675
-#: client/osci/dialog/StarSystemDlg.py:676
-#: client/osci/dialog/StarSystemDlg.py:677
-#: client/osci/dialog/StarSystemDlg.py:685
-#: client/osci/dialog/StarSystemDlg.py:686
-#: client/osci/dialog/StarSystemDlg.py:719
+#: client/osci/dialog/ResearchDlg.py:91 client/osci/dialog/ResearchDlg.py:169
+#: client/osci/dialog/ResearchDlg.py:192
+#: client/osci/dialog/StarSystemDlg.py:268
+#: client/osci/dialog/StarSystemDlg.py:652
+#: client/osci/dialog/StarSystemDlg.py:653
+#: client/osci/dialog/StarSystemDlg.py:654
+#: client/osci/dialog/StarSystemDlg.py:662
+#: client/osci/dialog/StarSystemDlg.py:663
+#: client/osci/dialog/StarSystemDlg.py:696
 #: client/osci/dialog/StructTaskDlg.py:146 client/osci/messages.py:253
-#: client/osci/res.py:183 client/osci/sequip.py:120
+#: client/osci/res.py:201 client/osci/sequip.py:120
 msgid "N/A"
 msgstr "N.V."
 
 #: client/osci/dialog/ConstructionDlg.py:215
-#: client/osci/dialog/DiplomacyDlg.py:118
-#: client/osci/dialog/StarSystemDlg.py:727
-#: client/osci/dialog/StarSystemDlg.py:741 client/osci/gdata.py:66
+#: client/osci/dialog/DiplomacyDlg.py:119
+#: client/osci/dialog/StarSystemDlg.py:704
+#: client/osci/dialog/StarSystemDlg.py:718 client/osci/gdata.py:66
 #: client/osci/gdata.py:78
 msgid "None"
 msgstr "Nichts"
@@ -799,7 +803,7 @@ msgstr "Ausführen des SCHIFFSMODELL HINZUFÜGEN Kommandos..."
 
 #: client/osci/dialog/ConstructionDlg.py:307
 #: client/osci/dialog/ConstructionDlg.py:314
-#: client/osci/dialog/DiplomacyDlg.py:244
+#: client/osci/dialog/DiplomacyDlg.py:245
 #: client/osci/dialog/FleetSpecsDlg.py:188
 #: client/osci/dialog/FleetSpecsDlg.py:195
 #: client/osci/dialog/FleetSpecsDlg.py:202
@@ -819,28 +823,28 @@ msgstr ""
 "Das Löschen dieses Modells betrifft %d Schiff(e). Wollen Sie es wirklich "
 "verschrotten?"
 
-#: client/osci/dialog/ConstructionDlg.py:361 client/osci/dialog/FleetDlg.py:309
-#: client/osci/dialog/FleetDlg.py:313 client/osci/dialog/GlobalQueuesDlg.py:195
+#: client/osci/dialog/ConstructionDlg.py:361 client/osci/dialog/FleetDlg.py:310
+#: client/osci/dialog/FleetDlg.py:314 client/osci/dialog/GlobalQueuesDlg.py:199
 #: client/osci/dialog/LoginDlg.py:129 client/osci/dialog/MainGameDlg.py:178
 #: client/osci/dialog/MainGameDlg.py:181 client/osci/dialog/MessagesDlg.py:319
 #: client/osci/dialog/MinefieldDlg.py:81 client/osci/dialog/NewTaskDlg.py:310
-#: client/osci/dialog/ResearchDlg.py:310
-#: client/osci/dialog/StarSystemDlg.py:967
-#: client/osci/dialog/StarSystemDlg.py:1022
-#: client/osci/dialog/StructTaskDlg.py:246 client/osci/dialog/TechInfoDlg.py:48
+#: client/osci/dialog/ResearchDlg.py:311
+#: client/osci/dialog/StarSystemDlg.py:962
+#: client/osci/dialog/StarSystemDlg.py:1019
+#: client/osci/dialog/StructTaskDlg.py:247 client/osci/dialog/TechInfoDlg.py:48
 #: client/osci/dialog/UpdateDlg.py:299
 msgid "Yes"
 msgstr "Ja"
 
-#: client/osci/dialog/ConstructionDlg.py:362 client/osci/dialog/FleetDlg.py:309
-#: client/osci/dialog/FleetDlg.py:313 client/osci/dialog/GalaxyRestartDlg.py:50
-#: client/osci/dialog/GlobalQueuesDlg.py:195 client/osci/dialog/LoginDlg.py:129
+#: client/osci/dialog/ConstructionDlg.py:362 client/osci/dialog/FleetDlg.py:310
+#: client/osci/dialog/FleetDlg.py:314 client/osci/dialog/GalaxyRestartDlg.py:50
+#: client/osci/dialog/GlobalQueuesDlg.py:199 client/osci/dialog/LoginDlg.py:129
 #: client/osci/dialog/MainGameDlg.py:177 client/osci/dialog/MainGameDlg.py:182
 #: client/osci/dialog/MessagesDlg.py:319 client/osci/dialog/MinefieldDlg.py:83
-#: client/osci/dialog/NewTaskDlg.py:310 client/osci/dialog/ResearchDlg.py:310
-#: client/osci/dialog/StarSystemDlg.py:967
-#: client/osci/dialog/StarSystemDlg.py:1022
-#: client/osci/dialog/StructTaskDlg.py:246 client/osci/dialog/TechInfoDlg.py:50
+#: client/osci/dialog/NewTaskDlg.py:310 client/osci/dialog/ResearchDlg.py:311
+#: client/osci/dialog/StarSystemDlg.py:962
+#: client/osci/dialog/StarSystemDlg.py:1019
+#: client/osci/dialog/StructTaskDlg.py:247 client/osci/dialog/TechInfoDlg.py:50
 #: client/osci/dialog/UpdateDlg.py:298
 msgid "No"
 msgstr "Nein"
@@ -862,7 +866,7 @@ msgid "Ship Designs"
 msgstr "Schiffsmodelle"
 
 #: client/osci/dialog/ConstructionDlg.py:418
-#: client/osci/dialog/ConstructionDlg.py:449 client/osci/dialog/FleetDlg.py:394
+#: client/osci/dialog/ConstructionDlg.py:449 client/osci/dialog/FleetDlg.py:395
 #: client/osci/dialog/FleetSplitDlg.py:516
 #: client/osci/dialog/FleetSplitDlg.py:554
 #: client/osci/dialog/MessagesDlg.py:393
@@ -875,8 +879,8 @@ msgid "B"
 msgstr "in PL"
 
 #: client/osci/dialog/ConstructionDlg.py:421
-#: client/osci/dialog/ConstructionDlg.py:468 client/osci/dialog/FleetDlg.py:375
-#: client/osci/dialog/FleetDlg.py:430 client/osci/dialog/FleetSpecsDlg.py:262
+#: client/osci/dialog/ConstructionDlg.py:468 client/osci/dialog/FleetDlg.py:376
+#: client/osci/dialog/FleetDlg.py:431 client/osci/dialog/FleetSpecsDlg.py:262
 #: client/osci/dialog/FleetSplitDlg.py:519
 #: client/osci/dialog/FleetSplitDlg.py:557
 msgid "Class"
@@ -902,7 +906,7 @@ msgstr "Schiffsklasse"
 msgid "Control unit"
 msgstr "Kontrolleinheit"
 
-#: client/osci/dialog/ConstructionDlg.py:445 client/osci/dialog/FleetDlg.py:448
+#: client/osci/dialog/ConstructionDlg.py:445 client/osci/dialog/FleetDlg.py:449
 msgid "Equipment"
 msgstr "Ausstattung"
 
@@ -922,8 +926,8 @@ msgstr "+"
 #: client/osci/dialog/PlanetsOverviewDlg.py:145
 #: client/osci/dialog/PlanetsOverviewDlg.py:148
 #: client/osci/dialog/PlanetsOverviewDlg.py:151
-#: client/osci/dialog/ResearchDlg.py:135
-#: client/osci/dialog/StarSystemDlg.py:558 client/osci/messages.py:255
+#: client/osci/dialog/ResearchDlg.py:136
+#: client/osci/dialog/StarSystemDlg.py:540 client/osci/messages.py:255
 #: client/osci/messages.py:262
 msgid "-"
 msgstr "-"
@@ -941,8 +945,8 @@ msgstr "Hinzufügen"
 msgid "Remove"
 msgstr "Entfernen"
 
-#: client/osci/dialog/ConstructionDlg.py:470 client/osci/dialog/FleetDlg.py:388
-#: client/osci/dialog/FleetDlg.py:442
+#: client/osci/dialog/ConstructionDlg.py:470 client/osci/dialog/FleetDlg.py:389
+#: client/osci/dialog/FleetDlg.py:443
 msgid "Signature"
 msgstr "Signatur"
 
@@ -950,7 +954,7 @@ msgstr "Signatur"
 msgid "Speed"
 msgstr "Tempo"
 
-#: client/osci/dialog/ConstructionDlg.py:474 client/osci/dialog/FleetDlg.py:376
+#: client/osci/dialog/ConstructionDlg.py:474 client/osci/dialog/FleetDlg.py:377
 #: client/osci/dialog/FleetSplitDlg.py:520
 #: client/osci/dialog/FleetSplitDlg.py:558
 msgid "HP"
@@ -973,7 +977,7 @@ msgstr "Militärische Stärke"
 msgid "Base exp pts"
 msgstr "Basis Erf Punkte"
 
-#: client/osci/dialog/ConstructionDlg.py:484 client/osci/dialog/FleetDlg.py:440
+#: client/osci/dialog/ConstructionDlg.py:484 client/osci/dialog/FleetDlg.py:441
 #: client/osci/dialog/FleetSplitDlg.py:542
 #: client/osci/dialog/FleetSplitDlg.py:580
 msgid "Tanks"
@@ -1011,7 +1015,7 @@ msgstr "Aufstufung auf"
 msgid "Design Actions"
 msgstr "Design Aktionen"
 
-#: client/osci/dialog/ConstructionDlg.py:505 client/osci/dialog/FleetDlg.py:426
+#: client/osci/dialog/ConstructionDlg.py:505 client/osci/dialog/FleetDlg.py:427
 msgid "Scrap"
 msgstr "Verschrotten"
 
@@ -1022,19 +1026,19 @@ msgid "Construct"
 msgstr "Erstellen"
 
 #: client/osci/dialog/ConstructionDlg.py:510
-#: client/osci/dialog/DiplomacyDlg.py:422
+#: client/osci/dialog/DiplomacyDlg.py:423
 #: client/osci/dialog/EmpireOverviewDlg.py:279
-#: client/osci/dialog/EventsDlg.py:190 client/osci/dialog/FleetDlg.py:368
+#: client/osci/dialog/EventsDlg.py:190 client/osci/dialog/FleetDlg.py:369
 #: client/osci/dialog/FleetSpecsDlg.py:272
 #: client/osci/dialog/FleetsAnalysisDlg.py:156
-#: client/osci/dialog/FleetsOverviewDlg.py:263
-#: client/osci/dialog/GlobalQueuesDlg.py:286
+#: client/osci/dialog/FleetsOverviewDlg.py:266
+#: client/osci/dialog/GlobalQueuesDlg.py:291
 #: client/osci/dialog/MapOverlayDlg.py:153
 #: client/osci/dialog/MessagesDlg.py:422 client/osci/dialog/MinefieldDlg.py:129
 #: client/osci/dialog/PlanetsAnalysisDlg.py:152
 #: client/osci/dialog/PlanetsOverviewDlg.py:277
-#: client/osci/dialog/ProblemsDlg.py:524 client/osci/dialog/ResearchDlg.py:370
-#: client/osci/dialog/StarSystemDlg.py:1222
+#: client/osci/dialog/ProblemsDlg.py:524 client/osci/dialog/ResearchDlg.py:371
+#: client/osci/dialog/StarSystemDlg.py:1186
 #: client/osci/dialog/SystemOverviewDlg.py:240
 #: client/osci/dialog/TechInfoDlg.py:422 client/osci/dialog/_Template.py:73
 msgid "Close"
@@ -1049,70 +1053,71 @@ msgid "%s -"
 msgstr "%s -"
 
 #: client/osci/dialog/DiplomacyDlg.py:81
-#: client/osci/dialog/StarSystemDlg.py:264
+#: client/osci/dialog/StarSystemDlg.py:266
 msgid "%s"
 msgstr "%s"
 
-#: client/osci/dialog/DiplomacyDlg.py:83 client/osci/dialog/DiplomacyDlg.py:126
+#: client/osci/dialog/DiplomacyDlg.py:83 client/osci/dialog/DiplomacyDlg.py:127
 msgid "%s [elect]"
 msgstr "%s [wähle]"
 
 #: client/osci/dialog/DiplomacyDlg.py:102
-#: client/osci/dialog/DiplomacyDlg.py:118
+#: client/osci/dialog/DiplomacyDlg.py:119
 msgid "Mobile"
 msgstr "Mobil"
 
 #: client/osci/dialog/DiplomacyDlg.py:102
-#: client/osci/dialog/DiplomacyDlg.py:118
+#: client/osci/dialog/DiplomacyDlg.py:119
 msgid "Static"
 msgstr "Statisch"
 
 #: client/osci/dialog/DiplomacyDlg.py:104
+#: client/osci/dialog/DiplomacyDlg.py:373
+msgid "Relation"
+msgstr "Beziehung"
+
 #: client/osci/dialog/DiplomacyDlg.py:105
+#: client/osci/dialog/DiplomacyDlg.py:106
 msgid "Relation %d, change %+d"
 msgstr "Beziehung %d, Änderung %+d"
 
-#: client/osci/dialog/DiplomacyDlg.py:230
+#: client/osci/dialog/DiplomacyDlg.py:231
 msgid "Enable"
 msgstr "Erlaube"
 
-#: client/osci/dialog/DiplomacyDlg.py:233
+#: client/osci/dialog/DiplomacyDlg.py:234
 msgid "Disable"
 msgstr "Verbiete"
 
-#: client/osci/dialog/DiplomacyDlg.py:244
+#: client/osci/dialog/DiplomacyDlg.py:245
 msgid "Required"
 msgstr "Benötigt"
 
-#: client/osci/dialog/DiplomacyDlg.py:245
+#: client/osci/dialog/DiplomacyDlg.py:246
 msgid "Conditions for pact: %s"
 msgstr "Bedingungen für Pakt: %s"
 
-#: client/osci/dialog/DiplomacyDlg.py:278
+#: client/osci/dialog/DiplomacyDlg.py:279
 msgid "Executing CHANGE PACT CONDITIONS command..."
 msgstr "Ausführen des ÄNDERE PAKT BEDINGUNGEN Kommandos..."
 
-#: client/osci/dialog/DiplomacyDlg.py:291
-#: client/osci/dialog/DiplomacyDlg.py:303
+#: client/osci/dialog/DiplomacyDlg.py:292
+#: client/osci/dialog/DiplomacyDlg.py:304
 msgid "Executing ELECT command..."
 msgstr "Ausführen des WÄHLE Kommandos..."
 
-#: client/osci/dialog/DiplomacyDlg.py:361 client/osci/dialog/MainGameDlg.py:342
+#: client/osci/dialog/DiplomacyDlg.py:362 client/osci/dialog/MainGameDlg.py:342
 #: client/osci/dialog/MapOverlayDlg.py:133
 msgid "Diplomacy"
 msgstr "Diplomatie"
 
-#: client/osci/dialog/DiplomacyDlg.py:372
-msgid "Relation"
-msgstr "Beziehung"
-
-#: client/osci/dialog/DiplomacyDlg.py:373
+#: client/osci/dialog/DiplomacyDlg.py:374
 #: client/osci/dialog/EmpireOverviewDlg.py:117
-#: client/osci/dialog/StarSystemDlg.py:1300
+#: client/osci/dialog/StarSystemDlg.py:1270
 msgid "Population"
 msgstr "Bevölkerung"
 
-#: client/osci/dialog/DiplomacyDlg.py:374
+#: client/osci/dialog/DiplomacyDlg.py:375
 #: client/osci/dialog/EmpireOverviewDlg.py:122
 #: client/osci/dialog/EmpireOverviewDlg.py:285
 #: client/osci/dialog/MainGameDlg.py:346 client/osci/dialog/MainGameDlg.py:383
@@ -1120,93 +1125,92 @@ msgstr "Bevölkerung"
 msgid "Planets"
 msgstr "Planeten"
 
-#: client/osci/dialog/DiplomacyDlg.py:375
+#: client/osci/dialog/DiplomacyDlg.py:376
 #: client/osci/dialog/EmpireOverviewDlg.py:123
 #: client/osci/dialog/PlanetsAnalysisDlg.py:132
-#: client/osci/dialog/StarSystemDlg.py:1262
+#: client/osci/dialog/StarSystemDlg.py:1226
 msgid "Structures"
 msgstr "Gebäude"
 
-#: client/osci/dialog/DiplomacyDlg.py:376
+#: client/osci/dialog/DiplomacyDlg.py:377
 msgid "Production"
 msgstr "Produktion"
 
-#: client/osci/dialog/DiplomacyDlg.py:377 client/osci/dialog/MainGameDlg.py:340
+#: client/osci/dialog/DiplomacyDlg.py:378 client/osci/dialog/MainGameDlg.py:340
 #: client/osci/dialog/ProblemsDlg.py:418 client/osci/dialog/ProblemsDlg.py:429
-#: client/osci/dialog/ProblemsDlg.py:511 client/osci/dialog/ResearchDlg.py:363
-#: client/osci/dialog/ResearchDlg.py:400
+#: client/osci/dialog/ProblemsDlg.py:511 client/osci/dialog/ResearchDlg.py:364
+#: client/osci/dialog/ResearchDlg.py:401
 msgid "Research"
 msgstr "Forschung"
 
-#: client/osci/dialog/DiplomacyDlg.py:378
+#: client/osci/dialog/DiplomacyDlg.py:379
 msgid "Military pwr"
 msgstr "Mil. Stärke"
 
-#: client/osci/dialog/DiplomacyDlg.py:379
+#: client/osci/dialog/DiplomacyDlg.py:380
 msgid "Contact"
 msgstr "Kontakt"
 
-#: client/osci/dialog/DiplomacyDlg.py:384
+#: client/osci/dialog/DiplomacyDlg.py:385
 msgid "Elect"
 msgstr "Wähle"
 
-#: client/osci/dialog/DiplomacyDlg.py:386
+#: client/osci/dialog/DiplomacyDlg.py:387
 msgid "Abstain"
 msgstr "Enthalten"
 
-#: client/osci/dialog/DiplomacyDlg.py:389
+#: client/osci/dialog/DiplomacyDlg.py:390
 msgid "Highlights On"
 msgstr "Hervorhebung AN"
 
-#: client/osci/dialog/DiplomacyDlg.py:391
+#: client/osci/dialog/DiplomacyDlg.py:392
 msgid "Highligh Off"
 msgstr "Hervorhebung AUS"
 
-#: client/osci/dialog/DiplomacyDlg.py:394
+#: client/osci/dialog/DiplomacyDlg.py:395
 msgid "Pacts"
 msgstr "Päkte"
 
-#: client/osci/dialog/DiplomacyDlg.py:398
-#: client/osci/dialog/DiplomacyDlg.py:411
+#: client/osci/dialog/DiplomacyDlg.py:399
+#: client/osci/dialog/DiplomacyDlg.py:412
 msgid "I"
 msgstr "Ich"
 
-#: client/osci/dialog/DiplomacyDlg.py:399
-#: client/osci/dialog/DiplomacyDlg.py:412
+#: client/osci/dialog/DiplomacyDlg.py:400
+#: client/osci/dialog/DiplomacyDlg.py:413
 msgid "Partner"
 msgstr "Partner"
 
-#: client/osci/dialog/DiplomacyDlg.py:400
-#: client/osci/dialog/DiplomacyDlg.py:413
+#: client/osci/dialog/DiplomacyDlg.py:401
+#: client/osci/dialog/DiplomacyDlg.py:414
 msgid "Pact"
 msgstr "Pakt"
 
-#: client/osci/dialog/DiplomacyDlg.py:404
+#: client/osci/dialog/DiplomacyDlg.py:405
 msgid "On"
 msgstr "On"
 
-#: client/osci/dialog/DiplomacyDlg.py:407
+#: client/osci/dialog/DiplomacyDlg.py:408
 msgid "Conditions"
 msgstr "Konditionen"
 
-#: client/osci/dialog/DiplomacyDlg.py:417
-#: client/osci/dialog/StarSystemDlg.py:1324
+#: client/osci/dialog/DiplomacyDlg.py:418
 msgid "Change"
 msgstr "Ändern"
 
-#: client/osci/dialog/DiplomacyDlg.py:419
+#: client/osci/dialog/DiplomacyDlg.py:420
 msgid "Reset"
 msgstr "Zurücksetzen"
 
-#: client/osci/dialog/DiplomacyDlg.py:426
+#: client/osci/dialog/DiplomacyDlg.py:427
 msgid "Highligh actions"
 msgstr "Hervorhebe Aktionen"
 
-#: client/osci/dialog/DiplomacyDlg.py:428
+#: client/osci/dialog/DiplomacyDlg.py:429
 msgid "Define color"
 msgstr "Farbe bestimmen"
 
-#: client/osci/dialog/DiplomacyDlg.py:429
+#: client/osci/dialog/DiplomacyDlg.py:430
 msgid "Disable highlight"
 msgstr "Hervorhebung AUS"
 
@@ -1367,7 +1371,7 @@ msgstr "mil."
 #: client/osci/dialog/EmpireOverviewDlg.py:203
 #: client/osci/dialog/EmpireOverviewDlg.py:204
 #: client/osci/dialog/EmpireOverviewDlg.py:205
-#: client/osci/dialog/FleetsOverviewDlg.py:242
+#: client/osci/dialog/FleetsOverviewDlg.py:245
 msgid "MP"
 msgstr "MP"
 
@@ -1408,8 +1412,8 @@ msgstr "Kommando LÖSCHE ALLE NACHRICHTEN wird ausgeführt..."
 
 #: client/osci/dialog/EventsDlg.py:146 client/osci/dialog/EventsDlg.py:158
 #: client/osci/dialog/FleetsAnalysisDlg.py:111
-#: client/osci/dialog/FleetsOverviewDlg.py:201
-#: client/osci/dialog/FleetsOverviewDlg.py:212
+#: client/osci/dialog/FleetsOverviewDlg.py:204
+#: client/osci/dialog/FleetsOverviewDlg.py:215
 #: client/osci/dialog/MessagesDlg.py:355 client/osci/dialog/MessagesDlg.py:370
 #: client/osci/dialog/PlanetsAnalysisDlg.py:108
 #: client/osci/dialog/PlanetsOverviewDlg.py:217
@@ -1432,7 +1436,7 @@ msgid "Time"
 msgstr "Zeit"
 
 #: client/osci/dialog/EventsDlg.py:178
-#: client/osci/dialog/FleetsOverviewDlg.py:236
+#: client/osci/dialog/FleetsOverviewDlg.py:239
 msgid "Location"
 msgstr "Ortsangabe"
 
@@ -1445,7 +1449,7 @@ msgstr "Nachricht"
 msgid "Delete"
 msgstr "Löschen"
 
-#: client/osci/dialog/EventsDlg.py:183 client/osci/dialog/FleetDlg.py:403
+#: client/osci/dialog/EventsDlg.py:183 client/osci/dialog/FleetDlg.py:404
 msgid "Delete All"
 msgstr "Alles löschen"
 
@@ -1515,15 +1519,15 @@ msgid "No commander specified."
 msgstr "Kein Anführer ausgewählt"
 
 #: client/osci/dialog/FleetCommandDlg.py:106 client/osci/dialog/FleetDlg.py:118
-#: client/osci/dialog/StarSystemDlg.py:427
-#: client/osci/dialog/StarSystemDlg.py:465
+#: client/osci/dialog/StarSystemDlg.py:419
+#: client/osci/dialog/StarSystemDlg.py:461
 #: client/osci/dialog/StarSystemDlg.py:489
-#: client/osci/dialog/StarSystemDlg.py:688
-#: client/osci/dialog/StarSystemDlg.py:689
-#: client/osci/dialog/StarSystemDlg.py:690
-#: client/osci/dialog/StarSystemDlg.py:691
-#: client/osci/dialog/StarSystemDlg.py:692
-#: client/osci/dialog/StarSystemDlg.py:693 client/osci/dialog/TechInfoDlg.py:41
+#: client/osci/dialog/StarSystemDlg.py:665
+#: client/osci/dialog/StarSystemDlg.py:666
+#: client/osci/dialog/StarSystemDlg.py:667
+#: client/osci/dialog/StarSystemDlg.py:668
+#: client/osci/dialog/StarSystemDlg.py:669
+#: client/osci/dialog/StarSystemDlg.py:670 client/osci/dialog/TechInfoDlg.py:41
 msgid "?"
 msgstr "?"
 
@@ -1601,7 +1605,7 @@ msgid "Declare War"
 msgstr "Erkläre Krieg"
 
 #: client/osci/dialog/FleetCommandDlg.py:301
-#: client/osci/dialog/ResearchDlg.py:423
+#: client/osci/dialog/ResearchDlg.py:424
 msgid "Repeat"
 msgstr "Wiederhole"
 
@@ -1609,7 +1613,7 @@ msgstr "Wiederhole"
 msgid "Use Wormhole"
 msgstr "Nutze Wurmloch"
 
-#: client/osci/dialog/FleetCommandDlg.py:306 client/osci/dialog/FleetDlg.py:395
+#: client/osci/dialog/FleetCommandDlg.py:306 client/osci/dialog/FleetDlg.py:396
 msgid "Target"
 msgstr "Ziel"
 
@@ -1632,7 +1636,7 @@ msgstr "Beginne mit dem Kommando #"
 
 #: client/osci/dialog/FleetCommandDlg.py:326
 #: client/osci/dialog/NewGlobalTaskDlg.py:274
-#: client/osci/dialog/NewTaskDlg.py:390 client/osci/dialog/StructTaskDlg.py:338
+#: client/osci/dialog/NewTaskDlg.py:390 client/osci/dialog/StructTaskDlg.py:339
 msgid "1"
 msgstr "1"
 
@@ -1649,8 +1653,8 @@ msgstr "Ausführen"
 msgid "Fleet: %s"
 msgstr "Flotte : %s"
 
-#: client/osci/dialog/FleetDlg.py:86 client/osci/dialog/FleetDlg.py:169
-#: client/osci/dialog/FleetDlg.py:176
+#: client/osci/dialog/FleetDlg.py:86 client/osci/dialog/FleetDlg.py:170
+#: client/osci/dialog/FleetDlg.py:177
 msgid "%d + %d"
 msgstr "%d + %d"
 
@@ -1658,177 +1662,177 @@ msgstr "%d + %d"
 msgid "Base speed %.2f, speed boost %.2f"
 msgstr "Basis Tempo %.2f, Tempoerhöhung %.2f"
 
-#: client/osci/dialog/FleetDlg.py:142
+#: client/osci/dialog/FleetDlg.py:143
 msgid "Command #%d"
 msgstr "Kommando #%d"
 
-#: client/osci/dialog/FleetDlg.py:170
+#: client/osci/dialog/FleetDlg.py:171
 msgid "Support: %d energy and %d contruction points per turn."
 msgstr "Unterhalt: %d Energie und %d Produktionspunkte pro Runde."
 
-#: client/osci/dialog/FleetDlg.py:190 client/osci/dialog/StarSystemDlg.py:556
+#: client/osci/dialog/FleetDlg.py:191 client/osci/dialog/StarSystemDlg.py:538
 msgid "%d x %s"
 msgstr "%d x %s"
 
-#: client/osci/dialog/FleetDlg.py:219
+#: client/osci/dialog/FleetDlg.py:220
 msgid "Select command to delete."
 msgstr "Wähle Kommando zum Löschen aus."
 
-#: client/osci/dialog/FleetDlg.py:223
+#: client/osci/dialog/FleetDlg.py:224
 msgid "Executing DELETE COMMAND command..."
 msgstr "Ausführen des BEFEHL RÜCKGÄNGIG Kommandos..."
 
-#: client/osci/dialog/FleetDlg.py:252
+#: client/osci/dialog/FleetDlg.py:253
 msgid "Select command to activate."
 msgstr "Wähle Kommando zum aktivieren aus."
 
-#: client/osci/dialog/FleetDlg.py:256
+#: client/osci/dialog/FleetDlg.py:257
 msgid "Executing ACTIVATE COMMAND command..."
 msgstr "Ausführen des AKTIVIERE BEFEHL Kommandos..."
 
-#: client/osci/dialog/FleetDlg.py:271
+#: client/osci/dialog/FleetDlg.py:272
 msgid "Executing MOVE ACTION command..."
 msgstr "Ausführen des BEWEGE BEFEHLS Kommandos..."
 
-#: client/osci/dialog/FleetDlg.py:287
+#: client/osci/dialog/FleetDlg.py:288
 msgid "Executing CLEAR PROCESSED ACTIONS command..."
 msgstr "Ausführen des LÖSCHE AUSGEFÜHRTE KOMMANDOS Kommandos..."
 
-#: client/osci/dialog/FleetDlg.py:308
+#: client/osci/dialog/FleetDlg.py:309
 #, fuzzy
 msgid "Really scrap this fleet?"
 msgstr "Dieses Schiff wirklich verschrotten?"
 
-#: client/osci/dialog/FleetDlg.py:312
+#: client/osci/dialog/FleetDlg.py:313
 msgid "Really scrap this ship?"
 msgstr "Dieses Schiff wirklich verschrotten?"
 
-#: client/osci/dialog/FleetDlg.py:319
+#: client/osci/dialog/FleetDlg.py:320
 msgid "Executing SCRAP SHIP command..."
 msgstr "Ausführen des SCHIFF HINZUFÜGEN Kommandos..."
 
-#: client/osci/dialog/FleetDlg.py:338
+#: client/osci/dialog/FleetDlg.py:339
 #, fuzzy
 msgid "Executing SCRAP FLEET command..."
 msgstr "Ausführen des TEILE FLOTTE AUF Kommandos..."
 
-#: client/osci/dialog/FleetDlg.py:366 client/osci/dialog/StarSystemDlg.py:1224
+#: client/osci/dialog/FleetDlg.py:367 client/osci/dialog/StarSystemDlg.py:1188
 #, fuzzy
 msgid "Locate"
 msgstr "Ortsangabe"
 
-#: client/osci/dialog/FleetDlg.py:374 client/osci/dialog/FleetSplitDlg.py:518
+#: client/osci/dialog/FleetDlg.py:375 client/osci/dialog/FleetSplitDlg.py:518
 #: client/osci/dialog/FleetSplitDlg.py:556
 #: client/osci/dialog/NewGlobalTaskDlg.py:266
-#: client/osci/dialog/NewTaskDlg.py:380 client/osci/dialog/ResearchDlg.py:377
-#: client/osci/dialog/ResearchDlg.py:397 client/osci/dialog/ResearchDlg.py:411
+#: client/osci/dialog/NewTaskDlg.py:380 client/osci/dialog/ResearchDlg.py:378
+#: client/osci/dialog/ResearchDlg.py:398 client/osci/dialog/ResearchDlg.py:412
 msgid "Lvl"
 msgstr "Lvl"
 
-#: client/osci/dialog/FleetDlg.py:377 client/osci/dialog/FleetSplitDlg.py:521
+#: client/osci/dialog/FleetDlg.py:378 client/osci/dialog/FleetSplitDlg.py:521
 #: client/osci/dialog/FleetSplitDlg.py:559
 msgid "Exp"
 msgstr "Erf."
 
-#: client/osci/dialog/FleetDlg.py:378 client/osci/dialog/FleetSplitDlg.py:522
+#: client/osci/dialog/FleetDlg.py:379 client/osci/dialog/FleetSplitDlg.py:522
 #: client/osci/dialog/FleetSplitDlg.py:560
 msgid "Spd"
 msgstr "Tempo"
 
-#: client/osci/dialog/FleetDlg.py:382
+#: client/osci/dialog/FleetDlg.py:383
 msgid "Coordinates"
 msgstr "Koordinaten"
 
-#: client/osci/dialog/FleetDlg.py:384
+#: client/osci/dialog/FleetDlg.py:385
 msgid "Orbiting"
 msgstr "Umlaufbahn"
 
-#: client/osci/dialog/FleetDlg.py:386 client/osci/dialog/FleetDlg.py:436
+#: client/osci/dialog/FleetDlg.py:387 client/osci/dialog/FleetDlg.py:437
 msgid "Max speed"
 msgstr "Maximales Tempo"
 
-#: client/osci/dialog/FleetDlg.py:391
+#: client/osci/dialog/FleetDlg.py:392
 msgid "Commands"
 msgstr "Kommandos"
 
 # /!\ keep in sync
-#: client/osci/dialog/FleetDlg.py:394
+#: client/osci/dialog/FleetDlg.py:395
 msgid "Command"
 msgstr "Kommando"
 
-#: client/osci/dialog/FleetDlg.py:395 client/osci/dialog/GlobalQueuesDlg.py:279
+#: client/osci/dialog/FleetDlg.py:396 client/osci/dialog/GlobalQueuesDlg.py:284
 #: client/osci/dialog/NewGlobalTaskDlg.py:292
 #: client/osci/dialog/NewTaskDlg.py:408 client/osci/dialog/ProblemsDlg.py:520
-#: client/osci/dialog/ResearchDlg.py:384 client/osci/dialog/ResearchDlg.py:402
-#: client/osci/dialog/ResearchDlg.py:428
-#: client/osci/dialog/StarSystemDlg.py:1429
-#: client/osci/dialog/StarSystemDlg.py:1500 client/osci/gdata.py:161
+#: client/osci/dialog/ResearchDlg.py:385 client/osci/dialog/ResearchDlg.py:403
+#: client/osci/dialog/ResearchDlg.py:429
+#: client/osci/dialog/StarSystemDlg.py:1383
+#: client/osci/dialog/StarSystemDlg.py:1454 client/osci/gdata.py:161
 msgid "Info"
 msgstr "Info"
 
 # Labelfeld too small...
-#: client/osci/dialog/FleetDlg.py:397
+#: client/osci/dialog/FleetDlg.py:398
 msgid "New cmd"
 msgstr "Kommando"
 
-#: client/osci/dialog/FleetDlg.py:399
+#: client/osci/dialog/FleetDlg.py:400
 msgid "Set active"
 msgstr "Aktivieren"
 
-#: client/osci/dialog/FleetDlg.py:401
+#: client/osci/dialog/FleetDlg.py:402
 msgid "Delete cmd"
 msgstr "Löschen"
 
-#: client/osci/dialog/FleetDlg.py:409
+#: client/osci/dialog/FleetDlg.py:410
 msgid "Other commands"
 msgstr "Andere Kommandos"
 
-#: client/osci/dialog/FleetDlg.py:411
+#: client/osci/dialog/FleetDlg.py:412
 msgid "Split fleet"
 msgstr "Flotte aufteilen"
 
-#: client/osci/dialog/FleetDlg.py:413
+#: client/osci/dialog/FleetDlg.py:414
 msgid "Rename fleet"
 msgstr "Flottenname"
 
-#: client/osci/dialog/FleetDlg.py:415
+#: client/osci/dialog/FleetDlg.py:416
 msgid "Fleet Specs"
 msgstr "Details"
 
-#: client/osci/dialog/FleetDlg.py:417
+#: client/osci/dialog/FleetDlg.py:418
 msgid "Auto delete"
 msgstr "Auto löschen"
 
-#: client/osci/dialog/FleetDlg.py:419
+#: client/osci/dialog/FleetDlg.py:420
 msgid "Scout wave"
 msgstr ""
 
-#: client/osci/dialog/FleetDlg.py:421
+#: client/osci/dialog/FleetDlg.py:422
 #, fuzzy
 msgid "Scrap fleet"
 msgstr "Flotte aufteilen"
 
-#: client/osci/dialog/FleetDlg.py:424
+#: client/osci/dialog/FleetDlg.py:425
 msgid "Ship Data"
 msgstr "Schiffsdaten"
 
-#: client/osci/dialog/FleetDlg.py:432
+#: client/osci/dialog/FleetDlg.py:433
 msgid "Attack eff"
 msgstr "Angriff eff."
 
-#: client/osci/dialog/FleetDlg.py:434
+#: client/osci/dialog/FleetDlg.py:435
 msgid "Defence eff"
 msgstr "Verteidigung eff."
 
-#: client/osci/dialog/FleetDlg.py:438
+#: client/osci/dialog/FleetDlg.py:439
 msgid "Scanner Pwr"
 msgstr "Scannreichweite"
 
-#: client/osci/dialog/FleetDlg.py:444
+#: client/osci/dialog/FleetDlg.py:445
 msgid "Support"
 msgstr "Unterhalt"
 
-#: client/osci/dialog/FleetDlg.py:446
+#: client/osci/dialog/FleetDlg.py:447
 msgid "Max HP"
 msgstr "Max TP"
 
@@ -2212,74 +2216,79 @@ msgstr "Schiffe"
 msgid "Fleet size"
 msgstr "Flottengröße"
 
-#: client/osci/dialog/FleetsOverviewDlg.py:118
+#: client/osci/dialog/FleetsOverviewDlg.py:105
+#: client/osci/dialog/NewTaskDlg.py:414
+msgid "Owner"
+msgstr "Besitzer"
+
+#: client/osci/dialog/FleetsOverviewDlg.py:120
 msgid "%s (dst)"
 msgstr "%s (Ziel)"
 
-#: client/osci/dialog/FleetsOverviewDlg.py:227
+#: client/osci/dialog/FleetsOverviewDlg.py:230
 msgid "Fleets Overview"
 msgstr "Flottenübersicht"
 
-#: client/osci/dialog/FleetsOverviewDlg.py:235
+#: client/osci/dialog/FleetsOverviewDlg.py:238
 msgid "Fleet"
 msgstr "Flotte"
 
-#: client/osci/dialog/FleetsOverviewDlg.py:237
+#: client/osci/dialog/FleetsOverviewDlg.py:240
 msgid "Current order"
 msgstr "Aktueller Befehl"
 
-#: client/osci/dialog/FleetsOverviewDlg.py:238
+#: client/osci/dialog/FleetsOverviewDlg.py:241
 msgid "ETA"
 msgstr "GAZ  "
 
-#: client/osci/dialog/FleetsOverviewDlg.py:239
+#: client/osci/dialog/FleetsOverviewDlg.py:242
 msgid "Fuel %"
 msgstr "Treibst. %"
 
-#: client/osci/dialog/FleetsOverviewDlg.py:240
+#: client/osci/dialog/FleetsOverviewDlg.py:243
 msgid "Op. time"
 msgstr "Op. Zeit  "
 
-#: client/osci/dialog/FleetsOverviewDlg.py:241
+#: client/osci/dialog/FleetsOverviewDlg.py:244
 msgid "Range"
 msgstr "Reichweite"
 
-#: client/osci/dialog/FleetsOverviewDlg.py:243
+#: client/osci/dialog/FleetsOverviewDlg.py:246
 msgid "Sign"
 msgstr "Sign"
 
-#: client/osci/dialog/FleetsOverviewDlg.py:244
+#: client/osci/dialog/FleetsOverviewDlg.py:247
 msgid "Last upgr."
 msgstr "Letzte Aufst."
 
-#: client/osci/dialog/FleetsOverviewDlg.py:248
+#: client/osci/dialog/FleetsOverviewDlg.py:251
 #: client/osci/dialog/SystemOverviewDlg.py:216
 msgid "Mine"
 msgstr "Eigene"
 
-#: client/osci/dialog/FleetsOverviewDlg.py:250 client/osci/gdata.py:91
+#: client/osci/dialog/FleetsOverviewDlg.py:253 client/osci/gdata.py:91
 msgid "Enemy"
 msgstr "Feind"
 
-#: client/osci/dialog/FleetsOverviewDlg.py:252 client/osci/gdata.py:91
+#: client/osci/dialog/FleetsOverviewDlg.py:255 client/osci/gdata.py:91
 msgid "Unfriendly"
 msgstr "Unfreundlich"
 
-#: client/osci/dialog/FleetsOverviewDlg.py:254 client/osci/gdata.py:91
+#: client/osci/dialog/FleetsOverviewDlg.py:257 client/osci/gdata.py:91
 #: client/osci/gdata.py:92
 msgid "Neutral"
 msgstr "Neutral"
 
-#: client/osci/dialog/FleetsOverviewDlg.py:256 client/osci/gdata.py:92
+#: client/osci/dialog/FleetsOverviewDlg.py:259 client/osci/gdata.py:92
 msgid "Friendly"
 msgstr "Freundlich"
 
-#: client/osci/dialog/FleetsOverviewDlg.py:258 client/osci/gdata.py:92
+#: client/osci/dialog/FleetsOverviewDlg.py:261 client/osci/gdata.py:92
 msgid "Allied"
 msgstr "Alliiert"
 
-#: client/osci/dialog/FleetsOverviewDlg.py:260
-#: client/osci/dialog/OptionsDlg.py:647
+#: client/osci/dialog/FleetsOverviewDlg.py:263
+#: client/osci/dialog/OptionsDlg.py:648
 msgid "Show redirects"
 msgstr "Zeige Umleitung"
 
@@ -2346,127 +2355,127 @@ msgid "Restart"
 msgstr "Neustart"
 
 #: client/osci/dialog/GlobalQueuesDlg.py:99
-#: client/osci/dialog/StarSystemDlg.py:275
+#: client/osci/dialog/StarSystemDlg.py:277
 msgid "New"
 msgstr "Neu"
 
-#: client/osci/dialog/GlobalQueuesDlg.py:130
-#: client/osci/dialog/GlobalQueuesDlg.py:152
-#: client/osci/dialog/StarSystemDlg.py:988
-#: client/osci/dialog/StarSystemDlg.py:1009
+#: client/osci/dialog/GlobalQueuesDlg.py:131
+#: client/osci/dialog/GlobalQueuesDlg.py:154
+#: client/osci/dialog/StarSystemDlg.py:984
+#: client/osci/dialog/StarSystemDlg.py:1005
 msgid "Executing MOVE TASK command..."
 msgstr "Ausführen des VERSCHIEBE AUFGABE Kommandos..."
 
-#: client/osci/dialog/GlobalQueuesDlg.py:171
-#: client/osci/dialog/StarSystemDlg.py:1032
+#: client/osci/dialog/GlobalQueuesDlg.py:174
+#: client/osci/dialog/StarSystemDlg.py:1029
 msgid "Executing CHANGE TASK command..."
 msgstr "Ausführen des ÄNDERE AUFGABE Kommandos..."
 
-#: client/osci/dialog/GlobalQueuesDlg.py:194
-#: client/osci/dialog/StarSystemDlg.py:1021
+#: client/osci/dialog/GlobalQueuesDlg.py:198
+#: client/osci/dialog/StarSystemDlg.py:1018
 msgid "Abort this construction task?"
 msgstr "Bauprozess abbrechen?"
 
-#: client/osci/dialog/GlobalQueuesDlg.py:200
+#: client/osci/dialog/GlobalQueuesDlg.py:204
 #, fuzzy
 msgid "Executing ABORT CONSTRUCTION command..."
 msgstr "Ausführen des STARTE PRODUKTION Kommandos..."
 
-#: client/osci/dialog/GlobalQueuesDlg.py:229
+#: client/osci/dialog/GlobalQueuesDlg.py:234
 #, fuzzy
 msgid "Global production queues"
 msgstr "Gesamtproduktion"
 
-#: client/osci/dialog/GlobalQueuesDlg.py:234
+#: client/osci/dialog/GlobalQueuesDlg.py:239
 msgid "Default global queue"
 msgstr ""
 
-#: client/osci/dialog/GlobalQueuesDlg.py:238
-#: client/osci/dialog/GlobalQueuesDlg.py:242
-#: client/osci/dialog/GlobalQueuesDlg.py:246
-#: client/osci/dialog/GlobalQueuesDlg.py:250
-#: client/osci/dialog/StarSystemDlg.py:232
+#: client/osci/dialog/GlobalQueuesDlg.py:243
+#: client/osci/dialog/GlobalQueuesDlg.py:247
+#: client/osci/dialog/GlobalQueuesDlg.py:251
+#: client/osci/dialog/GlobalQueuesDlg.py:255
+#: client/osci/dialog/StarSystemDlg.py:234
 msgid "Queue \"{0}\""
 msgstr ""
 
-#: client/osci/dialog/GlobalQueuesDlg.py:256
-#: client/osci/dialog/StarSystemDlg.py:1334
-#: client/osci/dialog/StarSystemDlg.py:1469
+#: client/osci/dialog/GlobalQueuesDlg.py:261
+#: client/osci/dialog/StarSystemDlg.py:1288
+#: client/osci/dialog/StarSystemDlg.py:1423
 msgid "Construction pts"
 msgstr "Produktionspkt."
 
-#: client/osci/dialog/GlobalQueuesDlg.py:260
-#: client/osci/dialog/GlobalQueuesDlg.py:276
+#: client/osci/dialog/GlobalQueuesDlg.py:265
+#: client/osci/dialog/GlobalQueuesDlg.py:281
 #: client/osci/dialog/NewGlobalTaskDlg.py:308
 #: client/osci/dialog/NewTaskDlg.py:446
-#: client/osci/dialog/StarSystemDlg.py:1473
-#: client/osci/dialog/StarSystemDlg.py:1497
-#: client/osci/dialog/StructTaskDlg.py:381
+#: client/osci/dialog/StarSystemDlg.py:1427
+#: client/osci/dialog/StarSystemDlg.py:1451
+#: client/osci/dialog/StructTaskDlg.py:382
 msgid "Quantity"
 msgstr "Anzahl"
 
-#: client/osci/dialog/GlobalQueuesDlg.py:264
-#: client/osci/dialog/StarSystemDlg.py:1414
-#: client/osci/dialog/StarSystemDlg.py:1485
+#: client/osci/dialog/GlobalQueuesDlg.py:269
+#: client/osci/dialog/StarSystemDlg.py:1368
+#: client/osci/dialog/StarSystemDlg.py:1439
 msgid "<<"
 msgstr "<<"
 
-#: client/osci/dialog/GlobalQueuesDlg.py:266
-#: client/osci/dialog/StarSystemDlg.py:1487
+#: client/osci/dialog/GlobalQueuesDlg.py:271
+#: client/osci/dialog/StarSystemDlg.py:1441
 msgid "Move task to first position in queue"
 msgstr "Verschiebe Vorgang auf die erste Position der Queue"
 
-#: client/osci/dialog/GlobalQueuesDlg.py:267
-#: client/osci/dialog/StarSystemDlg.py:1417
-#: client/osci/dialog/StarSystemDlg.py:1488
+#: client/osci/dialog/GlobalQueuesDlg.py:272
+#: client/osci/dialog/StarSystemDlg.py:1371
+#: client/osci/dialog/StarSystemDlg.py:1442
 msgid "<"
 msgstr "<"
 
-#: client/osci/dialog/GlobalQueuesDlg.py:269
-#: client/osci/dialog/StarSystemDlg.py:1490
+#: client/osci/dialog/GlobalQueuesDlg.py:274
+#: client/osci/dialog/StarSystemDlg.py:1444
 msgid "Move task to previous position in queue"
 msgstr "Verschiebe Vorgang auf die vorhergehende Position in der Queue"
 
-#: client/osci/dialog/GlobalQueuesDlg.py:270
-#: client/osci/dialog/StarSystemDlg.py:1420
-#: client/osci/dialog/StarSystemDlg.py:1491
+#: client/osci/dialog/GlobalQueuesDlg.py:275
+#: client/osci/dialog/StarSystemDlg.py:1374
+#: client/osci/dialog/StarSystemDlg.py:1445
 msgid ">"
 msgstr ">"
 
-#: client/osci/dialog/GlobalQueuesDlg.py:272
-#: client/osci/dialog/StarSystemDlg.py:1493
+#: client/osci/dialog/GlobalQueuesDlg.py:277
+#: client/osci/dialog/StarSystemDlg.py:1447
 msgid "Move task to next position in queue"
 msgstr "Verschiebe Vorgang auf die nächste Position in der Queue"
 
-#: client/osci/dialog/GlobalQueuesDlg.py:273
-#: client/osci/dialog/StarSystemDlg.py:1423
-#: client/osci/dialog/StarSystemDlg.py:1494
+#: client/osci/dialog/GlobalQueuesDlg.py:278
+#: client/osci/dialog/StarSystemDlg.py:1377
+#: client/osci/dialog/StarSystemDlg.py:1448
 msgid ">>"
 msgstr ">>"
 
-#: client/osci/dialog/GlobalQueuesDlg.py:275
-#: client/osci/dialog/StarSystemDlg.py:1496
+#: client/osci/dialog/GlobalQueuesDlg.py:280
+#: client/osci/dialog/StarSystemDlg.py:1450
 msgid "Move task to last position in queue"
 msgstr "Verschiebe Vorgang auf die letzte Position der Queue"
 
-#: client/osci/dialog/GlobalQueuesDlg.py:278
-#: client/osci/dialog/StarSystemDlg.py:1499
+#: client/osci/dialog/GlobalQueuesDlg.py:283
+#: client/osci/dialog/StarSystemDlg.py:1453
 msgid "Change task quantity"
 msgstr "Ändern der Vorgangsanzahl"
 
-#: client/osci/dialog/GlobalQueuesDlg.py:281
-#: client/osci/dialog/StarSystemDlg.py:1502
+#: client/osci/dialog/GlobalQueuesDlg.py:286
+#: client/osci/dialog/StarSystemDlg.py:1456
 msgid "Show task informations"
 msgstr "Zeigen der Vorgangsinformation"
 
-#: client/osci/dialog/GlobalQueuesDlg.py:282
-#: client/osci/dialog/ResearchDlg.py:426
-#: client/osci/dialog/StarSystemDlg.py:1503
+#: client/osci/dialog/GlobalQueuesDlg.py:287
+#: client/osci/dialog/ResearchDlg.py:427
+#: client/osci/dialog/StarSystemDlg.py:1457
 msgid "Abort"
 msgstr "Abbrechen"
 
-#: client/osci/dialog/GlobalQueuesDlg.py:284
-#: client/osci/dialog/StarSystemDlg.py:1505
+#: client/osci/dialog/GlobalQueuesDlg.py:289
+#: client/osci/dialog/StarSystemDlg.py:1459
 msgid "Abort task construction"
 msgstr "Abbruch des Bauvorgangs"
 
@@ -2547,8 +2556,8 @@ msgstr "Passwort"
 
 #: client/osci/dialog/LoginDlg.py:226 client/osci/dialog/MainGameDlg.py:367
 #: client/osci/dialog/NewGlobalTaskDlg.py:306
-#: client/osci/dialog/NewTaskDlg.py:444 client/osci/dialog/OptionsDlg.py:529
-#: client/osci/dialog/StructTaskDlg.py:379
+#: client/osci/dialog/NewTaskDlg.py:444 client/osci/dialog/OptionsDlg.py:530
+#: client/osci/dialog/StructTaskDlg.py:380
 msgid "Options"
 msgstr "Optionen"
 
@@ -2609,7 +2618,7 @@ msgid "Overview"
 msgstr "Übersicht"
 
 #: client/osci/dialog/MainGameDlg.py:353
-#: client/osci/dialog/StarSystemDlg.py:1390
+#: client/osci/dialog/StarSystemDlg.py:1344
 msgid "Problems"
 msgstr "Probleme"
 
@@ -2693,7 +2702,7 @@ msgid "N"
 msgstr "N"
 
 # Wiederholen
-#: client/osci/dialog/MessagesDlg.py:249 client/osci/dialog/ResearchDlg.py:409
+#: client/osci/dialog/MessagesDlg.py:249 client/osci/dialog/ResearchDlg.py:410
 msgid "R"
 msgstr "W"
 
@@ -2874,12 +2883,12 @@ msgid "Free slot"
 msgstr "Freie Position"
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:197
-#: client/osci/dialog/NewTaskDlg.py:291 client/osci/dialog/StructTaskDlg.py:229
+#: client/osci/dialog/NewTaskDlg.py:291 client/osci/dialog/StructTaskDlg.py:230
 msgid "Select technology to construct."
 msgstr "Wähle Technologie aus die gebaut werden soll."
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:205
-#: client/osci/dialog/NewTaskDlg.py:313 client/osci/dialog/StructTaskDlg.py:249
+#: client/osci/dialog/NewTaskDlg.py:313 client/osci/dialog/StructTaskDlg.py:250
 msgid "Executing START CONSTRUCTION command..."
 msgstr "Ausführen des STARTE PRODUKTION Kommandos..."
 
@@ -2899,42 +2908,42 @@ msgid "Misc"
 msgstr "Versch."
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:276
-#: client/osci/dialog/NewTaskDlg.py:392 client/osci/dialog/StructTaskDlg.py:340
+#: client/osci/dialog/NewTaskDlg.py:392 client/osci/dialog/StructTaskDlg.py:341
 msgid "2"
 msgstr "2"
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:278
-#: client/osci/dialog/NewTaskDlg.py:394 client/osci/dialog/StructTaskDlg.py:342
+#: client/osci/dialog/NewTaskDlg.py:394 client/osci/dialog/StructTaskDlg.py:343
 msgid "3"
 msgstr "3"
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:280
-#: client/osci/dialog/NewTaskDlg.py:396 client/osci/dialog/StructTaskDlg.py:344
+#: client/osci/dialog/NewTaskDlg.py:396 client/osci/dialog/StructTaskDlg.py:345
 msgid "4"
 msgstr "4"
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:282
-#: client/osci/dialog/NewTaskDlg.py:398 client/osci/dialog/StructTaskDlg.py:346
+#: client/osci/dialog/NewTaskDlg.py:398 client/osci/dialog/StructTaskDlg.py:347
 msgid "5"
 msgstr "5"
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:284
-#: client/osci/dialog/NewTaskDlg.py:400 client/osci/dialog/StructTaskDlg.py:348
+#: client/osci/dialog/NewTaskDlg.py:400 client/osci/dialog/StructTaskDlg.py:349
 msgid "6"
 msgstr "6"
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:286
-#: client/osci/dialog/NewTaskDlg.py:402 client/osci/dialog/StructTaskDlg.py:350
+#: client/osci/dialog/NewTaskDlg.py:402 client/osci/dialog/StructTaskDlg.py:351
 msgid "7"
 msgstr "7"
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:288
-#: client/osci/dialog/NewTaskDlg.py:404 client/osci/dialog/StructTaskDlg.py:352
+#: client/osci/dialog/NewTaskDlg.py:404 client/osci/dialog/StructTaskDlg.py:353
 msgid "8"
 msgstr "8"
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:290
-#: client/osci/dialog/NewTaskDlg.py:406 client/osci/dialog/StructTaskDlg.py:354
+#: client/osci/dialog/NewTaskDlg.py:406 client/osci/dialog/StructTaskDlg.py:355
 msgid "9"
 msgstr "9"
 
@@ -2945,22 +2954,21 @@ msgstr "Zivil"
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:303
 #: client/osci/dialog/NewTaskDlg.py:428 client/osci/dialog/NewTaskDlg.py:441
-#: client/osci/dialog/StructTaskDlg.py:365
+#: client/osci/dialog/StructTaskDlg.py:366
 msgid "Military"
 msgstr "Militärisch"
 
 #: client/osci/dialog/NewGlobalTaskDlg.py:310
-#: client/osci/dialog/NewTaskDlg.py:448 client/osci/dialog/OptionsDlg.py:635
-#: client/osci/dialog/StructTaskDlg.py:383
+#: client/osci/dialog/NewTaskDlg.py:448 client/osci/dialog/OptionsDlg.py:636
+#: client/osci/dialog/StructTaskDlg.py:384
 msgid "Report finalization"
 msgstr "Berichte Fertigstellung"
 
 #: client/osci/dialog/NewMessageDlg.py:79
 #: client/osci/dialog/NewMessageDlg.py:114
-#: client/osci/dialog/StarSystemDlg.py:315
-#: client/osci/dialog/StarSystemDlg.py:336
-#: client/osci/dialog/StarSystemDlg.py:577
-#: client/osci/dialog/StarSystemDlg.py:581
+#: client/osci/dialog/StarSystemDlg.py:317
+#: client/osci/dialog/StarSystemDlg.py:559
+#: client/osci/dialog/StarSystemDlg.py:563
 msgid "%s / %s"
 msgstr "%s / %s"
 
@@ -3008,7 +3016,7 @@ msgstr "Empfänger auswählen"
 
 #: client/osci/dialog/NewTaskDlg.py:210
 #: client/osci/dialog/PlanetsOverviewDlg.py:96
-#: client/osci/dialog/StarSystemDlg.py:548
+#: client/osci/dialog/StarSystemDlg.py:530
 msgid "[Nobody]"
 msgstr "[Niemand]"
 
@@ -3016,7 +3024,7 @@ msgstr "[Niemand]"
 msgid "Select planet to construct on."
 msgstr "Wähle Planet auf dem gebaut werden soll"
 
-#: client/osci/dialog/NewTaskDlg.py:309 client/osci/dialog/StructTaskDlg.py:245
+#: client/osci/dialog/NewTaskDlg.py:309 client/osci/dialog/StructTaskDlg.py:246
 msgid "Do you want to issue relocation of your government?"
 msgstr ""
 
@@ -3027,9 +3035,9 @@ msgstr "Wähle neue Aufgabe aus"
 #  Geschätzte Produktions Zeit
 #: client/osci/dialog/NewTaskDlg.py:381
 #: client/osci/dialog/PlanetsOverviewDlg.py:264
-#: client/osci/dialog/ResearchDlg.py:379 client/osci/dialog/ResearchDlg.py:399
-#: client/osci/dialog/ResearchDlg.py:413
-#: client/osci/dialog/StarSystemDlg.py:1465
+#: client/osci/dialog/ResearchDlg.py:380 client/osci/dialog/ResearchDlg.py:400
+#: client/osci/dialog/ResearchDlg.py:414
+#: client/osci/dialog/StarSystemDlg.py:1419
 msgid "ETC"
 msgstr "GPZ"
 
@@ -3038,17 +3046,13 @@ msgid "Stucts"
 msgstr "Gebäude"
 
 #: client/osci/dialog/NewTaskDlg.py:411
-#: client/osci/dialog/StarSystemDlg.py:1477
+#: client/osci/dialog/StarSystemDlg.py:1431
 msgid "Target planet"
 msgstr "Zielplanet"
 
 #: client/osci/dialog/NewTaskDlg.py:414
-msgid "Owner"
-msgstr "Besitzer"
-
-#: client/osci/dialog/NewTaskDlg.py:414
 #: client/osci/dialog/PlanetsOverviewDlg.py:251
-#: client/osci/dialog/StarSystemDlg.py:1230
+#: client/osci/dialog/StarSystemDlg.py:1194
 msgid "Planet"
 msgstr "Planet"
 
@@ -3056,19 +3060,19 @@ msgstr "Planet"
 msgid "Target slots"
 msgstr "Zielort"
 
-#: client/osci/dialog/NewTaskDlg.py:420 client/osci/dialog/StructTaskDlg.py:357
+#: client/osci/dialog/NewTaskDlg.py:420 client/osci/dialog/StructTaskDlg.py:358
 msgid "Bio production"
 msgstr "Bio Produktion"
 
-#: client/osci/dialog/NewTaskDlg.py:422 client/osci/dialog/StructTaskDlg.py:359
+#: client/osci/dialog/NewTaskDlg.py:422 client/osci/dialog/StructTaskDlg.py:360
 msgid "En production"
 msgstr "En Produktion"
 
-#: client/osci/dialog/NewTaskDlg.py:424 client/osci/dialog/StructTaskDlg.py:361
+#: client/osci/dialog/NewTaskDlg.py:424 client/osci/dialog/StructTaskDlg.py:362
 msgid "CP production"
 msgstr "PP Produktion"
 
-#: client/osci/dialog/NewTaskDlg.py:426 client/osci/dialog/StructTaskDlg.py:363
+#: client/osci/dialog/NewTaskDlg.py:426 client/osci/dialog/StructTaskDlg.py:364
 msgid "RP production"
 msgstr "FP Produktion"
 
@@ -3098,179 +3102,189 @@ msgstr "Wähle Objekt aus"
 msgid "Select Theme"
 msgstr "  Motivauswahl"
 
-#: client/osci/dialog/OptionsDlg.py:475
+#: client/osci/dialog/OptionsDlg.py:476
 #, fuzzy
 msgid "You should restart client to change the language."
 msgstr "Sie müssen die Anwendung neu starten um die Sprache zu ändern."
 
-#: client/osci/dialog/OptionsDlg.py:496
+#: client/osci/dialog/OptionsDlg.py:497
 msgid "The mode you selected is not properly formatted."
 msgstr ""
 
-#: client/osci/dialog/OptionsDlg.py:500
+#: client/osci/dialog/OptionsDlg.py:501
 #, fuzzy
 msgid "You have to restart client to change the resolution."
 msgstr "Sie müssen die Anwendung neu starten um die Sprache zu ändern."
 
-#: client/osci/dialog/OptionsDlg.py:539
+#: client/osci/dialog/OptionsDlg.py:540
 msgid "Resolution"
 msgstr "Auflösung"
 
-#: client/osci/dialog/OptionsDlg.py:551
+#: client/osci/dialog/OptionsDlg.py:552
 #, fuzzy
 msgid "Select resolution"
 msgstr "Postion auswählen."
 
-#: client/osci/dialog/OptionsDlg.py:565
+#: client/osci/dialog/OptionsDlg.py:566
 msgid "Language"
 msgstr "Sprache"
 
-#: client/osci/dialog/OptionsDlg.py:581
+#: client/osci/dialog/OptionsDlg.py:582
 msgid "Select language"
 msgstr "Sprachauswahl"
 
-#: client/osci/dialog/OptionsDlg.py:595
+#: client/osci/dialog/OptionsDlg.py:596
 msgid "Themes"
 msgstr "Motive"
 
-#: client/osci/dialog/OptionsDlg.py:606
+#: client/osci/dialog/OptionsDlg.py:607
 msgid "Select theme"
 msgstr "Motiv auswählen"
 
-#: client/osci/dialog/OptionsDlg.py:621
+#: client/osci/dialog/OptionsDlg.py:622
 msgid "Display flags"
 msgstr "Optionen"
 
-#: client/osci/dialog/OptionsDlg.py:623
+#: client/osci/dialog/OptionsDlg.py:624
 msgid "Fullscreen"
 msgstr "Vollbild"
 
-#: client/osci/dialog/OptionsDlg.py:625
+#: client/osci/dialog/OptionsDlg.py:626
 msgid "Double buf."
 msgstr "Double buf."
 
-#: client/osci/dialog/OptionsDlg.py:627
+#: client/osci/dialog/OptionsDlg.py:628
 msgid "HW surface"
 msgstr "HW Fläche"
 
-#: client/osci/dialog/OptionsDlg.py:629
+#: client/osci/dialog/OptionsDlg.py:630
 msgid "SW surface"
 msgstr "SW Fläche"
 
-#: client/osci/dialog/OptionsDlg.py:633
+#: client/osci/dialog/OptionsDlg.py:634
 msgid "Default settings"
 msgstr "Default Einstellungen"
 
-#: client/osci/dialog/OptionsDlg.py:637
+#: client/osci/dialog/OptionsDlg.py:638
 msgid "Display help/tooltip"
 msgstr "Zeige Hilfe/Tipps"
 
-#: client/osci/dialog/OptionsDlg.py:639
+#: client/osci/dialog/OptionsDlg.py:640
 msgid "Show coordinates"
 msgstr "Zeige Koordinaten"
 
-#: client/osci/dialog/OptionsDlg.py:641
+#: client/osci/dialog/OptionsDlg.py:642
 msgid "Players highlight"
 msgstr "Spieler hervorheben"
 
-#: client/osci/dialog/OptionsDlg.py:643
+#: client/osci/dialog/OptionsDlg.py:644
 msgid "Show minimap"
 msgstr "Zeige Minikarten"
 
-#: client/osci/dialog/OptionsDlg.py:645
+#: client/osci/dialog/OptionsDlg.py:646
 #, fuzzy
 msgid "Show gate systems"
 msgstr "Umbenennung des Systems"
 
-#: client/osci/dialog/OptionsDlg.py:648
-msgid "Starmap hotkey: CTRL-R"
+#: client/osci/dialog/OptionsDlg.py:649
+msgid "CTRL-R"
 msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:649
+msgid "Starmap hotkey:"
+msgstr ""
+
+#: client/osci/dialog/OptionsDlg.py:650
 #, fuzzy
 msgid "Show map grid"
 msgstr "Zeige Minikarten"
 
-#: client/osci/dialog/OptionsDlg.py:650
-msgid "Starmap hotkey: CTRL-G"
+#: client/osci/dialog/OptionsDlg.py:651
+msgid "CTRL-G"
 msgstr ""
 
-#: client/osci/dialog/OptionsDlg.py:651
+#: client/osci/dialog/OptionsDlg.py:651 client/osci/dialog/OptionsDlg.py:653
+#: client/osci/dialog/OptionsDlg.py:655 client/osci/dialog/OptionsDlg.py:657
+#: client/osci/dialog/OptionsDlg.py:659
+msgid "Starmap hotkey"
+msgstr ""
+
+#: client/osci/dialog/OptionsDlg.py:652
 #, fuzzy
 msgid "Alternate system info"
 msgstr "Umbenennung des Systems"
 
-#: client/osci/dialog/OptionsDlg.py:652
-msgid "Starmap hotkey: CTRL-A"
-msgstr ""
-
 #: client/osci/dialog/OptionsDlg.py:653
-msgid "Show map scanners"
+msgid "CTRL-A"
 msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:654
-msgid "Starmap hotkey: CTRL-S"
+msgid "Show map scanners"
 msgstr ""
 
 #: client/osci/dialog/OptionsDlg.py:655
+msgid "CTRL-S"
+msgstr ""
+
+#: client/osci/dialog/OptionsDlg.py:656
 #, fuzzy
 msgid "Show fleet lines"
 msgstr "Zeige Örtlichkeit"
 
-#: client/osci/dialog/OptionsDlg.py:656
-msgid "Starmap hotkey: CTRL-L"
+#: client/osci/dialog/OptionsDlg.py:657
+msgid "CTRL-L"
 msgstr ""
 
-#: client/osci/dialog/OptionsDlg.py:657
+#: client/osci/dialog/OptionsDlg.py:658
 #, fuzzy
 msgid "Show player zones"
 msgstr "Zeige Örtlichkeit"
 
-#: client/osci/dialog/OptionsDlg.py:658
-msgid "Starmap hotkey: CTRL-P"
+#: client/osci/dialog/OptionsDlg.py:659
+msgid "CTRL-P"
 msgstr ""
 
-#: client/osci/dialog/OptionsDlg.py:661
+#: client/osci/dialog/OptionsDlg.py:662
 msgid "Login settings"
 msgstr "Login Einstellungen"
 
-#: client/osci/dialog/OptionsDlg.py:663
+#: client/osci/dialog/OptionsDlg.py:664
 msgid "Auto-login"
 msgstr "Auto-Anmeldung"
 
-#: client/osci/dialog/OptionsDlg.py:665
+#: client/osci/dialog/OptionsDlg.py:666
 msgid "Remember password"
 msgstr "Passwort merken"
 
-#: client/osci/dialog/OptionsDlg.py:669
+#: client/osci/dialog/OptionsDlg.py:670
 msgid "Proxy"
 msgstr "Proxy"
 
-#: client/osci/dialog/OptionsDlg.py:670
+#: client/osci/dialog/OptionsDlg.py:671
 msgid "Host:"
 msgstr "Host:"
 
-#: client/osci/dialog/OptionsDlg.py:672
+#: client/osci/dialog/OptionsDlg.py:673
 msgid "Port:"
 msgstr "Port:"
 
-#: client/osci/dialog/OptionsDlg.py:674
+#: client/osci/dialog/OptionsDlg.py:675
 msgid "Username:"
 msgstr "Benutzer:"
 
-#: client/osci/dialog/OptionsDlg.py:676
+#: client/osci/dialog/OptionsDlg.py:677
 msgid "Password:"
 msgstr "Passwort:"
 
-#: client/osci/dialog/OptionsDlg.py:680
+#: client/osci/dialog/OptionsDlg.py:681
 msgid "Sound / Music"
 msgstr "Klang / Musik"
 
-#: client/osci/dialog/OptionsDlg.py:681
+#: client/osci/dialog/OptionsDlg.py:682
 msgid "Sounds"
 msgstr "Klänge"
 
-#: client/osci/dialog/OptionsDlg.py:685
+#: client/osci/dialog/OptionsDlg.py:686
 msgid "Music"
 msgstr "Musik"
 
@@ -3303,17 +3317,17 @@ msgid "Planets Overview"
 msgstr "Planetenübersicht"
 
 #: client/osci/dialog/PlanetsOverviewDlg.py:253
-#: client/osci/dialog/StarSystemDlg.py:1231
+#: client/osci/dialog/StarSystemDlg.py:1195
 msgid "Env"
 msgstr "Umw"
 
 #: client/osci/dialog/PlanetsOverviewDlg.py:254
-#: client/osci/dialog/StarSystemDlg.py:1231
+#: client/osci/dialog/StarSystemDlg.py:1195
 msgid "Min"
 msgstr "Min"
 
 #: client/osci/dialog/PlanetsOverviewDlg.py:255
-#: client/osci/dialog/StarSystemDlg.py:1231
+#: client/osci/dialog/StarSystemDlg.py:1195
 #: client/osci/dialog/SystemOverviewDlg.py:220
 msgid "En"
 msgstr "Én"
@@ -3345,8 +3359,8 @@ msgid "Mrl"
 msgstr "Moral"
 
 #: client/osci/dialog/PlanetsOverviewDlg.py:262
-#: client/osci/dialog/StructTaskDlg.py:157
 #: client/osci/dialog/StructTaskDlg.py:158
+#: client/osci/dialog/StructTaskDlg.py:159
 msgid "CP"
 msgstr "PP"
 
@@ -3359,7 +3373,7 @@ msgid "Tot.ETC"
 msgstr "Tot. GPZ"
 
 #: client/osci/dialog/PlanetsOverviewDlg.py:266
-#: client/osci/dialog/StarSystemDlg.py:1235
+#: client/osci/dialog/StarSystemDlg.py:1199
 msgid "Constructing"
 msgstr "Produzieren"
 
@@ -3554,7 +3568,7 @@ msgstr " hält benannte Flotten vom Zusammenschluss ab."
 
 #: client/osci/dialog/RenameFleetDlg.py:137
 #: client/osci/dialog/RenameSysDlg.py:113
-#: client/osci/dialog/StarSystemDlg.py:1245
+#: client/osci/dialog/StarSystemDlg.py:1209
 msgid "Rename"
 msgstr "Umbenennen"
 
@@ -3610,135 +3624,135 @@ msgstr "Forschungsliste [%d FP/Runde]"
 msgid "Research [TL%d]"
 msgstr "Forschung [TL%d]"
 
-#: client/osci/dialog/ResearchDlg.py:128
+#: client/osci/dialog/ResearchDlg.py:129
 msgid "Research points %d/%d, change %d pts/turn."
 msgstr "Forschungspunkte %d/%d, Veränderung %d Punkte/Zug."
 
-#: client/osci/dialog/ResearchDlg.py:133
-#: client/osci/dialog/StarSystemDlg.py:410
-#: client/osci/dialog/StarSystemDlg.py:816
+#: client/osci/dialog/ResearchDlg.py:134
+#: client/osci/dialog/StarSystemDlg.py:402
+#: client/osci/dialog/StarSystemDlg.py:793
 msgid "%d %%"
 msgstr "%d %%"
 
-#: client/osci/dialog/ResearchDlg.py:147
+#: client/osci/dialog/ResearchDlg.py:148
 msgid "[%s]"
 msgstr "[%s]"
 
-#: client/osci/dialog/ResearchDlg.py:155
+#: client/osci/dialog/ResearchDlg.py:156
 msgid "%d-%d"
 msgstr "%d-%d"
 
-#: client/osci/dialog/ResearchDlg.py:247
+#: client/osci/dialog/ResearchDlg.py:248
 msgid "Select technology to research."
 msgstr "Wählen Sie eine Technologie zur Erforschung aus."
 
-#: client/osci/dialog/ResearchDlg.py:252 client/osci/dialog/ResearchDlg.py:268
+#: client/osci/dialog/ResearchDlg.py:253 client/osci/dialog/ResearchDlg.py:269
 msgid "Executing START RESEARCH command..."
 msgstr "Ausführen des BEGINNE FORSCHUNG Kommandos..."
 
-#: client/osci/dialog/ResearchDlg.py:263
+#: client/osci/dialog/ResearchDlg.py:264
 msgid "Select technology to improve."
 msgstr "Wähle Technologie zur Optimierung aus."
 
-#: client/osci/dialog/ResearchDlg.py:278
+#: client/osci/dialog/ResearchDlg.py:279
 msgid "Executing MOVE RESEARCH command..."
 msgstr "Ausführen des VERSCHIEBE FORSCHUNGSVORGANG Kommandos..."
 
-#: client/osci/dialog/ResearchDlg.py:293
+#: client/osci/dialog/ResearchDlg.py:294
 msgid "Executing EDIT RESEARCH command..."
 msgstr "Ausführen des EDITIERE FORSCHUNG Kommandos..."
 
-#: client/osci/dialog/ResearchDlg.py:309
+#: client/osci/dialog/ResearchDlg.py:310
 msgid "Abort this research task?"
 msgstr "Diesen Forschungsvorgang abbrechen?"
 
-#: client/osci/dialog/ResearchDlg.py:313
+#: client/osci/dialog/ResearchDlg.py:314
 msgid "Executing ABORT RESEARCH command..."
 msgstr "Ausführen des BRECHE FORSCHUNG AB Kommandos..."
 
-#: client/osci/dialog/ResearchDlg.py:322
+#: client/osci/dialog/ResearchDlg.py:323
 #, fuzzy
 msgid "Select technology to obsolete."
 msgstr "Wähle Technologie aus die gebaut werden soll."
 
-#: client/osci/dialog/ResearchDlg.py:327
+#: client/osci/dialog/ResearchDlg.py:328
 #, fuzzy
 msgid "Executing OBSOLETTE command..."
 msgstr "Ausführen des WÄHLE Kommandos..."
 
-#: client/osci/dialog/ResearchDlg.py:338
+#: client/osci/dialog/ResearchDlg.py:339
 #, fuzzy
 msgid "Select technology to un-obsolete."
 msgstr "Wähle Technologie aus die gebaut werden soll."
 
-#: client/osci/dialog/ResearchDlg.py:343
+#: client/osci/dialog/ResearchDlg.py:344
 #, fuzzy
 msgid "Executing UN-OBSOLETTE command..."
 msgstr "Ausführen des WÄHLE Kommandos..."
 
-#: client/osci/dialog/ResearchDlg.py:374
+#: client/osci/dialog/ResearchDlg.py:375
 msgid "Known technologies"
 msgstr "Bekannte Technologien"
 
 # Schiff Equipment
-#: client/osci/dialog/ResearchDlg.py:378 client/osci/dialog/ResearchDlg.py:398
+#: client/osci/dialog/ResearchDlg.py:379 client/osci/dialog/ResearchDlg.py:399
 msgid "Sh"
 msgstr "SE"
 
 # Gebäude
-#: client/osci/dialog/ResearchDlg.py:378 client/osci/dialog/ResearchDlg.py:398
+#: client/osci/dialog/ResearchDlg.py:379 client/osci/dialog/ResearchDlg.py:399
 msgid "Str"
 msgstr "Gb"
 
-#: client/osci/dialog/ResearchDlg.py:380
+#: client/osci/dialog/ResearchDlg.py:381
 msgid "Improve"
 msgstr "Optimieren"
 
-#: client/osci/dialog/ResearchDlg.py:382
+#: client/osci/dialog/ResearchDlg.py:383
 msgid "Show completed"
 msgstr "Vollerforscht"
 
-#: client/osci/dialog/ResearchDlg.py:387
+#: client/osci/dialog/ResearchDlg.py:388
 msgid "Un-Obsolete"
 msgstr ""
 
-#: client/osci/dialog/ResearchDlg.py:389
+#: client/osci/dialog/ResearchDlg.py:390
 #, fuzzy
 msgid "Obsolete"
 msgstr "Abgeschlossen"
 
-#: client/osci/dialog/ResearchDlg.py:391
+#: client/osci/dialog/ResearchDlg.py:392
 #, fuzzy
 msgid "Show obsolete"
 msgstr "Vollerforscht"
 
-#: client/osci/dialog/ResearchDlg.py:394
+#: client/osci/dialog/ResearchDlg.py:395
 msgid "Researchable technologies"
 msgstr "Erforschbare Technologien"
 
-#: client/osci/dialog/ResearchDlg.py:405
+#: client/osci/dialog/ResearchDlg.py:406
 msgid "Research queue"
 msgstr "Forschungsliste"
 
-#: client/osci/dialog/ResearchDlg.py:412
+#: client/osci/dialog/ResearchDlg.py:413
 msgid "Progress"
 msgstr "Fortschritt"
 
-#: client/osci/dialog/ResearchDlg.py:416
+#: client/osci/dialog/ResearchDlg.py:417
 msgid "TOP"
 msgstr "TOP"
 
-#: client/osci/dialog/ResearchDlg.py:418
+#: client/osci/dialog/ResearchDlg.py:419
 msgid "Move selected technology to the top of the queue."
 msgstr "Verschiebe gewählte Technologie an die Spitze der Queue."
 
-#: client/osci/dialog/ResearchDlg.py:425
+#: client/osci/dialog/ResearchDlg.py:426
 msgid ""
 "Repeat research of this technology until the technology is fully improved."
 msgstr ""
 "Wiederhole Erforschung bis Technologie höchste Optimierung erfahren hat."
 
-#: client/osci/dialog/ResearchDlg.py:431
+#: client/osci/dialog/ResearchDlg.py:432
 msgid "Total amount of time needed to research all technologies in the queue"
 msgstr "Gesamtzeit bis alle Technologien in der Queue erforscht sind."
 
@@ -3790,72 +3804,72 @@ msgstr "(Autor: %s)"
 msgid "Show buoy text"
 msgstr "Zeige Boje Text"
 
-#: client/osci/dialog/StarSystemDlg.py:121
+#: client/osci/dialog/StarSystemDlg.py:123
 msgid "System: %s [%.02f, %.02f]"
 msgstr "System : %s [%.02f, %.02f]"
 
-#: client/osci/dialog/StarSystemDlg.py:123
+#: client/osci/dialog/StarSystemDlg.py:125
 msgid "System: %s"
 msgstr "System: %s"
 
-#: client/osci/dialog/StarSystemDlg.py:161
+#: client/osci/dialog/StarSystemDlg.py:163
 msgid "Planet %s: POPULATION IS REVOLTING"
 msgstr "Planet %s: BEVÖLKERUNG REVOLTIERT"
 
-#: client/osci/dialog/StarSystemDlg.py:165
+#: client/osci/dialog/StarSystemDlg.py:167
 msgid "Planet %s: %s"
 msgstr "Planet %s : %s"
 
-#: client/osci/dialog/StarSystemDlg.py:168
+#: client/osci/dialog/StarSystemDlg.py:170
 msgid "Planet %s"
 msgstr "Planet %s"
 
-#: client/osci/dialog/StarSystemDlg.py:288
+#: client/osci/dialog/StarSystemDlg.py:290
+#, fuzzy
 msgid ""
-"Planet downgrade limit %d, upgrade limit %d, can be terraformed to a %s."
+"Planet downgrade limit %d, upgrade limit %d.\n"
+"Can be terraformed to a %s."
 msgstr ""
 "Planetenabstufungsgrenze %d Aufstufungsgrenze %d, kann Terraforming zu einem "
 "%s durchlaufen."
 
-#: client/osci/dialog/StarSystemDlg.py:294
+#: client/osci/dialog/StarSystemDlg.py:296
+#, fuzzy
 msgid ""
-"Planet downgrade limit %d, upgrade limit %d, can terraformed to a %s in the "
-"future."
+"Planet downgrade limit %d, upgrade limit %d.\n"
+"Can terraformed to a %s in the future."
 msgstr ""
 "Planetenabstufungsgrenze %d Aufstufungsgrenze %d, kann Terraforming zu einem "
 "%s in der Zukunft durchlaufen"
 
-#: client/osci/dialog/StarSystemDlg.py:300
+#: client/osci/dialog/StarSystemDlg.py:302
 msgid "Planet downgrade limit %d, upgrade limit %d."
 msgstr "Planetenabstufungsgrenze %d Aufstufungsgrenze %d."
 
 # EMS Elekto Magnetische Strahlung
-#: client/osci/dialog/StarSystemDlg.py:307
-msgid "Energy abundance for average EMR level is %s."
+#: client/osci/dialog/StarSystemDlg.py:309
+#, fuzzy
+msgid "For average EMR level is %s."
 msgstr "Energiereichtum bei durchschnittl. EMS Niveau beträgt %s."
 
-#: client/osci/dialog/StarSystemDlg.py:319
+#: client/osci/dialog/StarSystemDlg.py:321
 msgid "Planet has %s free, %s usable out of maximum %s slots ."
 msgstr ""
 "Planet hat %s freie, %s benutzbare aus einem Maximum von %s Positionen ."
 
-#: client/osci/dialog/StarSystemDlg.py:329
+#: client/osci/dialog/StarSystemDlg.py:331
 msgid "Population: %s (max. %s, %+d last turn)"
 msgstr "Bevölkerung: %s (max. %s, %+d letzte Runde)"
 
 #: client/osci/dialog/StarSystemDlg.py:340
-msgid "1000 units of population consumes %s bio, and %s en."
-msgstr "1000 Einheiten Bevölkerung konsumieren %s Bio, und %s En"
-
-#: client/osci/dialog/StarSystemDlg.py:348
 msgid "Biomatter reserve: %s (max. %s, %+d last turn)"
 msgstr "Biomasse Reserve: %s (max. %s, %+d letzte Runde)"
 
-#: client/osci/dialog/StarSystemDlg.py:357
+#: client/osci/dialog/StarSystemDlg.py:349
 msgid "Energy reserve: %s (max. %s, %+d last turn)"
 msgstr "Energie Reserve: %s (max. %s, %+d letzte Runde)"
 
-#: client/osci/dialog/StarSystemDlg.py:372
+#: client/osci/dialog/StarSystemDlg.py:364
 msgid ""
 "Effective / raw construction points. Empire efficiency %+d %%, %+d %% "
 "because of morale."
@@ -3863,7 +3877,7 @@ msgstr ""
 "Effektive / Brutto Produktionspunkte. Imperiumseffizienz bei %+d %%, %+d %% "
 "auf Grund der Moral."
 
-#: client/osci/dialog/StarSystemDlg.py:386
+#: client/osci/dialog/StarSystemDlg.py:378
 msgid ""
 "Effective / raw research points. Empire efficiency %+d %%, %+d %% because of "
 "morale."
@@ -3871,512 +3885,474 @@ msgstr ""
 "Effektive / Brutto Forschungspunkte. Imperiumseffizienz bei %+d %%, %+d %% "
 "auf Grund der Moral."
 
-#: client/osci/dialog/StarSystemDlg.py:398
+#: client/osci/dialog/StarSystemDlg.py:390
 msgid "Enviroment (%d / %d) is improving (%d per turn), %s turns to improve."
 msgstr ""
 "Umwelt (%d / %d) verbessert sich (%d pro Runde), %s  Runden bis zur "
 "Aufstufung"
 
-#: client/osci/dialog/StarSystemDlg.py:403
+#: client/osci/dialog/StarSystemDlg.py:395
 msgid ""
 "Enviroment (%d / %d) is deteriorating (%d per turn), %s turns to deteriorate."
 msgstr ""
 "Umwelt (%d / %d)  verschlechtert sich (%d pro Runde), %s  Runden bis zur "
 "Abstufung"
 
-#: client/osci/dialog/StarSystemDlg.py:407
+#: client/osci/dialog/StarSystemDlg.py:399
 msgid "Enviroment (%d / %d) is stable."
 msgstr "Umwelt (%d / %d) ist stabil."
 
-#: client/osci/dialog/StarSystemDlg.py:412
+#: client/osci/dialog/StarSystemDlg.py:404
 msgid "0 %"
 msgstr "0 %"
 
-#: client/osci/dialog/StarSystemDlg.py:437
+#: client/osci/dialog/StarSystemDlg.py:433
 msgid "Shield (%d/%d) charged by %+d last turn."
 msgstr "Schild (%d/%d) aufgeladen um %+d in der letzten Runde."
 
-#: client/osci/dialog/StarSystemDlg.py:443
+#: client/osci/dialog/StarSystemDlg.py:439
 msgid "Shield (%d/%d) was damaged by %+d last turn."
 msgstr "Schild (%d/%d) wurde um %+d beschädigt letzte Runde."
 
-#: client/osci/dialog/StarSystemDlg.py:449
+#: client/osci/dialog/StarSystemDlg.py:445
 msgid "Shield (%d/%d) is unable to charge."
 msgstr "Schild (%d/%d) ist nicht in der Lage sich wieder aufzuladen."
 
-#: client/osci/dialog/StarSystemDlg.py:454
+#: client/osci/dialog/StarSystemDlg.py:450
 msgid "Shield (%d/%d) is fully charged."
 msgstr "Schild (%d/%d) ist voll aufgeladen."
 
-#: client/osci/dialog/StarSystemDlg.py:459
+#: client/osci/dialog/StarSystemDlg.py:455
 msgid "Shield (%d/unknown)"
 msgstr "Schild (%d/unbekannt)"
 
-#: client/osci/dialog/StarSystemDlg.py:472
+#: client/osci/dialog/StarSystemDlg.py:468
 msgid "M rise %+d, Base %d + Build %d + Pop %d = %d, revolt under %d."
 msgstr ""
 
-#: client/osci/dialog/StarSystemDlg.py:476
+#: client/osci/dialog/StarSystemDlg.py:472
 msgid "M fall %+d, Base %d + Build %d + Pop %d = %d, revolt under %d."
 msgstr ""
 
-#: client/osci/dialog/StarSystemDlg.py:480
+#: client/osci/dialog/StarSystemDlg.py:476
 #, fuzzy
 msgid "Morale is stable. Base %d + Build. %d + Pop. %d = %d, revolt under %d."
 msgstr "Moral ist stabil (%d / %d), Schwelle zur Revolte beträgt %d."
 
-#: client/osci/dialog/StarSystemDlg.py:494
-msgid "Minimal storage %d."
-msgstr "Minimal Speicherung %d."
-
-#: client/osci/dialog/StarSystemDlg.py:498
-msgid "Minimal storage %d"
-msgstr "Minimal Speicherung %d"
-
-#: client/osci/dialog/StarSystemDlg.py:519
+#: client/osci/dialog/StarSystemDlg.py:501
 msgid "System overview for star %s [%s]"
 msgstr "Systemübersicht für Stern %s [%s]"
 
-#: client/osci/dialog/StarSystemDlg.py:524
+#: client/osci/dialog/StarSystemDlg.py:506
 msgid "System overview"
 msgstr "Systemübersicht"
 
-#: client/osci/dialog/StarSystemDlg.py:625 client/osci/res.py:180
+#: client/osci/dialog/StarSystemDlg.py:607 client/osci/res.py:198
 msgid "[Unknown]"
 msgstr "[Unbekannt]"
 
-#: client/osci/dialog/StarSystemDlg.py:626
+#: client/osci/dialog/StarSystemDlg.py:608
 msgid "Redirect to %s"
 msgstr "Umleitung zu %s"
 
-#: client/osci/dialog/StarSystemDlg.py:630
-#: client/osci/dialog/StarSystemDlg.py:634
-#: client/osci/dialog/StarSystemDlg.py:1249
+#: client/osci/dialog/StarSystemDlg.py:612
+#: client/osci/dialog/StarSystemDlg.py:616
+#: client/osci/dialog/StarSystemDlg.py:1213
 msgid "Redirection OFF"
 msgstr "Umleitung AUS"
 
-#: client/osci/dialog/StarSystemDlg.py:643
-#: client/osci/dialog/StarSystemDlg.py:1253
+#: client/osci/dialog/StarSystemDlg.py:625
+#: client/osci/dialog/StarSystemDlg.py:1217
 msgid "Add buoy"
 msgstr "Boje hinzufügen"
 
-#: client/osci/dialog/StarSystemDlg.py:663
+#: client/osci/dialog/StarSystemDlg.py:640
 msgid "Planet Upgrade/Downgrade Data"
 msgstr "Planeten Aufstufung/Abstufung Daten"
 
-#: client/osci/dialog/StarSystemDlg.py:671
-#: client/osci/dialog/StarSystemDlg.py:680
+#: client/osci/dialog/StarSystemDlg.py:648
+#: client/osci/dialog/StarSystemDlg.py:657
 msgid "%d - %d EN"
 msgstr "%d - %d En"
 
-#: client/osci/dialog/StarSystemDlg.py:684
+#: client/osci/dialog/StarSystemDlg.py:661
 msgid "0 - 200 EN"
 msgstr "0 - 200 En"
 
-#: client/osci/dialog/StarSystemDlg.py:706
+#: client/osci/dialog/StarSystemDlg.py:683
 msgid "Task info: %s"
 msgstr "Vorgang Info  %s"
 
-#: client/osci/dialog/StarSystemDlg.py:711
+#: client/osci/dialog/StarSystemDlg.py:688
 msgid "%d %% [%+d %%]"
 msgstr "%d %% [%+d %%]"
 
-#: client/osci/dialog/StarSystemDlg.py:739
+#: client/osci/dialog/StarSystemDlg.py:716
 msgid "Slot info: %s"
 msgstr "Positionsinfo: %s"
 
-#: client/osci/dialog/StarSystemDlg.py:742
+#: client/osci/dialog/StarSystemDlg.py:719
 msgid "No problems."
 msgstr "Keine Probleme."
 
-#: client/osci/dialog/StarSystemDlg.py:745
+#: client/osci/dialog/StarSystemDlg.py:722
 msgid "Switched OFF"
 msgstr "Abgeschaltet"
 
-#: client/osci/dialog/StarSystemDlg.py:746
+#: client/osci/dialog/StarSystemDlg.py:723
 msgid "Structure is switched OFF."
 msgstr "Gebäude ist abgeschaltet"
 
-#: client/osci/dialog/StarSystemDlg.py:755
+#: client/osci/dialog/StarSystemDlg.py:732
 msgid "Insufficient biomatter, "
 msgstr "Mangel an Biomasse"
 
-#: client/osci/dialog/StarSystemDlg.py:756
+#: client/osci/dialog/StarSystemDlg.py:733
 msgid "Bio/"
 msgstr "Bio/"
 
-#: client/osci/dialog/StarSystemDlg.py:758
+#: client/osci/dialog/StarSystemDlg.py:735
 msgid "Insufficient energy, "
 msgstr "Energiemangel"
 
-#: client/osci/dialog/StarSystemDlg.py:759
+#: client/osci/dialog/StarSystemDlg.py:736
 msgid "En/"
 msgstr "En/"
 
-#: client/osci/dialog/StarSystemDlg.py:761
+#: client/osci/dialog/StarSystemDlg.py:738
 msgid "Insufficient workers, "
 msgstr "Mangel an Arbeitern, "
 
-#: client/osci/dialog/StarSystemDlg.py:762
+#: client/osci/dialog/StarSystemDlg.py:739
 msgid "Wrk/"
 msgstr "Arb/"
 
-#: client/osci/dialog/StarSystemDlg.py:764
+#: client/osci/dialog/StarSystemDlg.py:741
 msgid "Deteriorating, "
 msgstr "Verschlechternd, "
 
-#: client/osci/dialog/StarSystemDlg.py:765
+#: client/osci/dialog/StarSystemDlg.py:742
 msgid "Deter/"
 msgstr "Zerstör/"
 
-#: client/osci/dialog/StarSystemDlg.py:767
+#: client/osci/dialog/StarSystemDlg.py:744
 msgid "Repairing, "
 msgstr "Reparierend, "
 
-#: client/osci/dialog/StarSystemDlg.py:768
+#: client/osci/dialog/StarSystemDlg.py:745
 msgid "Rep/"
 msgstr "Rep/"
 
-#: client/osci/dialog/StarSystemDlg.py:770
+#: client/osci/dialog/StarSystemDlg.py:747
 msgid "New structure, "
 msgstr "Neues Gebäude, "
 
-#: client/osci/dialog/StarSystemDlg.py:771
+#: client/osci/dialog/StarSystemDlg.py:748
 msgid "New/"
 msgstr "Neu/"
 
-#: client/osci/dialog/StarSystemDlg.py:790
+#: client/osci/dialog/StarSystemDlg.py:767
 msgid "%d / ?"
 msgstr "%d / ?"
 
-#: client/osci/dialog/StarSystemDlg.py:817
+#: client/osci/dialog/StarSystemDlg.py:794
 msgid "Operational status of the structure."
 msgstr "Operationsstatus des Gebäudes"
 
-#: client/osci/dialog/StarSystemDlg.py:920
-#: client/osci/dialog/StarSystemDlg.py:933
+#: client/osci/dialog/StarSystemDlg.py:914
+#: client/osci/dialog/StarSystemDlg.py:928
 msgid "Executing MOVE STRUCTURE command..."
 msgstr "Ausführen des BEWEGE GEBÄUDE Kommandos..."
 
-#: client/osci/dialog/StarSystemDlg.py:953
+#: client/osci/dialog/StarSystemDlg.py:948
 msgid "Executing SWITCH STRUCTURE ON/OFF command..."
 msgstr "Ausführen des SCHALTE GEBÄUDE AN/AUS Kommandos..."
 
-#: client/osci/dialog/StarSystemDlg.py:966
+#: client/osci/dialog/StarSystemDlg.py:961
 msgid "Demolish this structure?"
 msgstr "Dieses Gebäude abreißen?"
 
-#: client/osci/dialog/StarSystemDlg.py:971
+#: client/osci/dialog/StarSystemDlg.py:966
 msgid "Executing DEMOLISH STRUCTURE command..."
 msgstr "Ausführen des ZERSTÖRE GEBÄUDE Kommandos..."
 
-#: client/osci/dialog/StarSystemDlg.py:1046
+#: client/osci/dialog/StarSystemDlg.py:1041
 msgid "Executing ABORT TASK command..."
 msgstr "Ausführen des ABBRUCH AUFGABE Kommandos..."
 
-#: client/osci/dialog/StarSystemDlg.py:1088
-#: client/osci/dialog/StarSystemDlg.py:1090
+#: client/osci/dialog/StarSystemDlg.py:1084
+#: client/osci/dialog/StarSystemDlg.py:1086
 msgid "Destination not explored"
 msgstr "Ziel nicht erforscht"
 
-#: client/osci/dialog/StarSystemDlg.py:1104
+#: client/osci/dialog/StarSystemDlg.py:1100
 msgid "Executing ADD BUOY command..."
 msgstr "Ausführen des BOJE ERRICHTEN Kommandos..."
 
-#: client/osci/dialog/StarSystemDlg.py:1117
+#: client/osci/dialog/StarSystemDlg.py:1113
 msgid "Executing DELETE BUOY command..."
 msgstr "Ausführen des BOJE ZERSTÖREN Kommandos..."
 
-#: client/osci/dialog/StarSystemDlg.py:1135
-msgid "Enter number into biomatter min. reserve field."
-msgstr "Trage Zahl in das Biomasse min. Reserve Feld ein."
-
-#: client/osci/dialog/StarSystemDlg.py:1140
-msgid "Enter number into energy min. reserve field."
-msgstr "Trage Zahl in das Energie min. Reserve Feld ein."
-
-#: client/osci/dialog/StarSystemDlg.py:1143
-msgid "Executing CHANGE RESERVES LIMITS command..."
-msgstr "Ausführen des ÄNDERE RESERVE GRENZEN Kommandos..."
-
-#: client/osci/dialog/StarSystemDlg.py:1157
-msgid "Executing SWITCH AUTOMATIC REGULATION command..."
-msgstr "Ausführen des SCHALTE AUTOMATISCHE REGULATION AN/AUS Kommandos..."
-
-#: client/osci/dialog/StarSystemDlg.py:1184
+#: client/osci/dialog/StarSystemDlg.py:1145
 #, fuzzy
 msgid "Executing CHANGE PLANETS GLOBAL QUEUE command..."
 msgstr "Ausführen des ÄNDERE AUFGABE Kommandos..."
 
-#: client/osci/dialog/StarSystemDlg.py:1232
-#: client/osci/dialog/StarSystemDlg.py:1233
+#: client/osci/dialog/StarSystemDlg.py:1196
+#: client/osci/dialog/StarSystemDlg.py:1197
 msgid "+/-"
 msgstr "+/-"
 
-#: client/osci/dialog/StarSystemDlg.py:1232
-#: client/osci/dialog/StarSystemDlg.py:1308
+#: client/osci/dialog/StarSystemDlg.py:1196
+#: client/osci/dialog/StarSystemDlg.py:1278
 #: client/osci/dialog/SystemOverviewDlg.py:218
 msgid "Biomatter"
 msgstr "Biomasse"
 
-#: client/osci/dialog/StarSystemDlg.py:1233
-#: client/osci/dialog/StarSystemDlg.py:1316
+#: client/osci/dialog/StarSystemDlg.py:1197
+#: client/osci/dialog/StarSystemDlg.py:1282
 msgid "Energy"
 msgstr "Energie"
 
-#: client/osci/dialog/StarSystemDlg.py:1234
+#: client/osci/dialog/StarSystemDlg.py:1198
 msgid "Con / Res"
 msgstr "Prod/Forsch"
 
-#: client/osci/dialog/StarSystemDlg.py:1234
+#: client/osci/dialog/StarSystemDlg.py:1198
 msgid "Space"
 msgstr "Posit."
 
-#: client/osci/dialog/StarSystemDlg.py:1247
+#: client/osci/dialog/StarSystemDlg.py:1211
 msgid "Find Wormhole Exit"
 msgstr "Finde Ausgang des Wurmlochs"
 
-#: client/osci/dialog/StarSystemDlg.py:1251
+#: client/osci/dialog/StarSystemDlg.py:1215
 msgid "Mass Redirect"
 msgstr "Umleitung"
 
-#: client/osci/dialog/StarSystemDlg.py:1255
+#: client/osci/dialog/StarSystemDlg.py:1219
 msgid "Delete buoy"
 msgstr "Zerstöre Boje"
 
-#: client/osci/dialog/StarSystemDlg.py:1257
+#: client/osci/dialog/StarSystemDlg.py:1221
 msgid "View Minefield"
 msgstr "Zeige Mienenfeld"
 
-#: client/osci/dialog/StarSystemDlg.py:1266
-#: client/osci/dialog/StarSystemDlg.py:1269
+#: client/osci/dialog/StarSystemDlg.py:1230
+#: client/osci/dialog/StarSystemDlg.py:1233
 msgid "Task queue"
 msgstr "Liste der Vorgänge"
 
-#: client/osci/dialog/StarSystemDlg.py:1273
+#: client/osci/dialog/StarSystemDlg.py:1237
 msgid "Planet type"
 msgstr "Typ"
 
-#: client/osci/dialog/StarSystemDlg.py:1277
+#: client/osci/dialog/StarSystemDlg.py:1241
 msgid "Diameter"
 msgstr "Durchmesser"
 
-#: client/osci/dialog/StarSystemDlg.py:1285
-msgid "Min. abundance"
+#: client/osci/dialog/StarSystemDlg.py:1253
+#, fuzzy
+msgid "Mineral abundance"
 msgstr "Mineralienreichtum"
 
-#: client/osci/dialog/StarSystemDlg.py:1289
-msgid "En. abundance"
+#: client/osci/dialog/StarSystemDlg.py:1258
+#, fuzzy
+msgid "Energy abundance"
 msgstr "Energiereichtum"
 
-#: client/osci/dialog/StarSystemDlg.py:1293
+#: client/osci/dialog/StarSystemDlg.py:1263
 msgid "Available space"
 msgstr "Verfügbarer Platz"
 
-#: client/osci/dialog/StarSystemDlg.py:1298
+#: client/osci/dialog/StarSystemDlg.py:1266
 msgid "Colony data"
 msgstr "Kolonie Daten"
 
-#: client/osci/dialog/StarSystemDlg.py:1304
-msgid "Pop. support"
-msgstr "Bev. Unterhalt"
-
-#: client/osci/dialog/StarSystemDlg.py:1312
-#: client/osci/dialog/StarSystemDlg.py:1320
-msgid "Min. reserve"
-msgstr "Min. Reserve"
-
-#: client/osci/dialog/StarSystemDlg.py:1326
-msgid "A"
-msgstr "A"
-
-#: client/osci/dialog/StarSystemDlg.py:1328
-#: client/osci/dialog/StarSystemDlg.py:1329
-msgid "Automatic regulation on/off."
-msgstr "Automatische Regulierung AN/AUS."
-
-#: client/osci/dialog/StarSystemDlg.py:1330
+#: client/osci/dialog/StarSystemDlg.py:1274
 msgid "Free workers"
 msgstr "Arbeitslose"
 
-#: client/osci/dialog/StarSystemDlg.py:1338
-#: client/osci/dialog/StarSystemDlg.py:1406
+#: client/osci/dialog/StarSystemDlg.py:1292
+#: client/osci/dialog/StarSystemDlg.py:1360
 msgid "Research pts"
 msgstr "Forschungspkt."
 
-#: client/osci/dialog/StarSystemDlg.py:1342
-msgid "Env. status"
-msgstr "Umwelt Status"
+#: client/osci/dialog/StarSystemDlg.py:1302
+#, fuzzy
+msgid "Environment status"
+msgstr "Umwelt"
 
-#: client/osci/dialog/StarSystemDlg.py:1346
-msgid "Strat. resource"
-msgstr "Strat. Ressource"
-
-#: client/osci/dialog/StarSystemDlg.py:1354
+#: client/osci/dialog/StarSystemDlg.py:1306
 #: client/osci/dialog/TechInfoDlg.py:131
 msgid "Planetary shield"
 msgstr "Planetenschild"
 
-#: client/osci/dialog/StarSystemDlg.py:1358
+#: client/osci/dialog/StarSystemDlg.py:1310
+#, fuzzy
+msgid "Strategic resource"
+msgstr "Strategische Ressourcen:"
+
+#: client/osci/dialog/StarSystemDlg.py:1312
 msgid "Show Terraforming Data"
 msgstr "Informationen zum Terraforming"
 
-#: client/osci/dialog/StarSystemDlg.py:1360
+#: client/osci/dialog/StarSystemDlg.py:1314
 msgid "System data"
 msgstr "Systemdaten"
 
-#: client/osci/dialog/StarSystemDlg.py:1362
+#: client/osci/dialog/StarSystemDlg.py:1318
 msgid "Net Bio +/-"
 msgstr "Netz Bio +/-"
 
-#: client/osci/dialog/StarSystemDlg.py:1366
+#: client/osci/dialog/StarSystemDlg.py:1322
 msgid "Net Energy +/-"
 msgstr "Netz Energie +/-"
 
-#: client/osci/dialog/StarSystemDlg.py:1370
+#: client/osci/dialog/StarSystemDlg.py:1326
 msgid "Net Construction"
 msgstr "Netz Produktion"
 
-#: client/osci/dialog/StarSystemDlg.py:1374
+#: client/osci/dialog/StarSystemDlg.py:1330
 msgid "Net Research"
 msgstr "Netz Forschung"
 
-#: client/osci/dialog/StarSystemDlg.py:1382
+#: client/osci/dialog/StarSystemDlg.py:1336
 #: client/osci/dialog/TechInfoDlg.py:128
 msgid "Hit points"
 msgstr "Trefferpunkte"
 
-#: client/osci/dialog/StarSystemDlg.py:1386
+#: client/osci/dialog/StarSystemDlg.py:1340
 msgid "Status"
 msgstr "Status"
 
-#: client/osci/dialog/StarSystemDlg.py:1394
+#: client/osci/dialog/StarSystemDlg.py:1348
 msgid "Biomatter p/c"
 msgstr "Biomasse P/R"
 
-#: client/osci/dialog/StarSystemDlg.py:1398
+#: client/osci/dialog/StarSystemDlg.py:1352
 msgid "Energy p/c"
 msgstr "Energie P/R"
 
-#: client/osci/dialog/StarSystemDlg.py:1402
+#: client/osci/dialog/StarSystemDlg.py:1356
 msgid "Constr pts"
 msgstr "Produktionspunkte"
 
-#: client/osci/dialog/StarSystemDlg.py:1410
+#: client/osci/dialog/StarSystemDlg.py:1364
 msgid "Workers"
 msgstr "Arbeiter"
 
-#: client/osci/dialog/StarSystemDlg.py:1416
+#: client/osci/dialog/StarSystemDlg.py:1370
 msgid "Move structure to first slot"
 msgstr "Bewege Gebäude an erste Position"
 
-#: client/osci/dialog/StarSystemDlg.py:1419
+#: client/osci/dialog/StarSystemDlg.py:1373
 msgid "Move structure to previous slot"
 msgstr "Verschiebe Gebäude auf die vorherige Position"
 
-#: client/osci/dialog/StarSystemDlg.py:1422
+#: client/osci/dialog/StarSystemDlg.py:1376
 msgid "Move structure to next slot"
 msgstr "Verschiebe Gebäude auf die nächste Position"
 
-#: client/osci/dialog/StarSystemDlg.py:1425
+#: client/osci/dialog/StarSystemDlg.py:1379
 msgid "Move structure to last slot"
 msgstr "Verschiebe Gebäude auf die letzte Position"
 
-#: client/osci/dialog/StarSystemDlg.py:1426
+#: client/osci/dialog/StarSystemDlg.py:1380
 msgid "ON/OFF"
 msgstr "AN/AUS"
 
-#: client/osci/dialog/StarSystemDlg.py:1428
+#: client/osci/dialog/StarSystemDlg.py:1382
 msgid "Switch structure ON or OFF"
 msgstr "Schalte Gebäude AN oder AUS"
 
-#: client/osci/dialog/StarSystemDlg.py:1431
+#: client/osci/dialog/StarSystemDlg.py:1385
 msgid "Show structure information"
 msgstr "Zeige Gebäude Informationen"
 
-#: client/osci/dialog/StarSystemDlg.py:1432
+#: client/osci/dialog/StarSystemDlg.py:1386
 msgid "Demolish"
 msgstr "Zerstören"
 
-#: client/osci/dialog/StarSystemDlg.py:1434
+#: client/osci/dialog/StarSystemDlg.py:1388
 msgid "Demolish structure"
 msgstr "Zerstöre Gebäude"
 
-#: client/osci/dialog/StarSystemDlg.py:1436
+#: client/osci/dialog/StarSystemDlg.py:1390
 msgid "Class Range En. Abundance"
 msgstr "Klassentypischer Energiewert"
 
-#: client/osci/dialog/StarSystemDlg.py:1440
+#: client/osci/dialog/StarSystemDlg.py:1394
 msgid "Upgrade Range En. Abund."
 msgstr "Aufstufungsspanne Energiewert"
 
-#: client/osci/dialog/StarSystemDlg.py:1444
+#: client/osci/dialog/StarSystemDlg.py:1398
 msgid "Downgrade Env."
 msgstr "Abstufung Umw"
 
-#: client/osci/dialog/StarSystemDlg.py:1448
+#: client/osci/dialog/StarSystemDlg.py:1402
 msgid "Upgrade Env."
 msgstr "Aufstuf. Umw"
 
-#: client/osci/dialog/StarSystemDlg.py:1452
+#: client/osci/dialog/StarSystemDlg.py:1406
 msgid "Downgrade To?"
 msgstr "Abstufen zu?"
 
-#: client/osci/dialog/StarSystemDlg.py:1456
+#: client/osci/dialog/StarSystemDlg.py:1410
 msgid "Upgrade To?"
 msgstr "Aufstufen zu?"
 
-#: client/osci/dialog/StarSystemDlg.py:1461
+#: client/osci/dialog/StarSystemDlg.py:1415
 msgid "Complete"
 msgstr "Abgeschlossen"
 
-#: client/osci/dialog/StarSystemDlg.py:1481
+#: client/osci/dialog/StarSystemDlg.py:1435
 msgid "Target slot"
 msgstr "Zielposition"
 
-#: client/osci/dialog/StarSystemDlg.py:1515
+#: client/osci/dialog/StarSystemDlg.py:1469
 #, fuzzy
 msgid "Select global queue"
 msgstr "Sprachauswahl"
 
-#: client/osci/dialog/StructTaskDlg.py:258
+#: client/osci/dialog/StructTaskDlg.py:259
 #, fuzzy
 msgid "You do not own required strategic resource(s)"
 msgstr "Benötigte Strategische Ressourcen:"
 
-#: client/osci/dialog/StructTaskDlg.py:266
+#: client/osci/dialog/StructTaskDlg.py:267
 msgid "Queue is full"
 msgstr ""
 
-#: client/osci/dialog/StructTaskDlg.py:316
+#: client/osci/dialog/StructTaskDlg.py:317
 msgid "Select structure to construct"
 msgstr "Wählen Sie ein Gebäude zum Aufbau aus"
 
-#: client/osci/dialog/StructTaskDlg.py:323
+#: client/osci/dialog/StructTaskDlg.py:324
 msgid "Production planet"
 msgstr "Produktion Planet"
 
-#: client/osci/dialog/StructTaskDlg.py:328
+#: client/osci/dialog/StructTaskDlg.py:329
 msgid "Structures to construct"
 msgstr "Baubare Gebäude"
 
-#: client/osci/dialog/StructTaskDlg.py:330
+#: client/osci/dialog/StructTaskDlg.py:331
 msgid "(right click for technology info)"
 msgstr "(Rechtsklick für Technologie Hilfe)"
 
-#: client/osci/dialog/StructTaskDlg.py:335
+#: client/osci/dialog/StructTaskDlg.py:336
 msgid "Filters"
 msgstr "Filter"
 
-#: client/osci/dialog/StructTaskDlg.py:337
+#: client/osci/dialog/StructTaskDlg.py:338
 msgid "Technology levels:"
 msgstr "Technologie Level:"
 
-#: client/osci/dialog/StructTaskDlg.py:370
+#: client/osci/dialog/StructTaskDlg.py:371
 msgid "Sort"
 msgstr ""
 
-#: client/osci/dialog/StructTaskDlg.py:374
+#: client/osci/dialog/StructTaskDlg.py:375
 #, fuzzy
 msgid "Tech Level"
 msgstr "Technologie Level:"
@@ -5567,13 +5543,13 @@ msgstr "Gewichtung : %s"
 msgid "Time: %s [%s]"
 msgstr "Datum : %s [%s]"
 
-#: client/osci/res.py:61
+#: client/osci/res.py:62
 msgid "Loading resources"
 msgstr "Laden der Ressourcen"
 
-#: client/osci/res.py:68 client/osci/res.py:83 client/osci/res.py:99
-#: client/osci/res.py:110 client/osci/res.py:125 client/osci/res.py:134
-#: client/osci/res.py:143
+#: client/osci/res.py:69 client/osci/res.py:84 client/osci/res.py:100
+#: client/osci/res.py:111 client/osci/res.py:126 client/osci/res.py:135
+#: client/osci/res.py:144 client/osci/res.py:153
 msgid "Loading resources..."
 msgstr "Laden der Ressourcen..."
 
@@ -5687,6 +5663,45 @@ msgstr "reparieren %d%%"
 #: client/osci/sequip.py:84
 msgid "repair %d"
 msgstr "Reparatur %d"
+
+#~ msgid "1000 units of population consumes %s bio, and %s en."
+#~ msgstr "1000 Einheiten Bevölkerung konsumieren %s Bio, und %s En"
+
+#~ msgid "Minimal storage %d."
+#~ msgstr "Minimal Speicherung %d."
+
+#~ msgid "Minimal storage %d"
+#~ msgstr "Minimal Speicherung %d"
+
+#~ msgid "Enter number into biomatter min. reserve field."
+#~ msgstr "Trage Zahl in das Biomasse min. Reserve Feld ein."
+
+#~ msgid "Enter number into energy min. reserve field."
+#~ msgstr "Trage Zahl in das Energie min. Reserve Feld ein."
+
+#~ msgid "Executing CHANGE RESERVES LIMITS command..."
+#~ msgstr "Ausführen des ÄNDERE RESERVE GRENZEN Kommandos..."
+
+#~ msgid "Executing SWITCH AUTOMATIC REGULATION command..."
+#~ msgstr "Ausführen des SCHALTE AUTOMATISCHE REGULATION AN/AUS Kommandos..."
+
+#~ msgid "Pop. support"
+#~ msgstr "Bev. Unterhalt"
+
+#~ msgid "Min. reserve"
+#~ msgstr "Min. Reserve"
+
+#~ msgid "A"
+#~ msgstr "A"
+
+#~ msgid "Automatic regulation on/off."
+#~ msgstr "Automatische Regulierung AN/AUS."
+
+#~ msgid "Env. status"
+#~ msgstr "Umwelt Status"
+
+#~ msgid "Strat. resource"
+#~ msgstr "Strat. Ressource"
 
 #~ msgid "Server sponsored by:"
 #~ msgstr "Server gesponsert von:"
