@@ -840,13 +840,7 @@ class StarSystemDlg:
             self.display(data.planetID)
 
     def onSlotHighlighted(self, widget, action, data):
-        if not data or data.index is None:
-            self.plInfoType = self.plInfoTypeSelected
-            self.plInfoData = self.plInfoDataSelected
-        else:
-            self.plInfoType = INFO_SLOT
-            self.plInfoData = data.index
-        self.showPlInfo()
+        self.onItemHighlighted(data, INFO_SLOT)
 
     def onSlotSelected(self, widget, action, data):
         self.win.vPQueue.selectItem(None)
@@ -880,6 +874,9 @@ class StarSystemDlg:
         self.showPlInfo()
 
     def onQueueItemHighlighted(self, widget, action, data):
+        self.onItemHighlighted(data, INFO_TASK)
+
+    def onItemHighlighted(self, data, info_type):
         # unselect structure
         if not data or data.index is None:
             # unselected or new task
@@ -887,7 +884,7 @@ class StarSystemDlg:
             self.plInfoData = self.plInfoDataSelected
         else:
             # info about task
-            self.plInfoType = INFO_TASK
+            self.plInfoType = info_type
             self.plInfoData = data.index
         self.showPlInfo()
 
