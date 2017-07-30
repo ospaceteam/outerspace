@@ -157,7 +157,6 @@ class ButtonArray(MetaWidget):
             button.background = None
             if button.visible: button.visible = 0
             index += 1
-        self.clearSelection()
         self.parent.redraw(self)
 
     def drawMetaWidget(self, surface):

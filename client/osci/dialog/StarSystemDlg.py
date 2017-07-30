@@ -973,6 +973,7 @@ class StarSystemDlg:
             planet.slots = client.cmdProxy.demolishStruct(self.planetID, self.plInfoData)
             self.plInfoType = self.plInfoTypeSelected = INFO_NONE
             self.plInfoData = self.plInfoDataSelected = None
+            self.win.vPSlots.selectItem(None)
             self.win.setStatus(_('Command has been executed.'))
         except ige.GameException, e:
             self.win.setStatus(e.args[0])
@@ -1048,6 +1049,7 @@ class StarSystemDlg:
             planet.prodQueue, player.stratRes = client.cmdProxy.abortConstruction(self.planetID, self.plInfoData)
             self.plInfoType = self.plInfoTypeSelected = INFO_NONE
             self.plInfoData = self.plInfoDataSelected = None
+            self.win.vPQueue.selectItem(None)
             self.showPlanet()
             self.win.setStatus(_('Command has been executed.'))
         except ige.GameException, e:
