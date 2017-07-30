@@ -92,8 +92,7 @@ class ButtonArray(MetaWidget):
         self.itemsChanged()
 
     def onButtonPressed(self, widget, action, data):
-        if self.selectedButton:
-            self.clearSelection()
+        self.clearSelection()
         if widget.pressed:
             self.selected = widget.data
             self.selectedButton = widget
