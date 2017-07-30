@@ -311,9 +311,15 @@ def drawTextAndIcons(surface, widget, style):
     if widget.icons:
         for img, align in widget.icons:
             r = Rect(rect)
-            if align & ALIGN_W: pass
-            elif align & ALIGN_E: r.left += rect.width - img.get_width()
-            else: r.left += (rect.width - img.get_width()) / 2
+            if align & ALIGN_W:
+                rect.left += img.get_width()
+                rect.width -= img.get_width()
+                pass
+            elif align & ALIGN_E:
+                r.left += rect.width - img.get_width()
+                rect.width -= img.get_width()
+            else:
+                r.left += (rect.width - img.get_width()) / 2
             if align & ALIGN_N: pass
             elif align & ALIGN_S: r.top += rect.height - img.get_height()
             else: r.top += (rect.height - img.get_height()) / 2
