@@ -1243,72 +1243,72 @@ class StarSystemDlg:
         ui.Label(self.win, layout = (15, 11, 5, 1), id = 'vPDiameter',
             align = ui.ALIGN_E, tags = ['pl'])
         # environment
-        ui.Label(self.win, layout = (0, 12, 4, 2), id = 'vPBioAbund',
+        ui.Label(self.win, layout = (0, 12, 5, 2), id = 'vPBioAbund',
             icons=[(res.getUIIcon('planet_biomatter'), ui.ALIGN_W)],
             tooltipTitle=_("Environment"),
-            align = ui.ALIGN_E, tags = ['pl'])
+            align = ui.ALIGN_NONE, tags = ['pl'])
         # minerals
-        ui.Label(self.win, layout = (5, 12, 4, 2), id = 'vPMinAbund',
+        ui.Label(self.win, layout = (5, 12, 5, 2), id = 'vPMinAbund',
             icons=[(res.getUIIcon('planet_minerals'), ui.ALIGN_W)],
             tooltipTitle=_("Mineral abundance"),
-            align = ui.ALIGN_E, tags = ['pl'])
+            align = ui.ALIGN_NONE, tags = ['pl'])
         # en. abundance
-        ui.Label(self.win, layout = (10, 12, 4, 2), id = 'vPEnAbund',
+        ui.Label(self.win, layout = (10, 12, 5, 2), id = 'vPEnAbund',
             icons=[(res.getUIIcon('planet_energy'), ui.ALIGN_W)],
             tooltipTitle=_("Energy abundance"),
-            align = ui.ALIGN_E, tags = ['pl'])
+            align = ui.ALIGN_NONE, tags = ['pl'])
         # available space
         ui.Label(self.win, layout = (15, 12, 5, 2), id = 'vPSlotsAbund',
             icons=[(res.getUIIcon('planet_free_slots'), ui.ALIGN_W)],
             tooltipTitle=_("Available space"),
-            align = ui.ALIGN_E, tags = ['pl'])
+            align = ui.ALIGN_NONE, tags = ['pl'])
         ## colony data
         ui.Title(self.win, layout = (0, 14, 20, 1), text = _('Colony data'),
             align = ui.ALIGN_W, font = 'normal-bold', tags = ['pl'])
         ui.Label(self.win, layout = (0, 15, 5, 2), id = 'vPCPop',
             icons=[(res.getUIIcon('population'), ui.ALIGN_W)],
             tooltipTitle=_("Population"),
-            align = ui.ALIGN_E, tags = ['pl'])
+            align = ui.ALIGN_NONE, tags = ['pl'])
         ui.Label(self.win, layout = (5, 15, 5, 2), id = 'vPCUnempl',
             icons=[(res.getUIIcon('unemployed'), ui.ALIGN_W)],
             tooltipTitle=_("Free workers"),
-            align = ui.ALIGN_E, tags = ['pl'])
+            align = ui.ALIGN_NONE, tags = ['pl'])
         ui.Label(self.win, layout = (10, 15, 5, 2), id = 'vPCStorBio',
             icons=[(res.getUIIcon('bio_stored'), ui.ALIGN_W)],
             tooltipTitle=_("Biomatter"),
-            align = ui.ALIGN_E, tags = ['pl'])
+            align = ui.ALIGN_NONE, tags = ['pl'])
         ui.Label(self.win, layout = (15, 15, 5, 2), id = 'vPCStorEn',
             icons=[(res.getUIIcon('en_stored'), ui.ALIGN_W)],
             tooltipTitle=_("Energy"),
-            align = ui.ALIGN_E, tags = ['pl'])
+            align = ui.ALIGN_NONE, tags = ['pl'])
 
 
         ui.Label(self.win, layout = (0, 18, 7, 2), id = 'vPCProd',
             icons=[(res.getUIIcon('planet_cp_production'), ui.ALIGN_W)],
             tooltipTitle=_("Construction pts"),
-            align = ui.ALIGN_E, tags = ['pl'])
+            align = ui.ALIGN_NONE, tags = ['pl'])
         ui.Label(self.win, layout = (7, 18, 7, 2), id = 'vPCSci',
             icons=[(res.getUIIcon('planet_rp_production'), ui.ALIGN_W)],
             tooltipTitle=_("Research pts"),
-            align = ui.ALIGN_E, tags = ['pl'])
+            align = ui.ALIGN_NONE, tags = ['pl'])
         ui.Label(self.win, layout = (14, 18, 6, 2), id = 'vPCMorale',
             icons=[(res.getUIIcon('morale'), ui.ALIGN_W)],
             tooltipTitle=_("Morale"),
-            align = ui.ALIGN_E, tags = ['pl'])
+            align = ui.ALIGN_NONE, tags = ['pl'])
 
 
         ui.Label(self.win, layout = (0, 21, 7, 2), id = 'vPCEnvStatus',
             icons=[(res.getUIIcon('environment_status'), ui.ALIGN_W)],
             tooltipTitle=_("Environment status"),
-            align = ui.ALIGN_E, tags = ['pl'])
+            align = ui.ALIGN_NONE, tags = ['pl'])
         ui.Label(self.win, layout = (7, 21, 7, 2), id = 'vPCShield',
             icons=[(res.getUIIcon('planetary_shield'), ui.ALIGN_W)],
             tooltipTitle=_("Planetary shield"),
-            align = ui.ALIGN_E, tags = ['pl'])
+            align = ui.ALIGN_NONE, tags = ['pl'])
         ui.Label(self.win, layout = (14, 21, 6, 2), id = 'vPCSRes',
             icons=[(res.getUIIcon('strategic_resource'), ui.ALIGN_W)],
             tooltipTitle=_("Strategic resource"),
-            align = ui.ALIGN_E, tags = ['pl'])
+            align = ui.ALIGN_NONE, tags = ['pl'])
         ui.Button(self.win, layout = (10, 23, 10, 1), text = _('Show Terraforming Data'),
             tags = ['pl'], action = 'onTerraformDataSelect')
         ui.Title(self.win, layout = (0, 24, 20, 1), text = _('System data'),
@@ -1316,19 +1316,19 @@ class StarSystemDlg:
         ui.Label(self.win, layout = (0, 25, 5, 2), id = 'vSTPBio',
             icons=[(res.getUIIcon('system_biomatter'), ui.ALIGN_W)],
             tooltipTitle=_("Net Bio +/-"),
-            align = ui.ALIGN_E, tags = ['pl'])
+            align = ui.ALIGN_NONE, tags = ['pl'])
         ui.Label(self.win, layout = (5, 25, 5, 2), id = 'vSTPEn',
             icons=[(res.getUIIcon('system_energy'), ui.ALIGN_W)],
             tooltipTitle=_("Net Energy +/-"),
-            align = ui.ALIGN_E, tags = ['pl'])
+            align = ui.ALIGN_NONE, tags = ['pl'])
         ui.Label(self.win, layout = (10, 25, 5, 2), id = 'vSTPProd',
             icons=[(res.getUIIcon('system_cp_production'), ui.ALIGN_W)],
             tooltipTitle=_("Net Construction"),
-            align = ui.ALIGN_E, tags = ['pl'])
+            align = ui.ALIGN_NONE, tags = ['pl'])
         ui.Label(self.win, layout = (15, 25, 5, 2), id = 'vSTPSci',
             icons=[(res.getUIIcon('system_rp_production'), ui.ALIGN_W)],
             tooltipTitle=_("Net Research"),
-            align = ui.ALIGN_E, tags = ['pl'])
+            align = ui.ALIGN_NONE, tags = ['pl'])
         ## info
         ui.Title(self.win, layout = (20, 20, 20, 1), id = 'vITitle',
             align = ui.ALIGN_W, font = 'normal-bold', tags = ['pl'])
