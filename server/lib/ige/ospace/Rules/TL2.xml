@@ -463,7 +463,7 @@
 		/>
 		<project
 			globalDisabled="0"
-			buildProd="9600"
+			buildProd="960"
 			data="100"
 			finishConstrHandler="finishProjectNF"
 		/>
