@@ -1,6 +1,9 @@
 ﻿Outer Space Change Log
 ======================
 
+[2017-07-30]
+- Revision bump to 0.5.71 [dahaic]
+
 [2017-07-16]
 - Update of tooltips [dahaic]
   Tooltips are now multilined, also distinguishing between title
