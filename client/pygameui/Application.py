@@ -55,7 +55,7 @@ class Application:
         self.activeWidget = None
         self.mouseOverWidget = None
         self.mouseOverCount = 0
-        self.mouseOverThreshold = 2
+        self.mouseOverThreshold = 3
         self.mouseLMBDouble = 0
         self.mouseRMBDouble = 0
         self.keyEvt = None
