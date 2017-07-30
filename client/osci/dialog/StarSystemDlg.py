@@ -633,12 +633,7 @@ class StarSystemDlg:
             self.win.vSViewMinefield.enabled = 0
 
     def showPlInfo(self):
-        if self.plInfoType == INFO_NONE:
-            self.win.setTagAttr('task', 'visible', 0)
-            self.win.setTagAttr('terra', 'visible', 0)
-            self.win.setTagAttr('slot', 'visible', 0)
-            self.win.vITitle.text = _('N/A')
-        if self.plInfoType == INFO_PLANET:
+        if self.plInfoType in [INFO_NONE, INFO_PLANET]:
             self.win.setTagAttr('task', 'visible', 0)
             self.win.setTagAttr('terra', 'visible', 1)
             self.win.setTagAttr('slot', 'visible', 0)
