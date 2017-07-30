@@ -1034,8 +1034,6 @@ class StarSystemDlg:
                 planet = client.get(self.planetID, noUpdate = 1)
                 player = client.getPlayer()
                 planet.prodQueue, player.stratRes = client.cmdProxy.changeConstruction(self.planetID, self.plInfoData, self.changeQtyDlg.quantity)
-                self.plInfoType = self.plInfoTypeSelected = INFO_NONE
-                self.plInfoData = self.plInfoDataSelected = None
                 self.showPlanet()
                 self.win.setStatus(_('Command has been executed.'))
             except ige.GameException, e:
