@@ -92,8 +92,7 @@ class ButtonArray(MetaWidget):
         self.itemsChanged()
 
     def onButtonPressed(self, widget, action, data):
-        if self.selectedButton:
-            self.clearSelection()
+        self.clearSelection()
         if widget.pressed:
             self.selected = widget.data
             self.selectedButton = widget
@@ -158,7 +157,6 @@ class ButtonArray(MetaWidget):
             button.background = None
             if button.visible: button.visible = 0
             index += 1
-        self.clearSelection()
         self.parent.redraw(self)
 
     def drawMetaWidget(self, surface):

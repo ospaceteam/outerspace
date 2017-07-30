@@ -114,12 +114,13 @@ class GlobalQueuesDlg:
             self.win.setTagAttr('data', 'visible', False)
             self.activeIndex = None
             self.newGlobalTaskDlg.display(self, self.activeQueue)
+            self.vPQueues[self.activeQueue].selectItem(None)
         else:
             # info about task
             task = self.vPQueues[self.activeQueue].items[data.index]
             self.activeIndex = data.index
             self.win.setTagAttr('data', 'visible', True)
-            self.win.vTaskName.text = task.tooltipTitle
+            self.win.vTaskName.text = task.tooltip
             self.win.vTaskQuantity.text = task.text
             self.win.vTaskConstPoints.text = task.const
 
@@ -139,6 +140,7 @@ class GlobalQueuesDlg:
             self.player.prodQueues[self.activeQueue] = client.cmdProxy.moveGlobalConstrItem(self.playerID, self.activeQueue, self.activeIndex, rel)
             self.activeIndex = pos
             self.vPQueues[self.activeQueue].selectItem(self.vPQueues[self.activeQueue].items[self.activeIndex])
+            self.vPQueues[self.activeQueue].selectItem(None)  # workaround for Selection not showing, TODO fix selection
             self.win.setStatus(_('Command has been executed.'))
         except GameException, e:
             self.win.setStatus(e.args[0])
@@ -153,6 +155,7 @@ class GlobalQueuesDlg:
             self.player.prodQueues[self.activeQueue] = client.cmdProxy.moveGlobalConstrItem(self.playerID, self.activeQueue, self.activeIndex, widget.data)
             self.activeIndex += widget.data
             self.vPQueues[self.activeQueue].selectItem(self.vPQueues[self.activeQueue].items[self.activeIndex])
+            self.vPQueues[self.activeQueue].selectItem(None)  # workaround for Selection not showing, TODO fix selection
             self.win.setStatus(_('Command has been executed.'))
         except GameException, e:
             self.win.setStatus(e.args[0])
@@ -171,6 +174,7 @@ class GlobalQueuesDlg:
                 self.win.setStatus(_('Executing CHANGE TASK command...'))
                 player = client.getPlayer()
                 player.prodQueues[self.activeQueue], player.stratRes = client.cmdProxy.changeGlobalConstruction(self.playerID, self.activeQueue, self.activeIndex, self.changeQtyDlg.quantity)
+                self.vPQueues[self.activeQueue].selectItem(None)  # workaround for Selection not showing, TODO fix selection
                 self.win.setStatus(_('Command has been executed.'))
                 self.win.vTaskQuantity.text = player.prodQueues[self.activeQueue][self.activeIndex].quantity
                 self.win.vTaskConstPoints.text = player.prodQueues[self.activeQueue][self.activeIndex].const
@@ -199,6 +203,7 @@ class GlobalQueuesDlg:
             try:
                 self.win.setStatus(_('Executing ABORT CONSTRUCTION command...'))
                 self.player.prodQueues[self.activeQueue], self.player.stratRes = client.cmdProxy.abortGlobalConstruction(self.playerID, self.activeQueue, self.activeIndex)
+                self.vPQueues[self.activeQueue].selectItem(None)
                 self.win.setStatus(_('Command has been executed.'))
                 if len(self.player.prodQueues[self.activeQueue]) == self.activeIndex:
                     if self.activeIndex == 0:
@@ -211,7 +216,7 @@ class GlobalQueuesDlg:
 
         if self.activeIndex:
             task = self.vPQueues[self.activeQueue].items[self.activeIndex]
-            self.win.vTaskName.text = task.tooltipTitle
+            self.win.vTaskName.text = task.tooltip
             self.win.vTaskQuantity.text = task.text
             self.win.vTaskConstPoints.text = task.const
         self.update()

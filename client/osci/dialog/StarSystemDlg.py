@@ -633,12 +633,7 @@ class StarSystemDlg:
             self.win.vSViewMinefield.enabled = 0
 
     def showPlInfo(self):
-        if self.plInfoType == INFO_NONE:
-            self.win.setTagAttr('task', 'visible', 0)
-            self.win.setTagAttr('terra', 'visible', 0)
-            self.win.setTagAttr('slot', 'visible', 0)
-            self.win.vITitle.text = _('N/A')
-        if self.plInfoType == INFO_PLANET:
+        if self.plInfoType in [INFO_NONE, INFO_PLANET]:
             self.win.setTagAttr('task', 'visible', 0)
             self.win.setTagAttr('terra', 'visible', 1)
             self.win.setTagAttr('slot', 'visible', 0)
@@ -840,13 +835,7 @@ class StarSystemDlg:
             self.display(data.planetID)
 
     def onSlotHighlighted(self, widget, action, data):
-        if not data or data.index is None:
-            self.plInfoType = self.plInfoTypeSelected
-            self.plInfoData = self.plInfoDataSelected
-        else:
-            self.plInfoType = INFO_SLOT
-            self.plInfoData = data.index
-        self.showPlInfo()
+        self.onItemHighlighted(data, INFO_SLOT)
 
     def onSlotSelected(self, widget, action, data):
         self.win.vPQueue.selectItem(None)
@@ -875,11 +864,14 @@ class StarSystemDlg:
                 self.structTaskDlg.display(self, self.planetID, False, data.techID)
                 self.win.vPSlots.selectItem(None)
 
-        self.plInfoType = INFO_NONE
-        self.plIndoData = None
+        self.plInfoType = self.plInfoTypeSelected = INFO_NONE
+        self.plInfoData = self.plInfoDataSelected = None
         self.showPlInfo()
 
     def onQueueItemHighlighted(self, widget, action, data):
+        self.onItemHighlighted(data, INFO_TASK)
+
+    def onItemHighlighted(self, data, info_type):
         # unselect structure
         if not data or data.index is None:
             # unselected or new task
@@ -887,7 +879,7 @@ class StarSystemDlg:
             self.plInfoData = self.plInfoDataSelected
         else:
             # info about task
-            self.plInfoType = INFO_TASK
+            self.plInfoType = info_type
             self.plInfoData = data.index
         self.showPlInfo()
 
@@ -912,9 +904,8 @@ class StarSystemDlg:
         self.showPlInfo()
 
     def onTerraformDataSelect(self, widget, action, data):
-        self.plInfoType = INFO_PLANET
-        self.plInfoTypeSelected = INFO_PLANET
-        self.plInfoData = None
+        self.plInfoType = self.plInfoTypeSelected = INFO_PLANET
+        self.plInfoData = self.plInfoDataSelected = None
         self.win.vPQueue.selectItem(None)
         self.showPlInfo()
 
@@ -924,6 +915,7 @@ class StarSystemDlg:
             planet = client.get(self.planetID, noUpdate = 1)
             planet.slots = client.cmdProxy.moveStruct(self.planetID, self.plInfoData, widget.data)
             self.plInfoData += widget.data
+            self.plInfoDataSelected = self.plInfoData
             self.showPlanet()
             self.win.vPSlots.selectItem(self.win.vPSlots.items[self.plInfoData])
             self.win.setStatus(_('Command has been executed.'))
@@ -943,7 +935,7 @@ class StarSystemDlg:
                 pos = len(planet.slots) - 1
 
             planet.slots = client.cmdProxy.moveStruct(self.planetID, self.plInfoData, rel)
-            self.plInfoData = pos
+            self.plInfoData = self.plInfoDataSelected = pos
             self.showPlanet()
             self.win.vPSlots.selectItem(self.win.vPSlots.items[self.plInfoData])
             self.win.setStatus(_('Command has been executed.'))
@@ -974,8 +966,9 @@ class StarSystemDlg:
             self.win.setStatus(_('Executing DEMOLISH STRUCTURE command...'))
             planet = client.get(self.planetID, noUpdate = 1)
             planet.slots = client.cmdProxy.demolishStruct(self.planetID, self.plInfoData)
-            self.plInfoType = INFO_NONE
-            self.plInfoDat = None
+            self.plInfoType = self.plInfoTypeSelected = INFO_NONE
+            self.plInfoData = self.plInfoDataSelected = None
+            self.win.vPSlots.selectItem(None)
             self.win.setStatus(_('Command has been executed.'))
         except ige.GameException, e:
             self.win.setStatus(e.args[0])
@@ -999,7 +992,7 @@ class StarSystemDlg:
                 pos = len(planet.prodQueue) - 1
 
             planet.prodQueue = client.cmdProxy.moveConstrItem(self.planetID, self.plInfoData, rel)
-            self.plInfoData = pos
+            self.plInfoData = self.plInfoDataSelected = pos
             self.showPlanet()
             self.win.vPQueue.selectItem(self.win.vPQueue.items[self.plInfoData])
             self.win.setStatus(_('Command has been executed.'))
@@ -1013,6 +1006,7 @@ class StarSystemDlg:
             planet = client.get(self.planetID, noUpdate = 1)
             planet.prodQueue = client.cmdProxy.moveConstrItem(self.planetID, self.plInfoData, widget.data)
             self.plInfoData += widget.data
+            self.plInfoDataSelected = self.plInfoData
             self.showPlanet()
             self.win.vPQueue.selectItem(self.win.vPQueue.items[self.plInfoData])
             self.win.setStatus(_('Command has been executed.'))
@@ -1036,8 +1030,6 @@ class StarSystemDlg:
                 planet = client.get(self.planetID, noUpdate = 1)
                 player = client.getPlayer()
                 planet.prodQueue, player.stratRes = client.cmdProxy.changeConstruction(self.planetID, self.plInfoData, self.changeQtyDlg.quantity)
-                self.plInfoType = INFO_NONE
-                self.plInfoDat = None
                 self.showPlanet()
                 self.win.setStatus(_('Command has been executed.'))
             except ige.GameException, e:
@@ -1050,8 +1042,9 @@ class StarSystemDlg:
             planet = client.get(self.planetID, noUpdate = 1)
             player = client.getPlayer()
             planet.prodQueue, player.stratRes = client.cmdProxy.abortConstruction(self.planetID, self.plInfoData)
-            self.plInfoType = INFO_NONE
-            self.plInfoDat = None
+            self.plInfoType = self.plInfoTypeSelected = INFO_NONE
+            self.plInfoData = self.plInfoDataSelected = None
+            self.win.vPQueue.selectItem(None)
             self.showPlanet()
             self.win.setStatus(_('Command has been executed.'))
         except ige.GameException, e:
