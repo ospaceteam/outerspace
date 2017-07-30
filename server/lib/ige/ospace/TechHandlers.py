@@ -207,7 +207,6 @@ def finishProjectNF(tran, source, target, tech):
         owner = tran.db[target.owner]
         stratRes = int(tech.data)
         owner.stratRes[stratRes] = owner.stratRes.get(stratRes, 0) + SR_AMOUNT_SMALL
-        Utils.sendMessage(tran, target, MSG_EXTRACTED_STRATRES, target.oid, stratRes)
 
 ## Antimatter transmutation
 def finishProjectNF2(tran, source, target, tech):
