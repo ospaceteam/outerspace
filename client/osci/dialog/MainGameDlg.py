@@ -184,7 +184,7 @@ class MainGameDlg:
     def onSaveStarmapConfirm(self):
         turn = client.getTurn()
         name = res.formatTime(turn,'_')
-        savedas = self.mapWidget.save(name)
+        savedas = self.mapWidget.save(name, chronicle_shot=True)
         self.confirmDlg.display(_('File saved as %s' % savedas), _('OK'), False)
 
     def onMenu(self, widget, action, data):

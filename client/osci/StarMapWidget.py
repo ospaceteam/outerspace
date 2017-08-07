@@ -73,6 +73,7 @@ class StarMapWidget(Widget):
             self.MAP_GATESYSTEMS: [],
             self.MAP_CONTROLAREA: {}
         }
+        self._central_blackhole = OID_NONE
         self._popupInfo = {}
         self._fleetRanges = {}
         self._fleetTarget = {}
@@ -169,9 +170,17 @@ class StarMapWidget(Widget):
     def requestRepaint(self):
         self.repaintMap = 1
 
-    def save(self,append=''):
+    def save(self,append='', chronicle_shot=False):
         name = ("starmap_%s.png" % append)
-        pygame.image.save(self._mapSurf,name)
+        if chronicle_shot:
+            central_blackhole_obj = client.get(self._central_blackhole, noUpdate = 1)
+            saved_x, saved_y = self.currX, self.currY
+            self.currX, self.currY = central_blackhole_obj.x, central_blackhole_obj.y
+            radius = 15
+            surface_side = (radius + 2) * 2 * self.scale
+            new_surf = self.draw(pygame.Surface((surface_side, surface_side)), chronicle_shot=True)
+            pygame.image.save(new_surf, name)
+            self.currX, self.currY = saved_x, saved_y
         return name
 
     def precompute(self):
@@ -381,6 +390,9 @@ class StarMapWidget(Widget):
                                         continue
                                 self._map[self.MAP_CONTROLAREA][ctrlid] = (controlcolor,dist)
                 self._map[self.MAP_SYSTEMS].append((obj.oid, obj.x, obj.y, name, img, colors, namecolor, False, icons, constPoints, sciPoints, isGovCentral))
+                if obj.starClass[0] == 'b':
+                    # assumption is only one black hole in the galaxy - means it is central system
+                    self._central_blackhole = obj.oid
                 # pop up info
                 info = []
                 info.append(_('System: %s [ID: %d]') % (name or res.getUnknownName(), obj.oid))
@@ -746,14 +758,14 @@ class StarMapWidget(Widget):
                 buoyName = "%s_plus" % buoyName
             icons.append(res.icons[buoyName])
 
-    def drawScanners(self):
+    def drawScanners(self, mapSurf):
         # default scanner ranges (inner and outer circles)
         scanner1range = 1.0/10
         scanner2range = 1.0/16
         # coordinates
-        centerX, centerY = self._mapSurf.get_rect().center
-        maxX = self._mapSurf.get_rect().width
-        maxY = self._mapSurf.get_rect().height
+        centerX, centerY = mapSurf.get_rect().center
+        maxX = mapSurf.get_rect().width
+        maxY = mapSurf.get_rect().height
         currX = self.currX
         currY = self.currY
         scale = self.scale
@@ -766,18 +778,18 @@ class StarMapWidget(Widget):
             range1 = int(range * scale * scanner1range)
             range2 = int(range * scale * scanner2range)
             if sx+currRange > 0 and sx-currRange < maxX and sy+currRange > 0 and sy-currRange < maxY:
-                pygame.draw.circle(self._mapSurf, (0x00, 0x00, 0x60), (sx, sy), currRange, 2)
+                pygame.draw.circle(mapSurf, (0x00, 0x00, 0x60), (sx, sy), currRange, 2)
                 scannerCalced.append((sx,sy,range1,range2))
         for sx, sy, range1, range2 in scannerCalced:
-            pygame.draw.circle(self._mapSurf, (0x00, 0x00, 0x30), (sx, sy), range1, 0)
+            pygame.draw.circle(mapSurf, (0x00, 0x00, 0x30), (sx, sy), range1, 0)
         for sx, sy, range1, range2 in scannerCalced:
-            pygame.draw.circle(self._mapSurf, (0x00, 0x00, 0x40), (sx, sy), range2, 0)
+            pygame.draw.circle(mapSurf, (0x00, 0x00, 0x40), (sx, sy), range2, 0)
 #        log.debug("Total scanner circles:",len(self._map[self.MAP_SCANNER1]))
 #        log.debug("Drawn scanner circles:",len(scannerCalced))
 
-    def drawControlAreas(self):
-        centerX, centerY = self._mapSurf.get_rect().center
-        maxY = self._mapSurf.get_rect().height
+    def drawControlAreas(self, mapSurf):
+        centerX, centerY = mapSurf.get_rect().center
+        maxY = mapSurf.get_rect().height
         currX = self.currX
         currY = self.currY
         scale = self.scale
@@ -789,12 +801,12 @@ class StarMapWidget(Widget):
             if sy > centerY: sy += 1 #fix a bug with the draw system
             dx = scale
             dy = scale
-            self._mapSurf.fill(self._map[self.MAP_CONTROLAREA][xy][0], pygame.Rect(sx, sy, dx, dy), 0)
+            mapSurf.fill(self._map[self.MAP_CONTROLAREA][xy][0], pygame.Rect(sx, sy, dx, dy), 0)
 
-    def drawRedirects(self):
+    def drawRedirects(self, mapSurf):
         # coordinates
-        centerX, centerY = self._mapSurf.get_rect().center
-        maxY = self._mapSurf.get_rect().height
+        centerX, centerY = mapSurf.get_rect().center
+        maxY = mapSurf.get_rect().height
         currX = self.currX
         currY = self.currY
         scale = self.scale
@@ -803,25 +815,25 @@ class StarMapWidget(Widget):
             sy = maxY - (int((sy - currY) * scale) + centerY)
             tx = int((tx - currX) * scale) + centerX
             ty = maxY - (int((ty - currY) * scale) + centerY)
-            pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx, sy), (tx, ty), 1)
-            pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx + 1, sy), (tx, ty), 1)
-            pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx - 1, sy), (tx, ty), 1)
-            pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx, sy + 1), (tx, ty), 1)
-            pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx, sy - 1), (tx, ty), 1)
-            pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx + 1, sy + 1), (tx, ty), 1)
-            pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx + 1, sy - 1), (tx, ty), 1)
-            pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx - 1, sy + 1), (tx, ty), 1)
-            pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx - 1, sy - 1), (tx, ty), 1)
-            pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx + 2, sy), (tx, ty), 1)
-            pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx - 2, sy), (tx, ty), 1)
-            pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx, sy + 2), (tx, ty), 1)
-            pygame.draw.line(self._mapSurf, (0x20, 0x20, 0x80), (sx, sy - 2), (tx, ty), 1)
-            # pygame.draw.line(self._mapSurf, (0x00, 0x00, 0x80), (sx, sy), ((sx + tx) / 2, (sy + ty) / 2), 3)
+            pygame.draw.line(mapSurf, (0x20, 0x20, 0x80), (sx, sy), (tx, ty), 1)
+            pygame.draw.line(mapSurf, (0x20, 0x20, 0x80), (sx + 1, sy), (tx, ty), 1)
+            pygame.draw.line(mapSurf, (0x20, 0x20, 0x80), (sx - 1, sy), (tx, ty), 1)
+            pygame.draw.line(mapSurf, (0x20, 0x20, 0x80), (sx, sy + 1), (tx, ty), 1)
+            pygame.draw.line(mapSurf, (0x20, 0x20, 0x80), (sx, sy - 1), (tx, ty), 1)
+            pygame.draw.line(mapSurf, (0x20, 0x20, 0x80), (sx + 1, sy + 1), (tx, ty), 1)
+            pygame.draw.line(mapSurf, (0x20, 0x20, 0x80), (sx + 1, sy - 1), (tx, ty), 1)
+            pygame.draw.line(mapSurf, (0x20, 0x20, 0x80), (sx - 1, sy + 1), (tx, ty), 1)
+            pygame.draw.line(mapSurf, (0x20, 0x20, 0x80), (sx - 1, sy - 1), (tx, ty), 1)
+            pygame.draw.line(mapSurf, (0x20, 0x20, 0x80), (sx + 2, sy), (tx, ty), 1)
+            pygame.draw.line(mapSurf, (0x20, 0x20, 0x80), (sx - 2, sy), (tx, ty), 1)
+            pygame.draw.line(mapSurf, (0x20, 0x20, 0x80), (sx, sy + 2), (tx, ty), 1)
+            pygame.draw.line(mapSurf, (0x20, 0x20, 0x80), (sx, sy - 2), (tx, ty), 1)
+            # pygame.draw.line(mapSurf, (0x00, 0x00, 0x80), (sx, sy), ((sx + tx) / 2, (sy + ty) / 2), 3)
 
-    def drawSystems(self):
+    def drawSystems(self, mapSurf):
         # coordinates
-        centerX, centerY = self._mapSurf.get_rect().center
-        maxY = self._mapSurf.get_rect().height
+        centerX, centerY = mapSurf.get_rect().center
+        maxY = mapSurf.get_rect().height
         currX = self.currX
         currY = self.currY
         scale = self.scale
@@ -833,7 +845,7 @@ class StarMapWidget(Widget):
                 w, h = img.get_size()
                 x = sx - w / 2
                 y = sy - h / 2
-                self._mapSurf.blit(img, (x, y))
+                mapSurf.blit(img, (x, y))
                 # images are now smaller - TODO fix images of stars
                 w = 22
                 h = 22
@@ -841,14 +853,14 @@ class StarMapWidget(Widget):
                     if self.overlayMode != gdata.OVERLAY_OWNER:
                         namecolor = res.fadeColor(namecolor)
                     img = renderText(self.textSize, name, 1, namecolor)
-                    self._mapSurf.blit(img, (sx - img.get_width() / 2, sy + h / 2))
+                    mapSurf.blit(img, (sx - img.get_width() / 2, sy + h / 2))
                 buoy = self.getBuoy(objID)
                 if buoy != None and not self.alternativeViewMode:
                     if not name: #if name not set and there is a bouy, set "?" as the name
                         if self.overlayMode != gdata.OVERLAY_OWNER:
                             namecolor = res.fadeColor(namecolor)
                         img = renderText(self.textSize, '[ ? ]', 1, namecolor)
-                        self._mapSurf.blit(img, (sx - img.get_width() / 2, sy + h / 2))
+                        mapSurf.blit(img, (sx - img.get_width() / 2, sy + h / 2))
                         nSy = sy + h / 2 + img.get_height()
                     nSy = sy + h / 2 + img.get_height()
                     lines = buoy[0].split("\n")
@@ -865,7 +877,7 @@ class StarMapWidget(Widget):
                             bouycolor = res.fadeColor(buoyColors[buoy[1] - 1])
                         img = renderText(self.textSize, line, 1, bouycolor)
                         maxW = max(img.get_width(), maxW)
-                        self._mapSurf.blit(img, (sx - img.get_width() / 2, nSy + hh))
+                        mapSurf.blit(img, (sx - img.get_width() / 2, nSy + hh))
                         hh += img.get_height()
                     if maxW > 0:
                         actRect = Rect(sx - maxW / 2, nSy, maxW, hh)
@@ -876,12 +888,12 @@ class StarMapWidget(Widget):
                     nSy = sy + h / 2 + img.get_height()
                     if constPoints != 0 or sciPoints != 0:
                         img = renderText(self.textSize, u"CP: %d RP: %d" % (constPoints, sciPoints), 1, namecolor)
-                        self._mapSurf.blit(img, (sx - img.get_width() / 2, nSy))
+                        mapSurf.blit(img, (sx - img.get_width() / 2, nSy))
                     if isGovCentral:
                         img = renderText(self.textSize, u"Central system", 1, (255, 255, 255))
-                        self._mapSurf.blit(img, (sx - img.get_width() / 2, nSy + img.get_height()))
+                        mapSurf.blit(img, (sx - img.get_width() / 2, nSy + img.get_height()))
                 for icon in icons:
-                    self._mapSurf.blit(icon, (x, y))
+                    mapSurf.blit(icon, (x, y))
                     x += icon.get_width() + 1
                 # active rectangle
                 actRect = Rect(sx - w / 2, sy - h / 2, w, h)
@@ -893,13 +905,13 @@ class StarMapWidget(Widget):
                     color = color[self.overlayMode]
                 sx = int((x - currX) * scale) + centerX
                 sy = maxY - (int((y - currY) * scale) + centerY)
-                pygame.draw.circle(self._mapSurf, color, (sx, sy), 5, 1)
-                pygame.draw.circle(self._mapSurf, color, (sx, sy), 4, 0)
+                pygame.draw.circle(mapSurf, color, (sx, sy), 5, 1)
+                pygame.draw.circle(mapSurf, color, (sx, sy), 4, 0)
                 if name and scale > 15:
                     if self.overlayMode != gdata.OVERLAY_OWNER:
                         namecolor = res.fadeColor(namecolor)
                     img = renderText(self.textSize, name, 1, namecolor)
-                    self._mapSurf.blit(img, (sx - img.get_width() / 2, sy + 6 / 2))
+                    mapSurf.blit(img, (sx - img.get_width() / 2, sy + 6 / 2))
                     buoy = self.getBuoy(objID)
                     if buoy != None:
                         lines = buoy[0].split("\n")
@@ -911,7 +923,7 @@ class StarMapWidget(Widget):
                                 break
                             img = renderText(self.textSize, line, 1, buoyColors[buoy[1] - 1])
                             maxW = max(img.get_width(), maxW)
-                            self._mapSurf.blit(img, (sx - img.get_width() / 2, nSy + hh))
+                            mapSurf.blit(img, (sx - img.get_width() / 2, nSy + hh))
                             hh += img.get_height()
                         if maxW > 0:
                             actRect = Rect(sx - maxW / 2, nSy, maxW, hh)
@@ -922,10 +934,10 @@ class StarMapWidget(Widget):
                 actRect.move_ip(self.rect.left, self.rect.top)
                 self._actAreas[objID] = actRect
 
-    def drawGateSystems(self):
+    def drawGateSystems(self, mapSurf):
         # coordinates
-        centerX, centerY = self._mapSurf.get_rect().center
-        maxY = self._mapSurf.get_rect().height
+        centerX, centerY = mapSurf.get_rect().center
+        maxY = mapSurf.get_rect().height
         currX = self.currX
         currY = self.currY
         scale = self.scale
@@ -938,12 +950,12 @@ class StarMapWidget(Widget):
                 for curSpeed in range(1,int(speed+1)):
                     radius = (curSpeed-1)* radiusMult + minRadius
                     color = res.getStargateColorCode(curSpeed)
-                    pygame.draw.circle(self._mapSurf, color, (sx, sy), radius, 1)
+                    pygame.draw.circle(mapSurf, color, (sx, sy), radius, 1)
 
-    def drawPlanets(self):
+    def drawPlanets(self, mapSurf):
         # coordinates
-        centerX, centerY = self._mapSurf.get_rect().center
-        maxY = self._mapSurf.get_rect().height
+        centerX, centerY = mapSurf.get_rect().center
+        maxY = mapSurf.get_rect().height
         currX = self.currX
         currY = self.currY
         scale = self.scale
@@ -960,7 +972,7 @@ class StarMapWidget(Widget):
                 orbit -= 1
                 actRect = Rect(sx + (orbit % 8) * rectSpace + 13, sy + 6 * (orbit / 8) - rectSize , rectSize, rectSize)
 
-                self._mapSurf.fill(color, actRect)
+                mapSurf.fill(color, actRect)
                 actRect.move_ip(self.rect.left, self.rect.top)
                 self._actAreas[objID] = actRect
         elif scale > 20:
@@ -971,14 +983,14 @@ class StarMapWidget(Widget):
                 sy = maxY - (int((y - currY) * scale) + centerY)
                 orbit -= 1
                 actRect = Rect(sx + (orbit % 8) * 3 + 7, sy - 3 * (orbit / 8) - 1, 2, 2)
-                self._mapSurf.fill(color, actRect)
+                mapSurf.fill(color, actRect)
                 actRect.move_ip(self.rect.left, self.rect.top)
                 self._actAreas[objID] = actRect
 
-    def drawFleets(self):
+    def drawFleets(self, mapSurf):
         # coordinates
-        centerX, centerY = self._mapSurf.get_rect().center
-        maxY = self._mapSurf.get_rect().height
+        centerX, centerY = mapSurf.get_rect().center
+        maxY = mapSurf.get_rect().height
         currX = self.currX
         currY = self.currY
         scale = self.scale
@@ -996,7 +1008,7 @@ class StarMapWidget(Widget):
                 sy1 = maxY - (int((y1 - currY) * scale) + centerY)
                 sx2 = int((x2 - currX) * scale) + centerX
                 sy2 = maxY - (int((y2 - currY) * scale) + centerY)
-                pygame.draw.line(self._mapSurf, color, (sx1, sy1), (sx2, sy2), 1)
+                pygame.draw.line(mapSurf, color, (sx1, sy1), (sx2, sy2), 1)
         # draw fleet symbol
         for objID, x, y, oldX, oldY, orbit, eta, color, size, military in self._map[self.MAP_FLEETS]:
             if not self.showCivilianFleets and not military:
@@ -1008,9 +1020,9 @@ class StarMapWidget(Widget):
             if orbit >= 0 and scale >= 30:
                 actRect = Rect(sx + (orbit % 7) * rectSpace + 13 + 2 * (orbit % 7), sy + scale/6 * (orbit / 7) + 6, rectSize, rectSize)
                 # TODO this is a workaround - fix it when pygame gets fixed
-                # pygame.draw.polygon(self._mapSurf, color,
+                # pygame.draw.polygon(mapSurf, color,
                 #    (actRect.midleft, actRect.midtop, actRect.midright, actRect.midbottom), 1)
-                pygame.draw.polygon(self._mapSurf, color,
+                pygame.draw.polygon(mapSurf, color,
                     (actRect.midleft, actRect.midtop, actRect.midright, actRect.midbottom), 0)
                 actRect.move_ip(self.rect.left, self.rect.top)
                 self._actAreas[objID] = actRect
@@ -1023,22 +1035,22 @@ class StarMapWidget(Widget):
                     mColor = color
                 else:
                     mColor = (0xff, 0xff, 0xff)
-                pygame.draw.line(self._mapSurf, mColor, (sx, sy), (sox, soy), size + 1)
+                pygame.draw.line(mapSurf, mColor, (sx, sy), (sox, soy), size + 1)
                 # TODO rotate triangle
-                pygame.draw.polygon(self._mapSurf, color,
+                pygame.draw.polygon(mapSurf, color,
                     (actRect.midleft, actRect.midtop, actRect.midright, actRect.midbottom), 1)
-                pygame.draw.polygon(self._mapSurf, color,
+                pygame.draw.polygon(mapSurf, color,
                     (actRect.midleft, actRect.midtop, actRect.midright, actRect.midbottom), 0)
                 if eta and scale > 15:
                     img = renderText(self.textSize, eta, 1, color)
-                    self._mapSurf.blit(img, actRect.topright)
+                    mapSurf.blit(img, actRect.topright)
                 actRect.move_ip(self.rect.left, self.rect.top)
                 self._actAreas[objID] = actRect
 
-    def drawOverlayEffects(self):
+    def drawOverlayEffects(self, mapSurf):
         # coordinates
-        centerX, centerY = self._mapSurf.get_rect().center
-        maxY = self._mapSurf.get_rect().height
+        centerX, centerY = mapSurf.get_rect().center
+        maxY = mapSurf.get_rect().height
         currX = self.currX
         currY = self.currY
         scale = self.scale
@@ -1054,23 +1066,25 @@ class StarMapWidget(Widget):
                     centralX = int((centralPlanet.x - currX) * scale) + centerX
                     centralY = maxY - (int((centralPlanet.y - currY) * scale) + centerY)
                     radius = int((107.5 - step) * govPCR / 37.5 * scale)
-                    pygame.draw.circle(self._mapSurf, moraleColor, (centralX, centralY), radius, 1)
+                    pygame.draw.circle(mapSurf, moraleColor, (centralX, centralY), radius, 1)
                     text = renderText(self.textSize, step, 1, moraleColor)
                     #maxW = max(text.get_width(), maxW)
-                    self._mapSurf.blit(text, (centralX + radius, centralY))
+                    mapSurf.blit(text, (centralX + radius, centralY))
 
 
 
-    def draw(self, surface):
-        if not self._mapSurf:
-            self._mapSurf = pygame.Surface(self.rect.size, SWSURFACE, surface)
+    def draw(self, surface, chronicle_shot=False):
+        if chronicle_shot:
+            mapSurf = pygame.Surface(surface.get_size(), SWSURFACE, surface)
+        elif not self._mapSurf:
+            mapSurf = pygame.Surface(self.rect.size, SWSURFACE, surface)
             # workaround for FILLED CIRCLE CLIP BUG - TODO remove
-            clip = self._mapSurf.get_clip()
+            clip = mapSurf.get_clip()
             clip.left += 1
             clip.top += 1
             clip.width -= 2
             clip.height -= 2
-            self._mapSurf.set_clip(clip)
+            mapSurf.set_clip(clip)
             #
             self._miniMapRect.left = self.rect.width - self._miniMapRect.width
             self._miniMapRect.top = self.rect.top
@@ -1078,60 +1092,53 @@ class StarMapWidget(Widget):
             self._overlayRect.top = 0 #self.rect.top
             #log.debug("Overlay Rect aligned to top:",self.rect.top)
             self.repaintMap = 1
-        if self.repaintMap:
+        else:
+            mapSurf = self._mapSurf
+        if self.repaintMap or chronicle_shot:
             self._actAreas = {}
-            mapSurface = self._mapSurf
-            # redraw map
-            mapSurface.fill((0x00, 0x00, 0x00))
-            # coordinates
-            centerX, centerY = mapSurface.get_rect().center
-            maxY = mapSurface.get_rect().height
-            currX = self.currX
-            currY = self.currY
-            scale = self.scale
-            # clipping (TODO better one)
-            clip = mapSurface.get_clip()
-            # scanners
+            mapSurf.fill((0x00, 0x00, 0x00))
+            ## scanners
             # scanner ranges and control areas
             if self.showScanners or self.toggleControlAreas:
                 if self.toggleControlAreas:
-                    self.drawControlAreas()
+                    self.drawControlAreas(mapSurf)
                 else:
-                    self.drawScanners()
+                    self.drawScanners(mapSurf)
             # pirate area
             if self.showPirateAreas:
                 pass # TODO
             # grid
             if self.showGrid:
-                self.drawGrid()
+                self.drawGrid(mapSurf)
             # redirections
             if self.showRedirects:
-                self.drawRedirects()
+                self.drawRedirects(mapSurf)
             # gate systems
             if self.showGateSystems:
-                self.drawGateSystems()
+                self.drawGateSystems(mapSurf)
             # stars
             if self.showSystems:
-                self.drawSystems()
+                self.drawSystems(mapSurf)
             # planets
             if self.showPlanets:
-                self.drawPlanets()
+                self.drawPlanets(mapSurf)
             # fleets
             if self.showFleets:
-                self.drawFleets()
-            self.drawOverlayEffects()
+                self.drawFleets(mapSurf)
+            self.drawOverlayEffects(mapSurf)
             # clean up flag
             self.repaintHotbuttons = 1
             self.repaintMap = 0
-        if self.repaintHotbuttons and self.showHotButtons:
-            # overlay selector
-            #if self.showOverlaySelector:
-            #    self.drawOverlaySelector(surface)
-            self.drawHotbuttons()
+        if self.repaintHotbuttons and self.showHotButtons and not chronicle_shot:
+            self.drawHotbuttons(mapSurf)
             # clean up flag
             self.repaintHotbuttons = 0
         # blit cached map
-        surface.blit(self._mapSurf, self.rect)
+        surface.blit(mapSurf, self.rect)
+        if chronicle_shot:
+            return surface
+        else:
+            self._mapSurf = mapSurf
         # additional informations
         oldClip = surface.get_clip()
         surface.set_clip(self.rect)
@@ -1267,64 +1274,9 @@ class StarMapWidget(Widget):
             else:
                 return None
 
-    def drawOverlaySelector(self,surface):
 
-        #guess we have to make this a popup! :(
-        #log.debug('Overlay Size:',self._overlayRect.width,self._overlayRect.height)
-        if not self._overlayZone:
-            self._overlayZone = pygame.Surface((self._overlayRect.width,self._overlayRect.height),SWSURFACE | SRCALPHA, surface)
-
-        self._detectOverlayZone.top = self._overlayRect.top + self.rect.top
-        self._detectOverlayZone.left = self._overlayRect.left
-        self._detectOverlayZone.width = self._overlayRect.width
-        self._detectOverlayZone.height = self._overlayRect.height
-
-        self._overlayZone.fill((0x00,0x00,0x00))
-
-        pygame.draw.rect(self._overlayZone,(0x00, 0x00, 0x90),Rect(0,0,self._overlayRect.width,self._overlayRect.height),1)
-
-
-
-
-        #pygame.draw.rect(self.overlayZone,(0x00, 0x00, 0x00),self._overlayRect,0) #this picks up mouse button position
-        #pygame.draw.rect(self._mapSurf,(0x00, 0x00, 0x00),self._overlayRect,0)
-        #pygame.draw.rect(self.overlayZone,(0x00, 0x00, 0x90),self._overlayRect,1)
-
-
-        mode = _("Overlay Mode: ")
-        if self.overlayMode == gdata.OVERLAY_OWNER:
-            mode = mode + _("Normal")
-        if self.overlayMode == gdata.OVERLAY_DIPLO:
-            mode = mode + _("Diplomatic")
-        if self.overlayMode == gdata.OVERLAY_BIO:
-            mode = mode + _("Environment")
-        if self.overlayMode == gdata.OVERLAY_FAME:
-            mode = mode + _("Pirate Fame")
-        if self.overlayMode == gdata.OVERLAY_MIN:
-            mode = mode + _("Minerals")
-        if self.overlayMode == gdata.OVERLAY_SLOT:
-            mode = mode + _("Slots")
-        if self.overlayMode == gdata.OVERLAY_STARGATE:
-            mode = mode + _("Fleet Acceleration")
-        if self.overlayMode == gdata.OVERLAY_DOCK:
-            mode = mode + _("Refuel and Repair")
-        if self.overlayMode == gdata.OVERLAY_MORALE:
-            mode = mode + _("Morale")
-
-        textSrfc = renderText(self.textSize, mode, 1, (0x70, 0x70, 0x80))
-        self._overlayZone.blit(textSrfc, (
-            6,
-            4 )
-        )
-
-        self._mapSurf.blit(self._overlayZone, self._overlayRect)
-#        surface.blit(self._overlayZone, self._overlayRect)
-
-
-
-
-    def drawGrid(self):
-        rect = self._mapSurf.get_rect()
+    def drawGrid(self, mapSurf):
+        rect = mapSurf.get_rect()
         centerX, centerY = rect.center
         maxY = rect.height
         currX = self.currX
@@ -1335,13 +1287,13 @@ class StarMapWidget(Widget):
         while x < left + rect.width + scale:
             value =  math.floor((x - centerX) / scale + currX)
             if value % 5 == 0:
-                pygame.draw.line(self._mapSurf, (0x00, 0x00, 0x90),
+                pygame.draw.line(mapSurf, (0x00, 0x00, 0x90),
                     (x, rect.top), (x, rect.bottom), 1)
                 if self.showCoords:
                     textSrfc = renderText(self.textSize, int(value), 1, (0x70, 0x70, 0x80))
-                    self._mapSurf.blit(textSrfc, (x + 2, rect.height - textSrfc.get_height()))
+                    mapSurf.blit(textSrfc, (x + 2, rect.height - textSrfc.get_height()))
             else:
-                pygame.draw.line(self._mapSurf, (0x33, 0x33, 0x66),
+                pygame.draw.line(mapSurf, (0x33, 0x33, 0x66),
                     (x, rect.top), (x, rect.bottom), 1)
             x += scale
         top = int((int(currY) - currY) * scale) + centerY - int(rect.height / scale / 2) * scale
@@ -1350,17 +1302,17 @@ class StarMapWidget(Widget):
             yScrn = maxY - y
             value =  math.floor(((maxY - yScrn) - centerY) / scale + currY)
             if value % 5 == 0:
-                pygame.draw.line(self._mapSurf, (0x00, 0x00, 0x90),
+                pygame.draw.line(mapSurf, (0x00, 0x00, 0x90),
                     (rect.left, yScrn), (rect.right, yScrn), 1)
                 textSrfc = renderText(self.textSize, int(value), 1, (0x70, 0x70, 0x80))
-                self._mapSurf.blit(textSrfc, (0, yScrn))
+                mapSurf.blit(textSrfc, (0, yScrn))
             else:
-                pygame.draw.line(self._mapSurf, (0x33, 0x33, 0x66),
+                pygame.draw.line(mapSurf, (0x33, 0x33, 0x66),
                     (rect.left, yScrn), (rect.right, yScrn), 1)
             y += scale
 
-    def drawHotbuttons(self):
-        rect = self._mapSurf.get_rect()
+    def drawHotbuttons(self, mapSurf):
+        rect = mapSurf.get_rect()
         bottom = rect.bottom
         right = rect.right
         dx = 137
@@ -1372,20 +1324,20 @@ class StarMapWidget(Widget):
         self._hotbuttonsZone.width = dx
         self._hotbuttonsZone.height = dy
 
-        pygame.draw.rect(self._mapSurf,(0x00, 0x00, 0x90),(left-1,top-1,dx+2,dy+2))
-        pygame.draw.rect(self._mapSurf,(0x33, 0x33, 0x66),(left,top,dx,dy))
+        pygame.draw.rect(mapSurf,(0x00, 0x00, 0x90),(left-1,top-1,dx+2,dy+2))
+        pygame.draw.rect(mapSurf,(0x33, 0x33, 0x66),(left,top,dx,dy))
 
         for buttonkey in self._hotbuttons:
             button = self._hotbuttons[buttonkey]
             self._hotbuttonRects[button[0]] = [button[0],Rect(button[2]+self._hotbuttonsZone.left,button[3]+self._hotbuttonsZone.top+15,button[4],button[5])]
             img = res.getButton(button[0],button[1])
             if (button[1] and not (self._tempOverlayHotbutton and self._tempOverlayHotbutton == button[0])) or (not button[1] and self._tempOverlayHotbutton and self._tempOverlayHotbutton == button[0]):
-                pygame.draw.rect(self._mapSurf,(0x90, 0x90, 0x90),(left+button[2]-1,top+15+button[3]-1,button[4]+2,button[5]+2),1)
-            self._mapSurf.blit(img,(left+button[2],top+15+button[3]))
+                pygame.draw.rect(mapSurf,(0x90, 0x90, 0x90),(left+button[2]-1,top+15+button[3]-1,button[4]+2,button[5]+2),1)
+            mapSurf.blit(img,(left+button[2],top+15+button[3]))
         if self._tempOverlayHotbutton:
             text = self._hotbuttons[self._tempOverlayHotbutton][7]
             textSrfc = renderText(self.textSize, text, 1, (0xEF, 0xEF, 0xEF))
-            self._mapSurf.blit(textSrfc, (left+2,top+1))
+            mapSurf.blit(textSrfc, (left+2,top+1))
 
     def initHotbuttons(self):
         # key : [ key , state , x , y , dx, dy, value, tooltip ]
