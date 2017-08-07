@@ -46,6 +46,7 @@ import resources
 import webbrowser, pygame
 from pygame.locals import *
 import time
+import os.path
 import Utils
 
 class MainGameDlg:
@@ -184,7 +185,8 @@ class MainGameDlg:
     def onSaveViewConfirm(self):
         turn = client.getTurn()
         name = 'view_' + res.formatTime(turn,'_')
-        savedas = self.mapWidget.save(name, chronicle_shot=False)
+        full_name = os.path.join(gdata.config.game.screenshot_dir, name)
+        savedas = self.mapWidget.save(full_name, chronicle_shot=False)
         self.confirmDlg.display(_('File saved as %s' % savedas), _('OK'), False)
 
     def onSaveStarmap(self, widget, action, data):
@@ -194,7 +196,8 @@ class MainGameDlg:
     def onSaveStarmapConfirm(self):
         turn = client.getTurn()
         name = 'starmap_' + res.formatTime(turn,'_')
-        savedas = self.mapWidget.save(name, chronicle_shot=True)
+        full_name = os.path.join(gdata.config.game.screenshot_dir, name)
+        savedas = self.mapWidget.save(full_name, chronicle_shot=True)
         self.confirmDlg.display(_('File saved as %s' % savedas), _('OK'), False)
 
     def onMenu(self, widget, action, data):
