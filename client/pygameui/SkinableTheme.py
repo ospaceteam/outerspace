@@ -945,6 +945,7 @@ def drawText(surface, widget):
         column = 0
         charIdx = 0
         firstY = y
+        previous_width = 0
         for char in para:
             fore = foreground
             back = None
@@ -975,36 +976,31 @@ def drawText(surface, widget):
             # get words from current drawed chat to end of paragraph
             words = para[charIdx:].split(' ')
             # compute length of rendered first word
-            lastWordSize = getTextSize(font, words[0])
+            remainingWordSize = getTextSize(font, words[0])
             # if word doesn't fit to current line,
             # move to next line
-            if x + lastWordSize[0] + 10 > r.right:
-                if x == r.left or onlyword: #only word on line, and still too large! Render as much as we can, then move to next line.
+            if x + remainingWordSize[0] + 10 > r.right:
+                if x == (r.left + previous_width) or onlyword: #only word on line, and still too large! Render as much as we can, then move to next line.
                     onlyword = True
                     if x + 10 > r.right:
-                        if not r.left + lastWordSize[0] + 10 > r.right: #finally, end of word
+                        if not r.left + remainingWordSize[0] + 10 > r.right: #finally, end of word
                             onlyword = False
                         x = r.left;
-                        y += lastWordSize[1]
+                        y += remainingWordSize[1]
                         if y + img.get_height() > r.bottom:
                             surface.set_clip(oldClip)
                             return
                 else:
                     x = r.left;
-                    y += lastWordSize[1]
+                    y += remainingWordSize[1]
                     if y + img.get_height() > r.bottom:
                         surface.set_clip(oldClip)
                         return
             # render next char
             img = renderText(font, char, 1, fore, back)
             # compute next char position
-            newX = x + img.get_width()
-            #if newX > r.right:
-            #    x = r.left
-            #    y += img.get_height()
-            #    if y + img.get_height() > r.bottom:
-            #        surface.set_clip(oldClip)
-            #        return
+            previous_width = img.get_width()
+            newX = x + previous_width
 
             surface.blit(img, (x, y))
             column += 1
