@@ -177,6 +177,13 @@ def runClient(options):
             if gdata.config.defaults.maxplanetsymbolsize == None:
                     gdata.config.defaults.maxplanetsymbolsize = 0
 
+            if gdata.config.game.screenshot_dir is None:
+                gdata.config.game.screenshot_dir = os.path.join(options.configDir, 'screenshots')
+                try:
+                    os.makedirs(gdata.config.game.screenshot_dir)
+                except OSError:
+                    pass
+
             import gettext
             log.debug('OSCI', 'Installing translation for:', language)
             if language == 'en':

@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 # setup library path
 import sys
 sys.path.append("../server/lib")
@@ -321,5 +322,5 @@ for tech in Rules.techs.itervalues():
 screen.blit(grid.printSDL(), (0, 0))
 pygame.display.update()
 
-pygame.image.save(grid.printSDL(), "techtree.bmp")
+pygame.image.save(grid.printSDL(), "techtree.png")
 #waitForKey()
