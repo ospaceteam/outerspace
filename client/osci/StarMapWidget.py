@@ -184,7 +184,15 @@ class StarMapWidget(Widget):
             self.currX, self.currY = saved_x, saved_y
         else:
             # print current player view
+            # these created surfaces are there just as a placeholder
+            self.repaintMap = True
+            buttons = self.showHotButtons
+            self.showHotButtons = False
+            self.draw(pygame.Surface((1, 1)))
             pygame.image.save(self._mapSurf, name)
+            self.showHotButtons = buttons
+            self.repaintMap = True
+            self.draw(pygame.Surface((1, 1)))
         return name
 
     def precompute(self):
@@ -1135,7 +1143,6 @@ class StarMapWidget(Widget):
             self.repaintMap = 0
         if self.repaintHotbuttons and self.showHotButtons and not chronicle_shot:
             self.drawHotbuttons(mapSurf)
-            # clean up flag
             self.repaintHotbuttons = 0
         # blit cached map
         surface.blit(mapSurf, self.rect)
