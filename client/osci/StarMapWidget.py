@@ -170,7 +170,7 @@ class StarMapWidget(Widget):
         self.repaintMap = 1
 
     def save(self,append=''):
-        name = ("starmap_%s.bmp" % append)
+        name = ("starmap_%s.png" % append)
         pygame.image.save(self._mapSurf,name)
         return name
 
