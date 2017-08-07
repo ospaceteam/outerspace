@@ -171,8 +171,9 @@ class StarMapWidget(Widget):
         self.repaintMap = 1
 
     def save(self,append='', chronicle_shot=False):
-        name = ("starmap_%s.png" % append)
+        name = ("%s.png" % append)
         if chronicle_shot:
+            # print whole galaxy, centered over black hole
             central_blackhole_obj = client.get(self._central_blackhole, noUpdate = 1)
             saved_x, saved_y = self.currX, self.currY
             self.currX, self.currY = central_blackhole_obj.x, central_blackhole_obj.y
@@ -181,6 +182,9 @@ class StarMapWidget(Widget):
             new_surf = self.draw(pygame.Surface((surface_side, surface_side)), chronicle_shot=True)
             pygame.image.save(new_surf, name)
             self.currX, self.currY = saved_x, saved_y
+        else:
+            # print current player view
+            pygame.image.save(self._mapSurf, name)
         return name
 
     def precompute(self):

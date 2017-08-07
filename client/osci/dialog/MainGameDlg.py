@@ -177,13 +177,23 @@ class MainGameDlg:
         self.confirmDlg.display(_('Are you sure to resign current game?'), _('No'),
             _('Yes'), cancelAction = self.onResignConfirmed)
 
-    def onSaveStarmap(self, widget, action, data):
+    def onSaveView(self, widget, action, data):
         self.confirmDlg.display(_('Save the current starmap view as an image?'), _('Yes'),
+            _('No'), confirmAction = self.onSaveViewConfirm)
+
+    def onSaveViewConfirm(self):
+        turn = client.getTurn()
+        name = 'view_' + res.formatTime(turn,'_')
+        savedas = self.mapWidget.save(name, chronicle_shot=False)
+        self.confirmDlg.display(_('File saved as %s' % savedas), _('OK'), False)
+
+    def onSaveStarmap(self, widget, action, data):
+        self.confirmDlg.display(_('Save whole galaxy starmap as an image?'), _('Yes'),
             _('No'), confirmAction = self.onSaveStarmapConfirm)
 
     def onSaveStarmapConfirm(self):
         turn = client.getTurn()
-        name = res.formatTime(turn,'_')
+        name = 'starmap_' + res.formatTime(turn,'_')
         savedas = self.mapWidget.save(name, chronicle_shot=True)
         self.confirmDlg.display(_('File saved as %s' % savedas), _('OK'), False)
 
@@ -245,7 +255,7 @@ class MainGameDlg:
         if client.db != None:
             player = client.getPlayer()
             if player.imperator > 2:
-                self.systemMenu.items[3].enabled = True
+                self.systemMenu.items[4].enabled = True
                 lastGalaxyRestartShown = gdata.config.game.lastGalaxyRestartShown
                 if lastGalaxyRestartShown != None:
                     localTime = time.time()
@@ -257,7 +267,7 @@ class MainGameDlg:
                     gdata.config.game.lastGalaxyRestartShown = str(time.time())
                     self.galaxyRestartDlg.display(restartAction = self.onRestartConfirmed)
             else:
-                self.systemMenu.items[3].enabled = False
+                self.systemMenu.items[4].enabled = False
                 if shownFromMenu == True:
                     self.win.setStatus(_("Only imperator elected three times and more can restart galaxy."))
 
@@ -362,7 +372,8 @@ class MainGameDlg:
             items = [
                 ui.Item(_("Find system"), action = "onSearch", hotkey = u'\x66'), # F
                 ui.Item(_("Statistics"), action = "onStats", hotkey = u'\x73'), # S
-                ui.Item(_("Save Starmap"), action = "onSaveStarmap", hotkey = u'\x76'), # V
+                ui.Item(_("Save View"), action = "onSaveView", hotkey = u'\x76'), # V
+                ui.Item(_("Save Starmap"), action = "onSaveStarmap"),
                 ui.Item(_("Galaxy restart"), action = "galaxyRestart", enabled = False, data = True), # no hotkey; if this position moved, you need to update restartGalaxy's "self.systemMenu.items" lines to reference new index position
                 ui.Item(_("Options"), action = "onOptions", hotkey = u'\x6F'), # O
                 ui.Item(_("--------"), enabled = False),
