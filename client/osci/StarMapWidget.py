@@ -109,7 +109,6 @@ class StarMapWidget(Widget):
         self.showBuoyDlg = ShowBuoyDlg(self.app)
         self.KeyModHelp = KeyModHelp(self.app)
         self._miniMapRect = Rect(0, 20, 175, 175)
-        self._overlayRect = Rect(0, 0, 175, 24)
         self._detectOverlayZone = Rect(0,0,0,0)
         self._hotbuttonsZone = Rect(0,0,0,0)
         self.initHotbuttons()
@@ -196,8 +195,6 @@ class StarMapWidget(Widget):
         return name
 
     def precompute(self):
-        # clear active areas for buoy texts
-        self._actBuoyAreas = {}
         player_highlight = -1
         if gdata.config.game.highlight != None:
             player_highlight = gdata.config.game.highlight
@@ -799,12 +796,12 @@ class StarMapWidget(Widget):
         scale = self.scale
         scannerCalced = []
         # draw
-        for x, y, range in self._map[self.MAP_SCANNER1]:
+        for x, y, scan_range in self._map[self.MAP_SCANNER1]:
             sx = int((x - currX) * scale) + centerX
             sy = maxY - (int((y - currY) * scale) + centerY)
-            currRange = int(range * scale * scanner1range + 2)
-            range1 = int(range * scale * scanner1range)
-            range2 = int(range * scale * scanner2range)
+            currRange = int(scan_range * scale * scanner1range + 2)
+            range1 = int(scan_range * scale * scanner1range)
+            range2 = int(scan_range * scale * scanner2range)
             if sx+currRange > 0 and sx-currRange < maxX and sy+currRange > 0 and sy-currRange < maxY:
                 pygame.draw.circle(mapSurf, (0x00, 0x00, 0x60), (sx, sy), currRange, 2)
                 scannerCalced.append((sx,sy,range1,range2))
@@ -843,6 +840,9 @@ class StarMapWidget(Widget):
             sy = maxY - (int((sy - currY) * scale) + centerY)
             tx = int((tx - currX) * scale) + centerX
             ty = maxY - (int((ty - currY) * scale) + centerY)
+            # TODO: change do polygon (triangle), but needs to start
+            # perpendicular to the redirect
+            #pygame.draw.polygon(mapSurf, (0x20, 0x20, 0x80), [(sx+2, sy), (sx-2, sy), (tx, ty)])
             pygame.draw.line(mapSurf, (0x20, 0x20, 0x80), (sx, sy), (tx, ty), 1)
             pygame.draw.line(mapSurf, (0x20, 0x20, 0x80), (sx + 1, sy), (tx, ty), 1)
             pygame.draw.line(mapSurf, (0x20, 0x20, 0x80), (sx - 1, sy), (tx, ty), 1)
@@ -856,9 +856,10 @@ class StarMapWidget(Widget):
             pygame.draw.line(mapSurf, (0x20, 0x20, 0x80), (sx - 2, sy), (tx, ty), 1)
             pygame.draw.line(mapSurf, (0x20, 0x20, 0x80), (sx, sy + 2), (tx, ty), 1)
             pygame.draw.line(mapSurf, (0x20, 0x20, 0x80), (sx, sy - 2), (tx, ty), 1)
-            # pygame.draw.line(mapSurf, (0x00, 0x00, 0x80), (sx, sy), ((sx + tx) / 2, (sy + ty) / 2), 3)
 
     def drawSystems(self, mapSurf):
+        # clear active areas for buoy texts
+        self._actBuoyAreas = {}
         # coordinates
         centerX, centerY = mapSurf.get_rect().center
         maxY = mapSurf.get_rect().height
@@ -1102,24 +1103,12 @@ class StarMapWidget(Widget):
 
 
     def draw(self, surface, chronicle_shot=False):
+        self._miniMapRect.left = self.rect.width - self._miniMapRect.width
+        self._miniMapRect.top = self.rect.top
         if chronicle_shot:
             mapSurf = pygame.Surface(surface.get_size(), SWSURFACE, surface)
         elif not self._mapSurf:
             mapSurf = pygame.Surface(self.rect.size, SWSURFACE, surface)
-            # workaround for FILLED CIRCLE CLIP BUG - TODO remove
-            clip = mapSurf.get_clip()
-            clip.left += 1
-            clip.top += 1
-            clip.width -= 2
-            clip.height -= 2
-            mapSurf.set_clip(clip)
-            #
-            self._miniMapRect.left = self.rect.width - self._miniMapRect.width
-            self._miniMapRect.top = self.rect.top
-            #self._overlayRect.left = self.rect.width - self._overlayRect.width
-            self._overlayRect.top = 0 #self.rect.top
-            #log.debug("Overlay Rect aligned to top:",self.rect.top)
-            self.repaintMap = 1
         else:
             mapSurf = self._mapSurf
         if self.repaintMap or chronicle_shot:
@@ -1166,77 +1155,40 @@ class StarMapWidget(Widget):
             return surface
         else:
             self._mapSurf = mapSurf
-        # additional informations
-        oldClip = surface.get_clip()
-        surface.set_clip(self.rect)
-        centerX, centerY = self._mapSurf.get_rect().center
-        maxY = self._mapSurf.get_rect().height
-        if self.highlightPos:
-            sx = int((self.highlightPos[0] - self.currX) * self.scale) + centerX + self.rect.left
-            sy = maxY - (int((self.highlightPos[1] - self.currY) * self.scale) + centerY) + self.rect.top
-            pygame.draw.circle(surface, (0xff, 0xff, 0xff), (sx, sy), 13, 2)
-        if self.alwaysShowRangeFor and self._fleetRanges.has_key(self.alwaysShowRangeFor):
-            x, y, maxRange, operRange, halfRange, speed, turns = self._fleetRanges[self.alwaysShowRangeFor]
-            sx = int((x - self.currX) * self.scale) + centerX + self.rect.left
-            sy = maxY - (int((y - self.currY) * self.scale) + centerY) + self.rect.top
-            rng = max(maxRange * self.scale, 0.2 * self.scale)
-            if rng > 1:
-                pygame.draw.circle(surface, (0xc0, 0x20, 0x20), (sx, sy), int(rng), 1)
-            rng = operRange * self.scale
-            if rng > 1:
-                pygame.draw.circle(surface, (0x20, 0x80, 0x20), (sx, sy), int(rng), 1)
-            rng = halfRange * self.scale
-            if rng > 1:
-                pygame.draw.circle(surface, (0x20, 0x20, 0x80), (sx, sy), int(rng), 1)
-        # draw ranges
-        for activeObjID in self.activeObjIDs:
-            if activeObjID and activeObjID in self._fleetTarget:
-                x, y, x1, y1 = self._fleetTarget[activeObjID]
-                sx = int((x - self.currX) * self.scale) + centerX + self.rect.left
-                sy = maxY - (int((y - self.currY) * self.scale) + centerY) + self.rect.top
-                dx = int((x1 - self.currX) * self.scale) + centerX + self.rect.left
-                dy = maxY - (int((y1 - self.currY) * self.scale) + centerY) + self.rect.top
-                pygame.draw.line(surface, (0xff, 0xff, 0x00), (sx, sy), (dx, dy), 2)
-            if activeObjID and activeObjID in self._fordersTarget:
-                for x, y, x1, y1, color in self._fordersTarget[activeObjID]:
-                    sx = int((x - self.currX) * self.scale) + centerX + self.rect.left
-                    sy = maxY - (int((y - self.currY) * self.scale) + centerY) + self.rect.top
-                    dx = int((x1 - self.currX) * self.scale) + centerX + self.rect.left
-                    dy = maxY - (int((y1 - self.currY) * self.scale) + centerY) + self.rect.top
-                    pygame.draw.line(surface, color, (sx, sy), (dx, dy), 2)
-            if activeObjID and activeObjID in self._fleetRanges:
-                x, y, maxRange, operRange, halfRange, speed, turns = self._fleetRanges[activeObjID]
-                sx = int((x - self.currX) * self.scale) + centerX + self.rect.left
-                sy = maxY - (int((y - self.currY) * self.scale) + centerY) + self.rect.top
-                if pygame.key.get_mods() & KMOD_SHIFT:
-                    for i in xrange(1, turns / 6):
-                        rng = int(i * speed * self.scale)
-                        if rng > 1:
-                            pygame.draw.circle(surface, (0x70, 0x70, 0x80), (sx, sy), rng, 1)
-                            textSrfc = renderText(self.textSize, res.formatTime(i * 6), 1, (0x70, 0x70, 0x80), (0x00, 0x00, 0x00))
-                            surface.blit(textSrfc, (sx - rng, sy - textSrfc.get_height() / 2))
-                            surface.blit(textSrfc, (sx + rng, sy - textSrfc.get_height() / 2))
-                            surface.blit(textSrfc, (sx - textSrfc.get_width() / 2, sy - rng))
-                            surface.blit(textSrfc, (sx - textSrfc.get_width() / 2, sy + rng - textSrfc.get_height()))
-                    rng = int(max(maxRange * self.scale, 0.2 * self.scale))
-                    if rng > 1:
-                        pygame.draw.circle(surface, (0xc0, 0x20, 0x20), (sx, sy), rng, 1)
-                else:
-                    rng = int(max(maxRange * self.scale, 0.2 * self.scale))
-                    if rng > 1:
-                        pygame.draw.circle(surface, (0xc0, 0x20, 0x20), (sx, sy), rng, 1)
-                    rng = int(operRange * self.scale)
-                    if rng > 1:
-                        pygame.draw.circle(surface, (0x20, 0x80, 0x20), (sx, sy), rng, 1)
-                    rng = int(halfRange * self.scale)
-                    if rng > 1:
-                        pygame.draw.circle(surface, (0x20, 0x20, 0x80), (sx, sy), rng, 1)
+        # additional information (ranges, fleet lines, selected system sign)
+        self.drawAdditions(surface)
 
         if self.showMiniMap:
             self.miniMap.draw(surface, self._miniMapRect.left, self._miniMapRect.top)
             if self.miniMap.needRect():
                 self.processMiniMapRect()
                 self.miniMap.draw(surface, self._miniMapRect.left, self._miniMapRect.top)
+        self.drawPopups(surface)
+        #
+        return self.rect
+
+    def getBuoy(self, objID):
+        player = client.getPlayer()
+        if hasattr(player, "buoys") and objID in player.buoys:
+            lines = player.buoys[objID][0].split("\n")
+            if len(lines) > 2:
+                return (u"%s\n%s" % (lines[0], lines[1]), player.buoys[objID][1])
+            else:
+                return player.buoys[objID]
+        else:
+            if hasattr(player, "alliedBuoys") and objID in player.alliedBuoys:
+                if len(player.alliedBuoys[objID]) > 0:
+                    lines = player.alliedBuoys[objID][0][0].split("\n")
+                    if len(lines) > 2:
+                        return (u"%s\n%s" % (lines[0], lines[1]), player.alliedBuoys[objID][0][1])
+                    else:
+                        return player.alliedBuoys[objID][0]
+                else:
+                    return None
+            else:
+                return None
+
+    def drawPopups(self, surface):
         # draw popups
         moreIDs = len(self.activeObjIDs) > 1
         if not moreIDs:
@@ -1275,31 +1227,78 @@ class StarMapWidget(Widget):
                         tmpY += textSrfc.get_height()
                     x += width + 2
 
+    def drawAdditions(self, surface):
+        oldClip = surface.get_clip()
+        surface.set_clip(self.rect)
+        centerX, centerY = self._mapSurf.get_rect().center
+        maxY = self._mapSurf.get_rect().height
+        # highlight position circle
+        if self.highlightPos:
+            sx = int((self.highlightPos[0] - self.currX) * self.scale) + centerX + self.rect.left
+            sy = maxY - (int((self.highlightPos[1] - self.currY) * self.scale) + centerY) + self.rect.top
+            pygame.draw.circle(surface, (0xff, 0xff, 0xff), (sx, sy), 13, 2)
+        # fleet range in case of selecting fleet orders
+        if self.alwaysShowRangeFor and self._fleetRanges.has_key(self.alwaysShowRangeFor):
+            x, y, maxRange, operRange, halfRange, speed, turns = self._fleetRanges[self.alwaysShowRangeFor]
+            sx = int((x - self.currX) * self.scale) + centerX + self.rect.left
+            sy = maxY - (int((y - self.currY) * self.scale) + centerY) + self.rect.top
+            rng = max(maxRange * self.scale, 0.2 * self.scale)
+            if rng > 1:
+                pygame.draw.circle(surface, (0xc0, 0x20, 0x20), (sx, sy), int(rng), 1)
+            rng = operRange * self.scale
+            if rng > 1:
+                pygame.draw.circle(surface, (0x20, 0x80, 0x20), (sx, sy), int(rng), 1)
+            rng = halfRange * self.scale
+            if rng > 1:
+                pygame.draw.circle(surface, (0x20, 0x20, 0x80), (sx, sy), int(rng), 1)
+        for activeObjID in self.activeObjIDs:
+            if activeObjID and activeObjID in self._fleetTarget:
+                # approaching fleet line
+                x, y, x1, y1 = self._fleetTarget[activeObjID]
+                sx = int((x - self.currX) * self.scale) + centerX + self.rect.left
+                sy = maxY - (int((y - self.currY) * self.scale) + centerY) + self.rect.top
+                dx = int((x1 - self.currX) * self.scale) + centerX + self.rect.left
+                dy = maxY - (int((y1 - self.currY) * self.scale) + centerY) + self.rect.top
+                pygame.draw.line(surface, (0xff, 0xff, 0x00), (sx, sy), (dx, dy), 2)
+            if activeObjID and activeObjID in self._fordersTarget:
+                # thickening fleet order lines
+                for x, y, x1, y1, color in self._fordersTarget[activeObjID]:
+                    sx = int((x - self.currX) * self.scale) + centerX + self.rect.left
+                    sy = maxY - (int((y - self.currY) * self.scale) + centerY) + self.rect.top
+                    dx = int((x1 - self.currX) * self.scale) + centerX + self.rect.left
+                    dy = maxY - (int((y1 - self.currY) * self.scale) + centerY) + self.rect.top
+                    pygame.draw.line(surface, color, (sx, sy), (dx, dy), 2)
+            if activeObjID and activeObjID in self._fleetRanges:
+                x, y, maxRange, operRange, halfRange, speed, turns = self._fleetRanges[activeObjID]
+                sx = int((x - self.currX) * self.scale) + centerX + self.rect.left
+                sy = maxY - (int((y - self.currY) * self.scale) + centerY) + self.rect.top
+                if pygame.key.get_mods() & KMOD_SHIFT:
+                    # fleet ranges stepped by 6 turns
+                    for i in xrange(1, turns / 6):
+                        rng = int(i * speed * self.scale)
+                        if rng > 1:
+                            pygame.draw.circle(surface, (0x70, 0x70, 0x80), (sx, sy), rng, 1)
+                            textSrfc = renderText(self.textSize, res.formatTime(i * 6), 1, (0x70, 0x70, 0x80), (0x00, 0x00, 0x00))
+                            surface.blit(textSrfc, (sx - rng, sy - textSrfc.get_height() / 2))
+                            surface.blit(textSrfc, (sx + rng, sy - textSrfc.get_height() / 2))
+                            surface.blit(textSrfc, (sx - textSrfc.get_width() / 2, sy - rng))
+                            surface.blit(textSrfc, (sx - textSrfc.get_width() / 2, sy + rng - textSrfc.get_height()))
+                    rng = int(max(maxRange * self.scale, 0.2 * self.scale))
+                    if rng > 1:
+                        pygame.draw.circle(surface, (0xc0, 0x20, 0x20), (sx, sy), rng, 1)
+                else:
+                    # fleet range based on fuel
+                    rng = int(max(maxRange * self.scale, 0.2 * self.scale))
+                    if rng > 1:
+                        pygame.draw.circle(surface, (0xc0, 0x20, 0x20), (sx, sy), rng, 1)
+                    rng = int(operRange * self.scale)
+                    if rng > 1:
+                        pygame.draw.circle(surface, (0x20, 0x80, 0x20), (sx, sy), rng, 1)
+                    rng = int(halfRange * self.scale)
+                    if rng > 1:
+                        pygame.draw.circle(surface, (0x20, 0x20, 0x80), (sx, sy), rng, 1)
         # restore clipping
         surface.set_clip(oldClip)
-        #
-        return self.rect
-
-    def getBuoy(self, objID):
-        player = client.getPlayer()
-        if hasattr(player, "buoys") and objID in player.buoys:
-            lines = player.buoys[objID][0].split("\n")
-            if len(lines) > 2:
-                return (u"%s\n%s" % (lines[0], lines[1]), player.buoys[objID][1])
-            else:
-                return player.buoys[objID]
-        else:
-            if hasattr(player, "alliedBuoys") and objID in player.alliedBuoys:
-                if len(player.alliedBuoys[objID]) > 0:
-                    lines = player.alliedBuoys[objID][0][0].split("\n")
-                    if len(lines) > 2:
-                        return (u"%s\n%s" % (lines[0], lines[1]), player.alliedBuoys[objID][0][1])
-                    else:
-                        return player.alliedBuoys[objID][0]
-                else:
-                    return None
-            else:
-                return None
 
 
     def drawGrid(self, mapSurf):
