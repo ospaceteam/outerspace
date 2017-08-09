@@ -215,24 +215,7 @@ class StarMapWidget(Widget):
         self._popupInfo = {}
         self._fleetRanges = {}
         # find all pirate planets
-        pirates = {}
-        log.debug("Checking pirate planets and wormholes")
-        for objID in client.db.keys():
-            if objID < OID_FREESTART:
-                continue
-            obj = client.get(objID, noUpdate = 1)
-            if not hasattr(obj, "type"):
-                continue
-            if obj.type == T_WORMHOLE and not hasattr(obj, 'destinationOid'):
-                obj = client.get(objID, forceUpdate = 1, publicOnly = 1)
-            if obj.type == T_PLANET and hasattr(obj, "x"):
-                ownerID = getattr(obj, 'owner', OID_NONE)
-                if ownerID == OID_NONE:
-                    continue
-                owner = client.get(ownerID, publicOnly = 1)
-                if hasattr(owner, "type") and (owner.type == T_PIRPLAYER or\
-                                                owner.type == T_AIPIRPLAYER):
-                    pirates[obj.x, obj.y] = None
+        pirate_systems = self.precomputePirateSystems()
         # process objects
         self.fleetOrbit = {}
         anyX = 0.0
@@ -249,9 +232,9 @@ class StarMapWidget(Widget):
             obj = client.get(objID, noUpdate = 1)
             if not hasattr(obj, "type"):
                 continue
+            if obj.type == T_PLAYER:
+                continue
             try:
-                if obj.type == T_PLAYER:
-                    continue
                 if hasattr(obj, "x"):
                     anyX = obj.x
                 if hasattr(obj, "y"):
@@ -260,298 +243,15 @@ class StarMapWidget(Widget):
                 log.warning('StarMapWidget', 'Cannot render objID = %d' % objID)
                 continue
             if obj.type == T_SYSTEM:
-                img = res.getSmallStarImg(obj.starClass[1]) # TODO correct me
-                icons = []
-                name = getattr(obj, 'name', None)
-                # TODO compute real relationship
-                #rel = REL_UNDEF
-                refuelMax = 0
-                refuelInc = 0
-                hasRefuel = False
-                upgradeShip = 0
-                repairShip = 0
-                speedBoost = 0
-                moraleCount = 0
-                morale = 200
-                constPoints = 0
-                sciPoints = 0
-                minerals = -1
-                bio = -1
-                slots = 0
-                numPlanets = 0
-                stratRes = SR_NONE
-                isGovCentral = False
-                #owner2 = 0
-                ownerID = OID_NONE
-                explored = False
-                if hasattr(obj, 'planets'):
-                    hasPirate = False
-                    for planetID in obj.planets:
-                        planet = client.get(planetID, noUpdate = 1)
-                        owner = getattr(planet, 'owner', OID_NONE)
-                        if hasattr(planet, "plType") and planet.plType not in ("A", "G"):
-                            numPlanets += 1
-                        if hasattr(planet, "plMin"):
-                            minerals = max(minerals,planet.plMin)
-                        if hasattr(planet, "plBio"):
-                            bio = max(bio,planet.plBio)
-                        if hasattr(planet, "plSlots"):
-                            slots += planet.plSlots
-                        if hasattr(planet, "plStratRes") and planet.plStratRes != SR_NONE:
-                            stratRes = planet.plStratRes
-                            stratRes = planet.plStratRes
-                            icons.append(res.icons["sr_%d" % planet.plStratRes])
-                        if owner:
-                            ownerID = owner
-                            if hasattr(planet, "morale"):
-                                morale = min(morale,planet.morale)
-                            if hasattr(planet, "refuelMax"):
-                                refuelMax = max(refuelMax, planet.refuelMax)
-                                refuelInc = max(refuelInc, planet.refuelInc)
-                            if hasattr(planet, "repairShip"):
-                                upgradeShip += planet.upgradeShip
-                                repairShip = max(repairShip, planet.repairShip)
-                            hasRefuel = hasRefuel or getattr(planet, 'hasRefuel', False)
-                            if hasattr(planet, "fleetSpeedBoost"):
-                                speedBoost = max(speedBoost, planet.fleetSpeedBoost)
-                            if hasattr(planet, "effProdProd"):
-                                constPoints += planet.effProdProd
-                            if hasattr(planet, "effProdSci"):
-                                sciPoints += planet.effProdSci
-                            if hasattr(planet, "slots"):
-                                for struct in planet.slots:
-                                    tech = Rules.techs[struct[STRUCT_IDX_TECHID]]
-                                    if not tech.govPwr == 0:
-                                        isGovCentral = True
-                                    if not hasattr(planet, "morale"): # ugly way to say "planets of other players"
-                                        # operational status and tech effectivity
-                                        maxTechHP = tech.maxHP
-                                        opStatus = struct[STRUCT_IDX_OPSTATUS]/100.0
-                                        if opStatus != 0:
-                                            currHP = struct[STRUCT_IDX_HP]
-                                            techEff = (currHP / opStatus) / maxTechHP
-                                        else:
-                                            techEff = 0
-                                        # production
-                                        b, m, e, d = tech.prodProdMod
-                                        prodMod = (b * planet.plBio + m * planet.plMin + e * planet.plEn + d * 100) / 100
-                                        constPoints += int(tech.prodProd * prodMod * techEff * opStatus)
-                                        # science
-                                        b, m, e, d = tech.prodSciMod
-                                        prodMod = (b * planet.plBio + m * planet.plMin + e * planet.plEn + d * 100) / 100
-                                        sciPoints += int(tech.prodSci * prodMod * techEff * opStatus)
-                        # uncharted system
-                        if hasattr(planet, 'plBio') and hasattr(planet, 'plEn'):
-                            explored = True
-                if not explored and name != None:
-                    name = "[%s]" % (name)
-                #if moraleCount > 0:
-                #    morale = morale/moraleCount
-                if morale==200:
-                    morale = -1
-                pirProb = self.precomputePirates(obj, pirates, icons)
-                if (player.type == T_PIRPLAYER or\
-                        player.type == T_AIPIRPLAYER):
-                    pirateFameCost = self.getPirateFameCost(player.oid,obj.oid,len(player.planets),pirates)
-                # refuelling
-                if refuelMax > 0:
-                    if refuelMax >= 87:
-                        icons.append(res.icons["fuel_99"])
-                    elif refuelMax >= 62:
-                        icons.append(res.icons["fuel_75"])
-                    elif refuelMax >= 37:
-                        icons.append(res.icons["fuel_50"])
-                    elif refuelMax >= 12:
-                        icons.append(res.icons["fuel_25"])
-                elif hasRefuel:
-                    icons.append(res.icons["fuel_-"])
-                # repair and upgrade
-                if upgradeShip > 10 and repairShip > 0.02:
-                    icons.append(res.icons["rep_10"])
-                elif upgradeShip > 0 and repairShip > 0:
-                    icons.append(res.icons["rep_1"])
-
-                self.precomputeCombat(obj, icons)
-                self.precomputeBuoys(obj, player, icons)
-                # star gates
-                if speedBoost > 1.0:
-                    icons.append(res.icons["sg_%02d" % round(speedBoost)])
-                    self._map[self.MAP_GATESYSTEMS].append((obj.x, obj.y, speedBoost))
-                #if owner2 != 0:
-                #   color = gdata.playerHighlightColor
-                #else:
-                #   color = res.getFFColorCode(rel)
-                if (player.type == T_PIRPLAYER or\
-                        player.type == T_AIPIRPLAYER):
-                    colors = res.getStarmapWidgetSystemColor(ownerID,bio,minerals,slots,numPlanets,speedBoost, refuelInc, upgradeShip, pirProb*100, stratRes, morale, pirateFameCost)
-                else:
-                    colors = res.getStarmapWidgetSystemColor(ownerID,bio,minerals,slots,numPlanets,speedBoost, refuelInc, upgradeShip, pirProb*100, stratRes, morale)
-                namecolor = res.getPlayerColor(ownerID)
-                controlcolor = res.getControlColor(ownerID)
-                if controlcolor:
-                    groupCenterX = int(anyX)
-                    groupCenterY = int(anyY)
-                    for rX in range(-CONTROLRANGE,CONTROLRANGE):
-                        for rY in range(-CONTROLRANGE,CONTROLRANGE):
-                            if rX*rX+rY*rY < MAXCONTROLRANGE:
-                                ctrlid = "%d:%d" % (groupCenterX+rX,groupCenterY+rY)
-                                dist = pow(anyX-(groupCenterX+rX+0.5),2) + pow(anyY-(groupCenterY+rY+0.5),2)
-                                if ctrlid in self._map[self.MAP_CONTROLAREA]:
-                                    oldCtrl = self._map[self.MAP_CONTROLAREA][ctrlid]
-                                    if dist > oldCtrl[1]:
-                                        continue
-                                self._map[self.MAP_CONTROLAREA][ctrlid] = (controlcolor,dist)
-                self._map[self.MAP_SYSTEMS].append((obj.oid, obj.x, obj.y, name, img, colors, namecolor, False, icons, constPoints, sciPoints, isGovCentral))
-                if obj.starClass[0] == 'b':
-                    # assumption is only one black hole in the galaxy - means it is central system
-                    self._central_blackhole = obj.oid
-                # pop up info
-                info = []
-                info.append(_('System: %s [ID: %d]') % (name or res.getUnknownName(), obj.oid))
-                info.append(_('Coordinates: [%.2f, %.2f]') % (obj.x, obj.y))
-                info.append(_('Scan pwr: %d') % obj.scanPwr)
-                info.append(_('Star Class: %s') % obj.starClass[1:])
-                info.append(_('Star Type: %s') % _(gdata.starTypes[obj.starClass[0]]))
-                if (player.type == T_PIRPLAYER or\
-                        player.type == T_AIPIRPLAYER):
-                    info.append(_('Fame to Colonize: %d') % pirateFameCost)
-                if refuelMax > 0:
-                    info.append(_("Refuel: %d %%/turn [%d %% max]") % (refuelInc, refuelMax))
-                if repairShip > 0:
-                    info.append(_("Repair ratio: %d %%/turn") % (repairShip * 100))
-                if upgradeShip > 0:
-                    info.append(_("Upgrade points: %d/turn") % upgradeShip)
-                if speedBoost > 0:
-                    info.append(_("Fleet speed: +%d %%") % (speedBoost * 100))
-                if pirProb > 0.0:
-                    info.append(_("Pirate get fame chance: %d %%") % (pirProb * 100))
-                self._popupInfo[obj.oid] = info
+                self.precomputeSystems(obj, player, pirate_systems)
             elif obj.type == T_WORMHOLE:
-                log.debug("Displaying wormhole",obj.oid)
-                img = res.getSmallStarImg(obj.starClass[1])
-                icons = []
-                name = getattr(obj, 'name', None)
-                pirProb = self.precomputePirates(obj, pirates, icons)
-                self.precomputeCombat(obj, icons)
-                self.precomputeBuoys(obj, player, icons)
-                color = res.getPlayerColor(OID_NONE)
-                namecolor = res.getPlayerColor(OID_NONE)
-                constPoints = 0
-                sciPoints = 0
-                isGovCentral = False
-                self._map[self.MAP_SYSTEMS].append((obj.oid, obj.x, obj.y, name, img, color, namecolor, True, icons, constPoints, sciPoints, isGovCentral))
-                # pop up info
-                info = []
-                info.append(_('Worm hole: %s [ID: %d]') % (name or res.getUnknownName(), obj.oid))
-                info.append(_('Coordinates: [%.2f, %.2f]') % (obj.x, obj.y))
-                try:
-                    log.debug("Attempting to get wormhole destination (",obj.destinationOid,") from client.")
-                    whDestObj = client.get(obj.destinationOid, noUpdate = 1) #except if the client doesn't have this in their DB
-                    whDestName = getattr(whDestObj, 'name', None)
-                    info.append(_('Destination: %s [ID: %d]') % (whDestName or res.getUnknownName(), obj.oid))
-                    info.append(_('Dest. Coords: [%.2f, %.2f]') % (whDestObj.x, whDestObj.y))
-                except:
-                    log.debug("Failed getting wormhole destination from client.")
-                    info.append(_('Destination: ? [ID: ?]'))
-                    info.append(_('Dest. Coords: [?, ?]'))
-                if pirProb > 0.0:
-                    info.append(_("Pirate get fame chance: %d %%") % (pirProb * 100))
-                self._popupInfo[obj.oid] = info
+                self.precomputeWormholes(obj, player, pirate_systems)
             elif obj.type == T_PLANET:
-                owner = getattr(obj, 'owner', OID_NONE)
-                # set up color reference data
-                biodata = -1
-                mindata = -1
-                slotdata = 0
-                stargatedata = 0
-                dockrefueldata = 0
-                dockupgradedata = 0
-                stratresdata = SR_NONE
-                moraledata = -1
-                pirProb = self.precomputePirates(obj, pirates, False)
-                famedata = pirProb*100
-                biodata = getattr(obj, 'plBio', -1)
-                mindata = getattr(obj, 'plMin', -1)
-                slotdata = getattr(obj, 'plSlots', 0)
-                dockrefueldata = getattr(obj, 'refuelInc', 0)
-                dockupgradedata = getattr(obj, 'upgradeShip', 0)
-                stargatedata = getattr(obj, 'fleetSpeedBoost', 0)
-                stratresdata = getattr(obj, 'plStratRes', SR_NONE)
-                moraledata = getattr(obj, 'morale', -1)
-                if (player.type == T_PIRPLAYER or\
-                        player.type == T_AIPIRPLAYER):
-                    pirateFameCost = self.getPirateFameCost(player.oid,obj.compOf,len(player.planets),pirates)
-                # build system
-                name = getattr(obj, 'name', None) or res.getUnknownName()
-                singlet = True
-                if hasattr(obj, "plType") and obj.plType in ("A", "G"):
-                    colors = gdata.sevColors[gdata.DISABLED]
-                else:
-                    singlet = False
-                    if (player.type == T_PIRPLAYER or\
-                            player.type == T_AIPIRPLAYER):
-                        colors = res.getStarmapWidgetPlanetColor(owner,biodata,mindata,slotdata,stargatedata, dockrefueldata, dockupgradedata, famedata, stratresdata, moraledata, pirateFameCost)
-                    else:
-                        colors = res.getStarmapWidgetPlanetColor(owner,biodata,mindata,slotdata,stargatedata, dockrefueldata, dockupgradedata, famedata, stratresdata, moraledata)
-                self._map[self.MAP_PLANETS].append((obj.oid, obj.x, obj.y, obj.orbit, colors, singlet))
-                scannerPwr = getattr(obj, 'scannerPwr', 0)
-                if scannerPwr:
-                    self._map[self.MAP_SCANNER1].append((obj.x, obj.y, scannerPwr))
-                # pop up info
-                info = []
-                info.append(_('Planet: %s [ID: %d]') % (name, obj.oid))
-                if hasattr(obj, 'scanPwr'): info.append(_('Scan pwr: %d') % obj.scanPwr)
-                elif hasattr(obj, 'scannerPwr'): info.append(_('Scanner pwr: %d') % obj.scannerPwr)
-                plType = gdata.planetTypes[getattr(obj, 'plType', None)]
-                info.append(_('Type: %s') % _(plType))
-                if (player.type == T_PIRPLAYER or\
-                        player.type == T_AIPIRPLAYER):
-                    info.append(_('Fame to Colonize: %d') % pirateFameCost)
-                if hasattr(obj, 'plBio'): info.append(_('Environment: %d') % obj.plBio)
-                if hasattr(obj, 'plMin'): info.append(_('Minerals: %d') % obj.plMin)
-                if hasattr(obj, 'plEn'): info.append(_('Energy: %d') % obj.plEn)
-                if hasattr(obj, 'plSlots'): info.append(_('Slots: %d') % obj.plSlots)
-                if hasattr(obj, "plStratRes") and obj.plStratRes != SR_NONE:
-                    info.append(_("Strat. resource: %s") % _(gdata.stratRes[obj.plStratRes]))
-                if owner:
-                    ownerobj = client.get(owner, publicOnly = 1)
-                    info.append(_('Owner: %s [ID: %s]') % (
-                        getattr(ownerobj, 'name', res.getUnknownName()),
-                        getattr(ownerobj, 'oid', '?')
-                    ))
-                self._popupInfo[obj.oid] = info
+                self.precomputePlanets(obj, player, pirate_systems)
             elif obj.type == T_FLEET:
                 self.precomputeFleet(obj)
             elif obj.type == T_ASTEROID:
-                owner = getattr(obj, 'owner', OID_NONE)
-                name = getattr(obj, 'name', None) or res.getUnknownName()
-                color = (0xff, 0xff, 0xff)
-                scannerPwr = getattr(obj, 'scannerPwr', 0)
-                orbit = -1
-                if obj.orbiting != OID_NONE:
-                    orbit = self.fleetOrbit.get(obj.orbiting, 0)
-                    self.fleetOrbit[obj.orbiting] = orbit + 1
-                eta = getattr(obj, 'eta', 0)
-                self._map[self.MAP_FLEETS].append((obj.oid, obj.x, obj.y, obj.oldX, obj.oldY, orbit, res.formatTime(eta), color,
-                    obj.signature / 25, 0))
-                # pop up info
-                info = []
-                info.append(_('Asteroid: %s [ID: %d]') % (name, obj.oid))
-                if hasattr(obj, 'scanPwr'): info.append(_('Scan pwr: %d') % obj.scanPwr)
-                info.append(_('Coordinates: [%.2f, %.2f]') % (obj.x, obj.y))
-                info.append(_('Signature: %d') % obj.signature)
-                if hasattr(obj, 'asDiameter'): info.append(_('Diameter: %d') % obj.asDiameter)
-                if hasattr(obj, 'asHP'): info.append(_('HP: %d') % obj.asHP)
-                if hasattr(obj, 'speed'): info.append(_('Speed: %.2f') % obj.speed)
-                if eta:
-                    info.append(_('ETA: %s') % res.formatTime(eta))
-                if owner:
-                    ownerobj = client.get(owner, publicOnly = 1)
-                    info.append(_('Owner: %s [ID: %s]') % (
-                        getattr(ownerobj, 'name', res.getUnknownName()),
-                        getattr(ownerobj, 'oid', '?')
-                    ))
-                self._popupInfo[obj.oid] = info
+                self.precomputeAsteroid(obj)
             elif obj.type in (T_GALAXY, T_AIPLAYER, T_AIRENPLAYER, T_AIMUTPLAYER, T_AIPIRPLAYER, T_AIEDENPLAYER, T_PIRPLAYER):
                 pass
             elif obj.type == T_UNKNOWN:
@@ -575,7 +275,323 @@ class StarMapWidget(Widget):
         # self dirty flag
         self.repaintMap = 1
 
-    def getPirateFameCost(self, playerID, systemID, numPiratePlanets, pirates):
+    def precomputePirateSystems(self):
+        pirate_systems = {}
+        log.debug("Checking pirate planets and wormholes")
+        for objID in client.db.keys():
+            if objID < OID_FREESTART:
+                continue
+            obj = client.get(objID, noUpdate = 1)
+            if not hasattr(obj, "type"):
+                continue
+            if obj.type == T_WORMHOLE and not hasattr(obj, 'destinationOid'):
+                obj = client.get(objID, forceUpdate = 1, publicOnly = 1)
+            if obj.type == T_PLANET and hasattr(obj, "x"):
+                ownerID = getattr(obj, 'owner', OID_NONE)
+                if ownerID == OID_NONE:
+                    continue
+                owner = client.get(ownerID, publicOnly = 1)
+                if hasattr(owner, "type") and (owner.type == T_PIRPLAYER or\
+                                                owner.type == T_AIPIRPLAYER):
+                    pirate_systems[obj.x, obj.y] = None
+        return pirate_systems
+
+    def precomputeSystems(self, obj, player, pirate_systems):
+        img = res.getSmallStarImg(obj.starClass[1]) # TODO correct me
+        icons = []
+        name = getattr(obj, 'name', None)
+        # TODO compute real relationship
+        #rel = REL_UNDEF
+        refuelMax = 0
+        refuelInc = 0
+        hasRefuel = False
+        upgradeShip = 0
+        repairShip = 0
+        speedBoost = 0
+        moraleCount = 0
+        morale = 200
+        constPoints = 0
+        sciPoints = 0
+        minerals = -1
+        bio = -1
+        slots = 0
+        numPlanets = 0
+        stratRes = SR_NONE
+        isGovCentral = False
+        #owner2 = 0
+        ownerID = OID_NONE
+        explored = False
+        if hasattr(obj, 'planets'):
+            hasPirate = False
+            for planetID in obj.planets:
+                planet = client.get(planetID, noUpdate = 1)
+                owner = getattr(planet, 'owner', OID_NONE)
+                if hasattr(planet, "plType") and planet.plType not in ("A", "G"):
+                    numPlanets += 1
+                if hasattr(planet, "plMin"):
+                    minerals = max(minerals,planet.plMin)
+                if hasattr(planet, "plBio"):
+                    bio = max(bio,planet.plBio)
+                if hasattr(planet, "plSlots"):
+                    slots += planet.plSlots
+                if hasattr(planet, "plStratRes") and planet.plStratRes != SR_NONE:
+                    stratRes = planet.plStratRes
+                    stratRes = planet.plStratRes
+                    icons.append(res.icons["sr_%d" % planet.plStratRes])
+                if owner:
+                    ownerID = owner
+                    if hasattr(planet, "morale"):
+                        morale = min(morale,planet.morale)
+                    if hasattr(planet, "refuelMax"):
+                        refuelMax = max(refuelMax, planet.refuelMax)
+                        refuelInc = max(refuelInc, planet.refuelInc)
+                    if hasattr(planet, "repairShip"):
+                        upgradeShip += planet.upgradeShip
+                        repairShip = max(repairShip, planet.repairShip)
+                    hasRefuel = hasRefuel or getattr(planet, 'hasRefuel', False)
+                    if hasattr(planet, "fleetSpeedBoost"):
+                        speedBoost = max(speedBoost, planet.fleetSpeedBoost)
+                    if hasattr(planet, "effProdProd"):
+                        constPoints += planet.effProdProd
+                    if hasattr(planet, "effProdSci"):
+                        sciPoints += planet.effProdSci
+                    if hasattr(planet, "slots"):
+                        for struct in planet.slots:
+                            tech = Rules.techs[struct[STRUCT_IDX_TECHID]]
+                            if not tech.govPwr == 0:
+                                isGovCentral = True
+                            if not hasattr(planet, "morale"): # ugly way to say "planets of other players"
+                                # operational status and tech effectivity
+                                maxTechHP = tech.maxHP
+                                opStatus = struct[STRUCT_IDX_OPSTATUS]/100.0
+                                if opStatus != 0:
+                                    currHP = struct[STRUCT_IDX_HP]
+                                    techEff = (currHP / opStatus) / maxTechHP
+                                else:
+                                    techEff = 0
+                                # production
+                                b, m, e, d = tech.prodProdMod
+                                prodMod = (b * planet.plBio + m * planet.plMin + e * planet.plEn + d * 100) / 100
+                                constPoints += int(tech.prodProd * prodMod * techEff * opStatus)
+                                # science
+                                b, m, e, d = tech.prodSciMod
+                                prodMod = (b * planet.plBio + m * planet.plMin + e * planet.plEn + d * 100) / 100
+                                sciPoints += int(tech.prodSci * prodMod * techEff * opStatus)
+                # uncharted system
+                if hasattr(planet, 'plBio') and hasattr(planet, 'plEn'):
+                    explored = True
+        if not explored and name != None:
+            name = "[%s]" % (name)
+        #if moraleCount > 0:
+        #    morale = morale/moraleCount
+        if morale==200:
+            morale = -1
+        pirProb = self.precomputePiratesProbability(obj, pirate_systems, icons)
+        if (player.type == T_PIRPLAYER or\
+                player.type == T_AIPIRPLAYER):
+            pirateFameCost = self.getPirateFameCost(player.oid,obj.oid,len(player.planets),pirate_systems)
+        # refuelling
+        if refuelMax > 0:
+            if refuelMax >= 87:
+                icons.append(res.icons["fuel_99"])
+            elif refuelMax >= 62:
+                icons.append(res.icons["fuel_75"])
+            elif refuelMax >= 37:
+                icons.append(res.icons["fuel_50"])
+            elif refuelMax >= 12:
+                icons.append(res.icons["fuel_25"])
+        elif hasRefuel:
+            icons.append(res.icons["fuel_-"])
+        # repair and upgrade
+        if upgradeShip > 10 and repairShip > 0.02:
+            icons.append(res.icons["rep_10"])
+        elif upgradeShip > 0 and repairShip > 0:
+            icons.append(res.icons["rep_1"])
+
+        self.precomputeCombat(obj, icons)
+        self.precomputeBuoys(obj, player, icons)
+        # star gates
+        if speedBoost > 1.0:
+            icons.append(res.icons["sg_%02d" % round(speedBoost)])
+            self._map[self.MAP_GATESYSTEMS].append((obj.x, obj.y, speedBoost))
+        #if owner2 != 0:
+        #   color = gdata.playerHighlightColor
+        #else:
+        #   color = res.getFFColorCode(rel)
+        if (player.type == T_PIRPLAYER or\
+                player.type == T_AIPIRPLAYER):
+            colors = res.getStarmapWidgetSystemColor(ownerID,bio,minerals,slots,numPlanets,speedBoost, refuelInc, upgradeShip, pirProb*100, stratRes, morale, pirateFameCost)
+        else:
+            colors = res.getStarmapWidgetSystemColor(ownerID,bio,minerals,slots,numPlanets,speedBoost, refuelInc, upgradeShip, pirProb*100, stratRes, morale)
+        namecolor = res.getPlayerColor(ownerID)
+        controlcolor = res.getControlColor(ownerID)
+        if controlcolor:
+            groupCenterX = int(obj.x)
+            groupCenterY = int(obj.y)
+            for rX in range(-CONTROLRANGE,CONTROLRANGE):
+                for rY in range(-CONTROLRANGE,CONTROLRANGE):
+                    if rX*rX+rY*rY < MAXCONTROLRANGE:
+                        ctrlid = "%d:%d" % (groupCenterX+rX,groupCenterY+rY)
+                        dist = pow(obj.x-(groupCenterX+rX+0.5),2) + pow(obj.y-(groupCenterY+rY+0.5),2)
+                        if ctrlid in self._map[self.MAP_CONTROLAREA]:
+                            oldCtrl = self._map[self.MAP_CONTROLAREA][ctrlid]
+                            if dist > oldCtrl[1]:
+                                continue
+                        self._map[self.MAP_CONTROLAREA][ctrlid] = (controlcolor,dist)
+        self._map[self.MAP_SYSTEMS].append((obj.oid, obj.x, obj.y, name, img, colors, namecolor, False, icons, constPoints, sciPoints, isGovCentral))
+        if obj.starClass[0] == 'b':
+            # assumption is only one black hole in the galaxy - means it is central system
+            self._central_blackhole = obj.oid
+        # pop up info
+        info = []
+        info.append(_('System: %s [ID: %d]') % (name or res.getUnknownName(), obj.oid))
+        info.append(_('Coordinates: [%.2f, %.2f]') % (obj.x, obj.y))
+        info.append(_('Scan pwr: %d') % obj.scanPwr)
+        info.append(_('Star Class: %s') % obj.starClass[1:])
+        info.append(_('Star Type: %s') % _(gdata.starTypes[obj.starClass[0]]))
+        if (player.type == T_PIRPLAYER or\
+                player.type == T_AIPIRPLAYER):
+            info.append(_('Fame to Colonize: %d') % pirateFameCost)
+        if refuelMax > 0:
+            info.append(_("Refuel: %d %%/turn [%d %% max]") % (refuelInc, refuelMax))
+        if repairShip > 0:
+            info.append(_("Repair ratio: %d %%/turn") % (repairShip * 100))
+        if upgradeShip > 0:
+            info.append(_("Upgrade points: %d/turn") % upgradeShip)
+        if speedBoost > 0:
+            info.append(_("Fleet speed: +%d %%") % (speedBoost * 100))
+        if pirProb > 0.0:
+            info.append(_("Pirate get fame chance: %d %%") % (pirProb * 100))
+        self._popupInfo[obj.oid] = info
+
+    def precomputeAsteroids(self, obj):
+        owner = getattr(obj, 'owner', OID_NONE)
+        name = getattr(obj, 'name', None) or res.getUnknownName()
+        color = (0xff, 0xff, 0xff)
+        scannerPwr = getattr(obj, 'scannerPwr', 0)
+        orbit = -1
+        if obj.orbiting != OID_NONE:
+            orbit = self.fleetOrbit.get(obj.orbiting, 0)
+            self.fleetOrbit[obj.orbiting] = orbit + 1
+        eta = getattr(obj, 'eta', 0)
+        self._map[self.MAP_FLEETS].append((obj.oid, obj.x, obj.y, obj.oldX, obj.oldY, orbit, res.formatTime(eta), color,
+            obj.signature / 25, 0))
+        # pop up info
+        info = []
+        info.append(_('Asteroid: %s [ID: %d]') % (name, obj.oid))
+        if hasattr(obj, 'scanPwr'): info.append(_('Scan pwr: %d') % obj.scanPwr)
+        info.append(_('Coordinates: [%.2f, %.2f]') % (obj.x, obj.y))
+        info.append(_('Signature: %d') % obj.signature)
+        if hasattr(obj, 'asDiameter'): info.append(_('Diameter: %d') % obj.asDiameter)
+        if hasattr(obj, 'asHP'): info.append(_('HP: %d') % obj.asHP)
+        if hasattr(obj, 'speed'): info.append(_('Speed: %.2f') % obj.speed)
+        if eta:
+            info.append(_('ETA: %s') % res.formatTime(eta))
+        if owner:
+            ownerobj = client.get(owner, publicOnly = 1)
+            info.append(_('Owner: %s [ID: %s]') % (
+                getattr(ownerobj, 'name', res.getUnknownName()),
+                getattr(ownerobj, 'oid', '?')
+            ))
+        self._popupInfo[obj.oid] = info
+
+    def precomputeWormholes(self, obj, player, pirate_systems):
+        log.debug("Displaying wormhole",obj.oid)
+        img = res.getSmallStarImg(obj.starClass[1])
+        icons = []
+        name = getattr(obj, 'name', None)
+        pirProb = self.precomputePiratesProbability(obj, pirate_systems, icons)
+        self.precomputeCombat(obj, icons)
+        self.precomputeBuoys(obj, player, icons)
+        color = res.getPlayerColor(OID_NONE)
+        namecolor = res.getPlayerColor(OID_NONE)
+        constPoints = 0
+        sciPoints = 0
+        isGovCentral = False
+        self._map[self.MAP_SYSTEMS].append((obj.oid, obj.x, obj.y, name, img, color, namecolor, True, icons, constPoints, sciPoints, isGovCentral))
+        # pop up info
+        info = []
+        info.append(_('Worm hole: %s [ID: %d]') % (name or res.getUnknownName(), obj.oid))
+        info.append(_('Coordinates: [%.2f, %.2f]') % (obj.x, obj.y))
+        try:
+            log.debug("Attempting to get wormhole destination (",obj.destinationOid,") from client.")
+            whDestObj = client.get(obj.destinationOid, noUpdate = 1) #except if the client doesn't have this in their DB
+            whDestName = getattr(whDestObj, 'name', None)
+            info.append(_('Destination: %s [ID: %d]') % (whDestName or res.getUnknownName(), obj.oid))
+            info.append(_('Dest. Coords: [%.2f, %.2f]') % (whDestObj.x, whDestObj.y))
+        except:
+            log.debug("Failed getting wormhole destination from client.")
+            info.append(_('Destination: ? [ID: ?]'))
+            info.append(_('Dest. Coords: [?, ?]'))
+        if pirProb > 0.0:
+            info.append(_("Pirate get fame chance: %d %%") % (pirProb * 100))
+        self._popupInfo[obj.oid] = info
+
+    def precomputePlanets(self, obj, player, pirate_systems):
+        owner = getattr(obj, 'owner', OID_NONE)
+        # set up color reference data
+        biodata = -1
+        mindata = -1
+        slotdata = 0
+        stargatedata = 0
+        dockrefueldata = 0
+        dockupgradedata = 0
+        stratresdata = SR_NONE
+        moraledata = -1
+        pirProb = self.precomputePiratesProbability(obj, pirate_systems, False)
+        famedata = pirProb*100
+        biodata = getattr(obj, 'plBio', -1)
+        mindata = getattr(obj, 'plMin', -1)
+        slotdata = getattr(obj, 'plSlots', 0)
+        dockrefueldata = getattr(obj, 'refuelInc', 0)
+        dockupgradedata = getattr(obj, 'upgradeShip', 0)
+        stargatedata = getattr(obj, 'fleetSpeedBoost', 0)
+        stratresdata = getattr(obj, 'plStratRes', SR_NONE)
+        moraledata = getattr(obj, 'morale', -1)
+        if (player.type == T_PIRPLAYER or\
+                player.type == T_AIPIRPLAYER):
+            pirateFameCost = self.getPirateFameCost(player.oid,obj.compOf,len(player.planets),pirate_systems)
+        # build system
+        name = getattr(obj, 'name', None) or res.getUnknownName()
+        singlet = True
+        if hasattr(obj, "plType") and obj.plType in ("A", "G"):
+            colors = gdata.sevColors[gdata.DISABLED]
+        else:
+            singlet = False
+            if (player.type == T_PIRPLAYER or\
+                    player.type == T_AIPIRPLAYER):
+                colors = res.getStarmapWidgetPlanetColor(owner,biodata,mindata,slotdata,stargatedata, dockrefueldata, dockupgradedata, famedata, stratresdata, moraledata, pirateFameCost)
+            else:
+                colors = res.getStarmapWidgetPlanetColor(owner,biodata,mindata,slotdata,stargatedata, dockrefueldata, dockupgradedata, famedata, stratresdata, moraledata)
+        self._map[self.MAP_PLANETS].append((obj.oid, obj.x, obj.y, obj.orbit, colors, singlet))
+        scannerPwr = getattr(obj, 'scannerPwr', 0)
+        if scannerPwr:
+            self._map[self.MAP_SCANNER1].append((obj.x, obj.y, scannerPwr))
+        # pop up info
+        info = []
+        info.append(_('Planet: %s [ID: %d]') % (name, obj.oid))
+        if hasattr(obj, 'scanPwr'): info.append(_('Scan pwr: %d') % obj.scanPwr)
+        elif hasattr(obj, 'scannerPwr'): info.append(_('Scanner pwr: %d') % obj.scannerPwr)
+        plType = gdata.planetTypes[getattr(obj, 'plType', None)]
+        info.append(_('Type: %s') % _(plType))
+        if (player.type == T_PIRPLAYER or\
+                player.type == T_AIPIRPLAYER):
+            info.append(_('Fame to Colonize: %d') % pirateFameCost)
+        if hasattr(obj, 'plBio'): info.append(_('Environment: %d') % obj.plBio)
+        if hasattr(obj, 'plMin'): info.append(_('Minerals: %d') % obj.plMin)
+        if hasattr(obj, 'plEn'): info.append(_('Energy: %d') % obj.plEn)
+        if hasattr(obj, 'plSlots'): info.append(_('Slots: %d') % obj.plSlots)
+        if hasattr(obj, "plStratRes") and obj.plStratRes != SR_NONE:
+            info.append(_("Strat. resource: %s") % _(gdata.stratRes[obj.plStratRes]))
+        if owner:
+            ownerobj = client.get(owner, publicOnly = 1)
+            info.append(_('Owner: %s [ID: %s]') % (
+                getattr(ownerobj, 'name', res.getUnknownName()),
+                getattr(ownerobj, 'oid', '?')
+            ))
+        self._popupInfo[obj.oid] = info
+
+    def getPirateFameCost(self, playerID, systemID, numPiratePlanets, pirate_systems):
         mod = 1
         system = client.get(systemID, noUpdate = 1)
         if hasattr(system,'planets') and system.planets:
@@ -587,7 +603,7 @@ class StarMapWidget(Widget):
                 elif getattr(planet, 'plStratRes', None) in (SR_TL3A, SR_TL3B, SR_TL3C):
                     mod = min(mod, Rules.pirateTL3StratResColonyCostMod)
         dist = 10000
-        for pirX, pirY in pirates:
+        for pirX, pirY in pirate_systems:
             dist = min(dist, math.hypot(system.x - pirX, system.y - pirY))
         if Rules.pirateGainFamePropability(dist) > 0:
             mod = Rules.pirateColonyFameZoneCost(dist)
@@ -745,9 +761,9 @@ class StarMapWidget(Widget):
                         self._fordersTarget[obj.oid].append((oldX, oldY, trgt.x, trgt.y, color))
                         oldX, oldY = trgt.x, trgt.y
 
-    def precomputePirates(self, system, pirates, icons = False):
+    def precomputePiratesProbability(self, system, pirate_systems, icons = False):
         dist = 10000
-        for pirX, pirY in pirates:
+        for pirX, pirY in pirate_systems:
             dist = min(dist, math.hypot(system.x - pirX, system.y - pirY))
         pirProb = Rules.pirateGainFamePropability(dist)
         if icons != False:
