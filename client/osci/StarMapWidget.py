@@ -23,13 +23,11 @@ from pygameui.Widget import Widget, registerWidget
 import pygameui as ui
 from pygameui.Fonts import *
 from ige.ospace.Const import *
-from ige.ospace import Rules, Utils
 import pygame, pygame.draw, pygame.key, pygame.image
 from pygame.locals import *
 from dialog.ShowBuoyDlg import ShowBuoyDlg
-from dialog.MapOverlayDlg import MapOverlayDlg
 from dialog.KeyModHelp import KeyModHelp
-import gdata, client, res, math, string
+import gdata, client, res
 from ige import log
 from osci.dialog.SearchDlg import SearchDlg
 from osci.MiniMap import MiniMap
@@ -42,8 +40,6 @@ class StarMapWidget(Widget):
         Widget.__init__(self, parent)
         self.searchDlg = SearchDlg(self.app)
         self.searchDlg.mapWidget = self
-        self.showOverlayDlg = MapOverlayDlg(self.app)
-        self.showOverlayDlg.mapWidget = self
         # data
         self.control_modes = {}  # mutable, thus updating here will update StarMap
         self.updateConfigModes()
@@ -71,7 +67,6 @@ class StarMapWidget(Widget):
         self.pressedObjIDs = []
         self._newCurrXY = 0
         self.activePos = (0, 0)
-        self.lockObj = OID_NONE
 
         # the map itself!
         self.star_map = StarMap(self.control_modes)
@@ -80,7 +75,6 @@ class StarMapWidget(Widget):
         self.showBuoyDlg = ShowBuoyDlg(self.app)
         self.KeyModHelp = KeyModHelp(self.app)
         self._miniMapRect = Rect(0, 20, 175, 175)
-        self._detectOverlayZone = Rect(0,0,0,0)
         self._hotbuttonsZone = Rect(0,0,0,0)
         self.initHotbuttons()
         self.miniMap = MiniMap(self._miniMapRect.width, self._miniMapRect.height)
@@ -396,8 +390,6 @@ class StarMapWidget(Widget):
         if self.control_modes['minimap']:
             if self._miniMapRect.collidepoint(pos):
                 return ui.NoEvent
-        if self._detectOverlayZone.collidepoint(pos):
-            return ui.NoEvent
         if self.control_modes['hotbuttons'] and self._hotbuttonsZone.collidepoint(pos):
             return ui.NoEvent
         self.pressedObjIDs = []
@@ -430,9 +422,6 @@ class StarMapWidget(Widget):
                 self.processMiniMapRect()
                 self.repaint_map = 1
                 return ui.NoEvent
-        if self._detectOverlayZone.collidepoint(pos):
-            self.showOverlayDlg.display()
-            return ui.NoEvent
         if self.control_modes['hotbuttons'] and self._hotbuttonsZone.collidepoint(pos):
             button = self.detectButtonOverpass(pos)
             if button:
@@ -585,9 +574,6 @@ class StarMapWidget(Widget):
             if self._miniMapRect.collidepoint(pos):
                 #log.debug('Minimap Rect Position');
                 return ui.NoEvent
-        if self._detectOverlayZone.collidepoint(pos):
-            #log.debug('Overlay Rect Position');
-            return ui.NoEvent
         if self.control_modes['hotbuttons'] and self._hotbuttonsZone.collidepoint(pos):
             #should give hotkey tooltips for this eventually
             self.toggleTempButton(pos)
@@ -678,9 +664,6 @@ class StarMapWidget(Widget):
         # Ctrl+L - Toggle drawing fleet lines
         elif evt.unicode == u'\x0C' and pygame.key.get_mods() & KMOD_CTRL:
             self.toggleHotbuttons('lines')
-        # Ctrl+M
-        elif evt.unicode == u'\x0D' and pygame.key.get_mods() & KMOD_CTRL:
-            self.showOverlayDlg.display()
         # Ctrl+P - Toggle viewing of control areas (turns off scanner circles)
         elif evt.unicode == u'\x10' and pygame.key.get_mods() & KMOD_CTRL:
             self.toggleHotbuttons('pzone')

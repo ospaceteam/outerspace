@@ -19,20 +19,13 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-from pygameui.Widget import Widget, registerWidget
-import pygameui as ui
 from pygameui.Fonts import *
 from ige.ospace.Const import *
 from ige.ospace import Rules, Utils
 import pygame, pygame.draw, pygame.key, pygame.image
 from pygame.locals import *
-from dialog.ShowBuoyDlg import ShowBuoyDlg
-from dialog.MapOverlayDlg import MapOverlayDlg
-from dialog.KeyModHelp import KeyModHelp
 import gdata, client, res, math, string
 from ige import log
-from osci.dialog.SearchDlg import SearchDlg
-from osci.MiniMap import MiniMap
 
 buoyColors = [(0xff, 0xff, 0x00), (0x00, 0xff, 0xff), (0xff, 0x00, 0xff), (0xb0, 0xb0, 0xff)]
 MAX_BOUY_DISPLAY_LEN = 30
@@ -506,19 +499,6 @@ class StarMap(object):
         else:
             mod = Rules.pirateColonyPlayerZoneCost(dist)
         return mod * numPiratePlanets * Rules.pirateColonyCostMod
-
-    def OLDgetPirateFameCost(self, playerID, systemID,numPiratePlanets):
-        mod = 1.0
-        system = client.get(systemID, noUpdate = 1)
-        for planetID in system.planets:
-            planet = client.get(planetID, noUpdate = 1)
-            if getattr(planet, 'owner', OID_NONE) == playerID:
-                # minimum reached, don't check rest
-                return 0.0
-            elif getattr(planet, 'plStratRes', None) in (SR_TL3A, SR_TL3B, SR_TL3C):
-                mod = min(mod, Rules.pirateTL3StratResColonyCostMod)
-        famePenalty = int(mod * Rules.pirateColonyCostMod * numPiratePlanets)
-        return famePenalty
 
     def precomputeRedirections(self,repaint=False): #also called from Mass Redirector
         player = client.getPlayer()
