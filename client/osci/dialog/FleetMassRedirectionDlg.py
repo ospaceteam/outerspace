@@ -80,7 +80,7 @@ class FleetMassRedirectionDlg:
                 player.shipRedirections = client.cmdProxy.redirectShips(player.oid,
                     self.targetID, self.systemID)
                 self.win.setStatus(_('Command has been executed.'))
-                self.win.vStarMap.precomputeRedirections(True)
+                self.win.vStarMap.precompute()
             except GameException, e:
                 self.win.setStatus(e.args[0])
         else:
