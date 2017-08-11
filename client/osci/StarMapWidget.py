@@ -39,8 +39,7 @@ MAX_BOUY_DISPLAY_LEN = 30
 CONTROLRANGE = 5
 MAXCONTROLRANGE = 30 #square of CONTROLRANGE + small amount
 
-class StarMapWidget(Widget):
-
+class StarMap(object):
     MAP_SCANNER1 = 1
     MAP_SYSTEMS = 3
     MAP_PLANETS = 4
@@ -51,17 +50,8 @@ class StarMapWidget(Widget):
     MAP_GATESYSTEMS = 10
     MAP_CONTROLAREA = 11
 
-    def __init__(self, parent, **kwargs):
-        Widget.__init__(self, parent)
-        self.searchDlg = SearchDlg(self.app)
-        self.searchDlg.mapWidget = self
-        self.showOverlayDlg = MapOverlayDlg(self.app)
-        self.showOverlayDlg.mapWidget = self
-        # data
-        self.action = None
-        self.callEventHandler = None
+    def __init__(self):
         # map
-        self._mapSurf = None
         self._map = {
             self.MAP_SCANNER1: [],
             self.MAP_SYSTEMS: [],
@@ -94,77 +84,20 @@ class StarMapWidget(Widget):
         self.repaintHotbuttons = 1
         self.setPosition = 1
         #modes
-        self.updateConfigModes()
         self.showSystems = 1
         self.showPlanets = 1
         self.showFleets = 1
         self.showCivilianFleets = 1
         self.showOverlaySelector = 1
-        self.showHotButtons = 1
         self.showPirateAreas = True
         self.highlightPos = None
         self.alwaysShowRangeFor = None
         #setup
         self.pirateDlgs = False
-        self.showBuoyDlg = ShowBuoyDlg(self.app)
-        self.KeyModHelp = KeyModHelp(self.app)
-        self._miniMapRect = Rect(0, 20, 175, 175)
-        self._detectOverlayZone = Rect(0,0,0,0)
-        self._hotbuttonsZone = Rect(0,0,0,0)
-        self.initHotbuttons()
-        self.miniMap = MiniMap(self._miniMapRect.width, self._miniMapRect.height)
-        # flags
-        self.processKWArguments(kwargs)
-        parent.registerWidget(self)
-        # popup menu
-        self.popup = ui.Menu(self.app, title = _("Select object"))
-        self.popup.subscribeAction("*", self)
         # overlay system
         self.overlayMode = gdata.OVERLAY_OWNER
         self._overlayZone = False
-        # key setting system
-        self.selectobject = False
-        self.setKey = False
-        # commands
-        self.keyPress = False
 
-    def updateConfigModes(self):
-        if gdata.config.defaults.showredirects == 'no':
-            self.showRedirects = 0
-        else:
-            self.showRedirects = 1
-        if gdata.config.defaults.showcoords == 'no':
-            self.showCoords = 0
-        else:
-            self.showCoords = 1
-        if gdata.config.defaults.showmapgrid == 'no':
-            self.showGrid = 0
-        else:
-            self.showGrid = 1
-        if gdata.config.defaults.showmapscanners == 'no':
-            self.showScanners = 0
-        else:
-            self.showScanners = 1
-        if gdata.config.defaults.showfleetlines == 'no':
-            self.showFleetLines = 0
-        else:
-            self.showFleetLines = 1
-        if gdata.config.defaults.showgatesystems == 'no':
-            self.showGateSystems = 0
-        else:
-            self.showGateSystems = 1
-        if gdata.config.defaults.alternateviewmode == 'no':
-            self.alternativeViewMode = 0
-        else:
-            self.alternativeViewMode = 1
-        if gdata.config.defaults.showplayerzones == 'yes': #default off
-            self.toggleControlAreas = 1
-        else:
-            self.toggleControlAreas = 0
-        if gdata.config.defaults.showminimap == 'yes':
-            self.showMiniMap = 1
-        else:
-            self.showMiniMap = 0
 
     def requestRepaint(self):
         self.repaintMap = 1
@@ -268,9 +201,6 @@ class StarMapWidget(Widget):
             self.currX = anyX
             self.currY = anyY
 
-        self.miniMap.precompute()
-        # self dirty flag
-        self.repaintMap = 1
 
     def precomputePirateSystems(self):
         pirate_systems = {}
@@ -1102,15 +1032,7 @@ class StarMapWidget(Widget):
 
 
 
-    def draw(self, surface, chronicle_shot=False):
-        self._miniMapRect.left = self.rect.width - self._miniMapRect.width
-        self._miniMapRect.top = self.rect.top
-        if chronicle_shot:
-            mapSurf = pygame.Surface(surface.get_size(), SWSURFACE, surface)
-        elif not self._mapSurf:
-            mapSurf = pygame.Surface(self.rect.size, SWSURFACE, surface)
-        else:
-            mapSurf = self._mapSurf
+    def draw(self, mapSurf, chronicle_shot=False):
         if self.repaintMap or chronicle_shot:
             self._actAreas = {}
             mapSurf.fill((0x00, 0x00, 0x00))
@@ -1144,28 +1066,47 @@ class StarMapWidget(Widget):
                 self.drawFleets(mapSurf)
             self.drawOverlayEffects(mapSurf)
             # clean up flag
-            self.repaintHotbuttons = 1
             self.repaintMap = 0
-        if self.repaintHotbuttons and self.showHotButtons and not chronicle_shot:
-            self.drawHotbuttons(mapSurf)
-            self.repaintHotbuttons = 0
-        # blit cached map
-        surface.blit(mapSurf, self.rect)
-        if chronicle_shot:
-            return surface
-        else:
-            self._mapSurf = mapSurf
-        # additional information (ranges, fleet lines, selected system sign)
-        self.drawAdditions(surface)
+        return mapSurf
 
-        if self.showMiniMap:
-            self.miniMap.draw(surface, self._miniMapRect.left, self._miniMapRect.top)
-            if self.miniMap.needRect():
-                self.processMiniMapRect()
-                self.miniMap.draw(surface, self._miniMapRect.left, self._miniMapRect.top)
-        self.drawPopups(surface)
-        #
-        return self.rect
+
+
+    def drawGrid(self, mapSurf):
+        rect = mapSurf.get_rect()
+        centerX, centerY = rect.center
+        maxY = rect.height
+        currX = self.currX
+        currY = self.currY
+        scale = self.scale
+        left = int((int(currX) - currX) * scale) + centerX - int(rect.width / scale / 2) * scale
+        x = left
+        while x < left + rect.width + scale:
+            value =  math.floor((x - centerX) / scale + currX)
+            if value % 5 == 0:
+                pygame.draw.line(mapSurf, (0x00, 0x00, 0x90),
+                    (x, rect.top), (x, rect.bottom), 1)
+                if self.showCoords:
+                    textSrfc = renderText(self.textSize, int(value), 1, (0x70, 0x70, 0x80))
+                    mapSurf.blit(textSrfc, (x + 2, rect.height - textSrfc.get_height()))
+            else:
+                pygame.draw.line(mapSurf, (0x33, 0x33, 0x66),
+                    (x, rect.top), (x, rect.bottom), 1)
+            x += scale
+        top = int((int(currY) - currY) * scale) + centerY - int(rect.height / scale / 2) * scale
+        y = top
+        while y < top + rect.height + scale:
+            yScrn = maxY - y
+            value =  math.floor(((maxY - yScrn) - centerY) / scale + currY)
+            if value % 5 == 0:
+                pygame.draw.line(mapSurf, (0x00, 0x00, 0x90),
+                    (rect.left, yScrn), (rect.right, yScrn), 1)
+                textSrfc = renderText(self.textSize, int(value), 1, (0x70, 0x70, 0x80))
+                mapSurf.blit(textSrfc, (0, yScrn))
+            else:
+                pygame.draw.line(mapSurf, (0x33, 0x33, 0x66),
+                    (rect.left, yScrn), (rect.right, yScrn), 1)
+            y += scale
+
 
     def getBuoy(self, objID):
         player = client.getPlayer()
@@ -1187,6 +1128,152 @@ class StarMapWidget(Widget):
                     return None
             else:
                 return None
+
+class StarMapWidget(Widget, StarMap):
+
+    def __init__(self, parent, **kwargs):
+        Widget.__init__(self, parent)
+        StarMap.__init__(self)
+        self.searchDlg = SearchDlg(self.app)
+        self.searchDlg.mapWidget = self
+        self.showOverlayDlg = MapOverlayDlg(self.app)
+        self.showOverlayDlg.mapWidget = self
+        # data
+        self.updateConfigModes()
+        self.showMiniMap = 1
+        self.showHotButtons = 1
+        self.action = None
+        self.callEventHandler = None
+        self.showBuoyDlg = ShowBuoyDlg(self.app)
+        self.KeyModHelp = KeyModHelp(self.app)
+        self._miniMapRect = Rect(0, 20, 175, 175)
+        self._detectOverlayZone = Rect(0,0,0,0)
+        self._hotbuttonsZone = Rect(0,0,0,0)
+        self.initHotbuttons()
+        self.miniMap = MiniMap(self._miniMapRect.width, self._miniMapRect.height)
+        # flags
+        self.processKWArguments(kwargs)
+        parent.registerWidget(self)
+        # popup menu
+        self.popup = ui.Menu(self.app, title = _("Select object"))
+        self.popup.subscribeAction("*", self)
+        # overlay system
+        self.overlayMode = gdata.OVERLAY_OWNER
+        self._overlayZone = False
+        # key setting system
+        self.selectobject = False
+        self.setKey = False
+        # commands
+        self.keyPress = False
+        # map
+        self._mapSurf = None
+
+
+    def updateConfigModes(self):
+        if gdata.config.defaults.showredirects == 'no':
+            self.showRedirects = 0
+        else:
+            self.showRedirects = 1
+        if gdata.config.defaults.showcoords == 'no':
+            self.showCoords = 0
+        else:
+            self.showCoords = 1
+        if gdata.config.defaults.showmapgrid == 'no':
+            self.showGrid = 0
+        else:
+            self.showGrid = 1
+        if gdata.config.defaults.showmapscanners == 'no':
+            self.showScanners = 0
+        else:
+            self.showScanners = 1
+        if gdata.config.defaults.showfleetlines == 'no':
+            self.showFleetLines = 0
+        else:
+            self.showFleetLines = 1
+        if gdata.config.defaults.showgatesystems == 'no':
+            self.showGateSystems = 0
+        else:
+            self.showGateSystems = 1
+        if gdata.config.defaults.alternateviewmode == 'no':
+            self.alternativeViewMode = 0
+        else:
+            self.alternativeViewMode = 1
+        if gdata.config.defaults.showplayerzones == 'yes': #default off
+            self.toggleControlAreas = 1
+        else:
+            self.toggleControlAreas = 0
+        if gdata.config.defaults.showminimap == 'yes':
+            self.showMiniMap = 1
+        else:
+            self.showMiniMap = 0
+
+    def precompute(self):
+        StarMap.precompute(self)
+        player = client.getPlayer()
+        if (player.type == T_PIRPLAYER or\
+            player.type == T_AIPIRPLAYER) and not self.pirateDlgs:
+            self.pirateDlgs = True
+            if self.showHotButtons:
+                self.initHotbuttons() #reinit to add the pirate button
+        self.miniMap.precompute()
+        # self dirty flag
+        self.repaintMap = 1
+
+    def draw(self, surface):
+        self._miniMapRect.left = self.rect.width - self._miniMapRect.width
+        self._miniMapRect.top = self.rect.top
+        if not self._mapSurf:
+            mapSurf = pygame.Surface(self.rect.size, SWSURFACE, surface)
+        else:
+            mapSurf = self._mapSurf
+        if self.repaintMap:
+            mapSurf = StarMap.draw(self, mapSurf, chronicle_shot=False)
+            self.repaintHotbuttons = 1
+        if self.repaintHotbuttons and self.showHotButtons:
+            self.drawHotbuttons(mapSurf)
+            self.repaintHotbuttons = 0
+        # blit cached map
+        surface.blit(mapSurf, self.rect)
+        self._mapSurf = mapSurf
+        if self.showMiniMap:
+            self.miniMap.draw(surface, self._miniMapRect.left, self._miniMapRect.top)
+            if self.miniMap.needRect():
+                self.processMiniMapRect()
+                self.miniMap.draw(surface, self._miniMapRect.left, self._miniMapRect.top)
+        # additional information (ranges, fleet lines, selected system sign)
+        self.drawAdditions(surface)
+
+        self.drawPopups(surface)
+        #
+        return self.rect
+
+    def drawHotbuttons(self, mapSurf):
+        rect = mapSurf.get_rect()
+        bottom = rect.bottom
+        right = rect.right
+        dx = 137
+        dy = 46
+        top = bottom - dy - 1
+        left = right - dx - 1
+        self._hotbuttonsZone.top = top + self.rect.top
+        self._hotbuttonsZone.left = left
+        self._hotbuttonsZone.width = dx
+        self._hotbuttonsZone.height = dy
+
+        pygame.draw.rect(mapSurf,(0x00, 0x00, 0x90),(left-1,top-1,dx+2,dy+2))
+        pygame.draw.rect(mapSurf,(0x33, 0x33, 0x66),(left,top,dx,dy))
+
+        for buttonkey in self._hotbuttons:
+            button = self._hotbuttons[buttonkey]
+            self._hotbuttonRects[button[0]] = [button[0],Rect(button[2]+self._hotbuttonsZone.left,button[3]+self._hotbuttonsZone.top+15,button[4],button[5])]
+            img = res.getButton(button[0],button[1])
+            if (button[1] and not (self._tempOverlayHotbutton and self._tempOverlayHotbutton == button[0])) or (not button[1] and self._tempOverlayHotbutton and self._tempOverlayHotbutton == button[0]):
+                pygame.draw.rect(mapSurf,(0x90, 0x90, 0x90),(left+button[2]-1,top+15+button[3]-1,button[4]+2,button[5]+2),1)
+            mapSurf.blit(img,(left+button[2],top+15+button[3]))
+        if self._tempOverlayHotbutton:
+            text = self._hotbuttons[self._tempOverlayHotbutton][7]
+            textSrfc = renderText(self.textSize, text, 1, (0xEF, 0xEF, 0xEF))
+            mapSurf.blit(textSrfc, (left+2,top+1))
 
     def drawPopups(self, surface):
         # draw popups
@@ -1299,71 +1386,6 @@ class StarMapWidget(Widget):
                         pygame.draw.circle(surface, (0x20, 0x20, 0x80), (sx, sy), rng, 1)
         # restore clipping
         surface.set_clip(oldClip)
-
-
-    def drawGrid(self, mapSurf):
-        rect = mapSurf.get_rect()
-        centerX, centerY = rect.center
-        maxY = rect.height
-        currX = self.currX
-        currY = self.currY
-        scale = self.scale
-        left = int((int(currX) - currX) * scale) + centerX - int(rect.width / scale / 2) * scale
-        x = left
-        while x < left + rect.width + scale:
-            value =  math.floor((x - centerX) / scale + currX)
-            if value % 5 == 0:
-                pygame.draw.line(mapSurf, (0x00, 0x00, 0x90),
-                    (x, rect.top), (x, rect.bottom), 1)
-                if self.showCoords:
-                    textSrfc = renderText(self.textSize, int(value), 1, (0x70, 0x70, 0x80))
-                    mapSurf.blit(textSrfc, (x + 2, rect.height - textSrfc.get_height()))
-            else:
-                pygame.draw.line(mapSurf, (0x33, 0x33, 0x66),
-                    (x, rect.top), (x, rect.bottom), 1)
-            x += scale
-        top = int((int(currY) - currY) * scale) + centerY - int(rect.height / scale / 2) * scale
-        y = top
-        while y < top + rect.height + scale:
-            yScrn = maxY - y
-            value =  math.floor(((maxY - yScrn) - centerY) / scale + currY)
-            if value % 5 == 0:
-                pygame.draw.line(mapSurf, (0x00, 0x00, 0x90),
-                    (rect.left, yScrn), (rect.right, yScrn), 1)
-                textSrfc = renderText(self.textSize, int(value), 1, (0x70, 0x70, 0x80))
-                mapSurf.blit(textSrfc, (0, yScrn))
-            else:
-                pygame.draw.line(mapSurf, (0x33, 0x33, 0x66),
-                    (rect.left, yScrn), (rect.right, yScrn), 1)
-            y += scale
-
-    def drawHotbuttons(self, mapSurf):
-        rect = mapSurf.get_rect()
-        bottom = rect.bottom
-        right = rect.right
-        dx = 137
-        dy = 46
-        top = bottom - dy - 1
-        left = right - dx - 1
-        self._hotbuttonsZone.top = top + self.rect.top
-        self._hotbuttonsZone.left = left
-        self._hotbuttonsZone.width = dx
-        self._hotbuttonsZone.height = dy
-
-        pygame.draw.rect(mapSurf,(0x00, 0x00, 0x90),(left-1,top-1,dx+2,dy+2))
-        pygame.draw.rect(mapSurf,(0x33, 0x33, 0x66),(left,top,dx,dy))
-
-        for buttonkey in self._hotbuttons:
-            button = self._hotbuttons[buttonkey]
-            self._hotbuttonRects[button[0]] = [button[0],Rect(button[2]+self._hotbuttonsZone.left,button[3]+self._hotbuttonsZone.top+15,button[4],button[5])]
-            img = res.getButton(button[0],button[1])
-            if (button[1] and not (self._tempOverlayHotbutton and self._tempOverlayHotbutton == button[0])) or (not button[1] and self._tempOverlayHotbutton and self._tempOverlayHotbutton == button[0]):
-                pygame.draw.rect(mapSurf,(0x90, 0x90, 0x90),(left+button[2]-1,top+15+button[3]-1,button[4]+2,button[5]+2),1)
-            mapSurf.blit(img,(left+button[2],top+15+button[3]))
-        if self._tempOverlayHotbutton:
-            text = self._hotbuttons[self._tempOverlayHotbutton][7]
-            textSrfc = renderText(self.textSize, text, 1, (0xEF, 0xEF, 0xEF))
-            mapSurf.blit(textSrfc, (left+2,top+1))
 
     def initHotbuttons(self):
         # key : [ key , state , x , y , dx, dy, value, tooltip ]
@@ -1801,5 +1823,6 @@ class StarMapWidget(Widget):
         self.processMiniMapRect()
         # disable auto position setting
         self.setPosition = 0
+
 
 registerWidget(StarMapWidget, 'starmapwidget')
