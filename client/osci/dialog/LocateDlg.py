@@ -33,12 +33,11 @@ class LocateDlg:
     def display(self, objID, caller):
         obj = client.get(objID, noUpdate = 1)
         self.caller = caller
-        self.win.vStarMap.currX = obj.x
-        self.win.vStarMap.currY = obj.y
+        self.win.vStarMap.star_map.currX = obj.x
+        self.win.vStarMap.star_map.currY = obj.y
         self.win.vStarMap.setPosition = 0
-        self.win.vStarMap.showOverlaySelector = 0
-        self.win.vStarMap.showMiniMap = 0
-        self.win.vStarMap.showHotButtons = 0
+        self.win.vStarMap.control_modes['minimap'] = 0
+        self.win.vStarMap.control_modes['hotbuttons'] = 0
         self.win.vStarMap.precompute()
         self.win.vStarMap.highlightPos = (obj.x, obj.y)
         self.show()
@@ -76,8 +75,6 @@ class LocateDlg:
         self.win.subscribeAction('*', self)
         StarMapWidget(self.win, layout = (0, 0, 20, 19),
             id = 'vStarMap')
-        # status bar + submit/cancel
 
         ui.TitleButton(self.win, layout = (15, 19, 5, 1), text = _('Cancel'), action = 'onCancel')
         ui.Title(self.win, id = 'vStatusBar', layout = (0, 19, 15, 1), align = ui.ALIGN_W)
-        #self.win.statusBar = self.win.vStatusBar
