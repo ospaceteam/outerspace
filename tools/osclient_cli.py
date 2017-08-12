@@ -67,6 +67,8 @@ parser.add_option("--starttime", dest = "startTime", default = 0,
     action = "store_true", help = "Start time in all galaxies of the game")
 parser.add_option("--adduser", dest = "addUser", nargs=4,
     metavar = "LOGIN PASSWD NICKNAME EMAIL", help = "Add new user")
+parser.add_option("--newgalaxy", dest = "newGalaxy", nargs=2,
+    metavar = "NAME TYPE", help = "Create new galaxy")
 parser.add_option("-b", "--backup", dest = "backup", default = None,
     action = "store", type = "string", metavar = "BASEFILENAME",
     help = "Backup server databases into BASEFILENAME-<database name>.osbackup")
@@ -119,6 +121,10 @@ elif options.ping:
 elif options.addUser:
     login, passwd, nick, email = options.addUser
     s.createAccount(login, passwd, nick, email)
+elif options.newGalaxy:
+    galaxy_name, galaxy_type = options.newGalaxy
+    list_of_players = []
+    s.createNewSubscribedGalaxy(OID_UNIVERSE, galaxy_name, galaxy_type, list_of_players)
 elif options.chronicler:
     sys.path.insert(0, os.path.join(baseDir, '..', 'client'))
     sys.path.insert(0, os.path.join(baseDir, '..', 'client', 'osci'))
