@@ -53,22 +53,28 @@ def initialize():
     global loginLogoImg
     loginLogoImg = pygame.image.load(resources.get('logo-login.png')).convert_alpha()
 
-def loadResources():
-    import dialog
-    dlg = dialog.ProgressDlg(gdata.app)
+def updateProgress(curr, progress_dlg):
+    if not progress_dlg: return
+    if curr % 30 == 0:
+        periods = '.' * (curr / 30 % 4)
+        progress_dlg.setProgress(_('Loading resources' + periods), curr)
+
+
+
+def loadResources(progress_dlg=None):
     curr = 0
     max = len(glob.glob(resources.get('galaxy/*.png'))) + len(glob.glob(resources.get('techs/*.png'))) + \
         len(glob.glob(resources.get('system/*.png'))) + len(glob.glob(resources.get('icons/*.png'))) + len(glob.glob(resources.get('buttons/*.png')))
-    dlg.display(_('Loading resources'), 0, max)
+    if progress_dlg:
+        progress_dlg.display(_('Loading resources'), 0, max)
     # load star imgs
     global smallStarImgs
     smallStarImgs = {}
     for filename in glob.glob(resources.get('galaxy/star_*.png')):
-        curr += 1
-        if curr % 10 == 0:
-            dlg.setProgress(_('Loading resources...'), curr)
         name = re.search("star_([^.]+).png", filename).group(1)
         smallStarImgs[name] = pygame.image.load(filename).convert_alpha()
+        curr += 1
+        updateProgress(curr, progress_dlg)
     # load tech imgs
     global techImgs
     techImgs = {}
@@ -79,9 +85,6 @@ def loadResources():
     red.fill((255, 0, 0))
     red.set_alpha(64)
     for filename in glob.glob(resources.get('techs/????.png')):
-        curr += 1
-        if curr % 10 == 0:
-            dlg.setProgress(_('Loading resources...'), curr)
         name = os.path.splitext(os.path.basename(filename))[0]
         imgID = int(name)
         techImgs[imgID] = pygame.image.load(filename).convert_alpha()
@@ -91,24 +94,22 @@ def loadResources():
         copyImg = techImgs[imgID].convert_alpha()
         copyImg.blit(red, (0,0))
         techImgs[imgID + redShift] = copyImg
+        curr += 1
+        updateProgress(curr, progress_dlg)
     # load big star imgs
     global bigStarImgs
     bigStarImgs = {}
     for filename in glob.glob(resources.get('system/star_*.png')):
-        curr += 1
-        if curr % 10 == 0:
-            dlg.setProgress(_('Loading resources...'), curr)
         name = re.search("star_([^.]+).png", filename).group(1)
         bigStarImgs[name] = pygame.image.load(filename).convert_alpha()
+        curr += 1
+        updateProgress(curr, progress_dlg)
     # load planet images
     global planetImgs
     global planetImgCnt
     planetImgs = {}
     planetImgCnt = {}
     for filename in glob.glob(resources.get('system/planet_*.png')):
-        curr += 1
-        if curr % 10 == 0:
-            dlg.setProgress(_('Loading resources...'), curr)
         matchobj = re.search("planet_((.)[^.]+).png", filename)
         name = matchobj.group(1)
         pltype = matchobj.group(2)
@@ -117,42 +118,40 @@ def loadResources():
         else:
             planetImgCnt[pltype] = 1
         planetImgs[name] = pygame.image.load(filename).convert_alpha()
+        curr += 1
+        updateProgress(curr, progress_dlg)
     # load ship imgs
     global shipImgs
     shipImgs = {}
     for filename in glob.glob(resources.get('ships/??.png')):
-        curr += 1
-        if curr % 10 == 0:
-            dlg.setProgress(_('Loading resources...'), curr)
         name = os.path.splitext(os.path.basename(filename))[0]
         shipImgs[int(name)] = pygame.image.load(filename).convert_alpha()
+        curr += 1
+        updateProgress(curr, progress_dlg)
     # load star imgs
     global icons
     icons = {}
     for filename in glob.glob(resources.get('icons/[!ui_]*.png')):
-        curr += 1
-        if curr % 10 == 0:
-            dlg.setProgress(_('Loading resources...'), curr)
         name = os.path.splitext(os.path.basename(filename))[0]
         icons[name] = pygame.image.load(filename).convert_alpha()
+        curr += 1
+        updateProgress(curr, progress_dlg)
     # load UI icons
     global ui_icons
     ui_icons = {}
     for filename in glob.glob(resources.get('icons/ui_*.png')):
-        curr += 1
-        if curr % 10 == 0:
-            dlg.setProgress(_('Loading resources...'), curr)
         name = os.path.splitext(os.path.basename(filename))[0]
         ui_icons[name] = pygame.image.load(filename).convert_alpha()
+        curr += 1
+        updateProgress(curr, progress_dlg)
     # load buttons
     global buttonImgs
     buttonImgs = {}
     for filename in glob.glob(resources.get('buttons/*.png')):
-        curr += 1
-        if curr % 10 == 0:
-            dlg.setProgress(_('Loading resources...'), curr)
         name = os.path.splitext(os.path.basename(filename))[0]
         buttonImgs[name] = pygame.image.load(filename).convert_alpha()
+        curr += 1
+        updateProgress(curr, progress_dlg)
     # other icons
     global cmdInProgressImg
     cmdInProgressImg = pygame.image.load(resources.get('cmdInProgress.png')).convert_alpha()
@@ -160,7 +159,6 @@ def loadResources():
     structProblemImg = pygame.image.load(resources.get('struct_problem.png')).convert_alpha()
     global structOffImg
     structOffImg = pygame.image.load(resources.get('struct_off.png')).convert_alpha()
-    dlg.hide()
 
 def prepareUIIcons(color):
     for image in ui_icons.values():

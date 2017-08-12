@@ -47,7 +47,6 @@ class FleetScoutBloomDlg:
         self.win.vStarMap.currY = fleet.y
         self.win.vStarMap.alwaysShowRangeFor = fleet.oid
         self.win.vStarMap.setPosition = 0
-        self.win.vStarMap.lockObj = fleet.orbiting
         self.win.vStarMap.precompute()
         self.sendShipIndex = 0
         self.targets = []

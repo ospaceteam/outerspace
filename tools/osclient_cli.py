@@ -27,7 +27,6 @@ import sys
 baseDir = os.path.abspath(os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(baseDir, '..', 'server', "lib"))
 
-import os
 from igeclient.IClient import IClient
 from ige.Const import OID_UNIVERSE
 import pprint, traceback
@@ -58,6 +57,10 @@ parser.add_option("--shutdown", dest = "shutdown", default = 0,
     action = "store_true", help = "Tells server to shutdown")
 parser.add_option("--ping", dest = "ping", default = 0,
     action = "store_true", help = "Just tries to connect")
+parser.add_option("--chronicler", dest = "chronicler", default = 0,
+    action = "store_true", help = "Makes a picture snap of every galaxy in the game")
+parser.add_option("--chronicler_dir", dest = "chronicler_dir", default = '.',
+    action = "store", type = "string",  help = "Directory where to put chronicler pictures")
 parser.add_option("--turns", dest = "turns", default = 0,
     action = "store", type = "int", metavar = "N", help = "Process N turns on server")
 parser.add_option("--starttime", dest = "startTime", default = 0,
@@ -70,6 +73,9 @@ parser.add_option("-b", "--backup", dest = "backup", default = None,
 parser.add_option("",  "--configdir", dest = "configDir",
     metavar = "DIRECTORY", default = os.path.join(os.path.expanduser("~"), ".outerspace"),
     help = "Override default configuration directory",)
+parser.add_option("",  "--configfile", dest = "configFilename",
+    metavar = "DIRECTORY", default = "admin_user.ini",
+    help = "Override default configuration file (applicable only for chronicler)",)
 parser.add_option("", "--game", dest = "game",
     metavar = "GAME", default = "Alpha",
     help = "Name of the game")
@@ -113,6 +119,93 @@ elif options.ping:
 elif options.addUser:
     login, passwd, nick, email = options.addUser
     s.createAccount(login, passwd, nick, email)
+elif options.chronicler:
+    sys.path.insert(0, os.path.join(baseDir, '..', 'client'))
+    sys.path.insert(0, os.path.join(baseDir, '..', 'client', 'osci'))
+    sys.path.insert(0, os.path.join(baseDir, '..', 'client-ai'))
+    from osci.StarMap import StarMap
+    import resources
+    import osci.res
+    import pygame, pygame.ftfont, pygame.freetype
+    import pygameui, pygameui.SkinableTheme
+    from osci.config import Config
+    import osci.gdata as gdata
+    import osci.client
+    import ige.version
+    import ai_handler
+    import gettext
+    import hashlib
+    gettext.NullTranslations().install(unicode = 1)
+    gdata.config = Config(os.path.join(options.configDir, options.configFilename))
+
+    gdata.config.game.server = 'localhost:9080'
+    gdata.config.galaxer.server = 'localhost:9081'
+
+    gdata.config.defaults.minfleetsymbolsize = 4
+    gdata.config.defaults.minplanetsymbolsize = 5
+    gdata.config.defaults.maxfleetsymbolsize = 0
+    gdata.config.defaults.maxplanetsymbolsize = 0
+
+    options.heartbeat = 60
+    osci.client.initialize('localhost:9080', ai_handler, options)
+    osci.client.login(options.game, login, password)
+    osci.client.updateDatabase()
+
+    os.environ["SDL_VIDEODRIVER"] = "dummy"  # this should make us headless
+    pygame.init()
+    screen = pygame.display.set_mode((10,10))
+    osci.res.initialize()
+    osci.res.loadResources()
+    pygameui.SkinableTheme.setSkin(os.path.join(resources.get("themes"), 'green'))
+    control_modes = {}  # mutable, thus updating here will update StarMap
+    control_modes['systems'] = 1
+    control_modes['planets'] = 1
+    control_modes['fleets'] = 1
+    control_modes['civilian_fleets'] = 1
+    control_modes['pirate_areas'] = 1
+    control_modes['hotbuttons'] = 0
+    control_modes['minimap'] = 0
+    control_modes['redirects'] = 0
+    control_modes['map_grid_coords'] = 1
+    control_modes['map_grid'] = 1
+    control_modes['scanners'] = 0
+    control_modes['fleet_lines'] = 1
+    control_modes['gate_systems'] = 1
+    control_modes['alternative_mode'] = 1
+    control_modes['control_areas'] = 1
+    control_modes['pirate_dialogs'] = 0  # only for pirate, obv.
+
+    # pick individual color for each player (needs to happen before precompute)
+    gdata.config.defaults.highlights = 'yes'
+    players = s.getInfo(OID_UNIVERSE).players
+    for player_id in players:
+        player = s.getInfo(player_id)
+        osci.client.db[player_id] = player
+        c_hash = hashlib.sha256(player.login.encode('utf-8')).hexdigest()[:6]
+        color_code = (int(c_hash[:2], 16), int(c_hash[2:4], 16), int(c_hash[4:], 16))
+        gdata.playersHighlightColors[player_id] = color_code
+        # we have to explicitly pick fleets, as they are invisible for admin
+        for obj in osci.client.cmdProxy.multiGetInfo(1, player.fleets[:]):
+            osci.client.db[obj.oid] = obj
+
+    painter = StarMap(control_modes)
+    turn_string = osci.res.formatTime(osci.client.getTurn(), '_')
+    painter.precompute()
+    # we are not using default zoom - it's too much
+    painter.scale = 30
+    galaxies = s.getInfo(OID_UNIVERSE).galaxies
+    for galaxy_id in galaxies:
+        galaxy = s.getInfo(galaxy_id)
+        #if galaxy.name.startswith("Single -"): continue
+        painter.currX, painter.currY = galaxy.x, galaxy.y
+        surface_side = (galaxy.radius + 0.5) * 2 * painter.scale
+        surface = pygame.Surface((surface_side, surface_side))
+        painter.rect = surface.get_rect()
+        new_surf, empty, empty = painter.draw(surface)
+        pic_name = galaxy.name + '.' + turn_string + '.png'
+        pic_path = os.path.join(options.chronicler_dir, pic_name)
+        pygame.image.save(new_surf, pic_path)
+
 else:
     # interactive console
     from code import InteractiveConsole
