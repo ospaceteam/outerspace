@@ -74,26 +74,17 @@ class StarMap(object):
         self.overlayMode = gdata.OVERLAY_OWNER
         self._overlayZone = False
 
+    def chronicle_draw(self):
+        # print whole galaxy, centered over black hole
+        central_blackhole_obj = client.get(self._central_blackhole, noUpdate = 1)
+        saved_x, saved_y = self.currX, self.currY
+        self.currX, self.currY = central_blackhole_obj.x, central_blackhole_obj.y
+        radius = 15 # TODO: update with radius of the galaxy
+        surface_side = (radius + 2) * 2 * self.scale
+        new_surf, empty, empty = self.draw(pygame.Surface((surface_side, surface_side)))
+        self.currX, self.currY = saved_x, saved_y
+        return new_surf
 
-    def save(self,append='', chronicle_shot=False):
-        name = ("%s.png" % append)
-        if chronicle_shot:
-            # print whole galaxy, centered over black hole
-            central_blackhole_obj = client.get(self._central_blackhole, noUpdate = 1)
-            saved_x, saved_y = self.currX, self.currY
-            self.currX, self.currY = central_blackhole_obj.x, central_blackhole_obj.y
-            radius = 15
-            surface_side = (radius + 2) * 2 * self.scale
-            new_surf = self.draw(pygame.Surface((surface_side, surface_side)), chronicle_shot=True)
-            pygame.image.save(new_surf, name)
-            self.currX, self.currY = saved_x, saved_y
-        else:
-            # print current player view
-            buttons = self.showHotButtons
-            self.showHotButtons = False
-            pygame.image.save(self._mapSurf, name)
-            self.showHotButtons = buttons
-        return name
 
     def precompute(self):
         player_highlight = -1

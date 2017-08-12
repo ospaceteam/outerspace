@@ -123,6 +123,21 @@ class StarMapWidget(Widget):
         # self dirty flag
         self.repaint_map = 1
 
+    def save(self, append='', chronicle_shot=False):
+        name = ("%s.png" % append)
+        if chronicle_shot:
+            # print whole galaxy, centered over black hole
+            # star_map has much more information about the galaxy, thus handling this request
+            new_surf = self.star_map.chronicle_draw()
+            pygame.image.save(new_surf, name)
+        else:
+            # print current player view
+            new_surf, empty, empty = self.star_map.draw(pygame.Surface((self.star_map.rect.width,
+                                                                        self.star_map.rect.height)))
+            pygame.image.save(new_surf, name)
+        return name
+
+
     def draw(self, surface):
         self._miniMapRect.left = self.rect.width - self._miniMapRect.width
         self._miniMapRect.top = self.rect.top
