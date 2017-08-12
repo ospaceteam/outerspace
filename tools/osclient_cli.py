@@ -27,7 +27,6 @@ import sys
 baseDir = os.path.abspath(os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(baseDir, '..', 'server', "lib"))
 
-import os
 from igeclient.IClient import IClient
 from ige.Const import OID_UNIVERSE
 import pprint, traceback
@@ -152,7 +151,7 @@ elif options.chronicler:
     osci.client.login(options.game, login, password)
     osci.client.updateDatabase()
 
-
+    os.environ["SDL_VIDEODRIVER"] = "dummy"  # this should make us headless
     pygame.init()
     screen = pygame.display.set_mode((10,10))
     osci.res.initialize()
