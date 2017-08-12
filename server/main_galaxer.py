@@ -176,51 +176,6 @@ def runGalaxer(options):
             if galCap * options.threshold <= count:
                 return createNewGalaxy(galType, galCap, radius)
 
-
-    def findSpotForGalaxy(newGalRadius):
-        """ We start with sum of surfaces of active galaxies (with borders) with this,
-            we count the hypothetical square all galaxies should fit together. We then
-            increase the size a bit, and try to place the new galaxy there randomly.
-            If not successful, increase again and repeat.
-        """
-        log.debug("Seeking position for new galaxy")
-        actualGalaxies = _getActualGalaxies()
-
-        attemptsAmount = 10000 # number of placement attempts within one resize
-        magicConstant = 1.1
-        magicConstantStep = 0.1
-        border = 50
-
-        # count surface required
-        wholeSurface = 0
-        for galaxyID in actualGalaxies:
-            galName, galX, galY, galRadius = actualGalaxies[galaxyID]
-            # border is counted only once as it can overlap
-            wholeSurface += (galRadius * 2 + border) ** 2
-        # adding wholeSurface of the galaxy currently processed
-        wholeSurface += (newGalRadius * 2 + border) ** 2
-
-        search = True
-        attempts = attemptsAmount
-        lowLimit = newGalRadius # only positive coordinates
-        while search:
-            highLimit = math.ceil(wholeSurface ** 0.5 * magicConstant)
-            attempts -= 1
-            posX = int(random.randrange(lowLimit, highLimit))
-            posY = int(random.randrange(lowLimit, highLimit))
-            isBlocked = False
-            for galaxyID in actualGalaxies:
-                galName, galX, galY, galRadius = actualGalaxies[galaxyID]
-                neededSpace = galRadius + border + newGalRadius
-                if abs(galX - posX) < neededSpace and abs(galY - posY) < neededSpace:
-                    isBlocked = True
-                    break
-            search = isBlocked
-            if not attempts:
-                magicConstant += magicConstantStep
-                attempts = attemptsAmount
-        return (posX, posY)
-
     def findNameForGalaxy():
         log.debug("Searching for available galaxy name")
         allNames = []
@@ -245,8 +200,6 @@ def runGalaxer(options):
         name = findNameForGalaxy()
         if name is None:
             return False
-        # now to get position for it - this cannot fail
-        posX, posY = findSpotForGalaxy(radius)
 
         # get list of players
         query = db.execute('SELECT login, nick, email FROM players\
@@ -257,7 +210,7 @@ def runGalaxer(options):
             nick = playerInfo[1]
             listOfPlayers.append(playerInfo)
         log.debug("Triggering creation of new galaxy")
-        s.createNewSubscribedGalaxy(ige.Const.OID_UNIVERSE, posX, posY, name, galType, listOfPlayers)
+        s.createNewSubscribedGalaxy(ige.Const.OID_UNIVERSE, name, galType, listOfPlayers)
 
         # now, as the galaxy has been created, remove booked players from galaxer database
         for playerInfo in listOfPlayers:
