@@ -58,10 +58,10 @@ parser.add_option("--shutdown", dest = "shutdown", default = 0,
     action = "store_true", help = "Tells server to shutdown")
 parser.add_option("--ping", dest = "ping", default = 0,
     action = "store_true", help = "Just tries to connect")
-parser.add_option("--historician", dest = "historician", default = 0,
+parser.add_option("--chronicler", dest = "chronicler", default = 0,
     action = "store_true", help = "Makes a picture snap of every galaxy in the game")
-parser.add_option("--history_dir", dest = "history_dir", default = '.',
-    action = "store", type = "string",  help = "Directory where to put historician pictures")
+parser.add_option("--chronicler_dir", dest = "chronicler_dir", default = '.',
+    action = "store", type = "string",  help = "Directory where to put chronicler pictures")
 parser.add_option("--turns", dest = "turns", default = 0,
     action = "store", type = "int", metavar = "N", help = "Process N turns on server")
 parser.add_option("--starttime", dest = "startTime", default = 0,
@@ -76,7 +76,7 @@ parser.add_option("",  "--configdir", dest = "configDir",
     help = "Override default configuration directory",)
 parser.add_option("",  "--configfile", dest = "configFilename",
     metavar = "DIRECTORY", default = "admin_user.ini",
-    help = "Override default configuration file (applicable only for historician)",)
+    help = "Override default configuration file (applicable only for chronicler)",)
 parser.add_option("", "--game", dest = "game",
     metavar = "GAME", default = "Alpha",
     help = "Name of the game")
@@ -120,7 +120,7 @@ elif options.ping:
 elif options.addUser:
     login, passwd, nick, email = options.addUser
     s.createAccount(login, passwd, nick, email)
-elif options.historician:
+elif options.chronicler:
     sys.path.insert(0, os.path.join(baseDir, '..', 'client'))
     sys.path.insert(0, os.path.join(baseDir, '..', 'client', 'osci'))
     sys.path.insert(0, os.path.join(baseDir, '..', 'client-ai'))
@@ -192,6 +192,8 @@ elif options.historician:
     painter = StarMap(control_modes)
     turn_string = osci.res.formatTime(osci.client.getTurn(), '_')
     painter.precompute()
+    # we are not using default zoom - it's too much
+    painter.scale = 30
     galaxies = s.getInfo(OID_UNIVERSE).galaxies
     for galaxy_id in galaxies:
         galaxy = s.getInfo(galaxy_id)
@@ -202,7 +204,7 @@ elif options.historician:
         painter.rect = surface.get_rect()
         new_surf, empty, empty = painter.draw(surface)
         pic_name = galaxy.name + '.' + turn_string + '.png'
-        pic_path = os.path.join(options.history_dir, pic_name)
+        pic_path = os.path.join(options.chronicler_dir, pic_name)
         pygame.image.save(new_surf, pic_path)
 
 else:

@@ -39,7 +39,7 @@ for i in `seq 1 24`;do
     ../outerspace.py ai-pool --configdir "$CONFIG_DIR" --local
 
     # make screenshots
-    ../tools/osclient_cli.py --configdir "$CONFIG_DIR" --historician --history_dir ${HISTORY_DIR} admin
+    ../tools/osclient_cli.py --configdir "$CONFIG_DIR" --chronicler --chronicler_dir ${HISTORY_DIR} admin
 
 done
 
