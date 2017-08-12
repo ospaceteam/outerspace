@@ -566,7 +566,7 @@ class StarMap(object):
             info.append(_('Ships:'))
             number = {}
             for designID, hp, shield, exp in obj.ships:
-                tech = client.getPlayer().shipDesigns[designID]
+                tech = client.get(owner).shipDesigns[designID]
                 level = Rules.shipExpToLevel.get(int(exp / tech.baseExp), Rules.shipDefLevel)
                 if designID not in number:
                     number[designID] = [0, 0, 0, 0, 0]
@@ -574,7 +574,7 @@ class StarMap(object):
             order = number.keys()
             order.sort()
             for designID in order:
-                tech = client.getPlayer().shipDesigns[designID]
+                tech = client.get(owner).shipDesigns[designID]
                 levels = number[designID]
                 info.append(_('  %d x %s   [%d, %d, %d, %d, %d]') % (
                         levels[0] + levels[1] + levels[2] + levels[3] + levels[4],
