@@ -151,7 +151,6 @@ elif options.chronicler:
     osci.client.login(options.game, login, password)
     osci.client.updateDatabase()
 
-    os.environ["SDL_VIDEODRIVER"] = "dummy"  # this should make us headless
     pygame.init()
     screen = pygame.display.set_mode((10,10))
     osci.res.initialize()
