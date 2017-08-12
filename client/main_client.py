@@ -317,7 +317,10 @@ def runClient(options):
             osci.res.initialize()
 
             # load resources
-            osci.res.loadResources()
+            import osci.dialog
+            dlg = osci.dialog.ProgressDlg(gdata.app)
+            osci.res.loadResources(dlg)
+            dlg.hide()
             osci.res.prepareUIIcons(ui.SkinableTheme.themeIcons)
 
 
