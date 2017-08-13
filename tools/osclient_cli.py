@@ -69,6 +69,8 @@ parser.add_option("--adduser", dest = "addUser", nargs=4,
     metavar = "LOGIN PASSWD NICKNAME EMAIL", help = "Add new user")
 parser.add_option("--newgalaxy", dest = "newGalaxy", nargs=2,
     metavar = "NAME TYPE", help = "Create new galaxy")
+parser.add_option("--deletegalaxy", dest = "deleteGalaxy",
+    metavar = "GALAXY_ID", help = "Delete galaxy")
 parser.add_option("-b", "--backup", dest = "backup", default = None,
     action = "store", type = "string", metavar = "BASEFILENAME",
     help = "Backup server databases into BASEFILENAME-<database name>.osbackup")
@@ -125,6 +127,8 @@ elif options.newGalaxy:
     galaxy_name, galaxy_type = options.newGalaxy
     list_of_players = []
     s.createNewSubscribedGalaxy(OID_UNIVERSE, galaxy_name, galaxy_type, list_of_players)
+elif options.deleteGalaxy:
+    s.delete(options.deleteGalaxy)
 elif options.chronicler:
     sys.path.insert(0, os.path.join(baseDir, '..', 'client'))
     sys.path.insert(0, os.path.join(baseDir, '..', 'client', 'osci'))
