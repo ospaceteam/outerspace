@@ -18,7 +18,9 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-import copy, math
+import copy
+import math
+import random
 from ige import log
 from ige.ospace.Const import *
 from ige.IDataHolder import IDataHolder
@@ -856,3 +858,13 @@ def dictSubtraction(dict1, dict2):
         result[key] = dict1[key] - dict2[key]
     return result
 
+def weightedRandom(choices, weights):
+    """ Choose randomly from weighted choices
+
+    """
+
+    die = random.randint(1, sum(weights))
+    for choice, weight in zip(choices, weights):
+        die -= weight
+        if die <= 0: return choice
+    assert False # shouldn't happen

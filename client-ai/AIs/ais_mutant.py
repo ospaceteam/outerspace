@@ -247,9 +247,13 @@ def attackManager():
         noOfSowers = sheet[4]
         noOfSwarmers = min(sheet[1], math.ceil(noOfSowers * 1.5))
         maxRange = 0.8 * subfleetMaxRange(client, db, {1:noOfSwarmers, 4:noOfSowers}, fleetID)
-        nearest = findNearest(db, fleet, data.otherSystems, maxRange)
+        # four nearest systems are considered, with probability to be chosen based on order
+        nearest = findNearest(db, fleet, data.otherSystems, maxRange, 4)
         if len(nearest):
-            target = nearest[0]
+            # range is adjusted to flatten probabilities a bit
+            probability_map = map(lambda x: x ** 2, range(6, 2, -1))
+            target = weightedRandom(nearest, probability_map)
+
             fleet, newFleet, myFleets = orderPartFleet(client, db,
                 {1:noOfSwarmers, 4:noOfSowers}, True,
                 fleetID, FLACTION_MOVE, target, None)
