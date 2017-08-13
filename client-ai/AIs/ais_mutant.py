@@ -47,6 +47,10 @@ def systemManager():
         # is the minefield in the system?
         hasMines = False
         possibleSlots = 0
+        # this variable will gather how valuable system is in regards of fighter defense
+        # in general, mutant has quite significant planetary defense, so our target is
+        # to have only about 10 % production spend on support
+        fighters_to_defend = 0
         for planetID in data.myPlanets & set(system.planets):
             planet = db[planetID]
             if Rules.Tech.MUTANTMINES in actualStats.planets[planetID]:
@@ -56,7 +60,8 @@ def systemManager():
             planet = db[planetID]
             mines = 0
             space = planet.plSlots - 1 # the main building is there every time
-            if planet.plType == u"I":
+            if planet.plType == u"I":  # gaia
+                fighters_to_defend += 15
                 # preserve minefield position, and in case there is no
                 # minefield in the system, try to place it on the first planet
                 # available
@@ -72,7 +77,8 @@ def systemManager():
                                             Rules.Tech.MUTANTPP2:noOfPPs,
                                             Rules.Tech.MUTANTFACT2:noOfFacts}
                 continue
-            elif planet.plType == u"E":
+            elif planet.plType == u"E":  # terrestial
+                fighters_to_defend += 8
                 # preserve minefield position, and in case there is no
                 # minefield in the system, try to place it on the first planet
                 # available
@@ -88,7 +94,8 @@ def systemManager():
                                             Rules.Tech.MUTANTPP2:noOfPPs,
                                             Rules.Tech.MUTANTFACT2:noOfFacts}
                 continue
-            elif planet.plType == u"M":
+            elif planet.plType == u"M":  # marginal
+                fighters_to_defend += 5
                 # preserve minefield position, and in case there is no
                 # minefield in the system, try to place it on the first planet
                 # available
@@ -105,6 +112,7 @@ def systemManager():
                                             Rules.Tech.MUTANTFACT1:noOfFacts}
                 continue
             else: # all sub-marginal types
+                fighters_to_defend += 3
                 # preserve minefield position, and in case there is no
                 # minefield in the system, try to place it on the first planet
                 # available
@@ -122,37 +130,54 @@ def systemManager():
                 continue
         idlePlanets = buildSystem(client, db, systemID, data.myProdPlanets & set(system.planets), finalSystemPlan)
         # rest of the planets build ships
+        # first get all our ships in the system
+        system_fleet = {}
+        for fleetID in getattr(system, 'fleets', []):
+            fleet = db[fleetID]
+            if getattr(fleet, 'owner', OID_NONE) == playerID:
+                system_fleet = dictAddition(system_fleet, getFleetSheet(fleet))
+        hasSeeders = False
+        hasSeekers = False
+        try:
+            if system_fleet[2] >= 2: hasSeeders = True
+        except KeyError:
+            pass
+        try:
+            if system_fleet[3] >= 2: hasSeekers = True
+        except KeyError:
+            pass
+
         for planetID in idlePlanets:
             planet = db[planetID]
-            systemFleets = getattr(system, 'fleets', [])
-            hasSeeders = False
-            hasSeekers = False
-            for fleetID in systemFleets:
-                fleet = db[fleetID]
-                if getattr(fleet, 'owner', OID_NONE) == playerID:
-                    if fleetContains(fleet, {2:2}):
-                        hasSeeders = True
-                    if fleetContains(fleet, {3:2}):
-                        hasSeekers = True
             shipDraw = random.randint(1, 10)
-            if not hasSeeders or not hasSeekers:
-                # 20 %
-                if shipDraw < 3:
-                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 1, 2, planetID, True, False, OID_NONE)
-                else:
-                    if not hasSeeders:
-                        planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 2, 1, planetID, True, False, OID_NONE)
-                    elif not hasSeekers:
-                        planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 3, 1, planetID, True, False, OID_NONE)
-            else:
-                # 40 %
-                if shipDraw < 5:
-                    # build bombers
-                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 4, 2, planetID, True, False, OID_NONE)
-                # 60 %
-                else:
-                    # build fighters
-                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 1, 3, planetID, True, False, OID_NONE)
+            if (not hasSeeders or not hasSeekers) and shipDraw < 9:
+                # there is 20% chance it won't build civilian ships, but military one
+                if not hasSeeders:
+                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 2, 1, planetID, True, False, OID_NONE)
+                    continue
+                elif not hasSeekers:
+                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 3, 1, planetID, True, False, OID_NONE)
+                    continue
+            # rest is creation of ships based on current state + expected guard fighters
+            try:
+                fighters = system_fleet[1]
+            except KeyError:
+                fighters = 0
+            try:
+                bombers = system_fleet[4]
+            except KeyError:
+                bombers = 0
+            expected_fighters = bombers * 1.5 + fighters_to_defend
+            weight_fighter = 3
+            weight_bomber = 2
+            if expected_fighters > fighters:
+                # we have to build more fighters
+                weight_fighter += 1
+            elif expected_fighters < fighters:
+                # we have too many fighters - let's prefer bombers for now
+                weight_bomber += 1
+            choice = weightedRandom([1,4], [weight_fighter, weight_bomber])
+            planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, choice, 2, planetID, True, False, OID_NONE)
 
 def expansionManager():
     global data, db
