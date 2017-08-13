@@ -161,7 +161,7 @@ parser_ai.add_argument("--game", dest = "game",
     default = 'Alpha',
     help = "Name of game to which the AI belongs",
 )
-parser_server.add_argument("--test-connection", dest = "test",
+parser_ai.add_argument("--test-connection", dest = "test",
     action = "store_true", default=False,
     help = argparse.SUPPRESS
 )
