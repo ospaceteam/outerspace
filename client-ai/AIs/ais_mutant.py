@@ -50,7 +50,8 @@ def systemManager():
         # this variable will gather how valuable system is in regards of fighter defense
         # in general, mutant has quite significant planetary defense, so our target is
         # to have only about 10 % production spend on support
-        fighters_to_defend = 0
+        fighters_to_defend = systemWorthiness(system, [15,8,5,3])
+
         for planetID in data.myPlanets & set(system.planets):
             planet = db[planetID]
             if Rules.Tech.MUTANTMINES in actualStats.planets[planetID]:
@@ -61,7 +62,6 @@ def systemManager():
             mines = 0
             space = planet.plSlots - 1 # the main building is there every time
             if planet.plType == u"I":  # gaia
-                fighters_to_defend += 15
                 # preserve minefield position, and in case there is no
                 # minefield in the system, try to place it on the first planet
                 # available
@@ -78,7 +78,6 @@ def systemManager():
                                             Rules.Tech.MUTANTFACT2:noOfFacts}
                 continue
             elif planet.plType == u"E":  # terrestial
-                fighters_to_defend += 8
                 # preserve minefield position, and in case there is no
                 # minefield in the system, try to place it on the first planet
                 # available
@@ -95,7 +94,6 @@ def systemManager():
                                             Rules.Tech.MUTANTFACT2:noOfFacts}
                 continue
             elif planet.plType == u"M":  # marginal
-                fighters_to_defend += 5
                 # preserve minefield position, and in case there is no
                 # minefield in the system, try to place it on the first planet
                 # available
@@ -112,7 +110,6 @@ def systemManager():
                                             Rules.Tech.MUTANTFACT1:noOfFacts}
                 continue
             else: # all sub-marginal types
-                fighters_to_defend += 3
                 # preserve minefield position, and in case there is no
                 # minefield in the system, try to place it on the first planet
                 # available
@@ -262,8 +259,17 @@ def attackManager():
     attackFleets = set()
     for fleetID in copy.copy(data.myFleets):
         fleet = db.get(fleetID, None)
+        # minimal size of attack fleet is determined by size of originating system - larger
+        # more developed systems will stage stronger attack fleets
+        try:
+            system = db[fleet.orbiting]
+        except KeyError:
+            # this fleet is not on orbit, set legacy value
+            minimum = 12
+        else:
+            minimum = systemWorthiness(system, [8,5,3,2]) + 10
         if getattr(fleet, 'target', OID_NONE) == OID_NONE and getattr(fleet, 'ships', []):
-            if fleetContains(fleet, {1:12, 4:12}):
+            if fleetContains(fleet, {1:minimum, 4:minimum}):
                 attackFleets.add(fleetID)
     for fleetID in copy.copy(attackFleets):
         fleet = db[fleetID]
@@ -315,6 +321,23 @@ def logisticsManager():
                         fleet, newFleet, myFleets = orderPartFleet(client, db,
                             {1:0, 4:0}, True, fleetID, FLACTION_MOVE, minDistSysID, None)
                         data.idleFleets -= set([fleetID])
+
+def systemWorthiness(system, weights):
+    """ Scans system, and based on planetary composition and weights returns constant.
+    Weights are expected to be quadruplet of numbers, for [gaia, terrestial, marginal, rest]
+    """
+    worth = 0
+    for planet_id in data.myPlanets & set(system.planets):
+        planet = db[planet_id]
+        if planet.plType == u"I":  # gaia
+            worth += weights[0]
+        elif planet.plType == u"E":  # terrestial
+            worth += weights[1]
+        elif planet.plType == u"M":  # marginal
+            worth += weights[2]
+        else:  # junk
+            worth += weights[3]
+    return worth
 
 
 def run(aclient):
