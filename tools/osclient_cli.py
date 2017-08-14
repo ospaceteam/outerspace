@@ -186,17 +186,17 @@ elif options.chronicler:
 
     # pick individual color for each player (needs to happen before precompute)
     gdata.config.defaults.highlights = 'yes'
-    players = s.getInfo(OID_UNIVERSE).players
-    for player_id in players:
-        player = s.getInfo(player_id)
-        osci.client.db[player_id] = player
+    fleets_to_get = []
+    players_ids = s.getInfo(OID_UNIVERSE).players
+    for player in osci.client.cmdProxy.multiGetInfo(1, players_ids[:]):
+        osci.client.db[player.oid] = player
         c_hash = hashlib.sha256(player.login.encode('utf-8')).hexdigest()[:6]
         color_code = (int(c_hash[:2], 16), int(c_hash[2:4], 16), int(c_hash[4:], 16))
-        gdata.playersHighlightColors[player_id] = color_code
+        gdata.playersHighlightColors[player.oid] = color_code
         # we have to explicitly pick fleets, as they are invisible for admin
-        for obj in osci.client.cmdProxy.multiGetInfo(1, player.fleets[:]):
-            osci.client.db[obj.oid] = obj
-
+        fleets_to_get += player.fleets
+    for obj in osci.client.cmdProxy.multiGetInfo(1, fleets_to_get[:]):
+        osci.client.db[obj.oid] = obj
     painter = StarMap(control_modes)
     turn_string = osci.res.formatTime(osci.client.getTurn(), '_')
     painter.precompute()

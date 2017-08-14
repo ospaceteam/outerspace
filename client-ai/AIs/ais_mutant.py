@@ -47,6 +47,11 @@ def systemManager():
         # is the minefield in the system?
         hasMines = False
         possibleSlots = 0
+        # this variable will gather how valuable system is in regards of fighter defense
+        # in general, mutant has quite significant planetary defense, so our target is
+        # to have only about 10 % production spend on support
+        fighters_to_defend = systemWorthiness(system, [15,8,5,3])
+
         for planetID in data.myPlanets & set(system.planets):
             planet = db[planetID]
             if Rules.Tech.MUTANTMINES in actualStats.planets[planetID]:
@@ -56,7 +61,7 @@ def systemManager():
             planet = db[planetID]
             mines = 0
             space = planet.plSlots - 1 # the main building is there every time
-            if planet.plType == u"I":
+            if planet.plType == u"I":  # gaia
                 # preserve minefield position, and in case there is no
                 # minefield in the system, try to place it on the first planet
                 # available
@@ -72,7 +77,7 @@ def systemManager():
                                             Rules.Tech.MUTANTPP2:noOfPPs,
                                             Rules.Tech.MUTANTFACT2:noOfFacts}
                 continue
-            elif planet.plType == u"E":
+            elif planet.plType == u"E":  # terrestial
                 # preserve minefield position, and in case there is no
                 # minefield in the system, try to place it on the first planet
                 # available
@@ -88,7 +93,7 @@ def systemManager():
                                             Rules.Tech.MUTANTPP2:noOfPPs,
                                             Rules.Tech.MUTANTFACT2:noOfFacts}
                 continue
-            elif planet.plType == u"M":
+            elif planet.plType == u"M":  # marginal
                 # preserve minefield position, and in case there is no
                 # minefield in the system, try to place it on the first planet
                 # available
@@ -122,37 +127,54 @@ def systemManager():
                 continue
         idlePlanets = buildSystem(client, db, systemID, data.myProdPlanets & set(system.planets), finalSystemPlan)
         # rest of the planets build ships
+        # first get all our ships in the system
+        system_fleet = {}
+        for fleetID in getattr(system, 'fleets', []):
+            fleet = db[fleetID]
+            if getattr(fleet, 'owner', OID_NONE) == playerID:
+                system_fleet = dictAddition(system_fleet, getFleetSheet(fleet))
+        hasSeeders = False
+        hasSeekers = False
+        try:
+            if system_fleet[2] >= 2: hasSeeders = True
+        except KeyError:
+            pass
+        try:
+            if system_fleet[3] >= 2: hasSeekers = True
+        except KeyError:
+            pass
+
         for planetID in idlePlanets:
             planet = db[planetID]
-            systemFleets = getattr(system, 'fleets', [])
-            hasSeeders = False
-            hasSeekers = False
-            for fleetID in systemFleets:
-                fleet = db[fleetID]
-                if getattr(fleet, 'owner', OID_NONE) == playerID:
-                    if fleetContains(fleet, {2:2}):
-                        hasSeeders = True
-                    if fleetContains(fleet, {3:2}):
-                        hasSeekers = True
             shipDraw = random.randint(1, 10)
-            if not hasSeeders or not hasSeekers:
-                # 20 %
-                if shipDraw < 3:
-                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 1, 2, planetID, True, False, OID_NONE)
-                else:
-                    if not hasSeeders:
-                        planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 2, 1, planetID, True, False, OID_NONE)
-                    elif not hasSeekers:
-                        planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 3, 1, planetID, True, False, OID_NONE)
-            else:
-                # 40 %
-                if shipDraw < 5:
-                    # build bombers
-                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 4, 2, planetID, True, False, OID_NONE)
-                # 60 %
-                else:
-                    # build fighters
-                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 1, 3, planetID, True, False, OID_NONE)
+            if (not hasSeeders or not hasSeekers) and shipDraw < 9:
+                # there is 20% chance it won't build civilian ships, but military one
+                if not hasSeeders:
+                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 2, 1, planetID, True, False, OID_NONE)
+                    continue
+                elif not hasSeekers:
+                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 3, 1, planetID, True, False, OID_NONE)
+                    continue
+            # rest is creation of ships based on current state + expected guard fighters
+            try:
+                fighters = system_fleet[1]
+            except KeyError:
+                fighters = 0
+            try:
+                bombers = system_fleet[4]
+            except KeyError:
+                bombers = 0
+            expected_fighters = bombers * 1.5 + fighters_to_defend
+            weight_fighter = 3
+            weight_bomber = 2
+            if expected_fighters > fighters:
+                # we have to build more fighters
+                weight_fighter += 1
+            elif expected_fighters < fighters:
+                # we have too many fighters - let's prefer bombers for now
+                weight_bomber += 1
+            choice = weightedRandom([1,4], [weight_fighter, weight_bomber])
+            planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, choice, 2, planetID, True, False, OID_NONE)
 
 def expansionManager():
     global data, db
@@ -237,8 +259,17 @@ def attackManager():
     attackFleets = set()
     for fleetID in copy.copy(data.myFleets):
         fleet = db.get(fleetID, None)
+        # minimal size of attack fleet is determined by size of originating system - larger
+        # more developed systems will stage stronger attack fleets
+        try:
+            system = db[fleet.orbiting]
+        except KeyError:
+            # this fleet is not on orbit, set legacy value
+            minimum = 12
+        else:
+            minimum = systemWorthiness(system, [8,5,3,2]) + 10
         if getattr(fleet, 'target', OID_NONE) == OID_NONE and getattr(fleet, 'ships', []):
-            if fleetContains(fleet, {1:12, 4:12}):
+            if fleetContains(fleet, {1:minimum, 4:minimum}):
                 attackFleets.add(fleetID)
     for fleetID in copy.copy(attackFleets):
         fleet = db[fleetID]
@@ -247,9 +278,13 @@ def attackManager():
         noOfSowers = sheet[4]
         noOfSwarmers = min(sheet[1], math.ceil(noOfSowers * 1.5))
         maxRange = 0.8 * subfleetMaxRange(client, db, {1:noOfSwarmers, 4:noOfSowers}, fleetID)
-        nearest = findNearest(db, fleet, data.otherSystems, maxRange)
+        # four nearest systems are considered, with probability to be chosen based on order
+        nearest = findNearest(db, fleet, data.otherSystems, maxRange, 4)
         if len(nearest):
-            target = nearest[0]
+            # range is adjusted to flatten probabilities a bit
+            probability_map = map(lambda x: x ** 2, range(6, 2, -1))
+            target = weightedRandom(nearest, probability_map)
+
             fleet, newFleet, myFleets = orderPartFleet(client, db,
                 {1:noOfSwarmers, 4:noOfSowers}, True,
                 fleetID, FLACTION_MOVE, target, None)
@@ -286,6 +321,23 @@ def logisticsManager():
                         fleet, newFleet, myFleets = orderPartFleet(client, db,
                             {1:0, 4:0}, True, fleetID, FLACTION_MOVE, minDistSysID, None)
                         data.idleFleets -= set([fleetID])
+
+def systemWorthiness(system, weights):
+    """ Scans system, and based on planetary composition and weights returns constant.
+    Weights are expected to be quadruplet of numbers, for [gaia, terrestial, marginal, rest]
+    """
+    worth = 0
+    for planet_id in data.myPlanets & set(system.planets):
+        planet = db[planet_id]
+        if planet.plType == u"I":  # gaia
+            worth += weights[0]
+        elif planet.plType == u"E":  # terrestial
+            worth += weights[1]
+        elif planet.plType == u"M":  # marginal
+            worth += weights[2]
+        else:  # junk
+            worth += weights[3]
+    return worth
 
 
 def run(aclient):
