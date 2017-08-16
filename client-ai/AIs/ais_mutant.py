@@ -269,6 +269,11 @@ def attackManager():
         else:
             minimum = systemWorthiness(system, [8,5,3,2]) + 10
         if getattr(fleet, 'target', OID_NONE) == OID_NONE and getattr(fleet, 'ships', []):
+            # this also covers fleets fighting over enemy systems - in that case, there
+            # is slight chance the fleet will continue to the next system without conquering
+            # the system first
+            if fleet.orbiting in data.otherSystems and weightedRandom([True, False], [9,1]):
+                continue
             if fleetContains(fleet, {1:minimum, 4:minimum}):
                 attackFleets.add(fleetID)
     for fleetID in copy.copy(attackFleets):
