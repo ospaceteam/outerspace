@@ -85,7 +85,6 @@ class StarSystemDlg:
         self.plInfoDataSelected = None
         #
         self.win.vSystemMap.systemID = self.systemID
-        self.win.vSystemMap.activeObjID = objID
         self.win.vSystemMap.precompute()
 
         # check, if player owns at least one planet in system
@@ -828,6 +827,12 @@ class StarSystemDlg:
         self.win.vSTPSci.text = tProdSci
 
     def onSelectMapObj(self, widget, action, data):
+        self.win.vSystemMap.selectedObjID = data
+        self.win.vSystemMap.activeObjID = data
+        self.display(data)
+
+    def onHighlightMapObj(self, widget, action, data):
+        self.win.vSystemMap.activeObjID = data
         self.display(data)
 
     def onSelectPlanet(self, widget, action, data):
@@ -1178,6 +1183,7 @@ class StarSystemDlg:
         SystemMapWidget(self.win,
             id = 'vSystemMap',
             action = 'onSelectMapObj',
+            hoverAction = 'onHighlightMapObj',
             layout = (0, 0, 40, 10)
         )
 

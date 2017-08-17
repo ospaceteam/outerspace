@@ -40,6 +40,7 @@ class SystemMapWidget(Widget):
         Widget.__init__(self, parent)
         # data
         self.action = None
+        self.hoverAction = None
         # map
         self.pressedObjID = OID_NONE
         self._actAreas = {}
@@ -212,7 +213,7 @@ class SystemMapWidget(Widget):
         for objID in self._actAreas.keys():
             rect = self._actAreas[objID]
             if rect.collidepoint(pos) and self.action:
-                self.processAction(self.action, objID)
+                self.processAction(self.hoverAction, objID)
                 return ui.NoEvent
         if self.selectedObjID:
             self.processAction(self.action, self.selectedObjID)
@@ -234,7 +235,6 @@ class SystemMapWidget(Widget):
             if rect.collidepoint(pos):
                 if self.pressedObjID == objID and self.action:
                     self.pressedObjID = OID_NONE
-                    self.selectedObjID = objID
                     self.processAction(self.action, objID)
                 return ui.NoEvent
         if self.selectedObjID:
