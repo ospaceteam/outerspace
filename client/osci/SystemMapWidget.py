@@ -208,6 +208,12 @@ class SystemMapWidget(Widget):
 
         return freeSlots
 
+    def onMouseOut(self):
+        # this is used when cursor moves directly from sun field out of widget
+        if self.selectedObjID:
+            self.processAction(self.action, self.selectedObjID)
+        return Widget.onMouseOut(self)
+
     def processMMotion(self, evt):
         pos = evt.pos
         for objID in self._actAreas.keys():
