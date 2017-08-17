@@ -289,6 +289,7 @@ class StarMap(object):
             icons.append(res.icons["rep_1"])
 
         self.precomputeCombat(obj, icons)
+        self.precomputeMines(obj, icons)
         self.precomputeBuoys(obj, player, icons)
         # star gates
         if speedBoost > 1.0:
@@ -382,6 +383,7 @@ class StarMap(object):
         name = getattr(obj, 'name', None)
         pirProb = self.precomputePiratesProbability(obj, pirate_systems, icons)
         self.precomputeCombat(obj, icons)
+        self.precomputeMines(obj, icons)
         self.precomputeBuoys(obj, player, icons)
         color = res.getPlayerColor(OID_NONE)
         namecolor = res.getPlayerColor(OID_NONE)
@@ -635,6 +637,19 @@ class StarMap(object):
             elif pirProb > 0.0:
                 icons.append(res.icons["pir_00"])
         return pirProb
+
+    def precomputeMines(self, system, icons):
+        if getattr(system, "minefield", False):
+            # ok, system has our mines - as minefield is identified
+            icons.append(res.icons["mines_ours"])
+            if getattr(system, "hasmines", 0) == 2:
+                # there are also unknown mines!
+                icons.append(res.icons["mines_unknown"])
+        elif getattr(system, "hasmines", 0):
+            # there are only unknown mines
+            icons.append(res.icons["mines_unknown"])
+
+
 
     def precomputeCombat(self, system, icons):
         if hasattr(system, "combatCounter") and system.combatCounter > 0:
