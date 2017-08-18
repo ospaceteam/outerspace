@@ -47,10 +47,9 @@ class Account:
 
 class ClientMngr:
 
-    def __init__(self, database, authMethod, configDir, metaserver = None):
+    def __init__(self, database, authMethod, configDir):
         self.configDir = configDir
         self.authMethod = authMethod
-        self.metaserver = metaserver
         if not self.authMethod:
             self.authMethod = Authentication.defaultMethod
         self._filename = os.path.join(self.configDir, 'accounts')
@@ -175,19 +174,8 @@ class ClientMngr:
         login = str(login)
         challenge = self.sessions[sid].challenge
         account = None
-        # use metaserver login if metaserver is defined
-        if self.metaserver:
-            result = self.metaserver.verifyPassword(login, Authentication.processUserPassword(cpasswd, challenge))
-            if result:
-                account = Account()
-                account.login = login
-                account.nick = result["nick"]
-                account.email = result["email"]
-                log.debug("User", login, "has valid metaserver account")
-            #else:
-            #    raise SecurityException("Wrong login and/or password.")
-        # local login
-        # TBD: option to disable local login completely
+        # local login - there has been option to use wordpress metaserver
+        # but for project of this size, less is more
         if not account:
             log.debug("Trying local login for user", login)
             if not self.accounts.has_key(login):
