@@ -20,7 +20,6 @@
 
 import pygameui as ui
 from osci import client, res, gdata, sequip
-from osci.SystemMapWidget import SystemMapWidget
 from FleetCommandDlg import FleetCommandDlg
 from FleetSpecsDlg import FleetSpecsDlg
 from FleetSplitDlg import FleetSplitDlg

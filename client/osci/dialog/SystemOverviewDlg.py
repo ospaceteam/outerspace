@@ -164,7 +164,7 @@ class SystemOverviewDlg:
         self.win.vUncolonizable = self.showUncolonizable
         self.win.vProblems = self.showProblems
 
-    def onSelectPlanet(self, widget, action, data):
+    def onSelectSystem(self, widget, action, data):
         item = self.win.vPlanets.selection[0]
         player = client.getPlayer()
         system = client.get(item.tSysID, noUpdate = 1)
@@ -225,7 +225,7 @@ class SystemOverviewDlg:
             (_('Upgrade'), 'tSyUpgrade', 3, ui.ALIGN_E),
             (_('+Gate %'), 'tSyGate', 3, ui.ALIGN_E),
             (_('Strat Res'), 'tStRes', 3.75, ui.ALIGN_E)],
-            columnLabels = 1, action = 'onSelectPlanet', rmbAction = "onShowLocation")
+            columnLabels = 1, action = 'onSelectSystem', rmbAction = "onShowLocation")
         ui.Button(self.win, layout = (0, 26, 5, 1), text = _('My Systems'), id = "vMine",
             toggle = 1,    action = "onToggleCondition", data = "showMine")
         ui.Button(self.win, layout = (5, 26, 5, 1), text = _('Other Cmdrs'), id = "vOtherPlayers",

@@ -40,6 +40,7 @@ class GlobalQueuesDlg:
     def __init__(self, app):
         self.app = app
         self.player = None
+        self.vPQueues = None
         self.queueNo = 5
         self.activeQueue = 0
         self.activeIndex = None
@@ -61,12 +62,22 @@ class GlobalQueuesDlg:
     def hide(self):
         self.win.setStatus(_("Ready."))
         self.win.hide()
+        if self.activeQueue is not None:
+            # we don't want current selection to be visible next time we open the dialog
+            self.vPQueues[self.activeQueue].selectItem(None)
+            self.win.setTagAttr('data', 'visible', False)
         # unregister updates
         if self in gdata.updateDlgs:
             gdata.updateDlgs.remove(self)
 
     def update(self):
         self.show()
+        if self.activeQueue is not None:
+            if self.activeIndex is not None:
+                # restore selection, as the items are recreated in show routine
+                self.vPQueues[self.activeQueue].selectItem(self.vPQueues[self.activeQueue].items[self.activeIndex])
+            else:
+                self.vPQueues[self.activeQueue].selectItem(None)
 
     def show(self):
         self.player = client.getPlayer()
@@ -127,24 +138,23 @@ class GlobalQueuesDlg:
     def onMoveTaskFirstLast(self, widget, action, data):
         if self.activeQueue == None or self.activeIndex == None:
             return
+
+        if widget.data == -1:
+            rel = -1 * self.activeIndex
+            pos = 0
+        else:
+            rel = len(self.player.prodQueues[self.activeQueue]) - self.activeIndex - 1
+            pos = len(self.player.prodQueues[self.activeQueue]) - 1
+
         try:
             self.win.setStatus(_('Executing MOVE TASK command...'))
-
-            if widget.data == -1:
-                rel = -1 * self.activeIndex
-                pos = 0
-            else:
-                rel = len(self.player.prodQueues[self.activeQueue]) - self.activeIndex - 1
-                pos = len(self.player.prodQueues[self.activeQueue]) - 1
-
             self.player.prodQueues[self.activeQueue] = client.cmdProxy.moveGlobalConstrItem(self.playerID, self.activeQueue, self.activeIndex, rel)
-            self.activeIndex = pos
-            self.vPQueues[self.activeQueue].selectItem(self.vPQueues[self.activeQueue].items[self.activeIndex])
-            self.vPQueues[self.activeQueue].selectItem(None)  # workaround for Selection not showing, TODO fix selection
             self.win.setStatus(_('Command has been executed.'))
         except GameException, e:
             self.win.setStatus(e.args[0])
             return
+
+        self.activeIndex = pos
         self.update()
 
     def onMoveTask(self, widget, action, data):
@@ -153,13 +163,11 @@ class GlobalQueuesDlg:
         try:
             self.win.setStatus(_('Executing MOVE TASK command...'))
             self.player.prodQueues[self.activeQueue] = client.cmdProxy.moveGlobalConstrItem(self.playerID, self.activeQueue, self.activeIndex, widget.data)
-            self.activeIndex += widget.data
-            self.vPQueues[self.activeQueue].selectItem(self.vPQueues[self.activeQueue].items[self.activeIndex])
-            self.vPQueues[self.activeQueue].selectItem(None)  # workaround for Selection not showing, TODO fix selection
             self.win.setStatus(_('Command has been executed.'))
         except GameException, e:
             self.win.setStatus(e.args[0])
             return
+        self.activeIndex += widget.data
         self.update()
 
     def onQtyTask(self, widget, action, data):
@@ -172,15 +180,13 @@ class GlobalQueuesDlg:
         if self.changeQtyDlg.quantity != None:
             try:
                 self.win.setStatus(_('Executing CHANGE TASK command...'))
-                player = client.getPlayer()
-                player.prodQueues[self.activeQueue], player.stratRes = client.cmdProxy.changeGlobalConstruction(self.playerID, self.activeQueue, self.activeIndex, self.changeQtyDlg.quantity)
-                self.vPQueues[self.activeQueue].selectItem(None)  # workaround for Selection not showing, TODO fix selection
+                self.player.prodQueues[self.activeQueue], self.player.stratRes = client.cmdProxy.changeGlobalConstruction(self.playerID, self.activeQueue, self.activeIndex, self.changeQtyDlg.quantity)
                 self.win.setStatus(_('Command has been executed.'))
-                self.win.vTaskQuantity.text = player.prodQueues[self.activeQueue][self.activeIndex].quantity
-                self.win.vTaskConstPoints.text = player.prodQueues[self.activeQueue][self.activeIndex].const
             except GameException, e:
                 self.win.setStatus(e.args[0])
                 return
+        self.win.vTaskQuantity.text = self.player.prodQueues[self.activeQueue][self.activeIndex].quantity
+        self.win.vTaskConstPoints.text = self.player.prodQueues[self.activeQueue][self.activeIndex].const
         self.update()
 
     def onTaskInfo(self, widget, action, data):
@@ -199,27 +205,28 @@ class GlobalQueuesDlg:
             _("Yes"), _("No"), self.onAbortTaskConfirmed)
 
     def onAbortTaskConfirmed(self):
-        if self.activeQueue != None and self.activeIndex != None:
+        if self.activeQueue is not None and self.activeIndex is not None:
             try:
                 self.win.setStatus(_('Executing ABORT CONSTRUCTION command...'))
                 self.player.prodQueues[self.activeQueue], self.player.stratRes = client.cmdProxy.abortGlobalConstruction(self.playerID, self.activeQueue, self.activeIndex)
-                self.vPQueues[self.activeQueue].selectItem(None)
                 self.win.setStatus(_('Command has been executed.'))
-                if len(self.player.prodQueues[self.activeQueue]) == self.activeIndex:
-                    if self.activeIndex == 0:
-                        self.activeIndex = None
-                    else:
-                        self.activeIndex -= 1
             except GameException, e:
                 self.win.setStatus(e.args[0])
                 return
+            if len(self.player.prodQueues[self.activeQueue]) == self.activeIndex:
+                if self.activeIndex == 0:
+                    self.activeIndex = None
+                else:
+                    self.activeIndex -= 1
 
-        if self.activeIndex:
+        self.update()
+        if self.activeIndex is not None:
             task = self.vPQueues[self.activeQueue].items[self.activeIndex]
             self.win.vTaskName.text = task.tooltip
             self.win.vTaskQuantity.text = task.text
             self.win.vTaskConstPoints.text = task.const
-        self.update()
+        else:
+            self.win.setTagAttr('data', 'visible', False)
 
 
     def onClose(self, widget, action, data):

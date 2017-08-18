@@ -281,6 +281,7 @@ class StructTaskDlg:
                 self.win.setStatus(e.args[0])
                 return
 
+        self.win.vTechs.selectItem(None)
         self.hide()
         self.caller.update()
 
