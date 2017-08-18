@@ -170,11 +170,6 @@ def runServer(options):
         msgDB.restore("%s-messages.osbackup" % options.restore, include = include)
         aiList = AIList(options.configDir, options.gameName)
         aiList.restore("%s-ais.osbackup" % options.restore)
-    metaserver = None
-    if config.wordpressmetaserver.url:
-        from ige.MetaServer import WordpressMetaServer
-        metaserver = WordpressMetaServer(config.wordpressmetaserver.url)
-        assert config.server.authmethod in ("plain", "rsa"), "Only plain and rsa authmethod supported for metaservers"
 
     # initialize game
     log.message('Initializing game \'%s\'...' % gameName)
@@ -182,7 +177,7 @@ def runServer(options):
     log.debug("Initializing issue manager")
     issueMngr = IssueMngr()
     log.debug("Initializing client manager")
-    clientMngr = ClientMngr(clientDB, config.server.authmethod, options.configDir, metaserver)
+    clientMngr = ClientMngr(clientDB, config.server.authmethod, options.configDir)
     log.debug("Initializing message manager")
     msgMngr = MsgMngr(msgDB)
     log.debug("Initializing game manager")
