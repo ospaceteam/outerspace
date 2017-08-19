@@ -83,8 +83,11 @@ def runGalaxer(options):
         galaxies = {}
         response = ''
         for galaxyID in un.galaxies:
-            galaxerInfo = s.getGalaxerInfo(galaxyID)
-            galaxies[galaxyID] = galaxerInfo
+            galaxerInfo = s.getPublicInfo(galaxyID)
+            name = galaxerInfo.name
+            x, y = galaxerInfo.x, galaxerInfo.y
+            radius = galaxerInfo.radius
+            galaxies[galaxyID] = (name, x, y, radius)
         return galaxies
 
     def _getActivePlayers():

@@ -51,13 +51,15 @@ class MiniMap:
         self._noRect = True
 
     def precompute(self):
-        minX = minY = 1000000
-        maxX = maxY = 0
+        galaxy_id = client.getPlayer().galaxies[0]
+        galaxy = client.get(galaxy_id, noUpdate = 1)
+        minX, maxX = galaxy.x - galaxy.radius, galaxy.x + galaxy.radius
+        minY, maxY = galaxy.y - galaxy.radius, galaxy.y + galaxy.radius
         for objID in client.db.keys():
             if objID < OID_FREESTART:
                 continue
             obj = client.get(objID, noUpdate = 1)
-            if not (hasattr(obj, "type") and hasattr(obj, "x") and hasattr(obj, "y")):
+            if not (hasattr(obj, "type")):
                 continue
             if obj.type in (T_SYSTEM,T_WORMHOLE):
                 ownerID = OID_NONE
@@ -69,10 +71,6 @@ class MiniMap:
                             ownerID = owner
                             break
                 color = res.getPlayerColor(ownerID)
-                minX = min(minX, obj.x)
-                minY = min(minY, obj.y)
-                maxX = max(maxX, obj.x)
-                maxY = max(maxY, obj.y)
                 self._map.append((obj.oid, obj.x, obj.y, color))
 
         self._minX = minX

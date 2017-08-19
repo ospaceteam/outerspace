@@ -20,9 +20,9 @@
 
 major = 0
 minor = 5
-revision = 71
+revision = 72
 # status must be either empty string or must start with a dash
-status = ""
+status = "-alpha"
 
 assert not status or status.startswith("-"), "Status MUST start with dash if set"
 
