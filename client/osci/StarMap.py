@@ -57,7 +57,6 @@ class StarMap(object):
             self.MAP_GATESYSTEMS: [],
             self.MAP_CONTROLAREA: {}
         }
-        self._central_blackhole = OID_NONE  # supports chronicle_shot
         self._popupInfo = {}
         self._fleetRanges = {}
         self._fleetTarget = {}
@@ -75,12 +74,11 @@ class StarMap(object):
         self._overlayZone = False
 
     def chronicle_draw(self):
-        # print whole galaxy, centered over black hole
-        central_blackhole_obj = client.get(self._central_blackhole, noUpdate = 1)
+        galaxy_id = client.getPlayer().galaxies[0]
+        galaxy = client.get(galaxy_id, noUpdate = 1)
         saved_x, saved_y = self.currX, self.currY
-        self.currX, self.currY = central_blackhole_obj.x, central_blackhole_obj.y
-        radius = 15 # TODO: update with radius of the galaxy
-        surface_side = (radius + 2) * 2 * self.scale
+        self.currX, self.currY = galaxy.x, galaxy.y
+        surface_side = (galaxy.radius + 2) * 2 * self.scale
         new_surf, empty, empty = self.draw(pygame.Surface((surface_side, surface_side)))
         self.currX, self.currY = saved_x, saved_y
         return new_surf
@@ -320,9 +318,6 @@ class StarMap(object):
                                 continue
                         self._map[self.MAP_CONTROLAREA][ctrlid] = (controlcolor,dist)
         self._map[self.MAP_SYSTEMS].append((obj.oid, obj.x, obj.y, name, img, colors, namecolor, False, icons, constPoints, sciPoints, isGovCentral))
-        if obj.starClass[0] == 'b':
-            # assumption is only one black hole in the galaxy - means it is central system
-            self._central_blackhole = obj.oid
         # pop up info
         info = []
         info.append(_('System: %s [ID: %d]') % (name or res.getUnknownName(), obj.oid))

@@ -316,11 +316,9 @@ class IGalaxy(IObject):
             if obj.timeEnabled:
                 return
             canRun = 0
-            # there must be at least 1/2 positions already assigned
-            #if len(obj.startingPos) <= obj.numOfStartPos / 2 and obj.creationTime < time.time() - 2 * 24 * 3600:
-            #   log.debug("Half galaxy populated", len(obj.startingPos), obj.numOfStartPos)
-            #   canRun = 1
-            # at least two days must pass from creation
+            # For galaxy that's not booked, every player joined manually, thus
+            # knows it will start soon. For booked one, we have to give them some
+            # time to prepare (as they might be waiting for very long time for this).
             if not obj.startingPos and not obj.bookedCreation:
                 log.debug("All positions taken, starting galaxy")
                 canRun = 1
@@ -467,15 +465,12 @@ class IGalaxy(IObject):
     delete.public = 1
     delete.accLevel = AL_ADMIN
 
-    def getGalaxerInfo(self, tran, obj):
-        return obj.name, obj.x, obj.y, obj.radius
-
-    getGalaxerInfo.public = 1
-    getGalaxerInfo.accLevel = AL_ADMIN
-
     def getPublicInfo(self, tran, obj):
         result = IDataHolder()
         result.oid = obj.oid
+        result.x = obj.x
+        result.y = obj.y
+        result.radius = obj.radius
         result.type = obj.type
         result.name = obj.name
         result.emrLevel = obj.emrLevel
