@@ -80,9 +80,6 @@ class IGalaxy(IObject):
             if planet.type != T_PLANET:
                 log.debug("REMOVING ??? from start pos", planetID)
                 obj.startingPos.remove(planetID)
-            #if planet.plType != "E":
-            #   log.debug("REMOVING non earth planet from start pos", planetID)
-            #   obj.startingPos.remove(planetID)
         # check compOf
         if not tran.db.has_key(obj.compOf) or tran.db[obj.compOf].type != T_UNIVERSE:
             log.debug("CONSISTENCY invalid compOf for galaxy", obj.oid, obj.compOf)
@@ -92,6 +89,19 @@ class IGalaxy(IObject):
                 obj.scenario = SCENARIO_SINGLE
             else:
                 obj.scenario = SCENARIO_OUTERSPACE
+        if not hasattr(obj, 'scenarioData'):
+            obj.scenarioData = IDataHolder()
+        if obj.scenario == SCENARIO_SINGLE and not getattr(obj, 'owner', OID_NONE):
+            # singleplayer galaxy owner being the only player present
+            players = set([])
+            for systemID in obj.systems:
+                for planetID in tran.db[systemID].planets:
+                    players |= set([tran.db[planetID].owner])
+            for playerID in players - set([OID_NONE]):
+                player = tran.db[playerID]
+                if player.type in [T_PLAYER, T_PIRPLAYER]:
+                    obj.owner = playerID
+                    break
 
 
     update.public = 0
@@ -477,6 +487,8 @@ class IGalaxy(IObject):
         result.type = obj.type
         result.name = obj.name
         result.emrLevel = obj.emrLevel
+        result.scenario = obj.scenario
+        result.scenarioData = obj.scenarioData
         return result
 
     getPublicInfo.public = 1

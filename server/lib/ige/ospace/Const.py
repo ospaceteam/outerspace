@@ -101,13 +101,13 @@ MSG_MINES_FLEET_RESULTS = 1043 # Our fleet triggered a minefield
 
 MSG_GNC_EMR_FORECAST = 2000 # Electromagnetic radiation (EMR) forecast
 MSG_GNC_EMR_CURRENT_LVL = 2001 # Curren level of EMR
-MSG_GNC_GALAXY_RESTARTED = 2002 # Galaxy was restarted
+MSG_GNC_GALAXY_FINISHED = 2002 # Galaxy has been closed by imperator
 MSG_GNC_VOTING_COMING = 2003 # new voting in 1:00 turna
 MSG_GNC_VOTING_NOWINNER = 2004 # no winner in elections
 MSG_GNC_VOTING_LEADER = 2005 # winner is leader
 MSG_GNC_VOTING_IMPERATOR = 2006 # winner is imperator
 MSG_GNC_GALAXY_GENERATOR = 2007 # galaxy generator information
-MSG_GNC_GALAXY_AUTO_RESTARTED = 2008 # Galaxy was automatically restarted
+MSG_GNC_GALAXY_AUTO_FINISHED = 2008 # Galaxy was automatically finished
 
 ## relations
 REL_ENEMY_LO = 0

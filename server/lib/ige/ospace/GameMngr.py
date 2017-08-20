@@ -296,6 +296,10 @@ class GameMngr(IGEGameMngr):
         log.debug('Registering player')
         playerID = self.registerPlayer(session.login, player)
         log.debug('Player ID =', playerID)
+        # singleplayer galaxy needs owner recorded so player can log back there
+        # also provides access rights to control it
+        if galaxy.scenario == SCENARIO_SINGLE:
+            galaxy.owner = session.cid
         # TODO tweak more planet's attrs
         planet = self.db[planetID]
         planet.slots = [

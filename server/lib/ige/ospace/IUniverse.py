@@ -311,7 +311,7 @@ class IUniverse(IObject):
                 if galaxy.scenario == SCENARIO_SINGLE:
                     if activePlayerCount == 0 \
                                and tran.gameMngr.config.server.mode == "normal":
-                        self.endSingleplayerGalaxy(tran, obj, galaxyID)
+                        self.finishSingleplayerGalaxy(tran, obj, galaxyID)
                     else:
                         # singleplayer galaxies do not need voting stuff, so there's nothing
                         # more to do
@@ -375,11 +375,11 @@ class IUniverse(IObject):
                 if activePlayerCount <= 1 and tran.gameMngr.config.server.mode == "normal":
                     log.message("AUTO RESTARTING GALAXY", galaxyID)
                     if activePlayerCount == 0:
-                        self.restartGalaxy2(tran, obj, galaxyID, ["The galaxy was ended with no active players."])
+                        self.finishGalaxyAutomated(tran, obj, galaxyID, ["The galaxy was ended with no active players."])
                     elif piratePlayer: #if the pirate is still alive, then he must be the winner.
-                        self.restartGalaxy2(tran, obj, galaxyID, ["The galaxy was automatically ended with the Pirate as winner!"])
+                        self.finishGalaxyAutomated(tran, obj, galaxyID, ["The galaxy was automatically ended with the Pirate as winner!"])
                     elif selfName: #if there is only one player, selfName must be themselves if it isn't null
-                        self.restartGalaxy2(tran, obj, galaxyID, ["The galaxy was automatically ended with commander %s as the only remaining player." % selfName])
+                        self.finishGalaxyAutomated(tran, obj, galaxyID, ["The galaxy was automatically ended with commander %s as the only remaining player." % selfName])
         # collect mailboxes
         used = [self.cmd(obj).getMailboxName(tran, obj)]
         for galaxyID in obj.galaxies:
@@ -472,41 +472,37 @@ class IUniverse(IObject):
 
     canSendMsg.public = 0
 
-    def restartGalaxy(self, tran, obj, galaxyID, imperatorMessage): #client-initiated restart
-        log.debug("Restarting Galaxy", galaxyID)
+    def finishGalaxyImperator(self, tran, obj, galaxyID, imperatorMessage):
+        log.debug("Finishing Galaxy", galaxyID)
         galaxy = tran.db[galaxyID]
-        if galaxy.imperator == 0 or galaxy.imperator != tran.cid:
-            raise GameException('Only galaxy imperator can restart galaxy')
+        if galaxy.scenario == SCENARIO_OUTERSPACE:
+            if galaxy.imperator == 0 or galaxy.imperator != tran.cid:
+                raise GameException('Only galaxy imperator can finish galaxy')
 
-        imperator = tran.db[tran.cid]
-        if imperator.imperator < 3:
-            raise GameException('Only imperator elected three times and more can restart galaxy')
+            imperator = tran.db[tran.cid]
+            if imperator.imperator < 3:
+                raise GameException('Only imperator elected three times and more can finish galaxy')
 
-        log.debug("Sending message", imperatorMessage)
-        message = {
-            "sender": imperator.name,
-            "senderID": tran.cid,
-            "forum": "NEWS",
-            "data": (galaxyID, MSG_GNC_GALAXY_RESTARTED, galaxyID, tran.db[OID_UNIVERSE].turn, (imperator.name, galaxy.name, imperatorMessage)),
-            "topic": "EVENT",
-        }
-        self.cmd(obj).sendMsg(tran, obj, message)
+            log.debug("Sending message", imperatorMessage)
+            message = {
+                "sender": imperator.name,
+                "senderID": tran.cid,
+                "forum": "NEWS",
+                "data": (galaxyID, MSG_GNC_GALAXY_RESTARTED, galaxyID, tran.db[OID_UNIVERSE].turn, (imperator.name, galaxy.name, imperatorMessage)),
+                "topic": "EVENT",
+            }
+            self.cmd(obj).sendMsg(tran, obj, message)
+        else:
+            raise GameException('Galaxy finish not permitted.')
 
-        oldX = galaxy.x
-        oldY = galaxy.y
-        oldName = galaxy.name
-        # not created by booker - will restart it
-        restart = not galaxy.bookedCreation
         log.debug("Deleting galaxy", galaxyID)
         self.cmd(galaxy).delete(tran, galaxy)
-        if restart:
-            self.cmd(obj).createNewGalaxy(tran, obj, oldX, oldY, oldName)
 
-    restartGalaxy.public = 1
-    restartGalaxy.accLevel = AL_NONE
+    finishGalaxyImperator.public = 1
+    finishGalaxyImperator.accLevel = AL_NONE
 
 
-    def restartGalaxy2(self, tran, obj, galaxyID, imperatorMessage): #server-initiated restart
+    def finishGalaxyAutomated(self, tran, obj, galaxyID, imperatorMessage): #server-initiated restart
         log.debug("Restarting Galaxy", galaxyID)
         log.debug("Sending message", imperatorMessage)
         galaxy = tran.db[galaxyID]
@@ -518,27 +514,20 @@ class IUniverse(IObject):
             "topic": "EVENT",
         }
         self.cmd(obj).sendMsg(tran, obj, message)
-        oldX = galaxy.x
-        oldY = galaxy.y
-        oldName = galaxy.name
-        # not created by booker - will restart it
-        restart = not galaxy.bookedCreation
         log.debug("Deleting galaxy", galaxyID)
         self.cmd(galaxy).delete(tran, galaxy)
-        if restart:
-            self.cmd(obj).createNewGalaxy(tran, obj, oldX, oldY, oldName)
 
-    restartGalaxy2.public = 1
-    restartGalaxy2.accLevel = AL_ADMIN
+    finishGalaxyAutomated.public = 1
+    finishGalaxyAutomated.accLevel = AL_ADMIN
 
-    def endSingleplayerGalaxy(self, tran, obj, galaxyID):
+    def finishSingleplayerGalaxy(self, tran, obj, galaxyID):
         # singleplayer galaxy is removed silently
         log.debug("Deleting Singleplayer galaxy", galaxyID)
         galaxy = tran.db[galaxyID]
         self.cmd(galaxy).delete(tran, galaxy)
 
-    endSingleplayerGalaxy.public = 1
-    endSingleplayerGalaxy.accLevel = AL_ADMIN
+    finishSingleplayerGalaxy.public = 1
+    finishSingleplayerGalaxy.accLevel = AL_OWNER
 
     def createNewSubscribedGalaxy(self, tran, obj, galaxyName, galaxyType, listOfPlayers):
         # even though galaxyName has been decided by Galaxer, we will use

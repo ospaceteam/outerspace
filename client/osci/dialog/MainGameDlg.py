@@ -209,12 +209,12 @@ class MainGameDlg:
         client.db.clear()
         self.app.exit()
 
-    def onRestartConfirmed(self, imperatorMsg):
+    def onRestartConfirmed(self, imperatorMsg=""):
         self.win.setStatus(_('Galaxy restart in progress...'))
         oldMsgHandler = client.cmdProxy.msgHandler
         client.cmdProxy.msgHandler = None
         client.cmdProxy.keepAliveTime = 60 * 60 # do not try to connect to server (one hour)
-        client.cmdProxy.restartGalaxy(OID_UNIVERSE, client.getPlayer().galaxies[0], imperatorMsg)
+        client.cmdProxy.finishGalaxyImperator(OID_UNIVERSE, client.getPlayer().galaxies[0], imperatorMsg)
         client.db.clear()
         client.cmdProxy.msgHandler = oldMsgHandler
         self.hide()
@@ -257,22 +257,34 @@ class MainGameDlg:
         shownFromMenu = bool(data)
         if client.db != None:
             player = client.getPlayer()
-            if player.imperator > 2:
+            galaxy = client.get(player.galaxies[0])
+            # player can restart (finish) it's own singleplayer galaxy anytime
+            if galaxy.scenario == SCENARIO_SINGLE:
+                if not player.oid == galaxy.owner:
+                    self.systemMenu.items[4].enabled = False
+                    return
                 self.systemMenu.items[4].enabled = True
-                lastGalaxyRestartShown = gdata.config.game.lastGalaxyRestartShown
-                if lastGalaxyRestartShown != None:
-                    localTime = time.time()
-                    storedTime = float(lastGalaxyRestartShown)
-                    if localTime - storedTime > 60 * 60 * 24 or shownFromMenu == True:
-                        gdata.config.game.lastGalaxyRestartShown = str(localTime)
+                if shownFromMenu:
+                    self.confirmDlg.display(_('Are you really really sure you want to restart this single player galaxy of yours? You won\'t be able to get back.'), _('Restart'), _('No'), confirmAction = self.onRestartConfirmed)
+
+            elif scenario == SCENARIO_OUTERSPACE:
+                # standard behavior
+                if player.imperator > 2:
+                    self.systemMenu.items[4].enabled = True
+                    lastGalaxyRestartShown = gdata.config.game.lastGalaxyRestartShown
+                    if lastGalaxyRestartShown != None:
+                        localTime = time.time()
+                        storedTime = float(lastGalaxyRestartShown)
+                        if localTime - storedTime > 60 * 60 * 24 or shownFromMenu == True:
+                            gdata.config.game.lastGalaxyRestartShown = str(localTime)
+                            self.galaxyRestartDlg.display(restartAction = self.onRestartConfirmed)
+                    else:
+                        gdata.config.game.lastGalaxyRestartShown = str(time.time())
                         self.galaxyRestartDlg.display(restartAction = self.onRestartConfirmed)
                 else:
-                    gdata.config.game.lastGalaxyRestartShown = str(time.time())
-                    self.galaxyRestartDlg.display(restartAction = self.onRestartConfirmed)
-            else:
-                self.systemMenu.items[4].enabled = False
-                if shownFromMenu == True:
-                    self.win.setStatus(_("Only imperator elected three times and more can restart galaxy."))
+                    self.systemMenu.items[4].enabled = False
+                    if shownFromMenu == True:
+                        self.win.setStatus(_("Only imperator elected three times and more can restart galaxy."))
 
     def updateMsgButton(self):
         if self.messagesDlg.newMsgs > 0:

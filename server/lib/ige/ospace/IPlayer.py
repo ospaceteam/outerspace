@@ -38,6 +38,7 @@ class IPlayer(IObject):
         IObject.init(self, obj)
         #
         obj.login = u''
+        obj.name = u''
         obj.fullName = u''
         #
         obj.buoys = {}
