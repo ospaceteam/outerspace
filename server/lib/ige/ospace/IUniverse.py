@@ -241,7 +241,7 @@ class IUniverse(IObject):
         if (turn + 2 * Rules.turnsPerDay) % Rules.voteForImpPeriod == 0:
             for galaxyID in obj.galaxies:
                 galaxy = tran.db[galaxyID]
-                if not galaxy.timeEnabled or galaxy.isSingle:
+                if not galaxy.timeEnabled or galaxy.scenario != SCENARIO_OUTERSPACE:
                     # skip this galaxy
                     continue
                 message = {
@@ -308,7 +308,7 @@ class IUniverse(IObject):
 
                 # now singleplayer galaxy can be handled, as we finally know whether it is
                 # deserted or not
-                if galaxy.isSingle:
+                if galaxy.scenario == SCENARIO_SINGLE:
                     if activePlayerCount == 0 \
                                and tran.gameMngr.config.server.mode == "normal":
                         self.endSingleplayerGalaxy(tran, obj, galaxyID)
@@ -556,7 +556,7 @@ class IUniverse(IObject):
         newGalaxy = tran.db[newGalaxyID]
         log.debug("Loading new ", newGalaxyID)
         self.cmd(newGalaxy).loadFromXML(tran, newGalaxy, galaxyFileName, galaxyType, pos_x, pos_y, galaxyName)
-        if newGalaxy.isSingle:
+        if newGalaxy.scenario == SCENARIO_SINGLE:
             # Singleplayer galaxies are not worthy having their own name
             # let's name them after the player
             # the only record, and second record is NICK

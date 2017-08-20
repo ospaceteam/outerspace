@@ -56,7 +56,8 @@ class IGalaxy(IObject):
         obj.bookedCreation = False
         obj.imperator = OID_NONE
         obj.description = ""
-        obj.isSingle = 0 # instead of False, because we load it from DOM
+        obj.scenario = SCENARIO_NONE
+        obj.scenarioData = IDataHolder()
         # electromagnetic radiation
         obj.emrLevel = 1.0
         obj.emrTrend = 1.0
@@ -85,11 +86,13 @@ class IGalaxy(IObject):
         # check compOf
         if not tran.db.has_key(obj.compOf) or tran.db[obj.compOf].type != T_UNIVERSE:
             log.debug("CONSISTENCY invalid compOf for galaxy", obj.oid, obj.compOf)
-        # TODO remove after 0.5.69
-        if not hasattr(obj, 'bookedCreation'):
-            obj.bookedCreation = False
-        if not hasattr(obj, 'isSingle'):
-            obj.isSingle = 0
+        # TODO: remove after 0.5.72
+        if not hasattr(obj, 'scenario'):
+            if obj.isSingle:
+                obj.scenario = SCENARIO_SINGLE
+            else:
+                obj.scenario = SCENARIO_OUTERSPACE
+
 
     update.public = 0
 
@@ -325,7 +328,7 @@ class IGalaxy(IObject):
             elif obj.creationTime < time.time() - 2 * 24 * 3600:
                 log.debug("Two days passed", obj.creationTime, time.time() - 2 * 24 * 3600)
                 canRun = 1
-            elif obj.isSingle:
+            elif obj.scenario == SCENARIO_SINGLE:
                 canRun = 1
             if not canRun:
                 return 0
