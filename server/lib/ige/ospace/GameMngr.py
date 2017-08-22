@@ -98,7 +98,7 @@ class GameMngr(IGEGameMngr):
     def createUniverse(self):
         universe = self.db[OID_UNIVERSE]
         tran = Transaction(self, OID_ADMIN)
-        self.cmdPool[universe.type].createNewGalaxy(tran, universe, 0, 0, self.config.name)
+        self.cmdPool[universe.type].createNewSubscribedGalaxy(tran, universe, 'Legacy', 'Circle42P', [])
         ##! TODO this is temporary
         ## create sector index (needed by loadFromXML)
         #galaxy = self.db[cmdObj.createGalaxy(tran, obj)]

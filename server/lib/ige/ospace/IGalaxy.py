@@ -53,7 +53,6 @@ class IGalaxy(IObject):
         obj.timeEnabled = 0 # TODO change to 0
         obj.timeStopped = 0
         obj.creationTime = 0.0
-        obj.bookedCreation = False
         obj.imperator = OID_NONE
         obj.description = ""
         obj.scenario = SCENARIO_NONE
@@ -110,12 +109,6 @@ class IGalaxy(IObject):
         return obj.systems
 
     getReferences.public = 0
-
-    def bookedInit(self, tran, obj):
-        obj.bookedCreation = True
-
-    bookedInit.public = 1
-    bookedInit.accLevel = AL_ADMIN
 
     def processINITPhase(self, tran, obj, data):
         # compute emr level
@@ -329,13 +322,9 @@ class IGalaxy(IObject):
             if obj.timeEnabled:
                 return
             canRun = 0
-            # For galaxy that's not booked, every player joined manually, thus
-            # knows it will start soon. For booked one, we have to give them some
-            # time to prepare (as they might be waiting for very long time for this).
-            if not obj.startingPos and not obj.bookedCreation:
-                log.debug("All positions taken, starting galaxy")
-                canRun = 1
-            elif obj.creationTime < time.time() - 2 * 24 * 3600:
+            # We have to give players some time to prepare
+            # (as they might be waiting for very long time for this galaxy to be created).
+            if obj.creationTime < time.time() - 2 * 24 * 3600:
                 log.debug("Two days passed", obj.creationTime, time.time() - 2 * 24 * 3600)
                 canRun = 1
             elif obj.scenario == SCENARIO_SINGLE:
