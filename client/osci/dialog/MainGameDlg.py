@@ -32,7 +32,7 @@ from GlobalQueuesDlg import GlobalQueuesDlg
 from FleetsOverviewDlg import FleetsOverviewDlg
 from PlanetsAnalysisDlg import PlanetsAnalysisDlg
 from FleetsAnalysisDlg import FleetsAnalysisDlg
-from GalaxyRestartDlg import GalaxyRestartDlg
+from GalaxyFinishDlg import GalaxyFinishDlg
 from ConfirmDlg import ConfirmDlg
 from OptionsDlg import OptionsDlg
 from SearchDlg import SearchDlg
@@ -68,7 +68,7 @@ class MainGameDlg:
         self.searchDlg = SearchDlg(self.app)
         self.problemsDlg = ProblemsDlg.ProblemsDlg(self.app)
         self.empireOverviewDlg = EmpireOverviewDlg.EmpireOverviewDlg(self.app)
-        self.galaxyRestartDlg = GalaxyRestartDlg(self.app)
+        self.galaxyFinishDlg = GalaxyFinishDlg(self.app)
         self.planetsAnalysisDlg = PlanetsAnalysisDlg(app)
         self.fleetsAnalysisDlg = FleetsAnalysisDlg(app)
         self.mapWidget = None
@@ -209,8 +209,8 @@ class MainGameDlg:
         client.db.clear()
         self.app.exit()
 
-    def onRestartConfirmed(self, imperatorMsg=""):
-        self.win.setStatus(_('Galaxy restart in progress...'))
+    def onFinishConfirmed(self, imperatorMsg=""):
+        self.win.setStatus(_('Galaxy finish in progress...'))
         oldMsgHandler = client.cmdProxy.msgHandler
         client.cmdProxy.msgHandler = None
         client.cmdProxy.keepAliveTime = 60 * 60 # do not try to connect to server (one hour)
@@ -221,7 +221,7 @@ class MainGameDlg:
         self.app.exit()
 
     def update(self,configUpdated=False):
-        self.galaxyRestart(None, None, False)
+        self.galaxyFinish(None, None, False)
         player = client.getPlayer()
         turn = client.getTurn()
         self.win.vTurn.text = res.formatTime(turn)
@@ -253,7 +253,7 @@ class MainGameDlg:
         else:
             self.win.vMessages.foreground = None
 
-    def galaxyRestart(self, widget, action, data):
+    def galaxyFinish(self, widget, action, data):
         shownFromMenu = bool(data)
         if client.db != None:
             player = client.getPlayer()
@@ -265,26 +265,26 @@ class MainGameDlg:
                     return
                 self.systemMenu.items[4].enabled = True
                 if shownFromMenu:
-                    self.confirmDlg.display(_('Are you really really sure you want to restart this single player galaxy of yours? You won\'t be able to get back.'), _('Restart'), _('No'), confirmAction = self.onRestartConfirmed)
+                    self.confirmDlg.display(_('Are you really really sure you want to finish this single player galaxy of yours? You won\'t be able to get back.'), _('Finish'), _('No'), confirmAction = self.onFinishConfirmed)
 
             elif scenario == SCENARIO_OUTERSPACE:
                 # standard behavior
                 if player.imperator > 2:
                     self.systemMenu.items[4].enabled = True
-                    lastGalaxyRestartShown = gdata.config.game.lastGalaxyRestartShown
-                    if lastGalaxyRestartShown != None:
+                    lastGalaxyFinishShown = gdata.config.game.lastGalaxyFinishShown
+                    if lastGalaxyFinishShown != None:
                         localTime = time.time()
-                        storedTime = float(lastGalaxyRestartShown)
+                        storedTime = float(lastGalaxyFinishShown)
                         if localTime - storedTime > 60 * 60 * 24 or shownFromMenu == True:
-                            gdata.config.game.lastGalaxyRestartShown = str(localTime)
-                            self.galaxyRestartDlg.display(restartAction = self.onRestartConfirmed)
+                            gdata.config.game.lastGalaxyFinishShown = str(localTime)
+                            self.galaxyFinishDlg.display(finishAction = self.onFinishConfirmed)
                     else:
-                        gdata.config.game.lastGalaxyRestartShown = str(time.time())
-                        self.galaxyRestartDlg.display(restartAction = self.onRestartConfirmed)
+                        gdata.config.game.lastGalaxyFinishShown = str(time.time())
+                        self.galaxyFinishDlg.display(finishAction = self.onFinishConfirmed)
                 else:
                     self.systemMenu.items[4].enabled = False
                     if shownFromMenu == True:
-                        self.win.setStatus(_("Only imperator elected three times and more can restart galaxy."))
+                        self.win.setStatus(_("Only imperator elected three times and more can finish galaxy."))
 
     def updateMsgButton(self):
         if self.messagesDlg.newMsgs > 0:
@@ -389,7 +389,7 @@ class MainGameDlg:
                 ui.Item(_("Statistics"), action = "onStats", hotkey = u'\x73'), # S
                 ui.Item(_("Save View"), action = "onSaveView", hotkey = u'\x76'), # V
                 ui.Item(_("Save Starmap"), action = "onSaveStarmap"),
-                ui.Item(_("Galaxy restart"), action = "galaxyRestart", enabled = False, data = True), # no hotkey; if this position moved, you need to update restartGalaxy's "self.systemMenu.items" lines to reference new index position
+                ui.Item(_("Galaxy finish"), action = "galaxyFinish", enabled = False, data = True), # no hotkey; if this position moved, you need to update finishGalaxy's "self.systemMenu.items" lines to reference new index position
                 ui.Item(_("Options"), action = "onOptions", hotkey = u'\x6F'), # O
                 ui.Item(_("--------"), enabled = False),
                 ui.Item(_("Resign"), action = "onResign"), # no hotkey
