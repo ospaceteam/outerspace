@@ -271,6 +271,7 @@ class MainGameDlg:
         else:
             self.win.vMessages.foreground = None
 
+
     def alterMenu(self, widget, action, data):
         """ Update menu according to current situation, being different in singleplayer
         or when player is imperator of competitive galaxy, or player has no rights to
@@ -289,11 +290,6 @@ class MainGameDlg:
                 else:
                     self.systemMenu.items[7].text = _("Pause galaxy")
                 self.systemMenu.items[7].action = "onToggleTime"
-                if not player.oid == galaxy.owner:
-                    # this shouldn't really happen for human player
-                    self.systemMenu.items[6].enabled = False  # finish galaxy
-                    self.systemMenu.items[7].enabled = False  # resign / pause
-                    return
                 self.systemMenu.items[6].enabled = True
                 self.systemMenu.items[7].enabled = True
 
@@ -305,6 +301,12 @@ class MainGameDlg:
                 else:
                     # no right to finish galaxy
                     self.systemMenu.items[6].enabled = False
+                # you cannot resign when time is stopped
+                if galaxy.timeEnabled:
+                    self.systemMenu.items[7].enabled = True
+                else:
+                    self.systemMenu.items[7].enabled = False
+
 
     def galaxyFinishButton(self, widget, action, data):
         player = client.getPlayer()
@@ -323,7 +325,7 @@ class MainGameDlg:
         """
         if client.db != None:
             player = client.getPlayer()
-            galaxy = client.get(player.galaxies[0], forceUpdate=1)
+            galaxy = client.get(player.galaxies[0])
             if galaxy.scenario == SCENARIO_OUTERSPACE and player.imperator > 2:
                 lastGalaxyFinishShown = gdata.config.game.lastGalaxyFinishShown
                 if lastGalaxyFinishShown != None:

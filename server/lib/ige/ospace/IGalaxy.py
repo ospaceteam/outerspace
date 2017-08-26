@@ -494,6 +494,7 @@ class IGalaxy(IObject):
         result.emrLevel = obj.emrLevel
         result.scenario = obj.scenario
         result.scenarioData = obj.scenarioData
+        result.timeEnabled = obj.timeEnabled
         return result
 
     getPublicInfo.public = 1
