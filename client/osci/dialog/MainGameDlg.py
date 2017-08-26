@@ -209,19 +209,37 @@ class MainGameDlg:
         client.db.clear()
         self.app.exit()
 
-    def onFinishConfirmed(self, imperatorMsg=""):
+    def onToggleTime(self, widget, action, data):
+        galaxyID = client.getPlayer().galaxies[0]
+        galaxy = client.get(galaxyID)
+        galaxy.timeEnabled = client.cmdProxy.toggleTime(client.getPlayer().galaxies[0])
+        self.alterMenu(None, None, False)
+
+    def onFinishConfirmedSingle(self):
+        self.onFinishConfirmed(None, SCENARIO_SINGLE)
+
+    def onFinishConfirmedOuterspace(self, imperatorMsg):
+        self.onFinishConfirmed(imperatorMsg, SCENARIO_OUTERSPACE)
+
+    def onFinishConfirmed(self, imperatorMsg, scenario):
         self.win.setStatus(_('Galaxy finish in progress...'))
         oldMsgHandler = client.cmdProxy.msgHandler
         client.cmdProxy.msgHandler = None
         client.cmdProxy.keepAliveTime = 60 * 60 # do not try to connect to server (one hour)
-        client.cmdProxy.finishGalaxyImperator(OID_UNIVERSE, client.getPlayer().galaxies[0], imperatorMsg)
+        if scenario == SCENARIO_SINGLE:
+            client.cmdProxy.deleteSingle(client.getPlayer().galaxies[0])
+        elif scenario == SCENARIO_OUTERSPACE:
+            client.cmdProxy.finishGalaxyImperator(OID_UNIVERSE, client.getPlayer().galaxies[0], imperatorMsg)
+        else:
+            return
         client.db.clear()
         client.cmdProxy.msgHandler = oldMsgHandler
         self.hide()
         self.app.exit()
 
     def update(self,configUpdated=False):
-        self.galaxyFinish(None, None, False)
+        self.galaxyFinishPopup(None, None, False)
+        self.alterMenu(None, None, False)
         player = client.getPlayer()
         turn = client.getTurn()
         self.win.vTurn.text = res.formatTime(turn)
@@ -253,38 +271,70 @@ class MainGameDlg:
         else:
             self.win.vMessages.foreground = None
 
-    def galaxyFinish(self, widget, action, data):
-        shownFromMenu = bool(data)
+    def alterMenu(self, widget, action, data):
+        """ Update menu according to current situation, being different in singleplayer
+        or when player is imperator of competitive galaxy, or player has no rights to
+        finish galaxy at all.
+
+        Also popups finish galaxy dialog for imperator once in a while.
+        """
         if client.db != None:
             player = client.getPlayer()
             galaxy = client.get(player.galaxies[0])
             # player can restart (finish) it's own singleplayer galaxy anytime
             if galaxy.scenario == SCENARIO_SINGLE:
+                # depends on state of galaxy
+                if not galaxy.timeEnabled:
+                    self.systemMenu.items[7].text = _("Resume galaxy")
+                else:
+                    self.systemMenu.items[7].text = _("Pause galaxy")
+                self.systemMenu.items[7].action = "onToggleTime"
                 if not player.oid == galaxy.owner:
-                    self.systemMenu.items[4].enabled = False
+                    # this shouldn't really happen for human player
+                    self.systemMenu.items[6].enabled = False  # finish galaxy
+                    self.systemMenu.items[7].enabled = False  # resign / pause
                     return
-                self.systemMenu.items[4].enabled = True
-                if shownFromMenu:
-                    self.confirmDlg.display(_('Are you really really sure you want to finish this single player galaxy of yours? You won\'t be able to get back.'), _('Finish'), _('No'), confirmAction = self.onFinishConfirmed)
+                self.systemMenu.items[6].enabled = True
+                self.systemMenu.items[7].enabled = True
 
-            elif scenario == SCENARIO_OUTERSPACE:
+            elif galaxy.scenario == SCENARIO_OUTERSPACE:
                 # standard behavior
                 if player.imperator > 2:
-                    self.systemMenu.items[4].enabled = True
-                    lastGalaxyFinishShown = gdata.config.game.lastGalaxyFinishShown
-                    if lastGalaxyFinishShown != None:
-                        localTime = time.time()
-                        storedTime = float(lastGalaxyFinishShown)
-                        if localTime - storedTime > 60 * 60 * 24 or shownFromMenu == True:
-                            gdata.config.game.lastGalaxyFinishShown = str(localTime)
-                            self.galaxyFinishDlg.display(finishAction = self.onFinishConfirmed)
-                    else:
-                        gdata.config.game.lastGalaxyFinishShown = str(time.time())
-                        self.galaxyFinishDlg.display(finishAction = self.onFinishConfirmed)
+                    # player is imperator for more than two weeks - has right to finish galaxy
+                    self.systemMenu.items[6].enabled = True
                 else:
-                    self.systemMenu.items[4].enabled = False
-                    if shownFromMenu == True:
-                        self.win.setStatus(_("Only imperator elected three times and more can finish galaxy."))
+                    # no right to finish galaxy
+                    self.systemMenu.items[6].enabled = False
+
+    def galaxyFinishButton(self, widget, action, data):
+        player = client.getPlayer()
+        galaxy = client.get(player.galaxies[0])
+        if galaxy.scenario == SCENARIO_OUTERSPACE and player.imperator > 2:
+            localTime = time.time()
+            gdata.config.game.lastGalaxyFinishShown = str(localTime)
+            self.galaxyFinishDlg.display(finishAction = self.onFinishConfirmedOuterspace)
+        elif galaxy.scenario == SCENARIO_SINGLE:
+            self.confirmDlg.display(_('Are you really really sure you want to finish this single player galaxy of yours? You won\'t be able to get back.'), _('Finish'), _('No'), confirmAction = self.onFinishConfirmedSingle)
+
+
+    def galaxyFinishPopup(self, widget, action, data):
+        """ Pop up dialog to finish galaxy in case player is eligible imperator of competitive
+        galaxy. Do this once per day.
+        """
+        if client.db != None:
+            player = client.getPlayer()
+            galaxy = client.get(player.galaxies[0], forceUpdate=1)
+            if galaxy.scenario == SCENARIO_OUTERSPACE and player.imperator > 2:
+                lastGalaxyFinishShown = gdata.config.game.lastGalaxyFinishShown
+                if lastGalaxyFinishShown != None:
+                    localTime = time.time()
+                    storedTime = float(lastGalaxyFinishShown)
+                    if localTime - storedTime > 60 * 60 * 24 or shownFromMenu == True:
+                        gdata.config.game.lastGalaxyFinishShown = str(localTime)
+                        self.galaxyFinishDlg.display(finishAction = self.onFinishConfirmedOuterspace)
+                else:
+                    gdata.config.game.lastGalaxyFinishShown = str(time.time())
+                    self.galaxyFinishDlg.display(finishAction = self.onFinishConfirmedOuterspace)
 
     def updateMsgButton(self):
         if self.messagesDlg.newMsgs > 0:
@@ -389,9 +439,9 @@ class MainGameDlg:
                 ui.Item(_("Statistics"), action = "onStats", hotkey = u'\x73'), # S
                 ui.Item(_("Save View"), action = "onSaveView", hotkey = u'\x76'), # V
                 ui.Item(_("Save Starmap"), action = "onSaveStarmap"),
-                ui.Item(_("Galaxy finish"), action = "galaxyFinish", enabled = False, data = True), # no hotkey; if this position moved, you need to update finishGalaxy's "self.systemMenu.items" lines to reference new index position
                 ui.Item(_("Options"), action = "onOptions", hotkey = u'\x6F'), # O
                 ui.Item(_("--------"), enabled = False),
+                ui.Item(_("Finish galaxy"), action = "galaxyFinishButton", enabled = False, data = True), # no hotkey; if this position moved, you need to update finishGalaxy's "self.systemMenu.items" lines to reference new index position
                 ui.Item(_("Resign"), action = "onResign"), # no hotkey
                 ui.Item(_("--------"), enabled = False),
                 ui.Item(_("Quit"), action = "onQuit", hotkey = u'\x71'), # Q

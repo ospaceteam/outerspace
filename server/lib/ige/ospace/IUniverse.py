@@ -311,7 +311,7 @@ class IUniverse(IObject):
                 if galaxy.scenario == SCENARIO_SINGLE:
                     if activePlayerCount == 0 \
                                and tran.gameMngr.config.server.mode == "normal":
-                        self.finishSingleplayerGalaxy(tran, obj, galaxyID)
+                        self.finishGalaxySingle(tran, obj, galaxyID)
                     else:
                         # singleplayer galaxies do not need voting stuff, so there's nothing
                         # more to do
@@ -520,14 +520,6 @@ class IUniverse(IObject):
     finishGalaxyAutomated.public = 1
     finishGalaxyAutomated.accLevel = AL_ADMIN
 
-    def finishSingleplayerGalaxy(self, tran, obj, galaxyID):
-        # singleplayer galaxy is removed silently
-        log.debug("Deleting Singleplayer galaxy", galaxyID)
-        galaxy = tran.db[galaxyID]
-        self.cmd(galaxy).delete(tran, galaxy)
-
-    finishSingleplayerGalaxy.public = 1
-    finishSingleplayerGalaxy.accLevel = AL_OWNER
 
     def createNewSubscribedGalaxy(self, tran, obj, galaxyName, galaxyType, listOfPlayers):
         # even though galaxyName has been decided by Galaxer, we will use

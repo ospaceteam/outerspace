@@ -433,6 +433,15 @@ class IGalaxy(IObject):
     enableTime.public = 1
     enableTime.accLevel = AL_ADMIN
 
+    def deleteSingle(self, tran, obj):
+        if obj.scenario != SCENARIO_SINGLE:
+            raise GameException('Only Single Player galaxies can be deleted this way')
+        log.debug(obj.oid, "GALAXY - singleplayer delete")
+        self.delete(tran, obj)
+
+    deleteSingle.public = 1
+    deleteSingle.accLevel = AL_OWNER
+
     def delete(self, tran, obj):
         log.debug(obj.oid, "GALAXY - delete")
         universe = tran.db[OID_UNIVERSE]
