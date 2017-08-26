@@ -743,7 +743,7 @@ class IPlanet(IObject):
         obj.moraleModifiers[2] = 0
         system = tran.db[obj.compOf]
         galaxy = tran.db[system.compOf]
-        if galaxy.timeEnabled and not galaxy.timeStopped:
+        if galaxy.timeEnabled:
             # too much population affects morale (if there is more than base population)
             if obj.storPop > Rules.moraleBasePop:
                 obj.moraleModifiers[2] -= Rules.moraleHighPopPenalty * obj.storPop / Rules.moraleBasePop

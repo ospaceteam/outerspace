@@ -43,6 +43,7 @@ class IGalaxy(IObject):
     def init(self, obj):
         IObject.init(self, obj)
         #
+        obj.owner = OID_NONE
         obj.x = 0.0
         obj.y = 0.0
         obj.radius = 0.0
@@ -51,7 +52,6 @@ class IGalaxy(IObject):
         obj.startingPos = []
         obj.numOfStartPos = 0
         obj.timeEnabled = 0 # TODO change to 0
-        obj.timeStopped = 0
         obj.creationTime = 0.0
         obj.imperator = OID_NONE
         obj.description = ""
@@ -135,12 +135,6 @@ class IGalaxy(IObject):
             obj.emrLevel -= Utils.rand(1, 6) / 100.0
         elif obj.emrLevel <= obj.emrTrend:
             obj.emrLevel += Utils.rand(1, 6) / 100.0
-        #
-        if not obj.timeStopped:
-            if not obj.timeEnabled:
-                self.cmd(obj).enableTime(tran, obj)
-        else:
-            self.cmd(obj).enableTime(tran, obj, force = 1, enable = 0)
         # remove old messages
         self.cmd(obj).deleteOldMsgs(tran, obj)
         return obj.systems
@@ -149,14 +143,14 @@ class IGalaxy(IObject):
     processINITPhase.accLevel = AL_ADMIN
 
     def processPRODPhase(self, tran, obj, data):
-        if obj.timeEnabled and not obj.timeStopped:
+        if obj.timeEnabled:
             return obj.systems
 
     processPRODPhase.public = 1
     processPRODPhase.accLevel = AL_ADMIN
 
     def processACTIONPhase(self, tran, obj, data):
-        if obj.timeEnabled and not obj.timeStopped:
+        if obj.timeEnabled:
             return obj.systems
 
     processACTIONPhase.public = 1
@@ -175,7 +169,7 @@ class IGalaxy(IObject):
     processSCAN2Phase.accLevel = AL_ADMIN
 
     def processBATTLEPhase(self, tran, obj, data):
-        if obj.timeEnabled and not obj.timeStopped:
+        if obj.timeEnabled:
             return obj.systems
 
     processBATTLEPhase.public = 1
@@ -191,7 +185,7 @@ class IGalaxy(IObject):
         for planetID in remove:
             obj.startingPos.remove(planetID)
         #
-        #if obj.timeEnabled and not obj.timeStopped:
+        #if obj.timeEnabled:
         return obj.systems
 
     processFINALPhase.public = 1
@@ -316,6 +310,32 @@ class IGalaxy(IObject):
         galaxy.systems.append(oid)
         return oid
 
+    def toggleTime(self, tran, obj):
+        player = tran.db[obj.owner]
+        obj.timeEnabled = 1 - obj.timeEnabled
+        self.trickleTimeToPlayers(tran, obj)
+        return obj.timeEnabled
+
+    toggleTime.public = 1
+    toggleTime.accLevel = AL_OWNER
+
+    def trickleTimeToPlayers(self, tran, obj):
+        # enable time for players
+        for systemID in obj.systems:
+            system = tran.db[systemID]
+            for planetID in system.planets:
+                planet = tran.db[planetID]
+                if planet.owner != OID_NONE:
+                    player = tran.db[planet.owner]
+                    if player.timeEnabled != obj.timeEnabled:
+                        player.timeEnabled = obj.timeEnabled
+                        player.lastLogin = time.time()
+                        if player.timeEnabled:
+                            Utils.sendMessage(tran, player, MSG_ENABLED_TIME, player.oid, None)
+                        else:
+                            #Utils.sendMessage(tran, player, MSG_DISABLED_TIME, player.oid, None)
+                            pass
+
     def enableTime(self, tran, obj, force = 0, deleteSP = 0, enable = 1):
         log.debug('IGalaxy', 'Checking for time...')
         if not force:
@@ -408,20 +428,7 @@ class IGalaxy(IObject):
         # close galaxy
         if deleteSP:
             obj.startingPos = []
-        # load new galaxy
-        # TODO
-        # enable time for players
-        for systemID in obj.systems:
-            system = tran.db[systemID]
-            for planetID in system.planets:
-                planet = tran.db[planetID]
-                if planet.owner != OID_NONE:
-                    player = tran.db[planet.owner]
-                    if player.timeEnabled != enable:
-                        player.timeEnabled = enable
-                        player.lastLogin = time.time()
-                        if enable:
-                            Utils.sendMessage(tran, player, MSG_ENABLED_TIME, player.oid, None)
+        self.trickleTimeToPlayers(tran, obj)
 
     enableTime.public = 1
     enableTime.accLevel = AL_ADMIN

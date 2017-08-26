@@ -299,7 +299,7 @@ class GameMngr(IGEGameMngr):
         # singleplayer galaxy needs owner recorded so player can log back there
         # also provides access rights to control it
         if galaxy.scenario == SCENARIO_SINGLE:
-            galaxy.owner = session.cid
+            galaxy.owner = playerID
         # TODO tweak more planet's attrs
         planet = self.db[planetID]
         planet.slots = [
@@ -423,7 +423,7 @@ class GameMngr(IGEGameMngr):
                 players = 0,
                 rebels = 0,
                 age = int(((time.time() - galaxy.creationTime) / (24 * 3600))),
-                running = galaxy.timeEnabled and not galaxy.timeStopped,
+                running = galaxy.timeEnabled,
             )
             for playerID in universe.players:
                 player = self.db[playerID]
