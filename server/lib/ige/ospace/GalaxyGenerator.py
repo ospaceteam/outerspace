@@ -18,7 +18,12 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-import os, random, math, sys
+import math
+import os
+import random
+import sys
+
+from ige.ospace.Const import SCENARIO_SINGLE, SCENARIO_OUTERSPACE
 
 class GalaxyStats:
 
@@ -234,7 +239,7 @@ def generateGalaxy2(galaxyType=None):
     galaxy.centerX = stats.galaxyCenter[0]
     galaxy.centerY = stats.galaxyCenter[1]
     galaxy.radius = stats.galaxyRadius
-    galaxy.isSingle = 1 if stats.galaxyPlayers == 1 else 0
+    galaxy.scenario = SCENARIO_SINGLE if stats.galaxyPlayers == 1 else SCENARIO_OUTERSPACE
     r = stats.galaxyMinR + random.uniform(0, 0.5)
     dkeys = stats.galaxyDensity.keys()
     dkeys.sort()
@@ -712,7 +717,7 @@ def saveGalaxy(galaxyType, galaxy, fh):
     print >>fh, '\t<galaxy galaxyType="%s" x="%.2f" y="%.2f">' % (
         galaxyType, galaxy.centerX, galaxy.centerY
     )
-    print >>fh, '\t\t<properties radius="%.2f" isSingle="%s"/>' % (galaxy.radius, galaxy.isSingle)
+    print >>fh, '\t\t<properties radius="%.2f" scenario="%s"/>' % (galaxy.radius, galaxy.scenario)
     #print >>fh, '\t\t<properties radius="%.2f"/>' % galaxy.radius
     for system in galaxy.systems:
         saveSystem(fh, system)

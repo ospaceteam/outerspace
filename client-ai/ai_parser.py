@@ -147,7 +147,9 @@ class AIList:
         """ Removes galaxy directory, and all player data contained within.
 
         """
-        shutil.rmtree(os.path.join(self.configDir, 'ai_data', self.gameName, galaxyName))
+        ai_player_data_dir = os.path.join(self.configDir, 'ai_data', self.gameName, galaxyName)
+        if os.path.exists(ai_player_data_dir):
+            shutil.rmtree(ai_player_data_dir)
         return
 
     def backup(self, backupPath):

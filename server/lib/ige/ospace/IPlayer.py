@@ -38,6 +38,7 @@ class IPlayer(IObject):
         IObject.init(self, obj)
         #
         obj.login = u''
+        obj.name = u''
         obj.fullName = u''
         #
         obj.buoys = {}
@@ -368,6 +369,9 @@ class IPlayer(IObject):
         """Remove player from the game. Give remaining planets, ... to the REBELS"""
         # cannot resign when time is stopped
         # TODO smarted conditions (like cannot resign twice a week or so)
+        galaxy = tran.db[obj.galaxies[0]]
+        if galaxy.scenario == SCENARIO_SINGLE:
+            raise GameException('You cannot resign current game - it is single player game.')
         if not obj.timeEnabled:
             raise GameException('You cannot resign current game - time is stopped.')
         log.debug("Resigning player", obj.oid)

@@ -43,6 +43,7 @@ class IGalaxy(IObject):
     def init(self, obj):
         IObject.init(self, obj)
         #
+        obj.owner = OID_NONE
         obj.x = 0.0
         obj.y = 0.0
         obj.radius = 0.0
@@ -51,12 +52,11 @@ class IGalaxy(IObject):
         obj.startingPos = []
         obj.numOfStartPos = 0
         obj.timeEnabled = 0 # TODO change to 0
-        obj.timeStopped = 0
         obj.creationTime = 0.0
-        obj.bookedCreation = False
         obj.imperator = OID_NONE
         obj.description = ""
-        obj.isSingle = 0 # instead of False, because we load it from DOM
+        obj.scenario = SCENARIO_NONE
+        obj.scenarioData = IDataHolder()
         # electromagnetic radiation
         obj.emrLevel = 1.0
         obj.emrTrend = 1.0
@@ -79,17 +79,29 @@ class IGalaxy(IObject):
             if planet.type != T_PLANET:
                 log.debug("REMOVING ??? from start pos", planetID)
                 obj.startingPos.remove(planetID)
-            #if planet.plType != "E":
-            #   log.debug("REMOVING non earth planet from start pos", planetID)
-            #   obj.startingPos.remove(planetID)
         # check compOf
         if not tran.db.has_key(obj.compOf) or tran.db[obj.compOf].type != T_UNIVERSE:
             log.debug("CONSISTENCY invalid compOf for galaxy", obj.oid, obj.compOf)
-        # TODO remove after 0.5.69
-        if not hasattr(obj, 'bookedCreation'):
-            obj.bookedCreation = False
-        if not hasattr(obj, 'isSingle'):
-            obj.isSingle = 0
+        # TODO: remove after 0.5.72
+        if not hasattr(obj, 'scenario'):
+            if obj.isSingle:
+                obj.scenario = SCENARIO_SINGLE
+            else:
+                obj.scenario = SCENARIO_OUTERSPACE
+        if not hasattr(obj, 'scenarioData'):
+            obj.scenarioData = IDataHolder()
+        if obj.scenario == SCENARIO_SINGLE and not getattr(obj, 'owner', OID_NONE):
+            # singleplayer galaxy owner being the only player present
+            players = set([])
+            for systemID in obj.systems:
+                for planetID in tran.db[systemID].planets:
+                    players |= set([tran.db[planetID].owner])
+            for playerID in players - set([OID_NONE]):
+                player = tran.db[playerID]
+                if player.type in [T_PLAYER, T_PIRPLAYER]:
+                    obj.owner = playerID
+                    break
+
 
     update.public = 0
 
@@ -97,12 +109,6 @@ class IGalaxy(IObject):
         return obj.systems
 
     getReferences.public = 0
-
-    def bookedInit(self, tran, obj):
-        obj.bookedCreation = True
-
-    bookedInit.public = 1
-    bookedInit.accLevel = AL_ADMIN
 
     def processINITPhase(self, tran, obj, data):
         # compute emr level
@@ -129,12 +135,6 @@ class IGalaxy(IObject):
             obj.emrLevel -= Utils.rand(1, 6) / 100.0
         elif obj.emrLevel <= obj.emrTrend:
             obj.emrLevel += Utils.rand(1, 6) / 100.0
-        #
-        if not obj.timeStopped:
-            if not obj.timeEnabled:
-                self.cmd(obj).enableTime(tran, obj)
-        else:
-            self.cmd(obj).enableTime(tran, obj, force = 1, enable = 0)
         # remove old messages
         self.cmd(obj).deleteOldMsgs(tran, obj)
         return obj.systems
@@ -143,14 +143,14 @@ class IGalaxy(IObject):
     processINITPhase.accLevel = AL_ADMIN
 
     def processPRODPhase(self, tran, obj, data):
-        if obj.timeEnabled and not obj.timeStopped:
+        if obj.timeEnabled:
             return obj.systems
 
     processPRODPhase.public = 1
     processPRODPhase.accLevel = AL_ADMIN
 
     def processACTIONPhase(self, tran, obj, data):
-        if obj.timeEnabled and not obj.timeStopped:
+        if obj.timeEnabled:
             return obj.systems
 
     processACTIONPhase.public = 1
@@ -169,7 +169,7 @@ class IGalaxy(IObject):
     processSCAN2Phase.accLevel = AL_ADMIN
 
     def processBATTLEPhase(self, tran, obj, data):
-        if obj.timeEnabled and not obj.timeStopped:
+        if obj.timeEnabled:
             return obj.systems
 
     processBATTLEPhase.public = 1
@@ -185,7 +185,7 @@ class IGalaxy(IObject):
         for planetID in remove:
             obj.startingPos.remove(planetID)
         #
-        #if obj.timeEnabled and not obj.timeStopped:
+        #if obj.timeEnabled:
         return obj.systems
 
     processFINALPhase.public = 1
@@ -310,22 +310,44 @@ class IGalaxy(IObject):
         galaxy.systems.append(oid)
         return oid
 
+    def toggleTime(self, tran, obj):
+        player = tran.db[obj.owner]
+        obj.timeEnabled = 1 - obj.timeEnabled
+        self.trickleTimeToPlayers(tran, obj)
+        return obj.timeEnabled
+
+    toggleTime.public = 1
+    toggleTime.accLevel = AL_OWNER
+
+    def trickleTimeToPlayers(self, tran, obj):
+        # enable time for players
+        for systemID in obj.systems:
+            system = tran.db[systemID]
+            for planetID in system.planets:
+                planet = tran.db[planetID]
+                if planet.owner != OID_NONE:
+                    player = tran.db[planet.owner]
+                    if player.timeEnabled != obj.timeEnabled:
+                        player.timeEnabled = obj.timeEnabled
+                        player.lastLogin = time.time()
+                        if player.timeEnabled:
+                            Utils.sendMessage(tran, player, MSG_ENABLED_TIME, player.oid, None)
+                        else:
+                            #Utils.sendMessage(tran, player, MSG_DISABLED_TIME, player.oid, None)
+                            pass
+
     def enableTime(self, tran, obj, force = 0, deleteSP = 0, enable = 1):
         log.debug('IGalaxy', 'Checking for time...')
         if not force:
             if obj.timeEnabled:
                 return
             canRun = 0
-            # For galaxy that's not booked, every player joined manually, thus
-            # knows it will start soon. For booked one, we have to give them some
-            # time to prepare (as they might be waiting for very long time for this).
-            if not obj.startingPos and not obj.bookedCreation:
-                log.debug("All positions taken, starting galaxy")
-                canRun = 1
-            elif obj.creationTime < time.time() - 2 * 24 * 3600:
+            # We have to give players some time to prepare
+            # (as they might be waiting for very long time for this galaxy to be created).
+            if obj.creationTime < time.time() - 2 * 24 * 3600:
                 log.debug("Two days passed", obj.creationTime, time.time() - 2 * 24 * 3600)
                 canRun = 1
-            elif obj.isSingle:
+            elif obj.scenario == SCENARIO_SINGLE:
                 canRun = 1
             if not canRun:
                 return 0
@@ -406,23 +428,19 @@ class IGalaxy(IObject):
         # close galaxy
         if deleteSP:
             obj.startingPos = []
-        # load new galaxy
-        # TODO
-        # enable time for players
-        for systemID in obj.systems:
-            system = tran.db[systemID]
-            for planetID in system.planets:
-                planet = tran.db[planetID]
-                if planet.owner != OID_NONE:
-                    player = tran.db[planet.owner]
-                    if player.timeEnabled != enable:
-                        player.timeEnabled = enable
-                        player.lastLogin = time.time()
-                        if enable:
-                            Utils.sendMessage(tran, player, MSG_ENABLED_TIME, player.oid, None)
+        self.trickleTimeToPlayers(tran, obj)
 
     enableTime.public = 1
     enableTime.accLevel = AL_ADMIN
+
+    def deleteSingle(self, tran, obj):
+        if obj.scenario != SCENARIO_SINGLE:
+            raise GameException('Only Single Player galaxies can be deleted this way')
+        log.debug(obj.oid, "GALAXY - singleplayer delete")
+        self.delete(tran, obj)
+
+    deleteSingle.public = 1
+    deleteSingle.accLevel = AL_OWNER
 
     def delete(self, tran, obj):
         log.debug(obj.oid, "GALAXY - delete")
@@ -474,6 +492,9 @@ class IGalaxy(IObject):
         result.type = obj.type
         result.name = obj.name
         result.emrLevel = obj.emrLevel
+        result.scenario = obj.scenario
+        result.scenarioData = obj.scenarioData
+        result.timeEnabled = obj.timeEnabled
         return result
 
     getPublicInfo.public = 1

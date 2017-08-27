@@ -241,7 +241,7 @@ class IUniverse(IObject):
         if (turn + 2 * Rules.turnsPerDay) % Rules.voteForImpPeriod == 0:
             for galaxyID in obj.galaxies:
                 galaxy = tran.db[galaxyID]
-                if not galaxy.timeEnabled or galaxy.isSingle:
+                if not galaxy.timeEnabled or galaxy.scenario != SCENARIO_OUTERSPACE:
                     # skip this galaxy
                     continue
                 message = {
@@ -308,10 +308,10 @@ class IUniverse(IObject):
 
                 # now singleplayer galaxy can be handled, as we finally know whether it is
                 # deserted or not
-                if galaxy.isSingle:
+                if galaxy.scenario == SCENARIO_SINGLE:
                     if activePlayerCount == 0 \
                                and tran.gameMngr.config.server.mode == "normal":
-                        self.endSingleplayerGalaxy(tran, obj, galaxyID)
+                        self.finishGalaxySingle(tran, obj, galaxyID)
                     else:
                         # singleplayer galaxies do not need voting stuff, so there's nothing
                         # more to do
@@ -375,11 +375,11 @@ class IUniverse(IObject):
                 if activePlayerCount <= 1 and tran.gameMngr.config.server.mode == "normal":
                     log.message("AUTO RESTARTING GALAXY", galaxyID)
                     if activePlayerCount == 0:
-                        self.restartGalaxy2(tran, obj, galaxyID, ["The galaxy was ended with no active players."])
+                        self.finishGalaxyAutomated(tran, obj, galaxyID, ["The galaxy was ended with no active players."])
                     elif piratePlayer: #if the pirate is still alive, then he must be the winner.
-                        self.restartGalaxy2(tran, obj, galaxyID, ["The galaxy was automatically ended with the Pirate as winner!"])
+                        self.finishGalaxyAutomated(tran, obj, galaxyID, ["The galaxy was automatically ended with the Pirate as winner!"])
                     elif selfName: #if there is only one player, selfName must be themselves if it isn't null
-                        self.restartGalaxy2(tran, obj, galaxyID, ["The galaxy was automatically ended with commander %s as the only remaining player." % selfName])
+                        self.finishGalaxyAutomated(tran, obj, galaxyID, ["The galaxy was automatically ended with commander %s as the only remaining player." % selfName])
         # collect mailboxes
         used = [self.cmd(obj).getMailboxName(tran, obj)]
         for galaxyID in obj.galaxies:
@@ -472,41 +472,37 @@ class IUniverse(IObject):
 
     canSendMsg.public = 0
 
-    def restartGalaxy(self, tran, obj, galaxyID, imperatorMessage): #client-initiated restart
-        log.debug("Restarting Galaxy", galaxyID)
+    def finishGalaxyImperator(self, tran, obj, galaxyID, imperatorMessage):
+        log.debug("Finishing Galaxy", galaxyID)
         galaxy = tran.db[galaxyID]
-        if galaxy.imperator == 0 or galaxy.imperator != tran.cid:
-            raise GameException('Only galaxy imperator can restart galaxy')
+        if galaxy.scenario == SCENARIO_OUTERSPACE:
+            if galaxy.imperator == 0 or galaxy.imperator != tran.cid:
+                raise GameException('Only galaxy imperator can finish galaxy')
 
-        imperator = tran.db[tran.cid]
-        if imperator.imperator < 3:
-            raise GameException('Only imperator elected three times and more can restart galaxy')
+            imperator = tran.db[tran.cid]
+            if imperator.imperator < 3:
+                raise GameException('Only imperator elected three times and more can finish galaxy')
 
-        log.debug("Sending message", imperatorMessage)
-        message = {
-            "sender": imperator.name,
-            "senderID": tran.cid,
-            "forum": "NEWS",
-            "data": (galaxyID, MSG_GNC_GALAXY_RESTARTED, galaxyID, tran.db[OID_UNIVERSE].turn, (imperator.name, galaxy.name, imperatorMessage)),
-            "topic": "EVENT",
-        }
-        self.cmd(obj).sendMsg(tran, obj, message)
+            log.debug("Sending message", imperatorMessage)
+            message = {
+                "sender": imperator.name,
+                "senderID": tran.cid,
+                "forum": "NEWS",
+                "data": (galaxyID, MSG_GNC_GALAXY_RESTARTED, galaxyID, tran.db[OID_UNIVERSE].turn, (imperator.name, galaxy.name, imperatorMessage)),
+                "topic": "EVENT",
+            }
+            self.cmd(obj).sendMsg(tran, obj, message)
+        else:
+            raise GameException('Galaxy finish not permitted.')
 
-        oldX = galaxy.x
-        oldY = galaxy.y
-        oldName = galaxy.name
-        # not created by booker - will restart it
-        restart = not galaxy.bookedCreation
         log.debug("Deleting galaxy", galaxyID)
         self.cmd(galaxy).delete(tran, galaxy)
-        if restart:
-            self.cmd(obj).createNewGalaxy(tran, obj, oldX, oldY, oldName)
 
-    restartGalaxy.public = 1
-    restartGalaxy.accLevel = AL_NONE
+    finishGalaxyImperator.public = 1
+    finishGalaxyImperator.accLevel = AL_NONE
 
 
-    def restartGalaxy2(self, tran, obj, galaxyID, imperatorMessage): #server-initiated restart
+    def finishGalaxyAutomated(self, tran, obj, galaxyID, imperatorMessage): #server-initiated restart
         log.debug("Restarting Galaxy", galaxyID)
         log.debug("Sending message", imperatorMessage)
         galaxy = tran.db[galaxyID]
@@ -518,27 +514,12 @@ class IUniverse(IObject):
             "topic": "EVENT",
         }
         self.cmd(obj).sendMsg(tran, obj, message)
-        oldX = galaxy.x
-        oldY = galaxy.y
-        oldName = galaxy.name
-        # not created by booker - will restart it
-        restart = not galaxy.bookedCreation
         log.debug("Deleting galaxy", galaxyID)
         self.cmd(galaxy).delete(tran, galaxy)
-        if restart:
-            self.cmd(obj).createNewGalaxy(tran, obj, oldX, oldY, oldName)
 
-    restartGalaxy2.public = 1
-    restartGalaxy2.accLevel = AL_ADMIN
+    finishGalaxyAutomated.public = 1
+    finishGalaxyAutomated.accLevel = AL_ADMIN
 
-    def endSingleplayerGalaxy(self, tran, obj, galaxyID):
-        # singleplayer galaxy is removed silently
-        log.debug("Deleting Singleplayer galaxy", galaxyID)
-        galaxy = tran.db[galaxyID]
-        self.cmd(galaxy).delete(tran, galaxy)
-
-    endSingleplayerGalaxy.public = 1
-    endSingleplayerGalaxy.accLevel = AL_ADMIN
 
     def createNewSubscribedGalaxy(self, tran, obj, galaxyName, galaxyType, listOfPlayers):
         # even though galaxyName has been decided by Galaxer, we will use
@@ -556,7 +537,7 @@ class IUniverse(IObject):
         newGalaxy = tran.db[newGalaxyID]
         log.debug("Loading new ", newGalaxyID)
         self.cmd(newGalaxy).loadFromXML(tran, newGalaxy, galaxyFileName, galaxyType, pos_x, pos_y, galaxyName)
-        if newGalaxy.isSingle:
+        if newGalaxy.scenario == SCENARIO_SINGLE:
             # Singleplayer galaxies are not worthy having their own name
             # let's name them after the player
             # the only record, and second record is NICK
@@ -567,8 +548,6 @@ class IUniverse(IObject):
                 # empty list of players - galaxy generated by command
                 # thus we do not want to alter galaxy name
                 pass
-        log.debug("Running scripts specific to booked galaxies", newGalaxyID)
-        self.cmd(newGalaxy).bookedInit(tran, newGalaxy)
         log.debug("Setup Enviroment", newGalaxyID)
         self.cmd(newGalaxy).setupEnvironment(tran, newGalaxy)
         log.debug("Sending Announcement Message", newGalaxyID)
@@ -582,44 +561,6 @@ class IUniverse(IObject):
     createNewSubscribedGalaxy.public = 1
     createNewSubscribedGalaxy.accLevel = AL_ADMIN
 
-
-    def createNewGalaxy(self, tran, obj, x, y, galaxyName):
-        galaxyType = tran.gameMngr.config.galaxytype
-        if type(galaxyType) != str:
-            # old configuration file
-            log.debug("OLD configuration file detected, using server.newgalaxytype!")
-            galaxyType = tran.gameMngr.config.server.newgalaxytype
-            galaxyName = "Legacy Galaxy"
-        assert galaxyType, "galaxytype must be defined in configuration file"
-        print galaxyName
-        log.message("Adding new galaxy '%s' with type '%s' to (%d, %d)" % (galaxyName, galaxyType, x, y))
-        fh, galaxyFileName = tempfile.mkstemp(text = True)
-        log.debug("Generating new galaxy to temporary file", galaxyFileName)
-        GenerateGalaxy(galaxyType, os.fdopen(fh, "w+b"))
-        log.debug("Creating new galaxy")
-        newGalaxyID = self.createGalaxy(tran, obj)
-        log.debug("Created new galaxy", newGalaxyID)
-        newGalaxy = tran.db[newGalaxyID]
-        log.debug("Loading new ", newGalaxyID)
-        self.cmd(newGalaxy).loadFromXML(tran, newGalaxy, galaxyFileName, galaxyType, x, y, galaxyName)
-        log.debug("Setup Enviroment", newGalaxyID)
-        self.cmd(newGalaxy).setupEnvironment(tran, newGalaxy)
-        log.debug("Sending Announcement Message", newGalaxyID)
-        #self.cmd(newGalaxy).announceGalaxy(tran,newGalaxy)
-        log.debug("Removing temp file", galaxyFileName)
-        os.remove(galaxyFileName)
-        # TODO: find you what's this code about
-        #message = {
-        #    "sender": 'Galaxy %s' % galaxyName,
-        #    "senderID": obj.oid,
-        #    "forum": "NEWS",
-        #    "data": (obj.oid, MSG_GNC_GALAXY_GENERATOR, obj.oid, tran.db[OID_UNIVERSE].turn, (galaxyName, newGalaxy.description)),
-        #    "topic": "EVENT",
-                #}
-        log.debug("Galaxy creation END")
-
-    createNewGalaxy.public = 1
-    createNewGalaxy.accLevel = AL_ADMIN
 
     def deleteGalaxy(self, tran, galaxyID):
         galaxy = tran.db[galaxyID]

@@ -98,7 +98,7 @@ class GameMngr(IGEGameMngr):
     def createUniverse(self):
         universe = self.db[OID_UNIVERSE]
         tran = Transaction(self, OID_ADMIN)
-        self.cmdPool[universe.type].createNewGalaxy(tran, universe, 0, 0, self.config.name)
+        self.cmdPool[universe.type].createNewSubscribedGalaxy(tran, universe, 'Legacy', 'Circle42P', [])
         ##! TODO this is temporary
         ## create sector index (needed by loadFromXML)
         #galaxy = self.db[cmdObj.createGalaxy(tran, obj)]
@@ -296,6 +296,10 @@ class GameMngr(IGEGameMngr):
         log.debug('Registering player')
         playerID = self.registerPlayer(session.login, player)
         log.debug('Player ID =', playerID)
+        # singleplayer galaxy needs owner recorded so player can log back there
+        # also provides access rights to control it
+        if galaxy.scenario == SCENARIO_SINGLE:
+            galaxy.owner = playerID
         # TODO tweak more planet's attrs
         planet = self.db[planetID]
         planet.slots = [
@@ -419,7 +423,7 @@ class GameMngr(IGEGameMngr):
                 players = 0,
                 rebels = 0,
                 age = int(((time.time() - galaxy.creationTime) / (24 * 3600))),
-                running = galaxy.timeEnabled and not galaxy.timeStopped,
+                running = galaxy.timeEnabled,
             )
             for playerID in universe.players:
                 player = self.db[playerID]

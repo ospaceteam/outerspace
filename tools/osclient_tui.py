@@ -344,15 +344,8 @@ def createGalaxy():
     universe = 1
     print "Creating new galaxy...please specify these parameters. Normal galaxy positions are multiples of 100."
     name = raw_input("Galaxy Name: ")
-    xpos = raw_input("X Position: ")
-    ypos = raw_input("Y Position: ")
-    try:
-        xpos = int(xpos)
-        ypos = int(ypos)
-    except:
-        print "Positions not integers."
-        return
-    s.createNewGalaxy(universe, xpos, ypos, name)
+    gal_type = raw_input("Galaxy Type: ")
+    s.createNewGalaxy(universe, name, gal_type)
 
 def startGalaxy():
     showGalaxies()
