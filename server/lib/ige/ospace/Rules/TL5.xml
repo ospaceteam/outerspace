@@ -1243,7 +1243,7 @@
 		/>
 		<preresearch>Mines present us with a problem: how do we adaquately deploy a mine field that completely covers a star system, protecting it from attack.</preresearch>
 		<description>Military powers have long desired to effectively mine a star system. The robotic mine field is just that: equipped with subspace scanners that detect where fleets will arrive in the system, these mines manuever themselves to detonate just seconds after the enemy arrives.</description>
-		<flavor>Only one mine field control structure in the system will be used for deploying mines. Having two structures is effectively useless.</flavor>
+                <flavor>Only one mine field control structure in the system of given type will be used for deploying mines. Having two same structures is effectively useless.</flavor>
 	</technology>
 	<technology id="5507" symbol="FLAKSWARMMINEFIELD" name="Swarm Mine Field Control">
 		<discovery
@@ -1266,7 +1266,7 @@
 		/>
 		<preresearch>Mines present us with a problem: how do we adaquately deploy a mine field that completely covers a star system, protecting it from attack.</preresearch>
 		<description>Military powers have long desired to effectively mine a star system. The swarm mine field is just that: by saturating the system with enough mines, and combining that with rapid movement and a powerful planet-based scanner, these mines can be quickly repositioned for maximum effect.</description>
-		<flavor>Only one mine field control structure in the system will be used for deploying mines. Having two structures is effectively useless.</flavor>
+                <flavor>Only one mine field control structure in the system of given type will be used for deploying mines. Having two same structures is effectively useless.</flavor>
 	</technology>
 	<technology id="5508" symbol="BIOMINEFIELD" name="Self Aware Mine Field Control">
 		<discovery
@@ -1289,7 +1289,7 @@
 		/>
 		<preresearch>Mines present us with a problem: how do we adaquately deploy a mine field that completely covers a star system, protecting it from attack.</preresearch>
 		<description>Military powers have long desired to effectively mine a star system. The self aware mine field is just that: a thinking, breathing entity that has one desire, to outthink the enemy and crush them with a single suicide charge.</description>
-		<flavor>Only one mine field control structure in the system will be used for deploying mines. Having two structures is effectively useless.</flavor>
+                <flavor>Only one mine field control structure in the system of given type will be used for deploying mines. Having two same structures is effectively useless.</flavor>
 	</technology>
 	<technology id="5800" symbol="PLCOND5" name="Planetary Condensation">
 		<discovery

@@ -240,7 +240,7 @@
                 />
                 <preresearch>Mines present us with a problem: how do we adequately deploy a mine field that completely covers a star system, protecting it from attack.</preresearch>
                 <description>Military powers have long desired to effectively mine a star system. This simple autonomous mine field is the first attempt to do just that: platforms spread over whole star system, ready to be directed towards arriving enemy fleets. Unfortunately the technology has some limitations, and it is quite easy to outmaneuver mines during their terminal attack phase.</description>
-                <flavor>Only one mine field control structure in the system will be used for deploying mines. Having two structures is effectively useless.</flavor>
+                <flavor>Only one mine field control structure in the system of given type will be used for deploying mines. Having two same structures is effectively useless.</flavor>
         </technology>
 	<technology id="2400" symbol="COLONYMOD2" name="Colony Module">
 		<discovery

@@ -48,11 +48,8 @@ class MinefieldDlg:
         system = client.get(self.systemID, noUpdate = 1)
         self._mines = {}
         if hasattr(system, "minefield"):
-            for mine in system.minefield:
-                if mine in self._mines:
-                    self._mines[mine] += 1
-                else:
-                    self._mines[mine] = 1
+            for mine_id, amount, turn_deploy in system.minefield:
+                self._mines[mine_id] = amount
 
     def hide(self):
         self.win.setStatus(_("Ready."))
@@ -62,11 +59,7 @@ class MinefieldDlg:
             gdata.updateDlgs.remove(self)
 
     def update(self):
-        self.setDefaults()
-        if self.fleetID != OID_NONE: #MaxHPs or Shield Piercing flag might have changed, so recalc fleet
-            self.calcFleet(self.fleet)
-        elif self.designID != OID_NONE:
-            self.calcDesign(self.designID)
+        self.precompute()
         self.show()
 
     def show(self):
