@@ -340,6 +340,8 @@
 			mineclass="9054"
 			minenum="15"
 			minerate="6"
+			combatAtt="6"
+			structWeapons="3,2,0,0,1"
 			isMilitary="1"
 			fullInfo="1"
 		/>

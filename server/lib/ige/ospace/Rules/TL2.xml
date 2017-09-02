@@ -236,6 +236,8 @@
                         mineclass="9055"
                         minenum="16"
                         minerate="16"
+                        combatAtt="8"
+                        structWeapons="2,2,2,0,1"
                         isMilitary="1"
                 />
                 <preresearch>Mines present us with a problem: how do we adequately deploy a mine field that completely covers a star system, protecting it from attack.</preresearch>

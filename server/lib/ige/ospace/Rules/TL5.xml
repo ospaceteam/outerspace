@@ -1226,19 +1226,21 @@
 		<discovery
 			researchMod="1.7 + 0.75"
 			level="5"
-			researchRequires="FLAKBATTERY-3"
+			researchRequires="BASICMINEFIELD-3"
 			researchRaces="C"
 		/>
 		<structure
 			subtype="str612"
 			buildProd="3200"
 			operWorkers="1500"
-			operEn="15"
+			operEn="50"
 			scannerPwr="30"
-			maxHP="400"
+			maxHP="800"
 			mineclass="9050"
 			minenum="8"
 			minerate="23"
+			combatAtt="8"
+			structWeapons="2,2,2,0,1"
 			isMilitary="1"
 		/>
 		<preresearch>Mines present us with a problem: how do we adaquately deploy a mine field that completely covers a star system, protecting it from attack.</preresearch>
@@ -1249,19 +1251,21 @@
 		<discovery
 			researchMod="1.7 + 0.75"
 			level="5"
-			researchRequires="FLAKBATTERY-3"
+			researchRequires="BASICMINEFIELD-3"
 			researchRaces="H"
 		/>
 		<structure
 			subtype="str612"
 			buildProd="3200"
 			operWorkers="1500"
-			operEn="25"
+			operEn="100"
 			scannerPwr="45"
-			maxHP="500"
+			maxHP="600"
 			mineclass="9051"
 			minenum="40"
 			minerate="5"
+			combatAtt="8"
+			structWeapons="2,2,2,0,1"
 			isMilitary="1"
 		/>
 		<preresearch>Mines present us with a problem: how do we adaquately deploy a mine field that completely covers a star system, protecting it from attack.</preresearch>
@@ -1272,19 +1276,21 @@
 		<discovery
 			researchMod="1.7 + 0.75"
 			level="5"
-			researchRequires="SSFLAKBATTERY-3"
+			researchRequires="BASICMINEFIELD-3"
 			researchRaces="B"
 		/>
 		<structure
 			subtype="str612"
 			buildProd="3200"
-			operWorkers="1000"
-			operEn="10"
+			operWorkers="2500"
+			operEn="50"
 			scannerPwr="25"
-			maxHP="300"
+			maxHP="1000"
 			mineclass="9052"
 			minenum="6"
 			minerate="23"
+			combatAtt="8"
+			structWeapons="2,2,2,0,1"
 			isMilitary="1"
 		/>
 		<preresearch>Mines present us with a problem: how do we adaquately deploy a mine field that completely covers a star system, protecting it from attack.</preresearch>

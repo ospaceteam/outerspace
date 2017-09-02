@@ -855,13 +855,15 @@
         <structure
             subtype="str612"
             buildProd="3200"
-            operWorkers="2500"
-            operEn="35"
+            operWorkers="3000"
+            operEn="200"
             scannerPwr="40"
             maxHP="800"
             mineclass="9053"
             minenum="12"
             minerate="19"
+            combatAtt="8"
+            structWeapons="2,2,2,0,1"
             systemDef="4"
             isMilitary="1"
         />
