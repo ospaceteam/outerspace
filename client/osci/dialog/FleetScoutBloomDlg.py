@@ -146,10 +146,8 @@ class FleetScoutBloomDlg:
             if newfleet:
                 #move the ship
                 self.moveShip(newfleet)
-                #add fleet to starmap without recomputing the whole starmap
                 client.db[newfleet.oid] = client.get(newfleet.oid, forceUpdate = 1)
-                self.win.vStarMap.precomputeFleet(newfleet)
-                self.win.vStarMap.requestRepaint()
+                self.win.vStarMap.precompute()
         else:
             self.win.setStatus(_("You cannot order a ship to the same system twice in one Scout Wave command"))
         self.showCommands()
