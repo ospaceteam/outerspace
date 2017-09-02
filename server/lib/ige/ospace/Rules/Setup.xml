@@ -931,6 +931,19 @@
 			shortname="Mutant"
 	        />
 	</technology>
+	<technology id="9055" symbol="MINE_SIMPLE" name="Simple Mine">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="99"
+		/>
+		<mine
+			weaponDmgMin="20"
+			weaponDmgMax="30"
+			weaponAtt="4"
+			weaponIgnoreShield="0"
+			shortname="Simple"
+	        />
+	</technology>
 	<technology id="99001" symbol="COMSCANDEVEL" name="Developer Testing Comm/Scan Center">
 		<discovery
 			researchMod="1.0"
