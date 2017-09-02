@@ -132,7 +132,7 @@ def systemManager():
         for fleetID in getattr(system, 'fleets', []):
             fleet = db[fleetID]
             if getattr(fleet, 'owner', OID_NONE) == playerID:
-                system_fleet = dictAddition(system_fleet, getFleetSheet(fleet))
+                system_fleet = Utils.dictAddition(system_fleet, getFleetSheet(fleet))
         hasSeeders = False
         hasSeekers = False
         try:
@@ -173,7 +173,7 @@ def systemManager():
             elif expected_fighters < fighters:
                 # we have too many fighters - let's prefer bombers for now
                 weight_bomber += 1
-            choice = weightedRandom([1,4], [weight_fighter, weight_bomber])
+            choice = Utils.weightedRandom([1,4], [weight_fighter, weight_bomber])
             planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, choice, 2, planetID, True, False, OID_NONE)
 
 def expansionManager():
@@ -272,7 +272,7 @@ def attackManager():
             # this also covers fleets fighting over enemy systems - in that case, there
             # is slight chance the fleet will continue to the next system without conquering
             # the system first
-            if fleet.orbiting in data.otherSystems and weightedRandom([True, False], [9,1]):
+            if fleet.orbiting in data.otherSystems and Utils.weightedRandom([True, False], [9,1]):
                 continue
             if fleetContains(fleet, {1:minimum, 4:minimum}):
                 attackFleets.add(fleetID)
@@ -288,7 +288,7 @@ def attackManager():
         if len(nearest):
             # range is adjusted to flatten probabilities a bit
             probability_map = map(lambda x: x ** 2, range(6, 2, -1))
-            target = weightedRandom(nearest, probability_map)
+            target = Utils.weightedRandom(nearest, probability_map)
 
             fleet, newFleet, myFleets = orderPartFleet(client, db,
                 {1:noOfSwarmers, 4:noOfSowers}, True,

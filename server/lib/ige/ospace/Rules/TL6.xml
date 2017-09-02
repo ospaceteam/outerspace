@@ -855,19 +855,21 @@
         <structure
             subtype="str612"
             buildProd="3200"
-            operWorkers="2500"
-            operEn="35"
+            operWorkers="3000"
+            operEn="200"
             scannerPwr="40"
             maxHP="800"
             mineclass="9053"
             minenum="12"
             minerate="19"
+            combatAtt="8"
+            structWeapons="2,2,2,0,1"
             systemDef="4"
             isMilitary="1"
         />
         <preresearch>Just when you thought mine fields were working well, our military has decided they want more firepower onboard!</preresearch>
         <description>Equipped with the latest in nova-class warheads, the Supernova Mine Field does significantly more damage than the standard mine field. The control structure both deploys faster and can maintain more mines.</description>
-        <flavor>Only one mine field control structure in the system will be used for deploying mines. Having two structures is effectively useless.</flavor>
+        <flavor>Only one mine field control structure in the system of given type will be used for deploying mines. Having two same structures is effectively useless.</flavor>
     </technology>
     <technology id="6340" symbol="HUGEHULL6" name="Mobile Planet (Hull)">
         <discovery

@@ -51,7 +51,7 @@ class ISystem(IObject):
         # system wide data
         obj.scannerPwrs = {}
         # mine field
-        obj.minefield = {}
+        obj.minefield = {}  # for every owner (key) list of minefield (triplet) exists (mine_id, amount, last_deployed)
 
     def update(self, tran, obj):
         # check existence of all planets
@@ -62,7 +62,27 @@ class ISystem(IObject):
                 elif tran.db[planetID].type != T_PLANET:
                     log.debug("CONSISTENCY - planet %d from system %d is not a T_PLANET" % (planetID, obj.oid))
         if not hasattr(obj,'minefield'):
-            obj.miefield = {}
+            obj.minefield = {}
+        # TODO: only needed for 0.5.72 update
+        old_minefields = False
+        for ownerID in obj.minefield:
+            if obj.minefield[ownerID] and type(obj.minefield[ownerID][0]) is not tuple:
+                old_minefields = True
+        if old_minefields:
+            for ownerID in obj.minefield:
+                temp_mine_dict = {}
+                for mine_id in obj.minefield[ownerID]:
+                    try:
+                        temp_mine_dict[mine_id] += 1
+                    except KeyError:
+                        temp_mine_dict[mine_id] = 1
+                # now translate dictionary into list of tuples
+                owners_minefields = []
+                turn = tran.db[OID_UNIVERSE].turn
+                for mine_id, amount in temp_mine_dict.iteritems():
+                    owners_minefields.append((mine_id, amount, turn))
+                obj.minefield[ownerID] = owners_minefields
+
         # check that all .fleet are in .closeFleets
         for fleetID in obj.fleets:
             if fleetID not in obj.closeFleets:
@@ -222,12 +242,12 @@ class ISystem(IObject):
                     continue
                 newPwr = scanPwr * fleet.signature / obj.signature
                 results.extend(self.cmd(fleet).getScanInfos(tran, fleet, newPwr, player))
-            result.hasmines = 0 #no
+            result.hasmines = 0 # no
             if len(obj.minefield) > 0:
-                result.hasmines = 1 #yes
-            result.minefield = self.getMines(obj,player.oid) #only shows mines you own
+                result.hasmines = 1 # yes
+            result.minefield = self.getMines(obj, player.oid) # only shows mines you own
             if len(obj.minefield) > 1 or (len(obj.minefield) == 1 and len(result.minefield) == 0):
-                result.hasmines = 2 #yes, and some aren't my mines
+                result.hasmines = 2 # yes, and some aren't my mines
         return results
 
     def processINITPhase(self, tran, obj, data):
@@ -239,23 +259,14 @@ class ISystem(IObject):
     processINITPhase.accLevel = AL_ADMIN
 
     def processPRODPhase(self, tran, obj, data):
-        #mine deployment
+        # mine deployment
         owners = []
         for planetID in obj.planets:
             planet = tran.db[planetID]
             if planet.owner not in owners + [OID_NONE]:
                 owners.append(planet.owner)
-        for ownerid in owners:
-            tech,structtech = self.getSystemMineLauncher(tran,obj,ownerid)
-            if tech==0: #no control structure
-                continue
-            owner = tran.db[ownerid]
-            turn = tran.db[OID_UNIVERSE].turn
-            minerate = int(tech.minerate / Rules.techImprEff[owner.techs.get(structtech, Rules.techBaseImprovement)])
-            minenum = int(tech.minenum * Rules.techImprEff[owner.techs.get(structtech, Rules.techBaseImprovement)])
-            if (turn%minerate)==0: #it is the launch turn
-                self.addMine(obj,ownerid,tech.mineclass,minenum)
-                log.debug('ISystem', 'Mine deployed for owner %d in system %d' % (ownerid, obj.oid))
+        for owner_id in owners:
+            self.deployMines(tran, obj, owner_id)
         return obj.planets
 
     processPRODPhase.public = 1
@@ -402,10 +413,10 @@ class ISystem(IObject):
             if owner != OID_NONE:
                 isOwnedObject = 1
         for owner in ownerIDs:
-            tempAtt, tempDef = self.getSystemCombatBonuses(tran,system,owner)
+            tempAtt, tempDef = self.getSystemCombatBonuses(tran, system, owner)
             systemAtt[owner] = tempAtt
             systemDef[owner] = tempDef
-            hasMine[owner] = self.getSystemMineSource(tran,system,owner)
+            hasMine[owner] = self.getSystemMineSource(tran, system, owner)
         if not isOwnedObject:
             #@log.debug('ISystem', 'No combat')
             # reset combat counters
@@ -539,42 +550,41 @@ class ISystem(IObject):
         isCombat = False
         isMineCombat = False
         for owner in ownerIDs:
-            if not (owner in hasMine): #no planets
+            if owner not in hasMine: # no planets
                 continue
-            if hasMine[owner] == 0: #no control structure
+            if not hasMine[owner]: # no planet with control structure
                 continue
-            objID = hasMine[owner]
-            if len(self.getMines(system,owner)) == 0:
-                continue #no mines, something broke
-            #log.debug('ISystem-Mines', 'Mines Found')
-            if len(attack[objID]) == 0:
-                continue #no targets
+            controlPlanetID = hasMine[owner][0]  # there is list returned, all planets have same effect
+            if len(self.getMines(system, owner)) == 0:
+                continue # no mines, something broke
+            if len(attack[controlPlanetID]) == 0:
+                continue # no targets
             isMineFired = True
-            mineTargets = copy.copy(attack[objID])
+            mineTargets = copy.copy(attack[controlPlanetID])
             while isMineFired:
                 while len(mineTargets) > 0:
-                    targetID = random.choice(mineTargets) #select random target
+                    targetID = random.choice(mineTargets) # select random target
                     targetobj = tran.db.get(targetID, None)
                     try:
                         if targetobj.type == T_FLEET:
                             fleetOwners[targetID] = targetobj.owner
-                            break #target found
-                        mineTargets.remove(targetID) #remove an object type that a mine can't hit from the temporary targets list
+                            break # target found
+                        mineTargets.remove(targetID)  # remove an object type that a mine can't hit from the temporary targets list
                     except:
-                        mineTargets.remove(targetID) #remove a dead fleet from the temporary targets list
+                        mineTargets.remove(targetID)  # remove a dead fleet from the temporary targets list
 
                 if len(mineTargets) == 0:
-                    break #no fleet targets for mines
-                temp, temp, firing[targetID] = self.cmd(targetobj).getPreCombatData(tran, targetobj) #fix firing for "surrender to" section
-                damage,att,ignoreshield, mineID = self.cmd(obj).fireMine(system, owner)
-                if not damage: #no more mines
+                    break # no fleet targets for mines
+                temp, temp, firing[targetID] = self.cmd(targetobj).getPreCombatData(tran, targetobj)  # fix firing for "surrender to" section
+                damage, att, ignoreshield, mineID = self.cmd(obj).fireMine(system, owner)
+                if not damage: # no more mines
                     isMineFired = False
                     break
-                log.debug('ISystem', 'Mine Shooting (damage, att, ignore shield):',damage,att,ignoreshield)
+                log.debug('ISystem', 'Mine Shooting (damage, att, ignore shield):', damage, att, ignoreshield)
                 isMineCombat = True
                 minesTriggered[mineID] = minesTriggered.get(mineID, 0) + 1
-                #Process Combat
-                #for now we assume only one ship can be destroyed by one mine
+                # Process Combat
+                # for now we assume only one ship can be destroyed by one mine
                 dmg, destroyed = self.cmd(targetobj).applyMine(tran, targetobj, att, damage, ignoreshield)
                 #log.debug('ISystem-Mines', 'Actual Damage Done:',dmg)
                 if dmg > 0:
@@ -588,7 +598,7 @@ class ISystem(IObject):
             players = {}
             for triggerID in firing.keys():
                 players[owners[triggerID]] = None
-            controllerPlanet = tran.db.get(objID, None)
+            controllerPlanet = tran.db.get(controlPlanetID, None)
             damageCausedSum = 0
             killsCausedSum = 0
             for mineID in damageCaused.keys():
@@ -776,7 +786,7 @@ class ISystem(IObject):
                 owners.append(planet.owner)
         for ownerid in obj.minefield:
             if ownerid not in owners:
-                self.removeMines(obj,ownerid)
+                self.clearMines(obj, ownerid)
         return obj.planets[:] + obj.closeFleets[:]
 
     processFINALPhase.public = 1
@@ -850,82 +860,156 @@ class ISystem(IObject):
         obj.planets.append(oid)
         return oid
 
-    def addMine(self,obj,ownerid,minetechid,maxnum): #add a mine for an owner
-        if ownerid in obj.minefield:
-            if len(obj.minefield[ownerid]) < maxnum:
-                obj.minefield[ownerid].append(minetechid)
+    def deployMines(self, tran, obj, owner_id):
+        """ Go through all mine control structures and attempt to add mines.
+
+        """
+        for tech, struct in self.getSystemMineLauncher(tran, obj, owner_id):
+            if not struct[STRUCT_IDX_STATUS] & STRUCT_STATUS_ON:
+                # structure is offline, reset timer
+                self.addMine(tran, obj, owner_id, tech.mineclass, 0)
+                continue
+            efficiency = struct[STRUCT_IDX_HP] / float(tech.maxHP)
+            minerate = int(tech.minerate / efficiency)
+            minenum = int(tech.minenum * efficiency)
+            if self.addMine(tran, obj, owner_id, tech.mineclass, minenum, minerate):
+                log.debug('ISystem', 'Mine deployed for owner %d in system %d' % (owner_id, obj.oid))
+
+    deployMines.public = 1
+    deployMines.accLevel = AL_ADMIN
+
+
+    def addMine(self, tran, obj, owner_id, mine_tech_id, max_amount=None, mine_rate=None):
+        """ Increment amount within particular minefield of particular player.
+        Set current turn as a date of latest deployment.
+
+        Returns True if mine was added.
+
+        """
+        current_turn = tran.db[OID_UNIVERSE].turn
+        if owner_id in obj.minefield:
+            index = -1
+            for mine_id, amount, deploy_turn in obj.minefield[owner_id]:
+                index += 1
+                if mine_id != mine_tech_id:
+                    continue
+                if max_amount is not None and amount >= max_amount:
+                    # cannot add more, thus update deploy turn to current one
+                    # (so replenish starts after that amount of turns if needed)
+                    obj.minefield[owner_id][index] = (mine_id, amount, current_turn)
+                    return False
+                if mine_rate and (current_turn - deploy_turn) < mine_rate:
+                    # need more time to deploy new mine
+                    return False
+                obj.minefield[owner_id][index] = (mine_id, amount + 1, current_turn)
+                return True
+            # owner has some minefield, but not this type
+            obj.minefield[owner_id].append((mine_id, 1, current_turn))
+            return True
         else:
-            obj.minefield[ownerid]= [minetechid]
+            # this will be owner's first minefield in this system
+            obj.minefield[owner_id]= [(mine_tech_id, 1, current_turn)]
+            return True
 
     addMine.public = 1
     addMine.accLevel = AL_ADMIN
 
-    def getMines(self,obj,ownerid): #get all mines of an owner
-        if ownerid in obj.minefield:
-            return obj.minefield[ownerid]
+    def removeMine(self, obj, owner_id, mine_tech_id):
+        """ Decrement amount within particular minefield of particular player.
+        If amount drops to zero, remove minefield.
+        If all minefields are removed, remove player minefield record.
+
+        """
+        if owner_id in obj.minefield:
+            index = -1
+            for mine_id, amount, deploy_turn in obj.minefield[owner_id]:
+                index += 1
+                if mine_id != mine_tech_id:
+                    continue
+                amount -= 1
+                if amount > 0:
+                    obj.minefield[owner_id][index] = (mine_id, amount, deploy_turn)
+                else:
+                    # we have depleted the minefield, remove any notion of it
+                    del obj.minefield[owner_id][index]
+                break
+            if not len(obj.minefield[owner_id]):
+                # all minefields are depleted, remove player record
+                del obj.minefield[owner_id]
+
+    removeMine.public = 1
+    removeMine.accLevel = AL_ADMIN
+
+
+    def getMines(self, obj, owner_id):
+        """ Return list of tuples representing each minefield.
+
+        """
+        if owner_id in obj.minefield:
+            return obj.minefield[owner_id]
         else:
             return []
 
     getMines.public = 1
     getMines.accLevel = AL_ADMIN
 
-    def removeMines(self,obj,ownerid): #remove all mines of an owner
-        if ownerid in obj.minefield:
-            del obj.minefield[ownerid]
+    def clearMines(self, obj, owner_id):
+        """ Remove all minefields of given owner from the system.
 
-    removeMines.public = 0
+        """
+        if owner_id in obj.minefield:
+            del obj.minefield[owner_id]
 
-    def fireMine(self,obj,ownerid): #shoot the mine
-        if ownerid in obj.minefield:
-            mine = obj.minefield[ownerid].pop(random.randrange(0,len(obj.minefield[ownerid]))) #select a random mine to detonate
-            if len(obj.minefield[ownerid]) == 0:
-                obj.minefield.pop(ownerid) #delete the owner if no more mines
-        else:
-            return False,False,False,False
+    clearMines.public = 0
+
+    def fireMine(self, obj, owner_id): # shoot the mine
+        if owner_id not in obj.minefield:
+            return False, False, False, False
+
+        mine_ids = []
+        amounts = []
+        for mine_id, amount, deploy_turn in obj.minefield[owner_id]:
+            mine_ids.append(mine_id)
+            amounts.append(amount)
+        mine = Utils.weightedRandom(mine_ids, amounts) # select random mine to detonate
+        self.removeMine(obj, owner_id, mine)
         tech = Rules.techs[mine]
-        damage = random.randrange(tech.weaponDmgMin,tech.weaponDmgMax)
+        damage = random.randrange(tech.weaponDmgMin, tech.weaponDmgMax)
         attack = tech.weaponAtt
-        ignoreshield = tech.weaponIgnoreShield
-        return damage,attack,ignoreshield, mine
+        ignore_shield = tech.weaponIgnoreShield
+        return damage, attack, ignore_shield, mine
 
     fireMine.public = 1
     fireMine.accLevel = AL_ADMIN
 
-    def getSystemMineLauncher(self,tran,obj,playerID):
-        launchtech = 0
-        mineclass = 0
-        structure = 0
+    def getSystemMineLauncher(self, tran, obj, playerID):
+        launchers = []
         for planetID in obj.planets:
             planet = tran.db[planetID]
             if planet.owner == playerID:
                 for struct in planet.slots:
                     tech = Rules.techs[struct[STRUCT_IDX_TECHID]]
-                    if tech.mineclass > mineclass:
-                        if tech.mineclass > mineclass:
-                            mineclass = tech.mineclass
-                            launchtech = tech
-                            structure = struct[STRUCT_IDX_TECHID]
-        return launchtech, structure
+                    if tech.mineclass:
+                        launchtech = tech
+                        launchers.append((launchtech, struct))
+        return launchers
 
     getSystemMineLauncher.public = 0
 
-    def getSystemMineSource(self,tran,obj,playerID):
-        source = 0
-        mineclass = 0
+    def getSystemMineSource(self, tran, obj, playerID):
+        sources = []
         for planetID in obj.planets:
             planet = tran.db[planetID]
             if planet.owner == playerID:
                 for struct in planet.slots:
                     tech = Rules.techs[struct[STRUCT_IDX_TECHID]]
-                    if tech.mineclass > mineclass:
-                        if tech.mineclass > mineclass:
-                            mineclass = tech.mineclass
-                            source = planetID
-        return source
+                    if tech.mineclass:
+                        sources.append(planetID)
+        return sources
 
     getSystemMineSource.public = 0
 
-    def getSystemCombatBonuses(self,tran,obj,playerID):
+    def getSystemCombatBonuses(self, tran, obj, playerID):
         systemAtt = 0;
         systemDef = 0;
         for planetID in obj.planets:
@@ -935,9 +1019,9 @@ class ISystem(IObject):
                     tech = Rules.techs[struct[STRUCT_IDX_TECHID]]
                     techEff = Utils.getTechEff(tran, struct[STRUCT_IDX_TECHID], planet.owner)
                     if tech.systemAtt > 0 or tech.systemDef > 0:
-                        systemAtt = max(systemAtt,tech.systemAtt*techEff)
-                        systemDef = max(systemDef,tech.systemDef*techEff)
-        return (systemAtt,systemDef)
+                        systemAtt = max(systemAtt, tech.systemAtt * techEff)
+                        systemDef = max(systemDef, tech.systemDef * techEff)
+        return (systemAtt, systemDef)
 
     getSystemCombatBonuses.public = 0
 

@@ -340,6 +340,8 @@
 			mineclass="9054"
 			minenum="15"
 			minerate="6"
+			combatAtt="6"
+			structWeapons="3,2,0,0,1"
 			isMilitary="1"
 			fullInfo="1"
 		/>
@@ -929,6 +931,19 @@
 			weaponAtt="10"
 			weaponIgnoreShield="0"
 			shortname="Mutant"
+	        />
+	</technology>
+	<technology id="9055" symbol="MINE_SIMPLE" name="Simple Mine">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="99"
+		/>
+		<mine
+			weaponDmgMin="20"
+			weaponDmgMax="30"
+			weaponAtt="4"
+			weaponIgnoreShield="0"
+			shortname="Simple"
 	        />
 	</technology>
 	<technology id="99001" symbol="COMSCANDEVEL" name="Developer Testing Comm/Scan Center">

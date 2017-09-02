@@ -220,6 +220,30 @@
 		<preresearch>This structure improves environment by spreading Mutagen into the atmosphere.</preresearch>
 		<description>By dispersing mutagen into the atmosphere through specially tuned venting systems, the Mutagen Dispensor rapidly improves a planet's health.</description>
 	</technology>
+        <technology id="2008" symbol="BASICMINEFIELD" name="Simple Mine Field Control">
+                <discovery
+                        researchMod="1.7 + 0.75"
+                        level="2"
+			researchRequires="EMCANNON-3"
+                />
+                <structure
+                        subtype="str612"
+                        buildProd="3000"
+                        operWorkers="1500"
+                        operEn="45"
+                        scannerPwr="30"
+                        maxHP="800"
+                        mineclass="9055"
+                        minenum="16"
+                        minerate="16"
+                        combatAtt="8"
+                        structWeapons="2,2,2,0,1"
+                        isMilitary="1"
+                />
+                <preresearch>Mines present us with a problem: how do we adequately deploy a mine field that completely covers a star system, protecting it from attack.</preresearch>
+                <description>Military powers have long desired to effectively mine a star system. This simple autonomous mine field is the first attempt to do just that: platforms spread over whole star system, ready to be directed towards arriving enemy fleets. Unfortunately the technology has some limitations, and it is quite easy to outmaneuver mines during their terminal attack phase.</description>
+                <flavor>Only one mine field control structure in the system of given type will be used for deploying mines. Having two same structures is effectively useless.</flavor>
+        </technology>
 	<technology id="2400" symbol="COLONYMOD2" name="Colony Module">
 		<discovery
 			researchMod="1.00 + 0.50"
