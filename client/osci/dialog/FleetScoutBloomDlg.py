@@ -14,7 +14,7 @@
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with Outer Space; if not, write to the Free Software 
+#  along with Outer Space; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
@@ -38,7 +38,8 @@ class FleetScoutBloomDlg:
         self.targetID = OID_NONE
         self.targetPlayerID = OID_NONE
         self.fleet = None
-        self.sendShips = []
+        self.sendShips = {}
+        self.selectedShip = OID_NONE
 
     def display(self, fleetDlg):
         self.fleetDlg = fleetDlg
@@ -48,17 +49,18 @@ class FleetScoutBloomDlg:
         self.win.vStarMap.alwaysShowRangeFor = fleet.oid
         self.win.vStarMap.setPosition = 0
         self.win.vStarMap.precompute()
-        self.sendShipIndex = 0
         self.targets = []
         if self.targetID:
             target = client.get(self.targetID, noUpdate = 1)
             self.win.vStarMap.highlightPos = (target.x, target.y)
         # ships
-        self.sendShips = []
+        self.sendShips = {}
         # collect buildings
         for designID, a, b, c in self.fleet.ships: #fixed bug in reference of designID...added a, b, c to do it; breaks list lookup otherwise (not sure why) with hash error --RC
-            if designID not in self.sendShips:
-                self.sendShips.append(designID)
+            try:
+                self.sendShips[designID] += 1
+            except KeyError:
+                self.sendShips[designID] = 1
         self.showCommands()
         self.win.show()
         # register for updates
@@ -83,8 +85,10 @@ class FleetScoutBloomDlg:
             target = client.get(self.targetID, noUpdate = 1)
             info = getattr(target, 'name', res.getUnknownName())
         # correct buildingIndex
-        if self.sendShipIndex >= len(self.sendShips):
-            self.sendShipIndex = 0
+        if not self.sendShips:
+            self.selectedShip = OID_NONE
+        elif self.selectedShip not in self.sendShips:
+            self.selectedShip = self.sendShips.keys()[0]
         # get target data
         self.win.vTarget.text = info
         fleet = self.fleet
@@ -117,11 +121,14 @@ class FleetScoutBloomDlg:
                 self.win.vEta.text = _("N/A")
 
         if self.sendShips:
-            self.win.vSendShip.enabled = 1
-            techID = self.sendShips[self.sendShipIndex]
-            self.win.vSendShip.text = client.getPlayer().shipDesigns[techID].name
-            self.win.vSendShip.data = techID
+            self.win.vSelectedShip.enabled = 1
+            designID = self.selectedShip
+            self.win.vSelectedShip.text = client.getPlayer().shipDesigns[designID].name
+            self.win.vSelectedShip.data = designID
         else:
+            self.win.vSelectedShip.enabled = 0
+            self.win.vSelectedShip.text = ""
+            self.win.vSelectedShip.data = OID_NONE
             self.win.setStatus(_("No ships found."))
 
     def onSelectMapObj(self, widget, action, data):
@@ -146,16 +153,18 @@ class FleetScoutBloomDlg:
             if newfleet:
                 #move the ship
                 self.moveShip(newfleet)
-                #add fleet to starmap without recomputing the whole starmap
                 client.db[newfleet.oid] = client.get(newfleet.oid, forceUpdate = 1)
-                self.win.vStarMap.precomputeFleet(newfleet)
-                self.win.vStarMap.requestRepaint()
+                self.win.vStarMap.precompute()
         else:
             self.win.setStatus(_("You cannot order a ship to the same system twice in one Scout Wave command"))
+        # adjust number of ships
+        self.sendShips[self.selectedShip] -= 1
+        if not self.sendShips[self.selectedShip]:
+            del self.sendShips[self.selectedShip]
         self.showCommands()
 
     def splitShip(self):
-        designID = self.sendShips[self.sendShipIndex]
+        designID = self.selectedShip
         ships = []
         for ship in self.fleet.ships:
             if ship[0] == designID:
@@ -184,8 +193,16 @@ class FleetScoutBloomDlg:
         self.fleetDlg.update()
         self.hide()
 
-    def onSendShipChange(self, widget, action, data):
-        self.sendShipIndex += 1
+    def onSelectedShipChange(self, widget, action, data):
+        list_of_designs = self.sendShips.keys()
+        try:
+            position = list_of_designs.index(self.selectedShip)
+            self.selectedShip = list_of_designs[(position + 1) % len(list_of_designs)]
+        except ValueError:
+            if not list_of_designs:
+                self.selectedShip = OID_NONE
+            else:
+                self.selectedShip = list_of_designs[0]
         self.showCommands()
 
     def createUI(self):
@@ -210,8 +227,8 @@ class FleetScoutBloomDlg:
         # Ship to send
         ui.Label(self.win, layout = (0, 25, 5, 1), text = _('Ship'),
             align = ui.ALIGN_E)
-        ui.Button(self.win, layout = (5, 25, 10, 1), id = 'vSendShip',
-            align = ui.ALIGN_NONE, action = 'onSendShipChange')
+        ui.Button(self.win, layout = (5, 25, 10, 1), id = 'vSelectedShip',
+            align = ui.ALIGN_NONE, action = 'onSelectedShipChange')
         ui.Label(self.win, layout = (0, 26, 5, 1), text = _("For last move:"), align = ui.ALIGN_W)
         ui.Label(self.win, layout = (5, 26, 2, 1), text = _("ETA:"), align = ui.ALIGN_W)
         ui.Label(self.win, layout = (7, 26, 2, 1), id = 'vEta', align = ui.ALIGN_E)
