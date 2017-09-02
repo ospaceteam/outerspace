@@ -20,11 +20,11 @@
 
 import copy
 import math
-import random
 from ige import log
 from ige.ospace.Const import *
 from ige.IDataHolder import IDataHolder
 import ige.ospace.Rules as Rules
+import ige.ospace.Utils as Utils
 
 data = IDataHolder()
 
@@ -714,7 +714,7 @@ def buildSystem(client, db, systemID, prodPlanets, finalSystemPlan):
     # parse final plan to set buildings which need to be build and those that
     # may be demolished
     for planetID in finalSystemPlan:
-        difference[planetID] = dictSubtraction(finalSystemPlan[planetID], structStats.planets[planetID])
+        difference[planetID] = Utils.dictSubtraction(finalSystemPlan[planetID], structStats.planets[planetID])
     for planetID in difference:
         structsToBuild[planetID] = {}
         structsToDemolish[planetID] = {}
@@ -828,43 +828,3 @@ def compareBuildStructPlans(plan1, plan2):
             return False
     return True
 
-def dictAddition(dict1, dict2):
-    """ Per-key addition of two dictionaries, where values are additive.
-
-    """
-    dict1Keys = set(dict1.keys())
-    dict2Keys = set(dict2.keys())
-    result = {}
-    for key in dict1Keys - dict2Keys:
-        result[key] = dict1[key]
-    for key in dict2Keys - dict1Keys:
-        result[key] = dict2[key]
-    for key in dict1Keys & dict2Keys:
-        result[key] = dict1[key] + dict2[key]
-    return result
-
-def dictSubtraction(dict1, dict2):
-    """ Per-key subtraction of two dictionaries, where values are additive.
-
-    """
-    dict1Keys = set(dict1.keys())
-    dict2Keys = set(dict2.keys())
-    result = {}
-    for key in dict1Keys - dict2Keys:
-        result[key] = dict1[key]
-    for key in dict2Keys - dict1Keys:
-        result[key] = -dict2[key]
-    for key in dict1Keys & dict2Keys:
-        result[key] = dict1[key] - dict2[key]
-    return result
-
-def weightedRandom(choices, weights):
-    """ Choose randomly from weighted choices
-
-    """
-
-    die = random.randint(1, sum(weights))
-    for choice, weight in zip(choices, weights):
-        die -= weight
-        if die <= 0: return choice
-    assert False # shouldn't happen
