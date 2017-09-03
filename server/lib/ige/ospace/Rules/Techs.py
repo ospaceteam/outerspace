@@ -21,6 +21,8 @@
 import sys, copy
 from ige import log
 from ige.ospace import Const
+from ige.ospace.Const import SR_AMOUNT_BIG
+from ige.ospace.Const import SR_AMOUNT_SMALL
 import hashlib, os.path
 import cPickle as pickle
 import types
@@ -471,7 +473,9 @@ else:
         stratRes = {}
         for resource in tech.buildSRes:
             resource_id = getattr(Const, resource)
-            resource_amount = getattr(Const, tech.buildSRes[resource])
+            # prescription contains constants for big and small amounts
+            # possibly within expression
+            resource_amount = eval(tech.buildSRes[resource])
             stratRes[resource_id] = resource_amount
         tech.buildSRes = stratRes
 
