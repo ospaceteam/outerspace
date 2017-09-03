@@ -741,6 +741,28 @@
         <preresearch>A device capable of creating a massive gravity distortion wave.</preresearch>
         <description>With recent advances in gravitonics, military researchers have devised this massive explosive device.  Originally concieved as a planetary bomb, it was found insuitable for atmospheric entry.  Looking for a new use, military minds jumped to the idea of an area effect weapon that would be effective against the swarms of fighters they had recently encountered.  Although the enemy has since discontinued the use of swarms as they were made ineffective by various advances in ship hardware on all sides, the Gravity Surge Mortar is still a devastatingly effective weapon system.  The support and firing systems for it are extremely complex and bulky, but the projectile once assembled, fired and armed is capable of projecting a wave of extreme gravitational distortions in a radius of one hundred to one hundred fifty kilometers.  Most small ships in its area of effect are destroyed, and larger ships suffer severe structural and hull damage. This weapon cannot be used from the planet surface, it's useable only by ships.</description>
     </technology>
+    <technology id="4457" symbol="TITANIUMLHULL" name="Titanium Large Hull">
+            <discovery
+                    researchMod="1.5 + 0.75 + 0.75"
+                    level="4"
+                    researchRequires="LARGEHULL3-5"
+                    researchReqSRes="SR_TL1B"
+            />
+            <shiphull
+                    buildSRes="SR_TL1B:SR_AMOUNT_SMALL * 4"
+                    buildProd="960"
+                    storEn="3072"
+                    operEn="8"
+                    maxHP="384"
+                    slots="96"
+                    weight="64"
+                    maxWeight="240"
+                    signature="40"
+                    minSignature="6"
+                    combatClass="2"
+            />
+            <preresearch>Give us piece of the Titanium and we'll prepare for you improved version of the large hull.</preresearch>
+    </technology>
     <technology id="4458" symbol="LIVMEDIUMHULL4" name="Live Medium Hull">
         <discovery
             researchMod="1.00 + 1.00"
