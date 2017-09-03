@@ -1,6 +1,41 @@
 ﻿Outer Space Change Log
 ======================
 
+[2017-09-03]
+- Revision bump to 0.5.72 [dahaic]
+
+Balacing:
+- Simple Mine Field Control introduced
+  Available to all players on TL2, it is first minefield player can utilize.
+- Titanium Medium hull and Titanium Large hull introduced
+  With same balancing mechanisms as Titanium Small Hull, these are now
+  available to players to help them tailor their fleets better to their needs.
+- Small cost adjustments of Medium, Large and Stealth hulls.
+- Mutant is now a bit less trivial.
+  It will now build ships based on demand, attack more systems than just the
+  closest one, and it will attack with different sizes of fleets.
+- Minefields polish
+  Multiple types of minefields can coexist within one system. Player can have
+  up to three minefields (in case of advanced Cyborg player) active in one
+  system at the time. State of Mine Field Control structure influcences growth
+  of minefield now.
+
+Client:
+- Player now has option to save screenshot of whole galaxy.
+  Client is now aware of galaxy radius, thus known part will be placed
+  accordingly.
+- Screenshots does not show hot buttons widget.
+- Fixed various UI annoyances.
+- Minefields are now visible on the Star Map itself.
+
+Other:
+- Singleplayer galaxies can be deleted/paused/resumed by the owner.
+  Player can no longer resign from singleplayer galaxy - single galaxies of other
+  players shouldn't show up in the login dialog anymore.
+- Admin can take screenshots of whole galaxies, without hiding anything.
+  With this feature, it should be possible to chronicle galaxies and make
+  short videos afterwards.
+
 [2017-07-30]
 - Revision bump to 0.5.71 [dahaic]
 
