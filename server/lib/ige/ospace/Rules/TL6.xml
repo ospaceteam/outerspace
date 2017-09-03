@@ -336,7 +336,7 @@
             researchRaces="H"
         />
         <shiphull
-            buildProd="160"
+            buildProd="300"
             storEn="384"
             operEn="4"
             maxHP="36"

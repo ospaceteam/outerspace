@@ -296,7 +296,7 @@
 			researchRequires="MEDIUMHULL2-3"
 		/>
 		<shiphull
-			buildProd="480"
+			buildProd="960"
 			storEn="3072"
 			operEn="8"
 			maxHP="256"
