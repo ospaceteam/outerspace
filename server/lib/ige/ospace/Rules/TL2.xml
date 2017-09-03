@@ -271,7 +271,7 @@
 			researchRequires="SMALLHULL1-3"
 		/>
 		<shiphull
-			buildProd="240"
+			buildProd="480"
 			storEn="768"
 			operEn="4"
 			maxHP="64"
@@ -324,7 +324,7 @@
 		/>
 		<shiphull
 			buildSRes="SR_TL1B:SR_AMOUNT_SMALL"
-			buildProd="240"
+			buildProd="480"
 			storEn="384"
 			operEn="4"
 			maxHP="24"

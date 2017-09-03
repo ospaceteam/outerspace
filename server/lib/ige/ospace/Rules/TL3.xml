@@ -296,7 +296,7 @@
 			researchRequires="MEDIUMHULL2-3"
 		/>
 		<shiphull
-			buildProd="480"
+			buildProd="960"
 			storEn="3072"
 			operEn="8"
 			maxHP="256"
@@ -517,6 +517,28 @@
 			minHull="1"
 		/>
 		<preresearch>Sometimes you need to deploy Mutagen Dispenser on a low production world. This is a way how to do it.</preresearch>
+	</technology>
+	<technology id="3413" symbol="TITANIUMMHULL" name="Titanium Medium Hull">
+		<discovery
+			researchMod="1.5 + 0.75 + 0.75"
+			level="3"
+			researchRequires="MEDIUMHULL2-5"
+			researchReqSRes="SR_TL1B"
+		/>
+		<shiphull
+			buildSRes="SR_TL1B:SR_AMOUNT_SMALL * 2"
+			buildProd="720"
+			storEn="768"
+			operEn="4"
+			maxHP="96"
+			slots="48"
+			weight="32"
+			maxWeight="120"
+			signature="16"
+			minSignature="4"
+			combatClass="1"
+		/>
+		<preresearch>Give us piece of the Titanium and we'll prepare for you improved version of the medium hull.</preresearch>
 	</technology>
 	<technology id="3420" symbol="SOLARSHIELD" name="Solar Shield">
 		<discovery
