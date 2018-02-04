@@ -153,6 +153,7 @@ addMsg(MSG_INVALID_TASK, N_('Construction of %(1)s is not valid - construction s
 addMsg(MSG_NOSUPPORT_POP, N_('Population decreased.\n\nPopulation of this planet has decreased. Build more facilities producing food.'), severity = CRI)
 addMsg(MSG_COMPLETED_PROJECT, N_('Project finished: %(1)s'), (techID2Name,), MIN)
 addMsg(MSG_ENABLED_TIME, N_('Time in galaxy started to run...'), severity = CRI)
+addMsg(MSG_DISABLED_TIME, N_('Time in galaxy stopped...'), severity = CRI)
 addMsg(MSG_MISSING_STRATRES, N_('Strategic resource missing: %(1)s'), (stratID2Name,), MAJ)
 addMsg(MSG_DELETED_RESEARCH, N_('Research task deleted: %(1)s'), (techID2Name,), CRI)
 addMsg(MSG_EXTRACTED_STRATRES, N_('Strategic resource extracted: %(1)s'), (stratID2Name,), MIN)
