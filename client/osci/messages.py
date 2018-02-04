@@ -139,7 +139,7 @@ addMsg(MSG_CANNOTBUILD_NOSLOT, N_('Cannot build on planet - no free slot.'), sev
 addMsg(MSG_WASTED_PRODPTS, N_('Construction problem: no task\n\n%(1)d construction points were not used because there was no task to fulfill.'), (int,), severity = INFO)
 addMsg(MSG_LOST_PLANET, N_('Planet lost.'), severity = CRI)
 addMsg(MSG_COMPLETED_STRUCTURE, N_('Structure completed: %(1)s'), (techID2Name,), MIN)
-addMsg(MSG_DELOY_HANDLER, N_('A deployment of %(1)s was completed'), (techID2Name,), MIN)
+addMsg(MSG_DEPLOY_HANDLER, N_('A deployment of %(1)s was completed'), (techID2Name,), MIN)
 addMsg(MSG_COMPLETED_SHIP, N_('Ship completed: %(1)s'), (techID2Name,), MIN)
 addMsg(MSG_GAINED_PLANET, N_('New planet.'), severity = CRI)
 addMsg(MSG_COMBAT_RESULTS, N_('Combat with: %(4)s. HP lost: we %(1)d, they %(2)d.\n\nEnemy lost %(2)d HP, we lost %(1)d HP and %(3)d ships/structures. We attacked/were attacked by %(4)s.'), (int, int, int, objIDList2Names), MAJ)

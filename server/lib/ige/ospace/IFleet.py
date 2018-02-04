@@ -829,7 +829,7 @@ class IFleet(IObject):
                     if deployHandler.deployHandlerValidator(tran, obj, planet, deployHandler):
                         try:
                             deployHandler.deployHandlerFunction(tran, obj, planet, deployHandler)
-                            Utils.sendMessage(tran, obj, MSG_DELOY_HANDLER, planet.oid, deployHandlerID)
+                            Utils.sendMessage(tran, obj, MSG_DEPLOY_HANDLER, planet.oid, deployHandlerID)
                             removeShip = 1
                         except GameException, e:
                             log.warning('IFleet -','Deploy handler error - internal error')
