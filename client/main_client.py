@@ -250,7 +250,8 @@ def runClient(options):
                     if 'doublebuf' in strFlags: flags |= DOUBLEBUF
                     if 'fullscreen' in strFlags: flags |= FULLSCREEN
 
-            gdata.scrnSize = (800, 600)
+            DEFAULT_SCRN_SIZE = (800, 600)
+            gdata.scrnSize = DEFAULT_SCRN_SIZE
             if gdata.config.display.resolution != None:
                     width, height = gdata.config.display.resolution.split('x')
                     gdata.scrnSize = (int(width), int(height))
@@ -262,7 +263,12 @@ def runClient(options):
                     bestdepth = int(gdata.config.display.depth)
 
             # initialize screen
-            screen = pygame.display.set_mode(gdata.scrnSize, flags, bestdepth)
+            try:
+                screen = pygame.display.set_mode(gdata.scrnSize, flags, bestdepth)
+            except pygame.error:
+                # for example if fullscreen is selected with resolution bigger than display
+                gdata.scrnSize = DEFAULT_SCRN_SIZE
+                screen = pygame.display.set_mode(gdata.scrnSize, flags, bestdepth)
             gdata.screen = screen
             log.debug('OSCI', 'Driver:', pygame.display.get_driver())
             log.debug('OSCI', 'Using depth:', bestdepth)
