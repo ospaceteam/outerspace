@@ -189,7 +189,7 @@ class ProblemsDlg:
                                             vDescription = _('Structure (%s) is off and will be destroyed in %s turns.') % (tech.name, res.formatTime(turnsToDestroy))))
 
                                 elif status & STRUCT_STATUS_DETER:
-                                    problem = _('is deteriorating and will be destroyed in %s turns') % res.formatTime(turnsToDestroy)
+                                    problem = _('is deteriorating')
                                     disp = major
                                     fgColor = gdata.sevColors[gdata.MAJ]
                                 elif status & STRUCT_STATUS_NOBIO:

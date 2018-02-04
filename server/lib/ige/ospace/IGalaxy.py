@@ -333,8 +333,7 @@ class IGalaxy(IObject):
                         if player.timeEnabled:
                             Utils.sendMessage(tran, player, MSG_ENABLED_TIME, player.oid, None)
                         else:
-                            #Utils.sendMessage(tran, player, MSG_DISABLED_TIME, player.oid, None)
-                            pass
+                            Utils.sendMessage(tran, player, MSG_DISABLED_TIME, player.oid, None)
 
     def enableTime(self, tran, obj, force = 0, deleteSP = 0, enable = 1):
         log.debug('IGalaxy', 'Checking for time...')
