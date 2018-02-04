@@ -304,48 +304,6 @@ class FleetDlg:
     def onScoutWaveFleet(self, widget, action, data):
         self.fleetScoutBloomDlg.display(self)
 
-    def onScrapFleet(self, widget, action, data):
-        self.confirmDlg.display(_("Really scrap this fleet?"),
-            _("Yes"), _("No"), self.onScrapConfirmed)
-
-    def onDeleteSelectedShip(self, widget, action, data):
-        self.confirmDlg.display(_("Really scrap this ship?"),
-            _("Yes"), _("No"), self.onDeleteSelectedShipConfirmed)
-
-    def onDeleteSelectedShipConfirmed(self):
-        if self.win.vShips.selection:
-            item = self.win.vShips.selection[0]
-        try:
-            self.win.setStatus(_('Executing SCRAP SHIP command...'))
-            client.db[self.fleetID] = client.cmdProxy.removeShips(self.fleetID,
-                [item.tSpec])
-            self.win.setStatus(_('Command has been executed.'))
-            if not client.get(self.fleetID, noUpdate = 1).ships:
-                # remove fleet
-                client.getPlayer().fleets.remove(self.fleetID)
-                del client.db[self.fleetID]
-                self.hide()
-            else:
-                self.update()
-            gdata.mainGameDlg.update()
-            return 0
-        except ige.GameException, e:
-            self.win.setStatus(_(e.args[0]))
-            return 1
-
-    def onScrapConfirmed(self):
-        try:
-            self.win.setStatus(_('Executing SCRAP FLEET command...'))
-            client.db[self.fleetID] = client.cmdProxy.disbandFleet(self.fleetID)
-            self.win.setStatus(_('Command has been executed.'))
-            client.getPlayer().fleets.remove(self.fleetID)
-            del client.db[self.fleetID]
-            self.hide()
-            gdata.mainGameDlg.update()
-            return 0
-        except ige.GameException, e:
-            self.win.setStatus(_(e.args[0]))
-            return 1
 
     def onRenameFleet(self, widget, action, data):
         self.renameFleetDlg.display(self.fleetID)
@@ -418,13 +376,9 @@ class FleetDlg:
             layout = (35, 25, 5, 1), action = 'onAutoDelete')
         ui.Button(self.win, text = _('Scout wave'), id = 'vScoutWaveButton',
             layout = (20, 26, 5, 1), action = 'onScoutWaveFleet')
-        ui.Button(self.win, text = _('Scrap fleet'), id = 'vScrapButton',
-            layout = (25, 26, 5, 1), action = 'onScrapFleet')
         # ship data
-        ui.Title(self.win, text = _('Ship Data'), layout = (0, 12, 15, 1),
+        ui.Title(self.win, text = _('Ship Data'), layout = (0, 12, 20, 1),
             align = ui.ALIGN_W, font = 'normal-bold')
-        ui.Button(self.win, text = _("Scrap"), layout = (15, 12, 5, 1),
-            action = "onDeleteSelectedShip")
         ui.Label(self.win, text = _('Name'), layout = (0, 13, 5, 1), align = ui.ALIGN_W)
         ui.Label(self.win, id = 'vShipModel', layout = (5, 13, 5, 1), align = ui.ALIGN_E)
         ui.Label(self.win, text = _('Class'), layout = (10, 13, 5, 1), align = ui.ALIGN_W)
