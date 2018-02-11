@@ -34,6 +34,7 @@ class Account:
         self.login = None
         self.nick = None
         self.passwd = None
+        self.email = None
         # account options
         self.lastLogin = 0
         self.blockedUntil = -1 # -1 for not blocked, > 0 for blocked

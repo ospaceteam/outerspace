@@ -74,6 +74,7 @@ def runServer(options):
     msgMngr = None
     clientMngr = None
     issueMngr = None
+    bookingMngr = None
 
     # define and register exit function
 
@@ -95,6 +96,10 @@ def runServer(options):
             if issueMngr:
                 log.message('Shutting down issue manager...')
                 issueMngr.shutdown()
+
+            if bookingMngr:
+                log.message('Shutting down booking manager...')
+                bookingMngr.shutdown()
         except:
             log.exception("Shutdown of the server failed")
 
@@ -127,6 +132,7 @@ def runServer(options):
     from ige.MsgMngr import MsgMngr
     from ige.IssueMngr import IssueMngr
     from ige.ospace.GameMngr import GameMngr
+    from ige.BookingMngr import BookingMngr
 
     # read configuration
     from ige.Config import Config
@@ -152,6 +158,7 @@ def runServer(options):
     gameDB = Database(os.path.join(options.configDir,"db_data"), "game_%s" % gameName, cache = 15000)
     clientDB = DatabaseString(os.path.join(options.configDir,"db_data"), "accounts", cache = 100)
     msgDB = DatabaseString(os.path.join(options.configDir,"db_data"), "messages", cache = 1000)
+    bookingDB = DatabaseString(os.path.join(options.configDir,"db_data"), "bookings", cache = 100)
 
     if options.restore:
         gameDB.restore("%s-game_%s.osbackup" % (options.restore, gameName))
@@ -168,6 +175,7 @@ def runServer(options):
                     return True
             return False
         msgDB.restore("%s-messages.osbackup" % options.restore, include = include)
+        bookingDB.restore("%s-bookings.osbackup" % options.restore, include = include)
         aiList = AIList(options.configDir, options.gameName)
         aiList.restore("%s-ais.osbackup" % options.restore)
 
@@ -182,6 +190,8 @@ def runServer(options):
     msgMngr = MsgMngr(msgDB)
     log.debug("Initializing game manager")
     game = GameMngr(gameName, config, clientMngr, msgMngr, gameDB, options.configDir)
+    log.debug("Initializing booking manager")
+    bookingMngr = BookingMngr(clientMngr, game, bookingDB, options.threshold)
 
     # either forced reset, or uninitialized server
     if options.reset or not gameDB.keys():
@@ -203,10 +213,11 @@ def runServer(options):
     if options.upgrade:
         game.upgrade()
         msgMngr.upgrade()
+        bookingMngr.upgrade()
 
     game.start()
 
-    server.init(clientMngr)
+    server.init(clientMngr, bookingMngr)
     server.register(game)
 
     server.xmlrpcPublish('clientmngr', clientMngr)

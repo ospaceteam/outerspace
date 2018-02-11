@@ -25,13 +25,13 @@ from ige.ospace.Const import *
 import ige
 from MainGameDlg import MainGameDlg
 
-class GalaxerDlg:
+class BookingDlg:
     """ There you subscribe to the new galaxy."""
 
     def __init__(self, app):
         self.app = app
         self.createUI()
-        self.galaxerInfo = client.getGalaxerData()
+        self.bookingInfo = client.cmdProxy.getBookingAnswers()
 
     def display(self, caller = None):
         self.caller = caller
@@ -43,8 +43,13 @@ class GalaxerDlg:
 
     def show(self):
         items = []
-        for galaxyType in self.galaxerInfo:
-            info, tPos, tCur, rawTime, isSelected = self.galaxerInfo[galaxyType]
+        for galaxyType in self.bookingInfo:
+            booking = self.bookingInfo[galaxyType]
+            info = booking.info_text
+            tPos = booking.capacity
+            tCur = booking.bookings
+            rawTime = booking.last_creation
+            isSelected = booking.is_booked
             if rawTime:
                 tTime = time.strftime(_("%m-%d-%y %H:%M"), time.localtime(rawTime))
             else:
@@ -55,28 +60,31 @@ class GalaxerDlg:
                 tChoice = ''
             item = ui.Item(galaxyType, tPos = tPos, tCur = tCur, tTime = tTime,tChoice = tChoice)
             items.append(item)
-        self.win.vGalaxer.items = items
-        self.win.vGalaxer.itemsChanged()
+        self.win.vBooking.items = items
+        self.win.vBooking.itemsChanged()
         return True
 
     def onSelect(self, widget, action, data):
-        self.win.vInfo.text = [self.galaxerInfo[data.text][0]]
+        self.win.vInfo.text = [self.bookingInfo[data.text].info_text]
         self.win.vInfo.offsetRow = 0
         self.win.vInfo.vertScrollbar.slider.position = 0
         return
 
     def onToggle(self, widget, action, data):
-        selection = self.win.vGalaxer.selection
+        selection = self.win.vBooking.selection
         try:
             selectedType = selection[0].text
         except IndexError:
             selectedType = None
         if selectedType:
-            result = client.setPlayerPreference(selectedType)
+            result = client.cmdProxy.toggleBooking(selectedType)
+            print(result)
             if not type(result) == type(True) and not result == True:
-                self.galaxerInfo = result
+                # booking change is logged, no galaxy creation triggered
+                self.bookingInfo = result
                 self.show()
             else:
+                # galaxy creation has been triggered
                 self.win.setStatus(_('Command has been executed.'))
                 self.hide()
                 if not gdata.mainGameDlg:
@@ -101,7 +109,8 @@ class GalaxerDlg:
             layoutManager = ui.SimpleGridLM(),
             tabChange = True
         )
-        ui.Listbox(self.win, layout = (0, 0, 21, 6), id = 'vGalaxer',
+        ui.Listbox(self.win, layout = (0, 0, 21, 6), id = 'vBooking',
+                             sortedBy = ('tPos', 1),
             columns = (    (_('Galaxy type'), 'text', 5, ui.ALIGN_W),
                         (_('Capacity'), 'tPos', 3, ui.ALIGN_NONE),
                         (_('Queue'), 'tCur', 3, ui.ALIGN_NONE),

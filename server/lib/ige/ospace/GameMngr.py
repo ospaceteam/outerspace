@@ -366,10 +366,11 @@ class GameMngr(IGEGameMngr):
         session = self.clientMngr.getSession(sid)
         return self._createNewPlayer(session, galaxyID)
 
-    def createNewSubscribedPlayer(self, (login, nick, email), galaxyID):
+    def createNewSubscribedPlayer(self, login, galaxyID):
         log.debug('Creating new subscribed player using fake session')
+        player = self.clientMngr[login]
         session = Session(None)
-        session.setAttrs(login, nick, email)
+        session.setAttrs(login, player.nick, player.email)
         return self._createNewPlayer(session, galaxyID)
 
     def removePlayer(self, playerID):
@@ -387,6 +388,7 @@ class GameMngr(IGEGameMngr):
     def validateClient(self, session):
         # TODO better validation
         return 1
+
 
     # TODO delete
     #def getAccRights(self, obj, cid):

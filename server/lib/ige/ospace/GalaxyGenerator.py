@@ -23,17 +23,25 @@ import os
 import random
 import sys
 
+import data
+
 from ige.ospace.Const import SCENARIO_SINGLE, SCENARIO_OUTERSPACE
+
+# IDs of galaxy types
+GALAXY_CIRCLE1P = "Circle1P"
+GALAXY_CIRCLE9P = "Circle9P"
+GALAXY_CIRCLE42P = "Circle42P"
+GALAXY_CIRCLE65P = "Circle65P"
 
 class GalaxyStats:
 
     def __init__(self, galaxyType=None):
-        self.activeGalaxy = 'self.circle42P'
+        self.activeGalaxy = GALAXY_CIRCLE42P
         self.galaxies = {
-                    'Circle1P' : self.circle1P,
-                    'Circle9P' : self.circle9P,
-                    'Circle42P' : self.circle42P,
-                    'Circle65P' : self.circle65P
+                    GALAXY_CIRCLE1P : self.circle1P,
+                    GALAXY_CIRCLE9P : self.circle9P,
+                    GALAXY_CIRCLE42P : self.circle42P,
+                    GALAXY_CIRCLE65P : self.circle65P
         }
         self.makeStats(galaxyType)
 
@@ -160,9 +168,9 @@ class GalaxyStats:
 
 class GalaxyGenerator:
     def __init__(self):
-        self.galaxyTypes = {'Circle1P':(1, 'Single player galaxy to enjoy freebuilding. Mutant is the only enemy. Endless game.', 15.0),
-                            'Circle9P':(9, 'Smaller galaxy for 9 players, without pirate or EDEN. Recommended for new players or those who seek more casual gameplay.', 26.0),
-                            'Circle42P':(42, 'Original size galaxy for 42 players, place of epic battles, recommended only to the experienced players. May be quite time consuming.', 50.0)}
+        self.galaxyTypes = {GALAXY_CIRCLE1P:(1, 'Single player galaxy to enjoy freebuilding. Mutant is the only enemy. Endless game.', 15.0),
+                            GALAXY_CIRCLE9P:(9, 'Smaller galaxy for 9 players, without pirate or EDEN. Recommended for new players or those who seek more casual gameplay.', 26.0),
+                            GALAXY_CIRCLE42P:(42, 'Original size galaxy for 42 players, place of epic battles, recommended only to the experienced players. May be quite time consuming.', 50.0)}
 
     def generateGalaxy(self, galaxyType, fileHandle):
         if not galaxyType in self.galaxyTypes.keys():
@@ -751,19 +759,12 @@ systemNames = []
 
 def loadSystemNames():
     global systemNames
-    names = {}
-    filename = os.path.join(
-        os.path.dirname(__file__),
-        "..",
-        "..",
-        "..",
-        "data",
-        "SystemNames.txt",
-    )
-    filename = os.path.abspath(filename)
-    for line in open(filename, "r"):
-        names[line.strip()] = None
-    systemNames = names.keys()
+    names = set([])
+
+    with open(data.SYSTEM_NAMES_FILE) as names_file:
+        for line in names_file:
+            names.add(line.strip())
+    systemNames = list(names)
 
 ## Generates new galaxy and saves it to specified file
 ## fh - handle of file where galaxy will be saved -

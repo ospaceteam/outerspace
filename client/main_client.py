@@ -158,7 +158,6 @@ def runClient(options):
             gdata.config = Config(os.path.join(options.configDir, options.configFilename))
 
             gdata.config.game.server = options.server
-            gdata.config.galaxer.server = options.galaxer
 
             if gdata.config.client.language == None:
                     gdata.config.client.language = 'en'

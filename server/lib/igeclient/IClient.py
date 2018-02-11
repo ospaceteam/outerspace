@@ -120,6 +120,12 @@ class IClient:
     def changePassword(self, old, new):
         return apply(IProxy('changePassword', None, self), (old, new))
 
+    def getBookingAnswers(self):
+        return apply(IProxy('getBookingAnswers', None, self), ())
+
+    def toggleBooking(self, galaxy_type):
+        return apply(IProxy('toggleBooking', None, self), (galaxy_type,))
+
     def createNewPlayer(self, galaxyID):
         return apply(IProxy('%s.createNewPlayer' % self.gameID, None, self), (galaxyID,))
 

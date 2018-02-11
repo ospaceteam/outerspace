@@ -38,17 +38,11 @@ serverVersion = None
 ignoreMsgs = {}
 nonexistingObj = {}
 options = None
-galaxer = None
 
 def initialize(aServer, aCallbackObj, anOptions):
-    global callbackObj, server, options, galaxer
+    global callbackObj, server, options
     callbackObj = aCallbackObj
     server = aServer
-    try:
-        galaxer = xmlrpclib.ServerProxy('http://' + gdata.config.galaxer.server)
-        galaxer.test()
-    except socket.error, e:
-        log.warning('Galaxer is not available')
 
     options = anOptions
     initCmdProxy(options.heartbeat)
@@ -120,22 +114,6 @@ def saveDB():
     if db:
         log.message('OSClient', 'Saving database')
         db.save()
-
-## Part for communication with Galaxer
-def getGalaxerData():
-    global cmdProxy, galaxer
-    token = cmdProxy.getToken()
-
-    galaxer.test()
-    log.debug("Fetching data from Galaxer")
-    galaxerData = galaxer.getDataForPlayer(token)
-    return galaxerData
-
-def setPlayerPreference(galType):
-    global cmdProxy, galaxer
-    token = cmdProxy.getToken()
-    galaxerData = galaxer.setPlayerPreference(token, galType)
-    return galaxerData
 
     ## Message handler
 
