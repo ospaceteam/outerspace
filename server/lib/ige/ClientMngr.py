@@ -34,6 +34,7 @@ class Account:
         self.login = None
         self.nick = None
         self.passwd = None
+        self.email = None
         # account options
         self.lastLogin = 0
         self.blockedUntil = -1 # -1 for not blocked, > 0 for blocked
@@ -66,9 +67,6 @@ class ClientMngr:
         password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
         open(os.path.join(self.configDir, "token"), "w").write(password)
         self.accounts[ADMIN_LOGIN].passwd = password
-        # tokens to provide player identification
-        # to external parts of server (Galaxer)
-        self.tokens = {}
 
     def shutdown(self):
         self.accounts.shutdown()
@@ -187,11 +185,7 @@ class ClientMngr:
         self.sessions[sid].setAttrs(account.login, account.nick, account.email)
         account.lastLogin = time.time()
         account.addHostID(hostID)
-        self.tokens[sid] = hashlib.md5(str(random.random())).hexdigest()
         return 1, None
-
-    def getToken(self, sid):
-        return self.tokens[sid], None
 
     def getSession(self, sid):
         session = self.sessions.get(sid, None)
@@ -207,16 +201,6 @@ class ClientMngr:
                 return session
         return None
 
-    def getSessionByToken(self, sid, token):
-        # check admin
-        session = self.getSession(sid)
-        if session.login != ADMIN_LOGIN:
-            raise SecurityException('You cannot issue this command.')
-        for sid in self.tokens:
-            if self.tokens[sid] == token:
-                return self.getSession(sid), None
-        return 0, None
-
     def logout(self, sid):
         session = self.sessions.get(sid, None)
         if session:
@@ -225,7 +209,6 @@ class ClientMngr:
             except AttributeError:
                 pass
             del self.sessions[sid]
-            del self.tokens[sid]
             return 1, None
         else:
             raise SecurityException('No such session id.')

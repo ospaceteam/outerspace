@@ -99,12 +99,6 @@ class IClient:
     def getRegisteredGames(self):
         return apply(IProxy('getRegisteredGames', None, self), ())
 
-    def getToken(self):
-        return apply(IProxy('getToken', None, self), ())
-
-    def getSessionByToken(self, token):
-        return apply(IProxy('getSessionByToken', None, self), (token,))
-
     def cleanupSessions(self):
         return apply(IProxy('cleanupSessions', None, self), ())
 
@@ -119,6 +113,12 @@ class IClient:
 
     def changePassword(self, old, new):
         return apply(IProxy('changePassword', None, self), (old, new))
+
+    def getBookingAnswers(self):
+        return apply(IProxy('getBookingAnswers', None, self), ())
+
+    def toggleBooking(self, galaxy_type):
+        return apply(IProxy('toggleBooking', None, self), (galaxy_type,))
 
     def createNewPlayer(self, galaxyID):
         return apply(IProxy('%s.createNewPlayer' % self.gameID, None, self), (galaxyID,))

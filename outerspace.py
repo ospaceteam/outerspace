@@ -30,14 +30,10 @@ relative_path = os.path.dirname(os.path.realpath(__file__))
 # tweak PYTHONPATH
 sys.path.insert(0, os.path.join(relative_path, "client"))
 sys.path.insert(0, os.path.join(relative_path, "server"))
+sys.path.insert(0, os.path.join(relative_path, "server", "data"))
 sys.path.insert(0, os.path.join(relative_path, "client-ai"))
 sys.path.insert(0, os.path.join(relative_path, "server","lib"))
 
-
-# parse command line parameters
-# client with singleplayer server [and galaxer] is run in case
-# of no subcommand. Subcommands exists to provide means to run
-# headless servers and galaxers for MMOG purposes
 
 parser = argparse.ArgumentParser()
 
@@ -52,11 +48,6 @@ common_parser.add_argument("--server", dest = "server",
     default = "pichu.dahaic.net:9080",
     help = "Outer Space server location"
 )
-common_parser.add_argument("--galaxer", dest = "galaxer",
-    metavar = "HOSTNAME:PORT",
-    default = "pichu.dahaic.net:9081",
-    help = "Outer Space galaxy booking system location"
-)
 common_parser.add_argument("--local", dest = "local",
     action = "store_true",
     default = False,
@@ -66,17 +57,16 @@ common_parser.add_argument("--profile", dest = "profile",
     default=False,
     help = "Run with profiling enabled"
 )
-subparsers = parser.add_subparsers(help='Subcommands: client (default), galaxer, server, ai, ai-pool')
+subparsers = parser.add_subparsers(help='Subcommands: client (default), server, ai, ai-pool')
 
 parser_client = subparsers.add_parser('client', help='Game client of Outer Space', parents=[common_parser])
-parser_galaxer = subparsers.add_parser('galaxer', help='Utility server to provide galaxy booking system', parents=[common_parser])
 parser_server = subparsers.add_parser('server', help='Dedicated server', parents=[common_parser])
 parser_ai = subparsers.add_parser('ai', help='Run one AI worker', parents=[common_parser])
 parser_ai_pool = subparsers.add_parser('ai-pool', help='Batch run of AI players defined in configuration', parents=[common_parser])
 
 # unfortunately, argparser does not support default subcommand (maybe it is
 # messy approach? :( ) so we push 'client' when default should apply
-if len(sys.argv) == 1 or sys.argv[1] not in ['client', 'galaxer', 'server', 'ai', 'ai-pool', '--help', '-h']:
+if len(sys.argv) == 1 or sys.argv[1] not in ['client', 'server', 'ai', 'ai-pool', '--help', '-h']:
     sys.argv = [sys.argv[0]] + ['client'] + sys.argv[1:]
 
 subcommand = sys.argv[1]
@@ -106,14 +96,6 @@ parser_client.add_argument("--heartbeat", dest = "heartbeat",
     help = "Heartbeat for server connection"
 )
 
-# galaxer
-parser_galaxer.add_argument("--threshold", dest = "threshold",
-    type = float,
-    metavar = "REALNUMBER",
-    default = 1.0,
-    help = "Ratio of galaxy capacity, which is necessary to create it."
-)
-
 # server
 parser_server.add_argument("--configfilename", dest = "configFilename",
     metavar = "FILENAME",
@@ -138,6 +120,13 @@ parser_server.add_argument("--mode", dest = "mode",
     metavar = "MODE",
     default=1,
     help = "Server mode: 0 - debug, 1 - normal",
+)
+parser_server.add_argument("--threshold", dest = "threshold",
+    type = float,
+    metavar = "REALNUMBER",
+    default = 1.0,
+    help = ("Ratio of galaxy capacity, which is necessary to be booked "
+            "by players, before creation of galaxy is triggered.")
 )
 
 # ai
@@ -195,14 +184,8 @@ options.configDir = os.path.expanduser(options.configDir)
 if options.local:
     # we will set localhost as a connections
     options.server = 'localhost:9080'
-    options.galaxer= 'localhost:9081'
 
-
-if subcommand == 'galaxer':
-    from main_galaxer import runGalaxer
-    task = runGalaxer
-
-elif subcommand == 'server':
+if subcommand == 'server':
     from main_server import runServer
     task = runServer
 

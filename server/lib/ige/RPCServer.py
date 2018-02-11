@@ -141,7 +141,7 @@ class xmlrpc(xmlrpc_handler.xmlrpc_handler):
             )
 
 ## Public interface
-def init(clientMngr):
+def init(clientMngr, bookingMngr):
     global callMap
 
     callMap['login'] = clientMngr.login
@@ -153,9 +153,9 @@ def init(clientMngr):
     callMap['cleanupSessions'] = clientMngr.cleanupSessions
     callMap['exportAccounts'] = clientMngr.exportAccounts
     callMap['getVersion'] = versionHandler
-    callMap['getToken'] = clientMngr.getToken
-    callMap['getSessionByToken'] = clientMngr.getSessionByToken
     callMap['getRegisteredGames'] = getRegisteredGamesHandler
+    callMap['getBookingAnswers'] = bookingMngr.get_booking_answers
+    callMap['toggleBooking'] = bookingMngr.toggle_booking
 
 def register(game):
     global callMap
@@ -173,6 +173,7 @@ def register(game):
 
     global registeredGames
     registeredGames[game.gameID] = game.gameName
+
 
 def xmlrpcPublish(name, obj):
     objMap[name] = obj

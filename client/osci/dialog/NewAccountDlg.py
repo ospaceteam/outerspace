@@ -23,7 +23,7 @@ from osci import client, gdata, res
 from ige.ospace.Const import *
 from MainGameDlg import MainGameDlg
 from ConfirmDlg import ConfirmDlg
-from GalaxerDlg import GalaxerDlg
+from BookingDlg import BookingDlg
 import ige
 
 class NewAccountDlg:
@@ -101,14 +101,10 @@ class NewAccountDlg:
                 gdata.mainGameDlg.display()
             client.updateDatabase(clearDB = 1)
 
-    def onGalaxer(self, widget, action, data):
-        try:
-            client.galaxer.test()
-            self.win.hide()
-            self.win.setStatus(_('Command has been executed.'))
-            GalaxerDlg(gdata.app).display(self)
-        except Exception:
-            self.win.setStatus(_('Galaxer not present.'))
+    def onBooking(self, widget, action, data):
+        self.win.hide()
+        self.win.setStatus(_('Command has been executed.'))
+        BookingDlg(gdata.app).display(self)
 
     def onCancel(self, widget, action, data):
         self.win.hide()
@@ -133,7 +129,7 @@ class NewAccountDlg:
         self.win.subscribeAction('*', self)
         ui.Label(self.win, layout = (0, 10, 5, 1), text = _("VIP Password:"))
         ui.Entry(self.win, layout = (5, 10, 5, 1), id = 'vPassword', align = ui.ALIGN_W, showChar = '*', orderNo = 1 )
-        ui.TitleButton(self.win, layout = (13, 10, 8, 1), text = _('Book position'), action = 'onGalaxer')
+        ui.TitleButton(self.win, layout = (13, 10, 8, 1), text = _('Book position'), action = 'onBooking')
         ui.Title(self.win, layout = (0, 11, 13, 1), id = 'vStatusBar', align = ui.ALIGN_W)
         ui.TitleButton(self.win, layout = (13, 11, 4, 1), text = _('Exit'), action = 'onCancel')
         ui.TitleButton(self.win, layout = (17, 11, 4, 1), text = _('Select'), action = 'onSelect')

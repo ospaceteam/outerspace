@@ -3,7 +3,7 @@
 Outer Space is turn-base 4X multiplayer on-line strategy game. Your goal is to become an Imperator of the Galaxy, racing other human players for supremacy via diplomacy, economic strength of you empire and research. And if all other means fail, you may subdue your neighbours with you powerful fleets and superior strategic thinking.
 
 ## Getting started
-The ```outerspace``` project consists of two big parts. One is graphic client, providing everything player needs to enjoy the game. Then there is a server side, with game server itself, plus Galaxer (daemon for starting a galaxies on-demand) and AI framework.
+The ```outerspace``` project consists of two big parts. One is graphic client, providing everything player needs to enjoy the game. Then there is a server side, with game server itself and AI framework.
 
 ### Installation
 #### Requirements
@@ -39,21 +39,20 @@ this will require administrator access, though.
 *NOTE (Windows):* It is highly advisable to follow steps described in [Using Python on Windows guide](https://docs.python.org/2.7/using/windows.html).
 
 ### Running a game client
-In case the server is running on ```non-default remote machine```, you need to know IP address of the server, and ports on which the Server and Galaxer listen. Then you run the game with command
+In case the Server is running on ```non-default remote machine```, you need to know IP address of the Server and port on which the Server listens. Then you run the game with command
 
 ```
-python2 ./outerspace.py client --server HOSTNAME:PORT_SERVER --galaxer HOSTNAME:PORT_GALAXER
+python2 ./outerspace.py client --server HOSTNAME:PORT_SERVER
 ```
 
-By default both of these parameters points to localhost, so in case you want to login to your local Server and local Galaxer,
-it's even simpler
+In case you want to login to your local Server, you can do it easily by using.
 
 ```
-python2 ./outerspace.py client
+python2 ./outerspace.py client --local
 ```
 
 ### Server side
-To achieve full functionality, you have to start main Server, Galaxer for player queuing new galaxies, then you have to set up turn ticks of the server as well as periodic triggering of the AI subsystem.
+To achieve full functionality, you have to start main Server, then you have to set up turn ticks of the server as well as periodic triggering of the AI subsystem.
 
 #### Game server
 Server can be simply run with command
@@ -63,17 +62,6 @@ python2 ./outerspace.py server
 ```
 which will start server listening to default TCP port 9080 on all networks.
 
-
-#### Galaxer
-Next step is to run Galaxer, in very similar fashion. Most common scenario is Galaxer running on the same machine as main server, in which case no arguments are necessary.
-```
-python2 ./outerspace.py galaxer
-```
-
-In case server runs on remote machine, add parameter to define IP address and port
-```
-python2 ./outerspace.py client --server HOSTNAME:PORT_SERVER 
-```
 
 #### Ticking game server
 For triggering one turn, you have to run
