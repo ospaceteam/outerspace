@@ -184,14 +184,8 @@ options.configDir = os.path.expanduser(options.configDir)
 if options.local:
     # we will set localhost as a connections
     options.server = 'localhost:9080'
-    options.galaxer= 'localhost:9081'
 
-
-if subcommand == 'galaxer':
-    from main_galaxer import runGalaxer
-    task = runGalaxer
-
-elif subcommand == 'server':
+if subcommand == 'server':
     from main_server import runServer
     task = runServer
 

@@ -99,12 +99,6 @@ class IClient:
     def getRegisteredGames(self):
         return apply(IProxy('getRegisteredGames', None, self), ())
 
-    def getToken(self):
-        return apply(IProxy('getToken', None, self), ())
-
-    def getSessionByToken(self, token):
-        return apply(IProxy('getSessionByToken', None, self), (token,))
-
     def cleanupSessions(self):
         return apply(IProxy('cleanupSessions', None, self), ())
 

@@ -153,8 +153,6 @@ def init(clientMngr, bookingMngr):
     callMap['cleanupSessions'] = clientMngr.cleanupSessions
     callMap['exportAccounts'] = clientMngr.exportAccounts
     callMap['getVersion'] = versionHandler
-    callMap['getToken'] = clientMngr.getToken
-    callMap['getSessionByToken'] = clientMngr.getSessionByToken
     callMap['getRegisteredGames'] = getRegisteredGamesHandler
     callMap['getBookingAnswers'] = bookingMngr.get_booking_answers
     callMap['toggleBooking'] = bookingMngr.toggle_booking

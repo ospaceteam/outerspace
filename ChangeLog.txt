@@ -1,6 +1,9 @@
 ﻿Outer Space Change Log
 ======================
 
+[2018-02-11]
+- Removal of Galaxer, merging functionality into Server [dahaic]
+
 [2017-09-03]
 - Revision bump to 0.5.72 [dahaic]
 

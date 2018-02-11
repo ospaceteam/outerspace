@@ -149,7 +149,6 @@ elif options.chronicler:
     gdata.config = Config(os.path.join(options.configDir, options.configFilename))
 
     gdata.config.game.server = 'localhost:9080'
-    gdata.config.galaxer.server = 'localhost:9081'
 
     gdata.config.defaults.minfleetsymbolsize = 4
     gdata.config.defaults.minplanetsymbolsize = 5
