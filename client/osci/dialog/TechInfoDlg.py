@@ -362,7 +362,7 @@ class TechInfoDlg:
         requiredStrategicResources = []
         for res in resourceDict:
             try:
-                amount = resourceDict[res] / float(SR_AMOUNT_BIG)
+                amount = resourceDict[res] / float(Rules.stratResAmountBig)
             except IndexError:
                 # this is case of research resources - it's pure list, not a dictionary
                 requiredStrategicResources += [gdata.stratRes[res]]

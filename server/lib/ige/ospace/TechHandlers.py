@@ -206,7 +206,7 @@ def finishProjectNF(tran, source, target, tech):
         # TODO success shall depend on the level of the technology
         owner = tran.db[target.owner]
         stratRes = int(tech.data)
-        owner.stratRes[stratRes] = owner.stratRes.get(stratRes, 0) + SR_AMOUNT_SMALL
+        owner.stratRes[stratRes] = owner.stratRes.get(stratRes, 0) + Rules.stratResAmountSmall
 
 ## Antimatter transmutation
 def finishProjectNF2(tran, source, target, tech):
@@ -215,7 +215,7 @@ def finishProjectNF2(tran, source, target, tech):
         # TODO success shall depend on the level of the technology
         owner = tran.db[target.owner]
         stratRes = int(tech.data)
-        owner.stratRes[stratRes] = owner.stratRes.get(stratRes, 0) + 4 * SR_AMOUNT_BIG
+        owner.stratRes[stratRes] = owner.stratRes.get(stratRes, 0) + 4 * Rules.stratResAmountBig
         Utils.sendMessage(tran, target, MSG_EXTRACTED_ANTIMATTER_SYNTH, target.oid, stratRes)
 
 ## Upgrade ships

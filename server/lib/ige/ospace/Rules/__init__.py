@@ -146,6 +146,8 @@ tlPopReserve = 250
 
 ## Resources
 stratResRate = turnsPerDay * 6
+stratResAmountBig = 10
+stratResAmountSmall = 1
 
 ## Population
 popGrowthRate = 0.02

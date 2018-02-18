@@ -109,7 +109,7 @@
 		<structure
 			subtype="str610"
 			buildProd="5760"
-			buildSRes="SR_TL5C:SR_AMOUNT_BIG"
+			buildSRes="SR_TL5C:stratResAmountBig"
 			operWorkers="4000"
 			operEn="250"
 			scannerPwr="70"
@@ -133,7 +133,7 @@
 		<structure
 			subtype="str400"
 			buildProd="3840"
-			buildSRes="SR_TL5A:SR_AMOUNT_BIG"
+			buildSRes="SR_TL5A:stratResAmountBig"
 			operWorkers="3500"
 			storEn="10800"
 			prodEn="1600"
@@ -155,7 +155,7 @@
 		<structure
 			subtype="str400"
 			buildProd="3840"
-			buildSRes="SR_TL5B:SR_AMOUNT_BIG"
+			buildSRes="SR_TL5B:stratResAmountBig"
 			operWorkers="3500"
 			storEn="8100"
 			prodEn="1200"
@@ -177,7 +177,7 @@
 		<structure
 			subtype="str105"
 			buildProd="3840"
-			buildSRes="SR_TL5C:SR_AMOUNT_BIG"
+			buildSRes="SR_TL5C:stratResAmountBig"
 			operWorkers="2000"
 			moraleTrgt="+8"
 			prodBio="450"
@@ -207,7 +207,7 @@
 		<structure
 			subtype="str600"
 			buildProd="3840"
-			buildSRes="SR_TL5C:SR_AMOUNT_BIG"
+			buildSRes="SR_TL5C:stratResAmountBig"
 			operEn="1500"
 			operWorkers="2000"
 			fleetSpeedBoost="3.2"
@@ -703,7 +703,7 @@
 		<shipequip
 			subtype="seq_wpn"
 			buildProd="1676"
-			buildSRes="SR_TL5B:SR_AMOUNT_SMALL"
+			buildSRes="SR_TL5B:stratResAmountSmall"
 			slots="8"
 			weight="20"
 			weaponDmgMin="687"
@@ -728,7 +728,7 @@
 		<shipequip
 			subtype="seq_wpn"
 			buildProd="2400"
-			buildSRes="SR_TL5B:SR_AMOUNT_SMALL"
+			buildSRes="SR_TL5B:stratResAmountSmall"
 			slots="1"
 			weight="5"
 			weaponDmgMin="25"
@@ -755,7 +755,7 @@
 			slots="4"
 			weight="14"
 			buildProd="1960"
-			buildSRes="SR_TL5A:SR_AMOUNT_SMALL"
+			buildSRes="SR_TL5A:stratResAmountSmall"
 			weaponDmgMin="1865"
 			weaponDmgMax="2688"
 			weaponAtt="6"
@@ -779,7 +779,7 @@
 		<shipequip
 			subtype="seq_mod"
 			buildProd="480"
-			buildSRes="SR_TL5A:SR_AMOUNT_SMALL"
+			buildSRes="SR_TL5A:stratResAmountSmall"
 			storEn="7680"
 			operEn="0"
 			slots="1"
@@ -801,7 +801,7 @@
 			subtype="seq_mod"
 			equipType="Combat Bonuses"
 			buildProd="960"
-			buildSRes="SR_TL5B:SR_AMOUNT_SMALL"
+			buildSRes="SR_TL5B:stratResAmountSmall"
 			slots="1"
 			weight="-8"
 			signature="-30"
@@ -826,7 +826,7 @@
 		<shipequip
 			subtype="seq_struct"
 			buildProd="1440"
-			buildSRes="SR_TL5C:SR_AMOUNT_BIG"
+			buildSRes="SR_TL5C:stratResAmountBig"
 			operEn="10"
 			slots="12"
 			weight="30"
@@ -970,7 +970,7 @@
 		/>
 		<shiphull
 			buildProd="2880"
-			buildSRes="SR_TL5C:SR_AMOUNT_SMALL"
+			buildSRes="SR_TL5C:stratResAmountSmall"
 			storEn="5984"
 			operEn="16"
 			maxHP="1024"
@@ -1073,7 +1073,7 @@
 		<shipequip
 			subtype="seq_ctrl"
 			buildProd="120"
-			buildSRes="SR_TL5B:SR_AMOUNT_SMALL"
+			buildSRes="SR_TL5B:stratResAmountSmall"
 			combatAtt="8"
 			combatDef="8"
 			missileDef="8"
@@ -1099,7 +1099,7 @@
 		<shipequip
 			subtype="seq_eng"
 			buildProd="1152"
-			buildSRes="SR_TL5B:SR_AMOUNT_SMALL"
+			buildSRes="SR_TL5B:stratResAmountSmall"
 			storEn="3840"
 			operEn="32"
 			slots="16"
@@ -1189,7 +1189,7 @@
 		<structure
 			subtype="str99"
 			buildProd="2600"
-			buildSRes="SR_BIO1:SR_AMOUNT_BIG"
+			buildSRes="SR_BIO1:stratResAmountBig"
 			operWorkers="1500"
 			operEn="35"
 			maxHP="600"
@@ -1395,7 +1395,7 @@
 		<project
 			globalDisabled="1"
 			buildProd="480"
-			buildSRes="SR_TL5C:SR_AMOUNT_BIG"
+			buildSRes="SR_TL5C:stratResAmountBig"
 			finishConstrHandler="finishProjectBioEnrich"
 			validateConstrHandler="validateProjectBioEnrich"
 		/>
@@ -1414,7 +1414,7 @@
 		<project
 			globalDisabled="0"
 			buildProd="48000"
-			buildSRes="SR_TL5A:SR_AMOUNT_BIG"
+			buildSRes="SR_TL5A:stratResAmountBig"
 			data="3"
 			finishConstrHandler="finishProjectNF2"
 		/>
@@ -1433,7 +1433,7 @@
 		<project
 			globalDisabled="0"
 			buildProd="48000"
-			buildSRes="SR_TL5A:SR_AMOUNT_BIG"
+			buildSRes="SR_TL5A:stratResAmountBig"
 			data="4"
 			finishConstrHandler="finishProjectNF2"
 		/>
@@ -1452,7 +1452,7 @@
 		<project
 			globalDisabled="0"
 			buildProd="48000"
-			buildSRes="SR_TL5A:SR_AMOUNT_BIG"
+			buildSRes="SR_TL5A:stratResAmountBig"
 			data="5"
 			finishConstrHandler="finishProjectNF2"
 		/>

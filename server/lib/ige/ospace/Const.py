@@ -219,9 +219,6 @@ SR_TLAA = 1000 # Unnilseptium
 # "goods"
 SR_BIO1 = 100
 
-SR_AMOUNT_BIG = 10
-SR_AMOUNT_SMALL = 1
-
 ## ship improvements
 SI_SPEED = 1
 SI_TANKS = 2

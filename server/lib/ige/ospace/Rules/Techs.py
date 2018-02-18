@@ -21,8 +21,6 @@
 import sys, copy
 from ige import log
 from ige.ospace import Const
-from ige.ospace.Const import SR_AMOUNT_BIG
-from ige.ospace.Const import SR_AMOUNT_SMALL
 import ige.ospace.Rules
 import hashlib, os.path
 import cPickle as pickle
@@ -470,6 +468,10 @@ def init(configDir):
                 tech.unpackStruct = 0
 
             # strat. resources
+            # this has to be here to prevent import deadlock in Rules
+            from ige.ospace.Rules import stratResAmountBig
+            from ige.ospace.Rules import stratResAmountSmall
+
             stratRes = []
             for sr in tech.researchReqSRes:
                 stratRes.append(getattr(Const, sr))

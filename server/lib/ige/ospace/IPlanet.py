@@ -336,7 +336,7 @@ class IPlanet(IObject):
         if owner and obj.plStratRes != SR_NONE:
             turn = tran.db[OID_UNIVERSE].turn
             if turn % Rules.stratResRate == 0:
-                owner.stratRes[obj.plStratRes] = owner.stratRes.get(obj.plStratRes, 0) + SR_AMOUNT_BIG
+                owner.stratRes[obj.plStratRes] = owner.stratRes.get(obj.plStratRes, 0) + Rules.stratResAmountBig
                 Utils.sendMessage(tran, obj, MSG_EXTRACTED_STRATRES, obj.oid, obj.plStratRes)
         # compute base morale
         if owner:
