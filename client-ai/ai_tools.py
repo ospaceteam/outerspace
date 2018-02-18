@@ -663,14 +663,14 @@ def getSystemStatsChange(client, db, techID, targetPlanetID, targetTechID):
     deltaEn = 0
     tech = client.getFullTechInfo(techID)
     deltaEn -= tech.operEn
-    deltaBio -= Rules.maxPopReserve * tech.operWorkers / 100
+    deltaBio -= tech.operWorkers / 100
     deltaEn += tech.prodEn * Rules.techImprEff[player.techs.get(techID, 1)] * sum([x*y/100.0 for x, y in zip(tech.prodEnMod, [planet.plBio, planet.plMin, planet.plEn, 100])])
     deltaBio += tech.prodBio * Rules.techImprEff[player.techs.get(techID, 1)] * sum([x*y/100.0 for x, y in zip(tech.prodBioMod, [planet.plBio, planet.plMin, planet.plEn, 100])])
     deltaProd = tech.prodProd * Rules.techImprEff[player.techs.get(techID, 1)] * sum([x*y/100.0 for x, y in zip(tech.prodProdMod, [planet.plBio, planet.plMin, planet.plEn, 100])])
     if targetTechID:
         tech = client.getFullTechInfo(targetTechID)
         deltaEn += tech.operEn
-        deltaBio += Rules.maxPopReserve * tech.operWorkers / 100
+        deltaBio += tech.operWorkers / 100
         deltaEn -= tech.prodEn * Rules.techImprEff[player.techs.get(techID, 1)] * sum([x*y/100.0 for x, y in zip(tech.prodEnMod, [planet.plBio, planet.plMin, planet.plEn, 100])])
         deltaBio -= tech.prodBio * Rules.techImprEff[player.techs.get(techID, 1)] * sum([x*y/100.0 for x, y in zip(tech.prodBioMod, [planet.plBio, planet.plMin, planet.plEn, 100])])
         deltaProd -= tech.prodProd * Rules.techImprEff[player.techs.get(techID, 1)] * sum([x*y/100.0 for x, y in zip(tech.prodProdMod, [planet.plBio, planet.plMin, planet.plEn, 100])])

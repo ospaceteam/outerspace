@@ -464,16 +464,16 @@ class StarSystemDlg:
             self.win.vPCMorale.foreground = None
         if hasattr(planet, 'changeMorale'):
             if planet.changeMorale > 0:
-                info = _('M rise %+d, Base %d + Build %d + Pop %d = %d, revolt under %d.') % (
-                    planet.changeMorale,planet.moraleModifiers[0],planet.moraleModifiers[1],planet.moraleModifiers[2],planet.moraleModifiers[3], Rules.revoltThr,
+                info = _('M rise %+d, Base %d + Build %d + Pop %d + Unemp %d = %d, revolt under %d.') % (
+                    planet.changeMorale,planet.moraleModifiers[0],planet.moraleModifiers[1],planet.moraleModifiers[2],planet.moraleModifiers[3],planet.moraleModifiers[4], Rules.revoltThr,
                 )
             elif planet.changeMorale < 0:
-                info = _('M fall %+d, Base %d + Build %d + Pop %d = %d, revolt under %d.') % (
-                    planet.changeMorale,planet.moraleModifiers[0],planet.moraleModifiers[1],planet.moraleModifiers[2],planet.moraleModifiers[3], Rules.revoltThr,
+                info = _('M fall %+d, Base %d + Build %d + Pop %d + Unemp %d = %d, revolt under %d.') % (
+                    planet.changeMorale,planet.moraleModifiers[0],planet.moraleModifiers[1],planet.moraleModifiers[2],planet.moraleModifiers[3],planet.moraleModifiers[4], Rules.revoltThr,
                 )
             else:
-                info = _('Morale is stable. Base %d + Build. %d + Pop. %d = %d, revolt under %d.') % (
-                    planet.moraleModifiers[0],planet.moraleModifiers[1],planet.moraleModifiers[2],planet.moraleModifiers[3], Rules.revoltThr,
+                info = _('Morale is stable. Base %d + Build. %d + Pop. %d + Unemp %d = %d, revolt under %d.') % (
+                    planet.moraleModifiers[0],planet.moraleModifiers[1],planet.moraleModifiers[2],planet.moraleModifiers[3],planet.moraleModifiers[4], Rules.revoltThr,
                 )
             self.win.vPCMorale.tooltip = info
             self.win.vPCMorale.statustip = info

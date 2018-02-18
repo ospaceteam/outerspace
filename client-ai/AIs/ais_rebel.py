@@ -47,7 +47,7 @@ def planetManager():
             for techID, hp, something, eff in planet.slots:
                 tech = client.getFullTechInfo(techID)
                 systemEn -= tech.operEn
-                systemBio -= Rules.maxPopReserve * tech.operWorkers / 100
+                systemBio -= tech.operWorkers / 100
                 systemEn += tech.prodEn * Rules.techImprEff[player.techs.get(techID, 1)] * sum([x*y/100.0 for x, y in zip(tech.prodEnMod, [planet.plBio, planet.plMin, planet.plEn, 100])])
                 systemBio += tech.prodBio * Rules.techImprEff[player.techs.get(techID, 1)] * sum([x*y/100.0 for x, y in zip(tech.prodBioMod, [planet.plBio, planet.plMin, planet.plEn, 100])])
             for task in getattr(planet, 'prodQueue', []):
@@ -57,7 +57,7 @@ def planetManager():
                     if tech.isStructure:
                         target = db[task.targetID]
                         systemEn -= tech.operEn
-                        systemBio -= Rules.maxPopReserve * tech.operWorkers / 100
+                        systemBio -= tech.operWorkers / 100
                         systemEn += tech.prodEn * Rules.techImprEff[player.techs.get(techID, 1)] * sum([x*y/100.0 for x, y in zip(tech.prodEnMod, [target.plBio, target.plMin, target.plEn, 100])])
                         systemBio += tech.prodBio * Rules.techImprEff[player.techs.get(techID, 1)] * sum([x*y/100.0 for x, y in zip(tech.prodBioMod, [target.plBio, target.plMin, target.plEn, 100])])
         idlePlanets = data.myProdPlanets & set(system.planets)
@@ -75,7 +75,7 @@ def planetManager():
             # now we ignore all already build structures, and try to satisfy
             # outpost/fact or outpost/labs ration [on free slots]
             if planet.plSlots > len(planet.slots):
-                if systemEn > prodTech.operEn and systemBio > prodTech.operWorkers * Rules.maxPopReserve / 100:
+                if systemEn > prodTech.operEn and systemBio > prodTech.operWorkers / 100:
                     planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planet.oid,
                         prodTech.id, 1, planetID, prodTech.id < 1000, 0, OID_NONE)
                     idlePlanets.remove(planetID)

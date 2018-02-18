@@ -141,8 +141,7 @@ enBaseStor = 4800
 
 autoMinStorTurns = 2
 
-maxPopReserve = 1.125
-tlPopReserve = 250
+tlPopReserve = 100
 
 ## Resources
 stratResRate = turnsPerDay * 6
@@ -278,6 +277,12 @@ moraleModPlHit = 96.0 # how many morale point per 1 per cent of damage
 moralePerPointChance = 5.0 # for every point below revoltThr % chance for revolt
 moraleProdStep = 10
 moraleProdBonus = [-0.875, -0.75, -0.625, -0.50, -0.375, -0.25, -0.125, 0.0, 0.0, 0.125, 0.25]
+# we expect pop reserve from TL to get into unemployed
+# tlPopReserve * TL1
+# if we get no reserve, there is a hit, if we get at least
+# the reserve, it's a bonus, linear in between
+unemployedMoraleLow = -20
+unemployedMoraleHigh = 10
 
 ## Revolt
 revoltDestrBio = 0.05
