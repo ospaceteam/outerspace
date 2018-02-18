@@ -370,14 +370,14 @@ class IGalaxy(IObject):
                     player.techs[techID] = (Rules.techBaseImprovement + Rules.techMaxImprovement) / 2
             self.cmd(planet).changeOwner(tran, planet, playerID, 1)
             planet.slots = [
-                Utils.newStructure(tran, Tech.PWRPLANTNUK1, playerID, STRUCT_STATUS_ON),
-                Utils.newStructure(tran, Tech.FARM1, playerID, STRUCT_STATUS_ON),
-                Utils.newStructure(tran, Tech.FARM1, playerID, STRUCT_STATUS_ON),
-                Utils.newStructure(tran, Tech.FARM1, playerID, STRUCT_STATUS_ON),
-                Utils.newStructure(tran, Tech.ANCFACTORY, playerID, STRUCT_STATUS_ON),
-                Utils.newStructure(tran, Tech.ANCFACTORY, playerID, STRUCT_STATUS_ON),
-                Utils.newStructure(tran, Tech.ANCRESLAB, playerID, STRUCT_STATUS_ON),
-                Utils.newStructure(tran, Tech.REPAIR1, playerID, STRUCT_STATUS_ON),
+                Utils.newStructure(tran, Tech.PWRPLANTNUK1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
+                Utils.newStructure(tran, Tech.FARM1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
+                Utils.newStructure(tran, Tech.FARM1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
+                Utils.newStructure(tran, Tech.FARM1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
+                Utils.newStructure(tran, Tech.ANCFACTORY, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
+                Utils.newStructure(tran, Tech.ANCFACTORY, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
+                Utils.newStructure(tran, Tech.ANCRESLAB, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
+                Utils.newStructure(tran, Tech.REPAIR1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
             ]
             planet.storPop = Rules.startingPopulation
             planet.storBio = Rules.startingBio
@@ -562,17 +562,17 @@ class IGalaxy(IObject):
                     # populate planet
                     log.debug("Adding renegades", planetID)
                     self.cmd(planet).changeOwner(tran, planet, player.oid, 1)
-                    planet.slots.append(Utils.newStructure(tran, Rules.Tech.RENEGADEBASE, planet.owner))
+                    planet.slots.append(Utils.newStructure(tran, Rules.Tech.RENEGADEBASE, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
                     planet.storPop = 3000
                 # pirates
                 elif playerType == T_AIPIRPLAYER:
                     # populate planet
                     log.debug("Adding pirates", planetID)
                     self.cmd(planet).changeOwner(tran, planet, player.oid, 1)
-                    planet.slots.append(Utils.newStructure(tran, Rules.Tech.PIRATEBASE, planet.owner))
+                    planet.slots.append(Utils.newStructure(tran, Rules.Tech.PIRATEBASE, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
                     planet.storPop = 5000
                     if planet.plSlots > 1:
-                        planet.slots.append(Utils.newStructure(tran, Rules.Tech.PIRATEDEN, planet.owner))
+                        planet.slots.append(Utils.newStructure(tran, Rules.Tech.PIRATEDEN, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
                         planet.storPop += 1000
                 # EDEN
                 elif playerType == T_AIEDENPLAYER:
@@ -585,15 +585,15 @@ class IGalaxy(IObject):
                             planet.plMaxSlots = 2
                         if planet.plDiameter < 2000:
                             planet.plDiameter = 2000
-                    planet.slots.append(Utils.newStructure(tran, Rules.Tech.EDENBASE, planet.owner))
-                    planet.slots.append(Utils.newStructure(tran, Rules.Tech.EDENSTATION, planet.owner))
+                    planet.slots.append(Utils.newStructure(tran, Rules.Tech.EDENBASE, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
+                    planet.slots.append(Utils.newStructure(tran, Rules.Tech.EDENSTATION, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
                     planet.storPop = 3000
                 # mutants
                 elif playerType == T_AIMUTPLAYER:
                     # populate planet
                     log.debug("Adding mutants", planetID)
                     self.cmd(planet).changeOwner(tran, planet, player.oid, 1)
-                    planet.slots.append(Utils.newStructure(tran, Rules.Tech.MUTANTBASE, planet.owner))
+                    planet.slots.append(Utils.newStructure(tran, Rules.Tech.MUTANTBASE, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
                     planet.storPop = 3000
 
     setupEnvironment.public = 1

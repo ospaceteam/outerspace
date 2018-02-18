@@ -848,7 +848,7 @@ class IFleet(IObject):
                         if len(planet.slots) < planet.plSlots:
                             try:
                                 structTech.finishConstrHandler(tran, obj, planet, structTech)
-                                planet.slots.insert(0, Utils.newStructure(tran, structTechID, obj.owner))
+                                planet.slots.insert(0, Utils.newStructure(tran, structTechID, obj.owner, hpRatio = Rules.structFromShipHpRatio))
                                 removeShip = 1
                                 Utils.sendMessage(tran, obj, MSG_COMPLETED_STRUCTURE, planet.oid, structTech.id)
                             except GameException, e:

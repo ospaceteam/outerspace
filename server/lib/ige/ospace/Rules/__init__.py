@@ -44,6 +44,12 @@ buildOnSamePlanetMod = 1
 buildOnAnotherPlanetMod = 2
 unusedProdMod = 0.75
 
+# structure economy revamp constants
+structDefaultHpRatio = 0.1 # structures are build with this percentage of HPs
+structDefaultCpCosts = 0.2 # structures costs this amount of what is in XMLs
+structFromShipHpRatio = 1.0 # structures from ships are build with this percentage of HPs
+structNewPlayerHpRatio = 1.0 # structures from ships are build with this percentage of HPs
+
 ## Environment
 envInterval = 1000
 envAutoMod = 10.0

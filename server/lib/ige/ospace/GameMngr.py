@@ -303,14 +303,14 @@ class GameMngr(IGEGameMngr):
         # TODO tweak more planet's attrs
         planet = self.db[planetID]
         planet.slots = [
-            Utils.newStructure(tran, Tech.PWRPLANTNUK1, playerID, STRUCT_STATUS_ON),
-            Utils.newStructure(tran, Tech.FARM1, playerID, STRUCT_STATUS_ON),
-            Utils.newStructure(tran, Tech.FARM1, playerID, STRUCT_STATUS_ON),
-            Utils.newStructure(tran, Tech.FARM1, playerID, STRUCT_STATUS_ON),
-            Utils.newStructure(tran, Tech.ANCFACTORY, playerID, STRUCT_STATUS_ON),
-            Utils.newStructure(tran, Tech.ANCFACTORY, playerID, STRUCT_STATUS_ON),
-            Utils.newStructure(tran, Tech.ANCRESLAB, playerID, STRUCT_STATUS_ON),
-            Utils.newStructure(tran, Tech.REPAIR1, playerID, STRUCT_STATUS_ON),
+            Utils.newStructure(tran, Tech.PWRPLANTNUK1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
+            Utils.newStructure(tran, Tech.FARM1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
+            Utils.newStructure(tran, Tech.FARM1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
+            Utils.newStructure(tran, Tech.FARM1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
+            Utils.newStructure(tran, Tech.ANCFACTORY, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
+            Utils.newStructure(tran, Tech.ANCFACTORY, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
+            Utils.newStructure(tran, Tech.ANCRESLAB, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
+            Utils.newStructure(tran, Tech.REPAIR1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
         ]
         planet.storPop = Rules.startingPopulation
         planet.storBio = Rules.startingBio

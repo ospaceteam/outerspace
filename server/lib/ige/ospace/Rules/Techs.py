@@ -23,6 +23,7 @@ from ige import log
 from ige.ospace import Const
 from ige.ospace.Const import SR_AMOUNT_BIG
 from ige.ospace.Const import SR_AMOUNT_SMALL
+from ige.ospace import Rules
 import hashlib, os.path
 import cPickle as pickle
 import types
@@ -292,6 +293,8 @@ class TechTreeContentHandler(ContentHandler):
             self.tech.set('isStructure', 1)
             for key in attrs.keys():
                 self.tech.set(key, attrs[key])
+            realBuildProd = int(self.tech.buildProd * Rules.structDefaultCpCosts)
+            self.tech.set('buildProd', realBuildProd)
         elif self.state == 3 and name == 'discovery':
             self.tech.set('isDiscovery', 1)
             for key in attrs.keys():
