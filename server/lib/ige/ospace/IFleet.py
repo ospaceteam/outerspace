@@ -985,12 +985,12 @@ class IFleet(IObject):
                         for sr in upgradeToSpec.buildSRes:
                             if not sr in neededSR:
                                 neededSR[sr] = 0
-                            neededSR[sr] += 1
+                            neededSR[sr] += upgradeToSpec.buildSRes[sr]
                         # old design
                         for sr in spec.buildSRes:
                             if not sr in neededSR:
                                 neededSR[sr] = 0
-                            neededSR[sr] -= 1
+                            neededSR[sr] -= spec.buildSRes[sr]
                         # check player's resources
                         ok = 1
                         for sr in neededSR:
