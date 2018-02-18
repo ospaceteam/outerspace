@@ -21,8 +21,14 @@
 from ige.ospace.Const import *
 from ige.IDataHolder import makeIDataHolder
 
-from Techs import techs, Tech
 from Techs import noop as techDefaultHandler
+
+def init(configDir):
+    global techs, Tech
+    import Techs
+
+    Techs.init(configDir)
+    from Techs import techs, Tech
 
 ## General
 turnsPerDay = 24

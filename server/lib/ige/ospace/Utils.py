@@ -29,7 +29,7 @@ def newStructure(tran, techID, playerID, status = STRUCT_STATUS_ON | STRUCT_STAT
     hp = int(tech.maxHP * getTechEff(tran, techID, playerID))
     if hpRatio is None:
         # default is used
-        hpRatio = structDefaultHpRatio
+        hpRatio = Rules.structDefaultHpRatio
     hp = int(hp * hpRatio)
     s = IDataHolder()
     s = [techID, hp, status, 0]
