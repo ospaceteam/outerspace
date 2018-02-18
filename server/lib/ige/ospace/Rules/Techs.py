@@ -21,8 +21,7 @@
 import sys, copy
 from ige import log
 from ige.ospace import Const
-from ige.ospace.Const import SR_AMOUNT_BIG
-from ige.ospace.Const import SR_AMOUNT_SMALL
+import ige.ospace.Rules
 import hashlib, os.path
 import cPickle as pickle
 import types
@@ -292,6 +291,8 @@ class TechTreeContentHandler(ContentHandler):
             self.tech.set('isStructure', 1)
             for key in attrs.keys():
                 self.tech.set(key, attrs[key])
+            realBuildProd = int(self.tech.buildProd * ige.ospace.Rules.structDefaultCpCosts)
+            self.tech.set('buildProd', realBuildProd)
         elif self.state == 3 and name == 'discovery':
             self.tech.set('isDiscovery', 1)
             for key in attrs.keys():
@@ -360,184 +361,186 @@ class TechTreeContentHandler(ContentHandler):
 
 Tech = IDataHolder()
 
-## check, if anything has been changed
+## init is wrapping all code that needs to be performed before module
+# is ready. That is checking if techs changed, if not loading pickled
+# data, othervise rebuild database from source data
+# We should be able to do server-provided techs in the future (per galaxy
+# rulesets)
 
-def chsumDir(chsum, dirname, names):
-    names.sort()
-    for filename in names:
-        if os.path.splitext(filename)[1] in ('.xml',):
-            log.debug('Checking file', filename)
-            # read file
-            fh = open(os.path.join(dirname, filename), 'rb')
-            chsum.update(fh.read())
-            fh.close()
 
-# compute checksum
-file = sys.modules[__name__].__file__
-forceLoad = 0
-if os.path.exists(file):
-    # regular module
-    directory = os.path.dirname(file)
-    chsum = hashlib.sha1()
-    os.path.walk(directory, chsumDir, chsum)
-else:
-    # packed, cannot access xml specifications
-    directory = os.path.join('res', 'techspec')
-    forceLoad = 1
+def init(configDir):
+    global Tech, techs
+    ## check, if anything has been changed
 
-# read old checksum
-try:
-    fh = open(os.path.join(directory, 'checksum'), 'rb')
-    oldChsum = fh.read()
-    fh.close()
-except IOError:
-    oldChsum = ''
-
-# compare
-if forceLoad or chsum.hexdigest() == oldChsum:
-    # load old definitions
-    log.message('Loading stored specifications from', directory)
-    techs = pickle.load(open(os.path.join(directory, 'techs.spf'), 'rb'))
-    Tech = pickle.load(open(os.path.join(directory, 'Tech.spf'), 'rb'))
-
-    log.message("There is %d technologies" % len(techs))
-
-    # clean up 'type' in lists
-    for key in attrs.keys():
-        if type(attrs[key]) == types.ListType and len(attrs[key]) == 1:
-            log.debug("Cleaning up", key)
-            attrs[key] = []
-
-else:
-    # create new ones
-    ## load technologies definitions
-
-    def processDir(arg, dirname, names):
-        if dirname.find(".svn") >= 0:
-            log.message("Skipping directory", dirname)
-            return
-        log.message('Loading XML files from', dirname)
+    def chsumDir(chsum, dirname, names):
         names.sort()
         for filename in names:
-            if os.path.splitext(filename)[1] == '.xml':
-                log.message('Parsing XML file', filename)
-                xml.sax.parse(os.path.join(dirname, filename), TechTreeContentHandler())
+            if os.path.splitext(filename)[1] in ('.xml', '.py'):
+                log.debug('Checking file', filename)
+                # read file
+                fh = open(os.path.join(dirname, filename), 'rb')
+                chsum.update(fh.read())
+                fh.close()
 
-    # collect xml files
-    os.path.walk(directory, processDir, None)
+    # compute checksum
+    moduleFile = sys.modules['ige.ospace.Rules'].__file__
+    forceLoad = 0
 
-    # clean up 'type' in lists
-    for key in attrs.keys():
-        if type(attrs[key]) == types.ListType and len(attrs[key]) == 1:
-            log.debug("Cleaning up", key)
-            attrs[key] = []
-        elif type(attrs[key]) == types.DictType and len(attrs[key]) == 1:
-            log.debug("Cleaning up", key)
-            attrs[key] = {}
+    # regular module
+    moduleDirectory = os.path.dirname(moduleFile)
+    chsum = hashlib.sha1()
+    os.path.walk(moduleDirectory, chsumDir, chsum)
+
+    # read old checksum
+    try:
+        fh = open(os.path.join(configDir, 'checksum'), 'rb')
+        oldChsum = fh.read()
+        fh.close()
+    except IOError:
+        oldChsum = ''
+
+    # compare
+    if forceLoad or chsum.hexdigest() == oldChsum:
+        # load old definitions
+        log.message('Loading stored specifications from', configDir)
+        techs = pickle.load(open(os.path.join(configDir, 'techs.spf'), 'rb'))
+        Tech = pickle.load(open(os.path.join(configDir, 'Tech.spf'), 'rb'))
+
+        log.message("There is %d technologies" % len(techs))
+
+        # clean up 'type' in lists
+        for key in attrs.keys():
+            if type(attrs[key]) == types.ListType and len(attrs[key]) == 1:
+                log.debug("Cleaning up", key)
+                attrs[key] = []
+
+    else:
+        # create new ones
+        ## load technologies definitions
+
+        def processDir(arg, dirname, names):
+            log.message('Loading XML files from', dirname)
+            names.sort()
+            for filename in names:
+                if os.path.splitext(filename)[1] == '.xml':
+                    log.message('Parsing XML file', filename)
+                    xml.sax.parse(os.path.join(dirname, filename), TechTreeContentHandler())
+
+        # collect xml files
+        os.path.walk(moduleDirectory, processDir, None)
+
+        # clean up 'type' in lists
+        for key in attrs.keys():
+            if type(attrs[key]) == types.ListType and len(attrs[key]) == 1:
+                log.debug("Cleaning up", key)
+                attrs[key] = []
+            elif type(attrs[key]) == types.DictType and len(attrs[key]) == 1:
+                log.debug("Cleaning up", key)
+                attrs[key] = {}
 
 
-    # link tech tree using researchRequires fields
-    # construct researchEnables fields
-    log.message('Converting symbolic fields...')
-    for techID in techs.keys():
-        tech = techs[techID]
-        # convert symbolic names to numbers
-        techIDs = []
-        for techSymName in tech.researchRequires:
-            #@log.debug('Converting REQ', techSymName)
-            symName, improvement = techSymName.split('-')
-            techIDs.append((getattr(Tech, symName), int(improvement)))
-        tech.researchRequires = techIDs
-        techIDs = {1: [], 2:[], 3:[], 4:[], 5:[], 6:[]}
-        for techSymName in tech.researchEnables:
-            #@log.debug('Converting EN', techSymName)
-            improvement, symName = techSymName.split('-')
-            techIDs[int(improvement)].append(getattr(Tech, symName))
-        tech.researchEnables = techIDs
-        techIDs = []
-        for techSymName in tech.researchDisables:
-            techIDs.append(getattr(Tech, techSymName))
-        tech.researchDisables = techIDs
-        techIDs = []
-        if tech.unpackStruct:
-            tech.unpackStruct = getattr(Tech, tech.unpackStruct)
-        else:
-            tech.unpackStruct = 0
-
-        # strat. resources
-        stratRes = []
-        for sr in tech.researchReqSRes:
-            stratRes.append(getattr(Const, sr))
-        tech.researchReqSRes = stratRes
-        # build requirements with quantities
-        stratRes = {}
-        for resource in tech.buildSRes:
-            resource_id = getattr(Const, resource)
-            # prescription contains constants for big and small amounts
-            # possibly within expression
-            resource_amount = eval(tech.buildSRes[resource])
-            stratRes[resource_id] = resource_amount
-        tech.buildSRes = stratRes
-
-        # evaluate researchMod
-        if tech.researchMod == "expr":
-            tech.researchMod = 1.0
-        else:
-            tech.researchMod = eval(tech.researchMod)
-        #~ # convert weapons
-        #~ techIDs = []
-        #~ for weaponName in tech.weapons:
-            #~ techIDs.append(getattr(Tech, weaponName))
-        #~ tech.weapons = techIDs
-
-    # link
-    log.message('Linking tech tree...')
-    for techID in techs.keys():
-        tech = techs[techID]
-        #@log.debug(techID, 'Req', tech.researchRequires)
-        #@log.debug(techID, 'En', tech.researchEnables)
-        for tmpTechID, improvement in tech.researchRequires:
-            if techID not in techs[tmpTechID].researchEnables[improvement]:
-                #@log.debug('Adding', tmpTechID, improvement, 'ENABLES', techID)
-                techs[tmpTechID].researchEnables[improvement].append(techID)
-        for improvement in tech.researchEnables.keys():
-            for tmpTechID in tech.researchEnables[improvement]:
-                if (techID, improvement) not in techs[tmpTechID].researchRequires:
-                    #@log.debug('Adding', tmpTechID, 'REQUIRES', techID, improvement)
-                    techs[tmpTechID].researchRequires.append((techID, improvement))
-
-    changed = 1
-    while changed:
-        changed = 0
-        log.debug("Tech disable iteration")
-        for techID in techs:
+        # link tech tree using researchRequires fields
+        # construct researchEnables fields
+        log.message('Converting symbolic fields...')
+        for techID in techs.keys():
             tech = techs[techID]
-            for tech2ID in tech.researchDisables:
-                tech2 = techs[tech2ID]
-                if techID not in tech2.researchDisables and techID != tech2ID:
-                    tech2.researchDisables.append(techID)
-                    changed = 1
-                    log.debug("Adding", tech2ID, "DISABLES", techID, ", NOW", tech2.researchDisables)
-                for tech3ID in tech2.researchDisables:
-                    tech3 = techs[tech3ID]
-                    if tech3ID not in tech.researchDisables and tech3ID != techID:
-                        tech.researchDisables.append(tech3ID)
+            # convert symbolic names to numbers
+            techIDs = []
+            for techSymName in tech.researchRequires:
+                #@log.debug('Converting REQ', techSymName)
+                symName, improvement = techSymName.split('-')
+                techIDs.append((getattr(Tech, symName), int(improvement)))
+            tech.researchRequires = techIDs
+            techIDs = {1: [], 2:[], 3:[], 4:[], 5:[], 6:[]}
+            for techSymName in tech.researchEnables:
+                #@log.debug('Converting EN', techSymName)
+                improvement, symName = techSymName.split('-')
+                techIDs[int(improvement)].append(getattr(Tech, symName))
+            tech.researchEnables = techIDs
+            techIDs = []
+            for techSymName in tech.researchDisables:
+                techIDs.append(getattr(Tech, techSymName))
+            tech.researchDisables = techIDs
+            techIDs = []
+            if tech.unpackStruct:
+                tech.unpackStruct = getattr(Tech, tech.unpackStruct)
+            else:
+                tech.unpackStruct = 0
+
+            # strat. resources
+            # this has to be here to prevent import deadlock in Rules
+            from ige.ospace.Rules import stratResAmountBig
+            from ige.ospace.Rules import stratResAmountSmall
+
+            stratRes = []
+            for sr in tech.researchReqSRes:
+                stratRes.append(getattr(Const, sr))
+            tech.researchReqSRes = stratRes
+            # build requirements with quantities
+            stratRes = {}
+            for resource in tech.buildSRes:
+                resource_id = getattr(Const, resource)
+                # prescription contains constants for big and small amounts
+                # possibly within expression
+                resource_amount = eval(tech.buildSRes[resource])
+                stratRes[resource_id] = resource_amount
+            tech.buildSRes = stratRes
+
+            # evaluate researchMod
+            if tech.researchMod == "expr":
+                tech.researchMod = 1.0
+            else:
+                tech.researchMod = eval(tech.researchMod)
+            #~ # convert weapons
+            #~ techIDs = []
+            #~ for weaponName in tech.weapons:
+                #~ techIDs.append(getattr(Tech, weaponName))
+            #~ tech.weapons = techIDs
+
+        # link
+        log.message('Linking tech tree...')
+        for techID in techs.keys():
+            tech = techs[techID]
+            #@log.debug(techID, 'Req', tech.researchRequires)
+            #@log.debug(techID, 'En', tech.researchEnables)
+            for tmpTechID, improvement in tech.researchRequires:
+                if techID not in techs[tmpTechID].researchEnables[improvement]:
+                    #@log.debug('Adding', tmpTechID, improvement, 'ENABLES', techID)
+                    techs[tmpTechID].researchEnables[improvement].append(techID)
+            for improvement in tech.researchEnables.keys():
+                for tmpTechID in tech.researchEnables[improvement]:
+                    if (techID, improvement) not in techs[tmpTechID].researchRequires:
+                        #@log.debug('Adding', tmpTechID, 'REQUIRES', techID, improvement)
+                        techs[tmpTechID].researchRequires.append((techID, improvement))
+
+        changed = 1
+        while changed:
+            changed = 0
+            log.debug("Tech disable iteration")
+            for techID in techs:
+                tech = techs[techID]
+                for tech2ID in tech.researchDisables:
+                    tech2 = techs[tech2ID]
+                    if techID not in tech2.researchDisables and techID != tech2ID:
+                        tech2.researchDisables.append(techID)
                         changed = 1
-                        log.debug("Adding", techID, "DISABLES", tech3ID, "NOW", tech.researchDisables)
-    # just for debug
-    #for techID in techs.keys():
-    #    tech = techs[techID]
-    #    log.debug('Link:', techID, tech.isStarting, tech.researchRequires, tech.researchEnables)
+                        log.debug("Adding", tech2ID, "DISABLES", techID, ", NOW", tech2.researchDisables)
+                    for tech3ID in tech2.researchDisables:
+                        tech3 = techs[tech3ID]
+                        if tech3ID not in tech.researchDisables and tech3ID != techID:
+                            tech.researchDisables.append(tech3ID)
+                            changed = 1
+                            log.debug("Adding", techID, "DISABLES", tech3ID, "NOW", tech.researchDisables)
 
-    # save new specification
-    log.message('Saving specification...')
-    pickle.dump(techs, open(os.path.join(directory, 'techs.spf'), 'wb'), 1)
-    pickle.dump(Tech, open(os.path.join(directory, 'Tech.spf'), 'wb'), 1)
-    fh = open(os.path.join(directory, 'checksum'), 'wb')
-    fh.write(chsum.hexdigest())
-    fh.close()
+        # save new specification
+        log.message('Saving specification...')
+        pickle.dump(techs, open(os.path.join(configDir, 'techs.spf'), 'wb'), 1)
+        pickle.dump(Tech, open(os.path.join(configDir, 'Tech.spf'), 'wb'), 1)
+        fh = open(os.path.join(configDir, 'checksum'), 'wb')
+        fh.write(chsum.hexdigest())
+        fh.close()
 
-    log.message("There is %d technologies" % len(techs))
+        log.message("There is %d technologies" % len(techs))
 
 #~ # save DOT file
 #~ dotName = os.path.join(os.path.dirname(__file__), "techtree.dot")

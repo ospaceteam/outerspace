@@ -848,7 +848,7 @@ class IFleet(IObject):
                         if len(planet.slots) < planet.plSlots:
                             try:
                                 structTech.finishConstrHandler(tran, obj, planet, structTech)
-                                planet.slots.insert(0, Utils.newStructure(tran, structTechID, obj.owner))
+                                planet.slots.insert(0, Utils.newStructure(tran, structTechID, obj.owner, hpRatio = Rules.structFromShipHpRatio))
                                 removeShip = 1
                                 Utils.sendMessage(tran, obj, MSG_COMPLETED_STRUCTURE, planet.oid, structTech.id)
                             except GameException, e:
@@ -985,12 +985,12 @@ class IFleet(IObject):
                         for sr in upgradeToSpec.buildSRes:
                             if not sr in neededSR:
                                 neededSR[sr] = 0
-                            neededSR[sr] += 1
+                            neededSR[sr] += upgradeToSpec.buildSRes[sr]
                         # old design
                         for sr in spec.buildSRes:
                             if not sr in neededSR:
                                 neededSR[sr] = 0
-                            neededSR[sr] -= 1
+                            neededSR[sr] -= spec.buildSRes[sr]
                         # check player's resources
                         ok = 1
                         for sr in neededSR:

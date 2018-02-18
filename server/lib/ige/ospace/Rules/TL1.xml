@@ -351,7 +351,7 @@
 			slots="2"
 			weight="7"
 			buildProd="960"
-			buildSRes="SR_TL1A:SR_AMOUNT_SMALL"
+			buildSRes="SR_TL1A:stratResAmountSmall"
 			weaponDmgMin="400"
 			weaponDmgMax="560"
 			weaponAtt="4"

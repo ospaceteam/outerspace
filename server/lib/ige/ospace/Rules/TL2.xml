@@ -53,7 +53,7 @@
 		<structure
 			subtype="str400"
 			buildProd="1920"
-			buildSRes="SR_TL1A:SR_AMOUNT_BIG"
+			buildSRes="SR_TL1A:stratResAmountBig"
 			operWorkers="1000"
 			storEn="3600"
 			prodEn="400"
@@ -192,7 +192,7 @@
 			buildProd="1920"
 			operEn="50"
 			operWorkers="1000"
-			buildSRes="SR_TL1B:SR_AMOUNT_BIG"
+			buildSRes="SR_TL1B:stratResAmountBig"
 			prodProd="29"
 			prodProdMod="0.0,1.0,0.0,0.0"
 			prodEnv="-2"
@@ -211,7 +211,7 @@
 		<structure
 			subtype="str250"
 			buildProd="1920"
-			buildSRes="SR_BIO1:SR_AMOUNT_BIG"
+			buildSRes="SR_BIO1:stratResAmountBig"
 			operWorkers="1000"
 			operEn="25"
 			maxHP="400"
@@ -323,7 +323,7 @@
 			researchReqSRes="SR_TL1B"
 		/>
 		<shiphull
-			buildSRes="SR_TL1B:SR_AMOUNT_SMALL"
+			buildSRes="SR_TL1B:stratResAmountSmall"
 			buildProd="480"
 			storEn="384"
 			operEn="4"

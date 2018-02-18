@@ -506,7 +506,7 @@
 		<shipequip
 			subtype="seq_struct"
 			buildProd="2880"
-			buildSRes="SR_BIO1:SR_AMOUNT_BIG"
+			buildSRes="SR_BIO1:stratResAmountBig"
 
 			storEn="960"
 			operEn="10"
@@ -526,13 +526,13 @@
 			researchReqSRes="SR_TL1B"
 		/>
 		<shiphull
-			buildSRes="SR_TL1B:SR_AMOUNT_SMALL * 2"
+			buildSRes="SR_TL1B:stratResAmountSmall * 2"
 			buildProd="720"
 			storEn="768"
 			operEn="4"
 			maxHP="96"
-			slots="48"
-			weight="32"
+			slots="40"
+			weight="36"
 			maxWeight="120"
 			signature="16"
 			minSignature="4"

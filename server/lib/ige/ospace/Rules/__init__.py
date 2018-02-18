@@ -21,8 +21,14 @@
 from ige.ospace.Const import *
 from ige.IDataHolder import makeIDataHolder
 
-from Techs import techs, Tech
 from Techs import noop as techDefaultHandler
+
+def init(configDir):
+    global techs, Tech
+    import Techs
+
+    Techs.init(configDir)
+    from Techs import techs, Tech
 
 ## General
 turnsPerDay = 24
@@ -43,6 +49,12 @@ maxProdQueueLen = 10
 buildOnSamePlanetMod = 1
 buildOnAnotherPlanetMod = 2
 unusedProdMod = 0.75
+
+# structure economy revamp constants
+structDefaultHpRatio = 0.1 # structures are build with this percentage of HPs
+structDefaultCpCosts = 0.2 # structures costs this amount of what is in XMLs
+structFromShipHpRatio = 1.0 # structures from ships are build with this percentage of HPs
+structNewPlayerHpRatio = 1.0 # structures from ships are build with this percentage of HPs
 
 ## Environment
 envInterval = 1000
@@ -129,11 +141,12 @@ enBaseStor = 4800
 
 autoMinStorTurns = 2
 
-maxPopReserve = 1.125
-tlPopReserve = 250
+tlPopReserve = 100
 
 ## Resources
 stratResRate = turnsPerDay * 6
+stratResAmountBig = 10
+stratResAmountSmall = 1
 
 ## Population
 popGrowthRate = 0.02
@@ -264,6 +277,12 @@ moraleModPlHit = 96.0 # how many morale point per 1 per cent of damage
 moralePerPointChance = 5.0 # for every point below revoltThr % chance for revolt
 moraleProdStep = 10
 moraleProdBonus = [-0.875, -0.75, -0.625, -0.50, -0.375, -0.25, -0.125, 0.0, 0.0, 0.125, 0.25]
+# we expect pop reserve from TL to get into unemployed
+# tlPopReserve * TL1
+# if we get no reserve, there is a hit, if we get at least
+# the reserve, it's a bonus, linear in between
+unemployedMoraleLow = -20
+unemployedMoraleHigh = 10
 
 ## Revolt
 revoltDestrBio = 0.05

@@ -82,8 +82,8 @@ class IPlanet(IObject):
         obj.morale = Rules.maxMorale
         obj.changeMorale = 0.0
         obj.moraleTrgt = 0.0
-        # moraleModifiers [ base morale by distance from homeworld, from buildings, from population, sumary 1+2+3 ]
-        obj.moraleModifiers = [ 0.0 , 0.0 , 0.0 , 0.0 ]
+        # moraleModifiers [ base morale by distance from homeworld, from buildings, from population, from unemployment, summary 1+2+3+4 ]
+        obj.moraleModifiers = [ 0.0 , 0.0 , 0.0 , 0.0, 0.0]
         obj.revoltLen = 0
         obj.combatExp = 0
         obj.isMilitary = 0
@@ -336,7 +336,7 @@ class IPlanet(IObject):
         if owner and obj.plStratRes != SR_NONE:
             turn = tran.db[OID_UNIVERSE].turn
             if turn % Rules.stratResRate == 0:
-                owner.stratRes[obj.plStratRes] = owner.stratRes.get(obj.plStratRes, 0) + SR_AMOUNT_BIG
+                owner.stratRes[obj.plStratRes] = owner.stratRes.get(obj.plStratRes, 0) + Rules.stratResAmountBig
                 Utils.sendMessage(tran, obj, MSG_EXTRACTED_STRATRES, obj.oid, obj.plStratRes)
         # compute base morale
         if owner:
@@ -481,9 +481,7 @@ class IPlanet(IObject):
         # process population
         if obj.storPop > 0:
             # the reserve is needed
-            #obj.maxPop = int((obj.maxPop + getattr(owner, "techLevel", 1) * Rules.tlPopReserve) * Rules.maxPopReserve)
-            obj.maxPop = int(obj.maxPop * Rules.maxPopReserve)
-            obj.maxPop += int((obj.plSlots - len(obj.slots)) * getattr(owner, "techLevel", 1) * Rules.tlPopReserve)
+            obj.maxPop += obj.plSlots * getattr(owner, "techLevel", 1) * Rules.tlPopReserve
             # max pop
             maxPop = obj.maxPop
             if obj.popEatBio: maxPop = min(maxPop,  1000.0 * obj.storBio / obj.popEatBio)
@@ -744,14 +742,28 @@ class IPlanet(IObject):
         system = tran.db[obj.compOf]
         galaxy = tran.db[system.compOf]
         if galaxy.timeEnabled:
+            owner = tran.db.get(obj.owner, None)
             # too much population affects morale (if there is more than base population)
             if obj.storPop > Rules.moraleBasePop:
                 obj.moraleModifiers[2] -= Rules.moraleHighPopPenalty * obj.storPop / Rules.moraleBasePop
             elif obj.storPop <= Rules.moraleLowPop:
                 obj.moraleModifiers[2] += Rules.moraleLowPopBonus
+            else:
+                # gradually removing LowPop bonus as we approach BasePop - big jumps are awful game
+                # mechanic
+                moraleBonusRange = Rules.moraleBasePop - Rules.moraleLowPop
+                moraleBonus = float(obj.storPop - Rules.moraleLowPop) / moraleBonusRange
+                obj.moraleModifiers[2] += int(Rules.moraleLowPopBonus * (1 - moraleBonus) )
+            # there is effect of unemployed population
+            # if there is none, there is a hit, if there is what's necessary, there is a bonus
+            # effect between the two is linear
+            idealUnemployedPop =  obj.plSlots * getattr(owner, "techLevel", 1) * Rules.tlPopReserve
+            moraleBonusRange = Rules.unemployedMoraleHigh - Rules.unemployedMoraleLow
+            unemployedRatio = min(1.0, float(obj.unemployedPop) / idealUnemployedPop)
+            obj.moraleModifiers[3] = Rules.unemployedMoraleLow + int(moraleBonusRange * unemployedRatio)
             # count final morale values
-            obj.moraleModifiers[3] = obj.moraleModifiers[0] +obj.moraleModifiers[1] + obj.moraleModifiers[2]
-            obj.moraleTrgt = obj.moraleModifiers[3]
+            obj.moraleModifiers[4] = obj.moraleModifiers[0] +obj.moraleModifiers[1] + obj.moraleModifiers[2] + obj.moraleModifiers[3]
+            obj.moraleTrgt = obj.moraleModifiers[4]
             obj.moraleTrgt = max(0.0, min(obj.moraleTrgt, Rules.maxMorale))
             if obj.morale > int(obj.moraleTrgt):
                 obj.morale -= max(1.0, (obj.morale - obj.moraleTrgt) * Rules.moraleChngPerc)
@@ -915,7 +927,7 @@ class IPlanet(IObject):
         # fix signature
         obj.signature = 75
         if not hasattr(obj, 'moraleModifiers'):
-            obj.moraleModifiers = [ 0.0 , 0.0 , 0.0 , 0.0 ]
+            obj.moraleModifiers = [ 0.0 , 0.0 , 0.0 , 0.0, 0.0 ]
 
     update.public = 0
 

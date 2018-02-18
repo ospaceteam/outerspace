@@ -203,6 +203,9 @@ elif subcommand == 'client':
     task = runClient
 
 if __name__ == '__main__':
+    # first, we have to initialize Rules (to provide it with configDir)
+    import ige.ospace.Rules as Rules
+    Rules.init(options.configDir)
     if options.profile:
         import cProfile
         profiling_output = '{0}.raw'.format(options.profile)

@@ -30,7 +30,7 @@
 		/>
 		<project
 			buildProd="240"
-			buildSRes="SR_TLAA:SR_AMOUNT_BIG"
+			buildSRes="SR_TLAA:stratResAmountBig"
 			finishConstrHandler="finishProjectCondPl"
 			validateConstrHandler="validateProjectCondPl"
 		/>
@@ -45,7 +45,7 @@
 		/>
 		<project
 			buildProd="240"
-			buildSRes="SR_TLAA:SR_AMOUNT_BIG"
+			buildSRes="SR_TLAA:stratResAmountBig"
 			finishConstrHandler="finishProjectAssemblePl"
 			validateConstrHandler="validateProjectAssemblePl"
 		/>
@@ -60,7 +60,7 @@
 		/>
 		<project
 			buildProd="240"
-			buildSRes="SR_TLAA:SR_AMOUNT_BIG"
+			buildSRes="SR_TLAA:stratResAmountBig"
 			finishConstrHandler="finishProjectBioEnrich"
 			validateConstrHandler="validateProjectBioEnrich"
 		/>
@@ -75,7 +75,7 @@
 		/>
 		<project
 			buildProd="240"
-			buildSRes="SR_TLAA:SR_AMOUNT_BIG"
+			buildSRes="SR_TLAA:stratResAmountBig"
 			finishConstrHandler="finishProjectMinEnrich"
 			validateConstrHandler="validateProjectMinEnrich"
 		/>
