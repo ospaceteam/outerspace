@@ -276,8 +276,6 @@ class MainGameDlg:
         """ Update menu according to current situation, being different in singleplayer
         or when player is imperator of competitive galaxy, or player has no rights to
         finish galaxy at all.
-
-        Also popups finish galaxy dialog for imperator once in a while.
         """
         if client.db != None:
             player = client.getPlayer()
@@ -331,7 +329,7 @@ class MainGameDlg:
                 if lastGalaxyFinishShown != None:
                     localTime = time.time()
                     storedTime = float(lastGalaxyFinishShown)
-                    if localTime - storedTime > 60 * 60 * 24 or shownFromMenu == True:
+                    if localTime - storedTime > 60 * 60 * 24:
                         gdata.config.game.lastGalaxyFinishShown = str(localTime)
                         self.galaxyFinishDlg.display(finishAction = self.onFinishConfirmedOuterspace)
                 else:
