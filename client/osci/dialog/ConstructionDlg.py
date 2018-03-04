@@ -230,7 +230,6 @@ class ConstructionDlg:
             else:
                 self.win.vASlots.text = _("N/A")
             self.win.vATanks.text = _("%d") % result.storEn
-            self.win.vASupport.text = _("%d") % result.operEn
             if result.speed > 0:
                 support = 10000000
                 if result.operEn > 0: support = min(support, result.storEn / result.operEn)
@@ -238,8 +237,6 @@ class ConstructionDlg:
             else:
                 self.win.vARange.text = _("None")
             self.win.vACCPts.text = _("%d") % result.buildProd
-            self.win.vACSup.text = _("%d") % (result.buildProd * Rules.operProdRatio)
-            self.win.vABaseExp.text = _("%d") % result.baseExp
             self.win.vACombatPwr.text = _("%d") % result.combatPwr
             if self.selectedDesignID and player.shipDesigns[self.selectedDesignID].upgradeTo:
                 self.win.vAUpgrade.text = player.shipDesigns[player.shipDesigns[self.selectedDesignID].upgradeTo].name
@@ -255,11 +252,8 @@ class ConstructionDlg:
             self.win.vAPayload.text = _("N/A")
             self.win.vASlots.text = _("N/A")
             self.win.vATanks.text = _("N/A")
-            self.win.vASupport.text = _("N/A")
             self.win.vARange.text = _("N/A")
             self.win.vACCPts.text = _("N/A")
-            self.win.vACSup.text = _("N/A")
-            self.win.vABaseExp.text = _("N/A")
             self.win.vACombatPwr.text = _("N/A")
             self.win.vAUpgrade.text = _("N/A")
 
@@ -485,87 +479,85 @@ class ConstructionDlg:
             align = ui.ALIGN_W)
         ui.ActiveLabel(self.win, layout = (20, 3, 10, 1), id = "vCtrl",
             align = ui.ALIGN_E, action = "onSelectCtrl")
-        ui.Title(self.win, layout = (15, 4, 11, 1), text = _('Engines'),
+        ui.Title(self.win, layout = (15, 4, 21, 1), text = _('Engines'),
             font = 'normal-bold', align = ui.ALIGN_W)
-        ui.Button(self.win, layout = (26, 4, 4, 1), text = _("Add"),
+        ui.Button(self.win, layout = (36, 4, 4, 1), text = _("Add"),
             action = "onAddEngine")
-        ui.Listbox(self.win, layout = (15, 5, 15, 3), id = 'vEngines',
+        ui.Listbox(self.win, layout = (15, 5, 25, 3), id = 'vEngines',
             columns = (
                 (_('#'), 'tNumber', 2, ui.ALIGN_E),
                 (_('Name'), 'text', 8, ui.ALIGN_W),
-                (_('Data'), 'tData', 4, ui.ALIGN_W),
+                (_('Data'), 'tData', 14, ui.ALIGN_W),
             ),
             columnLabels = 0, action = "onEqSelectedInList"
         )
-        ui.Title(self.win, layout = (15, 8, 11, 1), text = _('Weapons'),
+        ui.Title(self.win, layout = (15, 8, 21, 1), text = _('Weapons'),
             font = 'normal-bold', align = ui.ALIGN_W)
-        ui.Button(self.win, layout = (26, 8, 4, 1), text = _("Add"),
+        ui.Button(self.win, layout = (36, 8, 4, 1), text = _("Add"),
             action = "onAddWeapon")
-        ui.Listbox(self.win, layout = (15, 9, 15, 4), id = 'vWeapons',
+        ui.Listbox(self.win, layout = (15, 9, 25, 4), id = 'vWeapons',
             columns = (
                 (_('#'), 'tNumber', 2, ui.ALIGN_E),
                 (_('Name'), 'text', 8, ui.ALIGN_W),
-                (_('Data'), 'tData', 4, ui.ALIGN_W),
+                (_('Data'), 'tData', 14, ui.ALIGN_W),
             ),
             columnLabels = 0, action = "onEqSelectedInList"
         )
-        ui.Title(self.win, layout = (15, 13, 11, 1), text = _('Equipment'),
+        ui.Title(self.win, layout = (15, 13, 21, 1), text = _('Equipment'),
             font = 'normal-bold', align = ui.ALIGN_W)
-        ui.Button(self.win, layout = (26, 13, 4, 1), text = _("Add"),
+        ui.Button(self.win, layout = (36, 13, 4, 1), text = _("Add"),
             action = "onAddEquipment")
-        ui.Listbox(self.win, layout = (15, 14, 15, 5), id = 'vEquipment',
+        ui.Listbox(self.win, layout = (15, 14, 25, 5), id = 'vEquipment',
             columns = (
                 (_('#'), 'tNumber', 2, ui.ALIGN_E),
                 (_('Name'), 'text', 8, ui.ALIGN_W),
-                (_('Data'), 'tData', 4, ui.ALIGN_W),
+                (_('Data'), 'tData', 14, ui.ALIGN_W),
             ),
             columnLabels = 0, action = "onEqSelectedInList"
         )
-        ui.Button(self.win, layout = (24, 19, 1.2, 1), text = _("++"),
+        ui.Button(self.win, layout = (34, 19, 1.2, 1), text = _("++"),
             action = "onIncrEquipment5", rmbAction = "onIncrEquipment20")
-        ui.Button(self.win, layout = (25.2, 19, 1.8, 1), text = _("+"),
+        ui.Button(self.win, layout = (35.2, 19, 1.8, 1), text = _("+"),
             action = "onIncrEquipment")
-        ui.Button(self.win, layout = (27, 19, 1.8, 1), text = _("-"),
+        ui.Button(self.win, layout = (37, 19, 1.8, 1), text = _("-"),
             action = "onDecrEquipment")
-        ui.Button(self.win, layout = (28.8, 19, 1.2, 1), text = _("--"),
+        ui.Button(self.win, layout = (38.8, 19, 1.2, 1), text = _("--"),
             action = "onDecrEquipment5", rmbAction = "onDecrEquipment20")
         #ui.Button(self.win, layout = (21, 24, 4.5, 1), text = _("Add"),
         #    action = "onAddEquipment")
         #ui.Button(self.win, layout = (25.5, 24, 4.5, 1), text = _("Remove"),
         #    action = "onRemoveEquipment")
         # ship's attrs
-        ui.Label(self.win, layout = (30, 1, 5, 1), text = _("Class"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (16, 19, 4, 1), text = _("Upgrade to"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (20, 19, 7, 1), id = "vAUpgrade", align = ui.ALIGN_E)
+
+        ui.Label(self.win, layout = (31, 1, 4, 1), text = _("Class"), align = ui.ALIGN_W)
         ui.Label(self.win, layout = (35, 1, 5, 1), id = "vAClass", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 2, 5, 1), text = _("Signature"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 2, 5, 1), id = "vASignature", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 3, 5, 1), text = _("Speed"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 3, 5, 1), id = "vASpeed", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 4, 5, 1), text = _("HP"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 4, 5, 1), id = "vAHP", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 5, 5, 1), text = _("Base attack"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 5, 5, 1), id = "vAAttack", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 6, 5, 1), text = _("Base defence"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 6, 5, 1), id = "vADefence", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 7, 5, 1), text = _("Military power"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 7, 5, 1), id = "vACombatPwr", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 8, 5, 1), text = _("Base exp pts"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 8, 5, 1), id = "vABaseExp", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 10, 3, 1), text = _("Tanks"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (33, 10, 7, 1), id = "vATanks", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 11, 7, 1), text = _("Support (fuel)"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (37, 11, 3, 1), id = "vASupport", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 12, 7, 1), text = _("Support (const. pts)"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (37, 12, 3, 1), id = "vACSup", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 13, 5, 1), text = _("Max. range"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 13, 5, 1), id = "vARange", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 15, 5, 1), text = _("Unused payload"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 15, 5, 1), id = "vAPayload", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 16, 5, 1), text = _("Free slots"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 16, 5, 1), id = "vASlots", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 18, 5, 1), text = _("Constr. pts"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 18, 5, 1), id = "vACCPts", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 20, 5, 1), text = _("Upgrade to"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 20, 5, 1), id = "vAUpgrade", align = ui.ALIGN_E)
+        ui.Label(self.win, layout = (31, 2, 6, 1), text = _("Free slots"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (37, 2, 3, 1), id = "vASlots", align = ui.ALIGN_E)
+        ui.Label(self.win, layout = (31, 3, 6, 1), text = _("Unused payload"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (37, 3, 3, 1), id = "vAPayload", align = ui.ALIGN_E)
+
+        ui.Label(self.win, layout = (17, 21, 4, 1), text = _("HP"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (21, 21, 5, 1), id = "vAHP", align = ui.ALIGN_E)
+        ui.Label(self.win, layout = (17, 22, 4, 1), text = _("Base attack"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (21, 22, 5, 1), id = "vAAttack", align = ui.ALIGN_E)
+        ui.Label(self.win, layout = (17, 23, 3, 1), text = _("Base defence"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (20, 23, 6, 1), id = "vADefence", align = ui.ALIGN_E)
+        ui.Label(self.win, layout = (17, 24, 5, 1), text = _("Military power"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (22, 24, 4, 1), id = "vACombatPwr", align = ui.ALIGN_E)
+
+        ui.Label(self.win, layout = (28, 20, 5, 1), text = _("Signature"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (33, 20, 5, 1), id = "vASignature", align = ui.ALIGN_E)
+        ui.Label(self.win, layout = (28, 21, 5, 1), text = _("Speed"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (33, 21, 5, 1), id = "vASpeed", align = ui.ALIGN_E)
+        ui.Label(self.win, layout = (28, 22, 5, 1), text = _("Tanks"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (33, 22, 5, 1), id = "vATanks", align = ui.ALIGN_E)
+        ui.Label(self.win, layout = (28, 23, 5, 1), text = _("Max. range"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (33, 23, 5, 1), id = "vARange", align = ui.ALIGN_E)
+        ui.Label(self.win, layout = (28, 24, 5, 1), text = _("Constr. pts"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (33, 24, 5, 1), font = 'normal-bold', id = "vACCPts", align = ui.ALIGN_E)
+
         # actions
         ui.Title(self.win, layout = (15, 25, 25, 1), text = _('Design Actions'),
             font = 'normal-bold', align = ui.ALIGN_W)
