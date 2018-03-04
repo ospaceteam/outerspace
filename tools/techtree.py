@@ -56,9 +56,23 @@ race2Name = {
     "H": "Human",
 }
 
-# imports
-from ige.ospace import Rules, TechHandlers
+import os
+from optparse import OptionParser
 
+# parse command line arguments (needs to be first, so we have configDir ready when importing)
+parser = OptionParser()
+parser.add_option("",  "--configdir", dest = "configDir",
+    metavar = "DIRECTORY", default = os.path.join(os.path.expanduser("~"), ".outerspace"),
+    help = "Override default configuration directory",)
+
+options, args = parser.parse_args()
+
+
+# imports
+import ige.ospace.Rules as Rules
+Rules.init(options.configDir)
+
+import ige.ospace.TechHandlers as TechHandlers
 import pygame
 from pygame.locals import *
 

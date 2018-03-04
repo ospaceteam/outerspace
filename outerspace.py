@@ -203,6 +203,8 @@ elif subcommand == 'client':
     task = runClient
 
 if __name__ == '__main__':
+    if not os.path.exists(options.configDir):
+        os.makedirs(options.configDir)
     # first, we have to initialize Rules (to provide it with configDir)
     import ige.ospace.Rules as Rules
     Rules.init(options.configDir)
