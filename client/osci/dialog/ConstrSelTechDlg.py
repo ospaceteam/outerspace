@@ -29,6 +29,10 @@ MEDIUM = 4
 LARGE = 8
 PLANET = 16
 OTHER = 32
+ARMOR = 64
+SHIELD = 128
+POD = 256
+SCANNER = 512
 
 typeText = {
     ENGINE: _('Engine'),
@@ -37,6 +41,10 @@ typeText = {
     LARGE:  _('Anti-large'),
     PLANET: _('Anti-planet'),
     OTHER:  _('Other'),
+    ARMOR:  _('Armor'),
+    SHIELD: _('Shield'),
+    POD:    _('Deployable'),
+    SCANNER:_('Scanner'),
 }
 
 class ConstrSelTechDlg:
@@ -55,13 +63,9 @@ class ConstrSelTechDlg:
             self.hullType = client.getFullTechInfo(hullID).combatClass
         else:
             self.hullType = 0
-        self.typeFilter = ENGINE | SMALL | MEDIUM | LARGE | PLANET | OTHER
-        self.win.vEngine.checked = self.typeFilter & ENGINE
-        self.win.vSmall.checked = self.typeFilter & SMALL
-        self.win.vMedium.checked = self.typeFilter & MEDIUM
-        self.win.vLarge.checked = self.typeFilter & LARGE
-        self.win.vPlanet.checked = self.typeFilter & PLANET
-        self.win.vOther.checked = self.typeFilter & OTHER
+        self.typeFilter = ENGINE | \
+                          SMALL | MEDIUM | LARGE | PLANET | \
+                          OTHER | ARMOR | SHIELD | POD | SCANNER
         self.show()
         self.win.show()
         # register for updates
@@ -89,6 +93,20 @@ class ConstrSelTechDlg:
             return LARGE
         if getattr(tech, "weaponClass") == 3:
             return PLANET
+        if getattr(tech, "subtype") == "seq_mod" \
+            and (
+                getattr(tech, "maxHP") > 0
+                or getattr(tech, "autoRepairFix") > 0
+                or getattr(tech, "autoRepairPerc") > 0
+                ):
+            # armor modules
+            return ARMOR
+        if getattr(tech, "shieldPerc") > 0 or getattr(tech, "hardShield") > 0:
+            return SHIELD
+        if getattr(tech, "subtype") == "seq_struct":
+            return POD
+        if getattr(tech, "subtype") == "seq_mod" and getattr(tech, 'scannerPwr') > 0:
+            return SCANNER
         return OTHER
 
     def show(self):
@@ -147,35 +165,22 @@ class ConstrSelTechDlg:
             escKeyClose = 1,
             movable = 0,
             title = _('Select component'),
-            rect = ui.Rect((w - 764) / 2, (h - 463) / 2, 764, 463),
+            rect = ui.Rect((w - 764) / 2, (h - 304) / 2, 764, 304),
             layoutManager = ui.SimpleGridLM(),
         )
         self.win.subscribeAction('*', self)
         # component list
-        ui.Listbox(self.win, layout = (0, 0, 38, 20), id = "vList",
+        ui.Listbox(self.win, layout = (0, 0, 38, 13), id = "vList",
             columns = (
                 (_('Name'), 'text', 9, ui.ALIGN_W),
                 (_('Type'), 'tType', 4, ui.ALIGN_W),
                 (_('Data'), 'tData', 0, ui.ALIGN_W),
             ),
-            columnLabels = 1
+            sortedBy = ('tType', 1)
         )
 
-        ui.Check(self.win, layout = (0, 20, 5, 1), text = typeText[ENGINE], id = 'vEngine',
-            checked = 1, action = 'onFilter', data = ENGINE)
-        ui.Check(self.win, layout = (5, 20, 5, 1), text = typeText[SMALL], id = 'vSmall',
-            checked = 1, action = 'onFilter', data = SMALL)
-        ui.Check(self.win, layout = (10, 20, 5, 1), text = typeText[MEDIUM], id = 'vMedium',
-            checked = 1, action = 'onFilter', data = MEDIUM)
-        ui.Check(self.win, layout = (15, 20, 5, 1), text = typeText[LARGE], id = 'vLarge',
-            checked = 1, action = 'onFilter', data = LARGE)
-        ui.Check(self.win, layout = (20, 20, 5, 1), text = typeText[PLANET], id = 'vPlanet',
-            checked = 1, action = 'onFilter', data = PLANET)
-        ui.Check(self.win, layout = (25, 20, 5, 1), text = typeText[OTHER], id = 'vOther',
-            checked = 1, action = 'onFilter', data = OTHER)
-
         # status bar + submit/cancel
-        ui.TitleButton(self.win, layout = (33, 21, 5, 1), text = _('Select'), action = 'onSelect')
-        ui.TitleButton(self.win, layout = (28, 21, 5, 1), text = _('Cancel'), action = 'onCancel')
-        ui.Title(self.win, id = 'vStatusBar', layout = (0, 21, 28, 1), align = ui.ALIGN_W)
+        ui.TitleButton(self.win, layout = (33, 13, 5, 1), text = _('Select'), action = 'onSelect')
+        ui.TitleButton(self.win, layout = (28, 13, 5, 1), text = _('Cancel'), action = 'onCancel')
+        ui.Title(self.win, id = 'vStatusBar', layout = (0, 13, 28, 1), align = ui.ALIGN_W)
         #self.win.statusBar = self.win.vStatusBar

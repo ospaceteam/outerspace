@@ -314,8 +314,8 @@ class Listbox(MetaWidget):
         self.itemsChanged()
 
     def unselectAll(self):
-        if self._selection:
-            for item in self._selection:
+        if self.selection:
+            for item in self.selection:
                 item.selected = 0
                 if item.index != None:
                     self._setListIndex(item.index, item)
