@@ -373,7 +373,7 @@ class IUniverse(IObject):
                 # check win conditions, but only in normal mode
                 # development mode does not end galaxies
                 if activePlayerCount <= 1 and tran.gameMngr.config.server.mode == "normal":
-                    log.message("AUTO RESTARTING GALAXY", galaxyID)
+                    log.message("AUTO FINISHING GALAXY", galaxyID)
                     if activePlayerCount == 0:
                         self.finishGalaxyAutomated(tran, obj, galaxyID, ["The galaxy was ended with no active players."])
                     elif piratePlayer: #if the pirate is still alive, then he must be the winner.
@@ -480,7 +480,7 @@ class IUniverse(IObject):
                 "sender": imperator.name,
                 "senderID": tran.cid,
                 "forum": "NEWS",
-                "data": (galaxyID, MSG_GNC_GALAXY_RESTARTED, galaxyID, tran.db[OID_UNIVERSE].turn, (imperator.name, galaxy.name, imperatorMessage)),
+                "data": (galaxyID, MSG_GNC_GALAXY_FINISHED, galaxyID, tran.db[OID_UNIVERSE].turn, (imperator.name, galaxy.name, imperatorMessage)),
                 "topic": "EVENT",
             }
             self.cmd(obj).sendMsg(tran, obj, message)
@@ -502,7 +502,7 @@ class IUniverse(IObject):
             "sender": "Galaxy %s" % galaxy.name,
             "senderID": tran.cid,
             "forum": "NEWS",
-            "data": (galaxyID, MSG_GNC_GALAXY_AUTO_RESTARTED, galaxyID, tran.db[OID_UNIVERSE].turn, (galaxy.name, imperatorMessage)),
+            "data": (galaxyID, MSG_GNC_GALAXY_AUTO_FINISHED, galaxyID, tran.db[OID_UNIVERSE].turn, (galaxy.name, imperatorMessage)),
             "topic": "EVENT",
         }
         self.cmd(obj).sendMsg(tran, obj, message)
