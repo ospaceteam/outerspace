@@ -30,7 +30,7 @@ from igeclient.IClient import IClient
 import pprint, traceback
 from getpass import getpass
 from code import InteractiveConsole
-from ige.ospace import Rules, Const
+from ige.ospace import Const
 import time
 
 #not race specific:

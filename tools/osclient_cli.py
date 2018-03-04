@@ -133,6 +133,9 @@ elif options.chronicler:
     sys.path.insert(0, os.path.join(baseDir, '..', 'client'))
     sys.path.insert(0, os.path.join(baseDir, '..', 'client', 'osci'))
     sys.path.insert(0, os.path.join(baseDir, '..', 'client-ai'))
+    import ige.ospace.Rules as Rules
+    Rules.init(options.configDir)
+
     from osci.StarMap import StarMap
     import resources
     import osci.res
