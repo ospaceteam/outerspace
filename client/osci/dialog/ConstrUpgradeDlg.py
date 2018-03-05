@@ -132,10 +132,11 @@ class ConstrUpgradeDlg:
                 (_('Per ship'), 'tDiff', 4, ui.ALIGN_E),
                 (_('Total'), 'tTotal', 4, ui.ALIGN_E),
             ),
-            columnLabels = 1
+            columnLabels = 1,
+            action = "onSelect",
+            rmbAction = "onCancel"
         )
         # status bar + submit/cancel
-        ui.TitleButton(self.win, layout = (15, 21, 5, 1), text = _('Select'), action = 'onSelect')
-        ui.TitleButton(self.win, layout = (10, 21, 5, 1), text = _('Cancel'), action = 'onCancel')
-        ui.Title(self.win, id = 'vStatusBar', layout = (0, 21, 10, 1), align = ui.ALIGN_W)
+        ui.TitleButton(self.win, layout = (15, 21, 5, 1), text = _('Cancel'), action = 'onCancel')
+        ui.Title(self.win, id = 'vStatusBar', layout = (0, 21, 15, 1), align = ui.ALIGN_W)
         #self.win.statusBar = self.win.vStatusBar

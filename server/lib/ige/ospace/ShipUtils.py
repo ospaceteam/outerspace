@@ -160,7 +160,6 @@ def makeShipFullSpec(player, name, hullID, eqIDs, improvements, raiseExs = True)
                     equipCounter[tech.equipType] += 1
                 else:
                     equipCounter[tech.equipType] = 1
-                log.debug(equipCounter[tech.equipType])
                 if equipCounter[tech.equipType] > Rules.maxEquipType[tech.equipType]:
                     raise GameException("Maximum number of restricted type equipment installations exceeded: %s." % tech.equipType)
             # add values

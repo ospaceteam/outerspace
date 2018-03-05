@@ -171,8 +171,11 @@ class ConstructionDlg:
         else:
             self.win.vCtrl.text = _("[Click to select]")
         # equipments
-        items = []
+        engines = []
+        weapons = []
+        equipment = []
         selected = None
+        selected_type = None
         for eqID in self.eqIDs:
             tech = client.getTechInfo(eqID)
             short = sequip.getShortDescr(eqID)
@@ -181,10 +184,31 @@ class ConstructionDlg:
                 tData = short, tooltipTitle = _("Details"), tooltip = long, statustip = long)
             if eqID == self.selectedEqID:
                 selected = item
-            items.append(item)
-        self.win.vEquipment.items = items
+                selected_type = tech.subtype
+            if tech.subtype == "seq_eng":
+                engines.append(item)
+            elif tech.subtype == "seq_wpn":
+                weapons.append(item)
+            elif tech.subtype in ["seq_mod", "seq_struct"]:
+                equipment.append(item)
+        self.win.vEngines.items = engines
+        self.win.vEngines.itemsChanged()
+        if selected_type == "seq_eng":
+            self.win.vEngines.selectItem(selected)
+        else:
+            self.win.vEngines.selectItem(None)
+        self.win.vWeapons.items = weapons
+        self.win.vWeapons.itemsChanged()
+        if selected_type == "seq_wpn":
+            self.win.vWeapons.selectItem(selected)
+        else:
+            self.win.vWeapons.selectItem(None)
+        self.win.vEquipment.items = equipment
         self.win.vEquipment.itemsChanged()
-        self.win.vEquipment.selectItem(selected)
+        if selected_type == "seq_mod":
+            self.win.vEquipment.selectItem(selected)
+        else:
+            self.win.vEquipment.selectItem(None)
         # display computed attrs
         if result:
             hull = client.getTechInfo(result.hullID)
@@ -206,7 +230,6 @@ class ConstructionDlg:
             else:
                 self.win.vASlots.text = _("N/A")
             self.win.vATanks.text = _("%d") % result.storEn
-            self.win.vASupport.text = _("%d") % result.operEn
             if result.speed > 0:
                 support = 10000000
                 if result.operEn > 0: support = min(support, result.storEn / result.operEn)
@@ -214,13 +237,13 @@ class ConstructionDlg:
             else:
                 self.win.vARange.text = _("None")
             self.win.vACCPts.text = _("%d") % result.buildProd
-            self.win.vACSup.text = _("%d") % (result.buildProd * Rules.operProdRatio)
-            self.win.vABaseExp.text = _("%d") % result.baseExp
             self.win.vACombatPwr.text = _("%d") % result.combatPwr
             if self.selectedDesignID and player.shipDesigns[self.selectedDesignID].upgradeTo:
                 self.win.vAUpgrade.text = player.shipDesigns[player.shipDesigns[self.selectedDesignID].upgradeTo].name
+                self.win.vAUpgrade.font = "normal-italic"
             else:
                 self.win.vAUpgrade.text = _("N/A")
+                self.win.vAUpgrade.font = "normal"
         else:
             self.win.vAClass.text = _("N/A")
             self.win.vASignature.text = _("N/A")
@@ -231,11 +254,8 @@ class ConstructionDlg:
             self.win.vAPayload.text = _("N/A")
             self.win.vASlots.text = _("N/A")
             self.win.vATanks.text = _("N/A")
-            self.win.vASupport.text = _("N/A")
             self.win.vARange.text = _("N/A")
             self.win.vACCPts.text = _("N/A")
-            self.win.vACSup.text = _("N/A")
-            self.win.vABaseExp.text = _("N/A")
             self.win.vACombatPwr.text = _("N/A")
             self.win.vAUpgrade.text = _("N/A")
 
@@ -251,7 +271,8 @@ class ConstructionDlg:
         else:
             eqIDs = {}
         for eqID in self.eqIDs:
-            eqIDs[eqID] = self.eqIDs[eqID]
+            if self.eqIDs[eqID]:
+                eqIDs[eqID] = self.eqIDs[eqID]
         try:
             self.win.setStatus(_("Executing ADD SHIP DESIGN command..."))
             player = client.getPlayer()
@@ -284,9 +305,14 @@ class ConstructionDlg:
         self.ctrlID = ctrlID
         self.show()
 
+    def onAddEngine(self, widget, action, data):
+        self.selTechDlg.display('isShipEquip', ["seq_eng"], self.onEqSelected, hullID = self.hullID)
+
+    def onAddWeapon(self, widget, action, data):
+        self.selTechDlg.display('isShipEquip', ["seq_wpn"], self.onEqSelected, hullID = self.hullID)
+
     def onAddEquipment(self, widget, action, data):
-        self.selTechDlg.display('isShipEquip', ["seq_wpn", "seq_mod", "seq_struct",
-            "seq_eng"], self.onEqSelected, hullID = self.hullID)
+        self.selTechDlg.display('isShipEquip', ["seq_mod", "seq_struct"], self.onEqSelected, hullID = self.hullID)
 
     def onEqSelected(self, eqID):
         self.eqIDs[eqID] = self.eqIDs.get(eqID, 0) + 1
@@ -315,33 +341,54 @@ class ConstructionDlg:
         self.win.vDuplDesign.enabled = 0
         self.update()
 
-    def onEqSelectedInList(self, widget, action, data):
-        self.selectedEqID = self.win.vEquipment.selection[0].techID
-
-    def onChangeEquipmentQty(self, delta):
+    def _getSelectedWidget(self):
+        widgets = []
+        if self.win.vEngines.selection:
+            widgets.append(self.win.vEngines)
+        if self.win.vWeapons.selection:
+            widgets.append(self.win.vWeapons)
         if self.win.vEquipment.selection:
-            item = self.win.vEquipment.selection[0]
+            widgets.append(self.win.vEquipment)
+        return widgets
+
+    def onEqSelectedInListInc(self, widget, action, data):
+        self._onEqSelectedInList(widget)
+        self._onChangeEquipmentQty(1)
+
+    def onEqSelectedInListDec(self, widget, action, data):
+        self._onEqSelectedInList(widget)
+        self._onChangeEquipmentQty(-1)
+
+    def _onEqSelectedInList(self, widget):
+        for old_select_widget in self._getSelectedWidget():
+            if old_select_widget is not widget:
+                old_select_widget.unselectAll()
+        self.selectedEqID = widget.selection[0].techID
+
+    def _onChangeEquipmentQty(self, delta):
+        for widget in self._getSelectedWidget():
+            item = widget.selection[0]
             eqID = item.techID
-            self.eqIDs[eqID] = self.eqIDs.get(eqID, 0) + delta
+            self.eqIDs[eqID] = max(self.eqIDs.get(eqID, 0) + delta, 0)
             self.update()
 
     def onIncrEquipment(self, widget, action, data):
-        self.onChangeEquipmentQty(1)
+        self._onChangeEquipmentQty(1)
 
     def onDecrEquipment(self, widget, action, data):
-        self.onChangeEquipmentQty(-1)
+        self._onChangeEquipmentQty(-1)
 
     def onIncrEquipment5(self, widget, action, data):
-        self.onChangeEquipmentQty(5)
+        self._onChangeEquipmentQty(5)
 
     def onDecrEquipment5(self, widget, action, data):
-        self.onChangeEquipmentQty(-5)
+        self._onChangeEquipmentQty(-5)
 
     def onIncrEquipment20(self, widget, action, data):
-        self.onChangeEquipmentQty(20)
+        self._onChangeEquipmentQty(20)
 
     def onDecrEquipment20(self, widget, action, data):
-        self.onChangeEquipmentQty(-20)
+        self._onChangeEquipmentQty(-20)
 
     def onRemoveEquipment(self, widget, action, data):
         if self.win.vEquipment.selection:
@@ -442,67 +489,82 @@ class ConstructionDlg:
             align = ui.ALIGN_W)
         ui.ActiveLabel(self.win, layout = (20, 3, 10, 1), id = "vCtrl",
             align = ui.ALIGN_E, action = "onSelectCtrl")
-        ui.Title(self.win, layout = (15, 4, 15, 1), text = _('Equipment'),
-            font = 'normal-bold', align = ui.ALIGN_W)
-        ui.Listbox(self.win, layout = (15, 5, 15, 19), id = 'vEquipment',
+        ui.Button(self.win, layout = (15, 4, 6, 1), text = _('Engines'),
+            font = 'normal-bold', action = "onAddEngine")
+        ui.Title(self.win, layout = (21, 4, 19, 1),)
+        ui.Listbox(self.win, layout = (15, 5, 25, 3), id = 'vEngines',
             columns = (
                 (_('#'), 'tNumber', 2, ui.ALIGN_E),
                 (_('Name'), 'text', 8, ui.ALIGN_W),
-                (_('Data'), 'tData', 4, ui.ALIGN_W),
+                (_('Data'), 'tData', 14, ui.ALIGN_W),
             ),
-            columnLabels = 1, action = "onEqSelectedInList"
+            columnLabels = 0,
+            action = "onEqSelectedInListInc",
+            rmbAction = "onEqSelectedInListDec"
         )
-        ui.Button(self.win, layout = (15, 24, 1.2, 1), text = _("++"),
-            action = "onIncrEquipment5", rmbAction = "onIncrEquipment20")
-        ui.Button(self.win, layout = (16.2, 24, 1.8, 1), text = _("+"),
-            action = "onIncrEquipment")
-        ui.Button(self.win, layout = (18, 24, 1.8, 1), text = _("-"),
-            action = "onDecrEquipment")
-        ui.Button(self.win, layout = (19.8, 24, 1.2, 1), text = _("--"),
-            action = "onDecrEquipment5", rmbAction = "onDecrEquipment20")
-        ui.Button(self.win, layout = (21, 24, 4.5, 1), text = _("Add"),
-            action = "onAddEquipment")
-        ui.Button(self.win, layout = (25.5, 24, 4.5, 1), text = _("Remove"),
-            action = "onRemoveEquipment")
+        ui.Button(self.win, layout = (15, 8, 6, 1), text = _('Weapons'),
+            font = 'normal-bold', action = "onAddWeapon")
+        ui.Title(self.win, layout = (21, 8, 19, 1),)
+        ui.Listbox(self.win, layout = (15, 9, 25, 4), id = 'vWeapons',
+            columns = (
+                (_('#'), 'tNumber', 2, ui.ALIGN_E),
+                (_('Name'), 'text', 8, ui.ALIGN_W),
+                (_('Data'), 'tData', 14, ui.ALIGN_W),
+            ),
+            columnLabels = 0,
+            action = "onEqSelectedInListInc",
+            rmbAction = "onEqSelectedInListDec"
+        )
+        ui.Button(self.win, layout = (15, 13, 6, 1), text = _('Equipment'),
+            font = 'normal-bold', action = "onAddEquipment")
+        ui.Title(self.win, layout = (21, 13, 19, 1),)
+        ui.Listbox(self.win, layout = (15, 14, 25, 5), id = 'vEquipment',
+            columns = (
+                (_('#'), 'tNumber', 2, ui.ALIGN_E),
+                (_('Name'), 'text', 8, ui.ALIGN_W),
+                (_('Data'), 'tData', 14, ui.ALIGN_W),
+            ),
+            columnLabels = 0,
+            action = "onEqSelectedInListInc",
+            rmbAction = "onEqSelectedInListDec"
+        )
+
+        ui.Button(self.win, layout = (15, 19, 6, 1), text = _("Upgrade to"),
+                 id = "vUpgrade", font = 'normal-bold', action = "onUpgrade")
+        ui.Label(self.win, layout = (21, 19, 6, 1), id = "vAUpgrade", align = ui.ALIGN_E)
+        ui.Title(self.win, layout = (27.5, 19, 12.5, 1))
         # ship's attrs
-        ui.Label(self.win, layout = (30, 1, 5, 1), text = _("Class"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 1, 5, 1), id = "vAClass", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 2, 5, 1), text = _("Signature"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 2, 5, 1), id = "vASignature", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 3, 5, 1), text = _("Speed"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 3, 5, 1), id = "vASpeed", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 4, 5, 1), text = _("HP"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 4, 5, 1), id = "vAHP", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 5, 5, 1), text = _("Base attack"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 5, 5, 1), id = "vAAttack", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 6, 5, 1), text = _("Base defence"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 6, 5, 1), id = "vADefence", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 7, 5, 1), text = _("Military power"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 7, 5, 1), id = "vACombatPwr", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 8, 5, 1), text = _("Base exp pts"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 8, 5, 1), id = "vABaseExp", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 10, 3, 1), text = _("Tanks"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (33, 10, 7, 1), id = "vATanks", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 11, 7, 1), text = _("Support (fuel)"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (37, 11, 3, 1), id = "vASupport", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 12, 7, 1), text = _("Support (const. pts)"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (37, 12, 3, 1), id = "vACSup", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 13, 5, 1), text = _("Max. range"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 13, 5, 1), id = "vARange", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 15, 5, 1), text = _("Unused payload"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 15, 5, 1), id = "vAPayload", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 16, 5, 1), text = _("Free slots"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 16, 5, 1), id = "vASlots", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 18, 5, 1), text = _("Constr. pts"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 18, 5, 1), id = "vACCPts", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (30, 20, 5, 1), text = _("Upgrade to"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 20, 5, 1), id = "vAUpgrade", align = ui.ALIGN_E)
+
+        ui.Label(self.win, layout = (30.5, 1, 4.5, 1), text = _("Class"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (35, 1, 4.75, 1), id = "vAClass", align = ui.ALIGN_E)
+        ui.Label(self.win, layout = (30.5, 2, 6.5, 1), text = _("Free slots"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (37, 2, 2.75, 1), id = "vASlots", align = ui.ALIGN_E)
+        ui.Label(self.win, layout = (30.5, 3, 6.5, 1), text = _("Unused payload"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (37, 3, 2.75, 1), id = "vAPayload", align = ui.ALIGN_E)
+
+        ui.Label(self.win, layout = (17, 21, 4, 1), text = _("HP"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (21, 21, 5, 1), id = "vAHP", align = ui.ALIGN_E)
+        ui.Label(self.win, layout = (17, 22, 4, 1), text = _("Base attack"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (21, 22, 5, 1), id = "vAAttack", align = ui.ALIGN_E)
+        ui.Label(self.win, layout = (17, 23, 3, 1), text = _("Base defence"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (20, 23, 6, 1), id = "vADefence", align = ui.ALIGN_E)
+        ui.Label(self.win, layout = (17, 24, 5, 1), text = _("Military power"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (22, 24, 4, 1), id = "vACombatPwr", align = ui.ALIGN_E)
+
+        ui.Label(self.win, layout = (28, 20, 5, 1), text = _("Signature"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (33, 20, 5, 1), id = "vASignature", align = ui.ALIGN_E)
+        ui.Label(self.win, layout = (28, 21, 5, 1), text = _("Speed"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (33, 21, 5, 1), id = "vASpeed", align = ui.ALIGN_E)
+        ui.Label(self.win, layout = (28, 22, 5, 1), text = _("Tanks"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (33, 22, 5, 1), id = "vATanks", align = ui.ALIGN_E)
+        ui.Label(self.win, layout = (28, 23, 5, 1), text = _("Max. range"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (33, 23, 5, 1), id = "vARange", align = ui.ALIGN_E)
+        ui.Label(self.win, layout = (28, 24, 5, 1), text = _("Constr. pts"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (33, 24, 5, 1), font = 'normal-bold', id = "vACCPts", align = ui.ALIGN_E)
+
         # actions
-        ui.Title(self.win, layout = (15, 25, 25, 1), text = _('Design Actions'),
-            font = 'normal-bold', align = ui.ALIGN_W)
-        ui.Button(self.win, layout = (15, 26, 5, 1), text = _("Upgrade"),
-            id = "vUpgrade", action = "onUpgrade")
-        ui.Button(self.win, layout = (20, 26, 5, 1), text = _("Scrap"),
+        ui.Title(self.win, layout = (15, 25, 25, 1))
+        ui.Button(self.win, layout = (15, 26, 5, 1), text = _("Scrap"),
             id = "vScrap", action = "onScrap")
         ui.Button(self.win, layout = (35, 26, 5, 1), text = _("Construct"),
             id = "vConstruct", action = "onConstruct")
