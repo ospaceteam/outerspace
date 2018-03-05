@@ -240,8 +240,10 @@ class ConstructionDlg:
             self.win.vACombatPwr.text = _("%d") % result.combatPwr
             if self.selectedDesignID and player.shipDesigns[self.selectedDesignID].upgradeTo:
                 self.win.vAUpgrade.text = player.shipDesigns[player.shipDesigns[self.selectedDesignID].upgradeTo].name
+                self.win.vAUpgrade.font = "normal-italic"
             else:
                 self.win.vAUpgrade.text = _("N/A")
+                self.win.vAUpgrade.font = "normal"
         else:
             self.win.vAClass.text = _("N/A")
             self.win.vASignature.text = _("N/A")
@@ -349,7 +351,15 @@ class ConstructionDlg:
             widgets.append(self.win.vEquipment)
         return widgets
 
-    def onEqSelectedInList(self, widget, action, data):
+    def onEqSelectedInListInc(self, widget, action, data):
+        self._onEqSelectedInList(widget)
+        self._onChangeEquipmentQty(1)
+
+    def onEqSelectedInListDec(self, widget, action, data):
+        self._onEqSelectedInList(widget)
+        self._onChangeEquipmentQty(-1)
+
+    def _onEqSelectedInList(self, widget):
         for old_select_widget in self._getSelectedWidget():
             if old_select_widget is not widget:
                 old_select_widget.unselectAll()
@@ -479,64 +489,58 @@ class ConstructionDlg:
             align = ui.ALIGN_W)
         ui.ActiveLabel(self.win, layout = (20, 3, 10, 1), id = "vCtrl",
             align = ui.ALIGN_E, action = "onSelectCtrl")
-        ui.Title(self.win, layout = (15, 4, 21, 1), text = _('Engines'),
-            font = 'normal-bold', align = ui.ALIGN_W)
-        ui.Button(self.win, layout = (36, 4, 4, 1), text = _("Add"),
-            action = "onAddEngine")
+        ui.Button(self.win, layout = (15, 4, 6, 1), text = _('Engines'),
+            font = 'normal-bold', action = "onAddEngine")
+        ui.Title(self.win, layout = (21, 4, 19, 1),)
         ui.Listbox(self.win, layout = (15, 5, 25, 3), id = 'vEngines',
             columns = (
                 (_('#'), 'tNumber', 2, ui.ALIGN_E),
                 (_('Name'), 'text', 8, ui.ALIGN_W),
                 (_('Data'), 'tData', 14, ui.ALIGN_W),
             ),
-            columnLabels = 0, action = "onEqSelectedInList"
+            columnLabels = 0,
+            action = "onEqSelectedInListInc",
+            rmbAction = "onEqSelectedInListDec"
         )
-        ui.Title(self.win, layout = (15, 8, 21, 1), text = _('Weapons'),
-            font = 'normal-bold', align = ui.ALIGN_W)
-        ui.Button(self.win, layout = (36, 8, 4, 1), text = _("Add"),
-            action = "onAddWeapon")
+        ui.Button(self.win, layout = (15, 8, 6, 1), text = _('Weapons'),
+            font = 'normal-bold', action = "onAddWeapon")
+        ui.Title(self.win, layout = (21, 8, 19, 1),)
         ui.Listbox(self.win, layout = (15, 9, 25, 4), id = 'vWeapons',
             columns = (
                 (_('#'), 'tNumber', 2, ui.ALIGN_E),
                 (_('Name'), 'text', 8, ui.ALIGN_W),
                 (_('Data'), 'tData', 14, ui.ALIGN_W),
             ),
-            columnLabels = 0, action = "onEqSelectedInList"
+            columnLabels = 0,
+            action = "onEqSelectedInListInc",
+            rmbAction = "onEqSelectedInListDec"
         )
-        ui.Title(self.win, layout = (15, 13, 21, 1), text = _('Equipment'),
-            font = 'normal-bold', align = ui.ALIGN_W)
-        ui.Button(self.win, layout = (36, 13, 4, 1), text = _("Add"),
-            action = "onAddEquipment")
+        ui.Button(self.win, layout = (15, 13, 6, 1), text = _('Equipment'),
+            font = 'normal-bold', action = "onAddEquipment")
+        ui.Title(self.win, layout = (21, 13, 19, 1),)
         ui.Listbox(self.win, layout = (15, 14, 25, 5), id = 'vEquipment',
             columns = (
                 (_('#'), 'tNumber', 2, ui.ALIGN_E),
                 (_('Name'), 'text', 8, ui.ALIGN_W),
                 (_('Data'), 'tData', 14, ui.ALIGN_W),
             ),
-            columnLabels = 0, action = "onEqSelectedInList"
+            columnLabels = 0,
+            action = "onEqSelectedInListInc",
+            rmbAction = "onEqSelectedInListDec"
         )
-        ui.Button(self.win, layout = (34, 19, 1.2, 1), text = _("++"),
-            action = "onIncrEquipment5", rmbAction = "onIncrEquipment20")
-        ui.Button(self.win, layout = (35.2, 19, 1.8, 1), text = _("+"),
-            action = "onIncrEquipment")
-        ui.Button(self.win, layout = (37, 19, 1.8, 1), text = _("-"),
-            action = "onDecrEquipment")
-        ui.Button(self.win, layout = (38.8, 19, 1.2, 1), text = _("--"),
-            action = "onDecrEquipment5", rmbAction = "onDecrEquipment20")
-        #ui.Button(self.win, layout = (21, 24, 4.5, 1), text = _("Add"),
-        #    action = "onAddEquipment")
-        #ui.Button(self.win, layout = (25.5, 24, 4.5, 1), text = _("Remove"),
-        #    action = "onRemoveEquipment")
-        # ship's attrs
-        ui.Label(self.win, layout = (16, 19, 4, 1), text = _("Upgrade to"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (20, 19, 7, 1), id = "vAUpgrade", align = ui.ALIGN_E)
 
-        ui.Label(self.win, layout = (31, 1, 4, 1), text = _("Class"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (35, 1, 5, 1), id = "vAClass", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (31, 2, 6, 1), text = _("Free slots"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (37, 2, 3, 1), id = "vASlots", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (31, 3, 6, 1), text = _("Unused payload"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (37, 3, 3, 1), id = "vAPayload", align = ui.ALIGN_E)
+        ui.Button(self.win, layout = (15, 19, 6, 1), text = _("Upgrade to"),
+                 id = "vUpgrade", font = 'normal-bold', action = "onUpgrade")
+        ui.Label(self.win, layout = (21, 19, 6, 1), id = "vAUpgrade", align = ui.ALIGN_E)
+        ui.Title(self.win, layout = (27.5, 19, 12.5, 1))
+        # ship's attrs
+
+        ui.Label(self.win, layout = (30.5, 1, 4.5, 1), text = _("Class"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (35, 1, 4.75, 1), id = "vAClass", align = ui.ALIGN_E)
+        ui.Label(self.win, layout = (30.5, 2, 6.5, 1), text = _("Free slots"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (37, 2, 2.75, 1), id = "vASlots", align = ui.ALIGN_E)
+        ui.Label(self.win, layout = (30.5, 3, 6.5, 1), text = _("Unused payload"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (37, 3, 2.75, 1), id = "vAPayload", align = ui.ALIGN_E)
 
         ui.Label(self.win, layout = (17, 21, 4, 1), text = _("HP"), align = ui.ALIGN_W)
         ui.Label(self.win, layout = (21, 21, 5, 1), id = "vAHP", align = ui.ALIGN_E)
@@ -559,11 +563,8 @@ class ConstructionDlg:
         ui.Label(self.win, layout = (33, 24, 5, 1), font = 'normal-bold', id = "vACCPts", align = ui.ALIGN_E)
 
         # actions
-        ui.Title(self.win, layout = (15, 25, 25, 1), text = _('Design Actions'),
-            font = 'normal-bold', align = ui.ALIGN_W)
-        ui.Button(self.win, layout = (15, 26, 5, 1), text = _("Upgrade"),
-            id = "vUpgrade", action = "onUpgrade")
-        ui.Button(self.win, layout = (20, 26, 5, 1), text = _("Scrap"),
+        ui.Title(self.win, layout = (15, 25, 25, 1))
+        ui.Button(self.win, layout = (15, 26, 5, 1), text = _("Scrap"),
             id = "vScrap", action = "onScrap")
         ui.Button(self.win, layout = (35, 26, 5, 1), text = _("Construct"),
             id = "vConstruct", action = "onConstruct")

@@ -176,11 +176,12 @@ class ConstrSelTechDlg:
                 (_('Type'), 'tType', 4, ui.ALIGN_W),
                 (_('Data'), 'tData', 0, ui.ALIGN_W),
             ),
-            sortedBy = ('tType', 1)
+            sortedBy = ('tType', 1),
+            action = "onSelect",
+            rmbAction = "onCancel"
         )
 
         # status bar + submit/cancel
-        ui.TitleButton(self.win, layout = (33, 13, 5, 1), text = _('Select'), action = 'onSelect')
-        ui.TitleButton(self.win, layout = (28, 13, 5, 1), text = _('Cancel'), action = 'onCancel')
-        ui.Title(self.win, id = 'vStatusBar', layout = (0, 13, 28, 1), align = ui.ALIGN_W)
+        ui.TitleButton(self.win, layout = (33, 13, 5, 1), text = _('Cancel'), action = 'onCancel')
+        ui.Title(self.win, id = 'vStatusBar', layout = (0, 13, 33, 1), align = ui.ALIGN_W)
         #self.win.statusBar = self.win.vStatusBar
