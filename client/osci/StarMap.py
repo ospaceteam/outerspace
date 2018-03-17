@@ -1001,7 +1001,9 @@ class StarMap(object):
                 centralPlanet = client.get(player.planets[0])
                 govPCR = player.govPwrCtrlRange
                 player.stats.storPop, player.govPwr
-                for step in xrange(100, max(Rules.minMoraleTrgt-1, int(107.5-37.5*player.stats.storPop/player.govPwr) - 1) , -10):
+                maxMorale = int(Rules.maxMorale)
+                minAchievedMorale = int(max(Rules.minMoraleTrgt - 1, 107.5 - 37.5 * player.stats.storPop / player.govPwr))
+                for step in xrange(maxMorale, minAchievedMorale - 1 , -10):
                     moraleColor = res.getMoraleColors(step)
                     centralX = int((centralPlanet.x - currX) * scale) + centerX
                     centralY = maxY - (int((centralPlanet.y - currY) * scale) + centerY)
