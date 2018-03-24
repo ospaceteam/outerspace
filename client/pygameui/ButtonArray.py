@@ -38,7 +38,6 @@ class ButtonArray(MetaWidget):
         self.selected = None
         self.selectedButton = None
         self.highlighted = None
-        self.highlightedButton = None
         self.buttonSize = (1, 1)
         self.rows = 0
         self.columns = 0
@@ -105,7 +104,6 @@ class ButtonArray(MetaWidget):
 
     def onButtonHighlighted(self, widget, action, data):
         self.highlighted = widget.data
-        self.highlightedButton = widget
         self.processAction(self.hoverAction, self.highlighted if data else None)
 
     def itemsChanged(self):
