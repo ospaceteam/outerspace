@@ -36,8 +36,10 @@ class Listbox(MetaWidget):
         self.__dict__["labels"] = []
         self.__dict__["action"] = None
         self.__dict__["rmbAction"] = None
+        self.__dict__["hoverAction"] = None
         self.__dict__["multiselection"] = 0
         self.__dict__["selection"] = []
+        self.__dict__["highlight"] = None
         self.__dict__["columns"] = [('Item', 'text', 0, ALIGN_W)]
         self.__dict__["columnLabels"] = 0
         self.__dict__["scrollBar"] = 1
@@ -65,7 +67,7 @@ class Listbox(MetaWidget):
             label.subscribeAction('*', self)
             self._buttons.append(label)
             for i in xrange(0, rows):
-                label = Button(self, action = 'onItemSelect', rmbAction = "onRmbItemSelect", style = "listitem", toggle = 1)
+                label = Button(self, action = 'onItemSelect', rmbAction = "onRmbItemSelect", hoverAction = "onItemHighlight", style = "listitem", toggle = 1)
                 label.subscribeAction('*', self)
                 self._labels.append(label)
 
@@ -117,7 +119,7 @@ class Listbox(MetaWidget):
                     label.redraw()
                 else:
                     if len(self._labels) <= lIndex:
-                        label = Button(self, action = 'onItemSelect', rmbAction = "onRmbItemSelect", style = "listitem", toggle = 1)
+                        label = Button(self, action = 'onItemSelect', rmbAction = "onRmbItemSelect", hoverAction = "onItemHighlight", style = "listitem", toggle = 1)
                         label.subscribeAction('*', self)
                         self._labels.append(label)
                     label = self._labels[lIndex]
@@ -178,6 +180,16 @@ class Listbox(MetaWidget):
             return 1
         return 0
 
+    def highlightItem(self, item, highlighted):
+        if item is not None:
+            self.highlight = item
+            self.highlight.highlighted = highlighted
+            self._setListIndex(item.index, item)
+            return 1
+        else:
+            self.highlight = None
+            return 0
+
     def onItemSelect(self, widget, action, data):
         if self.selectItem(widget.data):
             self.processAction(self.action, widget.data)
@@ -185,6 +197,10 @@ class Listbox(MetaWidget):
     def onRmbItemSelect(self, widget, action, data):
         if self.selectItem(widget.data):
             self.processAction(self.rmbAction, widget.data)
+
+    def onItemHighlight(self, widget, action, data):
+        if self.highlightItem(widget.data, data):
+            self.processAction(self.hoverAction, widget.data if data else None)
 
     def onNewValue(self, widget, action, data):
         value = widget.text
@@ -217,15 +233,15 @@ class Listbox(MetaWidget):
     def onSortByColumn(self, widget, action, data):
         self.setSort(widget.data)
 
-    def _setListIndex(self, index, item):
-        if index < len(self.labels):
+    def _setListIndex(self, rowIndex, item):
+        if rowIndex < len(self.labels):
             if item.selected and item not in self.selection:
                 self.selection.append(item)
             if not item.selected and item in self.selection:
                 self.selection.remove(item)
-            index2 = 0
+            columnIndex = 0
             for title, name, width, flags in self.columns:
-                label = self.labels[index][index2]
+                label = self.labels[rowIndex][columnIndex]
                 label.text = item.getAsString(name)
                 label.tooltip = item.tooltip
                 label.tooltipTitle = item.tooltipTitle
@@ -237,7 +253,8 @@ class Listbox(MetaWidget):
                     label.icons = item.icons
                 label.data = item
                 label.pressed = item.selected
-                index2 += 1
+                label.highlighted = item.highlighted
+                columnIndex += 1
 
     def itemsChanged(self):
         if self.sortable and self.sortedBy[0] != None:
@@ -317,6 +334,7 @@ class Listbox(MetaWidget):
         if self.selection:
             for item in self.selection:
                 item.selected = 0
+                item.highlighted = 0
                 if item.index != None:
                     self._setListIndex(item.index, item)
 

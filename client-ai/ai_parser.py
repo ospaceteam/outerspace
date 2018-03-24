@@ -86,7 +86,7 @@ class AIList:
             listfile.close()
 
     def _save(self):
-        json.dump(self.records, open(os.path.join(self.configDir, self.listname), "w"), cls=AIRecordEncoder)
+        json.dump(self.records, open(os.path.join(self.configDir, self.listname), "w"), cls=AIRecordEncoder, indent=2)
 
     def add(self, login, password, aiType):
         """ It adds new line to the ais_list. Now without galaxy_name,

@@ -26,6 +26,7 @@ class Item:
         self.text = text
         self.align = 0
         self.selected = 0
+        self.highlighted = 0
         self.icons = []
         self.font = None
         self.children = []

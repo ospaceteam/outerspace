@@ -37,13 +37,16 @@ class ConstructionDlg:
         self.upgradeDlg = ConstrUpgradeDlg(app)
         self.confirmDlg = ConfirmDlg(app)
         self.selectedDesignID = None
+        self.highlightedDesignID = None
+        self.editMode = False
 
     def display(self):
+        self.itemCache = {}
         self.hullID = OID_NONE
         self.ctrlID = OID_NONE
         self.eqIDs = {}
         self.selectedEqID = None
-        self.show()
+        self.update()
         self.win.show()
         # register for updates
         if self not in gdata.updateDlgs:
@@ -57,16 +60,16 @@ class ConstructionDlg:
             gdata.updateDlgs.remove(self)
 
     def update(self):
-        self.show()
+        self.showDesigns()
+        self.showDetails()
 
-    def show(self):
+    def showDesigns(self):
         player = client.getPlayer()
-        # check if selected ship design exists
-        if self.selectedDesignID not in player.shipDesigns:
-            self.selectedDesignID = None
+        # check if highlighted ship design exists
+        if self.highlightedDesignID not in player.shipDesigns:
+            self.highlightedDesignID = None
         # designs
-        items = []
-        selected = None
+        highlighted = None
         items = []
         for designID in player.shipDesigns:
             spec = player.shipDesigns[designID]
@@ -106,27 +109,59 @@ class ConstructionDlg:
             )
             if spec.upgradeTo:
                 item.foreground = gdata.sevColors[gdata.NONE]
-            if designID == self.selectedDesignID:
-                selected = item
+            if designID == self.highlightedDesignID:
+                highlighted = item
             items.append(item)
         self.win.vDesigns.items = items
         self.win.vDesigns.itemsChanged()
-        self.win.vDesigns.selectItem(selected)
-        # compute
-        if self.selectedDesignID == None:
-            if self.ctrlID:
-                eqIDs = {self.ctrlID : 1}
+        self.win.vDesigns.highlightItem(highlighted, 0)
+
+    def _setDetailButtons(self, player):
+        if self.selectedDesignID:
+            if player.shipDesigns[self.selectedDesignID].upgradeTo == 0:
+                self.win.vUpgrade.enabled = 1
+                self.win.vUpgrade.text = _("Upgrade")
             else:
-                eqIDs = {}
-            for eqID in self.eqIDs:
-                eqIDs[eqID] = self.eqIDs[eqID]
-            improvements = []
+                self.win.vUpgrade.enabled = 1
+                self.win.vUpgrade.text = _("Cancel Upgrd")
+
+        if self.editMode:
+            self.win.vEnginesButton.enabled = 1
+            self.win.vWeaponsButton.enabled = 1
+            self.win.vEquipmentButton.enabled = 1
             self.win.vUpgrade.enabled = 0
             self.win.vUpgrade.text = _("Upgrade")
             self.win.vScrap.enabled = 0
-            self.win.vConstruct.enabled = 1
         else:
-            spec = player.shipDesigns[self.selectedDesignID]
+            # only view mode?
+            # let's reset highlights in design listboxes
+            self.selectedEqID = None
+            self.win.vEngines.unselectAll()
+            self.win.vWeapons.unselectAll()
+            self.win.vEquipment.unselectAll()
+
+            self.win.vScrap.enabled = 1
+            self.win.vDuplDesign.enabled = 1
+            self.win.vConstruct.enabled = 0
+            self.win.vEnginesButton.enabled = 0
+            self.win.vWeaponsButton.enabled = 0
+            self.win.vEquipmentButton.enabled = 0
+
+    def _designRepresentation(self, player):
+        if self.highlightedDesignID == None:
+            if self.editMode:
+                if self.ctrlID:
+                    eqIDs = {self.ctrlID : 1}
+                else:
+                    eqIDs = {}
+                for eqID in self.eqIDs:
+                    eqIDs[eqID] = self.eqIDs[eqID]
+                improvements = []
+            else:
+                eqIDs = {}
+                improvements = []
+        else:
+            spec = player.shipDesigns[self.highlightedDesignID]
             self.hullID = spec.hullID
             eqIDs = spec.eqIDs
             improvements = spec.improvements
@@ -140,18 +175,13 @@ class ConstructionDlg:
                     self.win.vCtrl.text = tech.name
                 else:
                     self.eqIDs[eqID] = eqIDs[eqID]
-            if player.shipDesigns[self.selectedDesignID].upgradeTo == 0:
-                self.win.vUpgrade.enabled = 1
-                self.win.vUpgrade.text = _("Upgrade")
-            else:
-                self.win.vUpgrade.enabled = 1
-                self.win.vUpgrade.text = _("Cancel Upgrd")
-            self.win.vScrap.enabled = 1
-            self.win.vConstruct.enabled = 0
         try:
             result = ShipUtils.makeShipFullSpec(player, None, self.hullID, eqIDs, improvements)
+            if self.editMode:
+                self.win.vConstruct.enabled = 1
         except GameException, e:
             self.win.setStatus(e.args[0])
+            self.win.vConstruct.enabled = 0
             try:
                 result = ShipUtils.makeShipFullSpec(player, None, self.hullID, eqIDs,
                     improvements, raiseExs = False)
@@ -159,6 +189,9 @@ class ConstructionDlg:
                 result = None
         else:
             self.win.setStatus(_("Ready."))
+        return result
+
+    def _detailEquipmentLists(self):
         # design info
         if self.hullID:
             tech = client.getTechInfo(self.hullID)
@@ -180,8 +213,14 @@ class ConstructionDlg:
             tech = client.getTechInfo(eqID)
             short = sequip.getShortDescr(eqID)
             long = sequip.getLongDescr(eqID)
-            item = ui.Item(tech.name, techID = eqID, tNumber = self.eqIDs[eqID],
-                tData = short, tooltipTitle = _("Details"), tooltip = long, statustip = long)
+            # cache has been introduced to let items preserve highlight information
+            if eqID in self.itemCache:
+                item = self.itemCache[eqID]
+                item.tNumber = self.eqIDs[eqID]
+            else:
+                item = ui.Item(tech.name, techID = eqID, tNumber = self.eqIDs[eqID],
+                    tData = short, tooltipTitle = _("Details"), tooltip = long, statustip = long)
+                self.itemCache[eqID] = item
             if eqID == self.selectedEqID:
                 selected = item
                 selected_type = tech.subtype
@@ -209,7 +248,8 @@ class ConstructionDlg:
             self.win.vEquipment.selectItem(selected)
         else:
             self.win.vEquipment.selectItem(None)
-        # display computed attrs
+
+    def _detailComputedAttributes(self, player, result):
         if result:
             hull = client.getTechInfo(result.hullID)
             self.win.vAClass.text = _(gdata.shipClasses[result.combatClass])
@@ -238,8 +278,8 @@ class ConstructionDlg:
                 self.win.vARange.text = _("None")
             self.win.vACCPts.text = _("%d") % result.buildProd
             self.win.vACombatPwr.text = _("%d") % result.combatPwr
-            if self.selectedDesignID and player.shipDesigns[self.selectedDesignID].upgradeTo:
-                self.win.vAUpgrade.text = player.shipDesigns[player.shipDesigns[self.selectedDesignID].upgradeTo].name
+            if self.highlightedDesignID and player.shipDesigns[self.highlightedDesignID].upgradeTo:
+                self.win.vAUpgrade.text = player.shipDesigns[player.shipDesigns[self.highlightedDesignID].upgradeTo].name
                 self.win.vAUpgrade.font = "normal-italic"
             else:
                 self.win.vAUpgrade.text = _("N/A")
@@ -258,6 +298,13 @@ class ConstructionDlg:
             self.win.vACCPts.text = _("N/A")
             self.win.vACombatPwr.text = _("N/A")
             self.win.vAUpgrade.text = _("N/A")
+
+    def showDetails(self):
+        player = client.getPlayer()
+        self._setDetailButtons(player)
+        result = self._designRepresentation(player)
+        self._detailEquipmentLists()
+        self._detailComputedAttributes(player, result)
 
     def onConstruct(self, widget, action, data):
         name = self.win.vName.text
@@ -283,12 +330,11 @@ class ConstructionDlg:
         except GameException, e:
             self.win.setStatus(_(e.args[0]))
             return
+        self.editMode = False
         self.update()
 
-    def onCancel(self, widget, action, data):
-        self.hide()
-
     def onClose(self, widget, action, data):
+        self.editMode = False
         self.hide()
 
     def onSelectHull(self, widget, action, data):
@@ -296,14 +342,14 @@ class ConstructionDlg:
 
     def onHullSelected(self, hullID):
         self.hullID = hullID
-        self.show()
+        self.showDetails()
 
     def onSelectCtrl(self, widget, action, data):
         self.selTechDlg.display('isShipEquip', ["seq_ctrl"], self.onCtrlSelected, self.ctrlID, self.hullID)
 
     def onCtrlSelected(self, ctrlID):
         self.ctrlID = ctrlID
-        self.show()
+        self.showDetails()
 
     def onAddEngine(self, widget, action, data):
         self.selTechDlg.display('isShipEquip', ["seq_eng"], self.onEqSelected, hullID = self.hullID)
@@ -316,16 +362,35 @@ class ConstructionDlg:
 
     def onEqSelected(self, eqID):
         self.eqIDs[eqID] = self.eqIDs.get(eqID, 0) + 1
-        self.show()
+        self.showDetails()
 
     def onSelectDesign(self, widget, action, data):
         item = self.win.vDesigns.selection[0]
+        self.editMode = False
         self.selectedDesignID = item.tDesignID
-        self.win.vDuplDesign.enabled = 1
-        self.update()
+        self.highlightedDesignID = item.tDesignID
+        self.showDetails()
+
+    def onHighlightDesign(self, widget, action, data):
+        if self.editMode:
+            return
+        if data is None and not self.win.vDesigns.selection:
+            # unhighlight into non-selection
+            self.highlightedDesignID = None
+            self.win.vDuplDesign.enabled = 0
+            self.showDetails()
+            return
+        if data is not None:
+            item = self.win.vDesigns.highlight
+        elif self.win.vDesigns.selection:
+            item = self.win.vDesigns.selection[0]
+        self.highlightedDesignID = item.tDesignID
+        self.showDetails()
 
     def onNewDesign(self, widget, action, data):
         self.selectedDesignID = None
+        self.highlightedDesignID = None
+        self.editMode = True
         self.win.vDesigns.selectItem(None)
         self.hullID = OID_NONE
         self.ctrlID = OID_NONE
@@ -336,6 +401,8 @@ class ConstructionDlg:
 
     def onDuplDesign(self, widget, action, data):
         self.selectedDesignID = None
+        self.highlightedDesignID = None
+        self.editMode = True
         self.win.vDesigns.selectItem(None)
         self.win.vName.text = _(" ")
         self.win.vDuplDesign.enabled = 0
@@ -352,12 +419,14 @@ class ConstructionDlg:
         return widgets
 
     def onEqSelectedInListInc(self, widget, action, data):
-        self._onEqSelectedInList(widget)
-        self._onChangeEquipmentQty(1)
+        if self.editMode:
+            self._onEqSelectedInList(widget)
+            self._onChangeEquipmentQty(1)
 
     def onEqSelectedInListDec(self, widget, action, data):
-        self._onEqSelectedInList(widget)
-        self._onChangeEquipmentQty(-1)
+        if self.editMode:
+            self._onEqSelectedInList(widget)
+            self._onChangeEquipmentQty(-1)
 
     def _onEqSelectedInList(self, widget):
         for old_select_widget in self._getSelectedWidget():
@@ -370,32 +439,14 @@ class ConstructionDlg:
             item = widget.selection[0]
             eqID = item.techID
             self.eqIDs[eqID] = max(self.eqIDs.get(eqID, 0) + delta, 0)
-            self.update()
-
-    def onIncrEquipment(self, widget, action, data):
-        self._onChangeEquipmentQty(1)
-
-    def onDecrEquipment(self, widget, action, data):
-        self._onChangeEquipmentQty(-1)
-
-    def onIncrEquipment5(self, widget, action, data):
-        self._onChangeEquipmentQty(5)
-
-    def onDecrEquipment5(self, widget, action, data):
-        self._onChangeEquipmentQty(-5)
-
-    def onIncrEquipment20(self, widget, action, data):
-        self._onChangeEquipmentQty(20)
-
-    def onDecrEquipment20(self, widget, action, data):
-        self._onChangeEquipmentQty(-20)
+            self.showDetails()
 
     def onRemoveEquipment(self, widget, action, data):
         if self.win.vEquipment.selection:
             item = self.win.vEquipment.selection[0]
             eqID = item.techID
             del self.eqIDs[eqID]
-            self.update()
+            self.showDetails()
 
     def onScrap(self, widget, action, data):
         # count number of ships using this design
@@ -467,7 +518,9 @@ class ConstructionDlg:
                 (_('Name'), 'text', 8, ui.ALIGN_W),
                 (_('Class'), 'tClass', 2, ui.ALIGN_W),
             ),
-            columnLabels = 1, action = "onSelectDesign",
+            columnLabels = 1,
+            action = "onSelectDesign",
+            hoverAction = "onHighlightDesign"
         )
         ui.Button(self.win, layout = (0, 26, 7, 1), text = _("New design"),
             action = "onNewDesign")
@@ -490,7 +543,7 @@ class ConstructionDlg:
         ui.ActiveLabel(self.win, layout = (20, 3, 10, 1), id = "vCtrl",
             align = ui.ALIGN_E, action = "onSelectCtrl")
         ui.Button(self.win, layout = (15, 4, 6, 1), text = _('Engines'),
-            font = 'normal-bold', action = "onAddEngine")
+            id = "vEnginesButton", font = 'normal-bold', action = "onAddEngine")
         ui.Title(self.win, layout = (21, 4, 19, 1),)
         ui.Listbox(self.win, layout = (15, 5, 25, 3), id = 'vEngines',
             columns = (
@@ -503,7 +556,7 @@ class ConstructionDlg:
             rmbAction = "onEqSelectedInListDec"
         )
         ui.Button(self.win, layout = (15, 8, 6, 1), text = _('Weapons'),
-            font = 'normal-bold', action = "onAddWeapon")
+            id = "vWeaponsButton", font = 'normal-bold', action = "onAddWeapon")
         ui.Title(self.win, layout = (21, 8, 19, 1),)
         ui.Listbox(self.win, layout = (15, 9, 25, 4), id = 'vWeapons',
             columns = (
@@ -516,7 +569,7 @@ class ConstructionDlg:
             rmbAction = "onEqSelectedInListDec"
         )
         ui.Button(self.win, layout = (15, 13, 6, 1), text = _('Equipment'),
-            font = 'normal-bold', action = "onAddEquipment")
+            id = "vEquipmentButton", font = 'normal-bold', action = "onAddEquipment")
         ui.Title(self.win, layout = (21, 13, 19, 1),)
         ui.Listbox(self.win, layout = (15, 14, 25, 5), id = 'vEquipment',
             columns = (
@@ -567,7 +620,7 @@ class ConstructionDlg:
         ui.Button(self.win, layout = (15, 26, 5, 1), text = _("Scrap"),
             id = "vScrap", action = "onScrap")
         ui.Button(self.win, layout = (35, 26, 5, 1), text = _("Construct"),
-            id = "vConstruct", action = "onConstruct")
+            id = "vConstruct", action = "onConstruct", enabled = 0)
         # status bar + submit/cancel
         ui.TitleButton(self.win, layout = (35, 27, 5, 1), text = _('Close'), action = 'onClose')
         ui.Title(self.win, id = 'vStatusBar', layout = (0, 27, 35, 1), align = ui.ALIGN_W)
