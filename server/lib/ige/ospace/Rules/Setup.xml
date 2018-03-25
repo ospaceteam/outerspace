@@ -25,7 +25,7 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="r"
-			level="99"
+			level="1"
 		/>
 		<structure
 			buildProd="1320"
@@ -51,7 +51,7 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="r"
-			level="99"
+			level="1"
 		/>
 		<structure
 			buildProd="1920"
@@ -77,7 +77,7 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="r"
-			level="99"
+			level="1"
 		/>
 		<structure
 			buildProd="480"
@@ -100,7 +100,7 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="r"
-			level="99"
+			level="1"
 		/>
 		<structure
 			buildProd="3280"
@@ -127,7 +127,7 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="r"
-			level="99"
+			level="1"
 		/>
 		<structure
 			buildProd="1020"
@@ -150,7 +150,7 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="r"
-			level="99"
+			level="1"
 		/>
 		<structure
 			buildProd="3280"
@@ -171,7 +171,7 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="m"
-			level="99"
+			level="1"
 		/>
 		<structure
 			buildProd="720"
@@ -202,7 +202,7 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="m"
-			level="99"
+			level="1"
 		/>
 		<structure
 			buildProd="1440"
@@ -231,7 +231,7 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="m"
-			level="99"
+			level="1"
 		/>
 		<structure
 			buildProd="2880"
@@ -260,7 +260,7 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="m"
-			level="99"
+			level="1"
 		/>
 		<structure
 			buildProd="480"
@@ -275,7 +275,7 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="m"
-			level="99"
+			level="1"
 		/>
 		<structure
 			buildProd="720"
@@ -290,7 +290,7 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="m"
-			level="99"
+			level="1"
 		/>
 		<structure
 			buildProd="480"
@@ -306,7 +306,7 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="m"
-			level="99"
+			level="1"
 		/>
 		<structure
 			buildProd="960"
@@ -328,7 +328,7 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="m"
-			level="99"
+			level="1"
 		/>
 		<structure
 			subtype="str612"
@@ -350,7 +350,7 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="m"
-			level="99"
+			level="1"
 		/>
 		<structure
 			buildProd="5760"
@@ -379,7 +379,7 @@
 		<discovery
 			researchMod="1.00 + 0.50"
 			researchRaces="m"
-			level="99"
+			level="1"
 		/>
 		<shipequip
 			subtype="seq_struct"
@@ -398,7 +398,7 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="e"
-			level="99"
+			level="1"
 		/>
 		<structure
 			buildProd="2880"
@@ -452,7 +452,7 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="p"
-			level="99"
+			level="1"
 		/>
 		<structure
 			buildProd="3840"
@@ -484,7 +484,7 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="p"
-			level="99"
+			level="1"
 		/>
 		<structure
 			buildProd="240"
@@ -504,7 +504,7 @@
 		<discovery
 			researchMod="1.00"
 			researchRaces="p"
-			level="99"
+			level="1"
 		/>
 		<structure
 			buildProd="480"
@@ -527,7 +527,7 @@
 		<discovery
 			researchMod="1.00 + 1.00"
 			researchRaces="p"
-			level="99"
+			level="1"
 		/>
 		<shipequip
 			subtype="seq_eng"
@@ -544,7 +544,7 @@
 		<discovery
 			researchMod="1.00 + 0.50"
 			researchRaces="p"
-			level="99"
+			level="1"
 		/>
 		<shipequip
 			subtype="seq_struct"
@@ -564,7 +564,7 @@
 		<discovery
 			researchMod="1.50"
 			researchRaces="p"
-			level="99"
+			level="1"
 		/>
 		<structure
 			subtype="str25"
@@ -676,7 +676,7 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="e"
-			level="99"
+			level="1"
 		/>
 		<structure
 			buildProd="10000"
@@ -699,7 +699,7 @@
 		<discovery
 			researchMod="1.00 + 0.5 + 0.5"
 			researchRaces="e"
-			level="99"
+			level="1"
 		/>
 		<shipequip
 			subtype="seq_wpn"
@@ -720,7 +720,7 @@
 		<discovery
 			researchMod="1.00 + 0.5 + 0.5"
 			researchRaces="e"
-			level="99"
+			level="1"
 		/>
 		<shipequip
 			subtype="seq_wpn"
@@ -742,7 +742,7 @@
 		<discovery
 			researchMod="1.00 + 0.5 + 0.5"
 			researchRaces="e"
-			level="99"
+			level="1"
 		/>
 		<shipequip
 			subtype="seq_wpn"
@@ -764,7 +764,7 @@
 		<discovery
 			researchMod="1.00 + 0.5 + 0.5"
 			researchRaces="e"
-			level="99"
+			level="1"
 		/>
 		<shipequip
 			subtype="seq_wpn"
@@ -785,7 +785,7 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="p"
-			level="99"
+			level="1"
 		/>
 		<structure
 			buildProd="1440"
@@ -805,7 +805,7 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="p"
-			level="99"
+			level="1"
 		/>
 		<structure
 			buildProd="1440"
@@ -823,7 +823,7 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="p"
-			level="99"
+			level="1"
 		/>
 		<structure
 			buildProd="1440"
@@ -855,7 +855,7 @@
 		<discovery
 			researchMod="1.00 + 0.50"
 			researchRaces="p"
-			level="99"
+			level="1"
 		/>
 		<shipequip
 			subtype="seq_struct"

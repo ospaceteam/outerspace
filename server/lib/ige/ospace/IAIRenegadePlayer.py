@@ -41,6 +41,7 @@ class IAIRenegadePlayer(IPlayer):
         IPlayer.init(self, obj)
         #
         obj.name = u'Renegade'
+        obj.race = "r"
         obj.login = '*'
 
     def register(self, tran, obj):
@@ -74,9 +75,18 @@ class IAIRenegadePlayer(IPlayer):
             self.cmd(obj).delete(tran, obj)
 
     def update(self, tran, obj):
-        obj.techLevel = 99
-        obj.race = "r"
-        # grant technologies
+        self.setStartingTechnologies(obj)
+        self.setStartingShipDesigns(obj)
+        IPlayer.update(self, tran, obj)
+
+    @staticmethod
+    def setStartingPlanet(tran, planet):
+        planet.slots.append(Utils.newStructure(tran, Rules.Tech.RENEGADEBASE, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
+        planet.storPop = 3000
+
+    @staticmethod
+    def setStartingTechnologies(obj):
+        obj.techLevel = 2
         obj.techs[Rules.Tech.CANNON1] = 3
         obj.techs[Rules.Tech.SSROCKET] = 3
         obj.techs[Rules.Tech.RENEGADEBASE] = 3
@@ -85,17 +95,15 @@ class IAIRenegadePlayer(IPlayer):
         obj.techs[Rules.Tech.RENEGADEBASE3] = 3
         obj.techs[Rules.Tech.RENEGADEBASE3MINOR] = 3
         obj.techs[Rules.Tech.RENEGADECOSMODROME] = 3
-        if not len(obj.shipDesigns) == 3:
-            # three basic designs [they use modules not available to the player otherwise
-            # so it has to be done this way]
-            obj.shipDesigns[1] = ShipUtils.makeShipMinSpec(obj, 'Fighter', Rules.Tech.SMALLHULL1,
-                {Rules.Tech.SCOCKPIT1:1, Rules.Tech.CANNON1:1}, [])
-            obj.shipDesigns[2] = ShipUtils.makeShipMinSpec(obj, 'Corvette', Rules.Tech.SMALLHULL1,
-                {Rules.Tech.SCOCKPIT1:1, Rules.Tech.CANNON1:2, Rules.Tech.STEELARM2:1}, [])
-            obj.shipDesigns[3] = ShipUtils.makeShipMinSpec(obj, 'Frigate', Rules.Tech.MEDIUMHULL2,
-                {Rules.Tech.SBRIDGE1:1, Rules.Tech.CANNON1:2, Rules.Tech.SSROCKET:2}, [])
-        # call super method
-        IPlayer.update(self, tran, obj)
+
+    @staticmethod
+    def setStartingShipDesigns(obj):
+        obj.shipDesigns[1] = ShipUtils.makeShipMinSpec(obj, 'Fighter', Rules.Tech.SMALLHULL1,
+            {Rules.Tech.SCOCKPIT1:1, Rules.Tech.CANNON1:1}, [])
+        obj.shipDesigns[2] = ShipUtils.makeShipMinSpec(obj, 'Corvette', Rules.Tech.SMALLHULL1,
+            {Rules.Tech.SCOCKPIT1:1, Rules.Tech.CANNON1:2, Rules.Tech.STEELARM2:1}, [])
+        obj.shipDesigns[3] = ShipUtils.makeShipMinSpec(obj, 'Frigate', Rules.Tech.MEDIUMHULL2,
+            {Rules.Tech.SBRIDGE1:1, Rules.Tech.CANNON1:2, Rules.Tech.SSROCKET:2}, [])
 
     def getDiplomacyWith(self, tran, obj, playerID):
         if obj.oid == playerID:

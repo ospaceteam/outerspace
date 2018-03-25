@@ -37,6 +37,7 @@ class IAIEDENPlayer(IPlayer):
         IPlayer.init(self, obj)
         #
         obj.name = u'E.D.E.N.'
+        obj.race = "e"
         obj.login = '*'
 
     def register(self, tran, obj):
@@ -60,21 +61,34 @@ class IAIEDENPlayer(IPlayer):
         self.cmd(obj).update(tran, obj)
 
     def update(self, tran, obj):
-        obj.techLevel = 3
-        obj.race = "e"
-        # grant technologies
+        self.setStartingTechnologies(obj)
+        self.setStartingShipDesigns(obj)
+        IPlayer.update(self, tran, obj)
+
+    @staticmethod
+    def setStartingPlanet(tran, planet):
+        planet.plSlots = max(planet.plSlots, 2)
+        planet.plMaxSlots = max(planet.plMaxSlots, 2)
+        planet.plDiameter = max(planet.plDiameter, 2000)
+        planet.slots.append(Utils.newStructure(tran, Rules.Tech.EDENBASE, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
+        planet.slots.append(Utils.newStructure(tran, Rules.Tech.EDENSTATION, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
+        planet.storPop = 3000
+
+    @staticmethod
+    def setStartingTechnologies(obj):
+        obj.techLevel = 7
         obj.techs[Rules.Tech.LASCANNONTUR3] = Rules.techMaxImprovement
         obj.techs[Rules.Tech.SSROCKET2] = Rules.techMaxImprovement
         obj.techs[Rules.Tech.TORPEDO] = Rules.techMaxImprovement
-        # call super method
-        IPlayer.update(self, tran, obj)
-        #add TL99 techs
-        obj.techLevel = 99
         obj.techs[Rules.Tech.EDENCANNON] = Rules.techMaxImprovement
         obj.techs[Rules.Tech.EDENMISSILE] = Rules.techMaxImprovement
         obj.techs[Rules.Tech.EDENTORP] = Rules.techMaxImprovement
         obj.techs[Rules.Tech.EDENBOMB] = Rules.techMaxImprovement
         obj.techs[Rules.Tech.EDENSTATION] = Rules.techMaxImprovement
+
+    @staticmethod
+    def setStartingShipDesigns(obj):
+        pass
 
     def processINITPhase(self, tran, obj, data):
         IPlayer.processINITPhase(self, tran, obj, data)

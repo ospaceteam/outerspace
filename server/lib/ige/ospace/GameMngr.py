@@ -185,30 +185,6 @@ class GameMngr(IGEGameMngr):
         player.diplomacyRels.clear()
         # add player to the universe
         universe.players.append(playerID)
-        # make sure, there is something useable on the home planet
-        planet = self.db[player.planets[0]]
-        hasOutpost = False
-        for struct in planet.slots:
-            if struct[STRUCT_IDX_TECHID] == Tech.OUTPOST1:
-                hasOutpost = True
-        if not hasOutpost:
-            # find something to replace
-            finished = False
-            for property in ("prodSci", "prodProd", "prodBio"):
-                for struct in planet.slots:
-                    tech = Rules.techs[struct[STRUCT_IDX_TECHID]]
-                    if getattr(tech, property) > 0:
-                        struct[STRUCT_IDX_TECHID] = Tech.OUTPOST1
-                        struct[STRUCT_IDX_HP] = tech.maxHP
-                        finished = True
-                        break
-                if finished:
-                    break
-            if not finished:
-                # replace last structure
-                struct = planet.slots[-1]
-                struct[STRUCT_IDX_TECHID] = Tech.OUTPOST1
-                struct[STRUCT_IDX_HP] = tech.maxHP
         # save game info
         self.generateGameInfo()
         return player.oid, None
@@ -271,27 +247,13 @@ class GameMngr(IGEGameMngr):
         player.login = session.login
         player.timeEnabled = galaxy.timeEnabled
         player.galaxies.append(galaxy.oid)
-        # select starting point randomly
         log.debug('Selecting starting point')
-        while 1:
-            planetID = random.choice(galaxy.startingPos)
-            galaxy.startingPos.remove(planetID)
-            log.debug('Starting point', planetID)
-            log.debug('Starting point - owner', self.db[planetID].owner)
-            if self.db[planetID].owner == OID_NONE:
-                break
-            if not galaxy.startingPos:
-                raise GameException('No free starting point in the galaxy.')
+        planetID = IGalaxy.IGalaxy.getFreeStartingPosition(self.db, galaxy)
+
         player.planets.append(planetID)
-        # TODO tweak more player's attrs
         log.debug('Creating transaction')
         tran = Transaction(self, session.cid, session)
-        # Grant starting technologies (at medium improvement)
-        for techID in Rules.techs.keys():
-            if Rules.techs[techID].isStarting:
-                player.techs[techID] = (Rules.techBaseImprovement + Rules.techMaxImprovement) / 2
-            # grant all techs (TODO remove)
-            # player.techs[techID] = Rules.techMaxImprovement
+        IPlayer.IPlayer.setStartingTechnologies(player)
         # register player
         log.debug('Registering player')
         playerID = self.registerPlayer(session.login, player)
@@ -300,53 +262,12 @@ class GameMngr(IGEGameMngr):
         # also provides access rights to control it
         if galaxy.scenario == SCENARIO_SINGLE:
             galaxy.owner = playerID
-        # TODO tweak more planet's attrs
         planet = self.db[planetID]
-        planet.slots = [
-            Utils.newStructure(tran, Tech.PWRPLANTNUK1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-            Utils.newStructure(tran, Tech.FARM1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-            Utils.newStructure(tran, Tech.FARM1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-            Utils.newStructure(tran, Tech.FARM1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-            Utils.newStructure(tran, Tech.ANCFACTORY, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-            Utils.newStructure(tran, Tech.ANCFACTORY, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-            Utils.newStructure(tran, Tech.ANCRESLAB, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-            Utils.newStructure(tran, Tech.REPAIR1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-        ]
-        planet.storPop = Rules.startingPopulation
-        planet.storBio = Rules.startingBio
-        planet.storEn = Rules.startingEn
-        planet.scannerPwr = Rules.startingScannerPwr
         planet.owner = playerID
-        planet.morale = Rules.maxMorale
-        # fleet
-        # add basic ships designs
-        tempTechs = [Tech.FTLENG1, Tech.SCOCKPIT1, Tech.SCANNERMOD1, Tech.CANNON1,
-            Tech.CONBOMB1, Tech.SMALLHULL1, Tech.MEDIUMHULL2, Tech.COLONYMOD2]
-        for techID in tempTechs:
-            player.techs[techID] = 1
-        dummy, scoutID = self.cmdPool[T_PLAYER].addShipDesign(tran, player, "Scout", Tech.SMALLHULL1,
-            {Tech.FTLENG1:3, Tech.SCOCKPIT1:1, Tech.SCANNERMOD1:1})
-        dummy, fighterID = self.cmdPool[T_PLAYER].addShipDesign(tran, player, "Fighter", Tech.SMALLHULL1,
-            {Tech.FTLENG1:3, Tech.SCOCKPIT1:1, Tech.CANNON1:1})
-        dummy, bomberID = self.cmdPool[T_PLAYER].addShipDesign(tran, player, "Bomber", Tech.SMALLHULL1,
-            {Tech.FTLENG1:3, Tech.SCOCKPIT1:1, Tech.CONBOMB1:1})
-        dummy, colonyID = self.cmdPool[T_PLAYER].addShipDesign(tran, player, "Colony Ship", Tech.MEDIUMHULL2,
-            {Tech.FTLENG1:4, Tech.SCOCKPIT1:1, Tech.COLONYMOD2:1})
-        for techID in tempTechs:
-            del player.techs[techID]
-        # add small fleet
-        log.debug('Creating fleet')
-        system = self.db[planet.compOf]
-        fleet = self.cmdPool[T_FLEET].new(T_FLEET)
-        self.db.create(fleet)
-        log.debug('Creating fleet - created', fleet.oid)
-        self.cmdPool[T_FLEET].create(tran, fleet, system, playerID)
-        log.debug('Creating fleet - addShips')
-        self.cmdPool[T_FLEET].addNewShip(tran, fleet, scoutID)
-        self.cmdPool[T_FLEET].addNewShip(tran, fleet, scoutID)
-        self.cmdPool[T_FLEET].addNewShip(tran, fleet, fighterID)
-        self.cmdPool[T_FLEET].addNewShip(tran, fleet, fighterID)
-        self.cmdPool[T_FLEET].addNewShip(tran, fleet, colonyID)
+        system = tran.db[planet.compOf]
+        IPlayer.IPlayer.setStartingShipDesigns(player)
+        IPlayer.IPlayer.setStartingPlanet(tran, playerID, planet)
+        IPlayer.IPlayer.setStartingFleet(tran, playerID, system)
         # add player to universe
         log.debug('Adding player to universe')
         universe.players.append(playerID)
