@@ -42,7 +42,7 @@ from ai_parser import AIList
 class GameMngr(IGEGameMngr):
 
     #
-    # Reguired methods
+    # Required methods
     #
 
     def __init__(self, gameID, config, clientMngr, msgMngr, database, configDir, gameName = None):
@@ -99,15 +99,6 @@ class GameMngr(IGEGameMngr):
         universe = self.db[OID_UNIVERSE]
         tran = Transaction(self, OID_ADMIN)
         self.cmdPool[universe.type].createNewSubscribedGalaxy(tran, universe, 'Legacy', 'Circle42P', [])
-        ##! TODO this is temporary
-        ## create sector index (needed by loadFromXML)
-        #galaxy = self.db[cmdObj.createGalaxy(tran, obj)]
-        ##self.cmdPool[galaxy.type].loadFromXML(tran, galaxy, 'galaxy-Argo42P.xml', 'Circle42P', 100, 100, 'Argo')
-        #self.cmdPool[galaxy.type].loadFromXML(tran, galaxy, 'galaxy-Circle4P.xml', 'Circle4P', 100, 100, 'Galaxy Test')
-        ## setup environment
-        #self.cmdPool[galaxy.type].setupEnvironment(tran, galaxy)
-        ## start time
-        #self.cmdPool[galaxy.type].enableTime(tran, galaxy, force = 1)
         # create 'NATURE' player
         player = self.cmdPool[T_NATURE].new(T_NATURE)
         self.registerPlayer(player.login, player, OID_NATURE)
@@ -310,14 +301,6 @@ class GameMngr(IGEGameMngr):
         # TODO better validation
         return 1
 
-
-    # TODO delete
-    #def getAccRights(self, obj, cid):
-    #    # super class
-    #    objAcc = IGEGameMngr.getAccRights(self, obj, cid)
-    #    # relation based access rights
-    #    # TODO implement
-    #    return objAcc
 
     #
     # Game related methods

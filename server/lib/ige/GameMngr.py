@@ -86,7 +86,6 @@ class GameMngr:
         del objIDs[1]
         del objIDs[OID_ADMIN]
         del objIDs[OID_I_LOGIN2OID]
-        del objIDs[OID_I_NAME2OID]
         # stats
         types = {}
         typesMin = {}
@@ -137,7 +136,6 @@ class GameMngr:
         self.msgMngr.clear()
         # create indexes
         self.db.create(Index(), OID_I_LOGIN2OID)
-        self.db.create(Index(), OID_I_NAME2OID)
         # create admin
         self.registerPlayer(ADMIN_LOGIN, self.createAdmin(), OID_ADMIN)
         # create universe
@@ -251,9 +249,6 @@ class GameMngr:
         log.debug("Checking LOGIN2OID")
         if self.db[OID_I_LOGIN2OID].has_key(login) and not force:
             raise CreatePlayerException('Account already exists.')
-        log.debug("Checking NAME2OID")
-        if self.db[OID_I_NAME2OID].has_key(playerObj.name) and not force:
-            raise CreatePlayerException('Name already exists.')
         # action
         if not oid:
             log.debug("Creating object")
@@ -262,7 +257,6 @@ class GameMngr:
             self.db.create(playerObj, id = oid)
         log.debug("Fixing indexes")
         self.db[OID_I_LOGIN2OID][login] = oid
-        self.db[OID_I_NAME2OID][playerObj.name] = oid
         playerObj.oid = oid
         playerObj.owner = oid
         return oid
@@ -271,20 +265,12 @@ class GameMngr:
         log.debug('unregisterPlayer', playerObj.login, playerObj.name)
         # preconditions
         if not self.db[OID_I_LOGIN2OID].has_key(playerObj.login):
-            #raise ServerException('Account does not exist.')
             log.debug("Account %s does not exist" % playerObj.login)
-        if not self.db[OID_I_NAME2OID].has_key(playerObj.name):
-            #raise ServerException('Name does not exist.')
-            log.debug("Name %s does not exist" % playerObj.name)
         # try to remove it
         try:
             del self.db[OID_I_LOGIN2OID][playerObj.login]
         except:
             log.warning("Cannot remove '%s' from LOGIN2OID index" % playerObj.login)
-        try:
-            del self.db[OID_I_NAME2OID][playerObj.name]
-        except:
-            log.warning("Cannot remove '%s' from NAME2OID index" % playerObj.name)
         try:
             self.db.delete(playerObj.oid)
         except:
@@ -317,24 +303,6 @@ class GameMngr:
             session = self.clientMngr.getSessionByCID(obj.owner)
             if session:
                 session.messages[SMESSAGE_NEWMESSAGE] = None
-        # notify other players
-        #for oid in obj.accRights.keys():
-        #    if obj.accRights[oid] >= AL_FULLINFO:
-        #        if self.db.has_key(oid):
-        #            target = self.db[oid]
-        #            # new style messages
-        #            message = {
-        #                "sender": obj.name,
-        #                "senderID": sourceID,
-        #                "forum": "EVENTS",
-        #                "data": (sourceID, msgID, locationID, turn, data),
-        #                "topic": "EVENT",
-        #            }
-        #            self.cmdPool[target.type].sendAdminMsg(tran, target, message)
-        #            # TODO send event
-        #            session = self.clientMngr.getSessionByCID(oid)
-        #            if session:
-        #                session.messages[SMESSAGE_NEWMESSAGE] = None
 
     # dispatch command
     def execute(self, sid, command, oid, *args):
@@ -374,7 +342,6 @@ class GameMngr:
         except KeyError:
             raise NoSuchObjectException('Object %d does not exist.' % oid)
         cmdObj = getattr(self.cmdPool[obj.type], command)
-        # TODO check access level
         if not hasattr(cmdObj, 'public') or not cmdObj.public:
             raise SecurityException('Access denied - method is not public.')
         # get acces level of the commander
@@ -383,10 +350,6 @@ class GameMngr:
             accLevel = AL_OWNER
         if session.cid == OID_ADMIN:
             accLevel = AL_ADMIN
-        # TODO delete
-        #tmpAL = self.getAccRights(obj, session.cid)
-        #if tmpAL > accLevel:
-        #    accLevel = tmpAL
         #@log.debug('access rights', accLevel, cmdObj.accLevel)
         if cmdObj.accLevel > accLevel:
             raise SecurityException('Access denied - low access level.')
@@ -404,6 +367,3 @@ class GameMngr:
         #@log.debug("Execution time", time.time() - startTime)
         return result, messages
 
-    # TODO
-    #def getAccRights(self, obj, cid):
-    #    return obj.accRights.get(cid, AL_NONE)

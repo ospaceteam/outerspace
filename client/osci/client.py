@@ -65,7 +65,6 @@ def initCmdProxy(keepAliveTime):
 ## Authentication
 
 def login(gameid, login, password):
-    initCmdProxy(options.heartbeat)
     cmdProxy.connect(login)
     if gdata.config.client.keepAlive != None:
         cmdProxy.keepAliveTime = int(gdata.config.client.keepAlive)

@@ -345,7 +345,7 @@ def createGalaxy():
     print "Creating new galaxy...please specify these parameters. Normal galaxy positions are multiples of 100."
     name = raw_input("Galaxy Name: ")
     gal_type = raw_input("Galaxy Type: ")
-    s.createNewGalaxy(universe, name, gal_type)
+    s.createNewSubscribedGalaxy(universe, name, gal_type, [])
 
 def startGalaxy():
     showGalaxies()

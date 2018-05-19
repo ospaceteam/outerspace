@@ -22,7 +22,7 @@ import pygameui as ui
 from osci import client, gdata, res
 from ige.version import version
 from MainGameDlg import MainGameDlg
-from NewAccDlg import NewAccDlg
+from NewAccountDlg import NewAccountDlg
 from ConfirmDlg import ConfirmDlg
 from OptionsDlg import OptionsDlg
 import binascii
@@ -33,7 +33,7 @@ class LoginDlg:
 
     def __init__(self, app):
         self.app = app
-        self.newAccDlg = NewAccDlg(app)
+        self.newAccDlg = NewAccountDlg(app)
         self.confirmDlg = ConfirmDlg(app)
         self.firstlogin = True
         self.versionChecked = False

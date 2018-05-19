@@ -78,7 +78,6 @@ class BookingDlg:
             selectedType = None
         if selectedType:
             result = client.cmdProxy.toggleBooking(selectedType)
-            print(result)
             if not type(result) == type(True) and not result == True:
                 # booking change is logged, no galaxy creation triggered
                 self.bookingInfo = result

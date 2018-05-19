@@ -28,17 +28,13 @@ from ige import log
 # module globals
 cmdProxy = None
 db = None
-callbackObj = None
 lastUpdate = -1
 server = None
-serverVersion = None
-ignoreMsgs = {}
 nonexistingObj = {}
-optins = None
+options = None
 
-def initialize(aServer, aCallbackObj, anOptions):
-    global callbackObj, server, options
-    callbackObj = aCallbackObj
+def initialize(aServer, anOptions):
+    global server, options
     server = aServer
     options = anOptions
     initCmdProxy()
@@ -50,52 +46,31 @@ def reinitialize():
 def initCmdProxy():
     global cmdProxy, server
     if not cmdProxy:
-        callbackObj.onInitConnection()
         proxy = None
         if gdata.config.proxy.http != None:
             proxy = gdata.config.proxy.http
-        cmdProxy = IClient.IClient(server, proxy, msgHandler, idleHandler, 'OSClient/%s' % ige.version.versionString)
-        callbackObj.onConnInitialized()
+        cmdProxy = IClient.IClient(server, proxy, None, None, 'OSClient/%s' % ige.version.versionString)
 
 ## Authentication
 
 def login(gameid, login, password):
-    initCmdProxy()
     cmdProxy.connect(login)
     if gdata.config.client.keepAlive != None:
         cmdProxy.keepAliveTime = int(gdata.config.client.keepAlive)
     if cmdProxy.login(gameid, login, password):
-        global serverVersion
-        try:
-            result = cmdProxy.getIntroInfo(OID_UNIVERSE)
-            if hasattr(result, "version"):
-                serverVersion = result.version
-            elif hasattr(result, "lastClientVersion"):
-                # support for legacy version reporting
-                serverVersion = dict(
-                    major = result.lastClientVersion[0],
-                    minor = result.lastClientVersion[1],
-                    revision = result.lastClientVersion[2],
-                    status = result.lastClientVersion[3],
-                )
-        except ige.NoAccountException:
-            callbackObj.createGameAccount()
-            return 2
         return 1
     return 0
 
 def createAccount(login, password, nick, email):
     global cmdProxy, server
     if not cmdProxy:
-        callbackObj.onInitConnection()
         proxy = None
         if gdata.config.proxy.http != None:
             proxy = gdata.config.proxy.http
-        cmdProxy = IClient.IClient(server, proxy, msgHandler, idleHandler, 'OSClient/%d.%d.%d%s' % osci.version)
+        cmdProxy = IClient.IClient(server, proxy, None, None, 'OSClient/%d.%d.%d%s' % osci.version)
         cmdProxy.connect(login)
         if gdata.config.client.keepAlive != None:
             cmdProxy.keepAliveTime = int(gdata.config.client.keepAlive)
-        callbackObj.onConnInitialized()
     return cmdProxy.createAccount(login, password, nick, email)
 
 def logout():
@@ -110,36 +85,6 @@ def saveDB():
         log.message('OSClient', 'Saving database')
         db.save()
 
-## Message handler
-
-def msgHandler(mid, data):
-    if ignoreMsgs.has_key(mid):
-        log.debug('OSClient', 'ignoring message', mid, data)
-        return
-    if mid == SMESSAGE_NEWTURN:
-        updateDatabase()
-    elif mid == SMESSAGE_NEWMESSAGE:
-        getMessages()
-    elif mid == IClient.MSG_CMD_BEGIN:
-        callbackObj.onCmdBegin()
-    elif mid == IClient.MSG_CMD_END:
-        callbackObj.onCmdEnd()
-    else:
-        log.debug('OSClient', 'unhandled message', mid, data)
-
-def messageIgnore(mid):
-    global ignoreMsgs
-    ignoreMsgs[mid] = None
-
-def messageEnable(mid):
-    global ignoreMsgs
-    if ignoreMsgs.has_key(mid):
-        del ignoreMsgs[mid]
-
-## Idle handler
-def idleHandler():
-    callbackObj.onWaitingForResponse()
-
 ## Updater
 
 def updateDatabase(clearDB = 0):
@@ -147,10 +92,6 @@ def updateDatabase(clearDB = 0):
         return updateDatabaseUnsafe(clearDB)
     except:
         log.warning("Cannot update database")
-    # again with clear
-    callbackObj.onUpdateFinished()
-    messageEnable(SMESSAGE_NEWTURN)
-    messageEnable(SMESSAGE_NEWMESSAGE)
     return updateDatabaseUnsafe(clearDB = 1, force = 1)
 
 def updateDatabaseUnsafe(clearDB = 0, force = 0):
@@ -169,16 +110,11 @@ def updateDatabaseUnsafe(clearDB = 0, force = 0):
     log.message('IClient', 'Updating...')
     lastUpdate = db.turn
     nonexistingObj.clear()
-    # start updating...
-    messageIgnore(SMESSAGE_NEWTURN)
-    messageIgnore(SMESSAGE_NEWMESSAGE)
-    callbackObj.onUpdateStarting()
     current = 0
     max = 1
     # compute total objects to be fetched
     max += 6 # clear map, get messages, ...
     current += 1
-    callbackObj.onUpdateProgress(current, max, _("Deleting obsolete data..."))
     # delete selected objects
     # reset combatCounters
     for objID in db.keys():
@@ -197,73 +133,23 @@ def updateDatabaseUnsafe(clearDB = 0, force = 0):
             if hasattr(obj, "scanPwr"): obj.scanPwr = 0
             if hasattr(obj, "scannerPwr"): obj.scannerPwr = 0
     # update player
-    current += 1
-    callbackObj.onUpdateProgress(current, max, _("Downloading player data..."))
     db[db.playerID] = get(db.playerID)
     player = db[db.playerID]
     # update from scanner's map
-    current += 1
-    callbackObj.onUpdateProgress(current, max, _("Updating scanner..."))
-    map = cmdProxy.getScannerMap(db.playerID)
-    for objID in map:
-        db[objID] = map[objID]
+    scannerMap = cmdProxy.getScannerMap(db.playerID)
+    for objID in scannerMap:
+        db[objID] = scannerMap[objID]
     # update player's planets and fleets
-    current += 1
-    callbackObj.onUpdateProgress(current, max, _("Downloading planets and fleets data..."))
     for obj in cmdProxy.multiGetInfo(1, player.planets[:] + player.fleets[:]):
         db[obj.oid] = obj
-    #~ # compute system's positions
-    #~ current += 1
-    #~ callbackObj.onUpdateProgress(current, max, _("Updating astronomical coordinates..."))
-    #~ systems = {}
-    #~ for objID in db.keys():
-        #~ obj = db[objID]
-        #~ if obj.type == T_SYSTEM or obj.type == T_PLANET:
-            #~ if obj.type == T_SYSTEM:
-                #~ galaxy = get(obj.compOf)
-                #~ system = obj
-            #~ else:
-                #~ if obj.compOf in systems:
-                    #~ system = systems[obj.compOf]
-                #~ else:
-                    #~ system = get(obj.compOf, canBePublic = 0)
-                    #~ systems[obj.compOf] = system
-                #~ if hasattr(system, "compOf"):
-                    #~ galaxy = get(system.compOf)
-                #~ else:
-                    #~ continue
-            #~ angle = system.sAngle / 1000.0 + (db.turn / Rules.rotationMod) * system.dAngle / 1000.0
-            #~ obj.x = galaxy.x + system.dist * math.cos(angle) / 1000.0
-            #~ obj.y = galaxy.y + system.dist * math.sin(angle) / 1000.0
-    #~ del systems
-    # TODO: try to load allies's info
-    # get messages from server
-    current += 1
-    callbackObj.onUpdateProgress(current, max, _("Skipping messages..."))
-    # getMessages()
-    # clean maps on server
-    current += 1
-    callbackObj.onUpdateProgress(current, max, _("Clearing data on the server..."))
-    try:
-        cmdProxy.setResolution(db.playerID,gdata.scrnSize[0],gdata.scrnSize[1])
-    except:
-        log.debug('Server does not yet support resolution tracking')
-    # TODO not needed - delete cmdProxy.clearScannerMap(db.playerID)
     # finished
     log.message('IClient', 'Update finished.')
-    callbackObj.onUpdateFinished()
-    messageEnable(SMESSAGE_NEWTURN)
-    messageEnable(SMESSAGE_NEWMESSAGE)
 
 ## Basic functions
 
 def keepAlive(force = False):
-    if cmdProxy and db:
-        try:
-            if force or cmdProxy.doKeepAlive():
-                getMessages()
-        except ige.NoAccountException:
-            pass
+    # AI is fast, no need for keepAlive
+    pass
 
 def get(objID, forceUpdate = 0, noUpdate = 0, canBePublic = 1, publicOnly = 0):
     global nonexistingObj
@@ -394,48 +280,3 @@ def getDiplomacyWith(contactID):
         obj.diplomacyRels[playerID] = dipl
     return dipl
 
-def getMessages():
-    # construct list of mailboxes
-    mailboxes = []
-    mailboxes.append((db.playerID, getMessagesLastID(db.playerID)))
-    for galaxyID in getPlayer().galaxies:
-        mailboxes.append((galaxyID, getMessagesLastID(galaxyID)))
-    mailboxes.append((OID_UNIVERSE, getMessagesLastID(OID_UNIVERSE)))
-    # get data
-    data = cmdProxy.multiGetMsgs(OID_UNIVERSE, mailboxes)
-    # process
-    new = 0
-    now = time.time()
-    for objID, messages in data:
-        obj = get(objID)
-        # delete old messages TODO leave this to the user
-        #for messageID in obj._messages.keys():
-        #    message = obj._messages[messageID]
-        #    if message["time"] + Rules.messageTimeout < now:
-        #        del obj._messages[messageID]
-        # add new
-        for message in messages:
-            #@log.debug("Got message ID", message["id"])
-            if message["id"] not in obj._messages:
-                if message["forum"] != "OUTBOX":
-                    message["readed"] = 0
-                    message["replied"] = 0
-                else:
-                    message["readed"] = 1
-                    message["replied"] = 0
-                obj._messagesLastID = max(message["id"], obj._messagesLastID)
-                obj._messages[message["id"]] = message
-                new += 1
-            else:
-                log.warning("Got duplicated message", message)
-    if new > 0:
-        callbackObj.onNewMessages(new)
-    return new
-
-def getMessagesLastID(objID):
-    obj = get(objID, publicOnly = 1)
-    if not hasattr(obj, "_messages"):
-        log.debug("Creating _messages")
-        obj._messages = {}
-        obj._messagesLastID = -1
-    return obj._messagesLastID

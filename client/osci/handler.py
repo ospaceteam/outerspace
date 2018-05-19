@@ -20,7 +20,7 @@
 
 import gdata
 from dialog import ProgressDlg
-from dialog import NewAccountDlg
+from dialog import PlayerSelectDlg
 import pygame
 from ige import log
 
@@ -48,7 +48,7 @@ def onCmdEnd():
     gdata.app.update()
 
 def createGameAccount():
-    dlg = NewAccountDlg.NewAccountDlg(gdata.app)
+    dlg = PlayerSelectDlg.PlayerSelectDlg(gdata.app)
     dlg.display()
 
 def onUpdateStarting():
