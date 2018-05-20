@@ -87,6 +87,8 @@ def runAIClient(options):
         raise Exception, 'You have to provide password.'
 
     if client.login(options.game, login, password):
+        activePositions = client.cmdProxy.getActivePositions()
+        client.cmdProxy.selectPlayer(activePositions[0][0])
         if options.test:
             client.logout()
             return True

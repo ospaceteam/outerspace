@@ -76,8 +76,7 @@ def startServer():
     while True:
         args=[os.path.join(CODE_ROOT, 'tools', 'osclient_cli.py'),
               '--ping',
-              '--configdir=' + TEMP_DIR,
-              'admin']
+              '--configdir=' + TEMP_DIR]
         if subprocess.call(args, stdout=BUP_OUT,
                                  stderr=subprocess.STDOUT) == 0:
             break
@@ -100,8 +99,7 @@ def stopServer():
     log.info('Stopping server')
     args=[os.path.join(CODE_ROOT, 'tools', 'osclient_cli.py'),
           '--shutdown',
-          '--configdir=' + TEMP_DIR,
-          'admin']
+          '--configdir=' + TEMP_DIR]
     if subprocess.call(args, stdout=UTILS_OUT, stderr=subprocess.STDOUT) != 0:
         log.error('Server failed to stop')
         sys.exit(1)
@@ -118,8 +116,7 @@ def stopServer():
 def startServerTime():
     args=[os.path.join(CODE_ROOT, 'tools', 'osclient_cli.py'),
           '--starttime',
-          '--configdir=' + TEMP_DIR,
-          'admin']
+          '--configdir=' + TEMP_DIR]
     if subprocess.call(args, stdout=UTILS_OUT, stderr=subprocess.STDOUT) != 0:
         log.error('Time failed to start')
         sys.exit(1)
@@ -128,8 +125,7 @@ def startServerTime():
 def doTurns(amount=TURN_AMOUNT, skip=TURN_SKIP):
     args_osclient=[os.path.join(CODE_ROOT, 'tools', 'osclient_cli.py'),
           '--turns={0}'.format(skip),
-          '--configdir=' + TEMP_DIR,
-          'admin']
+          '--configdir=' + TEMP_DIR]
     args_ai=[os.path.join(CODE_ROOT, 'outerspace.py'),
           'ai-pool',
           '--configdir=' + TEMP_DIR,

@@ -47,10 +47,6 @@ def onCmdEnd():
         gdata.cmdInProgress = 0
     gdata.app.update()
 
-def createGameAccount():
-    dlg = PlayerSelectDlg.PlayerSelectDlg(gdata.app)
-    dlg.display()
-
 def onUpdateStarting():
     global progressDlg
     log.debug("onUpdateStarting")

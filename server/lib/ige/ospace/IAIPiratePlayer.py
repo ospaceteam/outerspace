@@ -49,46 +49,24 @@ class IAIPiratePlayer(IPlayer):
             if tech.level == 1 and (tech.isShipEquip or tech.isShipHull) and not tech.unpackStruct:
                 obj.techs[techID] = Rules.techMaxImprovement
 
-    def register(self, tran, obj):
+    def register(self, tran, obj, galaxyID):
         log.debug("Registering player", obj.oid)
         counter = 1
         while 1:
-            try:
-                obj.name = u'Pirate faction %d' % counter
-                obj.login = '*AIP*pirate%d' % counter
-                password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
-                tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
-                tran.db[OID_UNIVERSE].players.append(obj.oid)
-                tran.gameMngr.clientMngr.createAiAccount(None, obj.login, password, obj.name)
-                break
-            except CreatePlayerException:
+            obj.name = u'Pirate faction %d' % counter
+            obj.login = '*AIP*pirate%d' % counter
+            if galaxyID in tran.gameMngr.accountGalaxies(obj.login):
                 counter += 1
+                continue
+            password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
+            tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
+            tran.db[OID_UNIVERSE].players.append(obj.oid)
+            tran.gameMngr.clientMngr.createAiAccount(None, obj.login, password, obj.name)
+            break
         # after succesfull registration, register it to the AI system
         aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
         aiList.add(obj.login, password, 'ais_pirate')
-        # grant techs and so on
-        self.cmd(obj).update(tran, obj)
-
-    def reregister(self, tran, obj):
-        # nearly identical to register, just now we know the galaxy
-        # to add this information tu AIList
-        log.debug("Registering player", obj.oid)
-        counter = 1
-        while 1:
-            try:
-                obj.name = u'Pirate faction %d' % counter
-                obj.login = '*AIP*pirate%d' % counter
-                password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
-                tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
-                tran.db[OID_UNIVERSE].players.append(obj.oid)
-                tran.gameMngr.clientMngr.createAiAccount(None, obj.login, password, obj.name)
-                break
-            except CreatePlayerException:
-                counter += 1
-        # after succesfull registration, register it to the AI system
-        aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
-        aiList.add(obj.login, password, 'ais_pirate')
-        aiList.setGalaxy(obj.login, tran.db[obj.galaxies[0]].name)
+        aiList.setGalaxy(obj.login, tran.db[galaxyID].name)
         # grant techs and so on
         self.cmd(obj).update(tran, obj)
 

@@ -436,7 +436,7 @@ class IPlayer(IObject):
         self.cmd(obj).update(tran, obj)
         # reregister
         tran.gameMngr.removePlayer(obj.oid)
-        self.cmd(obj).reregister(tran, obj)
+        self.cmd(obj).register(tran, obj, obj.galaxies[0])
 
     resign.public = 1
     resign.accLevel = AL_OWNER

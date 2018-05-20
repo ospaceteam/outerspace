@@ -44,23 +44,24 @@ class IAIRenegadePlayer(IPlayer):
         obj.race = "r"
         obj.login = '*'
 
-    def register(self, tran, obj):
+    def register(self, tran, obj, galaxyID):
         log.debug("Registering player", obj.oid)
         counter = 1
         while 1:
-            try:
-                obj.name = u'Renegade faction %d' % counter
-                obj.login = '*AIP*renegade%d' % counter
-                password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
-                tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
-                tran.db[OID_UNIVERSE].players.append(obj.oid)
-                tran.gameMngr.clientMngr.createAiAccount(None, obj.login, password, obj.name)
-                break
-            except CreatePlayerException:
+            obj.name = u'Renegade faction %d' % counter
+            obj.login = '*AIP*renegade%d' % counter
+            if galaxyID in tran.gameMngr.accountGalaxies(obj.login):
                 counter += 1
+                continue
+            password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
+            tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
+            tran.db[OID_UNIVERSE].players.append(obj.oid)
+            tran.gameMngr.clientMngr.createAiAccount(None, obj.login, password, obj.name)
+            break
         # after succesfull registration, register it to the AI system
         aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
         aiList.add(obj.login, password, 'ais_renegade')
+        aiList.setGalaxy(obj.login, tran.db[galaxyID].name)
         # grant techs and so on
         self.cmd(obj).update(tran, obj)
 

@@ -105,9 +105,8 @@ class BookingMngr(object):
         player = self.clientMngr.getSession(sid).login
         log.debug("Player '{0}' toggled booking of '{1}'".format(player, gal_type))
         if self.database[gal_type].toggle_booking(player, self.threshold):
-            return self.trigger_galaxy_start(gal_type)
-        else:
-            return self.get_booking_answers(sid)
+            self.trigger_galaxy_start(gal_type)
+        return self.get_booking_answers(sid)
 
     def trigger_galaxy_start(self, gal_type):
         log.debug("Triggering new subscribed galaxy '{0}'".format(gal_type))
@@ -120,7 +119,7 @@ class BookingMngr(object):
         universe = self.gameMngr.db[ige.Const.OID_UNIVERSE]
         tran = Transaction(self.gameMngr, ige.Const.OID_ADMIN)
         name = self._find_galaxy_name()
-        self.gameMngr.cmdPool[universe.type].createNewSubscribedGalaxy(tran, universe, name, gal_type, players)
+        newGalaxyID = self.gameMngr.cmdPool[universe.type].createNewSubscribedGalaxy(tran, universe, name, gal_type, players)
         # update booking data
         booking.booked_players = set([])
         booking.last_creation = time.time()
@@ -131,7 +130,7 @@ class BookingMngr(object):
             log.debug("Removing other bookings of player '{0}'".format(player))
             for key in self.database.keys():
                 self.database[key].discard_booking(player)
-        return True, None
+        return newGalaxyID, None
 
     def _find_galaxy_name(self):
         log.debug("Searching for available galaxy name")

@@ -93,6 +93,13 @@ class GameMngr:
         typesSum = {}
         # upgrade all objects in database
         # and collect all not referenced objects
+        # upgrade 0.5.72 => 0.5.73
+        for login, mapping in self.db[OID_I_LOGIN2OID].iteritems():
+            try:
+                # this fails if upgrade is needed
+                mapping + 1
+            except TypeError:
+                self.db[OID_I_LOGIN2OID][login] = [mapping]
         for id in self.db.keys():
             try:
                 obj = self.db[id]
@@ -244,22 +251,33 @@ class GameMngr:
     def removePlayer(self, sid, *args, **kwargs):
         raise NotImplementedError
 
+    def selectPlayer(self, sid, playerID):
+        """ Selects which of the player objects of the account is going to be
+        used for this particular session."""
+
+        session = self.clientMngr.getSession(sid)
+        if session.cid:
+            raise GameException('You already selected a player object.')
+        try:
+            accounts_player_objects = self.db[OID_I_LOGIN2OID].get(session.login, [])
+        except AttributeError:
+            raise SecurityException('Not logged in.')
+
+        if playerID not in accounts_player_objects:
+            raise NoAccountException('Player object not on this account.')
+
+        log.debug('Adding cid to session', playerID)
+        session.cid = playerID
+        # validate client
+        if not self.validateClient(session):
+            raise GameException('Wrong version of client.')
+        # notify object, that player has logged in
+        player = self.db[playerID]
+        self.cmdPool[player.type].loggedIn(Transaction(self), player)
+        return True, None
+
     def registerPlayer(self, login, playerObj, oid = None, force = 0):
-        # preconditions
-        log.debug("Checking LOGIN2OID")
-        if self.db[OID_I_LOGIN2OID].has_key(login) and not force:
-            raise CreatePlayerException('Account already exists.')
-        # action
-        if not oid:
-            log.debug("Creating object")
-            oid = self.db.create(playerObj)
-        else:
-            self.db.create(playerObj, id = oid)
-        log.debug("Fixing indexes")
-        self.db[OID_I_LOGIN2OID][login] = oid
-        playerObj.oid = oid
-        playerObj.owner = oid
-        return oid
+        raise NotImplementedError
 
     def unregisterPlayer(self, playerObj):
         log.debug('unregisterPlayer', playerObj.login, playerObj.name)
@@ -268,7 +286,7 @@ class GameMngr:
             log.debug("Account %s does not exist" % playerObj.login)
         # try to remove it
         try:
-            del self.db[OID_I_LOGIN2OID][playerObj.login]
+            self.db[OID_I_LOGIN2OID][playerObj.login].remove(playerObj.oid)
         except:
             log.warning("Cannot remove '%s' from LOGIN2OID index" % playerObj.login)
         try:
@@ -311,23 +329,9 @@ class GameMngr:
         # check client id
         session = self.clientMngr.getSession(sid)
         if not session.cid:
-            # check if real id exists
-            try:
-                cid = self.db[OID_I_LOGIN2OID].get(session.login, None)
-            except AttributeError:
-                raise SecurityException('Not logged in.')
-            log.debug('Adding cid to session', cid)
-            if not cid:
-                # no real id
-                #@log.debug('Raising exception NoAccountException')
-                raise NoAccountException('No game account exists.')
-            session.cid = cid
-            # validate client
-            if not self.validateClient(session):
-                raise GameException('Wrong version of client.')
-            # notify object, that player has logged in
-            player = self.db[cid]
-            self.cmdPool[player.type].loggedIn(Transaction(self), player)
+            raise SecurityException('No player object selected.')
+        if not self.validateClient(session):
+            raise GameException('Wrong version of client.')
         # check game status (admin is allowed anytime)
         if self.status != GS_RUNNING and session.cid != OID_ADMIN:
             raise ServerStatusException(self.status)

@@ -69,11 +69,6 @@ def login(gameid, login, password):
     if gdata.config.client.keepAlive != None:
         cmdProxy.keepAliveTime = int(gdata.config.client.keepAlive)
     if cmdProxy.login(gameid, login, password):
-        try:
-            result = cmdProxy.getIntroInfo(OID_UNIVERSE)
-        except ige.NoAccountException:
-            callbackObj.createGameAccount()
-            return 2
         return 1
     return 0
 

@@ -28,6 +28,8 @@ import time
 from binascii import hexlify
 import threading
 
+from ige.Const import OID_ADMIN
+
 MSG_CMD_BEGIN = -1000
 MSG_CMD_END = -1001
 
@@ -120,6 +122,12 @@ class IClient:
     def toggleBooking(self, galaxy_type):
         return apply(IProxy('toggleBooking', None, self), (galaxy_type,))
 
+    def selectPlayer(self, playerID):
+        return apply(IProxy('%s.selectPlayer' % self.gameID, None, self), (playerID,))
+
+    def selectAdmin(self):
+        return apply(IProxy('%s.selectPlayer' % self.gameID, None, self), (OID_ADMIN,))
+
     def createNewPlayer(self, galaxyID):
         return apply(IProxy('%s.createNewPlayer' % self.gameID, None, self), (galaxyID,))
 
@@ -128,6 +136,9 @@ class IClient:
 
     def takeOverPirate(self, playerID, password):
         return apply(IProxy('%s.takeOverPirate' % self.gameID, None, self), (playerID, password))
+
+    def getActivePositions(self):
+        return apply(IProxy('%s.getActivePositions' % self.gameID, None, self), ())
 
     def getStartingPositions(self):
         return apply(IProxy('%s.getStartingPositions' % self.gameID, None, self), ())

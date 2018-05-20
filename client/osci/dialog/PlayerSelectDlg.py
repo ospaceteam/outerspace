@@ -27,10 +27,14 @@ from BookingDlg import BookingDlg
 import ige
 
 class PlayerSelectDlg:
-    """ Called for a new player."""
+    """ Called for selection of active or picking a new player."""
 
     def __init__(self, app):
         self.app = app
+        self.wantsNew = False
+        self.needsPassword = False
+        self.dataActive = None
+        self.dataStart = None
         self.createUI()
         self.confirmDlg = ConfirmDlg(app)
         self.confirmDlg.setTitle(_("No free starting position"))
@@ -44,46 +48,69 @@ class PlayerSelectDlg:
         self.win.hide()
 
     def show(self):
-        positions = client.cmdProxy.getStartingPositions()
         items = []
-        for objID, name, posType in positions:
-            item = ui.Item(name, tObjID = objID, tPosType = posType)
-            if posType == STARTPOS_NEWPLAYER:
+        items.extend(self.showActivePlayers())
+        if self.wantsNew:
+            items.extend(self.showStartPositions())
+        self.win.vPos.setItems(items)
+        self.showPassword()
+        return True
+
+    def showPassword(self):
+        self.win.vLPassword.visible = self.win.vPassword.visible = self.needsPassword
+
+    def showActivePlayers(self):
+        if self.dataActive is None:
+            self.dataActive = client.cmdProxy.getActivePositions()
+        items = []
+        for playerID, galaxyName, playerType in self.dataActive:
+            item = ui.Item(galaxyName, type = 'Active', tObjID = playerID, tPosType = PLAYER_SELECT_CONTINUE)
+            if playerType == T_PLAYER:
+                item.tPos = _('Continue playing.')
+            elif playerType == T_PIRPLAYER:
+                item.tPos = _('Yarr!')
+            else:
+                item.tPos = _('Unknown type of player.')
+            items.append(item)
+        if not items:
+            item = ui.Item('', type = '', tObjID = 'No active players', tPosType = None)
+            item.tPos = 'No Active Player'
+            items.append(item)
+        return items
+
+    def showStartPositions(self):
+        if self.dataStart is None:
+            self.dataStart = client.cmdProxy.getStartingPositions()
+        items = []
+        for objID, galaxyName, posType in self.dataStart:
+            item = ui.Item(galaxyName, type = 'New', tObjID = objID, tPosType = posType)
+            if posType == PLAYER_SELECT_NEWPLAYER:
                 item.tPos = _('Independent player')
-            elif posType == STARTPOS_AIPLAYER:
+            elif posType == PLAYER_SELECT_AIPLAYER:
                 item.tPos = _("Rebel faction")
-            elif posType == STARTPOS_PIRATE:
+            elif posType == PLAYER_SELECT_PIRATE:
                 item.tPos = _("Pirate faction [VIP password needed]")
             else:
                 item.tPos = _('Unknown. You cannot use this.')
             items.append(item)
-        self.win.vPos.setItems(items)
-        return True
+        return items
 
     def onSelect(self, widget, action, data):
         if not self.win.vPos.selection:
             self.win.setStatus(_('Select position.'))
             return
         item = self.win.vPos.selection[0]
-        if item.tPosType == STARTPOS_NEWPLAYER:
+        if item.tPosType == PLAYER_SELECT_CONTINUE:
+            playerID = item.tObjID
+        elif item.tPosType == PLAYER_SELECT_NEWPLAYER:
             self.win.setStatus(_('Executing CREATE NEW PLAYER command...'))
             playerID = client.cmdProxy.createNewPlayer(item.tObjID)
             self.win.setStatus(_('Command has been executed.'))
-            self.hide()
-            if not gdata.mainGameDlg:
-                gdata.mainGameDlg = MainGameDlg(self.app)
-                gdata.mainGameDlg.display()
-            client.updateDatabase(clearDB = 1)
-        elif item.tPosType == STARTPOS_AIPLAYER:
+        elif item.tPosType == PLAYER_SELECT_AIPLAYER:
             self.win.setStatus(_('Executing TAKE OVER REBEL FACTION command...'))
             playerID = client.cmdProxy.takeOverAIPlayer(item.tObjID)
             self.win.setStatus(_('Command has been executed.'))
-            self.hide()
-            if not gdata.mainGameDlg:
-                gdata.mainGameDlg = MainGameDlg(self.app)
-                gdata.mainGameDlg.display()
-            client.updateDatabase(clearDB = 1)
-        elif item.tPosType == STARTPOS_PIRATE:
+        elif item.tPosType == PLAYER_SELECT_PIRATE:
             password = self.win.vPassword.text
             if not password:
                 self.win.setStatus(_("Supply VIP password, please."))
@@ -95,11 +122,34 @@ class PlayerSelectDlg:
                 self.win.setStatus(_("Supply valid VIP password."))
                 return
             self.win.setStatus(_('Command has been executed.'))
-            self.hide()
-            if not gdata.mainGameDlg:
-                gdata.mainGameDlg = MainGameDlg(self.app)
-                gdata.mainGameDlg.display()
-            client.updateDatabase(clearDB = 1)
+        else:
+            return
+        self.win.setStatus(_('Executing SELECT PLAYER command...'))
+        client.cmdProxy.selectPlayer(playerID)
+        self.win.setStatus(_('Command has been executed.'))
+        self.hide()
+        if not gdata.mainGameDlg:
+            gdata.mainGameDlg = MainGameDlg(self.app)
+            gdata.mainGameDlg.display()
+        client.updateDatabase(clearDB = 1)
+
+    def onToggleNew(self, widget, action, data):
+        self.wantsNew = not self.wantsNew
+        if self.wantsNew:
+            self.win.vToggle.text = _('Hide New Players')
+        else:
+            self.win.vToggle.text = _('Show New Players')
+        # there is a bug which prevents redraw for mere text change
+        self.win.vToggle.visible = 0
+        self.win.vToggle.visible = 1
+        self.show()
+
+    def onListSelect(self, widget, action, data):
+        needsPassword = data.tPosType == PLAYER_SELECT_PIRATE
+        dirty = False
+        if needsPassword != self.needsPassword:
+            self.needsPassword = needsPassword
+            self.showPassword()
 
     def onBooking(self, widget, action, data):
         self.win.hide()
@@ -108,29 +158,30 @@ class PlayerSelectDlg:
 
     def onCancel(self, widget, action, data):
         self.win.hide()
-        if self.caller:
-            self.caller.display()
-        else:
-            self.app.exit()
+        self.app.exit()
 
     def createUI(self):
         w, h = gdata.scrnSize
         self.win = ui.Window(self.app,
             modal = 1,
             movable = 0,
-            title = _('Select starting position'),
-            rect = ui.Rect((w - 424) / 2, (h - 264) / 2, 424, 264),
+            title = _('Select gaming session'),
+            rect = ui.Rect((w - 524) / 2, (h - 264) / 2, 524, 264),
             layoutManager = ui.SimpleGridLM(),
             tabChange = True
         )
-        ui.Listbox(self.win, layout = (0, 0, 21, 10), id = 'vPos',
-            columns = ((_('Galaxy'), 'text', 5, ui.ALIGN_W), (_('Position'), 'tPos', 0, ui.ALIGN_W)),
+        ui.Listbox(self.win, layout = (0, 0, 26, 10), id = 'vPos',
+            columns = ((_('Type'), 'type', 3, ui.ALIGN_W),
+                       (_('Galaxy'), 'text', 7, ui.ALIGN_W),
+                       (_('Position'), 'tPos', 0, ui.ALIGN_W)),
+            action = 'onListSelect',
             columnLabels = 1)
         self.win.subscribeAction('*', self)
-        ui.Label(self.win, layout = (0, 10, 5, 1), text = _("VIP Password:"))
-        ui.Entry(self.win, layout = (5, 10, 5, 1), id = 'vPassword', align = ui.ALIGN_W, showChar = '*', orderNo = 1 )
-        ui.TitleButton(self.win, layout = (13, 10, 8, 1), text = _('Book position'), action = 'onBooking')
-        ui.Title(self.win, layout = (0, 11, 13, 1), id = 'vStatusBar', align = ui.ALIGN_W)
-        ui.TitleButton(self.win, layout = (13, 11, 4, 1), text = _('Exit'), action = 'onCancel')
-        ui.TitleButton(self.win, layout = (17, 11, 4, 1), text = _('Select'), action = 'onSelect')
+        ui.Label(self.win, layout = (8, 10, 5, 1), id = 'vLPassword', text = _("VIP Password:"))
+        ui.Entry(self.win, layout = (13, 10, 5, 1), id = 'vPassword', align = ui.ALIGN_W, showChar = '*', orderNo = 1 )
+        ui.TitleButton(self.win, layout = (18, 10, 8, 1), text = _('Book position'), action = 'onBooking')
+        ui.TitleButton(self.win, layout = (0, 10, 8, 1), id = 'vToggle', text = _('Show New Players'), action = 'onToggleNew')
+        ui.Title(self.win, layout = (0, 11, 18, 1), id = 'vStatusBar', align = ui.ALIGN_W)
+        ui.TitleButton(self.win, layout = (18, 11, 4, 1), text = _('Exit'), action = 'onCancel')
+        ui.TitleButton(self.win, layout = (22, 11, 4, 1), text = _('Select'), action = 'onSelect')
         self.win.statusBar = self.win.vStatusBar

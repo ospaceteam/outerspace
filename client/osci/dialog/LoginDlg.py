@@ -20,8 +20,8 @@
 
 import pygameui as ui
 from osci import client, gdata, res
-from MainGameDlg import MainGameDlg
 from NewAccountDlg import NewAccountDlg
+from PlayerSelectDlg import PlayerSelectDlg
 from ConfirmDlg import ConfirmDlg
 from OptionsDlg import OptionsDlg
 import binascii
@@ -33,6 +33,7 @@ class LoginDlg:
     def __init__(self, app):
         self.app = app
         self.newAccDlg = NewAccountDlg(app)
+        self.playerSelectDlg = PlayerSelectDlg(app)
         self.confirmDlg = ConfirmDlg(app)
         self.firstlogin = True
         self.versionChecked = False
@@ -112,11 +113,7 @@ class LoginDlg:
             # write configuration
             gdata.config.save()
             gdata.config.game.lastpasswordcrypted = binascii.b2a_base64(password).strip()
-            # show main dialog
-            if not gdata.mainGameDlg:
-                gdata.mainGameDlg = MainGameDlg(self.app)
-                gdata.mainGameDlg.display()
-            client.updateDatabase()
+            self.playerSelectDlg.display(self)
         elif result == 2:
             pass
         else:

@@ -372,12 +372,9 @@ class IGalaxy(IObject):
             # create new player
             log.debug("Creating new Rebel player", T_AIPLAYER)
             player = self.new(T_AIPLAYER)
-            self.cmd(player).register(tran, player)
+            self.cmd(player).register(tran, player, obj.oid)
             player.galaxies.append(obj.oid)
             playerID = player.oid
-            # finish AI list
-            aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
-            aiList.setGalaxy(player.login, obj.name)
             # TODO tweak more planet's attrs
             planet = tran.db[positionID]
             # Grant starting technologies (at medium improvement)
@@ -566,9 +563,7 @@ class IGalaxy(IObject):
                 # create new player
                 log.debug("Creating new player", playerType)
                 player = self.new(playerType)
-                self.cmd(player).register(tran, player)
-                aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
-                aiList.setGalaxy(player.login, obj.name)
+                self.cmd(player).register(tran, player, obj.oid)
                 player.galaxies.append(obj.oid)
             # now we have a player, let's iterate over vacant planets and set them up
             for planetID in vacant_planets[playerType]:

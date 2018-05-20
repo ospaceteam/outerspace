@@ -540,6 +540,7 @@ class IUniverse(IObject):
         for playerLogin in listOfPlayers:
             tran.gameMngr.createNewSubscribedPlayer(playerLogin, newGalaxyID)
         log.debug("Galaxy creation END")
+        return newGalaxyID
 
     createNewSubscribedGalaxy.public = 1
     createNewSubscribedGalaxy.accLevel = AL_ADMIN

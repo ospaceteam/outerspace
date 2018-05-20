@@ -483,7 +483,7 @@ def processMenu(inp, objId, s):
     return objId
 
 # parse command line arguments
-parser = OptionParser(usage = "usage: %prog [options] login")
+parser = OptionParser(usage = "usage: %prog [options]")
 parser.add_option("",  "--configdir", dest = "configDir",
     metavar = "DIRECTORY", default = os.path.join(os.path.expanduser("~"), ".outerspace"),
     help = "Override default configuration directory",
@@ -493,20 +493,12 @@ options, args = parser.parse_args()
 #s = IClient('ospace.net:9080', None, msgHandler, None, 'IClient/osc')
 s = IClient('localhost:9080', None, msgHandler, None, 'IClient/osc')
 
-if len(args) != 1:
-    print "Usage: osclient_tui.py [options] LOGIN"
-    sys.exit(1)
 
-login = args[0]
-
-if login == "admin":
-    # get admin login from <configDir>/token
-    password = open(os.path.join(options.configDir, "token"), "r").read()
-else:
-    password = getpass("Password: ")
-
-s.connect(login)
-s.login('Alpha', login, password)
+# get admin login from <configDir>/token
+password = open(os.path.join(options.configDir, "token"), "r").read()
+s.connect('admin')
+s.login('Alpha', 'admin', password)
+s.selectAdmin()
 
 try:
     objID = 0
