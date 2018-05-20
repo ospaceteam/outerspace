@@ -20,7 +20,6 @@
 
 import pygameui as ui
 from osci import client, gdata, res
-from ige.version import version
 from MainGameDlg import MainGameDlg
 from NewAccountDlg import NewAccountDlg
 from ConfirmDlg import ConfirmDlg
@@ -113,21 +112,6 @@ class LoginDlg:
             # write configuration
             gdata.config.save()
             gdata.config.game.lastpasswordcrypted = binascii.b2a_base64(password).strip()
-            # check version
-            log.debug('Comparing server and client versions', client.serverVersion, version)
-            if client.serverVersion != version and not self.versionChecked:
-                # don't check next time in this session
-                self.versionChecked = True
-                # wow, a different version!
-                self.confirmDlg.display(
-                    _("Your client version does not match server version %d.%d.%d%s. Do you want to continue?") % (
-                        client.serverVersion["major"],
-                        client.serverVersion["minor"],
-                        client.serverVersion["revision"],
-                        client.serverVersion["status"],
-                    ),
-                    _('Yes'), _('No'), self.onContinueWithOld, self.app.exit)
-                return
             # show main dialog
             if not gdata.mainGameDlg:
                 gdata.mainGameDlg = MainGameDlg(self.app)
@@ -147,14 +131,6 @@ class LoginDlg:
             self.caller.display()
         else:
             self.app.exit()
-
-    def onContinueWithOld(self):
-        # show main dialog
-        self.win.hide()
-        if not gdata.mainGameDlg:
-            gdata.mainGameDlg = MainGameDlg(self.app)
-            gdata.mainGameDlg.display()
-        client.updateDatabase()
 
     def onCreateAccount(self, widget, action, data):
         self.win.hide()

@@ -68,14 +68,6 @@ class IUniverse(IObject):
         result.turn = obj.turn
         result.serverTime = time.time()
         result.version = ige.version.version
-        # legacy client side update support
-        # TODO: Remove once not needed
-        result.lastClientVersion = (
-            ige.version.major,
-            ige.version.minor,
-            ige.version.revision,
-            ige.version.status,
-        )
         return result
 
     getIntroInfo.public = 1
