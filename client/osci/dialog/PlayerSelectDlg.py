@@ -33,8 +33,6 @@ class PlayerSelectDlg:
         self.app = app
         self.wantsNew = False
         self.needsPassword = False
-        self.dataActive = None
-        self.dataStart = None
         self.createUI()
         self.confirmDlg = ConfirmDlg(app)
         self.confirmDlg.setTitle(_("No free starting position"))
@@ -60,10 +58,9 @@ class PlayerSelectDlg:
         self.win.vLPassword.visible = self.win.vPassword.visible = self.needsPassword
 
     def showActivePlayers(self):
-        if self.dataActive is None:
-            self.dataActive = client.cmdProxy.getActivePositions()
+        dataActive = client.cmdProxy.getActivePositions()
         items = []
-        for playerID, galaxyName, playerType in self.dataActive:
+        for playerID, galaxyName, playerType in dataActive:
             item = ui.Item(galaxyName, type = 'Active', tObjID = playerID, tPosType = PLAYER_SELECT_CONTINUE)
             if playerType == T_PLAYER:
                 item.tPos = _('Continue playing.')
@@ -79,10 +76,9 @@ class PlayerSelectDlg:
         return items
 
     def showStartPositions(self):
-        if self.dataStart is None:
-            self.dataStart = client.cmdProxy.getStartingPositions()
+        dataStart = client.cmdProxy.getStartingPositions()
         items = []
-        for objID, galaxyName, posType in self.dataStart:
+        for objID, galaxyName, posType in dataStart:
             item = ui.Item(galaxyName, type = 'New', tObjID = objID, tPosType = posType)
             if posType == PLAYER_SELECT_NEWPLAYER:
                 item.tPos = _('Independent player')
@@ -124,6 +120,9 @@ class PlayerSelectDlg:
             self.win.setStatus(_('Command has been executed.'))
         else:
             return
+        self._selectPlayer(playerID)
+
+    def _selectPlayer(self, playerID):
         self.win.setStatus(_('Executing SELECT PLAYER command...'))
         client.cmdProxy.selectPlayer(playerID)
         self.win.setStatus(_('Command has been executed.'))
@@ -145,6 +144,9 @@ class PlayerSelectDlg:
         self.show()
 
     def onListSelect(self, widget, action, data):
+        if data.tPosType == PLAYER_SELECT_CONTINUE:
+            playerID = data.tObjID
+            self._selectPlayer(playerID)
         needsPassword = data.tPosType == PLAYER_SELECT_PIRATE
         dirty = False
         if needsPassword != self.needsPassword:

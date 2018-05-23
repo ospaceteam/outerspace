@@ -104,9 +104,13 @@ class BookingMngr(object):
     def toggle_booking(self, sid, gal_type):
         player = self.clientMngr.getSession(sid).login
         log.debug("Player '{0}' toggled booking of '{1}'".format(player, gal_type))
+        triggered = False
         if self.database[gal_type].toggle_booking(player, self.threshold):
             self.trigger_galaxy_start(gal_type)
-        return self.get_booking_answers(sid)
+            triggered = True
+        answers = self.get_booking_answers(sid)[0]
+        answers[None] = triggered
+        return answers, None
 
     def trigger_galaxy_start(self, gal_type):
         log.debug("Triggering new subscribed galaxy '{0}'".format(gal_type))
