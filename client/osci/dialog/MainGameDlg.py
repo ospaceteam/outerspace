@@ -101,9 +101,10 @@ class MainGameDlg:
         if self in gdata.updateDlgs:
             gdata.updateDlgs.remove(self)
 
-    def onQuit(self, widget, action, data):
-        self.app.setStatus(_('Logging out and exitting...'))
-        self.app.exit()
+    def onExit(self, widget, action, data):
+        self.app.setStatus(_('Exitting a session...'))
+        self.hide()
+        self.app.exitLocal()
 
     def onSelectMapObj(self, widget, action, data):
         self.win.vStarMap.highlightPos = None
@@ -207,7 +208,7 @@ class MainGameDlg:
     def onResignConfirmed(self):
         client.cmdProxy.resign(client.getPlayerID())
         client.db.clear()
-        self.app.exit()
+        self.app.exitLocal()
 
     def onToggleTime(self, widget, action, data):
         galaxyID = client.getPlayer().galaxies[0]
@@ -235,7 +236,7 @@ class MainGameDlg:
         client.db.clear()
         client.cmdProxy.msgHandler = oldMsgHandler
         self.hide()
-        self.app.exit()
+        self.app.exitLocal()
 
     def update(self,configUpdated=False):
         self.galaxyFinishPopup(None, None, False)
@@ -343,6 +344,8 @@ class MainGameDlg:
             self.win.vMessages.foreground = None
 
     def processKeyUp(self, evt):
+        if evt.key == K_F12 and pygame.key.get_mods() & KMOD_CTRL:
+            self.onExit(None, None, None)
         return ui.NoEvent
 
 
@@ -444,7 +447,7 @@ class MainGameDlg:
                 ui.Item(_("Finish galaxy"), action = "galaxyFinishButton", enabled = False, data = True), # no hotkey; if this position moved, you need to update finishGalaxy's "self.systemMenu.items" lines to reference new index position
                 ui.Item(_("Resign"), action = "onResign"), # no hotkey
                 ui.Item(_("--------"), enabled = False),
-                ui.Item(_("Quit"), action = "onQuit", hotkey = u'\x71'), # Q
+                ui.Item(_("Exit"), action = "onExit", hotkey = u'\x71'), # Q (also directly CTRL+F12)
             ]
         )
         self.systemMenu.subscribeAction("*", self)
