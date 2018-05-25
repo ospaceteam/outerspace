@@ -50,6 +50,7 @@ class PlayerSelectDlg:
         items.extend(self.showActivePlayers())
         if self.wantsNew:
             items.extend(self.showStartPositions())
+            items.extend(self.showNewSinglePositions())
         self.win.vPos.setItems(items)
         self.showPassword()
         return True
@@ -91,6 +92,18 @@ class PlayerSelectDlg:
             items.append(item)
         return items
 
+    def showNewSinglePositions(self):
+        dataStart = client.cmdProxy.getSingleStartingPositions()
+        items = []
+        for galaxyType, galaxyDescription, posType in dataStart:
+            item = ui.Item(galaxyType, type = 'New Single', tObjID = galaxyType, tPosType = posType, tPos = galaxyDescription, tooltipTitle = galaxyType, tooltip = galaxyDescription)
+            items.append(item)
+        if not items:
+            item = ui.Item('', type = '', tObjID = 'No active players', tPosType = None)
+            item.tPos = 'Limit of single player galaxies reached'
+            items.append(item)
+        return items
+
     def onSelect(self, widget, action, data):
         if not self.win.vPos.selection:
             self.win.setStatus(_('Select position.'))
@@ -118,6 +131,9 @@ class PlayerSelectDlg:
                 self.win.setStatus(_("Supply valid VIP password."))
                 return
             self.win.setStatus(_('Command has been executed.'))
+        elif item.tPosType == PLAYER_SELECT_NEWSINGLE:
+            # trigger generation of new single player galaxy (and log in right away)
+            playerID = client.cmdProxy.triggerSinglePlayerGalaxy(item.tObjID)
         else:
             return
         self._selectPlayer(playerID)
@@ -135,9 +151,9 @@ class PlayerSelectDlg:
     def onToggleNew(self, widget, action, data):
         self.wantsNew = not self.wantsNew
         if self.wantsNew:
-            self.win.vToggle.text = _('Hide New Players')
+            self.win.vToggle.text = _('Hide New Opportunities')
         else:
-            self.win.vToggle.text = _('Show New Players')
+            self.win.vToggle.text = _('Show New Opportunities')
         # there is a bug which prevents redraw for mere text change
         self.win.vToggle.visible = 0
         self.win.vToggle.visible = 1
@@ -168,22 +184,22 @@ class PlayerSelectDlg:
             modal = 1,
             movable = 0,
             title = _('Select gaming session'),
-            rect = ui.Rect((w - 524) / 2, (h - 264) / 2, 524, 264),
+            rect = ui.Rect((w - 564) / 2, (h - 264) / 2, 564, 264),
             layoutManager = ui.SimpleGridLM(),
             tabChange = True
         )
-        ui.Listbox(self.win, layout = (0, 0, 26, 10), id = 'vPos',
-            columns = ((_('Type'), 'type', 3, ui.ALIGN_W),
-                       (_('Galaxy'), 'text', 7, ui.ALIGN_W),
+        ui.Listbox(self.win, layout = (0, 0, 28, 10), id = 'vPos',
+            columns = ((_('Type'), 'type', 4, ui.ALIGN_W),
+                       (_('Galaxy'), 'text', 8, ui.ALIGN_W),
                        (_('Position'), 'tPos', 0, ui.ALIGN_W)),
             action = 'onListSelect',
             columnLabels = 1)
         self.win.subscribeAction('*', self)
-        ui.Label(self.win, layout = (8, 10, 5, 1), id = 'vLPassword', text = _("VIP Password:"))
-        ui.Entry(self.win, layout = (13, 10, 5, 1), id = 'vPassword', align = ui.ALIGN_W, showChar = '*', orderNo = 1 )
-        ui.TitleButton(self.win, layout = (18, 10, 8, 1), text = _('Book position'), action = 'onBooking')
-        ui.TitleButton(self.win, layout = (0, 10, 8, 1), id = 'vToggle', text = _('Show New Players'), action = 'onToggleNew')
-        ui.Title(self.win, layout = (0, 11, 18, 1), id = 'vStatusBar', align = ui.ALIGN_W)
-        ui.TitleButton(self.win, layout = (18, 11, 4, 1), text = _('Exit'), action = 'onCancel')
-        ui.TitleButton(self.win, layout = (22, 11, 4, 1), text = _('Select'), action = 'onSelect')
+        ui.Label(self.win, layout = (10, 10, 5, 1), id = 'vLPassword', text = _("VIP Password:"))
+        ui.Entry(self.win, layout = (15, 10, 5, 1), id = 'vPassword', align = ui.ALIGN_W, showChar = '*', orderNo = 1 )
+        ui.TitleButton(self.win, layout = (20, 10, 8, 1), text = _('Book position'), action = 'onBooking')
+        ui.TitleButton(self.win, layout = (0, 10, 10, 1), id = 'vToggle', text = _('Show New Opportunities'), action = 'onToggleNew')
+        ui.Title(self.win, layout = (0, 11, 20, 1), id = 'vStatusBar', align = ui.ALIGN_W)
+        ui.TitleButton(self.win, layout = (20, 11, 4, 1), text = _('Exit'), action = 'onCancel')
+        ui.TitleButton(self.win, layout = (24, 11, 4, 1), text = _('Select'), action = 'onSelect')
         self.win.statusBar = self.win.vStatusBar

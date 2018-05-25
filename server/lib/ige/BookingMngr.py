@@ -28,6 +28,7 @@ import log
 from ige.Transaction import Transaction
 from ige.IDataHolder import IDataHolder
 from ige.ospace.GalaxyGenerator import GalaxyGenerator
+import ige.ospace.Const
 
 class BookingMngrException(Exception):
     pass
@@ -72,11 +73,21 @@ class BookingMngr(object):
     def init_bookings(self):
         gal_gen = GalaxyGenerator()
         gal_types = gal_gen.getGalaxyTypes()
+        active_types = []
         for gal_type in gal_types:
+            gal_template = gal_gen.getGalaxyTemplate(gal_type)
+            if gal_template.scenario == ige.ospace.Const.SCENARIO_SINGLE:
+                continue
+            active_types.append(gal_type)
             if not self.database.has_key(gal_type):
                 self.database.create(Booking(), gal_type)
-            self.database[gal_type].capacity = gal_types[gal_type][0]
-            self.database[gal_type].info_text = gal_types[gal_type][1]
+            self.database[gal_type].capacity = gal_template.players
+            self.database[gal_type].info_text = gal_template.galaxyDescription
+        # cleanup of those not used anymore
+        for gal_type in self.database.keys():
+            if gal_type not in active_types:
+                del self.database[gal_type]
+
 
     def shutdown(self):
         log.message('Shutdown')
@@ -108,6 +119,7 @@ class BookingMngr(object):
         if self.database[gal_type].toggle_booking(player, self.threshold):
             self.trigger_galaxy_start(gal_type)
             triggered = True
+        # get_booking_answers returns tuple, we only need first part
         answers = self.get_booking_answers(sid)[0]
         answers[None] = triggered
         return answers, None
@@ -147,11 +159,11 @@ class BookingMngr(object):
         for galaxy_id in universe.galaxies:
             galaxy = self.gameMngr.db[galaxy_id]
             names_in_use.add(galaxy.name)
-        
+
         for name in all_names:
             if name in names_in_use:
                 continue
             return name
         # no name available
         return None
-        
+

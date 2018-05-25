@@ -162,11 +162,13 @@ def register(game):
 
     callMap[game.gameID + '.selectPlayer'] = game.selectPlayer
     callMap[game.gameID + '.execute'] = game.execute
+    callMap[game.gameID + '.triggerSinglePlayerGalaxy'] = game.triggerSinglePlayerGalaxy
     callMap[game.gameID + '.createNewPlayer'] = game.createNewPlayer
     callMap[game.gameID + '.takeOverAIPlayer'] = game.takeOverAIPlayer
     callMap[game.gameID + '.takeOverPirate'] = game.takeOverPirate
     callMap[game.gameID + '.getActivePositions'] = game.getActivePositions
     callMap[game.gameID + '.getStartingPositions'] = game.getStartingPositions
+    callMap[game.gameID + '.getSingleStartingPositions'] = game.getSingleStartingPositions
     callMap[game.gameID + '.getTurnData'] = game.getTurnData
     callMap[game.gameID + '.turnFinished'] = game.turnFinished
     callMap[game.gameID + '.processTurn'] = game.processTurn

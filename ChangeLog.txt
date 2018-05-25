@@ -1,6 +1,19 @@
 ﻿Outer Space Change Log
 ======================
 
+[2018-05-25]
+- User can play multiple galaxies from the same account [dahaic]
+  Only one presence in the galaxy is allowed, number of galaxies user
+  participates in is not limited, though.
+  New dialog for selecting session has been added to the boot sequence.
+- User can relog to another session on the same account [dahaic]
+  By selecting Exit in the main dialog, or pressing CTRL+F12, game won't
+  exit, but will reset into session picking dialog. This also applies for
+  resigning and finishing galaxies.
+- Single player galaxies are now more visible for selection [dahaic]
+  In the session selection dialog, user can also trigger creation of single
+  player galaxy. These are limited to 5 per account.
+
 [2018-02-11]
 - Removal of Galaxer, merging functionality into Server [dahaic]
 

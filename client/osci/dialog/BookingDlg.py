@@ -44,6 +44,9 @@ class BookingDlg:
     def show(self):
         items = []
         for galaxyType in self.bookingInfo:
+            if galaxyType is None:
+                # this is helper value TODO: handle it different way
+                continue
             booking = self.bookingInfo[galaxyType]
             info = booking.info_text
             tPos = booking.capacity
