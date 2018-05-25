@@ -43,11 +43,51 @@ class IAIPiratePlayer(IPlayer):
         #
         obj.pirateFame = 0
         obj.techLevel = 99
-        # grant technologies
+        # grant all TL1 ship techs except for colony module(s)
+        for techID in Rules.techs:
+            tech = Rules.techs[techID]
+            if tech.level == 1 and (tech.isShipEquip or tech.isShipHull) and not tech.unpackStruct:
+                obj.techs[techID] = Rules.techMaxImprovement
+
+    def register(self, tran, obj, galaxyID):
+        log.debug("Registering player", obj.oid)
+        counter = 1
+        while 1:
+            obj.name = u'Pirate faction %d' % counter
+            obj.login = '*AIP*pirate%d' % counter
+            if galaxyID in tran.gameMngr.accountGalaxies(obj.login):
+                counter += 1
+                continue
+            password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
+            tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
+            tran.db[OID_UNIVERSE].players.append(obj.oid)
+            tran.gameMngr.clientMngr.createAiAccount(None, obj.login, password, obj.name)
+            break
+        # after succesfull registration, register it to the AI system
+        aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
+        aiList.add(obj.login, password, 'ais_pirate')
+        aiList.setGalaxy(obj.login, tran.db[galaxyID].name)
+        # grant techs and so on
+        self.cmd(obj).update(tran, obj)
+
+    @staticmethod
+    def setStartingPlanet(tran, planet):
+        planet.plSlots = max(planet.plSlots, 2)
+        planet.plMaxSlots = max(planet.plMaxSlots, 2)
+        planet.plDiameter = max(planet.plDiameter, 2000)
+        planet.slots.append(Utils.newStructure(tran, Rules.Tech.PIRATEBASE, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
+        planet.slots.append(Utils.newStructure(tran, Rules.Tech.PIRATEDEN, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
+        planet.storPop = 6000
+
+    @staticmethod
+    def setStartingTechnologies(obj):
+        for techID in Rules.techs:
+            tech = Rules.techs[techID]
+            if tech.level == 1 and (tech.isShipEquip or tech.isShipHull) and not tech.unpackStruct:
+                obj.techs[techID] = Rules.techMaxImprovement
         obj.techs[Rules.Tech.EMCANNONTUR] = Rules.techMaxImprovement
         obj.techs[Rules.Tech.SSROCKET2] = Rules.techMaxImprovement
         obj.techs[Rules.Tech.TORPEDO] = Rules.techMaxImprovement
-        # grant special technologies
         obj.techs[Rules.Tech.PIRATEBASE] = Rules.techMaxImprovement
         obj.techs[Rules.Tech.PIRATEDEN] = Rules.techMaxImprovement
         obj.techs[Rules.Tech.PIRATESD] = Rules.techMaxImprovement
@@ -57,54 +97,11 @@ class IAIPiratePlayer(IPlayer):
         obj.techs[Rules.Tech.PIRSMCOLONYMOD] = Rules.techMaxImprovement
         obj.techs[Rules.Tech.PIRATEFTLENG] = Rules.techMaxImprovement
         obj.techs[Rules.Tech.PIRCOLONYMOD] = Rules.techMaxImprovement
-        # grant all TL1 ship techs except for colony module(s)
-        for techID in Rules.techs:
-            tech = Rules.techs[techID]
-            if tech.level == 1 and (tech.isShipEquip or tech.isShipHull) and not tech.unpackStruct:
-                obj.techs[techID] = Rules.techMaxImprovement
 
-    def register(self, tran, obj):
-        log.debug("Registering player", obj.oid)
-        counter = 1
-        while 1:
-            try:
-                obj.name = u'Pirate faction %d' % counter
-                obj.login = '*AIP*pirate%d' % counter
-                password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
-                tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
-                tran.db[OID_UNIVERSE].players.append(obj.oid)
-                tran.gameMngr.clientMngr.createAiAccount(None, obj.login, password, obj.name)
-                break
-            except CreatePlayerException:
-                counter += 1
-        # after succesfull registration, register it to the AI system
-        aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
-        aiList.add(obj.login, password, 'ais_pirate')
-        # grant techs and so on
-        self.cmd(obj).update(tran, obj)
-
-    def reregister(self, tran, obj):
-        # nearly identical to register, just now we know the galaxy
-        # to add this information tu AIList
-        log.debug("Registering player", obj.oid)
-        counter = 1
-        while 1:
-            try:
-                obj.name = u'Pirate faction %d' % counter
-                obj.login = '*AIP*pirate%d' % counter
-                password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
-                tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
-                tran.db[OID_UNIVERSE].players.append(obj.oid)
-                tran.gameMngr.clientMngr.createAiAccount(None, obj.login, password, obj.name)
-                break
-            except CreatePlayerException:
-                counter += 1
-        # after succesfull registration, register it to the AI system
-        aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
-        aiList.add(obj.login, password, 'ais_pirate')
-        aiList.setGalaxy(obj.login, tran.db[obj.galaxies[0]].name)
-        # grant techs and so on
-        self.cmd(obj).update(tran, obj)
+    @staticmethod
+    def setStartingShipDesigns(obj):
+        # these are generated by the AI itself
+        pass
 
     def processINITPhase(self, tran, obj, data):
         IPlayer.processINITPhase(self, tran, obj, data)

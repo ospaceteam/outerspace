@@ -56,7 +56,6 @@ def runAIClient(options):
 
     # client
     import ai_client as client
-    import ai_handler
     from igeclient.IClient import IClientException
     if options.ai:
         ai = __import__("AIs." + options.ai)
@@ -71,7 +70,7 @@ def runAIClient(options):
     # than once
     reload(client)
     gdata.config = Config(os.path.join(options.configDir, 'ais_dummy'))
-    client.initialize(options.server, ai_handler, options)
+    client.initialize(options.server, options)
 
     import gettext
     tran = gettext.NullTranslations()
@@ -88,6 +87,8 @@ def runAIClient(options):
         raise Exception, 'You have to provide password.'
 
     if client.login(options.game, login, password):
+        activePositions = client.cmdProxy.getActivePositions()
+        client.cmdProxy.selectPlayer(activePositions[0][0])
         if options.test:
             client.logout()
             return True

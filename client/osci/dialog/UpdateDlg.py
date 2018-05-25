@@ -19,7 +19,7 @@
 #
 
 from ige import log
-import ige.version
+from ige.version import version as clientVersion
 import os
 from osci import client, gdata, res
 import pygame
@@ -237,10 +237,10 @@ class UpdateDlg:
         # compare server and client versions
         log.message("Retrieving server version")
         self.serverVersion = client.cmdProxy.getVersion()
-        log.debug("Comparing server and client versions", self.serverVersion, ige.version.version)
+        log.debug("Comparing server and client versions", self.serverVersion, clientVersion)
         matches = True
         for i in ("major", "minor", "revision", "status"):
-            if ige.version.version[i] != self.serverVersion[i]:
+            if clientVersion[i] != self.serverVersion[i]:
                 matches = False
         if matches:
             log.message("Versions match, no need to update")

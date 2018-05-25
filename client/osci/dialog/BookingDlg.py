@@ -44,6 +44,9 @@ class BookingDlg:
     def show(self):
         items = []
         for galaxyType in self.bookingInfo:
+            if galaxyType is None:
+                # this is helper value TODO: handle it different way
+                continue
             booking = self.bookingInfo[galaxyType]
             info = booking.info_text
             tPos = booking.capacity
@@ -78,19 +81,15 @@ class BookingDlg:
             selectedType = None
         if selectedType:
             result = client.cmdProxy.toggleBooking(selectedType)
-            print(result)
-            if not type(result) == type(True) and not result == True:
+            if not result[None]:
                 # booking change is logged, no galaxy creation triggered
                 self.bookingInfo = result
                 self.show()
             else:
                 # galaxy creation has been triggered
-                self.win.setStatus(_('Command has been executed.'))
                 self.hide()
-                if not gdata.mainGameDlg:
-                    gdata.mainGameDlg = MainGameDlg(self.app)
-                    gdata.mainGameDlg.display()
-                client.updateDatabase(clearDB = 1)
+                self.caller.display()
+                self.caller.win.setStatus(_('New galaxy creation has been triggered.'))
 
     def onCancel(self, widget, action, data):
         self.win.hide()

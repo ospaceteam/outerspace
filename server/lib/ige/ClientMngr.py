@@ -26,25 +26,7 @@ import log
 from ige import SecurityException
 from ige.Const import ADMIN_LOGIN
 import Authentication
-
-class Account:
-
-    def __init__(self):
-        # credentials
-        self.login = None
-        self.nick = None
-        self.passwd = None
-        self.email = None
-        # account options
-        self.lastLogin = 0
-        self.blockedUntil = -1 # -1 for not blocked, > 0 for blocked
-        self.blocked = 0 # 1 for blocked account
-        self.confToken = None # e-mail confirmation token, if None e-mail has been confirmed
-        self.hostIDs = {} # hostids and times
-
-    def addHostID(self, hostID):
-        if hostID:
-            self.hostIDs[hostID] = time.time()
+from account import Account
 
 class ClientMngr:
 
@@ -57,8 +39,6 @@ class ClientMngr:
         self.sessions = {}
         #
         self.accounts = database
-        # create nick to account mapping
-        self.nick2login = database.get("**nick2login**", Mapping())
         # create special key
         if not self.accounts.has_key(ADMIN_LOGIN):
             log.message("No administator account found! (looking for '%s')" % ADMIN_LOGIN)
@@ -79,11 +59,6 @@ class ClientMngr:
 
     def exists(self, login):
         return self.accounts.has_key(str(login))
-
-    def getAccountByNick(self, nick, default = None):
-        if not self.nick2login.has_key(nick):
-            return default
-        return self.accounts[self.nick2login[str(nick)]]
 
     def __getitem__(self, login):
         return self.accounts[str(login)]
@@ -118,7 +93,6 @@ class ClientMngr:
         account.email = email
         account.confToken = hashlib.md5('%s%s%d' % (login, email, time.time())).hexdigest()
         self.accounts.create(account, id = str(account.login))
-        self.nick2login[account.nick] = account.login
         log.message('Account created, confirmation token:', account.confToken)
         # TODO send confirmation token to the email address
         return 1, None
@@ -138,7 +112,6 @@ class ClientMngr:
         account.email = None
         account.confToken = None
         self.accounts.create(account, id = str(account.login))
-        self.nick2login[account.nick] = account.login
         log.message('AI account created')
         return 1, None
 
@@ -171,16 +144,12 @@ class ClientMngr:
         log.debug(sid, 'login', repr(login), 'hostid', hostID)
         login = str(login)
         challenge = self.sessions[sid].challenge
-        account = None
-        # local login - there has been option to use wordpress metaserver
-        # but for project of this size, less is more
-        if not account:
-            log.debug("Trying local login for user", login)
-            if not self.accounts.has_key(login):
-                raise SecurityException('Wrong login and/or password.')
-            account = self.accounts[login]
-            if not Authentication.verify(cpasswd, account.passwd, challenge):
-                raise SecurityException('Wrong login and/or password.')
+        log.debug("Trying local login for user", login)
+        if not self.accounts.has_key(login):
+            raise SecurityException('Wrong login and/or password.')
+        account = self.accounts[login]
+        if not Authentication.verify(cpasswd, account.passwd, challenge):
+            raise SecurityException('Wrong login and/or password.')
         # setup session
         self.sessions[sid].setAttrs(account.login, account.nick, account.email)
         account.lastLogin = time.time()
@@ -248,7 +217,6 @@ class ClientMngr:
         # export accounts
         f = open(os.path.join(self.configDir,"accounts.txt"), "w")
         for account in self.accounts.keys():
-            if account == "**nick2login**": continue
             account = self.accounts[account]
             print >>f, "%s\t%s\t%s\t%s" % (
                 account.nick.encode("utf-8"),

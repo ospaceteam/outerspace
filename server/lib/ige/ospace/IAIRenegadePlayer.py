@@ -41,25 +41,27 @@ class IAIRenegadePlayer(IPlayer):
         IPlayer.init(self, obj)
         #
         obj.name = u'Renegade'
+        obj.race = "r"
         obj.login = '*'
 
-    def register(self, tran, obj):
+    def register(self, tran, obj, galaxyID):
         log.debug("Registering player", obj.oid)
         counter = 1
         while 1:
-            try:
-                obj.name = u'Renegade faction %d' % counter
-                obj.login = '*AIP*renegade%d' % counter
-                password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
-                tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
-                tran.db[OID_UNIVERSE].players.append(obj.oid)
-                tran.gameMngr.clientMngr.createAiAccount(None, obj.login, password, obj.name)
-                break
-            except CreatePlayerException:
+            obj.name = u'Renegade faction %d' % counter
+            obj.login = '*AIP*renegade%d' % counter
+            if galaxyID in tran.gameMngr.accountGalaxies(obj.login):
                 counter += 1
+                continue
+            password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
+            tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
+            tran.db[OID_UNIVERSE].players.append(obj.oid)
+            tran.gameMngr.clientMngr.createAiAccount(None, obj.login, password, obj.name)
+            break
         # after succesfull registration, register it to the AI system
         aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
         aiList.add(obj.login, password, 'ais_renegade')
+        aiList.setGalaxy(obj.login, tran.db[galaxyID].name)
         # grant techs and so on
         self.cmd(obj).update(tran, obj)
 
@@ -74,9 +76,18 @@ class IAIRenegadePlayer(IPlayer):
             self.cmd(obj).delete(tran, obj)
 
     def update(self, tran, obj):
-        obj.techLevel = 99
-        obj.race = "r"
-        # grant technologies
+        self.setStartingTechnologies(obj)
+        self.setStartingShipDesigns(obj)
+        IPlayer.update(self, tran, obj)
+
+    @staticmethod
+    def setStartingPlanet(tran, planet):
+        planet.slots.append(Utils.newStructure(tran, Rules.Tech.RENEGADEBASE, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
+        planet.storPop = 3000
+
+    @staticmethod
+    def setStartingTechnologies(obj):
+        obj.techLevel = 2
         obj.techs[Rules.Tech.CANNON1] = 3
         obj.techs[Rules.Tech.SSROCKET] = 3
         obj.techs[Rules.Tech.RENEGADEBASE] = 3
@@ -85,17 +96,15 @@ class IAIRenegadePlayer(IPlayer):
         obj.techs[Rules.Tech.RENEGADEBASE3] = 3
         obj.techs[Rules.Tech.RENEGADEBASE3MINOR] = 3
         obj.techs[Rules.Tech.RENEGADECOSMODROME] = 3
-        if not len(obj.shipDesigns) == 3:
-            # three basic designs [they use modules not available to the player otherwise
-            # so it has to be done this way]
-            obj.shipDesigns[1] = ShipUtils.makeShipMinSpec(obj, 'Fighter', Rules.Tech.SMALLHULL1,
-                {Rules.Tech.SCOCKPIT1:1, Rules.Tech.CANNON1:1}, [])
-            obj.shipDesigns[2] = ShipUtils.makeShipMinSpec(obj, 'Corvette', Rules.Tech.SMALLHULL1,
-                {Rules.Tech.SCOCKPIT1:1, Rules.Tech.CANNON1:2, Rules.Tech.STEELARM2:1}, [])
-            obj.shipDesigns[3] = ShipUtils.makeShipMinSpec(obj, 'Frigate', Rules.Tech.MEDIUMHULL2,
-                {Rules.Tech.SBRIDGE1:1, Rules.Tech.CANNON1:2, Rules.Tech.SSROCKET:2}, [])
-        # call super method
-        IPlayer.update(self, tran, obj)
+
+    @staticmethod
+    def setStartingShipDesigns(obj):
+        obj.shipDesigns[1] = ShipUtils.makeShipMinSpec(obj, 'Fighter', Rules.Tech.SMALLHULL1,
+            {Rules.Tech.SCOCKPIT1:1, Rules.Tech.CANNON1:1}, [])
+        obj.shipDesigns[2] = ShipUtils.makeShipMinSpec(obj, 'Corvette', Rules.Tech.SMALLHULL1,
+            {Rules.Tech.SCOCKPIT1:1, Rules.Tech.CANNON1:2, Rules.Tech.STEELARM2:1}, [])
+        obj.shipDesigns[3] = ShipUtils.makeShipMinSpec(obj, 'Frigate', Rules.Tech.MEDIUMHULL2,
+            {Rules.Tech.SBRIDGE1:1, Rules.Tech.CANNON1:2, Rules.Tech.SSROCKET:2}, [])
 
     def getDiplomacyWith(self, tran, obj, playerID):
         if obj.oid == playerID:

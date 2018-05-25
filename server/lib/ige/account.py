@@ -1,5 +1,5 @@
 #
-#  Copyright 2001 - 2016 Ludek Smid [http://www.ospace.net/]
+#  Copyright 2001 - 2018 Ludek Smid [http://www.ospace.net/]
 #
 #  This file is part of Outer Space.
 #
@@ -18,35 +18,25 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-import gdata
-from ige import log
+import time
 
-def onInitConnection():
-    pass
+class Account(object):
 
-def onConnInitialized():
-    pass
+    def __init__(self):
+        # credentials
+        self.login = None
+        self.nick = None
+        self.passwd = None
+        self.email = None
+        # account options
+        self.lastLogin = 0
+        self.blockedUntil = -1 # -1 for not blocked, > 0 for blocked
+        self.blocked = 0 # 1 for blocked account
+        self.confToken = None # e-mail confirmation token, if None e-mail has been confirmed
+        self.hostIDs = {} # hostids and times
+        self.players = [] # ids of connected player objects
 
-def onCmdBegin():
-    pass
+    def addHostID(self, hostID):
+        if hostID:
+            self.hostIDs[hostID] = time.time()
 
-def onCmdEnd():
-    pass
-
-def createGameAccount():
-    pass
-
-def onUpdateStarting():
-    pass
-
-def onUpdateProgress(curr, max, text = None):
-    pass
-
-def onUpdateFinished():
-    pass
-
-def onNewMessages(number):
-    pass
-
-def onWaitingForResponse():
-    pass

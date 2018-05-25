@@ -29,20 +29,22 @@ from ige.GameMngr import GameMngr as IGEGameMngr
 from ige.Index import Index
 from ige.Transaction import Transaction
 from ige.IDataHolder import IDataHolder
-from ige import GameException, SecurityException
+from ige import GameException, SecurityException, CreatePlayerException
 
 from Const import *
 import IPlayer, IUniverse, IGalaxy, ISystem, IWormHole, IPlanet, IFleet, IAlliance, IAsteroid
 import INature, IAIPlayer, IAIRenegadePlayer, IAIMutantPlayer, IAIPiratePlayer
+import GalaxyGenerator
 import IAIEDENPlayer, IPiratePlayer
 import Rules, Utils
+
 from Rules import Tech
 from ai_parser import AIList
 
 class GameMngr(IGEGameMngr):
 
     #
-    # Reguired methods
+    # Required methods
     #
 
     def __init__(self, gameID, config, clientMngr, msgMngr, database, configDir, gameName = None):
@@ -95,19 +97,39 @@ class GameMngr(IGEGameMngr):
         obj.name = 'GameMaster'
         return obj
 
+    def accountGalaxies(self, login):
+        """ Returns set of galaxies account is already in. Empty set otherwise """
+        galaxyIDs = set()
+        try:
+            for playerID in self.db[OID_I_LOGIN2OID][login]:
+                galaxyIDs |= set(self.db[playerID].galaxies)
+        except KeyError:
+            # fresh account
+            pass
+        return galaxyIDs
+
+    def registerPlayer(self, login, playerObj, oid = None):
+        log.debug("Registering login {0}".format(login))
+
+        # action
+        if not oid:
+            log.debug("Creating object")
+            oid = self.db.create(playerObj)
+        else:
+            self.db.create(playerObj, id = oid)
+        log.debug("Fixing indexes")
+        try:
+            self.db[OID_I_LOGIN2OID][login].append(oid)
+        except KeyError:
+            self.db[OID_I_LOGIN2OID][login] = [oid]
+        playerObj.oid = oid
+        playerObj.owner = oid
+        return oid
+
     def createUniverse(self):
         universe = self.db[OID_UNIVERSE]
         tran = Transaction(self, OID_ADMIN)
         self.cmdPool[universe.type].createNewSubscribedGalaxy(tran, universe, 'Legacy', 'Circle42P', [])
-        ##! TODO this is temporary
-        ## create sector index (needed by loadFromXML)
-        #galaxy = self.db[cmdObj.createGalaxy(tran, obj)]
-        ##self.cmdPool[galaxy.type].loadFromXML(tran, galaxy, 'galaxy-Argo42P.xml', 'Circle42P', 100, 100, 'Argo')
-        #self.cmdPool[galaxy.type].loadFromXML(tran, galaxy, 'galaxy-Circle4P.xml', 'Circle4P', 100, 100, 'Galaxy Test')
-        ## setup environment
-        #self.cmdPool[galaxy.type].setupEnvironment(tran, galaxy)
-        ## start time
-        #self.cmdPool[galaxy.type].enableTime(tran, galaxy, force = 1)
         # create 'NATURE' player
         player = self.cmdPool[T_NATURE].new(T_NATURE)
         self.registerPlayer(player.login, player, OID_NATURE)
@@ -134,28 +156,90 @@ class GameMngr(IGEGameMngr):
         self.generateGameInfo()
         return 1, None
 
-    def getStartingPositions(self, sid):
-        universe = self.db[OID_UNIVERSE]
+    def getActivePositions(self, sid):
+        session = self.clientMngr.getSession(sid)
         result = []
-        for galaxyID in universe.galaxies:
+        for playerID in self.db[OID_I_LOGIN2OID].get(session.login, []):
+            player = self.db[playerID]
+            galaxy = self.db[player.galaxies[0]]
+            result.append((playerID, galaxy.name, player.type))
+        return result, None
+
+    def getStartingPositions(self, sid):
+        session = self.clientMngr.getSession(sid)
+        universe = self.db[OID_UNIVERSE]
+        badGalaxies = self.accountGalaxies(session.login)
+        result = []
+
+        for galaxyID in set(universe.galaxies).difference(badGalaxies):
             galaxy = self.db[galaxyID]
             if galaxy.startingPos:
-                result.append((galaxyID, galaxy.name, STARTPOS_NEWPLAYER))
+                result.append((galaxyID, galaxy.name, PLAYER_SELECT_NEWPLAYER))
         for playerID in universe.players:
             player = self.db[playerID]
+            if badGalaxies.intersection(player.galaxies):
+                continue
+            try:
+                system = self.db[self.db[player.planets[0]].compOf]
+            except IndexError:
+                # no planets, definitely not a good starting position
+                continue
+            galaxy = self.db[system.compOf]
             if player.type == T_AIPLAYER and player.planets:
                 # check if home system is under attack
-                system = self.db[self.db[player.planets[0]].compOf]
                 if system.combatCounter > 0:
                     continue
-                #
-                galaxy = self.db[self.db[self.db[player.planets[0]].compOf].compOf]
-                result.append((playerID, galaxy.name, STARTPOS_AIPLAYER))
+                result.append((playerID, galaxy.name, PLAYER_SELECT_AIPLAYER))
             if player.type == T_AIPIRPLAYER:
-                if player.planets:
-                    galaxy = self.db[self.db[self.db[player.planets[0]].compOf].compOf]
-                    result.append((playerID, galaxy.name, STARTPOS_PIRATE))
+                result.append((playerID, galaxy.name, PLAYER_SELECT_PIRATE))
         return result, None
+
+    def _singleGamesLimit(self, sid):
+        session = self.clientMngr.getSession(sid)
+        noOfSingles = 0
+        for galaxyID in self.accountGalaxies(session.login):
+            galaxy = self.db[galaxyID]
+            if galaxy.scenario == SCENARIO_SINGLE:
+                noOfSingles += 1
+        if noOfSingles >= ACCOUNT_SCENARIO_LIMITS[SCENARIO_SINGLE]:
+            # limit of single galaxies allowed to the account reached
+            return True
+        return False
+
+    def getSingleStartingPositions(self, sid):
+        if self._singleGamesLimit(sid):
+            return [], None
+
+        # ok, what single galaxies are available?
+        singleGalaxyTemplates = []
+        galGen = GalaxyGenerator.GalaxyGenerator()
+        for galaxyType in galGen.getGalaxyTypes():
+            galaxyTemplate = galGen.getGalaxyTemplate(galaxyType)
+            if galaxyTemplate.scenario == SCENARIO_SINGLE:
+                singleGalaxyTemplates.append(galaxyTemplate)
+
+        # prepare result
+        result = []
+        for template in singleGalaxyTemplates:
+            result.append((template.galaxyType, template.galaxyDescription, PLAYER_SELECT_NEWSINGLE))
+        return result, None
+
+    def triggerSinglePlayerGalaxy(self, sid, galaxyType):
+        if self._singleGamesLimit(sid):
+            raise GameException('Limit of single player galaxies reached.')
+
+        session = self.clientMngr.getSession(sid)
+        log.debug("Triggering new single player galaxy '{0}' for {1}".format(galaxyType, session.login))
+        universe = self.db[ige.Const.OID_UNIVERSE]
+        tran = Transaction(self, ige.Const.OID_ADMIN)
+        name = "{0}-{1}-{2}".format(galaxyType, session.login, universe.turn)
+        players = [session.login]
+        newGalaxyID = self.cmdPool[universe.type].createNewSubscribedGalaxy(tran, universe, name, galaxyType, players)
+        # now we know the galaxy ID, but what actually client needs is it's player ID in the galaxy
+        for playerID in self.db[OID_I_LOGIN2OID][session.login]:
+            if newGalaxyID in self.db[playerID].galaxies:
+                break
+        return playerID, None
 
     def takeOverAIPlayer(self, sid, playerID):
         log.debug('Creating new player in session', sid)
@@ -164,11 +248,14 @@ class GameMngr(IGEGameMngr):
         universe = self.db[OID_UNIVERSE]
         log.debug('Creating transaction')
         tran = Transaction(self, session.cid, session)
-        # create player
-        log.debug("Morphing AI player", playerID)
         player = self.db[playerID]
         if not (player.type == T_AIPLAYER and player.planets):
             raise GameException('No such starting position.')
+        if self.accountGalaxies(session.login).intersection(player.galaxies):
+            raise GameException('Account already owns player in this galaxy.')
+
+        # create player
+        log.debug("Morphing AI player", playerID)
         player.type = T_PLAYER
         self.cmdPool[T_PLAYER].upgrade(tran, player)
         self.cmdPool[T_PLAYER].update(tran, player)
@@ -185,30 +272,6 @@ class GameMngr(IGEGameMngr):
         player.diplomacyRels.clear()
         # add player to the universe
         universe.players.append(playerID)
-        # make sure, there is something useable on the home planet
-        planet = self.db[player.planets[0]]
-        hasOutpost = False
-        for struct in planet.slots:
-            if struct[STRUCT_IDX_TECHID] == Tech.OUTPOST1:
-                hasOutpost = True
-        if not hasOutpost:
-            # find something to replace
-            finished = False
-            for property in ("prodSci", "prodProd", "prodBio"):
-                for struct in planet.slots:
-                    tech = Rules.techs[struct[STRUCT_IDX_TECHID]]
-                    if getattr(tech, property) > 0:
-                        struct[STRUCT_IDX_TECHID] = Tech.OUTPOST1
-                        struct[STRUCT_IDX_HP] = tech.maxHP
-                        finished = True
-                        break
-                if finished:
-                    break
-            if not finished:
-                # replace last structure
-                struct = planet.slots[-1]
-                struct[STRUCT_IDX_TECHID] = Tech.OUTPOST1
-                struct[STRUCT_IDX_HP] = tech.maxHP
         # save game info
         self.generateGameInfo()
         return player.oid, None
@@ -216,18 +279,18 @@ class GameMngr(IGEGameMngr):
     def takeOverPirate(self, sid, playerID, vipPassword):
         # limit this now only to the qark
         session = self.clientMngr.getSession(sid)
+        player = self.db[playerID]
         if vipPassword != self.config.vip.password:
-            raise SecurityException('You cannot issue this command.')
-        #
-        log.debug('Creating pirate in session', sid)
-        session = self.clientMngr.getSession(sid)
-        log.debug('Creating pirate with CID', session.cid)
+            raise SecurityException('Wrong VIP password.')
+        if self.accountGalaxies(session.login).intersection(player.galaxies):
+            raise GameException('Account already owns player in this galaxy.')
+
+        log.debug('Creating pirate in session {0} with CID {1}'.format(sid, session.cid))
         universe = self.db[OID_UNIVERSE]
         log.debug('Creating transaction')
         tran = Transaction(self, session.cid, session)
         # create player
         #log.debug("Morphing Pirate player", playerID)
-        player = self.db[playerID]
         log.debug("Player type", player.type)
         if player.type != T_AIPIRPLAYER:
             raise GameException('No such starting position.')
@@ -260,93 +323,40 @@ class GameMngr(IGEGameMngr):
         return player.oid, None
 
     def _createNewPlayer(self, session, galaxyID):
-        log.debug('Creating new player with CID', session.cid)
         universe = self.db[OID_UNIVERSE]
         galaxy = self.db[galaxyID]
         if not galaxy.startingPos:
             raise GameException('No such starting position.')
-        # create player
+        if galaxyID in self.accountGalaxies(session.login):
+            raise GameException('Account already owns player in this galaxy.')
+
+        log.debug('Creating new player with CID', session.cid)
         player = self.cmdPool[T_PLAYER].new(T_PLAYER)
         player.name = session.nick
         player.login = session.login
         player.timeEnabled = galaxy.timeEnabled
         player.galaxies.append(galaxy.oid)
-        # select starting point randomly
         log.debug('Selecting starting point')
-        while 1:
-            planetID = random.choice(galaxy.startingPos)
-            galaxy.startingPos.remove(planetID)
-            log.debug('Starting point', planetID)
-            log.debug('Starting point - owner', self.db[planetID].owner)
-            if self.db[planetID].owner == OID_NONE:
-                break
-            if not galaxy.startingPos:
-                raise GameException('No free starting point in the galaxy.')
+        planetID = IGalaxy.IGalaxy.getFreeStartingPosition(self.db, galaxy)
+
         player.planets.append(planetID)
-        # TODO tweak more player's attrs
         log.debug('Creating transaction')
         tran = Transaction(self, session.cid, session)
-        # Grant starting technologies (at medium improvement)
-        for techID in Rules.techs.keys():
-            if Rules.techs[techID].isStarting:
-                player.techs[techID] = (Rules.techBaseImprovement + Rules.techMaxImprovement) / 2
-            # grant all techs (TODO remove)
-            # player.techs[techID] = Rules.techMaxImprovement
+        IPlayer.IPlayer.setStartingTechnologies(player)
         # register player
-        log.debug('Registering player')
+        log.debug('Registering player for login {0}'.format(session.login))
         playerID = self.registerPlayer(session.login, player)
         log.debug('Player ID =', playerID)
         # singleplayer galaxy needs owner recorded so player can log back there
         # also provides access rights to control it
         if galaxy.scenario == SCENARIO_SINGLE:
             galaxy.owner = playerID
-        # TODO tweak more planet's attrs
         planet = self.db[planetID]
-        planet.slots = [
-            Utils.newStructure(tran, Tech.PWRPLANTNUK1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-            Utils.newStructure(tran, Tech.FARM1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-            Utils.newStructure(tran, Tech.FARM1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-            Utils.newStructure(tran, Tech.FARM1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-            Utils.newStructure(tran, Tech.ANCFACTORY, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-            Utils.newStructure(tran, Tech.ANCFACTORY, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-            Utils.newStructure(tran, Tech.ANCRESLAB, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-            Utils.newStructure(tran, Tech.REPAIR1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-        ]
-        planet.storPop = Rules.startingPopulation
-        planet.storBio = Rules.startingBio
-        planet.storEn = Rules.startingEn
-        planet.scannerPwr = Rules.startingScannerPwr
         planet.owner = playerID
-        planet.morale = Rules.maxMorale
-        # fleet
-        # add basic ships designs
-        tempTechs = [Tech.FTLENG1, Tech.SCOCKPIT1, Tech.SCANNERMOD1, Tech.CANNON1,
-            Tech.CONBOMB1, Tech.SMALLHULL1, Tech.MEDIUMHULL2, Tech.COLONYMOD2]
-        for techID in tempTechs:
-            player.techs[techID] = 1
-        dummy, scoutID = self.cmdPool[T_PLAYER].addShipDesign(tran, player, "Scout", Tech.SMALLHULL1,
-            {Tech.FTLENG1:3, Tech.SCOCKPIT1:1, Tech.SCANNERMOD1:1})
-        dummy, fighterID = self.cmdPool[T_PLAYER].addShipDesign(tran, player, "Fighter", Tech.SMALLHULL1,
-            {Tech.FTLENG1:3, Tech.SCOCKPIT1:1, Tech.CANNON1:1})
-        dummy, bomberID = self.cmdPool[T_PLAYER].addShipDesign(tran, player, "Bomber", Tech.SMALLHULL1,
-            {Tech.FTLENG1:3, Tech.SCOCKPIT1:1, Tech.CONBOMB1:1})
-        dummy, colonyID = self.cmdPool[T_PLAYER].addShipDesign(tran, player, "Colony Ship", Tech.MEDIUMHULL2,
-            {Tech.FTLENG1:4, Tech.SCOCKPIT1:1, Tech.COLONYMOD2:1})
-        for techID in tempTechs:
-            del player.techs[techID]
-        # add small fleet
-        log.debug('Creating fleet')
-        system = self.db[planet.compOf]
-        fleet = self.cmdPool[T_FLEET].new(T_FLEET)
-        self.db.create(fleet)
-        log.debug('Creating fleet - created', fleet.oid)
-        self.cmdPool[T_FLEET].create(tran, fleet, system, playerID)
-        log.debug('Creating fleet - addShips')
-        self.cmdPool[T_FLEET].addNewShip(tran, fleet, scoutID)
-        self.cmdPool[T_FLEET].addNewShip(tran, fleet, scoutID)
-        self.cmdPool[T_FLEET].addNewShip(tran, fleet, fighterID)
-        self.cmdPool[T_FLEET].addNewShip(tran, fleet, fighterID)
-        self.cmdPool[T_FLEET].addNewShip(tran, fleet, colonyID)
+        system = tran.db[planet.compOf]
+        IPlayer.IPlayer.setStartingShipDesigns(player)
+        IPlayer.IPlayer.setStartingPlanet(tran, playerID, planet)
+        IPlayer.IPlayer.setStartingFleet(tran, playerID, system)
         # add player to universe
         log.debug('Adding player to universe')
         universe.players.append(playerID)
@@ -389,14 +399,6 @@ class GameMngr(IGEGameMngr):
         # TODO better validation
         return 1
 
-
-    # TODO delete
-    #def getAccRights(self, obj, cid):
-    #    # super class
-    #    objAcc = IGEGameMngr.getAccRights(self, obj, cid)
-    #    # relation based access rights
-    #    # TODO implement
-    #    return objAcc
 
     #
     # Game related methods

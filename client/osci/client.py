@@ -65,27 +65,10 @@ def initCmdProxy(keepAliveTime):
 ## Authentication
 
 def login(gameid, login, password):
-    initCmdProxy(options.heartbeat)
     cmdProxy.connect(login)
     if gdata.config.client.keepAlive != None:
         cmdProxy.keepAliveTime = int(gdata.config.client.keepAlive)
     if cmdProxy.login(gameid, login, password):
-        global serverVersion
-        try:
-            result = cmdProxy.getIntroInfo(OID_UNIVERSE)
-            if hasattr(result, "version"):
-                serverVersion = result.version
-            elif hasattr(result, "lastClientVersion"):
-                # support for legacy version reporting
-                serverVersion = dict(
-                    major = result.lastClientVersion[0],
-                    minor = result.lastClientVersion[1],
-                    revision = result.lastClientVersion[2],
-                    status = result.lastClientVersion[3],
-                )
-        except ige.NoAccountException:
-            callbackObj.createGameAccount()
-            return 2
         return 1
     return 0
 

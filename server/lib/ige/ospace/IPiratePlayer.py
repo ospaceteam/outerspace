@@ -33,54 +33,38 @@ class IPiratePlayer(IPlayer):
 
     def init(self, obj):
         IPlayer.init(self, obj)
+        obj.techLevel = 3
+        obj.race = "p"
         obj.pirateFame = 0
-
-    def XXXgetDiplomacyWith(self, tran, obj, playerID):
-        if obj.oid == playerID:
-            return REL_UNITY
-        player = tran.db.get(playerID, None)
-        if player.type == T_AIEDENPLAYER:
-            dipl = obj.diplomacyRels.get(playerID, None)
-            if not dipl:
-                # make default
-                dipl = IDataHolder()
-                dipl.type = T_DIPLREL
-                dipl.pacts = {
-                        PACT_ALLOW_CIVILIAN_SHIPS: [PACT_ACTIVE, PACT_ALLOW_CIVILIAN_SHIPS],
-                        PACT_ALLOW_MILITARY_SHIPS: [PACT_ACTIVE, PACT_ALLOW_MILITARY_SHIPS]
-                }
-                dipl.relation = REL_FRIENDLY
-                dipl.relChng = 0
-                dipl.lastContact = tran.db[OID_UNIVERSE].turn
-                dipl.contactType = CONTACT_NONE
-                dipl.stats = None
-                if playerID != obj.oid:
-                    obj.diplomacyRels[playerID] = dipl
-                else:
-                    log.debug("getDiplomacyWith myself", obj.oid)
-            return dipl
-        # this AI battles with overyone
-        # make default
-        dipl = IDataHolder()
-        dipl.type = T_DIPLREL
-        dipl.pacts = {}
-        dipl.relation = REL_ENEMY
-        dipl.relChng = 0
-        dipl.lastContact = tran.db[OID_UNIVERSE].turn
-        dipl.contactType = CONTACT_NONE
-        dipl.stats = None
-        return dipl
-
-    def XXXisPactActive(self, tran, obj, partnerID, pactID):
-        return 0
 
     def update(self, tran, obj):
         # call super method
         IPlayer.update(self, tran, obj)
         #
-        obj.techLevel = 99
-        obj.race = "p"
         # grant special technologies
+        # grant all TL1 ship techs except for colony module(s)
+        # convert enslavedPop
+        if hasattr(obj, "enslavedPop"):
+            obj.pirateFame = int(obj.enslavedPop * 0.0005)
+            log.debug(obj.oid, "New pirate fame is", obj.pirateFame, obj.enslavedPop)
+            del obj.enslavedPop
+
+    def setStartingPlanet(self, planet):
+        planet.plSlots = max(planet.plSlots, 2)
+        planet.plMaxSlots = max(planet.plMaxSlots, 2)
+        planet.plDiameter = max(planet.plDiameter, 2000)
+        planet.slots.append(Utils.newStructure(tran, Rules.Tech.PIRATEBASE, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
+        planet.slots.append(Utils.newStructure(tran, Rules.Tech.PIRATEDEN, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
+        planet.storPop = 6000
+
+    def setStartingTechnologies(self, obj):
+        for techID in Rules.techs:
+            tech = Rules.techs[techID]
+            if tech.level == 1 and (tech.isShipEquip or tech.isShipHull) and not tech.unpackStruct:
+                obj.techs[techID] = Rules.techMaxImprovement
+        obj.techs[Rules.Tech.EMCANNONTUR] = Rules.techMaxImprovement
+        obj.techs[Rules.Tech.SSROCKET2] = Rules.techMaxImprovement
+        obj.techs[Rules.Tech.TORPEDO] = Rules.techMaxImprovement
         obj.techs[Rules.Tech.PIRATEBASE] = Rules.techMaxImprovement
         obj.techs[Rules.Tech.PIRATEDEN] = Rules.techMaxImprovement
         obj.techs[Rules.Tech.PIRATESD] = Rules.techMaxImprovement
@@ -90,16 +74,9 @@ class IPiratePlayer(IPlayer):
         obj.techs[Rules.Tech.PIRSMCOLONYMOD] = Rules.techMaxImprovement
         obj.techs[Rules.Tech.PIRATEFTLENG] = Rules.techMaxImprovement
         obj.techs[Rules.Tech.PIRCOLONYMOD] = Rules.techMaxImprovement
-        # grant all TL1 ship techs except for colony module(s)
-        for techID in Rules.techs:
-            tech = Rules.techs[techID]
-            if tech.level == 1 and (tech.isShipEquip or tech.isShipHull) and not tech.unpackStruct:
-                obj.techs[techID] = Rules.techMaxImprovement
-        # convert enslavedPop
-        if hasattr(obj, "enslavedPop"):
-            obj.pirateFame = int(obj.enslavedPop * 0.0005)
-            log.debug(obj.oid, "New pirate fame is", obj.pirateFame, obj.enslavedPop)
-            del obj.enslavedPop
+
+    def setStartingShipDesigns(self, obj):
+        pass
 
     def processDIPLPhase(self, tran, obj, data):
         self.forceAllyWithEDEN(tran,obj)

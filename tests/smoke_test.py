@@ -41,6 +41,7 @@ TEMP_DIR=tempfile.mkdtemp()
 SERVER_OUT=open(os.path.join(TEMP_DIR, 'server.out'), 'w')
 UTILS_OUT=open(os.path.join(TEMP_DIR, 'utils.out'), 'w')
 AI_OUT=open(os.path.join(TEMP_DIR, 'ai.out'), 'w')
+BUP_OUT=open(os.path.join(TEMP_DIR, 'bup.out'), 'w')
 
 TURN_SKIP=5
 TURN_AMOUNT=25
@@ -75,18 +76,17 @@ def startServer():
     while True:
         args=[os.path.join(CODE_ROOT, 'tools', 'osclient_cli.py'),
               '--ping',
-              '--configdir=' + TEMP_DIR,
-              'admin']
-        with open(os.devnull, 'w') as DEVNULL:
-            if subprocess.call(args, stdout=DEVNULL,
-                                     stderr=subprocess.STDOUT) == 0:
-                break
+              '--configdir=' + TEMP_DIR]
+        if subprocess.call(args, stdout=BUP_OUT,
+                                 stderr=subprocess.STDOUT) == 0:
+            break
         try:
             with open(os.path.join(TEMP_DIR, 'server.pid'), 'r') as pid_file:
                 pid=int(pid_file.read())
                 os.kill(pid, 0)
                 if time.time() - start_time > 60:
                     log.error('Server takes too long to initialize')
+                    killServer()
                     sys.exit(1)
                 log.debug('Waiting for server to initialize')
                 time.sleep(5)
@@ -99,8 +99,7 @@ def stopServer():
     log.info('Stopping server')
     args=[os.path.join(CODE_ROOT, 'tools', 'osclient_cli.py'),
           '--shutdown',
-          '--configdir=' + TEMP_DIR,
-          'admin']
+          '--configdir=' + TEMP_DIR]
     if subprocess.call(args, stdout=UTILS_OUT, stderr=subprocess.STDOUT) != 0:
         log.error('Server failed to stop')
         sys.exit(1)
@@ -117,8 +116,7 @@ def stopServer():
 def startServerTime():
     args=[os.path.join(CODE_ROOT, 'tools', 'osclient_cli.py'),
           '--starttime',
-          '--configdir=' + TEMP_DIR,
-          'admin']
+          '--configdir=' + TEMP_DIR]
     if subprocess.call(args, stdout=UTILS_OUT, stderr=subprocess.STDOUT) != 0:
         log.error('Time failed to start')
         sys.exit(1)
@@ -127,15 +125,14 @@ def startServerTime():
 def doTurns(amount=TURN_AMOUNT, skip=TURN_SKIP):
     args_osclient=[os.path.join(CODE_ROOT, 'tools', 'osclient_cli.py'),
           '--turns={0}'.format(skip),
-          '--configdir=' + TEMP_DIR,
-          'admin']
+          '--configdir=' + TEMP_DIR]
     args_ai=[os.path.join(CODE_ROOT, 'outerspace.py'),
           'ai-pool',
           '--configdir=' + TEMP_DIR,
           '--procs=1',
           '--local']
     for turn in range(0, amount, skip):
-        subprocess.call(args_ai, stdout=UTILS_OUT,
+        subprocess.call(args_ai, stdout=AI_OUT,
                                  stderr=subprocess.STDOUT)
         subprocess.call(args_osclient, stdout=UTILS_OUT,
                                        stderr=subprocess.STDOUT)
@@ -188,7 +185,7 @@ def checkPlayerProgress():
             if buildings < 10:
                 problem = True
     if problem:
-        log.warning('There is an issue with player progress')
+        log.error('There is an issue with player progress')
         log.debug('Building counts: {0}'.format(buildings_counts))
     else:
         log.info('Player progress ok')

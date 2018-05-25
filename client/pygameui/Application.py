@@ -328,6 +328,11 @@ class Application:
     def needsUpdate(self):
         return len(self.redrawWidgets) > 0
 
+    def exitLocal(self):
+        evt = pygame.event.Event(USEREVENT)
+        evt.action = "localExit"
+        pygame.event.post(evt)
+
     def exit(self):
         pygame.event.post(pygame.event.Event(QUIT))
 

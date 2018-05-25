@@ -19,6 +19,7 @@
 #
 
 import copy
+import random
 
 from ige.IObject import IObject
 from ige import *
@@ -30,6 +31,8 @@ from ige.IDataHolder import IDataHolder
 import os.path, time, Utils, Rules
 from ige import log
 from Rules import Tech
+import IPlayer, IAIPlayer, IAIRenegadePlayer, IAIMutantPlayer, IAIPiratePlayer
+import IAIEDENPlayer, IPiratePlayer
 
 import Scanner
 
@@ -109,6 +112,19 @@ class IGalaxy(IObject):
         return obj.systems
 
     getReferences.public = 0
+
+    @staticmethod
+    def getFreeStartingPosition(db, obj):
+        while 1:
+            planetID = random.choice(obj.startingPos)
+            obj.startingPos.remove(planetID)
+            log.debug('Starting point', planetID)
+            log.debug('Starting point - owner', db[planetID].owner)
+            if db[planetID].owner == OID_NONE:
+                return planetID
+            if not obj.startingPos:
+                raise GameException('No free starting point in the galaxy.')
+
 
     def processINITPhase(self, tran, obj, data):
         # compute emr level
@@ -356,12 +372,9 @@ class IGalaxy(IObject):
             # create new player
             log.debug("Creating new Rebel player", T_AIPLAYER)
             player = self.new(T_AIPLAYER)
-            self.cmd(player).register(tran, player)
+            self.cmd(player).register(tran, player, obj.oid)
             player.galaxies.append(obj.oid)
             playerID = player.oid
-            # finish AI list
-            aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
-            aiList.setGalaxy(player.login, obj.name)
             # TODO tweak more planet's attrs
             planet = tran.db[positionID]
             # Grant starting technologies (at medium improvement)
@@ -550,51 +563,20 @@ class IGalaxy(IObject):
                 # create new player
                 log.debug("Creating new player", playerType)
                 player = self.new(playerType)
-                self.cmd(player).register(tran, player)
-                aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
-                aiList.setGalaxy(player.login, obj.name)
+                self.cmd(player).register(tran, player, obj.oid)
                 player.galaxies.append(obj.oid)
             # now we have a player, let's iterate over vacant planets and set them up
             for planetID in vacant_planets[playerType]:
                 planet = tran.db[planetID]
-                # renegades
+                self.cmd(planet).changeOwner(tran, planet, player.oid, 1)
                 if playerType == T_AIRENPLAYER:
-                    # populate planet
-                    log.debug("Adding renegades", planetID)
-                    self.cmd(planet).changeOwner(tran, planet, player.oid, 1)
-                    planet.slots.append(Utils.newStructure(tran, Rules.Tech.RENEGADEBASE, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
-                    planet.storPop = 3000
-                # pirates
+                    IAIRenegadePlayer.IAIRenegadePlayer.setStartingPlanet(tran, planet)
                 elif playerType == T_AIPIRPLAYER:
-                    # populate planet
-                    log.debug("Adding pirates", planetID)
-                    self.cmd(planet).changeOwner(tran, planet, player.oid, 1)
-                    planet.slots.append(Utils.newStructure(tran, Rules.Tech.PIRATEBASE, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
-                    planet.storPop = 5000
-                    if planet.plSlots > 1:
-                        planet.slots.append(Utils.newStructure(tran, Rules.Tech.PIRATEDEN, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
-                        planet.storPop += 1000
-                # EDEN
+                    IAIPiratePlayer.IAIPiratePlayer.setStartingPlanet(tran, planet)
                 elif playerType == T_AIEDENPLAYER:
-                    # populate planet
-                    log.debug("Adding EDEN", planetID)
-                    self.cmd(planet).changeOwner(tran, planet, player.oid, 1)
-                    if planet.plSlots < 2:
-                        planet.plSlots = 2
-                        if planet.plMaxSlots < 2:
-                            planet.plMaxSlots = 2
-                        if planet.plDiameter < 2000:
-                            planet.plDiameter = 2000
-                    planet.slots.append(Utils.newStructure(tran, Rules.Tech.EDENBASE, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
-                    planet.slots.append(Utils.newStructure(tran, Rules.Tech.EDENSTATION, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
-                    planet.storPop = 3000
-                # mutants
+                    IAIEDENPlayer.IAIEDENPlayer.setStartingPlanet(tran, planet)
                 elif playerType == T_AIMUTPLAYER:
-                    # populate planet
-                    log.debug("Adding mutants", planetID)
-                    self.cmd(planet).changeOwner(tran, planet, player.oid, 1)
-                    planet.slots.append(Utils.newStructure(tran, Rules.Tech.MUTANTBASE, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
-                    planet.storPop = 3000
+                    IAIMutantPlayer.IAIMutantPlayer.setStartingPlanet(tran, planet)
 
     setupEnvironment.public = 1
     setupEnvironment.accLevel = AL_ADMIN

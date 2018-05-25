@@ -22,167 +22,316 @@ import math
 import os
 import random
 import sys
+import tempfile
 
 import data
 
-from ige.ospace.Const import SCENARIO_SINGLE, SCENARIO_OUTERSPACE
+import ige.ospace.Const as Const
 
-# IDs of galaxy types
-GALAXY_CIRCLE1P = "Circle1P"
-GALAXY_CIRCLE9P = "Circle9P"
-GALAXY_CIRCLE42P = "Circle42P"
-GALAXY_CIRCLE65P = "Circle65P"
-
-class GalaxyStats:
-
-    def __init__(self, galaxyType=None):
-        self.activeGalaxy = GALAXY_CIRCLE42P
-        self.galaxies = {
-                    GALAXY_CIRCLE1P : self.circle1P,
-                    GALAXY_CIRCLE9P : self.circle9P,
-                    GALAXY_CIRCLE42P : self.circle42P,
-                    GALAXY_CIRCLE65P : self.circle65P
+class GalaxyTemplate():
+    def __init__(self):
+        self.galaxyType = self.__class__.__name__
+        self.galaxyDescription = ""
+        self.scenario = Const.SCENARIO_NONE
+        self.minPlanets = 0
+        self.maxPlanets = 0
+        self.radius = 0.0
+        self.startR = (0.0, 999.0)
+        self.players = 0
+        self.playerGroup = 0
+        self.groupDist = 0
+        self.minR = 0
+        # format {minRadius: density, nextCircleRadius: differentDensity}
+        self.density = {1: 1, 2: 2}
+        self.minSystemLoneliness = 1.5
+        self.maxSystemLoneliness = 5
+        self.resources = {
+            # format resourceID : [(minDist, maxDist, number of resources)]
+            Const.SR_TL1A : [(0, 0, 0)]
         }
-        self.makeStats(galaxyType)
-
-    def circle1P(self):
-        self.galaxyMinPlanets = 100
-        self.galaxyMaxPlanets = 150
-        self.galaxyCenter = (50.0, 50.0)
-        self.galaxyRadius = 15.0
-        self.galaxyStartR = (11.0, 13.0)
-        self.galaxyPlayers = 1
-        self.galaxyPlayerGroup = 1
-        self.galaxyGroupDist = 4
-        self.galaxyMinR = 1
-        self.galaxyDensity = {1: 3, 5: 4, 10: 5}
-        self.galaxyResources = {
-            # format resourceID : (minDist, maxDist, number of resources)
-            1 : (13, 15, 2), # TL 1 + 2
-            2 : (13, 15, 2), # TL 1 + 2
-        }
-        self.galaxyDiseases = {
+        self.diseases = {
             # format diseaseID : (minDist, maxDist, number of diseases)
-            3 : (2, 4, 3), # TL 3 + 4
+            Const.DISEASE_MUTANT : [(0, 0, 0)]
         }
 
-    def circle9P(self):
-        self.galaxyMinPlanets = 500
-        self.galaxyMaxPlanets = 600
-        self.galaxyCenter = (50.0, 50.0)
-        self.galaxyRadius = 26.0
-        self.galaxyStartR = (15.0, 18.0)
-        self.galaxyPlayers = 9
-        self.galaxyPlayerGroup = 3
-        self.galaxyGroupDist = 4
-        self.galaxyMinR = 5
-        self.galaxyDensity = {5: 3.5, 10: 4, 20: 4}
-        self.galaxyResources = {
-            # format resourceID : (minDist, maxDist, number of resources)
-            1 : (20, 25, 6), # TL 1 + 2
-            2 : (20, 25, 6), # TL 1 + 2
+    @property
+    def center(self):
+        return (self.radius, self.radius)
+
+class Circle1SP(GalaxyTemplate):
+    def __init__(self):
+        GalaxyTemplate.__init__(self)
+
+        self.galaxyDescription = "Single player galaxy to enjoy freebuilding. Mutant is the only enemy. Endless game."
+        self.scenario = Const.SCENARIO_SINGLE
+        self.minPlanets = 100
+        self.maxPlanets = 150
+        self.radius = 15.0
+        self.startR = (11.0, 13.0)
+        self.players = 1
+        self.playerGroup = 1
+        self.groupDist = 4
+        self.minR = 1
+        # format {minRadius: density, nextCircleRadius: differentDensity}
+        self.density = {1: 3, 5: 4, 10: 5}
+        self.resources = {
+            # format resourceID : [(minDist, maxDist, number of resources)]
+            Const.SR_TL1A : [(13, 15, 2)],
+            Const.SR_TL1B : [(13, 15, 2)]
         }
-        self.galaxyDiseases = {
+        self.diseases = {
             # format diseaseID : (minDist, maxDist, number of diseases)
-            1 : (13, 25, 6), # TL 1 + 2
-            3 : (5, 9, 6), # TL 3 + 4
+            Const.DISEASE_MUTANT : [(2, 4, 3)]
         }
 
-    def circle42P(self):
-        self.galaxyMinPlanets = 0
-        self.galaxyMaxPlanets = 99999
-        self.galaxyCenter = (50.0, 50.0)
-        self.galaxyRadius = 50.0
-        self.galaxyStartR = (32.0, 36.0)
-        #galaxyPlayers = 30
-        #galaxyPlayerGroup = 2
-        self.galaxyPlayers = 42
-        self.galaxyPlayerGroup = 3
-        self.galaxyGroupDist = 4.0
-        self.galaxyMinR = 7.5
-        self.galaxyDensity = {7.5: 3, 10: 4, 20: 5, 30: 5.5, 40: 6, 50: 6}
-        self.galaxyResources = {
-            # format resourceID : (minDist, maxDist, number of resources)
-            1 : (20, 45, 15), # TL 1 + 2
-            2 : (20, 45, 15), # TL 1 + 2
-            3 : (8, 15, 7), # TL 3 + 4
-            4 : (8, 15, 7), # TL 3 + 4
-            5 : (8, 15, 7), # TL 3 + 4
-            6 : (7.5, 9, 1), # TL 5
-            7 : (7.5, 9, 1), # TL 5
-            8 : (7.5, 9, 1), # TL 5
+class Circle9P(GalaxyTemplate):
+    def __init__(self):
+        GalaxyTemplate.__init__(self)
+
+        self.galaxyDescription = "Smaller galaxy for 9 players, without pirate or EDEN. Recommended for new players or those who seek more casual gameplay."
+        self.scenario = Const.SCENARIO_OUTERSPACE
+        self.minPlanets = 500
+        self.maxPlanets = 600
+        self.radius = 26.0
+        self.startR = (15.0, 18.0)
+        self.players = 9
+        self.playerGroup = 3
+        self.groupDist = 4
+        self.minR = 5
+        # format {minRadius: density, nextCircleRadius: differentDensity}
+        self.density = {5: 3.5, 10: 4, 20: 4}
+        self.resources = {
+            # format resourceID : [(minDist, maxDist, number of resources)]
+            Const.SR_TL1A : [(20, 25, 6)],
+            Const.SR_TL1B : [(20, 25, 6)]
         }
-        self.galaxyDiseases = {
+        self.diseases = {
             # format diseaseID : (minDist, maxDist, number of diseases)
-            1 : (20, 45, 8), # TL 1 + 2
-            2 : (20, 45, 8), # TL 1 + 2
-            3 : (5, 15, 4), # TL 3 + 4
-            4 : (5, 15, 4), # TL 3 + 4
-            5 : (5, 15, 4), # TL 3 + 4
-            6 : (0, 5, 1), # TL 5
-            7 : (0, 5, 1), # TL 5
-            8 : (0, 5, 1), # TL 5
+            Const.DISEASE_MUTANT : [(13, 25, 6), (5, 9, 6)]
         }
 
-    def circle65P(self):
-        self.galaxyMinPlanets = 0
-        self.galaxyMaxPlanets = 99999
-        self.galaxyCenter = (75.0, 75.0)
-        self.galaxyRadius = 75.0
-        self.galaxyStartR = (45.0, 52.5)
-        self.galaxyPlayers = 65
-        self.galaxyPlayerGroup = 5
-        #galaxyPlayers = 48
-        #galaxyPlayerGroup = 4
-        self.galaxyGroupDist = 8
-        self.galaxyMinR = 7.5
-        self.galaxyDensity = {7.5: 3, 10: 4, 20: 5, 30: 5.5, 60: 6, 75: 6}
-        self.galaxyResources = {
-            # format resourceID : (minDist, maxDist, number of resources)
-            1 : (20, 67.5, 45), # TL 1 + 2
-            2 : (20, 67.5, 45), # TL 1 + 2
-            3 : (10, 20, 10), # TL 3 + 4
-            4 : (10, 20, 10), # TL 3 + 4
-            5 : (10, 20, 10), # TL 3 + 4
-            6 : (7.5, 9, 1), # TL 5
-            7 : (7.5, 9, 1), # TL 5
-            8 : (7.5, 9, 1), # TL 5
+class Circle42P(GalaxyTemplate):
+    def __init__(self):
+        GalaxyTemplate.__init__(self)
+
+        self.galaxyDescription = "Original size galaxy for 42 players, place of epic battles, recommended only to the experienced players. May become time consuming."
+        self.scenario = Const.SCENARIO_OUTERSPACE
+        self.minPlanets = 1000
+        self.maxPlanets = 99999
+        self.radius = 50.0
+        self.startR = (32.0, 36.0)
+        self.players = 42
+        self.playerGroup = 3
+        self.groupDist = 4
+        self.minR = 7.5
+        # format {minRadius: density, nextCircleRadius: differentDensity}
+        self.density = {7.5: 3, 10: 4, 20: 5, 30: 5.5, 40: 6, 50: 6}
+        self.resources = {
+            # format resourceID : [(minDist, maxDist, number of resources)]
+            Const.SR_TL1A : [(20, 45, 15)],
+            Const.SR_TL1B : [(20, 45, 15)],
+            Const.SR_TL3A : [(8, 15, 7)],
+            Const.SR_TL3B : [(8, 15, 7)],
+            Const.SR_TL3C : [(8, 15, 7)],
+            Const.SR_TL5A : [(7.5, 9, 1)],
+            Const.SR_TL5B : [(7.5, 9, 1)],
+            Const.SR_TL5C : [(7.5, 9, 1)]
         }
-        self.galaxyDiseases = {
+        self.diseases = {
             # format diseaseID : (minDist, maxDist, number of diseases)
-            1 : (20, 67.5, 16), # TL 1 + 2
-            2 : (20, 67.5, 16), # TL 1 + 2
-            3 : (5, 15, 4), # TL 3 + 4
-            4 : (5, 15, 4), # TL 3 + 4
-            5 : (5, 15, 4), # TL 3 + 4
-            6 : (0, 5, 1), # TL 5
-            7 : (0, 5, 1), # TL 5
-            8 : (0, 5, 1), # TL 5
+            Const.DISEASE_MUTANT : [(20, 45, 16), (5, 15, 12), (0, 5, 3)]
         }
 
-    def makeStats(self, galaxyType=None):
-        if galaxyType in self.galaxies.keys():
-            self.activeGalaxy = self.galaxies[galaxyType]
-        self.activeGalaxy()
+class Circle65P(GalaxyTemplate):
+    def __init__(self):
+        GalaxyTemplate.__init__(self)
 
+        self.galaxyDescription = "Majestic galaxy of unmatched size. Be prepared to work through diplomacy, as managing huge empire a conqueror needs would take all your time. Only for veteran players of many galaxies."
+        self.scenario = Const.SCENARIO_OUTERSPACE
+        self.minPlanets = 2000
+        self.maxPlanets = 99999
+        self.radius = 75.0
+        self.startR = (45.0, 52.5)
+        self.players = 65
+        self.playerGroup = 5
+        self.groupDist = 8
+        self.minR = 7.5
+        # format {minRadius: density, nextCircleRadius: differentDensity}
+        self.density = {7.5: 3, 10: 4, 20: 5, 30: 5.5, 60: 6, 75: 6}
+        self.resources = {
+            # format resourceID : [(minDist, maxDist, number of resources)]
+            Const.SR_TL1A : [(20, 67.5, 45)],
+            Const.SR_TL1B : [(20, 67.5, 45)],
+            Const.SR_TL3A : [(10, 20, 10)],
+            Const.SR_TL3B : [(10, 20, 10)],
+            Const.SR_TL3C : [(10, 20, 10)],
+            Const.SR_TL5A : [(7.5, 9, 2)],
+            Const.SR_TL5B : [(7.5, 9, 2)],
+            Const.SR_TL5C : [(7.5, 9, 2)]
+        }
+        self.diseases = {
+            # format diseaseID : (minDist, maxDist, number of diseases)
+            Const.DISEASE_MUTANT : [(20, 67.5, 32), (5, 15, 18), (0, 5, 6)]
+        }
 
 class GalaxyGenerator:
     def __init__(self):
-        self.galaxyTypes = {GALAXY_CIRCLE1P:(1, 'Single player galaxy to enjoy freebuilding. Mutant is the only enemy. Endless game.', 15.0),
-                            GALAXY_CIRCLE9P:(9, 'Smaller galaxy for 9 players, without pirate or EDEN. Recommended for new players or those who seek more casual gameplay.', 26.0),
-                            GALAXY_CIRCLE42P:(42, 'Original size galaxy for 42 players, place of epic battles, recommended only to the experienced players. May be quite time consuming.', 50.0)}
+        self.templates = {}
+        # TODO: I guess we can autodetect this somehow, in a future
+        for templateClass in [Circle1SP, Circle9P, Circle42P, Circle65P]:
+            templateInstance = templateClass()
+            self.templates[templateInstance.galaxyType] = templateInstance
 
-    def generateGalaxy(self, galaxyType, fileHandle):
-        if not galaxyType in self.galaxyTypes.keys():
+    def generateGalaxy(self, galaxyType):
+        if not galaxyType in self.templates:
             return False
-        else:
-            GenerateGalaxy(galaxyType, fileHandle)
-            return True
+
+        while True:
+            try:
+                galaxy = generateGalaxy2(self.templates[galaxyType])
+                break
+            except IndexError:
+                # this happens, if generator fails to place special
+                # planet - easier than handling it inside is to roll
+                # dice again
+                continue
+        self.shiftSystems(galaxy)
+
+        return self.saveGalaxy(galaxy)
 
     def getGalaxyTypes(self):
-        return self.galaxyTypes
+        return self.templates.keys()
 
+    def getGalaxyTemplate(self, galaxyType):
+        return self.templates[galaxyType]
 
+    def saveGalaxy(self, galaxy):
+        """ saving galaxy - instance of Galaxy object into xml-formated file
+
+            returns file name
+        """
+        # names
+        loadSystemNames()
+        fileHandle, galaxyFileName = tempfile.mkstemp(text = True)
+        fh = os.fdopen(fileHandle, "w")
+        # save
+        print >>fh, '<?xml version="1.0" encoding="UTF-8"?>'
+        print >>fh, '<universe>'
+        print >>fh, '\t<galaxy galaxyType="%s" x="%.2f" y="%.2f">' % (
+            galaxy.galaxyType, galaxy.centerX, galaxy.centerY
+        )
+        print >>fh, '\t\t<properties radius="%.2f" scenario="%s"/>' % (galaxy.radius, galaxy.scenario)
+        for system in galaxy.systems:
+            self.saveSystem(fh, system)
+        print >>fh, '\t</galaxy>'
+        print >>fh, '</universe>'
+        fh.close()
+        return galaxyFileName
+
+    def saveSystem(self, fh, system):
+        print >>fh, '\t\t<system x="%.2f" y="%.2f">' % (system.x, system.y)
+        # name = 'SCN-%04d%04d' % (system.x * 10, system.y * 10)
+        global systemNames
+        name = random.choice(systemNames)
+        systemNames.remove(name)
+        print >>fh, '\t\t\t<properties starClass="%s%d" name="%s"/>' % \
+            (system.starClass, system.starSubclass, name)
+        for planet in system.planets:
+            self.savePlanet(fh, planet)
+        print >>fh, '\t\t</system>'
+
+    def savePlanet(self, fh, planet):
+        print >>fh, '\t\t\t<planet>'
+        print >>fh, '\t\t\t\t<properties plType="%s" plMin="%d" plBio="%d" plEn="%d" plDiameter="%d" plSlots="%d" plMaxSlots="%d" plStratRes="%d" plDisease="%d" plStarting="%d"/>' % \
+            (planet.type, planet.minerals, planet.environ, planet.energy, planet.diameter, planet.slots, planet.maxSlots, planet.strategicRes, planet.disease, planet.starting)
+        if planet.starting:
+            print >>fh, '\t\t\t\t<startingpoint/>'
+        print >>fh, '\t\t\t</planet>'
+
+    def shiftSystems(self, galaxy):
+        """ makes sure no two systems are closer than _min and there are
+            no systems further than _max parsecs from their closest three neighbours).
+
+            Quite naive implementation."""
+        MAX_STEP = 25
+        DELTA = 0.25
+        galaxyTemplate = self.templates[galaxy.galaxyType]
+        _min = galaxyTemplate.minSystemLoneliness
+        _max = galaxyTemplate.maxSystemLoneliness
+        for i in xrange(MAX_STEP):
+            newMin, newMax = self._shiftSystems(galaxy, _min, _max, DELTA)
+            if newMin >= _min and newMax <= _max:
+                break
+
+    def _shiftSystems(self, galaxy, _min, _max, delta):
+        print 'Shifting...'
+        _min = _min * _min
+        _max = _max * _max
+        minMinDist = 1000000
+        maxMinDist = 0
+        for system1 in galaxy.systems:
+            if not system1._moveable:
+                continue
+            minDist = [1000000, 100000, 100000]
+            closestSystems = [None, None, None]
+            for system2 in galaxy.systems:
+                if system1 == system2 or not system2._moveable:
+                    continue
+                dist = (system1.x - system2.x) ** 2 + (system1.y - system2.y) ** 2
+                if dist < minDist[0]:
+                    minDist.pop()
+                    minDist.insert(0, dist)
+                    closestSystems.pop()
+                    closestSystems.insert(0, system2)
+                elif dist < minDist[1]:
+                    minDist.pop()
+                    minDist.insert(1, dist)
+                    closestSystems.pop()
+                    closestSystems.insert(1, system2)
+                elif dist < minDist[2]:
+                    minDist.pop()
+                    minDist.insert(2, dist)
+                    closestSystems.pop()
+                    closestSystems.insert(2, system2)
+            system1._closest = closestSystems
+            for closestSystem in closestSystems:
+                if not closestSystem:
+                    continue
+                # this has to be calculated again, even though we had it before in minDist
+                # because every move can alter others
+                dist = (system1.x - closestSystem.x) ** 2 + (system1.y - closestSystem.y) ** 2
+                if dist < _min and closestSystem:
+                    # move system away
+                    if system1.x > closestSystem.x:
+                        system1.x += random.uniform(0, delta)
+                        closestSystem.x -= random.uniform(0, delta)
+                    else:
+                        system1.x -= random.uniform(0, delta)
+                        closestSystem.x += random.uniform(0, delta)
+                    if system1.y > closestSystem.y:
+                        system1.y += random.uniform(0, delta)
+                        closestSystem.y -= random.uniform(0, delta)
+                    else:
+                        system1.y -= random.uniform(0, delta)
+                        closestSystem.y += random.uniform(0, delta)
+                elif dist > _max and closestSystem:
+                    # move systems closer
+                    if system1.x < closestSystem.x:
+                        system1.x += random.uniform(0, delta)
+                        closestSystem.x -= random.uniform(0, delta)
+                    else:
+                        system1.x -= random.uniform(0, delta)
+                        closestSystem.x += random.uniform(0, delta)
+                    if system1.y < closestSystem.y:
+                        system1.y += random.uniform(0, delta)
+                        closestSystem.y -= random.uniform(0, delta)
+                    else:
+                        system1.y -= random.uniform(0, delta)
+                        closestSystem.y += random.uniform(0, delta)
+                if dist < minMinDist: minMinDist = dist
+                if dist > maxMinDist: maxMinDist = dist
+        print 'Finished [min. dist = <%.2f; %.2f>]' % (math.sqrt(minMinDist), math.sqrt(maxMinDist))
+        return math.sqrt(minMinDist), math.sqrt(maxMinDist)
 
 class Galaxy:
 
@@ -222,41 +371,22 @@ class Planet:
         self.strategicRes = 0
         self.disease = 0
 
-def generateGalaxy(galaxy):
-    secX = 0
-    for sectors in sectorsSpec:
-        secY = 0
-        for sector in sectors:
-            minX = secX * sectorSize[0] + sectorsOffset[0]
-            maxX = minX + sectorSize[0]
-            minY = secY * sectorSize[1] + sectorsOffset[1]
-            maxY = minY + sectorSize[1]
-            for i in xrange(0, sector):
-                system = System()
-                galaxy.systems.append(system)
-                system.x = random.uniform(minX, maxX)
-                system.y = random.uniform(minY, maxY)
-                system.compOf = galaxy
-                generateSystem(system)
-            secY += 1
-        secX += 1
-
-def generateGalaxy2(galaxyType=None):
+def generateGalaxy2(galaxyTemplate):
     galaxy = Galaxy()
-    stats = GalaxyStats(galaxyType)
-    galaxy.centerX = stats.galaxyCenter[0]
-    galaxy.centerY = stats.galaxyCenter[1]
-    galaxy.radius = stats.galaxyRadius
-    galaxy.scenario = SCENARIO_SINGLE if stats.galaxyPlayers == 1 else SCENARIO_OUTERSPACE
-    r = stats.galaxyMinR + random.uniform(0, 0.5)
-    dkeys = stats.galaxyDensity.keys()
+    stats = galaxyTemplate
+    galaxy.galaxyType = stats.galaxyType
+    galaxy.centerX, galaxy.centerY = stats.center
+    galaxy.radius = stats.radius
+    galaxy.scenario = stats.scenario
+    r = stats.minR + random.uniform(0, 0.5)
+    dkeys = stats.density.keys()
     dkeys.sort()
     dkeys.reverse()
     prevR = 5
-    while r <= stats.galaxyRadius:
+    while r <= stats.radius:
         for key in dkeys:
             if key <= r:
-                density = stats.galaxyDensity[key]
+                density = stats.density[key]
                 break
         print r, density
         d = 2 * math.pi * r
@@ -296,22 +426,22 @@ def generateGalaxy2(galaxyType=None):
     system._moveable = 0
     galaxy.systems.append(system)
     # generate starting systems
-    if stats.galaxyPlayers:
-        r = (stats.galaxyStartR[0] + stats.galaxyStartR[1]) / 2
+    if stats.players:
+        r = (stats.startR[0] + stats.startR[1]) / 2
         d = 2 * math.pi * r
-        print "Player distance:", d / stats.galaxyPlayers
+        print "Player distance:", d / stats.players
         gaoff = random.uniform(0, math.pi * 2)
-        for i in range(0, stats.galaxyPlayers / stats.galaxyPlayerGroup):
-            print "Placing group:", i + 1, "of", stats.galaxyPlayers / stats.galaxyPlayerGroup
-            angle = gaoff + i * math.pi * 2 / (stats.galaxyPlayers / stats.galaxyPlayerGroup)
-            tr = random.uniform(stats.galaxyStartR[0], stats.galaxyStartR[1])
+        for i in range(0, stats.players / stats.playerGroup):
+            print "Placing group:", i + 1, "of", stats.players / stats.playerGroup
+            angle = gaoff + i * math.pi * 2 / (stats.players / stats.playerGroup)
+            tr = random.uniform(stats.startR[0], stats.startR[1])
             gx = math.cos(angle) * tr + galaxy.centerX
             gy = math.sin(angle) * tr + galaxy.centerY
             aoff = random.uniform(0, math.pi * 2)
-            for j in range(0, stats.galaxyPlayerGroup):
-                angle = aoff + j * math.pi * 2 / stats.galaxyPlayerGroup
-                x = math.cos(angle) * stats.galaxyGroupDist + gx
-                y = math.sin(angle) * stats.galaxyGroupDist + gy
+            for j in range(0, stats.playerGroup):
+                angle = aoff + j * math.pi * 2 / stats.playerGroup
+                x = math.cos(angle) * stats.groupDist + gx
+                y = math.sin(angle) * stats.groupDist + gy
                 while 1:
                     system = System()
                     system.x = x
@@ -338,12 +468,12 @@ def generateGalaxy2(galaxyType=None):
                         break
                 galaxy.systems.append(system)
     # strategic resources
-    keys = stats.galaxyResources.keys()
+    keys = stats.resources.keys()
     keys.sort()
     keys.reverse()
     for key in keys:
-        print "Placing resource", key
-        minR, maxR, count = stats.galaxyResources[key]
+      print "Placing resource", key
+      for minR, maxR, count in stats.resources[key]:
         aoff = random.uniform(0, math.pi * 2)
         for i in range(0, count):
             angle = aoff + i * math.pi * 2 / count
@@ -386,12 +516,12 @@ def generateGalaxy2(galaxyType=None):
             system.hasSR = 1
             print "    Planet", planet.type
     # diseases
-    keys = stats.galaxyDiseases.keys()
+    keys = stats.diseases.keys()
     keys.sort()
     keys.reverse()
     for key in keys:
-        print "Placing disease", key
-        minR, maxR, count = stats.galaxyDiseases[key]
+      print "Placing disease", key
+      for minR, maxR, count in stats.diseases[key]:
         aoff = random.uniform(0, math.pi * 2)
         for i in range(0, count):
             angle = aoff + i * math.pi * 2 / count
@@ -430,9 +560,9 @@ def generateGalaxy2(galaxyType=None):
     noOfPlanets = 0
     for system in galaxy.systems:
         noOfPlanets += len(system.planets)
-    if noOfPlanets < stats.galaxyMinPlanets or noOfPlanets > stats.galaxyMaxPlanets:
+    if noOfPlanets < stats.minPlanets or noOfPlanets > stats.maxPlanets:
         print 'There was {0} planets.\nStarting new generation...'.format(noOfPlanets)
-        return generateGalaxy2(galaxyType)
+        return generateGalaxy2(galaxyTemplate)
     else:
         return galaxy
 
@@ -616,73 +746,6 @@ def dice(num, range, offset):
         result += random.randrange(1, range + 1)
     return result
 
-def shiftSystems(galaxy, min, max, delta):
-    print 'Shifting...'
-    min = min * min
-    max = max * max
-    minMinDist = 1000000
-    maxMinDist = 0
-    for system1 in galaxy.systems:
-        if not system1._moveable:
-            continue
-        minDist = [1000000, 100000, 100000]
-        closestSystems = [None, None, None]
-        for system2 in galaxy.systems:
-            if system1 == system2 or not system2._moveable:
-                continue
-            dist = (system1.x - system2.x) ** 2 + (system1.y - system2.y) ** 2
-            if dist < minDist[0]:
-                minDist.pop()
-                minDist.insert(0, dist)
-                closestSystems.pop()
-                closestSystems.insert(0, system2)
-            elif dist < minDist[1]:
-                minDist.pop()
-                minDist.insert(1, dist)
-                closestSystems.pop()
-                closestSystems.insert(1, system2)
-            elif dist < minDist[2]:
-                minDist.pop()
-                minDist.insert(2, dist)
-                closestSystems.pop()
-                closestSystems.insert(2, system2)
-        system1._closest = closestSystems
-        for closestSystem in closestSystems:
-            if not closestSystem:
-                continue
-            dist = (system1.x - closestSystem.x) ** 2 + (system1.y - closestSystem.y) ** 2
-            if dist < min and closestSystem:
-                # move system away
-                if system1.x > closestSystem.x:
-                    system1.x += random.uniform(0, delta)
-                    closestSystem.x -= random.uniform(0, delta)
-                else:
-                    system1.x -= random.uniform(0, delta)
-                    closestSystem.x += random.uniform(0, delta)
-                if system1.y > closestSystem.y:
-                    system1.y += random.uniform(0, delta)
-                    closestSystem.y -= random.uniform(0, delta)
-                else:
-                    system1.y -= random.uniform(0, delta)
-                    closestSystem.y += random.uniform(0, delta)
-            elif dist > max and closestSystem:
-                # move systems closer
-                if system1.x < closestSystem.x:
-                    system1.x += random.uniform(0, delta)
-                    closestSystem.x -= random.uniform(0, delta)
-                else:
-                    system1.x -= random.uniform(0, delta)
-                    closestSystem.x += random.uniform(0, delta)
-                if system1.y < closestSystem.y:
-                    system1.y += random.uniform(0, delta)
-                    closestSystem.y -= random.uniform(0, delta)
-                else:
-                    system1.y -= random.uniform(0, delta)
-                    closestSystem.y += random.uniform(0, delta)
-            if dist < minMinDist: minMinDist = dist
-            if dist > maxMinDist: maxMinDist = dist
-    print 'Finished [min. dist = <%.2f; %.2f>]' % (math.sqrt(minMinDist), math.sqrt(maxMinDist))
-    return math.sqrt(minMinDist), math.sqrt(maxMinDist)
 
 ## info
 def getInfo(galaxy):
@@ -710,49 +773,6 @@ def getInfo(galaxy):
     print 'Types:', planetTypes
     return stars, starTypes, planets, planetTypes
 
-## saving
-## galaxy - instance of Galaxy object
-## fh - handle of file where galaxy will be saved -
-##        must be os.open() filelike object and must be opened.
-##        function calls close() method
-def saveGalaxy(galaxyType, galaxy, fh):
-    print 'Saving...'
-    # names
-    loadSystemNames()
-    # save
-    print >>fh, '<?xml version="1.0" encoding="UTF-8"?>'
-    print >>fh, '<universe>'
-    print >>fh, '\t<galaxy galaxyType="%s" x="%.2f" y="%.2f">' % (
-        galaxyType, galaxy.centerX, galaxy.centerY
-    )
-    print >>fh, '\t\t<properties radius="%.2f" scenario="%s"/>' % (galaxy.radius, galaxy.scenario)
-    #print >>fh, '\t\t<properties radius="%.2f"/>' % galaxy.radius
-    for system in galaxy.systems:
-        saveSystem(fh, system)
-    print >>fh, '\t</galaxy>'
-    print >>fh, '</universe>'
-    fh.close()
-    print 'Saved.'
-
-def saveSystem(fh, system):
-    print >>fh, '\t\t<system x="%.2f" y="%.2f">' % (system.x, system.y)
-    # name = 'SCN-%04d%04d' % (system.x * 10, system.y * 10)
-    global systemNames
-    name = random.choice(systemNames)
-    systemNames.remove(name)
-    print >>fh, '\t\t\t<properties starClass="%s%d" name="%s"/>' % \
-        (system.starClass, system.starSubclass, name)
-    for planet in system.planets:
-        savePlanet(fh, planet)
-    print >>fh, '\t\t</system>'
-
-def savePlanet(fh, planet):
-    print >>fh, '\t\t\t<planet>'
-    print >>fh, '\t\t\t\t<properties plType="%s" plMin="%d" plBio="%d" plEn="%d" plDiameter="%d" plSlots="%d" plMaxSlots="%d" plStratRes="%d" plDisease="%d" plStarting="%d"/>' % \
-        (planet.type, planet.minerals, planet.environ, planet.energy, planet.diameter, planet.slots, planet.maxSlots, planet.strategicRes, planet.disease, planet.starting)
-    if planet.starting:
-        print >>fh, '\t\t\t\t<startingpoint/>'
-    print >>fh, '\t\t\t</planet>'
 
 ## load names
 systemNames = []
@@ -765,29 +785,6 @@ def loadSystemNames():
         for line in names_file:
             names.add(line.strip())
     systemNames = list(names)
-
-## Generates new galaxy and saves it to specified file
-## fh - handle of file where galaxy will be saved -
-##        must be os.open() filelike object and must be opened.
-##        function calls close() method
-def GenerateGalaxy(galaxyType, fh):
-    while True:
-        try:
-            galaxy = generateGalaxy2(galaxyType)
-            break
-        except IndexError:
-            # this happens, if generator fails to place special
-            # planet - easier than handling it inside is to roll
-            # dice again
-            continue
-    step = 0
-    while step < 25:
-        min, max = shiftSystems(galaxy, 1.5, 5.0, 0.25)
-        if min >= 1.0 and max <= 5.0:
-            break
-        step += 1
-    print fh
-    saveGalaxy(galaxyType, galaxy, fh)
 
 if __name__ == '__main__':
     import sys

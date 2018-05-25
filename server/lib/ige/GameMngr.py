@@ -86,7 +86,6 @@ class GameMngr:
         del objIDs[1]
         del objIDs[OID_ADMIN]
         del objIDs[OID_I_LOGIN2OID]
-        del objIDs[OID_I_NAME2OID]
         # stats
         types = {}
         typesMin = {}
@@ -94,6 +93,13 @@ class GameMngr:
         typesSum = {}
         # upgrade all objects in database
         # and collect all not referenced objects
+        # upgrade 0.5.72 => 0.5.73
+        for login, mapping in self.db[OID_I_LOGIN2OID].iteritems():
+            try:
+                # this fails if upgrade is needed
+                mapping + 1
+            except TypeError:
+                self.db[OID_I_LOGIN2OID][login] = [mapping]
         for id in self.db.keys():
             try:
                 obj = self.db[id]
@@ -137,7 +143,6 @@ class GameMngr:
         self.msgMngr.clear()
         # create indexes
         self.db.create(Index(), OID_I_LOGIN2OID)
-        self.db.create(Index(), OID_I_NAME2OID)
         # create admin
         self.registerPlayer(ADMIN_LOGIN, self.createAdmin(), OID_ADMIN)
         # create universe
@@ -246,45 +251,44 @@ class GameMngr:
     def removePlayer(self, sid, *args, **kwargs):
         raise NotImplementedError
 
+    def selectPlayer(self, sid, playerID):
+        """ Selects which of the player objects of the account is going to be
+        used for this particular session."""
+
+        session = self.clientMngr.getSession(sid)
+        if session.cid:
+            raise GameException('You already selected a player object.')
+        try:
+            accounts_player_objects = self.db[OID_I_LOGIN2OID].get(session.login, [])
+        except AttributeError:
+            raise SecurityException('Not logged in.')
+
+        if playerID not in accounts_player_objects:
+            raise NoAccountException('Player object not on this account.')
+
+        log.debug('Adding cid to session', playerID)
+        session.cid = playerID
+        # validate client
+        if not self.validateClient(session):
+            raise GameException('Wrong version of client.')
+        # notify object, that player has logged in
+        player = self.db[playerID]
+        self.cmdPool[player.type].loggedIn(Transaction(self), player)
+        return True, None
+
     def registerPlayer(self, login, playerObj, oid = None, force = 0):
-        # preconditions
-        log.debug("Checking LOGIN2OID")
-        if self.db[OID_I_LOGIN2OID].has_key(login) and not force:
-            raise CreatePlayerException('Account already exists.')
-        log.debug("Checking NAME2OID")
-        if self.db[OID_I_NAME2OID].has_key(playerObj.name) and not force:
-            raise CreatePlayerException('Name already exists.')
-        # action
-        if not oid:
-            log.debug("Creating object")
-            oid = self.db.create(playerObj)
-        else:
-            self.db.create(playerObj, id = oid)
-        log.debug("Fixing indexes")
-        self.db[OID_I_LOGIN2OID][login] = oid
-        self.db[OID_I_NAME2OID][playerObj.name] = oid
-        playerObj.oid = oid
-        playerObj.owner = oid
-        return oid
+        raise NotImplementedError
 
     def unregisterPlayer(self, playerObj):
         log.debug('unregisterPlayer', playerObj.login, playerObj.name)
         # preconditions
         if not self.db[OID_I_LOGIN2OID].has_key(playerObj.login):
-            #raise ServerException('Account does not exist.')
             log.debug("Account %s does not exist" % playerObj.login)
-        if not self.db[OID_I_NAME2OID].has_key(playerObj.name):
-            #raise ServerException('Name does not exist.')
-            log.debug("Name %s does not exist" % playerObj.name)
         # try to remove it
         try:
-            del self.db[OID_I_LOGIN2OID][playerObj.login]
+            self.db[OID_I_LOGIN2OID][playerObj.login].remove(playerObj.oid)
         except:
             log.warning("Cannot remove '%s' from LOGIN2OID index" % playerObj.login)
-        try:
-            del self.db[OID_I_NAME2OID][playerObj.name]
-        except:
-            log.warning("Cannot remove '%s' from NAME2OID index" % playerObj.name)
         try:
             self.db.delete(playerObj.oid)
         except:
@@ -317,24 +321,6 @@ class GameMngr:
             session = self.clientMngr.getSessionByCID(obj.owner)
             if session:
                 session.messages[SMESSAGE_NEWMESSAGE] = None
-        # notify other players
-        #for oid in obj.accRights.keys():
-        #    if obj.accRights[oid] >= AL_FULLINFO:
-        #        if self.db.has_key(oid):
-        #            target = self.db[oid]
-        #            # new style messages
-        #            message = {
-        #                "sender": obj.name,
-        #                "senderID": sourceID,
-        #                "forum": "EVENTS",
-        #                "data": (sourceID, msgID, locationID, turn, data),
-        #                "topic": "EVENT",
-        #            }
-        #            self.cmdPool[target.type].sendAdminMsg(tran, target, message)
-        #            # TODO send event
-        #            session = self.clientMngr.getSessionByCID(oid)
-        #            if session:
-        #                session.messages[SMESSAGE_NEWMESSAGE] = None
 
     # dispatch command
     def execute(self, sid, command, oid, *args):
@@ -343,23 +329,9 @@ class GameMngr:
         # check client id
         session = self.clientMngr.getSession(sid)
         if not session.cid:
-            # check if real id exists
-            try:
-                cid = self.db[OID_I_LOGIN2OID].get(session.login, None)
-            except AttributeError:
-                raise SecurityException('Not logged in.')
-            log.debug('Adding cid to session', cid)
-            if not cid:
-                # no real id
-                #@log.debug('Raising exception NoAccountException')
-                raise NoAccountException('No game account exists.')
-            session.cid = cid
-            # validate client
-            if not self.validateClient(session):
-                raise GameException('Wrong version of client.')
-            # notify object, that player has logged in
-            player = self.db[cid]
-            self.cmdPool[player.type].loggedIn(Transaction(self), player)
+            raise SecurityException('No player object selected.')
+        if not self.validateClient(session):
+            raise GameException('Wrong version of client.')
         # check game status (admin is allowed anytime)
         if self.status != GS_RUNNING and session.cid != OID_ADMIN:
             raise ServerStatusException(self.status)
@@ -374,7 +346,6 @@ class GameMngr:
         except KeyError:
             raise NoSuchObjectException('Object %d does not exist.' % oid)
         cmdObj = getattr(self.cmdPool[obj.type], command)
-        # TODO check access level
         if not hasattr(cmdObj, 'public') or not cmdObj.public:
             raise SecurityException('Access denied - method is not public.')
         # get acces level of the commander
@@ -383,10 +354,6 @@ class GameMngr:
             accLevel = AL_OWNER
         if session.cid == OID_ADMIN:
             accLevel = AL_ADMIN
-        # TODO delete
-        #tmpAL = self.getAccRights(obj, session.cid)
-        #if tmpAL > accLevel:
-        #    accLevel = tmpAL
         #@log.debug('access rights', accLevel, cmdObj.accLevel)
         if cmdObj.accLevel > accLevel:
             raise SecurityException('Access denied - low access level.')
@@ -404,6 +371,3 @@ class GameMngr:
         #@log.debug("Execution time", time.time() - startTime)
         return result, messages
 
-    # TODO
-    #def getAccRights(self, obj, cid):
-    #    return obj.accRights.get(cid, AL_NONE)

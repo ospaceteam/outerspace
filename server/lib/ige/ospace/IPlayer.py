@@ -246,6 +246,61 @@ class IPlayer(IObject):
 
     update.public = 0
 
+    @staticmethod
+    def setStartingPlanet(tran, playerID, planet):
+        planet.plSlots = max(planet.plSlots, 9)
+        planet.plMaxSlots = max(planet.plMaxSlots, 9)
+        planet.plDiameter = max(planet.plDiameter, 9000)
+        planet.slots = [
+            Utils.newStructure(tran, Rules.Tech.PWRPLANTNUK1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
+            Utils.newStructure(tran, Rules.Tech.FARM1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
+            Utils.newStructure(tran, Rules.Tech.FARM1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
+            Utils.newStructure(tran, Rules.Tech.FARM1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
+            Utils.newStructure(tran, Rules.Tech.ANCFACTORY, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
+            Utils.newStructure(tran, Rules.Tech.ANCFACTORY, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
+            Utils.newStructure(tran, Rules.Tech.ANCRESLAB, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
+            Utils.newStructure(tran, Rules.Tech.REPAIR1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
+        ]
+        planet.storPop = Rules.startingPopulation
+        planet.storBio = Rules.startingBio
+        planet.storEn = Rules.startingEn
+        planet.scannerPwr = Rules.startingScannerPwr
+        planet.morale = Rules.maxMorale
+
+    @staticmethod
+    def setStartingTechnologies(obj):
+        obj.techLevel = 1
+        for techID in Rules.techs.keys():
+            if Rules.techs[techID].isStarting:
+                obj.techs[techID] = (Rules.techBaseImprovement + Rules.techMaxImprovement) / 2
+
+    @staticmethod
+    def setStartingShipDesigns(obj):
+        obj.shipDesigns[1] = ShipUtils.makeShipMinSpec(obj, 'Scout', Rules.Tech.SMALLHULL1,
+                {Rules.Tech.SCOCKPIT1:1, Rules.Tech.SCANNERMOD1:1, Rules.Tech.FTLENG1:3}, [])
+        obj.shipDesigns[2] = ShipUtils.makeShipMinSpec(obj, 'Fighter', Rules.Tech.SMALLHULL1,
+                {Rules.Tech.SCOCKPIT1:1, Rules.Tech.CANNON1:1, Rules.Tech.FTLENG1:3}, [])
+        obj.shipDesigns[3] = ShipUtils.makeShipMinSpec(obj, 'Bomber', Rules.Tech.SMALLHULL1,
+                {Rules.Tech.SCOCKPIT1:1, Rules.Tech.CONBOMB1:1, Rules.Tech.FTLENG1:3}, [])
+        obj.shipDesigns[4] = ShipUtils.makeShipMinSpec(obj, 'Colony Ship', Rules.Tech.MEDIUMHULL2,
+                {Rules.Tech.SCOCKPIT1:1, Rules.Tech.COLONYMOD2:1, Rules.Tech.FTLENG1:4}, [])
+
+    @staticmethod
+    def setStartingFleet(tran, playerID, system):
+        # add small fleet
+        log.debug('Creating fleet')
+        fleet = tran.gameMngr.cmdPool[T_FLEET].new(T_FLEET)
+        tran.db.create(fleet)
+        log.debug('Creating fleet - created', fleet.oid)
+        tran.gameMngr.cmdPool[T_FLEET].create(tran, fleet, system, playerID)
+        log.debug('Creating fleet - addShips')
+        # for IDs, see setStartingShipDesigns
+        tran.gameMngr.cmdPool[T_FLEET].addNewShip(tran, fleet, 1)
+        tran.gameMngr.cmdPool[T_FLEET].addNewShip(tran, fleet, 1)
+        tran.gameMngr.cmdPool[T_FLEET].addNewShip(tran, fleet, 2)
+        tran.gameMngr.cmdPool[T_FLEET].addNewShip(tran, fleet, 2)
+        tran.gameMngr.cmdPool[T_FLEET].addNewShip(tran, fleet, 4)
+
     def startGlobalConstruction(self, tran, player, techID, quantity, isShip, reportFinished, queue):
         if len(player.prodQueues) <= queue:
             raise GameException('Invalid queue.')
@@ -381,7 +436,7 @@ class IPlayer(IObject):
         self.cmd(obj).update(tran, obj)
         # reregister
         tran.gameMngr.removePlayer(obj.oid)
-        self.cmd(obj).reregister(tran, obj)
+        self.cmd(obj).register(tran, obj, obj.galaxies[0])
 
     resign.public = 1
     resign.accLevel = AL_OWNER

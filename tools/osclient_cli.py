@@ -48,7 +48,7 @@ def getPlayer(name):
     return None
 
 # parse command line arguments
-parser = OptionParser(usage = "usage: %prog [options] login")
+parser = OptionParser(usage = "usage: %prog [options]")
 parser.add_option("-c", "--cleanup", dest = "cleanup", default = False,
     action = "store_true", help = "Cleanup server sessions")
 parser.add_option("-t", "--turn", dest = "turns", default = 0,
@@ -90,19 +90,12 @@ options, args = parser.parse_args()
 #s = IClient('ospace.net:9080', None, msgHandler, 'IClient/osc')
 s = IClient('localhost:9080', None, msgHandler, None, 'IClient/osc')
 
-if len(args) != 1:
-    parser.error("no login name specified")
+with open(os.path.join(options.configDir, "token"), "r") as pw_file:
+    password = pw_file.read()
+    s.connect('admin')
+    s.login('Alpha', 'admin', password)
 
-login = args[0]
-
-if login == "admin":
-    # get admin login from <configDir>/token
-    password = open(os.path.join(options.configDir, "token"), "r").read()
-else:
-    password = getpass("Password: ")
-
-s.connect(login)
-s.login(options.game, login, password)
+s.selectAdmin()
 
 if options.backup:
     s.backup(options.backup)
