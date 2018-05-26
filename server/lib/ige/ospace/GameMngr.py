@@ -173,6 +173,9 @@ class GameMngr(IGEGameMngr):
 
         for galaxyID in set(universe.galaxies).difference(badGalaxies):
             galaxy = self.db[galaxyID]
+            if galaxy.scenario == SCENARIO_SINGLE:
+                # single player scenarios are off limit :)
+                continue
             if galaxy.startingPos:
                 result.append((galaxyID, galaxy.name, PLAYER_SELECT_NEWPLAYER))
         for playerID in universe.players:
@@ -253,6 +256,11 @@ class GameMngr(IGEGameMngr):
             raise GameException('No such starting position.')
         if self.accountGalaxies(session.login).intersection(player.galaxies):
             raise GameException('Account already owns player in this galaxy.')
+        for galaxyID in player.galaxies:
+            galaxy = self.db[galaxyID]
+            if galaxy.scenario == SCENARIO_SINGLE:
+                raise GameException('AI in single scenario cannot be taken over.')
+
 
         # create player
         log.debug("Morphing AI player", playerID)
@@ -285,6 +293,10 @@ class GameMngr(IGEGameMngr):
             raise SecurityException('Wrong VIP password.')
         if self.accountGalaxies(session.login).intersection(player.galaxies):
             raise GameException('Account already owns player in this galaxy.')
+        for galaxyID in player.galaxies:
+            galaxy = self.db[galaxyID]
+            if galaxy.scenario == SCENARIO_SINGLE:
+                raise GameException('AI in single scenario cannot be taken over.')
 
         log.debug('Creating pirate in session {0} with CID {1}'.format(sid, session.cid))
         universe = self.db[OID_UNIVERSE]

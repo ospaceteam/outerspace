@@ -42,6 +42,9 @@ else
     # create 1SP galaxy
     ../tools/osclient_cli.py --newgalaxy Circle1SP Circle1SP --configdir "$CONFIG_DIR"
 
+    # create 3SP galaxy
+    ../tools/osclient_cli.py --newgalaxy Circle3SP Circle3SP --configdir "$CONFIG_DIR"
+
     # create 9P galaxy
     ../tools/osclient_cli.py --newgalaxy Circle9P Circle9P --configdir "$CONFIG_DIR"
 

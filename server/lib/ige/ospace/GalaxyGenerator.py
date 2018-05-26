@@ -84,6 +84,32 @@ class Circle1SP(GalaxyTemplate):
             Const.DISEASE_MUTANT : [(2, 4, 3)]
         }
 
+class Circle3SP(GalaxyTemplate):
+    def __init__(self):
+        GalaxyTemplate.__init__(self)
+
+        self.galaxyDescription = "More complex single player galaxy with classic starting group of three. Mutant is the only agressive enemy. Endless game."
+        self.scenario = Const.SCENARIO_SINGLE
+        self.minPlanets = 350
+        self.maxPlanets = 400
+        self.radius = 25.0
+        self.startR = (15.0, 17.0)
+        self.players = 3
+        self.playerGroup = 3
+        self.groupDist = 3
+        self.minR = 3
+        # format {minRadius: density, nextCircleRadius: differentDensity}
+        self.density = {3: 3, 5: 4, 10: 4.5, 20: 4.5, 25: 5}
+        self.resources = {
+            # format resourceID : [(minDist, maxDist, number of resources)]
+            Const.SR_TL1A : [(15, 17, 3)],
+            Const.SR_TL1B : [(15, 17, 3)]
+        }
+        self.diseases = {
+            # format diseaseID : (minDist, maxDist, number of diseases)
+            Const.DISEASE_MUTANT : [(2, 4, 3)]
+        }
+
 class Circle9P(GalaxyTemplate):
     def __init__(self):
         GalaxyTemplate.__init__(self)
@@ -178,7 +204,7 @@ class GalaxyGenerator:
     def __init__(self):
         self.templates = {}
         # TODO: I guess we can autodetect this somehow, in a future
-        for templateClass in [Circle1SP, Circle9P, Circle42P, Circle65P]:
+        for templateClass in [Circle1SP, Circle3SP, Circle9P, Circle42P, Circle65P]:
             templateInstance = templateClass()
             self.templates[templateInstance.galaxyType] = templateInstance
 
