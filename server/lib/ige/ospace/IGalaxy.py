@@ -46,6 +46,7 @@ class IGalaxy(IObject):
     def init(self, obj):
         IObject.init(self, obj)
         #
+        obj.name = ""
         obj.owner = OID_NONE
         obj.x = 0.0
         obj.y = 0.0
@@ -458,7 +459,6 @@ class IGalaxy(IObject):
         log.debug(obj.oid, "GALAXY - delete")
         universe = tran.db[OID_UNIVERSE]
         aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
-        aiList.finishGalaxy(obj.name)
         # delete systems and planets
         for systemID in obj.systems:
             log.debug("Deleting system", systemID)
@@ -479,6 +479,7 @@ class IGalaxy(IObject):
             player = tran.db[playerID]
             if obj.oid not in player.galaxies:
                 continue
+            aiList.removeGalaxy(player.login, obj.name)
             if player.fleets:
                 log.debug("Player %d has still fleets" % playerID, player.name, player.fleets)
                 for fleetID in player.fleets:

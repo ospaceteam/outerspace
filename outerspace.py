@@ -154,6 +154,12 @@ parser_ai.add_argument("--test-connection", dest = "test",
     action = "store_true", default=False,
     help = argparse.SUPPRESS
 )
+parser_ai.add_argument("--galaxy", dest = "galaxies",
+    metavar = "NAME",
+    action = "append",
+    default = [],
+    help = "Name of galaxy to enable AI for, no argument means all galaxies"
+)
 
 
 # ai-pool

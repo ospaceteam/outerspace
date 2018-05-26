@@ -97,8 +97,11 @@ class ClientMngr:
         # TODO send confirmation token to the email address
         return 1, None
 
-    def createAiAccount(self, sid, login, passwd, nick):
-        self.accounts.delete(login)
+    def createAIAccount(self, sid, login, passwd, nick):
+        if self.accounts.has_key(login):
+            log.message('AI account already exists, no work needed.', login, nick)
+            return 1, None
+
         log.message('Creating AI account', login, nick)
         login = login.strip()
         passwd = passwd.strip()
@@ -115,8 +118,9 @@ class ClientMngr:
         log.message('AI account created')
         return 1, None
 
-    def removeAiAccount(self,login):
+    def removeAIAccount(self,login):
         self.accounts.delete(login)
+        aiList.remove(login)
         return 1, None
 
     def hello(self, sid, login, clientId):

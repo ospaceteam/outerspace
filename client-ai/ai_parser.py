@@ -17,6 +17,7 @@
 #  along with Outer Space; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
+import copy
 import json
 import os
 import shutil
@@ -94,13 +95,13 @@ class AIList:
 
         """
         if login in self.getLogins():
-            # this way, we make sure login is unique key
-            # removal of obviously obsolete record
-            self.remove(login)
+            # great, account already exists
+            return
         record = AIRecord()
         record.login = login
         record.password = password
         record.aiType = aiType
+        record.galaxyNames = []
         self.records.append(record)
         self._save()
 
@@ -128,14 +129,15 @@ class AIList:
         self.records = []
         self._save()
 
-    def setGalaxy(self, login, galaxyName):
-        """ Add [or change] the galaxy information to the record associated
-        with login.
+    def addGalaxy(self, login, galaxyName):
+        """ Add the galaxy information to the record associated with login. There
+        can be multiple galaxies of the same name - we do use this as a counter,
+        if the account is still in use.
 
         """
         for record in self.records:
             if record.login == login:
-                record.galaxyName = galaxyName
+                record.galaxyNames.append(galaxyName)
         try:
             os.makedirs(os.path.join(self.configDir, "ai_data", self.gameName, galaxyName))
         except OSError:
@@ -143,10 +145,26 @@ class AIList:
         self._save()
         return
 
-    def finishGalaxy(self, galaxyName):
-        """ Removes galaxy directory, and all player data contained within.
+    def removeGalaxy(self, login, galaxyName):
+        """ Remove one instance of galaxy information from the record associated with login.
+        We do not remove the record itself - account also stays on the server.
 
         """
+        for record in copy.copy(self.records):
+            if record.login == login and galaxyName in record.galaxyNames:
+                record.galaxyNames.remove(galaxyName)
+                break
+        self._save()
+        return
+
+    def finishGalaxy(self, galaxyName):
+        """ If there is no occurence of particular galaxy, remove all saved data.
+        """
+        for record in self.records:
+            if galaxyName in record.galaxyNames:
+                # still in use, nothing to do
+                return
+
         ai_player_data_dir = os.path.join(self.configDir, 'ai_data', self.gameName, galaxyName)
         if os.path.exists(ai_player_data_dir):
             shutil.rmtree(ai_player_data_dir)

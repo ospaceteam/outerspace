@@ -83,7 +83,7 @@ class GameMngr(IGEGameMngr):
         # remove all AI accounts and their records in AI list
         aiList = AIList(self.configDir, self.gameName)
         for login in aiList.getLogins():
-            self.clientMngr.removeAiAccount(login)
+            self.clientMngr.removeAIAccount(login)
         aiList.removeAll()
         IGEGameMngr.reset(self)
         # save informations
@@ -260,9 +260,10 @@ class GameMngr(IGEGameMngr):
         self.cmdPool[T_PLAYER].upgrade(tran, player)
         self.cmdPool[T_PLAYER].update(tran, player)
         # remove AI player account from game and its record from the AIlist
-        self.clientMngr.removeAiAccount(player.login)
         aiList = AIList(self.configDir, self.gameName)
-        aiList.remove(player.login)
+        for galaxyID in player.galaxies:
+            galaxy = self.db[galaxyID]
+            aiList.removeGalaxy(player.login, galaxy.name)
         # reregister player
         self.removePlayer(player.oid)
         player.name = session.nick
@@ -298,9 +299,10 @@ class GameMngr(IGEGameMngr):
         self.cmdPool[T_PIRPLAYER].upgrade(tran, player)
         self.cmdPool[T_PIRPLAYER].update(tran, player)
         # remove AI player account from game and its record from the AIlist
-        self.clientMngr.removeAiAccount(player.login)
         aiList = AIList(self.configDir, self.gameName)
-        aiList.remove(player.login)
+        for galaxyID in player.galaxies:
+            galaxy = self.db[galaxyID]
+            aiList.removeGalaxy(player.login, galaxy.name)
         # reregister player
         self.removePlayer(player.oid)
         player.fullName = "Pirate %s" % session.nick
