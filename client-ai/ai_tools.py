@@ -101,6 +101,9 @@ def tool_parseDB(client, db):
                 if getattr(owners[ownerID], 'type', OID_NONE) in (T_AIPIRPLAYER, T_PIRPLAYER):
                     data.pirateSystems.add(db[objID].compOf)
         elif objType == T_SYSTEM:
+            if getattr(obj, "starClass", "a")[0] == 'b':
+                # black hole -> nothing to see here, let's ignore it completely
+                continue
             data.systems.add(objID)
             if not hasattr(db[objID], 'planets'):
                 data.unknownSystems.add(objID)

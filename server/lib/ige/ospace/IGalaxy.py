@@ -128,6 +128,8 @@ class IGalaxy(IObject):
 
 
     def processINITPhase(self, tran, obj, data):
+        if not obj.timeEnabled:
+            return
         # compute emr level
         turn = tran.db[OID_UNIVERSE].turn
         obj.emrTime -= 1
@@ -160,20 +162,25 @@ class IGalaxy(IObject):
     processINITPhase.accLevel = AL_ADMIN
 
     def processPRODPhase(self, tran, obj, data):
-        if obj.timeEnabled:
-            return obj.systems
+        if not obj.timeEnabled:
+            return
+        return obj.systems
 
     processPRODPhase.public = 1
     processPRODPhase.accLevel = AL_ADMIN
 
     def processACTIONPhase(self, tran, obj, data):
-        if obj.timeEnabled:
-            return obj.systems
+        if not obj.timeEnabled:
+            return
+        return obj.systems
 
     processACTIONPhase.public = 1
     processACTIONPhase.accLevel = AL_ADMIN
 
     def processSCAN2Phase(self, tran, obj, data):
+        # data == True means forced scan (first after generating the galaxy)
+        if not obj.timeEnabled and not data:
+            return
         # compute scanner for all objects on the map
         playerMap = Scanner.computeMap(self, tran, obj)
         # distribute map
@@ -186,13 +193,16 @@ class IGalaxy(IObject):
     processSCAN2Phase.accLevel = AL_ADMIN
 
     def processBATTLEPhase(self, tran, obj, data):
-        if obj.timeEnabled:
-            return obj.systems
+        if not obj.timeEnabled:
+            return
+        return obj.systems
 
     processBATTLEPhase.public = 1
     processBATTLEPhase.accLevel = AL_ADMIN
 
     def processFINALPhase(self, tran, obj, data):
+        if not obj.timeEnabled:
+            return
         # validate starting positions
         remove = []
         for planetID in obj.startingPos:
@@ -209,6 +219,8 @@ class IGalaxy(IObject):
     processFINALPhase.accLevel = AL_ADMIN
 
     def processFINAL2Phase(self, tran, obj, data):
+        if not obj.timeEnabled:
+            return
         # save history file
         turn = tran.db[OID_UNIVERSE].turn
         # TODO: reneable history when it's optimized

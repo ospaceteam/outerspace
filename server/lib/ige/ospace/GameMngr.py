@@ -331,7 +331,7 @@ class GameMngr(IGEGameMngr):
             system.scannerPwrs[player.oid] = scannerPwr
         log.debug('Processing scan phase')
         galaxy = tran.db[player.galaxies[0]]
-        self.cmdPool[T_GALAXY].processSCAN2Phase(tran, galaxy, None)
+        self.cmdPool[T_GALAXY].processSCAN2Phase(tran, galaxy, True)
         # save game info
         self.generateGameInfo()
         return player.oid, None
@@ -378,7 +378,7 @@ class GameMngr(IGEGameMngr):
         system = self.db[planet.compOf]
         log.debug('Processing scan phase')
         system.scannerPwrs[playerID] = Rules.startingScannerPwr
-        self.cmdPool[T_GALAXY].processSCAN2Phase(tran, galaxy, None)
+        self.cmdPool[T_GALAXY].processSCAN2Phase(tran, galaxy, True)
         # check if galaxy can be "started"
         self.cmdPool[T_GALAXY].enableTime(tran, galaxy)
         # save game info
@@ -482,6 +482,13 @@ class GameMngr(IGEGameMngr):
             for playerID in gStats.keys():
                 if galaxyID not in galaxies[playerID]:
                     del gStats[playerID]
+                    continue
+                try:
+                    gStats[playerID].storPop
+                except AttributeError:
+                    # time has not been enabled yet
+                    del gStats[playerID]
+
             if 0:
                 # average
                 storPop = 0

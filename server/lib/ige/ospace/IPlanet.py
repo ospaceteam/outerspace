@@ -418,6 +418,7 @@ class IPlanet(IObject):
             obj.unemployedPop -= min(obj.unemployedPop, int(tech.operWorkers * opStatus))
             obj.storPop += int(tech.prodPop * techEff * opStatus)
             obj.scannerPwr = max(int(tech.scannerPwr * techEff * (2.0 - emrLevel) * opStatus), obj.scannerPwr)
+            obj.scannerPwr = min(obj.scannerPwr, Rules.scannerMaxPwr)
             # rebellion and combat has common penalty
             b, m, e, d = tech.prodProdMod
             prodMod = (b * obj.plBio + m * obj.plMin + e * obj.plEn + d * 100) / 100
