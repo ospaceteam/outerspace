@@ -173,6 +173,7 @@ techImprEff = {1:0.750, 2:0.875, 3:1.000, 4:1.125, 5:1.250} #per sublevel
 ## Scanner
 maxSignature = 100
 scannerMinPwr = 1
+scannerMaxPwr = 150
 level1InfoScanPwr = 1000
 level2InfoScanPwr = 1200
 level3InfoScanPwr = 1400

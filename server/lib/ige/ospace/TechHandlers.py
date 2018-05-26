@@ -229,7 +229,7 @@ def finishProjectUPGRADESHIPS(tran, source, target, tech):
 ## Deep scan
 def finishProjectDEEPSPACESCAN(tran, source, target, tech):
     techEff = Utils.getTechEff(tran, tech.id, source.owner)
-    target.scannerPwr = int(float(tech.data) * techEff * target.scannerPwr)
+    target.scannerPwr = min(int(float(tech.data) * techEff * target.scannerPwr), Rules.scannerMaxPwr)
     system = tran.db[target.compOf]
     system.scannerPwrs[target.owner] = max(system.scannerPwrs.get(target.owner, 0), target.scannerPwr)
 

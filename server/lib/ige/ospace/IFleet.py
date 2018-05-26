@@ -413,7 +413,7 @@ class IFleet(IObject):
         if obj.closeSystem:
                 system = tran.db[obj.closeSystem]
                 emrLevel = tran.db[system.compOf].emrLevel
-                obj.scannerPwr = int(obj.origScannerPwr * (2.0 - emrLevel))
+                obj.scannerPwr = min(int(obj.origScannerPwr * (2.0 - emrLevel)), Rules.scannerMaxPwr)
         # replace obsolete commands
         for actionTuple in obj.actions[:]:
             try:
