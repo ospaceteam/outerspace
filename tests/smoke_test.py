@@ -20,6 +20,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+import argparse
 import atexit
 import httplib
 import json
@@ -37,22 +38,6 @@ log.basicConfig(level=log.INFO, format='%(levelname)-7s: %(message)s')
 CODE_ROOT=os.path.realpath(os.path.join(
           os.path.dirname(os.path.realpath(__file__)),
           '..'))
-TEMP_DIR=tempfile.mkdtemp()
-SERVER_OUT=open(os.path.join(TEMP_DIR, 'server.out'), 'w')
-UTILS_OUT=open(os.path.join(TEMP_DIR, 'utils.out'), 'w')
-AI_OUT=open(os.path.join(TEMP_DIR, 'ai.out'), 'w')
-BUP_OUT=open(os.path.join(TEMP_DIR, 'bup.out'), 'w')
-
-TURN_SKIP=5
-TURN_AMOUNT=25
-try:
-    if sys.argv[1] == 'long':
-        TURN_AMOUNT=300
-        log.info('Starting a long running variant')
-except IndexError:
-    pass
-
-log.info('Location of logs: ' + str(TEMP_DIR))
 
 def killServer():
     try:
@@ -122,21 +107,42 @@ def startServerTime():
         sys.exit(1)
     log.info('Time has been started')
 
-def doTurns(amount=TURN_AMOUNT, skip=TURN_SKIP):
+def doTurns(amount, skip, slow=False):
     args_osclient=[os.path.join(CODE_ROOT, 'tools', 'osclient_cli.py'),
           '--turns={0}'.format(skip),
           '--configdir=' + TEMP_DIR]
     args_ai=[os.path.join(CODE_ROOT, 'outerspace.py'),
           'ai-pool',
           '--configdir=' + TEMP_DIR,
-          '--procs=1',
           '--local']
+    if slow:
+        args_ai.append('--procs=1')
     for turn in range(0, amount, skip):
         subprocess.call(args_ai, stdout=AI_OUT,
                                  stderr=subprocess.STDOUT)
         subprocess.call(args_osclient, stdout=UTILS_OUT,
                                        stderr=subprocess.STDOUT)
         log.info('Turn {0}'.format(turn + skip))
+
+def createGalaxy(galaxy_type, galaxy_name = None):
+    if galaxy_name is None:
+        galaxy_name = galaxy_type
+    args=[os.path.join(CODE_ROOT, 'tools', 'osclient_cli.py'),
+          '--newgalaxy={0}'.format(galaxy_name),'{0}'.format(galaxy_type),
+          '--configdir=' + TEMP_DIR]
+    if subprocess.call(args, stdout=UTILS_OUT, stderr=subprocess.STDOUT) != 0:
+        log.error('Galaxy {0} has not been created'.format(galaxy_type))
+    else:
+        log.info('Galaxy {0} created'.format(galaxy_type))
+
+def deleteGalaxy(galaxy_id):
+    args=[os.path.join(CODE_ROOT, 'tools', 'osclient_cli.py'),
+          '--deletegalaxy={0}'.format(galaxy_id),
+          '--configdir=' + TEMP_DIR]
+    if subprocess.call(args, stdout=UTILS_OUT, stderr=subprocess.STDOUT) != 0:
+        log.error('Galaxy {0} has not been deleted'.format(galaxy_id))
+    else:
+        log.info('Galaxy {0} deleted'.format(galaxy_id))
 
 def assertGrep(pattern, text, flags=0):
     if re.search(pattern, text, flags|re.MULTILINE):
@@ -176,31 +182,62 @@ def checkPlayerProgress():
                            'Alpha', 'json.txt'), 'r') as stats_file:
         stats = json.loads(stats_file.read())
         buildings_counts = []
-        for player in stats['10000']['players']:
-            player_stats = stats['10000']['players'][player]
-            player_name = player_stats[0]
-            if 'E.D.E.N.' in player_name or 'order' == player: continue
-            buildings = int(player_stats[3])
-            buildings_counts += [buildings]
-            if buildings < 10:
-                problem = True
+        for galaxy in stats:
+            if galaxy == 'turn':
+                continue
+            for player in stats[galaxy]['players']:
+                player_stats = stats[galaxy]['players'][player]
+                player_name = player_stats[0]
+                if 'E.D.E.N.' in player_name or 'order' == player: continue
+                buildings = int(player_stats[3])
+                buildings_counts += [buildings]
+                if buildings < 10:
+                    log.error(player_stats)
+                    problem = True
     if problem:
         log.error('There is an issue with player progress')
         log.debug('Building counts: {0}'.format(buildings_counts))
     else:
         log.info('Player progress ok')
 
+# parse command line arguments
+parser = argparse.ArgumentParser()
+parser.add_argument("--slow", dest = "slow", default = False,
+    action = "store_true", help = "Switches off multiprocessing of AI")
+parser.add_argument("--turns", dest = "turns", default = 40,
+    type = int, metavar = "N", help = "Process N turns on server")
+parser.add_argument("--turn-skip", dest = "turnSkip", default = 5,
+    type = int, metavar = "N", help = "Process N turns on server")
+args = parser.parse_args()
 
+
+
+# prepare logging
+TEMP_DIR=tempfile.mkdtemp()
+SERVER_OUT=open(os.path.join(TEMP_DIR, 'server.out'), 'w')
+UTILS_OUT=open(os.path.join(TEMP_DIR, 'utils.out'), 'w')
+AI_OUT=open(os.path.join(TEMP_DIR, 'ai.out'), 'w')
+BUP_OUT=open(os.path.join(TEMP_DIR, 'bup.out'), 'w')
+log.info('Location of logs: ' + str(TEMP_DIR))
+
+
+# test itself
 startServer()
 atexit.register(killServer)
+createGalaxy("Circle1SP")
+createGalaxy("Circle3SP")
+createGalaxy("Circle9P")
 startServerTime()
-doTurns()
+deleteGalaxy(10000) # legacy
+createGalaxy("Circle42P")
+startServerTime()
+doTurns(args.turns, args.turnSkip, slow=args.slow)
 checkServerStatus()
 stopServer()
 checkPlayerProgress()
 
 startServer()
-doTurns(15)
+doTurns(2*args.turnSkip, args.turnSkip, slow=args.slow)
 checkServerStatus()
 stopServer()
 checkPlayerProgress()
