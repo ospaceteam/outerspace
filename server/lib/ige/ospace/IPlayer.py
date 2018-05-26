@@ -1190,6 +1190,8 @@ class IPlayer(IObject):
     processACTIONPhase.accLevel = AL_ADMIN
 
     def processINITPhase(self, tran, obj, data):
+        if not obj.timeEnabled:
+            return
         # reset stats
         obj.stats.storPop = 0
         obj.stats.prodProd = 0
@@ -1215,8 +1217,6 @@ class IPlayer(IObject):
         # set empty population distribution
         obj.tmpPopDistr = {}
         # do not process other cmds if time disabled
-        if not obj.timeEnabled:
-            return
         # clear contacts and delete too old rels
         turn = tran.db[OID_UNIVERSE].turn
         for objID in obj.diplomacyRels.keys():
@@ -1246,16 +1246,17 @@ class IPlayer(IObject):
     processINITPhase.accLevel = AL_ADMIN
 
     def processFINALPhase(self, tran, obj, data):
-        if obj.timeEnabled:
-            #try/except so that entire final process doesn't break on error in sub-phase
-            try:
-                self.cmd(obj).processRSRCHPhase(tran, obj, data)
-            except:
-                log.warning('Cannot execute FINAL/RSRCH on %d' % (obj.oid))
-            try:
-                self.cmd(obj).processDIPLPhase(tran, obj, data)
-            except:
-                log.warning('Cannot execute FINAL/DIPL on %d' % (obj.oid))
+        if not obj.timeEnabled:
+            return
+        #try/except so that entire final process doesn't break on error in sub-phase
+        try:
+            self.cmd(obj).processRSRCHPhase(tran, obj, data)
+        except:
+            log.warning('Cannot execute FINAL/RSRCH on %d' % (obj.oid))
+        try:
+            self.cmd(obj).processDIPLPhase(tran, obj, data)
+        except:
+            log.warning('Cannot execute FINAL/DIPL on %d' % (obj.oid))
         # efficiency
         obj.prodEff = 1.0
         obj.sciEff = 1.0
