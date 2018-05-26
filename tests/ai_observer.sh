@@ -37,13 +37,13 @@ else
     ../outerspace.py server --configdir "$CONFIG_DIR" --local &> /dev/null &
     sleep 30 # just to be sure
     # now we delete Legacy galaxy - it's too big for common scenario
-    ../tools/osclient_cli.py --deletegalaxy 10000 --configdir "$CONFIG_DIR" admin
+    ../tools/osclient_cli.py --deletegalaxy 10000 --configdir "$CONFIG_DIR"
 
-    # create 1P galaxy
-    ../tools/osclient_cli.py --newgalaxy Circle1P Circle1P --configdir "$CONFIG_DIR" admin
+    # create 1SP galaxy
+    ../tools/osclient_cli.py --newgalaxy Circle1SP Circle1SP --configdir "$CONFIG_DIR"
 
     # create 9P galaxy
-    ../tools/osclient_cli.py --newgalaxy Circle9P Circle9P --configdir "$CONFIG_DIR" admin
+    ../tools/osclient_cli.py --newgalaxy Circle9P Circle9P --configdir "$CONFIG_DIR"
 
     # create 42P galaxy (you can just comment removal above, legacy is 42P ^^ :) )
     #../tools/osclient_cli.py --newgalaxy Circle42P Circle42P --configdir "$CONFIG_DIR" admin
@@ -52,7 +52,7 @@ else
     #../tools/osclient_cli.py --newgalaxy Circle65P Circle65P --configdir "$CONFIG_DIR" admin
 
     # start time
-    ../tools/osclient_cli.py --starttime --configdir "$CONFIG_DIR" admin
+    ../tools/osclient_cli.py --starttime --configdir "$CONFIG_DIR"
 fi
 
 # by default, we are skipping quite a lot, and doing a week in one batch
@@ -61,16 +61,16 @@ TURN_SKIP=6
 DAYS=6
 for i in `seq 0 ${TURN_SKIP} $((($DAYS * 24)))`;do
     # turn
-    ../tools/osclient_cli.py --configdir "$CONFIG_DIR" --turns ${TURN_SKIP} admin
+    ../tools/osclient_cli.py --configdir "$CONFIG_DIR" --turns ${TURN_SKIP}
 
     # run AI
     ../outerspace.py ai-pool --configdir "$CONFIG_DIR" --local
 
     # make screenshots
-    ../tools/osclient_cli.py --configdir "$CONFIG_DIR" --chronicler --chronicler_dir ${HISTORY_DIR} admin
+    ../tools/osclient_cli.py --configdir "$CONFIG_DIR" --chronicler --chronicler_dir ${HISTORY_DIR}
 
 done
 
 # stop server
-../tools/osclient_cli.py --configdir "$CONFIG_DIR" --shutdown admin
+../tools/osclient_cli.py --configdir "$CONFIG_DIR" --shutdown
 echo ConfigDir: ${CONFIG_DIR}

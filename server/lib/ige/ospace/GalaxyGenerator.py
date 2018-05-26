@@ -264,6 +264,8 @@ class GalaxyGenerator:
                 break
 
     def _shiftSystems(self, galaxy, _min, _max, delta):
+        # _min and _max are squared, so dist frequently calculated later
+        # doesn't have to be square rooted
         print 'Shifting...'
         _min = _min * _min
         _max = _max * _max
