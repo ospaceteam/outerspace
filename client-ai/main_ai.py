@@ -88,15 +88,18 @@ def runAIClient(options):
 
     if client.login(options.game, login, password):
         activePositions = client.cmdProxy.getActivePositions()
-        client.cmdProxy.selectPlayer(activePositions[0][0])
-        if options.test:
+        for playerID, galaxyName, playerType in activePositions:
+            if options.galaxies and galaxyName not in options.galaxies:
+                continue
+            client.cmdProxy.selectPlayer(playerID)
+            if options.test:
+                client.logout()
+                return True
+            # event loop
+            client.updateDatabase()
+            ai.run(client)
             client.logout()
-            return True
-        # event loop
-        client.updateDatabase()
-        ai.run(client)
-        client.logout()
-        log.debug("Shut down")
+            log.debug("Shut down")
     else:
         return False
 

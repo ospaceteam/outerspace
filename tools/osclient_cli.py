@@ -47,6 +47,44 @@ def getPlayer(name):
             return pl
     return None
 
+class dummyHandler:
+    @staticmethod
+    def onInitConnection():
+        pass
+
+    @staticmethod
+    def onConnInitialized():
+        pass
+
+    @staticmethod
+    def onCmdBegin():
+        pass
+
+    @staticmethod
+    def onCmdEnd():
+        pass
+
+    @staticmethod
+    def onUpdateStarting():
+        pass
+
+    @staticmethod
+    def onUpdateProgress(curr, max, text = None):
+        pass
+
+    @staticmethod
+    def onUpdateFinished():
+        pass
+
+    @staticmethod
+    def onNewMessages(number):
+        pass
+
+    @staticmethod
+    def onWaitingForResponse():
+        pass
+
+
 # parse command line arguments
 parser = OptionParser(usage = "usage: %prog [options]")
 parser.add_option("-c", "--cleanup", dest = "cleanup", default = False,
@@ -138,7 +176,6 @@ elif options.chronicler:
     import osci.gdata as gdata
     import osci.client
     import ige.version
-    import ai_handler
     import gettext
     import hashlib
     gettext.NullTranslations().install(unicode = 1)
@@ -152,8 +189,9 @@ elif options.chronicler:
     gdata.config.defaults.maxplanetsymbolsize = 0
 
     options.heartbeat = 60
-    osci.client.initialize('localhost:9080', ai_handler, options)
-    osci.client.login(options.game, login, password)
+    osci.client.initialize('localhost:9080', dummyHandler, options)
+    osci.client.login(options.game, 'admin', password)
+    osci.client.cmdProxy.selectAdmin()
     osci.client.updateDatabase()
 
     pygame.init()

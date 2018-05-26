@@ -43,26 +43,27 @@ def runAIPool(options):
 
     aiPool = multiprocessing.Pool(processes = options.procs)
 
-    ai_accounts_unavailable = []
     for gameName in games:
         aiList = AIList(options.configDir, gameName)
         for record in aiList.getAll():
-            if options.galaxies and record.galaxyName not in options.galaxies:
-                continue
-            optAI = copy.copy(options)
-            optAI.configDir = os.path.join(options.configDir, 'ai_data', gameName, record.galaxyName)
-            optAI.login = record.login
-            optAI.password = record.password
-            optAI.ai = record.aiType
-            optAI.game = gameName
-            if options.cleanup:
-                optAI.test = True
-                if not runAIClient(optAI):
-                    print('Removing {0} {1}'.format(optAI.login, optAI.password))
-                    aiList.remove(optAI.login, optAI.password)
-            else:
-                optAI.test = False
-                aiPool.apply_async(runAIClient, [optAI])
+            for galaxyName in record.galaxyNames:
+                if options.galaxies and not galaxyName not in options.galaxies:
+                    continue
+                optAI = copy.copy(options)
+                optAI.configDir = os.path.join(options.configDir, 'ai_data', gameName, galaxyName)
+                optAI.login = record.login
+                optAI.password = record.password
+                optAI.ai = record.aiType
+                optAI.game = gameName
+                optAI.galaxies = [galaxyName]
+                if options.cleanup:
+                    optAI.test = True
+                    if not runAIClient(optAI):
+                        print('Removing {0} {1}'.format(optAI.login, optAI.password))
+                        aiList.remove(optAI.login, optAI.password)
+                else:
+                    optAI.test = False
+                    aiPool.apply_async(runAIClient, [optAI])
     aiPool.close()
     aiPool.join()
     sys.exit()

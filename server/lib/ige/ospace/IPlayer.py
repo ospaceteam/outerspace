@@ -446,9 +446,10 @@ class IPlayer(IObject):
         if obj.type in AI_PLAYER_TYPES:
             # remove AI account from the game, and record in the AI list
             log.debug("Removing AI account from the AI list", obj.oid)
-            tran.gameMngr.clientMngr.removeAiAccount(obj.login)
             aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
-            aiList.remove(obj.login)
+            for galaxyID in obj.galaxies:
+                galaxy = tran.db[galaxyID]
+                aiList.removeGalaxy(obj.login, galaxy.name)
         log.debug("Deleting player", obj.oid)
         # delete relations
         for playerID in tran.db[OID_UNIVERSE].players:

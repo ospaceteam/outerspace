@@ -18,6 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 from ige import log
+from ige.ospace.Const import PACT_ALLOW_CIVILIAN_SHIPS, PACT_ALLOW_TANKING, PACT_MINOR_SCI_COOP, PACT_MAJOR_SCI_COOP, PACT_MINOR_CP_COOP, PACT_MAJOR_CP_COOP, PACT_ACTIVE, PACT_INACTIVE
 import ige.ospace.Rules as Rules
 import ige.ospace.Utils as Utils
 import ige.ospace.TechHandlers as TechHandlers
@@ -302,7 +303,20 @@ def diplomacyManager():
 #    if not player.voteFor == playerID:
 #        client.cmdProxy.setVoteFor(playerID, playerID)
 #    rebels cannot be voted
-    pass
+    for contactID in player.diplomacyRels:
+        dipl = client.getDiplomacyWith(contactID)
+        for pactID in [PACT_ALLOW_CIVILIAN_SHIPS, PACT_ALLOW_TANKING, PACT_MINOR_SCI_COOP, PACT_MAJOR_SCI_COOP, PACT_MINOR_CP_COOP, PACT_MAJOR_CP_COOP]:
+            pactSpec = Rules.pactDescrs[pactID]
+            if dipl.relation < pactSpec.validityInterval[0] or dipl.relation > pactSpec.validityInterval[1]:
+                # not friendly enough
+                continue
+            if pactID in dipl.pacts and dipl.pacts[pactID][0] in [PACT_ACTIVE, PACT_INACTIVE]:
+                # nothing more to do, move along
+                continue
+            # hey, we should enable this pact!
+            conditions = [pactID]
+            player.diplomacyRels = client.cmdProxy.changePactCond(playerID, contactID, pactID, PACT_INACTIVE, conditions)
+
 
 def defenseManager():
     global client, db, designs, data
