@@ -93,13 +93,15 @@ class GameMngr:
         typesSum = {}
         # upgrade all objects in database
         # and collect all not referenced objects
-        # upgrade 0.5.72 => 0.5.73
+        # TODO: remove after 0.5.73
         for login, mapping in self.db[OID_I_LOGIN2OID].iteritems():
             try:
-                # this fails if upgrade is needed
+                # this does not fail if upgrade is needed
                 mapping + 1
-            except TypeError:
+                # fix stuff
                 self.db[OID_I_LOGIN2OID][login] = [mapping]
+            except TypeError:
+                pass
         for id in self.db.keys():
             try:
                 obj = self.db[id]
