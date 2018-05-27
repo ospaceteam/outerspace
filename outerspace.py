@@ -177,12 +177,8 @@ parser_ai_pool.add_argument("--galaxy", dest = "galaxies",
 )
 parser_ai_pool.add_argument("--game", dest = "game",
     metavar = "NAME",
-    default = None,
-    help = "Name of the game for which the AIs should be run. No argument means all games.",
-)
-parser_ai_pool.add_argument("--cleanup", dest = "cleanup",
-    action = "store_true", default=False,
-    help = argparse.SUPPRESS
+    default = "Alpha",
+    help = "Name of the game for which the AIs should be run.",
 )
 
 options = parser.parse_args()

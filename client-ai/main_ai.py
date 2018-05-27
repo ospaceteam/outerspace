@@ -86,20 +86,26 @@ def runAIClient(options):
     else:
         raise Exception, 'You have to provide password.'
 
+    # first get list of sessions, then iterate over them
+    # this is to prevent exceptions flooding logs
+    # TODO: make session optional argument for main_ai_pool
     if client.login(options.game, login, password):
         activePositions = client.cmdProxy.getActivePositions()
-        for playerID, galaxyName, playerType in activePositions:
-            if options.galaxies and galaxyName not in options.galaxies:
-                continue
-            client.cmdProxy.selectPlayer(playerID)
-            if options.test:
-                client.logout()
-                return True
-            # event loop
-            client.updateDatabase()
-            ai.run(client)
-            client.logout()
-            log.debug("Shut down")
+        client.logout()
+        if options.test:
+            return True
     else:
         return False
+
+    for playerID, galaxyName, playerType in activePositions:
+        if options.galaxies and galaxyName not in options.galaxies:
+            continue
+        client.login(options.game, login, password)
+        client.cmdProxy.selectPlayer(playerID)
+        # event loop
+        client.updateDatabase()
+        print(client.db.keys())
+        ai.run(client)
+        client.logout()
+        log.debug("Shut down")
 

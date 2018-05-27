@@ -36,8 +36,6 @@ import IAIEDENPlayer, IPiratePlayer
 
 import Scanner
 
-from ai_parser import AIList
-
 class IGalaxy(IObject):
 
     typeID = T_GALAXY
@@ -478,7 +476,6 @@ class IGalaxy(IObject):
     def delete(self, tran, obj):
         log.debug(obj.oid, "GALAXY - delete")
         universe = tran.db[OID_UNIVERSE]
-        aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
         # delete systems and planets
         for systemID in obj.systems:
             log.debug("Deleting system", systemID)
@@ -499,7 +496,6 @@ class IGalaxy(IObject):
             player = tran.db[playerID]
             if obj.oid not in player.galaxies:
                 continue
-            aiList.removeGalaxy(player.login, obj.name)
             if player.fleets:
                 log.debug("Player %d has still fleets" % playerID, player.name, player.fleets)
                 for fleetID in player.fleets:

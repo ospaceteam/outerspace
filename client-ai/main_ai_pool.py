@@ -37,33 +37,22 @@ def runAIPool(options):
     if options.game:
         games.append(options.game)
     else:
-        for filename in os.listdir(options.configDir):
-            if re.match('ais_list\.', filename):
-                games.append(filename.split('.')[1])
+        # support for games autodetect is not implemented
+        raise NotImplementedError
 
     aiPool = multiprocessing.Pool(processes = options.procs)
 
     for gameName in games:
-        aiList = AIList(options.configDir, gameName)
+        aiList = AIList(options.configDir)
         for record in aiList.getAll():
-            for galaxyName in record.galaxyNames:
-                if options.galaxies and not galaxyName not in options.galaxies:
-                    continue
-                optAI = copy.copy(options)
-                optAI.configDir = os.path.join(options.configDir, 'ai_data', gameName, galaxyName)
-                optAI.login = record.login
-                optAI.password = record.password
-                optAI.ai = record.aiType
-                optAI.game = gameName
-                optAI.galaxies = [galaxyName]
-                if options.cleanup:
-                    optAI.test = True
-                    if not runAIClient(optAI):
-                        print('Removing {0} {1}'.format(optAI.login, optAI.password))
-                        aiList.remove(optAI.login, optAI.password)
-                else:
-                    optAI.test = False
-                    aiPool.apply_async(runAIClient, [optAI])
+            optAI = copy.copy(options)
+            optAI.configDir = os.path.join(options.configDir, 'ai_data', gameName)
+            optAI.login = record.login
+            optAI.password = record.password
+            optAI.ai = record.aiType
+            optAI.game = gameName
+            optAI.test = False
+            aiPool.apply_async(runAIClient, [optAI])
     aiPool.close()
     aiPool.join()
     sys.exit()

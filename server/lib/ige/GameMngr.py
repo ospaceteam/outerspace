@@ -31,7 +31,6 @@ from ige.Const import ADMIN_LOGIN
 import os, os.path, time
 import log
 from IObject import IDataHolder
-from ai_parser import AIList
 
 class GameMngr:
 
@@ -102,6 +101,25 @@ class GameMngr:
                 self.db[OID_I_LOGIN2OID][login] = [mapping]
             except TypeError:
                 pass
+        # make proper AI accounts TODO: remove after 0.5.73
+        for login, mapping in self.db[OID_I_LOGIN2OID].iteritems():
+            if login.startswith('*AIP*'):
+                # let's replace this account with new, shiny one!
+                if "rebels" in login:
+                    ai = "ais_rebel"
+                elif "mutant" in login:
+                    ai = "ais_mutant"
+                elif "pirate" in login:
+                    ai = "ais_pirate"
+                elif "eden" in login:
+                    ai = "ais_eden"
+                else:
+                    # unknown type, ignore
+                    continue
+                old = self.clientMngr.accounts[login]
+                self.clientMngr.accounts.delete(login)
+                self.clientMngr.createAIAccount(login, old.nick, ai)
+
         for id in self.db.keys():
             try:
                 obj = self.db[id]
@@ -226,8 +244,6 @@ class GameMngr:
         self.db.backup(basename)
         self.clientMngr.backup(basename)
         self.msgMngr.backup(basename)
-        aiList = AIList(self.configDir, self.gameName)
-        aiList.backup(basename)
         return True, None
 
     def commitDatabases(self, sid):
