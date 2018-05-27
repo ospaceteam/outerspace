@@ -81,6 +81,7 @@ class IGalaxy(IObject):
             if not tran.db.has_key(planetID):
                 log.debug("REMOVING nonexistent obj from start pos", planetID)
                 obj.startingPos.remove(planetID)
+                continue
             planet = tran.db[planetID]
             if planet.type != T_PLANET:
                 log.debug("REMOVING ??? from start pos", planetID)
