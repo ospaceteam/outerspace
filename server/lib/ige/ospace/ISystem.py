@@ -195,6 +195,25 @@ class ISystem(IObject):
                     orbit += 1
             except:
                 log.debug("Copy failed")
+        # TODO: remove in version 0.5.73
+        if True:
+            owners = []
+            for planetID in obj.planets:
+                planet = tran.db[planetID]
+                if planet.owner not in owners + [OID_NONE]:
+                    owners.append(planet.owner)
+            for owner_id in owners:
+                for tech, struct in self.getSystemMineLauncher(tran, obj, owner_id):
+                    if not struct[STRUCT_IDX_STATUS] & STRUCT_STATUS_ON:
+                        # structure is offline, reset timer
+                        self.addMine(tran, obj, owner_id, tech.mineclass, 0)
+                        continue
+                    efficiency = struct[STRUCT_IDX_HP] / float(tech.maxHP)
+                    minenum = int(tech.minenum * efficiency)
+                    # by setting minerate to None, we are forcing a creation of one - so it grabs
+                    # galaxyTurn instead of universe.turn
+                    if self.addMine(tran, obj, owner_id, tech.mineclass, None, None):
+                        log.debug('ISystem', 'Mine timer reset for owner %d in system %d' % (owner_id, obj.oid))
 
     update.public = 0
 
@@ -886,7 +905,7 @@ class ISystem(IObject):
         Returns True if mine was added.
 
         """
-        current_turn = tran.db[OID_UNIVERSE].turn
+        current_turn = tran.db[obj.compOf].galaxyTurn
         if owner_id in obj.minefield:
             index = -1
             for mine_id, amount, deploy_turn in obj.minefield[owner_id]:

@@ -65,6 +65,8 @@ class IGalaxy(IObject):
         obj.emrLevel = 1.0
         obj.emrTrend = 1.0
         obj.emrTime = 0
+        # galaxy keeps track of it's own time as well (because of pauses)
+        obj.galaxyTurn = 0
 
     def update(self, tran, obj):
         # check existence of all systems
@@ -105,6 +107,9 @@ class IGalaxy(IObject):
                 if player.type in [T_PLAYER, T_PIRPLAYER]:
                     obj.owner = playerID
                     break
+        # TODO: remove after 0.5.73
+        if not hasattr(obj, 'galaxyTurn'):
+            obj.galaxyTurn = 0
 
 
     update.public = 0
@@ -132,6 +137,8 @@ class IGalaxy(IObject):
             return
         # compute emr level
         turn = tran.db[OID_UNIVERSE].turn
+        # galaxy keeps track of it's own time (because of pauses)
+        obj.galaxyTurn += 1
         obj.emrTime -= 1
         if obj.emrTime <= 0:
             modulo = turn % Rules.emrPeriod
