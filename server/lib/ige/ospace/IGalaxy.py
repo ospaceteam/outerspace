@@ -36,8 +36,6 @@ import IAIEDENPlayer, IPiratePlayer
 
 import Scanner
 
-from ai_parser import AIList
-
 class IGalaxy(IObject):
 
     typeID = T_GALAXY
@@ -65,6 +63,8 @@ class IGalaxy(IObject):
         obj.emrLevel = 1.0
         obj.emrTrend = 1.0
         obj.emrTime = 0
+        # galaxy keeps track of it's own time as well (because of pauses)
+        obj.galaxyTurn = 0
 
     def update(self, tran, obj):
         # check existence of all systems
@@ -79,6 +79,7 @@ class IGalaxy(IObject):
             if not tran.db.has_key(planetID):
                 log.debug("REMOVING nonexistent obj from start pos", planetID)
                 obj.startingPos.remove(planetID)
+                continue
             planet = tran.db[planetID]
             if planet.type != T_PLANET:
                 log.debug("REMOVING ??? from start pos", planetID)
@@ -105,6 +106,9 @@ class IGalaxy(IObject):
                 if player.type in [T_PLAYER, T_PIRPLAYER]:
                     obj.owner = playerID
                     break
+        # TODO: remove after 0.5.73
+        if not hasattr(obj, 'galaxyTurn'):
+            obj.galaxyTurn = 0
 
 
     update.public = 0
@@ -132,6 +136,8 @@ class IGalaxy(IObject):
             return
         # compute emr level
         turn = tran.db[OID_UNIVERSE].turn
+        # galaxy keeps track of it's own time (because of pauses)
+        obj.galaxyTurn += 1
         obj.emrTime -= 1
         if obj.emrTime <= 0:
             modulo = turn % Rules.emrPeriod
@@ -470,7 +476,6 @@ class IGalaxy(IObject):
     def delete(self, tran, obj):
         log.debug(obj.oid, "GALAXY - delete")
         universe = tran.db[OID_UNIVERSE]
-        aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
         # delete systems and planets
         for systemID in obj.systems:
             log.debug("Deleting system", systemID)
@@ -491,7 +496,6 @@ class IGalaxy(IObject):
             player = tran.db[playerID]
             if obj.oid not in player.galaxies:
                 continue
-            aiList.removeGalaxy(player.login, obj.name)
             if player.fleets:
                 log.debug("Player %d has still fleets" % playerID, player.name, player.fleets)
                 for fleetID in player.fleets:

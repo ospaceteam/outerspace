@@ -26,7 +26,8 @@ import log
 from ige import SecurityException
 from ige.Const import ADMIN_LOGIN
 import Authentication
-from account import Account
+from account import Account, AIAccount
+from ai_parser import AIList
 
 class ClientMngr:
 
@@ -47,6 +48,7 @@ class ClientMngr:
         password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
         open(os.path.join(self.configDir, "token"), "w").write(password)
         self.accounts[ADMIN_LOGIN].passwd = password
+        self.generateAIList()
 
     def shutdown(self):
         self.accounts.shutdown()
@@ -97,31 +99,50 @@ class ClientMngr:
         # TODO send confirmation token to the email address
         return 1, None
 
-    def createAIAccount(self, sid, login, passwd, nick):
+    def createAIAccount(self, login, nick, aiType):
         if self.accounts.has_key(login):
             log.message('AI account already exists, no work needed.', login, nick)
-            return 1, None
+            password = self.accounts[login].passwd
+            return password, None
 
         log.message('Creating AI account', login, nick)
         login = login.strip()
-        passwd = passwd.strip()
         nick = nick.strip()
         # create account
-        account = Account()
+        account = AIAccount()
         # update
         account.login = login
-        account.passwd = passwd
         account.nick = nick
-        account.email = None
-        account.confToken = None
+        account.aiType = aiType
         self.accounts.create(account, id = str(account.login))
         log.message('AI account created')
+        self.generateAIList()
         return 1, None
 
-    def removeAIAccount(self,login):
+    def generateAIList(self):
+        aiList = AIList(self.configDir)
+        aiList.removeAll()
+        for login in self.accounts.keys():
+            account = self.accounts[login]
+            if not account.isAI:
+                continue
+            aiList.add(login, account.passwd, account.aiType)
+        aiList.save()
+        log.message('AI list regenerated')
+
+    def removeAIAccount(self, login):
         self.accounts.delete(login)
-        aiList.remove(login)
+        self.generateAIList()
         return 1, None
+
+    def resetAIAccounts(self):
+        for login in self.accounts.keys():
+            account = self.accounts[login]
+            if account.isAI:
+                self.accounts.delete(login)
+        self.generateAIList()
+        return 1, None
+
 
     def hello(self, sid, login, clientId):
         log.debug(clientId, 'connected. User', repr(login))

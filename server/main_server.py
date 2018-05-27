@@ -32,8 +32,6 @@ def runServer(options):
     sys.path.insert(0, os.path.join(baseDir, "data"))
 
     import os, atexit
-    from ai_parser import AIList
-
 
 
     #configure gc
@@ -176,8 +174,6 @@ def runServer(options):
             return False
         msgDB.restore("%s-messages.osbackup" % options.restore, include = include)
         bookingDB.restore("%s-bookings.osbackup" % options.restore, include = include)
-        aiList = AIList(options.configDir, options.gameName)
-        aiList.restore("%s-ais.osbackup" % options.restore)
 
     # initialize game
     log.message('Initializing game \'%s\'...' % gameName)

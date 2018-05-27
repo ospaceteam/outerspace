@@ -18,6 +18,8 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+import hashlib
+import random
 import time
 
 class Account(object):
@@ -34,9 +36,18 @@ class Account(object):
         self.blocked = 0 # 1 for blocked account
         self.confToken = None # e-mail confirmation token, if None e-mail has been confirmed
         self.hostIDs = {} # hostids and times
-        self.players = [] # ids of connected player objects
+        self.isAI = False
 
     def addHostID(self, hostID):
         if hostID:
             self.hostIDs[hostID] = time.time()
 
+class AIAccount(Account):
+
+    def __init__(self):
+        Account.__init__(self)
+        self.passwd = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
+
+        self.isAI = True
+        self.aiType = None
+        self.galaxyNames = []

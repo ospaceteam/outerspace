@@ -39,10 +39,6 @@ def initialize(aServer, anOptions):
     options = anOptions
     initCmdProxy()
 
-def reinitialize():
-    global cmdProxy
-    cmdProxy = None
-
 def initCmdProxy():
     global cmdProxy, server
     if not cmdProxy:
@@ -55,30 +51,17 @@ def initCmdProxy():
 
 def login(gameid, login, password):
     cmdProxy.connect(login)
-    if gdata.config.client.keepAlive != None:
-        cmdProxy.keepAliveTime = int(gdata.config.client.keepAlive)
     if cmdProxy.login(gameid, login, password):
         return 1
     return 0
 
-def createAccount(login, password, nick, email):
-    global cmdProxy, server
-    if not cmdProxy:
-        proxy = None
-        if gdata.config.proxy.http != None:
-            proxy = gdata.config.proxy.http
-        cmdProxy = IClient.IClient(server, proxy, None, None, 'OSClient/%d.%d.%d%s' % osci.version)
-        cmdProxy.connect(login)
-        if gdata.config.client.keepAlive != None:
-            cmdProxy.keepAliveTime = int(gdata.config.client.keepAlive)
-    return cmdProxy.createAccount(login, password, nick, email)
-
 def logout():
+    global db, lastUpdate
     if cmdProxy and cmdProxy.logged:
         cmdProxy.logout()
-    if db:
-        log.message('OSClient', 'Saving database')
-        db.save()
+    saveDB()
+    db = None
+    lastUpdate = -1
 
 def saveDB():
     if db:
@@ -146,10 +129,6 @@ def updateDatabaseUnsafe(clearDB = 0, force = 0):
     log.message('IClient', 'Update finished.')
 
 ## Basic functions
-
-def keepAlive(force = False):
-    # AI is fast, no need for keepAlive
-    pass
 
 def get(objID, forceUpdate = 0, noUpdate = 0, canBePublic = 1, publicOnly = 0):
     global nonexistingObj

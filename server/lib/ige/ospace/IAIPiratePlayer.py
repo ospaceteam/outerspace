@@ -25,9 +25,6 @@ from ige.IDataHolder import IDataHolder
 import Rules, Utils
 from Const import *
 import math, time, random, os, sys
-import hashlib
-
-from ai_parser import AIList
 
 class IAIPiratePlayer(IPlayer):
 
@@ -58,15 +55,10 @@ class IAIPiratePlayer(IPlayer):
             if galaxyID in tran.gameMngr.accountGalaxies(obj.login):
                 counter += 1
                 continue
-            password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
             tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
             tran.db[OID_UNIVERSE].players.append(obj.oid)
-            tran.gameMngr.clientMngr.createAIAccount(None, obj.login, password, obj.name)
+            tran.gameMngr.clientMngr.createAIAccount(obj.login, obj.name, 'ais_pirate')
             break
-        # after succesfull registration, register it to the AI system
-        aiList = AIList(tran.gameMngr.configDir, tran.gameMngr.gameName)
-        aiList.add(obj.login, password, 'ais_pirate')
-        aiList.addGalaxy(obj.login, tran.db[galaxyID].name)
         # grant techs and so on
         self.cmd(obj).update(tran, obj)
 

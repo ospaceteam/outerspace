@@ -48,12 +48,16 @@ def killServer():
     except:
         pass
 
-def startServer():
-    log.info('Starting server')
+def startServer(upgrade=False):
     args=[os.path.join(CODE_ROOT, 'outerspace.py'),
           'server',
           '--configdir=' + TEMP_DIR,
           '--mode=0']
+    if upgrade:
+        log.info('Starting server with upgrade')
+        args.append('--upgrade')
+    else:
+        log.info('Starting server')
     subprocess.Popen(args, stdout=SERVER_OUT, stderr=subprocess.STDOUT)
 
     time.sleep(1) # give server process enough time to initialize
@@ -164,7 +168,7 @@ def checkServerStatus():
     log.info('Server status is present.')
     return True
 
-def checkLogs():
+def checkLogs(hard=False):
     everything_ok = True
     for logfile in [SERVER_OUT, AI_OUT, UTILS_OUT]:
         with open(logfile.name) as readable_logfile:
@@ -175,6 +179,8 @@ def checkLogs():
                 everything_ok = False
     if everything_ok:
         log.info('No error messages found in log files')
+    elif hard:
+        sys.exit(1)
 
 def checkPlayerProgress():
     problem = False
@@ -222,6 +228,7 @@ log.info('Location of logs: ' + str(TEMP_DIR))
 
 
 # test itself
+# check basic sanity
 startServer()
 atexit.register(killServer)
 createGalaxy("Circle1SP")
@@ -231,13 +238,21 @@ startServerTime()
 deleteGalaxy(10000) # legacy
 createGalaxy("Circle42P")
 startServerTime()
-doTurns(args.turns, args.turnSkip, slow=args.slow)
+doTurns(args.turnSkip, args.turnSkip, slow=args.slow)
 checkServerStatus()
 stopServer()
-checkPlayerProgress()
+checkLogs(hard=True)
 
+# check upgrade sanity
+startServer(upgrade=True)
+doTurns(args.turnSkip, args.turnSkip, slow=args.slow)
+checkServerStatus()
+stopServer()
+checkLogs(hard=True)
+
+# this block checks player progression
 startServer()
-doTurns(2*args.turnSkip, args.turnSkip, slow=args.slow)
+doTurns(args.turns, args.turnSkip)
 checkServerStatus()
 stopServer()
 checkPlayerProgress()

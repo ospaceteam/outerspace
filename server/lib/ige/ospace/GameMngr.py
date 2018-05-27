@@ -39,7 +39,6 @@ import IAIEDENPlayer, IPiratePlayer
 import Rules, Utils
 
 from Rules import Tech
-from ai_parser import AIList
 
 class GameMngr(IGEGameMngr):
 
@@ -81,10 +80,7 @@ class GameMngr(IGEGameMngr):
 
     def reset(self):
         # remove all AI accounts and their records in AI list
-        aiList = AIList(self.configDir, self.gameName)
-        for login in aiList.getLogins():
-            self.clientMngr.removeAIAccount(login)
-        aiList.removeAll()
+        self.clientMngr.resetAIAccounts()
         IGEGameMngr.reset(self)
         # save informations
         self.db.checkpoint()
@@ -267,11 +263,6 @@ class GameMngr(IGEGameMngr):
         player.type = T_PLAYER
         self.cmdPool[T_PLAYER].upgrade(tran, player)
         self.cmdPool[T_PLAYER].update(tran, player)
-        # remove AI player account from game and its record from the AIlist
-        aiList = AIList(self.configDir, self.gameName)
-        for galaxyID in player.galaxies:
-            galaxy = self.db[galaxyID]
-            aiList.removeGalaxy(player.login, galaxy.name)
         # reregister player
         self.removePlayer(player.oid)
         player.name = session.nick
@@ -310,11 +301,6 @@ class GameMngr(IGEGameMngr):
         player.type = T_PIRPLAYER
         self.cmdPool[T_PIRPLAYER].upgrade(tran, player)
         self.cmdPool[T_PIRPLAYER].update(tran, player)
-        # remove AI player account from game and its record from the AIlist
-        aiList = AIList(self.configDir, self.gameName)
-        for galaxyID in player.galaxies:
-            galaxy = self.db[galaxyID]
-            aiList.removeGalaxy(player.login, galaxy.name)
         # reregister player
         self.removePlayer(player.oid)
         player.fullName = "Pirate %s" % session.nick
