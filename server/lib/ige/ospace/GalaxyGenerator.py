@@ -87,6 +87,31 @@ class Circle1SP(GalaxyTemplate):
             Const.DISEASE_MUTANT : [(2, 5, 3)]
         }
 
+class Circle3BP(GalaxyTemplate):
+    def __init__(self):
+        GalaxyTemplate.__init__(self)
+
+        self.galaxyDescription = "Small galaxy to brawl with two other commanders. No voting, no imperator. Conquest is the only solution."
+        self.scenario = Const.SCENARIO_BRAWL
+        self.minPlanets = 250
+        self.maxPlanets = 350
+        self.startR = (0.0, 0.0)
+        self.players = 3
+        self.playerGroup = 3
+        self.groupDist = 12
+        self.minR = 3
+        # format {minRadius: density, nextCircleRadius: differentDensity}
+        self.density = {3:4, 6: 4, 10: 4.5, 15: 5}
+        self.resources = {
+            # format resourceID : [(minDist, maxDist, number of resources)]
+            Const.SR_TL1A : [(11, 13, 3)],
+            Const.SR_TL1B : [(11, 13, 3)]
+        }
+        self.diseases = {
+                # no mutant
+        }
+
+
 class Circle3SP(GalaxyTemplate):
     def __init__(self):
         GalaxyTemplate.__init__(self)
@@ -110,6 +135,17 @@ class Circle3SP(GalaxyTemplate):
         self.diseases = {
             # format diseaseID : (minDist, maxDist, number of diseases)
             Const.DISEASE_MUTANT : [(2, 4, 3)]
+        }
+
+class Circle3CP(Circle3SP):
+    def __init__(self):
+        Circle3SP.__init__(self)
+
+        self.galaxyDescription = "Cooperative galaxy, where you and two other commanders fend of and defeat sprawling mutant menace. Cooperation is not enforced, but recommended. Galaxy ends when mutant player cease to exist."
+        self.scenario = Const.SCENARIO_COOP
+        self.diseases = {
+            # format diseaseID : (minDist, maxDist, number of diseases)
+            Const.DISEASE_MUTANT : [(2, 4, 5)]
         }
 
 class Circle9P(GalaxyTemplate):
@@ -203,7 +239,7 @@ class GalaxyGenerator:
     def __init__(self):
         self.templates = {}
         # TODO: I guess we can autodetect this somehow, in a future
-        for templateClass in [Circle1SP, Circle3SP, Circle9P, Circle42P, Circle65P]:
+        for templateClass in [Circle1SP, Circle3BP, Circle3SP, Circle3CP, Circle9P, Circle42P, Circle65P]:
             templateInstance = templateClass()
             self.templates[templateInstance.galaxyType] = templateInstance
 

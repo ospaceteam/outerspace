@@ -227,6 +227,24 @@ class IUniverse(IObject):
                     dipl.stats = tran.db[partyID].stats
                 else:
                     dipl.stats = None
+        # process each galaxy
+        for galaxyID in obj.galaxies:
+            log.debug("Voting for galaxy", galaxyID)
+            galaxy = tran.db[galaxyID]
+            if not galaxy.timeEnabled:
+                # skip this galaxy
+                continue
+            if galaxy.scenario == SCENARIO_OUTERSPACE:
+                self.processScenarioOuterspace(tran, obj, galaxy)
+            elif galaxy.scenario == SCENARIO_SINGLE:
+                self.processScenarioSingle(tran, obj, galaxy)
+                continue
+            elif galaxy.scenario == SCENARIO_COOP:
+                self.processScenarioCoop(tran, obj, galaxy)
+                continue
+            elif galaxy.scenario == SCENARIO_BRAWL:
+                self.processScenarioBrawl(tran, obj, galaxy)
+                continue
         # imperator voting
         turn = tran.db[OID_UNIVERSE].turn
         if (turn + 2 * Rules.turnsPerDay) % Rules.voteForImpPeriod == 0:
@@ -296,18 +314,6 @@ class IUniverse(IObject):
                         voters[voteFor].append(player.name)
                     else:
                         voters[voteFor] = [player.name]
-
-                # now singleplayer galaxy can be handled, as we finally know whether it is
-                # deserted or not
-                if galaxy.scenario == SCENARIO_SINGLE:
-                    if activePlayerCount == 0 \
-                               and tran.gameMngr.config.server.mode == "normal":
-                        self.finishGalaxySingle(tran, obj, galaxyID)
-                    else:
-                        # singleplayer galaxies do not need voting stuff, so there's nothing
-                        # more to do
-                        continue
-
 
                 # check winner
                 nominated = votesID.keys()
@@ -385,6 +391,101 @@ class IUniverse(IObject):
 
     processFINAL2Phase.public = 1
     processFINAL2Phase.accLevel = AL_ADMIN
+
+    def processScenarioOuterspace(self, tran, obj, galaxy):
+        # TODO: fix it as right now, it's processed in the body of FINAL
+        # (all the voting and stuff)
+        pass
+
+    def processScenarioSingle(self, tran, obj, galaxy):
+        """ If owner of the galaxy is not present anymore, remove it.
+        There are no winning conditions right now.
+        """
+        try:
+            player = tran.db[galaxy.owner]
+            if galaxy.oid in player.galaxies:
+                # all is well
+                return True
+            # new player has nothing to do with this galaxy
+        except KeyError:
+            # there is no object with owner OID
+            pass
+        except AttributeError:
+            # there is object with owner OID, but it's not player object
+            pass
+        # let's clean it
+        if tran.gameMngr.config.server.mode == "normal":
+            self.cmd(galaxy).delete(tran, galaxy)
+
+    def processScenarioCoop(self, tran, obj, galaxy):
+        ENEMIES = [T_AIEDENPLAYER, T_AIMUTPLAYER, T_AIPIRPLAYER]
+        clear = True
+        players = []
+        for playerID in obj.players:
+            player = tran.db[playerID]
+            if galaxy.oid not in player.galaxies:
+                continue
+            if player.type in ENEMIES:
+                clear = False
+                continue
+            if player.type == T_AIPLAYER:
+                players.append(player)
+            if player.type != T_PLAYER:
+                # skip non-regular players
+                continue
+            players.append(player)
+        if not len(players):
+            # no player left? what a strange state! Let's delete it quick!
+            self.cmd(galaxy).delete(tran, galaxy)
+            return False
+        if not clear:
+            # struggle is ongoing
+            return True
+        # no enemies left, let's celebrate by sending a message, and finish the galaxy
+        victors = map(lambda x: x.name, players)
+        message = {
+            "sender": "Galaxy %s" % galaxy.name,
+            "senderID": tran.cid,
+            "forum": "NEWS",
+            "data": (galaxy.oid, MSG_GNC_GALAXY_COOP_WON, galaxy.oid, obj.turn, (galaxy.name, victors)),
+            "topic": "EVENT",
+        }
+        self.cmd(obj).sendMsg(tran, obj, message)
+        self.cmd(galaxy).delete(tran, galaxy)
+
+    def processScenarioBrawl(self, tran, obj, galaxy):
+        players = []
+        for playerID in obj.players:
+            player = tran.db[playerID]
+            if galaxy.oid not in player.galaxies:
+                continue
+            if player.type != T_PLAYER:
+                # skip non-regular players
+                continue
+            players.append(player)
+        if len(players) > 1:
+            # fight continues
+            return True
+        if not len(players):
+            # no player left? what a strange state! Let's delete it quick!
+            self.cmd(galaxy).delete(tran, galaxy)
+            return False
+        # last man standing! Let's send announcement, and change the galaxy
+        # to SCENARIO_SINGLE for winner to enjoy it (and pause / finish at will)
+        winner = players[0]
+        message = {
+            "sender": "Galaxy %s" % galaxy.name,
+            "senderID": tran.cid,
+            "forum": "NEWS",
+            "data": (galaxy.oid, MSG_GNC_GALAXY_BRAWL_WON, galaxy.oid, obj.turn, (galaxy.name, winner.name)),
+            "topic": "EVENT",
+        }
+        self.cmd(obj).sendMsg(tran, obj, message)
+        galaxy.scenario = SCENARIO_SINGLE
+        galaxy.name += " won on {0}".format(obj.turn)
+        galaxy.owner = winner.oid
+        return False
+
 
     def update(self, tran, obj):
         # check existence of all galaxies
