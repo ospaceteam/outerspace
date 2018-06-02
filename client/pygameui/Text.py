@@ -386,10 +386,13 @@ class Text(Widget):
 
     # redirect mouse wheel events to the scollbar
     def processMWUp(self, evt):
-        return self.vertScrollbar.processMWUp(evt)
+        if self.vertScrollbar:
+            return self.vertScrollbar.processMWUp(evt)
 
     def processMWDown(self, evt):
-        return self.vertScrollbar.processMWDown(evt)
+        if self.vertScrollbar:
+            return self.vertScrollbar.processMWDown(evt)
+
 
 registerWidget(Text, 'text')
 
