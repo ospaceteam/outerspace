@@ -31,7 +31,6 @@ import ige.ospace.Const as Const
 class GalaxyTemplate():
     def __init__(self):
         self.galaxyType = self.__class__.__name__
-        self.galaxyDescription = ""
         self.scenario = Const.SCENARIO_NONE
         self.minPlanets = 0
         self.maxPlanets = 0
@@ -46,11 +45,11 @@ class GalaxyTemplate():
         self.maxSystemLoneliness = 5
         self.resources = {
             # format resourceID : [(minDist, maxDist, number of resources)]
-            Const.SR_TL1A : [(0, 0, 0)]
+            #Const.SR_TL1A : [(0, 0, 0)]
         }
         self.diseases = {
             # format diseaseID : (minDist, maxDist, number of diseases)
-            Const.DISEASE_MUTANT : [(0, 0, 0)]
+            #Const.DISEASE_MUTANT : [(0, 0, 0)]
         }
 
     @property
@@ -91,7 +90,7 @@ class Circle3BP(GalaxyTemplate):
     def __init__(self):
         GalaxyTemplate.__init__(self)
 
-        self.galaxyDescription = "Small galaxy to brawl with two other commanders. No voting, no imperator. Conquest is the only solution."
+        #self.galaxyDescription = "Small galaxy to brawl with two other commanders. No voting, no imperator. Conquest is the only solution."
         self.scenario = Const.SCENARIO_BRAWL
         self.minPlanets = 250
         self.maxPlanets = 350
@@ -107,16 +106,13 @@ class Circle3BP(GalaxyTemplate):
             Const.SR_TL1A : [(11, 13, 3)],
             Const.SR_TL1B : [(11, 13, 3)]
         }
-        self.diseases = {
-                # no mutant
-        }
 
 
 class Circle3SP(GalaxyTemplate):
     def __init__(self):
         GalaxyTemplate.__init__(self)
 
-        self.galaxyDescription = "More complex single player galaxy with classic starting group of three. Mutant is the only agressive enemy. Endless game."
+        #self.galaxyDescription = "More complex single player galaxy with classic starting group of three. Mutant is the only agressive enemy. Endless game."
         self.scenario = Const.SCENARIO_SINGLE
         self.minPlanets = 350
         self.maxPlanets = 400
@@ -141,7 +137,7 @@ class Circle3CP(Circle3SP):
     def __init__(self):
         Circle3SP.__init__(self)
 
-        self.galaxyDescription = "Cooperative galaxy, where you and two other commanders fend of and defeat sprawling mutant menace. Cooperation is not enforced, but recommended. Galaxy ends when mutant player cease to exist."
+        #self.galaxyDescription = "Cooperative galaxy, where you and two other commanders fend of and defeat sprawling mutant menace. Cooperation is not enforced, but recommended. Galaxy ends when mutant player cease to exist."
         self.scenario = Const.SCENARIO_COOP
         self.diseases = {
             # format diseaseID : (minDist, maxDist, number of diseases)
@@ -152,7 +148,7 @@ class Circle9P(GalaxyTemplate):
     def __init__(self):
         GalaxyTemplate.__init__(self)
 
-        self.galaxyDescription = "Smaller galaxy for 9 players, without pirate or EDEN. Recommended for new players or those who seek more casual gameplay."
+        #self.galaxyDescription = "Smaller galaxy for 9 players, without pirate or EDEN. Recommended for new players or those who seek more casual gameplay."
         self.scenario = Const.SCENARIO_OUTERSPACE
         self.minPlanets = 500
         self.maxPlanets = 600
@@ -177,10 +173,10 @@ class Circle42P(GalaxyTemplate):
     def __init__(self):
         GalaxyTemplate.__init__(self)
 
-        self.galaxyDescription = "Original size galaxy for 42 players, place of epic battles, recommended only to the experienced players. May become time consuming."
+        #self.galaxyDescription = "Original size galaxy for 42 players, place of epic battles, recommended only to the experienced players. May become time consuming."
         self.scenario = Const.SCENARIO_OUTERSPACE
-        self.minPlanets = 1000
-        self.maxPlanets = 99999
+        self.minPlanets = 1500
+        self.maxPlanets = 1800
         self.startR = (32.0, 36.0)
         self.players = 42
         self.playerGroup = 3
@@ -208,10 +204,10 @@ class Circle65P(GalaxyTemplate):
     def __init__(self):
         GalaxyTemplate.__init__(self)
 
-        self.galaxyDescription = "Majestic galaxy of unmatched size. Be prepared to work through diplomacy, as managing huge empire a conqueror needs would take all your time. Only for veteran players of many galaxies."
+        #self.galaxyDescription = "Majestic galaxy of unmatched size. Be prepared to work through diplomacy, as managing huge empire a conqueror needs would take all your time. Only for veteran players of many galaxies."
         self.scenario = Const.SCENARIO_OUTERSPACE
-        self.minPlanets = 2000
-        self.maxPlanets = 99999
+        self.minPlanets = 3200
+        self.maxPlanets = 3500
         self.startR = (45.0, 52.5)
         self.players = 65
         self.playerGroup = 5
@@ -246,7 +242,6 @@ class GalaxyGenerator:
     def generateGalaxy(self, galaxyType):
         if not galaxyType in self.templates:
             return False
-
         while True:
             try:
                 galaxy = generateGalaxy2(self.templates[galaxyType])

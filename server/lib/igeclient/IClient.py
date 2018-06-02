@@ -119,6 +119,9 @@ class IClient:
     def getBookingAnswers(self):
         return apply(IProxy('getBookingAnswers', None, self), ())
 
+    def getBookingOffers(self):
+        return apply(IProxy('getBookingOffers', None, self), ())
+
     def toggleBooking(self, galaxy_type):
         return apply(IProxy('toggleBooking', None, self), (galaxy_type,))
 
@@ -131,9 +134,6 @@ class IClient:
     def createNewPlayer(self, galaxyID):
         return apply(IProxy('%s.createNewPlayer' % self.gameID, None, self), (galaxyID,))
 
-    def triggerSinglePlayerGalaxy(self, galaxyType):
-        return apply(IProxy('%s.triggerSinglePlayerGalaxy' % self.gameID, None, self), (galaxyType,))
-
     def takeOverAIPlayer(self, playerID):
         return apply(IProxy('%s.takeOverAIPlayer' % self.gameID, None, self), (playerID,))
 
@@ -145,9 +145,6 @@ class IClient:
 
     def getStartingPositions(self):
         return apply(IProxy('%s.getStartingPositions' % self.gameID, None, self), ())
-
-    def getSingleStartingPositions(self):
-        return apply(IProxy('%s.getSingleStartingPositions' % self.gameID, None, self), ())
 
     def processTurn(self):
         return apply(IProxy('%s.processTurn' % self.gameID, None, self), ())
