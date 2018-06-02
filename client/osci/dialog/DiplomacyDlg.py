@@ -39,6 +39,7 @@ class DiplomacyDlg:
         self.createUI()
         self.selectedPartyID = OID_NONE
         self.selectedPactID = OID_NONE
+        self.galaxyScenario = None
         self.cDlg = ColorDefinitionDlg(self.app)
 
     def display(self):
@@ -51,11 +52,16 @@ class DiplomacyDlg:
     def hide(self):
         self.win.setStatus(_("Ready."))
         self.win.hide()
+        self.galaxyScenario = None
         # unregister updates
         if self in gdata.updateDlgs:
             gdata.updateDlgs.remove(self)
 
     def update(self):
+        if not self.galaxyScenario:
+            galaxyID = client.getPlayer().galaxies[0]
+            galaxy = client.get(galaxyID)
+            self.galaxyScenario = galaxy.scenario
         self.show()
 
     def show(self):
@@ -147,11 +153,18 @@ class DiplomacyDlg:
         self.win.vContacts.selectItem(selected)
         self.win.vContacts.itemsChanged()
         # voting
-        self.win.vAbstain.enabled = player.voteFor != OID_NONE
-        if selected:
-            self.win.vVoteFor.enabled = selected.tContactID != player.voteFor
+        if self.galaxyScenario == SCENARIO_OUTERSPACE:
+            # this is just in case we reloged
+            self.win.vAbstain.visible = 1
+            self.win.vVoteFor.visible = 1
+            self.win.vAbstain.enabled = player.voteFor != OID_NONE
+            if selected:
+                self.win.vVoteFor.enabled = selected.tContactID != player.voteFor
+            else:
+                self.win.vVoteFor.enabled = 0
         else:
-            self.win.vVoteFor.enabled = 0
+            self.win.vAbstain.visible = 0
+            self.win.vVoteFor.visible = 0
         # pacts
         items = []
         selected = None
