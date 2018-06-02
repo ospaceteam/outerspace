@@ -1,6 +1,20 @@
 ﻿Outer Space Change Log
 ======================
 
+[2018-05-27]
+- New game modes introduced, Coop and Brawl [dahaic]
+  Coop is scenario where players tries to fight AI together. Implemented
+  in Circle3CP, in which Mutant is the enemy. There is no enforcement of
+  peace as that does not prevent trolling anyway. Sane players set relations
+  and are good to go. As it is just an advanced type of training, reward is
+  just a global announcement.
+  
+  Brawl is deathmatch variant of galaxy, in first iteration represented by
+  Circle3BP. Three players pit against each other, no mutant, only renegades.
+  There is no diplomatic victory - you have to remain sole player in the galaxy.
+  If you win, galaxy switches to single mode, and you become the owner.
+
+
 [2018-05-25]
 - User can play multiple galaxies from the same account [dahaic]
   Only one presence in the galaxy is allowed, number of galaxies user

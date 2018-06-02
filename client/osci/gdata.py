@@ -170,6 +170,39 @@ sevColors = {
     DISABLED: (0x80, 0x80, 0x80),
 }
 
+gameScenarios = {
+    Const.SCENARIO_SINGLE: N_("Single"),
+    Const.SCENARIO_COOP: N_("Cooperative"),
+    Const.SCENARIO_BRAWL: N_("Brawl"),
+    Const.SCENARIO_OUTERSPACE: N_("Outer Space")
+}
+
+gameScenarioDescriptions = {
+    Const.SCENARIO_SINGLE: N_("Single player game to enjoy freebuilding, learn the game, and try new strategies. Usually some AI opponents try to slow you down. You can pause galaxy any time, as well as finish it. Endless game, set your own goals."),
+    Const.SCENARIO_COOP: N_("Cooperative game pits you and other commanders against strong AI opposition. Learn how to play along other players to achieve common goal. Cooperation is not enforced by game, but it is recommended to utilize all pacts available. Game ends when AI empires cease to exist."),
+    Const.SCENARIO_BRAWL: N_("Brawl is a mode where you fight other commanders for supremacy. There is no other way to win, than to conquer everything. Usually there are no agressive AI present. You win, when you are the only human commander in the galaxy."),
+    Const.SCENARIO_OUTERSPACE: N_("Original and complete mode. True experience, full of fights between commanders, sprawling AI, diplomacy and backstabbing. Recommended to veteran players with good grasp of game concepts. To win this game, you have to convince others to vote for you, and if you have enough backing, elect you to become the Imperator of the galaxy.")
+}
+
+galaxyTypeDescriptions = {
+    'Circle1SP': N_("Basic training galaxy, with mutant as the only agressive enemy. Recommended for new players."),
+    'Circle3BP': N_("Small galaxy to brawl with two other commanders."),
+    'Circle3SP': N_("More complex single player galaxy, with classic starting group of three commanders. Mutant is the only agressive enemy, two friendly Rebels start in the vicinity."),
+    'Circle3CP': N_("Cooperative galaxy, where you and two other commanders fend off and defeat sprawling mutant menace. Recommended to inexperienced players."),
+    'Circle9P': N_("Smallest galaxy with Outer Space rules, recommended for beginners or those who seek more casual gameplay."),
+    'Circle42P': N_("Original galaxy, place of epic battles and complex intrigues. Recommended only to the experienced players. It may become time consuming."),
+    'Circle65P': N_("Majestic galaxy of unmatched size. Be prepared to work through diplomacy, as management of huge empire required for conquest would take all your time. Only for veteran players of many galaxies."),
+}
+
+gameChallenges = {
+    Const.T_AIPLAYER:     N_("Rebel"),
+    Const.T_AIRENPLAYER:  N_("Renegade"),
+    Const.T_AIMUTPLAYER:  N_("Mutant"),
+    Const.T_AIPIRPLAYER:  N_("Pirate"),
+    Const.T_AIEDENPLAYER: N_("EDEN"),
+}
+
+
 # StarMapWidget overlays
 OVERLAY_OWNER = "owner"
 OVERLAY_DIPLO = "diplomacy"

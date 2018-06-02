@@ -193,7 +193,7 @@ class GameMngr(IGEGameMngr):
                 result.append((playerID, galaxy.name, PLAYER_SELECT_PIRATE))
         return result, None
 
-    def _singleGamesLimit(self, sid):
+    def singleGamesLimit(self, sid):
         session = self.clientMngr.getSession(sid)
         noOfSingles = 0
         for galaxyID in self.accountGalaxies(session.login):
@@ -204,41 +204,6 @@ class GameMngr(IGEGameMngr):
             # limit of single galaxies allowed to the account reached
             return True
         return False
-
-    def getSingleStartingPositions(self, sid):
-        if self._singleGamesLimit(sid):
-            return [], None
-
-        # ok, what single galaxies are available?
-        singleGalaxyTemplates = []
-        galGen = GalaxyGenerator.GalaxyGenerator()
-        for galaxyType in galGen.getGalaxyTypes():
-            galaxyTemplate = galGen.getGalaxyTemplate(galaxyType)
-            if galaxyTemplate.scenario == SCENARIO_SINGLE:
-                singleGalaxyTemplates.append(galaxyTemplate)
-
-        # prepare result
-        result = []
-        for template in singleGalaxyTemplates:
-            result.append((template.galaxyType, template.galaxyDescription, PLAYER_SELECT_NEWSINGLE))
-        return result, None
-
-    def triggerSinglePlayerGalaxy(self, sid, galaxyType):
-        if self._singleGamesLimit(sid):
-            raise GameException('Limit of single player galaxies reached.')
-
-        session = self.clientMngr.getSession(sid)
-        log.debug("Triggering new single player galaxy '{0}' for {1}".format(galaxyType, session.login))
-        universe = self.db[ige.Const.OID_UNIVERSE]
-        tran = Transaction(self, ige.Const.OID_ADMIN)
-        name = "{0}-{1}-{2}".format(galaxyType, session.login, universe.turn)
-        players = [session.login]
-        newGalaxyID = self.cmdPool[universe.type].createNewSubscribedGalaxy(tran, universe, name, galaxyType, players)
-        # now we know the galaxy ID, but what actually client needs is it's player ID in the galaxy
-        for playerID in self.db[OID_I_LOGIN2OID][session.login]:
-            if newGalaxyID in self.db[playerID].galaxies:
-                break
-        return playerID, None
 
     def takeOverAIPlayer(self, sid, playerID):
         log.debug('Creating new player in session', sid)

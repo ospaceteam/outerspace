@@ -33,7 +33,7 @@ import ige
 import ige.version
 from ige import log
 import GalaxyGenerator
-from ige import GameException
+from ige import GameException, NoSuchObjectException
 
 class IUniverse(IObject):
 
@@ -227,150 +227,27 @@ class IUniverse(IObject):
                     dipl.stats = tran.db[partyID].stats
                 else:
                     dipl.stats = None
-        # imperator voting
-        turn = tran.db[OID_UNIVERSE].turn
-        if (turn + 2 * Rules.turnsPerDay) % Rules.voteForImpPeriod == 0:
-            for galaxyID in obj.galaxies:
-                galaxy = tran.db[galaxyID]
-                if not galaxy.timeEnabled or galaxy.scenario != SCENARIO_OUTERSPACE:
-                    # skip this galaxy
-                    continue
-                message = {
-                    "sender": "GNC",
-                    "senderID": galaxyID,
-                    "forum": "NEWS",
-                    "data": (galaxyID, MSG_GNC_VOTING_COMING, galaxyID, turn, None),
-                    "topic": "EVENT",
-                }
-                self.cmd(galaxy).sendMsg(tran, galaxy, message)
-        if turn % Rules.voteForImpPeriod == 0:
-            # voting
-            # process each galaxy
-            for galaxyID in obj.galaxies:
-                log.debug("Voting for galaxy", galaxyID)
-                galaxy = tran.db[galaxyID]
-                if not galaxy.timeEnabled:
-                    # skip this galaxy
-                    continue
-                # compute votes
-                activePlayerCount = 0
-                piratePlayer = False
-                selfName = None
-                sum = 0
-                votes = {}
-                votesID = {}
-                voters = {}
-                for playerID in obj.players:
-                    player = tran.db[playerID]
-                    if galaxyID not in player.galaxies:
-                        log.debug("Skipping player", playerID, " - not in this galaxy")
-                        continue
-                    if player.type == T_PIRPLAYER:
-                        log.debug("Skipping player", playerID, " - he/she is a pirate")
-                        piratePlayer = True
-                        activePlayerCount += 1
-                        continue
-                    if player.type != T_PLAYER:
-                        log.debug("Skipping player", playerID, " - it's not a regular player")
-                        # skip non-regular players
-                        continue
-                    selfName = player.name
-                    # add to sum
-                    log.debug(playerID, "votes for", player.voteFor, "with votes", player.stats.slots)
-                    activePlayerCount += 1
-                    sum += player.stats.slots
-                    if player.voteFor == OID_NONE:
-                        voteFor = None
-                    else:
-                        tmpPlayer = tran.db.get(player.voteFor, None)
-                        if not tmpPlayer or tmpPlayer.type != T_PLAYER:
-                            # reset vote
-                            player.voteFor = OID_NONE
-                            voteFor = None
-                        else:
-                            voteFor = tmpPlayer.name
-                    # count votes
-                    votes[voteFor] = votes.get(voteFor, 0) + player.stats.slots
-                    votesID[player.voteFor] = votesID.get(player.voteFor, 0) + player.stats.slots
-                    if voteFor in voters:
-                        voters[voteFor].append(player.name)
-                    else:
-                        voters[voteFor] = [player.name]
 
-                # now singleplayer galaxy can be handled, as we finally know whether it is
-                # deserted or not
-                if galaxy.scenario == SCENARIO_SINGLE:
-                    if activePlayerCount == 0 \
-                               and tran.gameMngr.config.server.mode == "normal":
-                        self.finishGalaxySingle(tran, obj, galaxyID)
-                    else:
-                        # singleplayer galaxies do not need voting stuff, so there's nothing
-                        # more to do
-                        continue
+        # process each galaxy winning checking routines
+        for galaxyID in obj.galaxies:
+            log.debug("Voting for galaxy", galaxyID)
+            galaxy = tran.db[galaxyID]
+            if not galaxy.timeEnabled:
+                # skip this galaxy
+                continue
+            if galaxy.scenario == SCENARIO_OUTERSPACE:
+                self.processScenarioOuterspace(tran, obj, galaxy)
+                continue
+            elif galaxy.scenario == SCENARIO_SINGLE:
+                self.processScenarioSingle(tran, obj, galaxy)
+                continue
+            elif galaxy.scenario == SCENARIO_COOP:
+                self.processScenarioCoop(tran, obj, galaxy)
+                continue
+            elif galaxy.scenario == SCENARIO_BRAWL:
+                self.processScenarioBrawl(tran, obj, galaxy)
+                continue
 
-
-                # check winner
-                nominated = votesID.keys()
-                nominated.sort(lambda a, b: cmp(votesID[b], votesID[a]))
-                winnerID = OID_NONE
-                # remove OID_NONE from the list
-                if OID_NONE in nominated:
-                    nominated.remove(OID_NONE)
-                # check winner
-                if nominated and float(votesID[nominated[0]]) / sum >= Rules.ratioNeededForImp:
-                    # we have the imperator!
-                    imperator = tran.db[nominated[0]]
-                    # 2 imperator, 3+ winner
-                    imperator.imperator = max(2, imperator.imperator + 1)
-                    if galaxy.imperator != OID_NONE and galaxy.imperator != imperator.oid:
-                        tran.db[galaxy.imperator].imperator = 0
-                    galaxy.imperator = imperator.oid
-                    # send message
-                    message = {
-                        "sender": "GNC",
-                        "senderID": galaxyID,
-                        "forum": "NEWS",
-                        "data": (galaxyID, MSG_GNC_VOTING_IMPERATOR, galaxyID, turn, (imperator.name, (votes,voters))),
-                        "topic": "EVENT",
-                    }
-                    self.cmd(galaxy).sendMsg(tran, galaxy, message)
-                elif len(nominated) >= 1:
-                    # we have the leader!
-                    leader = tran.db[nominated[0]]
-                    leader.imperator = 1
-                    if galaxy.imperator != OID_NONE and galaxy.imperator != leader.oid:
-                        tran.db[galaxy.imperator].imperator = 0
-                    galaxy.imperator = leader.oid
-                    # send message
-                    message = {
-                        "sender": "GNC",
-                        "senderID": galaxyID,
-                        "forum": "NEWS",
-                        "data": (galaxyID, MSG_GNC_VOTING_LEADER, galaxyID, turn, (leader.name, (votes,voters))),
-                        "topic": "EVENT",
-                    }
-                    self.cmd(galaxy).sendMsg(tran, galaxy, message)
-                else:
-                    # nobody wins
-                    galaxy.imperator = OID_NONE
-                    message = {
-                        "sender": "GNC",
-                        "senderID": galaxyID,
-                        "forum": "NEWS",
-                        "data": (galaxyID, MSG_GNC_VOTING_NOWINNER, galaxyID, turn, ((votes,voters),)),
-                        "topic": "EVENT",
-                    }
-                    self.cmd(galaxy).sendMsg(tran, galaxy, message)
-                # check win conditions, but only in normal mode
-                # development mode does not end galaxies
-                if activePlayerCount <= 1 and tran.gameMngr.config.server.mode == "normal":
-                    log.message("AUTO FINISHING GALAXY", galaxyID)
-                    if activePlayerCount == 0:
-                        self.finishGalaxyAutomated(tran, obj, galaxyID, ["The galaxy was ended with no active players."])
-                    elif piratePlayer: #if the pirate is still alive, then he must be the winner.
-                        self.finishGalaxyAutomated(tran, obj, galaxyID, ["The galaxy was automatically ended with the Pirate as winner!"])
-                    elif selfName: #if there is only one player, selfName must be themselves if it isn't null
-                        self.finishGalaxyAutomated(tran, obj, galaxyID, ["The galaxy was automatically ended with commander %s as the only remaining player." % selfName])
         # collect mailboxes
         used = [self.cmd(obj).getMailboxName(tran, obj)]
         for galaxyID in obj.galaxies:
@@ -385,6 +262,245 @@ class IUniverse(IObject):
 
     processFINAL2Phase.public = 1
     processFINAL2Phase.accLevel = AL_ADMIN
+
+    def _announceImperatorVoting(self, tran, obj, galaxy):
+        message = {
+            "sender": "GNC",
+            "senderID": galaxy.oid,
+            "forum": "NEWS",
+            "data": (galaxy.oid, MSG_GNC_VOTING_COMING, galaxy.oid, obj.turn, Rules.voteForImpAnnounceOffset),
+            "topic": "EVENT",
+        }
+        self.cmd(galaxy).sendMsg(tran, galaxy, message)
+
+    def _countVotes(self, tran, obj, galaxy):
+        VALID_TYPES = [T_PLAYER, T_AIPLAYER]
+        log.debug("Voting for galaxy", galaxy.oid)
+        # compute votes
+        votesByName = {}
+        votesByID = {}
+        voterNames = {}
+        for playerID in obj.players:
+            player = tran.db[playerID]
+            if galaxy.oid not in player.galaxies:
+                continue
+            if player.type not in VALID_TYPES:
+                continue
+            # add to sum
+            log.debug(playerID, "votes for", player.voteFor, "with votes", player.stats.slots)
+
+            tmpPlayer = tran.db.get(player.voteFor, None)
+            if not tmpPlayer or tmpPlayer.type not in VALID_TYPES:
+                # reset vote
+                player.voteFor = OID_NONE
+                votedName = None
+            else:
+                votedName = tmpPlayer.name
+
+            # count votes
+            votesByName[votedName] = votesByName.get(votedName, 0) + player.stats.slots
+            votesByID[player.voteFor] = votesByID.get(player.voteFor, 0) + player.stats.slots
+            try:
+                voterNames[votedName].append(player.name)
+            except KeyError:
+                voterNames[votedName] = [player.name]
+        return votesByName, votesByID, voterNames
+
+    def _processElectedImperator(self, tran, obj, galaxy, imperator, votesByName, voterNames):
+        # 2 imperator, 3+ winner
+        imperator.imperator = max(2, imperator.imperator + 1)
+        if galaxy.imperator != OID_NONE and galaxy.imperator != imperator.oid:
+            tran.db[galaxy.imperator].imperator = 0
+        galaxy.imperator = imperator.oid
+        # send message
+        message = {
+            "sender": "GNC",
+            "senderID": galaxy.oid,
+            "forum": "NEWS",
+            "data": (galaxy.oid, MSG_GNC_VOTING_IMPERATOR, galaxy.oid, obj.turn, (imperator.name, (votesByName, voterNames))),
+            "topic": "EVENT",
+        }
+        self.cmd(galaxy).sendMsg(tran, galaxy, message)
+
+    def _processElectedLeader(self, tran, obj, galaxy, leader, votesByName, voterNames):
+        leader.imperator = 1
+        if galaxy.imperator != OID_NONE and galaxy.imperator != leader.oid:
+            tran.db[galaxy.imperator].imperator = 0
+        galaxy.imperator = leader.oid
+        # send message
+        message = {
+            "sender": "GNC",
+            "senderID": galaxy.oid,
+            "forum": "NEWS",
+            "data": (galaxy.oid, MSG_GNC_VOTING_LEADER, galaxy.oid, obj.turn, (leader.name, (votesByName, voterNames))),
+            "topic": "EVENT",
+        }
+        self.cmd(galaxy).sendMsg(tran, galaxy, message)
+
+    def _processNoWinner(self, tran, obj, galaxy, votesByName, voterNames):
+        # nobody wins
+        if galaxy.imperator != OID_NONE:
+            tran.db[galaxy.imperator].imperator = 0
+            galaxy.imperator = OID_NONE
+        message = {
+            "sender": "GNC",
+            "senderID": galaxy.oid,
+            "forum": "NEWS",
+            "data": (galaxy.oid, MSG_GNC_VOTING_NOWINNER, galaxy.oid, obj.turn, ((votesByName, voterNames),)),
+            "topic": "EVENT",
+        }
+        self.cmd(galaxy).sendMsg(tran, galaxy, message)
+
+    def _processImperatorVoting(self, tran, obj, galaxy):
+        votesByName, votesByID, voterNames = self._countVotes(tran, obj, galaxy)
+        # check winner
+        totalVotes = sum(votesByID.values())
+        nominated = votesByID.keys()
+        nominated.sort(lambda a, b: cmp(votesByID[b], votesByID[a]))
+        winnerID = OID_NONE
+        # OID_NONE is not valid target
+        if OID_NONE in nominated:
+            nominated.remove(OID_NONE)
+        # check winner
+        try:
+            winnerID = nominated[0]
+            winner = tran.db[winnerID]
+            if float(votesByID[winnerID]) / totalVotes >= Rules.ratioNeededForImp:
+                self._processElectedImperator(tran, obj, galaxy, winner, votesByName, voterNames)
+            elif len(nominated) > 1 and votesByID[winnerID] == votesByID[nominated[1]]:
+                # oh no, more than one winner
+                self._processNoWinner(tran, obj, galaxy, votesByName, voterNames)
+            else:
+                self._processElectedLeader(tran, obj, galaxy, winner, votesByName, voterNames)
+        except IndexError:
+            # no nominations?
+            self._processNoWinner(tran, obj, galaxy, votesByName, voterNames)
+
+    def _autoFinishOuterspace(self, tran, obj, galaxy):
+        if tran.gameMngr.config.server.mode != "normal":
+            # check autoend conditions, but only in normal mode
+            # development mode does not end galaxies
+            return
+        for playerID in obj.players:
+            player = tran.db[playerID]
+            if galaxy.oid not in player.galaxies:
+                continue
+            if player.type == T_PIRPLAYER:
+                piratePlayer = True
+                activePlayerCount += 1
+                continue
+            if player.type != T_PLAYER:
+                continue
+            selfName = player.name
+            activePlayerCount += 1
+
+        if activePlayerCount <= 1:
+            log.message("AUTO FINISHING GALAXY", galaxy.oid)
+            if activePlayerCount == 0:
+                self.finishGalaxyAutomated(tran, obj, galaxy.oid, ["The galaxy was ended with no active players."])
+            elif piratePlayer: #if the pirate is still alive, then he must be the winner.
+                self.finishGalaxyAutomated(tran, obj, galaxy.oid, ["The galaxy was automatically ended with the Pirate as a winner!"])
+            elif selfName: #if there is only one player, selfName must be themselves if it isn't null
+                self.finishGalaxyAutomated(tran, obj, galaxy.oid, ["The galaxy was automatically ended with commander %s as the only remaining player." % selfName])
+
+    def processScenarioOuterspace(self, tran, obj, galaxy):
+        if (galaxy.galaxyTurn + Rules.voteForImpAnnounceOffset) % Rules.voteForImpPeriod == 0:
+            self._announceImperatorVoting(tran, obj, galaxy)
+        if galaxy.galaxyTurn % Rules.voteForImpPeriod == 0:
+            # voting
+            self._processImperatorVoting(tran, obj, galaxy)
+        self._autoFinishOuterspace(tran, obj, galaxy)
+
+
+    def processScenarioSingle(self, tran, obj, galaxy):
+        """ If owner of the galaxy is not present anymore, remove it.
+        There are no winning conditions right now.
+        """
+        try:
+            player = tran.db[galaxy.owner]
+            if galaxy.oid in player.galaxies:
+                # all is well
+                return True
+            # new player has nothing to do with this galaxy
+        except NoSuchObjectException:
+            # there is no object with owner OID
+            pass
+        except AttributeError:
+            # there is object with owner OID, but it's not player object
+            pass
+        # let's clean it
+        if tran.gameMngr.config.server.mode == "normal":
+            self.cmd(galaxy).delete(tran, galaxy)
+
+    def processScenarioCoop(self, tran, obj, galaxy):
+        ENEMIES = [T_AIEDENPLAYER, T_AIMUTPLAYER, T_AIPIRPLAYER]
+        clear = True
+        players = []
+        for playerID in obj.players:
+            player = tran.db[playerID]
+            if galaxy.oid not in player.galaxies:
+                continue
+            if player.type in ENEMIES:
+                clear = False
+                continue
+            if player.type == T_AIPLAYER:
+                players.append(player)
+            if player.type != T_PLAYER:
+                # skip non-regular players
+                continue
+            players.append(player)
+        if not len(players):
+            # no player left? what a strange state! Let's delete it quick!
+            self.cmd(galaxy).delete(tran, galaxy)
+            return False
+        if not clear:
+            # struggle is ongoing
+            return True
+        # no enemies left, let's celebrate by sending a message, and finish the galaxy
+        victors = map(lambda x: x.name, players)
+        message = {
+            "sender": "Galaxy %s" % galaxy.name,
+            "senderID": tran.cid,
+            "forum": "NEWS",
+            "data": (galaxy.oid, MSG_GNC_GALAXY_COOP_WON, galaxy.oid, obj.turn, (galaxy.name, victors)),
+            "topic": "EVENT",
+        }
+        self.cmd(obj).sendMsg(tran, obj, message)
+        self.cmd(galaxy).delete(tran, galaxy)
+
+    def processScenarioBrawl(self, tran, obj, galaxy):
+        players = []
+        for playerID in obj.players:
+            player = tran.db[playerID]
+            if galaxy.oid not in player.galaxies:
+                continue
+            if player.type != T_PLAYER:
+                # skip non-regular players
+                continue
+            players.append(player)
+        if len(players) > 1:
+            # fight continues
+            return True
+        if not len(players):
+            # no player left? what a strange state! Let's delete it quick!
+            self.cmd(galaxy).delete(tran, galaxy)
+            return False
+        # last man standing! Let's send announcement, and change the galaxy
+        # to SCENARIO_SINGLE for winner to enjoy it (and pause / finish at will)
+        winner = players[0]
+        message = {
+            "sender": "Galaxy %s" % galaxy.name,
+            "senderID": tran.cid,
+            "forum": "NEWS",
+            "data": (galaxy.oid, MSG_GNC_GALAXY_BRAWL_WON, galaxy.oid, obj.turn, (galaxy.name, winner.name)),
+            "topic": "EVENT",
+        }
+        self.cmd(obj).sendMsg(tran, obj, message)
+        galaxy.scenario = SCENARIO_SINGLE
+        galaxy.name += " won on {0}".format(obj.turn)
+        galaxy.owner = winner.oid
+        return False
+
 
     def update(self, tran, obj):
         # check existence of all galaxies
@@ -471,7 +587,7 @@ class IUniverse(IObject):
                 "sender": imperator.name,
                 "senderID": tran.cid,
                 "forum": "NEWS",
-                "data": (galaxyID, MSG_GNC_GALAXY_FINISHED, galaxyID, tran.db[OID_UNIVERSE].turn, (imperator.name, galaxy.name, imperatorMessage)),
+                "data": (galaxyID, MSG_GNC_GALAXY_FINISHED, galaxyID, obj.turn, (imperator.name, galaxy.name, imperatorMessage)),
                 "topic": "EVENT",
             }
             self.cmd(obj).sendMsg(tran, obj, message)
@@ -493,7 +609,7 @@ class IUniverse(IObject):
             "sender": "Galaxy %s" % galaxy.name,
             "senderID": tran.cid,
             "forum": "NEWS",
-            "data": (galaxyID, MSG_GNC_GALAXY_AUTO_FINISHED, galaxyID, tran.db[OID_UNIVERSE].turn, (galaxy.name, imperatorMessage)),
+            "data": (galaxyID, MSG_GNC_GALAXY_AUTO_FINISHED, galaxyID, obj.turn, (galaxy.name, imperatorMessage)),
             "topic": "EVENT",
         }
         self.cmd(obj).sendMsg(tran, obj, message)

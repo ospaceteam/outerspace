@@ -109,6 +109,8 @@ MSG_GNC_VOTING_LEADER = 2005 # winner is leader
 MSG_GNC_VOTING_IMPERATOR = 2006 # winner is imperator
 MSG_GNC_GALAXY_GENERATOR = 2007 # galaxy generator information
 MSG_GNC_GALAXY_AUTO_FINISHED = 2008 # Galaxy was automatically finished
+MSG_GNC_GALAXY_BRAWL_WON = 2009 # Brawl has only one commander left
+MSG_GNC_GALAXY_COOP_WON = 2010 # Coop has no enemies left
 
 ## relations
 REL_ENEMY_LO = 0
@@ -246,6 +248,7 @@ BUOY_TO_SCANNERSHARE = 4
 SCENARIO_NONE = 0
 SCENARIO_SINGLE = 1
 SCENARIO_COOP = 2
+SCENARIO_BRAWL = 3
 SCENARIO_OUTERSPACE = 42  # original, true, competitive
 
 ACCOUNT_SCENARIO_LIMITS = {SCENARIO_SINGLE: 5}

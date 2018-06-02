@@ -213,6 +213,7 @@ relLostWhenAttacked = -1000000
 defaultRelation = REL_NEUTRAL
 contactTimeout = 6 * turnsPerDay
 
+voteForImpAnnounceOffset = 2 * turnsPerDay
 voteForImpPeriod = 6 * turnsPerDay
 ratioNeededForImp = 0.6666
 

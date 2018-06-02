@@ -111,6 +111,13 @@ def votes2Txt((votes, voters)):
 
 def impMsg(msg):
     return "\n".join(msg)
+
+def listing(names):
+    if len(names) == 1:
+        return names[0]
+    conj = _(" and ")
+    text = conj.join([", ".join(names[:-1]), names[-1]])
+    return text
 #
 # Data
 #
@@ -179,7 +186,7 @@ addMsg(MSG_MINES_FLEET_RESULTS, N_('Hostile minefield triggered: HP / ships lost
 # GNC
 addMsg(MSG_GNC_EMR_FORECAST, N_("EMR Forecast\n\nLevel of the electromagnetic radiation is believed to be about %(1)d %% of the average level for the next %(2)s turns"), (float2percent, res.formatTime), severity = MIN)
 addMsg(MSG_GNC_EMR_CURRENT_LVL, N_("EMR Forecast\n\nCurrent level of the electromagnetic radiation is about %(1)d %% of the average level."), (float2percent,), severity = MIN)
-addMsg(MSG_GNC_VOTING_COMING, N_("Elections!\n\nIt's 2:00 turns before elections! Don't hesitate and vote for the best commander!"), (), severity = MAJ)
+addMsg(MSG_GNC_VOTING_COMING, N_("Elections!\n\nIt's %(1)s turns before elections! Don't hesitate and vote for the best commander!"), (res.formatTime,), severity = MAJ)
 addMsg(MSG_GNC_VOTING_NOWINNER, N_("Election results! Nobody won...\n\nThe results from the last elections have been published. Nobody was strong enough to be elected as a leader of our galaxy. Can we find such person another day?\n\nThe official election results follow:\n\n%(1)s\n\n"), (votes2Txt,), severity = MAJ)
 addMsg(MSG_GNC_VOTING_LEADER, N_("Election results! Leader elected!\n\nThe results from the last elections have been published. %(1)s has proved to be the most supported person and has been elected as our Leader. May be, %(1)s can become an Imperator one day.\n\nThe official election results follow:\n\n%(2)s\n\n"), (unicode, votes2Txt,), severity = MAJ)
 addMsg(MSG_GNC_VOTING_IMPERATOR, N_("Election results! Imperator elected!\n\nThe results from the last elections have been published. %(1)s has proved to be the most supported person and has been elected as our glorified Imperator. Congratulations - you proved to be the best of all of us!\n\nThe official election results follow:\n\n%(2)s\n\n"), (unicode, votes2Txt,), severity = MAJ)
@@ -187,6 +194,8 @@ addMsg(MSG_GNC_VOTING_IMPERATOR, N_("Election results! Imperator elected!\n\nThe
 addMsg(MSG_GNC_GALAXY_FINISHED, N_("Galaxy %(2)s knows its winner - Imperator %(1)s\n\nToday the galaxy %(2)s has been united and the peace has been restored. Majority of commanders voted for Imperator %(1)s as their supreme leader. Congratulations, Imperator, you were brave and wise!\n\nMessage from imperator:\n%(3)s"), (unicode, unicode, impMsg), severity = MAJ)
 addMsg(MSG_GNC_GALAXY_GENERATOR, N_("Galaxy %(1)s generation is completed. Galaxy specifications:\n\n%(2)s"), (unicode, votes2Txt,), severity = INFO)
 addMsg(MSG_GNC_GALAXY_AUTO_FINISHED, N_("Galaxy %(1)s has ended\n\nToday the galaxy %(1)s has been automatically ended.\n\nReason:\n%(2)s"), (unicode, impMsg), severity = MAJ)
+addMsg(MSG_GNC_GALAXY_BRAWL_WON, N_("Galaxy %(1)s has ended\n\nAll hail to the conqueror! Galaxy %(1)s is finally on the brink of peace. After years of conquest, all opposition has been decimated and Sovereign %(2)s stands as the sole usurper of the galaxy."), (unicode, unicode), severity = MAJ)
+addMsg(MSG_GNC_GALAXY_COOP_WON, N_("Galaxy %(1)s has ended\n\nAll citizens of galaxy %(1)s rejoice. Peace is finally here!. After years of fending of attacks of barbaric empires, stalwart defence by %(2)s prevailed, and ensured further generations can live in prosperity."), (unicode, listing), severity = MAJ)
 
 # i18n
 del N_
