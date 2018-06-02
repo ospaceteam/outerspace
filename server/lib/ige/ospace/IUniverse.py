@@ -264,12 +264,11 @@ class IUniverse(IObject):
     processFINAL2Phase.accLevel = AL_ADMIN
 
     def _announceImperatorVoting(self, tran, obj, galaxy):
-        turn = tran.db[OID_UNIVERSE].turn
         message = {
             "sender": "GNC",
             "senderID": galaxy.oid,
             "forum": "NEWS",
-            "data": (galaxy.oid, MSG_GNC_VOTING_COMING, galaxy.oid, turn, Rules.voteForImpAnnounceOffset),
+            "data": (galaxy.oid, MSG_GNC_VOTING_COMING, galaxy.oid, obj.turn, Rules.voteForImpAnnounceOffset),
             "topic": "EVENT",
         }
         self.cmd(galaxy).sendMsg(tran, galaxy, message)
@@ -308,7 +307,6 @@ class IUniverse(IObject):
         return votesByName, votesByID, voterNames
 
     def _processElectedImperator(self, tran, obj, galaxy, imperator, votesByName, voterNames):
-        turn = tran.db[OID_UNIVERSE].turn
         # 2 imperator, 3+ winner
         imperator.imperator = max(2, imperator.imperator + 1)
         if galaxy.imperator != OID_NONE and galaxy.imperator != imperator.oid:
@@ -319,13 +317,12 @@ class IUniverse(IObject):
             "sender": "GNC",
             "senderID": galaxy.oid,
             "forum": "NEWS",
-            "data": (galaxy.oid, MSG_GNC_VOTING_IMPERATOR, galaxy.oid, turn, (imperator.name, (votesByName, voterNames))),
+            "data": (galaxy.oid, MSG_GNC_VOTING_IMPERATOR, galaxy.oid, obj.turn, (imperator.name, (votesByName, voterNames))),
             "topic": "EVENT",
         }
         self.cmd(galaxy).sendMsg(tran, galaxy, message)
 
     def _processElectedLeader(self, tran, obj, galaxy, leader, votesByName, voterNames):
-        turn = tran.db[OID_UNIVERSE].turn
         leader.imperator = 1
         if galaxy.imperator != OID_NONE and galaxy.imperator != leader.oid:
             tran.db[galaxy.imperator].imperator = 0
@@ -335,13 +332,12 @@ class IUniverse(IObject):
             "sender": "GNC",
             "senderID": galaxy.oid,
             "forum": "NEWS",
-            "data": (galaxy.oid, MSG_GNC_VOTING_LEADER, galaxy.oid, turn, (leader.name, (votesByName, voterNames))),
+            "data": (galaxy.oid, MSG_GNC_VOTING_LEADER, galaxy.oid, obj.turn, (leader.name, (votesByName, voterNames))),
             "topic": "EVENT",
         }
         self.cmd(galaxy).sendMsg(tran, galaxy, message)
 
     def _processNoWinner(self, tran, obj, galaxy, votesByName, voterNames):
-        turn = tran.db[OID_UNIVERSE].turn
         # nobody wins
         if galaxy.imperator != OID_NONE:
             tran.db[galaxy.imperator].imperator = 0
@@ -350,7 +346,7 @@ class IUniverse(IObject):
             "sender": "GNC",
             "senderID": galaxy.oid,
             "forum": "NEWS",
-            "data": (galaxy.oid, MSG_GNC_VOTING_NOWINNER, galaxy.oid, turn, ((votesByName, voterNames),)),
+            "data": (galaxy.oid, MSG_GNC_VOTING_NOWINNER, galaxy.oid, obj.turn, ((votesByName, voterNames),)),
             "topic": "EVENT",
         }
         self.cmd(galaxy).sendMsg(tran, galaxy, message)
@@ -408,10 +404,9 @@ class IUniverse(IObject):
                 self.finishGalaxyAutomated(tran, obj, galaxy.oid, ["The galaxy was automatically ended with commander %s as the only remaining player." % selfName])
 
     def processScenarioOuterspace(self, tran, obj, galaxy):
-        turn = tran.db[OID_UNIVERSE].turn
-        if (turn + Rules.voteForImpAnnounceOffset) % Rules.voteForImpPeriod == 0:
+        if (galaxy.galaxyTurn + Rules.voteForImpAnnounceOffset) % Rules.voteForImpPeriod == 0:
             self._announceImperatorVoting(tran, obj, galaxy)
-        if turn % Rules.voteForImpPeriod == 0:
+        if galaxy.galaxyTurn % Rules.voteForImpPeriod == 0:
             # voting
             self._processImperatorVoting(tran, obj, galaxy)
         self._autoFinishOuterspace(tran, obj, galaxy)
@@ -592,7 +587,7 @@ class IUniverse(IObject):
                 "sender": imperator.name,
                 "senderID": tran.cid,
                 "forum": "NEWS",
-                "data": (galaxyID, MSG_GNC_GALAXY_FINISHED, galaxyID, tran.db[OID_UNIVERSE].turn, (imperator.name, galaxy.name, imperatorMessage)),
+                "data": (galaxyID, MSG_GNC_GALAXY_FINISHED, galaxyID, obj.turn, (imperator.name, galaxy.name, imperatorMessage)),
                 "topic": "EVENT",
             }
             self.cmd(obj).sendMsg(tran, obj, message)
@@ -614,7 +609,7 @@ class IUniverse(IObject):
             "sender": "Galaxy %s" % galaxy.name,
             "senderID": tran.cid,
             "forum": "NEWS",
-            "data": (galaxyID, MSG_GNC_GALAXY_AUTO_FINISHED, galaxyID, tran.db[OID_UNIVERSE].turn, (galaxy.name, imperatorMessage)),
+            "data": (galaxyID, MSG_GNC_GALAXY_AUTO_FINISHED, galaxyID, obj.turn, (galaxy.name, imperatorMessage)),
             "topic": "EVENT",
         }
         self.cmd(obj).sendMsg(tran, obj, message)
