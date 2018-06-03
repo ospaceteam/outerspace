@@ -57,8 +57,12 @@ class LoginDlg:
             self.win.vLogin.text = gdata.config.game.lastlogin
         if gdata.config.game.lastpassword:
             self.win.vPassword.text = gdata.config.game.lastpassword
+            self.win.vSavePassword.checked = True
         if gdata.config.game.lastpasswordcrypted:
             self.win.vPassword.text = binascii.a2b_base64(gdata.config.game.lastpasswordcrypted)
+            self.win.vSavePassword.checked = True
+        if gdata.config.game.autologin == 'yes':
+            self.win.vAutoLogin.checked = True
         if not gdata.config.game.lastgameid:
             gdata.config.game.lastgameid = 'Alpha'
         if gdata.config.game.lastgameid not in self.gameIDs:
@@ -71,6 +75,7 @@ class LoginDlg:
         self.win.vMessage.text = message
         #if gdata.config.game.autologin != 'yes':    # enable this to disable auto-login after change in options
         #    self.firstlogin = false
+        self._updatePasswordGData()
         self.win.show()
         if gdata.config.game.autologin == 'yes':
             self.autoLogin()
@@ -150,6 +155,28 @@ class LoginDlg:
         # show
         self.universeMenu.show((self.win.rect.x + 11 * 20 + 2, self.win.rect.y + 20 + 2))
 
+    def _updatePasswordGData(self):
+        if self.win.vSavePassword.checked:
+            self.win.vAutoLogin.enabled = True
+            gdata.savePassword = True
+        else:
+            gdata.savePassword = False
+            gdata.config.game.lastpasswordcrypted = None
+            self.win.vAutoLogin.enabled = False
+            self.win.vAutoLogin.checked = False
+
+        if self.win.vAutoLogin.checked:
+            gdata.config.game.autologin = 'yes'
+        else:
+            gdata.config.game.autologin = 'no'
+
+
+    def onSavePassword(self, widget, action, data):
+        self._updatePasswordGData()
+
+    def onAutoLogin(self, widget, action, data):
+        self._updatePasswordGData()
+
     def onUniverseSelected(self, widget, action, data):
         self.win.vUniverse.text = self.gameIDs[data]
         self.win.vUniverse.data = data
@@ -160,7 +187,7 @@ class LoginDlg:
             modal = 1,
             movable = 0,
             title = _('Outer Space Login'),
-            rect = ui.Rect((w - 424) / 2, (h - 144) / 2, 424, 144),
+            rect = ui.Rect((w - 424) / 2, (h - 164) / 2, 424, 164),
             layoutManager = ui.SimpleGridLM(),
             tabChange = True,
         )
@@ -196,12 +223,16 @@ class LoginDlg:
             layout = (11, 2, 10, 1),
             orderNo = 2
         )
-        ui.Button(self.win, layout = (11, 3, 10, 1), text = _("Options"), action = "onOptions", id = "vOptions")
-        ui.Button(self.win, layout = (11, 4, 10, 1), text = _("New account"),
+        ui.Check(self.win, layout = (16.5,3,5,1), text = _('Auto-login'), id = 'vAutoLogin',
+            checked = 0, action = "onAutoLogin")
+        ui.Check(self.win, layout = (11.25,3,5,1), text = _('Remember'), id = 'vSavePassword',
+            checked = 0, action = "onSavePassword")
+        ui.Button(self.win, layout = (11, 4, 10, 1), text = _("Options"), action = "onOptions", id = "vOptions")
+        ui.Button(self.win, layout = (11, 5, 10, 1), text = _("New account"),
             action = "onCreateAccount", id = "vCreate")
-        ui.Title(self.win, layout = (0, 5, 11, 1), id = 'vMessage', align = ui.ALIGN_W)
-        ui.TitleButton(self.win, layout = (11, 5, 5, 1), text = _('Exit'), action = 'onCancel')
-        loginBtn = ui.TitleButton(self.win, layout = (16, 5, 5, 1), text = _('Login'), action = 'onLogin')
+        ui.Title(self.win, layout = (0, 6, 11, 1), id = 'vMessage', align = ui.ALIGN_W)
+        ui.TitleButton(self.win, layout = (11, 6, 5, 1), text = _('Exit'), action = 'onCancel')
+        loginBtn = ui.TitleButton(self.win, layout = (16, 6, 5, 1), text = _('Login'), action = 'onLogin')
         ui.Label(self.win, layout = (0, 0, 5, 4), icons = ((res.loginLogoImg, ui.ALIGN_W),))
         self.win.acceptButton = loginBtn
         # Universe selection
