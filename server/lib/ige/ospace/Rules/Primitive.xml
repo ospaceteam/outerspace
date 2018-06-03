@@ -33,6 +33,7 @@ as well.
 
 <techtree>
 	<technology id="0400" symbol="SMALLHULL0" name="Primitive Small Hull">
+		<starting/>
 		<discovery
 			researchMod="1.00 + 1.00"
 			level="1"
@@ -52,6 +53,7 @@ as well.
 		/>
 	</technology>
 	<technology id="0401" symbol="MEDIUMHULL0" name="Primitive Medium Hull">
+		<starting/>
 		<discovery
 			researchMod="1.00 + 1.00"
 			level="1"
@@ -71,6 +73,7 @@ as well.
 		/>
 	</technology>
 	<technology id="0402" symbol="LARGEHULL0" name="Primitive Large Hull">
+		<starting/>
 		<discovery
 			researchMod="1.00 + 1.00"
 			level="1"
@@ -90,6 +93,7 @@ as well.
 		/>
 	</technology>
 	<technology id="0403" symbol="SCOCKPIT0" name="Primitive Cockpit">
+		<starting/>
 		<discovery
 			researchMod="1.00 + 0.50"
 			level="1"
@@ -108,6 +112,7 @@ as well.
 		/>
 	</technology>
 	<technology id="0404" symbol="SBRIDGE0" name="Primitive Bridge">
+		<starting/>
 		<discovery
 			researchMod="1.00 + 0.50"
 			level="1"
@@ -127,6 +132,7 @@ as well.
 		/>
 	</technology>
 	<technology id="0405" symbol="SCOMDECK0" name="Primitive Command Deck">
+		<starting/>
 		<discovery
 			researchMod="1.00 + 0.50"
 			level="1"
@@ -146,6 +152,7 @@ as well.
 		/>
 	</technology>
 	<technology id="0500" symbol="CANNON0" name="Primitive Cannon">
+		<starting/>
 		<discovery
 			researchMod="1.00 + 0.5 + 0.5"
 			level="1"
@@ -165,6 +172,7 @@ as well.
 		/>
 	</technology>
 	<technology id="0501" symbol="CANNONTUR0" name="Primitive Cannon Turret">
+		<starting/>
 		<discovery
 			researchMod="1.00 + 0.5 + 0.5"
 			level="1"
@@ -185,6 +193,7 @@ as well.
 		/>
 	</technology>
 	<technology id="0502" symbol="SSROCKET0" name="Primitive SS Missile">
+		<starting/>
 		<discovery
 			researchMod="1.00 + 0.50 + 0.50"
 			level="1"
@@ -205,6 +214,7 @@ as well.
 		/>
 	</technology>
 	<technology id="0503" symbol="TORPEDO0" name="Primitive Torpedo">
+		<starting/>
 		<discovery
 			researchMod="1.00 + 0.50 + 0.50"
 			level="1"
@@ -226,6 +236,7 @@ as well.
 		/>
 	</technology>
 	<technology id="0504" symbol="CONBOMB0" name="Primitive Bomb">
+		<starting/>
 		<discovery
 			researchMod="1.0 + 0.5 + 0.5"
 			level="1"
@@ -245,6 +256,7 @@ as well.
 		/>
 	</technology>
 	<technology id="0510" symbol="FTLENG0" name="Primitive FTL Engine">
+		<starting/>
 		<discovery
 			researchMod="1.00 + 1.00"
 			level="1"
@@ -262,6 +274,7 @@ as well.
 		/>
 	</technology>
 	<technology id="0511" symbol="SCANNERMOD0" name="Primitive Scanner Module">
+		<starting/>
 		<discovery
 			researchMod="1.00 + 0.50"
 			level="1"
@@ -278,6 +291,7 @@ as well.
 		/>
 	</technology>
 	<technology id="0512" symbol="COLONYMOD0" name="Primitive Colony Module">
+		<starting/>
 		<discovery
 			researchMod="1.00 + 0.50"
 			level="1"
@@ -297,6 +311,7 @@ as well.
 		/>
 	</technology>
 	<technology id="0513" symbol="ETANKS0" name="Primitive Fuel Tank">
+		<starting/>
 		<discovery
 			researchMod="1.00 + 0.50"
 			level="1"
