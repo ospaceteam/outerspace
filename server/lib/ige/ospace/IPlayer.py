@@ -77,7 +77,7 @@ class IPlayer(IObject):
         #
         obj.staticMap = {}
         obj.dynamicMap = {}
-        obj.galaxies = []
+        obj.galaxy = None
         obj.validSystems = []
         #
         obj.stats = IDataHolder()
@@ -92,6 +92,12 @@ class IPlayer(IObject):
         obj.clientStats = {}
 
     def update(self, tran, obj):
+        # TODO: remove after 0.5.73
+        if hasattr(obj, 'galaxies'):
+            try:
+                obj.galaxy = obj.galaxies[0]
+            except IndexError:
+                obj.galaxy = None
         # update all designs
         for designID in obj.shipDesigns:
             old = obj.shipDesigns[designID]
@@ -208,10 +214,10 @@ class IPlayer(IObject):
         if not hasattr(obj, "prodQueues"):
             obj.prodQueues = [[],[],[],[],[]]
         # check if player is a leader
-        if not obj.galaxies:
+        if not obj.galaxy:
             log.debug(obj.oid, obj.name, "IS NOT IN ANY GALAXY")
         else:
-            galaxy = tran.db[obj.galaxies[0]]
+            galaxy = tran.db[obj.galaxy]
             if galaxy.imperator != obj.oid and obj.imperator > 0:
                 log.debug(obj.oid, "Removing imperator/leader bonus")
                 obj.imperator = 0
@@ -422,7 +428,7 @@ class IPlayer(IObject):
         """Remove player from the game. Give remaining planets, ... to the REBELS"""
         # cannot resign when time is stopped
         # TODO smarted conditions (like cannot resign twice a week or so)
-        galaxy = tran.db[obj.galaxies[0]]
+        galaxy = tran.db[obj.galaxy]
         if galaxy.scenario == SCENARIO_SINGLE:
             raise GameException('You cannot resign current game - it is single player game.')
         if not obj.timeEnabled:
@@ -434,7 +440,7 @@ class IPlayer(IObject):
         self.cmd(obj).update(tran, obj)
         # reregister
         tran.gameMngr.removePlayer(obj.oid)
-        self.cmd(obj).register(tran, obj, obj.galaxies[0])
+        self.cmd(obj).register(tran, obj, obj.galaxy)
 
     resign.public = 1
     resign.accLevel = AL_OWNER
@@ -1195,8 +1201,6 @@ class IPlayer(IObject):
         obj.stats.fleetPwr = 0
         obj.stats.fleetSupportProd = 0
         obj.govPwr = Rules.baseGovPwr
-        # update galaxies
-        obj.galaxies = []
         # remove old messages
         self.cmd(obj).deleteOldMsgs(tran, obj)
         # clear fleet upgrade flag

@@ -18,8 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-import socket
-import xmlrpclib
+import os.path
 
 from igeclient import IClient, IClientDB
 from ige.ospace import Rules
@@ -87,11 +86,12 @@ def createAccount(login, password, nick, email):
     return cmdProxy.createAccount(login, password, nick, email)
 
 def logout():
+    global db, lastUpdate
     if cmdProxy and cmdProxy.logged:
         cmdProxy.logout()
-    if db:
-        log.message('OSClient', 'Saving database')
-        db.save()
+    saveDB()
+    db = None
+    lastUpdate = -1
 
 def saveDB():
     if db:
@@ -147,7 +147,8 @@ def updateDatabaseUnsafe(clearDB = 0, force = 0):
     # get real turn
     result = cmdProxy.getIntroInfo(OID_UNIVERSE)
     if not db:
-        db = IClientDB.IClientDB(result.cid, result.turn, options.configDir, cmdProxy.gameID)
+        dbLocation = os.path.join(options.configDir, 'player_data')
+        db = IClientDB.IClientDB(result.cid, result.turn, dbLocation, cmdProxy.gameID)
     if clearDB:
         db.clear()
     db.turn = result.turn
@@ -200,30 +201,6 @@ def updateDatabaseUnsafe(clearDB = 0, force = 0):
     callbackObj.onUpdateProgress(current, max, _("Downloading planets and fleets data..."))
     for obj in cmdProxy.multiGetInfo(1, player.planets[:] + player.fleets[:]):
         db[obj.oid] = obj
-    #~ # compute system's positions
-    #~ current += 1
-    #~ callbackObj.onUpdateProgress(current, max, _("Updating astronomical coordinates..."))
-    #~ systems = {}
-    #~ for objID in db.keys():
-        #~ obj = db[objID]
-        #~ if obj.type == T_SYSTEM or obj.type == T_PLANET:
-            #~ if obj.type == T_SYSTEM:
-                #~ galaxy = get(obj.compOf)
-                #~ system = obj
-            #~ else:
-                #~ if obj.compOf in systems:
-                    #~ system = systems[obj.compOf]
-                #~ else:
-                    #~ system = get(obj.compOf, canBePublic = 0)
-                    #~ systems[obj.compOf] = system
-                #~ if hasattr(system, "compOf"):
-                    #~ galaxy = get(system.compOf)
-                #~ else:
-                    #~ continue
-            #~ angle = system.sAngle / 1000.0 + (db.turn / Rules.rotationMod) * system.dAngle / 1000.0
-            #~ obj.x = galaxy.x + system.dist * math.cos(angle) / 1000.0
-            #~ obj.y = galaxy.y + system.dist * math.sin(angle) / 1000.0
-    #~ del systems
     # TODO: try to load allies's info
     # get messages from server
     current += 1

@@ -809,9 +809,6 @@ class IPlanet(IObject):
             player.stats.effProdSci += obj.effProdSci
             player.stats.structs += len(obj.slots)
             player.stats.slots += obj.plSlots
-            galaxyID = tran.db[obj.compOf].compOf
-            if galaxyID not in player.galaxies:
-                player.galaxies.append(galaxyID)
             # morale computation
             homePlanet = tran.db[player.planets[0]]
             dist = int(math.sqrt((homePlanet.x - obj.x) ** 2 + (homePlanet.y - obj.y) ** 2))
