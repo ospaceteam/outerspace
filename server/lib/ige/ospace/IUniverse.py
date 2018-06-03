@@ -621,8 +621,6 @@ class IUniverse(IObject):
 
 
     def createNewSubscribedGalaxy(self, tran, obj, galaxyName, galaxyType, listOfPlayers):
-        # even though galaxyName has been decided by bookingMngr, we will use
-        # this opportunity to rename Singleplayer galaxies to generic name
         galGen = GalaxyGenerator.GalaxyGenerator()
         galaxyRadius = galGen.getGalaxyTemplate(galaxyType).radius
         posX, posY = self.cmd(obj).findSpotForGalaxy(tran, obj, galaxyRadius)

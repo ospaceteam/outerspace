@@ -237,6 +237,10 @@ class GameMngr(IGEGameMngr):
         player.diplomacyRels.clear()
         # add player to the universe
         universe.players.append(playerID)
+        log.debug('Processing scan phase')
+        for galaxyID in player.galaxies:
+            galaxy = tran.db[galaxyID]
+            self.cmdPool[T_GALAXY].processSCAN2Phase(tran, galaxy, True)
         # save game info
         self.generateGameInfo()
         return player.oid, None
