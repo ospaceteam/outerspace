@@ -51,7 +51,7 @@ class MiniMap:
         self._noRect = True
 
     def precompute(self):
-        galaxy_id = client.getPlayer().galaxies[0]
+        galaxy_id = client.getPlayer().galaxy
         galaxy = client.get(galaxy_id, noUpdate = 1)
         minX, maxX = galaxy.x - galaxy.radius, galaxy.x + galaxy.radius
         minY, maxY = galaxy.y - galaxy.radius, galaxy.y + galaxy.radius

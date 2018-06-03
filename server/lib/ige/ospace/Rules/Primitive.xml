@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+#
+#  Copyright 2001 - 2018 Ludek Smid [http://www.ospace.net/]
+#
+#  This file is part of Outer Space.
+#
+#  Outer Space is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  Outer Space is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with Outer Space; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+-->
+<!--
+Primitive technologies are similar to their entry-level counterparts, just
+not upgradable, and 25% heavier. Inability to upgrade on the fly is main issue,
+as x-1 level is quite inefficient. So there is no need to nerf it more.
+
+Signatures raised, just to fluff the crudeness of that early technology.
+
+Players start with all primitive technologies, starting ships are composed of them
+as well.
+-->
+
+<techtree>
+	<technology id="0400" symbol="SMALLHULL0" name="Primitive Small Hull">
+		<starting/>
+		<discovery
+			researchMod="1.00 + 1.00"
+			level="1"
+			maxImprovement="1"
+		/>
+		<shiphull
+			buildProd="120"
+			storEn="384"
+			operEn="4"
+			maxHP="16"
+			slots="16"
+			weight="20"
+			maxWeight="48"
+			signature="3"
+			minSignature="1"
+			combatClass="0"
+		/>
+	</technology>
+	<technology id="0401" symbol="MEDIUMHULL0" name="Primitive Medium Hull">
+		<starting/>
+		<discovery
+			researchMod="1.00 + 1.00"
+			level="1"
+			maxImprovement="1"
+		/>
+		<shiphull
+			buildProd="480"
+			storEn="768"
+			operEn="4"
+			maxHP="64"
+			slots="32"
+			weight="40"
+			maxWeight="96"
+			signature="10"
+			minSignature="2"
+			combatClass="1"
+		/>
+	</technology>
+	<technology id="0402" symbol="LARGEHULL0" name="Primitive Large Hull">
+		<starting/>
+		<discovery
+			researchMod="1.00 + 1.00"
+			level="1"
+			maxImprovement="1"
+		/>
+		<shiphull
+			buildProd="960"
+			storEn="3072"
+			operEn="8"
+			maxHP="256"
+			slots="64"
+			weight="80"
+			maxWeight="192"
+			signature="25"
+			minSignature="3"
+			combatClass="2"
+		/>
+	</technology>
+	<technology id="0403" symbol="SCOCKPIT0" name="Primitive Cockpit">
+		<starting/>
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="1"
+			maxImprovement="1"
+		/>
+		<shipequip
+			subtype="seq_ctrl"
+			buildProd="120"
+			combatAtt="2"
+			combatDef="2"
+			missileDef="2"
+			maxHP="4"
+			slots="2"
+			weight="5"
+			scannerPwr="12"
+		/>
+	</technology>
+	<technology id="0404" symbol="SBRIDGE0" name="Primitive Bridge">
+		<starting/>
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="1"
+			maxImprovement="1"
+		/>
+		<shipequip
+			subtype="seq_ctrl"
+			buildProd="120"
+			combatAtt="4"
+			combatDef="4"
+			missileDef="4"
+			maxHP="8"
+			slots="4"
+			weight="10"
+			scannerPwr="20"
+			minHull="1"
+		/>
+	</technology>
+	<technology id="0405" symbol="SCOMDECK0" name="Primitive Command Deck">
+		<starting/>
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="1"
+			maxImprovement="1"
+		/>
+		<shipequip
+			subtype="seq_ctrl"
+			buildProd="120"
+			combatAtt="6"
+			combatDef="6"
+			missileDef="6"
+			maxHP="32"
+			slots="8"
+			weight="20"
+			scannerPwr="50"
+			minHull="2"
+		/>
+	</technology>
+	<technology id="0500" symbol="CANNON0" name="Primitive Cannon">
+		<starting/>
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="1"
+			maxImprovement="1"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="1"
+			weight="5"
+			buildProd="240"
+			weaponDmgMin="2"
+			weaponDmgMax="4"
+			weaponAtt="8"
+			weaponClass="0"
+			weaponROF="1"
+			weaponIgnoreShield="0"
+		/>
+	</technology>
+	<technology id="0501" symbol="CANNONTUR0" name="Primitive Cannon Turret">
+		<starting/>
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			level="1"
+			maxImprovement="1"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="2"
+			weight="5"
+			buildProd="456"
+			weaponDmgMin="3"
+			weaponDmgMax="5"
+			weaponAtt="11"
+			weaponClass="0"
+			weaponROF="2"
+			weaponIgnoreShield="0"
+			minHull="1"
+		/>
+	</technology>
+	<technology id="0502" symbol="SSROCKET0" name="Primitive SS Missile">
+		<starting/>
+		<discovery
+			researchMod="1.00 + 0.50 + 0.50"
+			level="1"
+			maxImprovement="1"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			buildProd="304"
+			slots="1"
+			weight="7"
+			weaponDmgMin="11"
+			weaponDmgMax="21"
+			weaponAtt="6"
+			weaponClass="1"
+			weaponROF="0.5"
+			weaponIsMissile="1"
+			weaponIgnoreShield="0"
+		/>
+	</technology>
+	<technology id="0503" symbol="TORPEDO0" name="Primitive Torpedo">
+		<starting/>
+		<discovery
+			researchMod="1.00 + 0.50 + 0.50"
+			level="1"
+			maxImprovement="1"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			buildProd="720"
+			slots="2"
+			weight="8"
+			weaponDmgMin="80"
+			weaponDmgMax="120"
+			weaponAtt="6"
+			weaponClass="2"
+			weaponROF="0.3"
+			weaponIsMissile="1"
+			weaponIgnoreShield="0"
+			minHull="1"
+		/>
+	</technology>
+	<technology id="0504" symbol="CONBOMB0" name="Primitive Bomb">
+		<starting/>
+		<discovery
+			researchMod="1.0 + 0.5 + 0.5"
+			level="1"
+			maxImprovement="1"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="2"
+			weight="9"
+			buildProd="480"
+			weaponDmgMin="60"
+			weaponDmgMax="180"
+			weaponAtt="4"
+			weaponClass="3"
+			weaponROF="0.2"
+			weaponIgnoreShield="0"
+		/>
+	</technology>
+	<technology id="0510" symbol="FTLENG0" name="Primitive FTL Engine">
+		<starting/>
+		<discovery
+			researchMod="1.00 + 1.00"
+			level="1"
+			maxImprovement="1"
+		/>
+		<shipequip
+			subtype="seq_eng"
+			buildProd="240"
+			storEn="96"
+			operEn="1"
+			slots="4"
+			weight="4"
+			engPwr="64"
+			signature="0"
+		/>
+	</technology>
+	<technology id="0511" symbol="SCANNERMOD0" name="Primitive Scanner Module">
+		<starting/>
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="1"
+			maxImprovement="1"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="60"
+			slots="1"
+			weight="1"
+			signature="+12"
+			scannerPwr="40"
+			maxInstallations="1"
+		/>
+	</technology>
+	<technology id="0512" symbol="COLONYMOD0" name="Primitive Colony Module">
+		<starting/>
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="1"
+			maxImprovement="1"
+		/>
+		<shipequip
+			subtype="seq_struct"
+			buildProd="720"
+
+			storEn="960"
+			operEn="10"
+
+			slots="8"
+			weight="25"
+			unpackStruct="OUTPOST1"
+			minHull="1"
+		/>
+	</technology>
+	<technology id="0513" symbol="ETANKS0" name="Primitive Fuel Tank">
+		<starting/>
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="1"
+			maxImprovement="1"
+		/>
+		<shipequip
+			subtype="seq_mod"
+			buildProd="120"
+			storEn="768"
+			operEn="0"
+			slots="1"
+			weight="4"
+		/>
+	</technology>
+</techtree>

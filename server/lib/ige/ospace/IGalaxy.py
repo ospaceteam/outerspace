@@ -396,55 +396,15 @@ class IGalaxy(IObject):
             playerID = player.oid
             # TODO tweak more planet's attrs
             planet = tran.db[positionID]
-            # Grant starting technologies (at medium improvement)
-            for techID in Rules.techs.keys():
-                if Rules.techs[techID].isStarting:
-                    player.techs[techID] = (Rules.techBaseImprovement + Rules.techMaxImprovement) / 2
             self.cmd(planet).changeOwner(tran, planet, playerID, 1)
-            planet.slots = [
-                Utils.newStructure(tran, Tech.PWRPLANTNUK1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-                Utils.newStructure(tran, Tech.FARM1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-                Utils.newStructure(tran, Tech.FARM1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-                Utils.newStructure(tran, Tech.FARM1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-                Utils.newStructure(tran, Tech.ANCFACTORY, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-                Utils.newStructure(tran, Tech.ANCFACTORY, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-                Utils.newStructure(tran, Tech.ANCRESLAB, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-                Utils.newStructure(tran, Tech.REPAIR1, playerID, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-            ]
-            planet.storPop = Rules.startingPopulation
-            planet.storBio = Rules.startingBio
-            planet.storEn = Rules.startingEn
-            planet.scannerPwr = Rules.startingScannerPwr
-            planet.morale = Rules.maxMorale
+            IAIPlayer.IAIPlayer.setStartingTechnologies(player)
             # fleet
             # add basic ships designs
-            tempTechs = [Tech.FTLENG1, Tech.SCOCKPIT1, Tech.SCANNERMOD1, Tech.CANNON1,
-                Tech.CONBOMB1, Tech.SMALLHULL1, Tech.MEDIUMHULL2, Tech.COLONYMOD2]
-            for techID in tempTechs:
-                player.techs[techID] = 1
-            dummy, scoutID = tran.gameMngr.cmdPool[T_AIPLAYER].addShipDesign(tran, player, "Scout", Tech.SMALLHULL1,
-                {Tech.FTLENG1:3, Tech.SCOCKPIT1:1, Tech.SCANNERMOD1:1})
-            dummy, fighterID = tran.gameMngr.cmdPool[T_AIPLAYER].addShipDesign(tran, player, "Fighter", Tech.SMALLHULL1,
-                {Tech.FTLENG1:3, Tech.SCOCKPIT1:1, Tech.CANNON1:1})
-            dummy, bomberID = tran.gameMngr.cmdPool[T_AIPLAYER].addShipDesign(tran, player, "Bomber", Tech.SMALLHULL1,
-                {Tech.FTLENG1:3, Tech.SCOCKPIT1:1, Tech.CONBOMB1:1})
-            dummy, colonyID = tran.gameMngr.cmdPool[T_AIPLAYER].addShipDesign(tran, player, "Colony Ship", Tech.MEDIUMHULL2,
-                {Tech.FTLENG1:4, Tech.SCOCKPIT1:1, Tech.COLONYMOD2:1})
-            for techID in tempTechs:
-                del player.techs[techID]
             # add small fleet
-            log.debug('Creating fleet')
             system = tran.db[planet.compOf]
-            fleet = tran.gameMngr.cmdPool[T_FLEET].new(T_FLEET)
-            tran.db.create(fleet)
-            log.debug('Creating fleet - created', fleet.oid)
-            tran.gameMngr.cmdPool[T_FLEET].create(tran, fleet, system, playerID)
-            log.debug('Creating fleet - addShips')
-            tran.gameMngr.cmdPool[T_FLEET].addNewShip(tran, fleet, scoutID)
-            tran.gameMngr.cmdPool[T_FLEET].addNewShip(tran, fleet, scoutID)
-            tran.gameMngr.cmdPool[T_FLEET].addNewShip(tran, fleet, fighterID)
-            tran.gameMngr.cmdPool[T_FLEET].addNewShip(tran, fleet, fighterID)
-            tran.gameMngr.cmdPool[T_FLEET].addNewShip(tran, fleet, colonyID)
+            IAIPlayer.IAIPlayer.setStartingShipDesigns(player)
+            IAIPlayer.IAIPlayer.setStartingPlanet(tran, playerID, planet)
+            IAIPlayer.IAIPlayer.setStartingFleet(tran, playerID, system)
             system.scannerPwrs[playerID] = Rules.startingScannerPwr
         # do scanner evaluation because of all new players
         self.cmd(obj).processSCAN2Phase(tran, obj, None)

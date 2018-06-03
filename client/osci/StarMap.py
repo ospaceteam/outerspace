@@ -74,7 +74,7 @@ class StarMap(object):
         self._overlayZone = False
 
     def chronicle_draw(self):
-        galaxy_id = client.getPlayer().galaxies[0]
+        galaxy_id = client.getPlayer().galaxy
         galaxy = client.get(galaxy_id, noUpdate = 1)
         saved_x, saved_y = self.currX, self.currY
         self.currX, self.currY = galaxy.x, galaxy.y

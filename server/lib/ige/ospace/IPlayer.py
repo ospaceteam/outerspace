@@ -274,20 +274,20 @@ class IPlayer(IObject):
     @staticmethod
     def setStartingTechnologies(obj):
         obj.techLevel = 1
-        for techID in Rules.techs.keys():
-            if Rules.techs[techID].isStarting:
-                obj.techs[techID] = (Rules.techBaseImprovement + Rules.techMaxImprovement) / 2
+        for techID, tech in Rules.techs.iteritems():
+            if tech.isStarting:
+                obj.techs[techID] = (Rules.techBaseImprovement + tech.maxImprovement) / 2
 
     @staticmethod
     def setStartingShipDesigns(obj):
-        obj.shipDesigns[1] = ShipUtils.makeShipMinSpec(obj, 'Scout', Rules.Tech.SMALLHULL1,
-                {Rules.Tech.SCOCKPIT1:1, Rules.Tech.SCANNERMOD1:1, Rules.Tech.FTLENG1:3}, [])
-        obj.shipDesigns[2] = ShipUtils.makeShipMinSpec(obj, 'Fighter', Rules.Tech.SMALLHULL1,
-                {Rules.Tech.SCOCKPIT1:1, Rules.Tech.CANNON1:1, Rules.Tech.FTLENG1:3}, [])
-        obj.shipDesigns[3] = ShipUtils.makeShipMinSpec(obj, 'Bomber', Rules.Tech.SMALLHULL1,
-                {Rules.Tech.SCOCKPIT1:1, Rules.Tech.CONBOMB1:1, Rules.Tech.FTLENG1:3}, [])
-        obj.shipDesigns[4] = ShipUtils.makeShipMinSpec(obj, 'Colony Ship', Rules.Tech.MEDIUMHULL2,
-                {Rules.Tech.SCOCKPIT1:1, Rules.Tech.COLONYMOD2:1, Rules.Tech.FTLENG1:4}, [])
+        obj.shipDesigns[1] = ShipUtils.makeShipMinSpec(obj, 'Scout', Rules.Tech.SMALLHULL0,
+                {Rules.Tech.SCOCKPIT0:1, Rules.Tech.SCANNERMOD0:1, Rules.Tech.FTLENG0:3}, [])
+        obj.shipDesigns[2] = ShipUtils.makeShipMinSpec(obj, 'Fighter', Rules.Tech.SMALLHULL0,
+                {Rules.Tech.SCOCKPIT0:1, Rules.Tech.CANNON0:2, Rules.Tech.FTLENG0:3}, [])
+        obj.shipDesigns[3] = ShipUtils.makeShipMinSpec(obj, 'Bomber', Rules.Tech.SMALLHULL0,
+                {Rules.Tech.SCOCKPIT0:1, Rules.Tech.CONBOMB0:1, Rules.Tech.FTLENG0:3}, [])
+        obj.shipDesigns[4] = ShipUtils.makeShipMinSpec(obj, 'Colony Ship', Rules.Tech.MEDIUMHULL0,
+                {Rules.Tech.SCOCKPIT0:1, Rules.Tech.COLONYMOD0:1, Rules.Tech.FTLENG0:4}, [])
 
     @staticmethod
     def setStartingFleet(tran, playerID, system):

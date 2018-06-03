@@ -73,12 +73,12 @@ class MessagesDlg:
         #
         player = client.getPlayer()
         objList = [player.oid]
-        objList.extend(player.galaxies)
+        objList.append(player.galaxy)
         objList.append(OID_UNIVERSE)
         # show forums
         items = []
         colors = [gdata.sevColors[gdata.INFO], gdata.sevColors[gdata.MIN]]
-        # Inbox
+        ## Inbox
         msgs, new = self.getMsgsNumber(player.oid, "INBOX",'local')
         self.newMsgs += new
         spec = gdata.mailboxSpec[T_PLAYER, "INBOX"]
@@ -99,27 +99,27 @@ class MessagesDlg:
         item = ui.Item(_(spec[0]), tObjID = player.oid, tForum = "OUTBOX",
             tType = T_PLAYER, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
         items.append(item)
-        # galaxies
-        for galaxyID in player.galaxies:
-            galaxy = client.get(galaxyID)
-            # folder
-            item = ui.Item(_("Galaxy %s") % galaxy.name, tObjID = OID_NONE, tForum = "", tMsgs = "", foreground = colors[0])
-            items.append(item)
-            # news
-            msgs, new = self.getMsgsNumber(galaxyID, "NEWS")
-            self.newMsgs += new
-            spec = gdata.mailboxSpec[T_GALAXY, "NEWS"]
-            item = ui.Item("   %s" % _(spec[0]), tObjID = galaxyID, tForum = "NEWS",
-                tType = T_GALAXY, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
-            items.append(item)
-            # public
-            msgs, new = self.getMsgsNumber(galaxyID, "PUBLIC",'galaxy')
-            self.newMsgs += new
-            spec = gdata.mailboxSpec[T_GALAXY, "PUBLIC"]
-            item = ui.Item("   %s" % _(spec[0]), tObjID = galaxyID, tForum = "PUBLIC",
-                tType = T_GALAXY, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
-            items.append(item)
-        # universe
+        ## galaxy
+        galaxyID = player.galaxy
+        galaxy = client.get(galaxyID)
+        # folder
+        item = ui.Item(_("Galaxy %s") % galaxy.name, tObjID = OID_NONE, tForum = "", tMsgs = "", foreground = colors[0])
+        items.append(item)
+        # news
+        msgs, new = self.getMsgsNumber(galaxyID, "NEWS")
+        self.newMsgs += new
+        spec = gdata.mailboxSpec[T_GALAXY, "NEWS"]
+        item = ui.Item("   %s" % _(spec[0]), tObjID = galaxyID, tForum = "NEWS",
+            tType = T_GALAXY, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
+        items.append(item)
+        # public
+        msgs, new = self.getMsgsNumber(galaxyID, "PUBLIC",'galaxy')
+        self.newMsgs += new
+        spec = gdata.mailboxSpec[T_GALAXY, "PUBLIC"]
+        item = ui.Item("   %s" % _(spec[0]), tObjID = galaxyID, tForum = "PUBLIC",
+            tType = T_GALAXY, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
+        items.append(item)
+        ## universe
         item = ui.Item(_("Outer Space"), tObjID = OID_NONE, tForum = "", tMsgs = "", foreground = colors[0])
         items.append(item)
         # news
