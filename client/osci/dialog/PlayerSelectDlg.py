@@ -33,12 +33,18 @@ class PlayerSelectDlg:
         self.app = app
         self.wantsNew = False
         self.needsPassword = False
+        self.previousSelection = None # this is to fix connection lost/relog usability issue
         self.createUI()
         self.confirmDlg = ConfirmDlg(app)
         self.confirmDlg.setTitle(_("No free starting position"))
 
     def display(self, caller = None):
         self.caller = caller
+        if gdata.mainGameDlg and self.previousSelection:
+            # this means connection dropped and we relogged
+            # let's go straight to the previously selected game
+            self._selectPlayer(self.previousSelection)
+            return
         if self.show():
             self.win.show()
 
@@ -125,6 +131,7 @@ class PlayerSelectDlg:
     def _selectPlayer(self, playerID):
         self.win.setStatus(_('Executing SELECT PLAYER command...'))
         client.cmdProxy.selectPlayer(playerID)
+        self.previousSelection = playerID
         self.win.setStatus(_('Command has been executed.'))
         self.hide()
         if not gdata.mainGameDlg:
