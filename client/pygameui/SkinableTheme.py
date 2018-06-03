@@ -795,11 +795,12 @@ def drawTooltip(surface, widget):
 
     # now we have to decide how to fit the tooltip fully into the window
     screen_width, screen_height = pygame.display.get_surface().get_size()
+    envelope = 8 # so we don't overflow the screen
     pos_r.left += 20
     if pos_r.left + max_width > screen_width:
-        pos_r.left = max(0, screen_width - max_width)
+        pos_r.left = max(0, screen_width - max_width - envelope)
     if pos_r.top + max_height > screen_height:
-        pos_r.top = max(0, screen_height - max_height)
+        pos_r.top = max(0, screen_height - max_height - envelope)
 
     # title
     title_r = getDRect(pos_r)

@@ -85,7 +85,7 @@ class PlayerSelectDlg:
         dataStart = client.cmdProxy.getStartingPositions()
         items = []
         for objID, galaxyName, posType in dataStart:
-            item = ui.Item(galaxyName, type = 'New', tObjID = objID, tPosType = posType)
+            item = ui.Item(galaxyName, type = _('Open'), tObjID = objID, tPosType = posType)
             if posType == PLAYER_SELECT_NEWPLAYER:
                 item.tPos = _('Independent player')
             elif posType == PLAYER_SELECT_AIPLAYER:
@@ -142,9 +142,11 @@ class PlayerSelectDlg:
     def onToggleNew(self, widget, action, data):
         self.wantsNew = not self.wantsNew
         if self.wantsNew:
-            self.win.vToggle.text = _('Hide New Opportunities')
+            self.win.vToggle.text = _('Hide Open Slots')
         else:
-            self.win.vToggle.text = _('Show New Opportunities')
+            self.win.vToggle.text = _('Show Open Slots')
+            self.win.vPos.unselectAll()
+            self.needsPassword = False
         # there is a bug which prevents redraw for mere text change
         self.win.vToggle.visible = 0
         self.win.vToggle.visible = 1
@@ -186,10 +188,10 @@ class PlayerSelectDlg:
             action = 'onListSelect',
             columnLabels = 1)
         self.win.subscribeAction('*', self)
-        ui.Label(self.win, layout = (10, 10, 5, 1), id = 'vLPassword', text = _("VIP Password:"))
-        ui.Entry(self.win, layout = (15, 10, 5, 1), id = 'vPassword', align = ui.ALIGN_W, showChar = '*', orderNo = 1 )
-        ui.TitleButton(self.win, layout = (20, 10, 8, 1), text = _('Book New Game'), action = 'onBooking')
-        ui.TitleButton(self.win, layout = (0, 10, 10, 1), id = 'vToggle', text = _('Show New Opportunities'), action = 'onToggleNew')
+        ui.Label(self.win, layout = (8, 10, 5, 1), id = 'vLPassword', text = _("VIP Password:"))
+        ui.Entry(self.win, layout = (13, 10, 7, 1), id = 'vPassword', align = ui.ALIGN_W, showChar = '*', orderNo = 1 )
+        ui.TitleButton(self.win, layout = (20, 10, 8, 1), text = _('Book New Game'), action = 'onBooking', tooltipTitle = _("New galaxy"), tooltip = _("Allows you to either start new single player galaxy, or get in a queue for\ngame with other players. That game will start when queue fills the capacity,\nand will show up in this dialog as active.\n\nYou can queue for multiple galaxies. Only single player games has account limit."))
+        ui.TitleButton(self.win, layout = (0, 10, 8, 1), id = 'vToggle', text = _('Show Open Slots'), action = 'onToggleNew', tooltipTitle = _("Open slots"), tooltip = _("Slots available in already running galaxies, there is no telling\nwhat state the game or the empire is in."))
         ui.Title(self.win, layout = (0, 11, 20, 1), id = 'vStatusBar', align = ui.ALIGN_W)
         ui.TitleButton(self.win, layout = (20, 11, 4, 1), text = _('Exit'), action = 'onCancel')
         ui.TitleButton(self.win, layout = (24, 11, 4, 1), text = _('Select'), action = 'onSelect')
