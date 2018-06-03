@@ -59,7 +59,7 @@ class DiplomacyDlg:
 
     def update(self):
         if not self.galaxyScenario:
-            galaxyID = client.getPlayer().galaxies[0]
+            galaxyID = client.getPlayer().galaxy
             galaxy = client.get(galaxyID)
             self.galaxyScenario = galaxy.scenario
         self.show()

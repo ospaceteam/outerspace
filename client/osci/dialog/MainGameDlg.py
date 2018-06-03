@@ -166,13 +166,12 @@ class MainGameDlg:
         self.searchDlg.display()
 
     def onStats(self, widget, action, data):
-        for galaxyID in client.getPlayer().galaxies:
-            url = 'http://%s/%s/galaxy%d.html' % (
-                gdata.config.game.server,
-                gdata.config.game.lastgameid,
-                galaxyID,
-            )
-            webbrowser.open(url, new = 1)
+        url = 'http://%s/%s/galaxy%d.html' % (
+            gdata.config.game.server,
+            gdata.config.game.lastgameid,
+            client.getPlayer().galaxy,
+        )
+        webbrowser.open(url, new = 1)
 
     def onResign(self, widget, action, data):
         # swap yes and no
@@ -211,9 +210,9 @@ class MainGameDlg:
         self.app.exitLocal()
 
     def onToggleTime(self, widget, action, data):
-        galaxyID = client.getPlayer().galaxies[0]
+        galaxyID = client.getPlayer().galaxy
         galaxy = client.get(galaxyID)
-        galaxy.timeEnabled = client.cmdProxy.toggleTime(client.getPlayer().galaxies[0])
+        galaxy.timeEnabled = client.cmdProxy.toggleTime(galaxyID)
         self.alterMenu(None, None, False)
 
     def onFinishConfirmedSingle(self):
@@ -228,9 +227,9 @@ class MainGameDlg:
         client.cmdProxy.msgHandler = None
         client.cmdProxy.keepAliveTime = 60 * 60 # do not try to connect to server (one hour)
         if scenario == SCENARIO_SINGLE:
-            client.cmdProxy.deleteSingle(client.getPlayer().galaxies[0])
+            client.cmdProxy.deleteSingle(client.getPlayer().galaxy)
         elif scenario == SCENARIO_OUTERSPACE:
-            client.cmdProxy.finishGalaxyImperator(OID_UNIVERSE, client.getPlayer().galaxies[0], imperatorMsg)
+            client.cmdProxy.finishGalaxyImperator(OID_UNIVERSE, client.getPlayer().galaxy, imperatorMsg)
         else:
             return
         client.db.clear()
@@ -280,7 +279,7 @@ class MainGameDlg:
         """
         if client.db != None:
             player = client.getPlayer()
-            galaxy = client.get(player.galaxies[0])
+            galaxy = client.get(player.galaxy)
             # player can restart (finish) it's own singleplayer galaxy anytime
             if galaxy.scenario == SCENARIO_SINGLE:
                 # depends on state of galaxy
@@ -309,7 +308,7 @@ class MainGameDlg:
 
     def galaxyFinishButton(self, widget, action, data):
         player = client.getPlayer()
-        galaxy = client.get(player.galaxies[0])
+        galaxy = client.get(player.galaxy)
         if galaxy.scenario == SCENARIO_OUTERSPACE and player.imperator > 2:
             localTime = time.time()
             gdata.config.game.lastGalaxyFinishShown = str(localTime)
@@ -324,7 +323,7 @@ class MainGameDlg:
         """
         if client.db != None:
             player = client.getPlayer()
-            galaxy = client.get(player.galaxies[0])
+            galaxy = client.get(player.galaxy)
             if galaxy.scenario == SCENARIO_OUTERSPACE and player.imperator > 2:
                 lastGalaxyFinishShown = gdata.config.game.lastGalaxyFinishShown
                 if lastGalaxyFinishShown != None:
