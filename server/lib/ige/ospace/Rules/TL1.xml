@@ -378,7 +378,6 @@
 		<discovery
 			researchMod="1.50 + 0.75"
 			level="1"
-			researchRequires="SMALLHULL1-3"
 		/>
 		<project
 			globalDisabled="0"
