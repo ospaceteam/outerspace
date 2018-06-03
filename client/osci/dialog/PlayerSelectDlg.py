@@ -130,7 +130,7 @@ class PlayerSelectDlg:
         if not gdata.mainGameDlg:
             gdata.mainGameDlg = MainGameDlg(self.app)
             gdata.mainGameDlg.display()
-        client.updateDatabase(clearDB = 1)
+        client.updateDatabase()
 
     def onToggleNew(self, widget, action, data):
         self.wantsNew = not self.wantsNew

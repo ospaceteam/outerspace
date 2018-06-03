@@ -64,7 +64,12 @@ class IClientDB:
             self.timestamp = {}
 
     def save(self):
-        fh = open(os.path.join(self.dataDir, '%s_%d.data' % (self.gameID, self.playerID)), 'wb')
+        try:
+            fh = open(os.path.join(self.dataDir, '%s_%d.data' % (self.gameID, self.playerID)), 'wb')
+        except IOError:
+            # directory is not there, most likely
+            os.makedirs(self.dataDir)
+            fh = open(os.path.join(self.dataDir, '%s_%d.data' % (self.gameID, self.playerID)), 'wb')
         pickle.dump(self.data, fh, 1)
         fh.close()
         fh = open(os.path.join(self.dataDir, '%s_%d.timestamp' % (self.gameID, self.playerID)), 'wb')
