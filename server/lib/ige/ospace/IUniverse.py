@@ -282,7 +282,7 @@ class IUniverse(IObject):
         voterNames = {}
         for playerID in obj.players:
             player = tran.db[playerID]
-            if galaxy.oid not in player.galaxies:
+            if galaxy.oid != player.galaxy:
                 continue
             if player.type not in VALID_TYPES:
                 continue
@@ -383,7 +383,7 @@ class IUniverse(IObject):
             return
         for playerID in obj.players:
             player = tran.db[playerID]
-            if galaxy.oid not in player.galaxies:
+            if galaxy.oid != player.galaxy:
                 continue
             if player.type == T_PIRPLAYER:
                 piratePlayer = True
@@ -418,7 +418,7 @@ class IUniverse(IObject):
         """
         try:
             player = tran.db[galaxy.owner]
-            if galaxy.oid in player.galaxies:
+            if galaxy.oid == player.galaxy:
                 # all is well
                 return True
             # new player has nothing to do with this galaxy
@@ -438,7 +438,7 @@ class IUniverse(IObject):
         players = []
         for playerID in obj.players:
             player = tran.db[playerID]
-            if galaxy.oid not in player.galaxies:
+            if galaxy.oid != player.galaxy:
                 continue
             if player.type in ENEMIES:
                 clear = False
@@ -472,7 +472,7 @@ class IUniverse(IObject):
         players = []
         for playerID in obj.players:
             player = tran.db[playerID]
-            if galaxy.oid not in player.galaxies:
+            if galaxy.oid != player.galaxy:
                 continue
             if player.type != T_PLAYER:
                 # skip non-regular players

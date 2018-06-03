@@ -392,7 +392,7 @@ class IGalaxy(IObject):
             log.debug("Creating new Rebel player", T_AIPLAYER)
             player = self.new(T_AIPLAYER)
             self.cmd(player).register(tran, player, obj.oid)
-            player.galaxies.append(obj.oid)
+            player.galaxy = obj.oid
             playerID = player.oid
             # TODO tweak more planet's attrs
             planet = tran.db[positionID]
@@ -494,7 +494,7 @@ class IGalaxy(IObject):
         # delete all remaining fleets
         for playerID in universe.players[:]:
             player = tran.db[playerID]
-            if obj.oid not in player.galaxies:
+            if obj.oid != player.galaxy:
                 continue
             if player.fleets:
                 log.debug("Player %d has still fleets" % playerID, player.name, player.fleets)
@@ -573,7 +573,7 @@ class IGalaxy(IObject):
             found = 0
             for playerID in universe.players:
                 player = tran.db[playerID]
-                if obj.oid in player.galaxies and player.type == playerType:
+                if obj.oid == player.galaxy and player.type == playerType:
                     found = 1
                     break
             if not found:
@@ -581,7 +581,7 @@ class IGalaxy(IObject):
                 log.debug("Creating new player", playerType)
                 player = self.new(playerType)
                 self.cmd(player).register(tran, player, obj.oid)
-                player.galaxies.append(obj.oid)
+                player.galaxy = obj.oid
             # now we have a player, let's iterate over vacant planets and set them up
             for planetID in vacant_planets[playerType]:
                 planet = tran.db[planetID]
