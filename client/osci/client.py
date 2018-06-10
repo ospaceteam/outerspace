@@ -355,7 +355,8 @@ def getMessages():
     mailboxes = []
     mailboxes.append((db.playerID, getMessagesLastID(db.playerID)))
     galaxyID = getPlayer().galaxy
-    mailboxes.append((galaxyID, getMessagesLastID(galaxyID)))
+    if galaxyID:
+        mailboxes.append((galaxyID, getMessagesLastID(galaxyID)))
     mailboxes.append((OID_UNIVERSE, getMessagesLastID(OID_UNIVERSE)))
     # get data
     data = cmdProxy.multiGetMsgs(OID_UNIVERSE, mailboxes)
