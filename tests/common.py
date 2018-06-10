@@ -136,7 +136,10 @@ def createGalaxy(galaxy_type, galaxy_name = None):
     if subprocess.call(args, stdout=UTILS_OUT, stderr=subprocess.STDOUT) != 0:
         log.error('Galaxy {0} has not been created'.format(galaxy_type))
     else:
-        log.info('Galaxy {0} created'.format(galaxy_type))
+        if galaxy_name:
+            log.info('Galaxy {0} named {1} created'.format(galaxy_type, galaxy_name))
+        else:
+            log.info('Galaxy {0} created'.format(galaxy_type))
 
 def deleteGalaxy(galaxy_id):
     args=[os.path.join(CODE_ROOT, 'tools', 'osclient_cli.py'),

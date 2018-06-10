@@ -20,10 +20,19 @@
 #
 import argparse
 import atexit
+import logging as log
 import os
 import sys
 
 import common as c
+
+log.basicConfig(level=log.INFO, format='%(levelname)-7s: %(message)s')
+
+def slicer(slices):
+    slices = int(slices)
+    if 24 % slices:
+        raise ArgumentError
+    return 24 / slices
 
 # parse command line arguments
 parser = argparse.ArgumentParser()
@@ -33,10 +42,13 @@ parser.add_argument("--configdir", dest = "configdir", default = None,
                 "it won't recreate galaxies but continue with what is already available."))
 parser.add_argument("--history", dest = "history", default = "./history",
         type = str, metavar = "PATH", help = "Directory where screenshots will be saved.")
-parser.add_argument("--days", dest = "days", default = 6,
-    type = int, metavar = "N", help = "Process N turns on server")
-parser.add_argument("--turn-skip", dest = "turnSkip", default = 6,
-    type = int, metavar = "N", help = "Process N turns on server")
+parser.add_argument("--days", dest = "days", default = 0,
+    type = int, metavar = "N", help = "Process N days of the gameplay, default is 0.")
+parser.add_argument("--day-slices", dest = "turnSkip", default = slicer(4),
+    type = slicer, metavar = "N", help = "Process N cycles per day, default is 4.")
+parser.add_argument("--galaxy-check", dest = "galaxy_check", default = None, nargs = 2,
+        metavar = "GALAXY_TYPE NUMBER", help = ("Allows visual checking of galaxy generator "
+                  "settings by easily generating selected NUMBER of GALAXY_TYPE galaxies."))
 args = parser.parse_args()
 
 c.initPaths(args.configdir)
@@ -44,14 +56,24 @@ if not c.startServer():
     sys.exit()
 atexit.register(c.killServer)
 if args.configdir is None:
-    c.deleteGalaxy(10000) # legacy - too big to be a default
-    c.createGalaxy("Circle1SP")
-    c.createGalaxy("Circle3SP")
-    c.createGalaxy("Circle9P")
+    c.deleteGalaxy(10000) # legacy galaxy - we want precisely what user asked for, so deleted
+    if not args.galaxy_check:
+        # default set
+        c.createGalaxy("Circle1SP")
+        c.createGalaxy("Circle3SP")
+        c.createGalaxy("Circle9P")
+    else:
+        galaxy_type, quantity = args.galaxy_check[0], int(args.galaxy_check[1])
+        for num in xrange(quantity):
+            c.createGalaxy(galaxy_type, "{0}.{1}".format(galaxy_type, num + 1))
+
     c.startServerTime()
 
-for screenshot_cycle in xrange(args.days * 24 / args.turnSkip):
-    c.doTurns(args.turnSkip, args.turnSkip, verbose=False)
-    c.makeScreenshots(args.history)
+c.makeScreenshots(args.history)
+for day in xrange(args.days):
+    for _slice in xrange(24 / args.turnSkip):
+        c.doTurns(args.turnSkip, args.turnSkip, verbose=False)
+        c.makeScreenshots(args.history)
+    log.info("Day {0} rendered.".format(day + 1))
 c.stopServer()
 
