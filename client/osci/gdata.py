@@ -186,12 +186,13 @@ gameScenarioDescriptions = {
 
 galaxyTypeDescriptions = {
     'Circle1SP': N_("Basic training galaxy, with mutant as the only agressive enemy. Recommended for new players."),
-    'Circle3BP': N_("Small galaxy to brawl with two other commanders."),
+    'Circle3BP': N_("Tiny galaxy to brawl with two other commanders. Tactics prevail here, as there is not enough planets to make long term strategies viable."),
     'Circle3SP': N_("More complex single player galaxy, with classic starting group of three commanders. Mutant is the only agressive enemy, two friendly Rebels start in the vicinity."),
     'Circle3CP': N_("Cooperative galaxy, where you and two other commanders fend off and defeat sprawling mutant menace. Recommended to inexperienced players."),
+    'Circle5BP': N_("Small galaxy to brawl with four other commanders. Trust no one and keep watching your back."),
     'Circle9P': N_("Smallest galaxy with Outer Space rules, recommended for beginners or those who seek more casual gameplay."),
     'Circle42P': N_("Original galaxy, place of epic battles and complex intrigues. Recommended only to the experienced players. It may become time consuming."),
-    'Circle65P': N_("Majestic galaxy of unmatched size. Be prepared to work through diplomacy, as management of huge empire required for conquest would take all your time. Only for veteran players of many galaxies."),
+    'Circle65P': N_("Majestic galaxy of unmatched size. Be prepared to work primarily through diplomacy, as management of huge empire required for conquest would take all your time. Only for veteran players of many galaxies."),
 }
 
 gameChallenges = {
