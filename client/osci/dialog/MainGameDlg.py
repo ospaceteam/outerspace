@@ -76,7 +76,7 @@ class MainGameDlg:
         self.centered = 0
 
     def display(self):
-        gdata.showBackground = 0
+        self.app.showBackground = False
         gdata.mainGameDlg = self
         self.win.show()
         # register for updates
@@ -94,7 +94,7 @@ class MainGameDlg:
             self.win.vTurn.background = None
 
     def hide(self):
-        gdata.showBackground = 1
+        self.app.showBackground = True
         self.win.hide()
         gdata.mainGameDlg = None
         # unregister updates

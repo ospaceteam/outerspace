@@ -62,24 +62,20 @@ import osci.res
 
 
 
-background = None
-backgroundOffset = None
-
-def drawBackground():
-    global background, backgroundOffset
-    if not background:
-        image = random.choice([
-            resources.get('bck1_1024x768.jpg'),
-            resources.get('bck2_1024x768.jpg'),
-            resources.get('bck3_1024x768.jpg'),
-            resources.get('bck4_1024x768.jpg'),
-            resources.get('bck5_1024x768.jpg'),
-        ])
-        background = pygame.image.load(image).convert_alpha()
-        backgroundOffset = (
-            (gdata.screen.get_width() - background.get_width()) / 2,
-            (gdata.screen.get_height() - background.get_height()) / 2,
-        )
+def defineBackground():
+    surface = pygame.Surface.copy(gdata.screen)
+    image = random.choice([
+        resources.get('bck1_1024x768.jpg'),
+        resources.get('bck2_1024x768.jpg'),
+        resources.get('bck3_1024x768.jpg'),
+        resources.get('bck4_1024x768.jpg'),
+        resources.get('bck5_1024x768.jpg'),
+    ])
+    background = pygame.image.load(image).convert_alpha()
+    backgroundOffset = (
+        (surface.get_width() - background.get_width()) / 2,
+        (surface.get_height() - background.get_height()) / 2,
+    )
     try:
         font = pygame.ftfont.Font(resources.get('fonts/DejaVuLGCSans.ttf'), 12)
     except IOError:
@@ -90,27 +86,26 @@ def drawBackground():
     font.set_bold(1)
     color = 0x40, 0x70, 0x40
     #
-    gdata.screen.blit(background, backgroundOffset)
+    surface.blit(background, backgroundOffset)
     # screen.fill((0x00, 0x00, 0x00))
     # OSCI version
     img = font.render(_('Outer Space %s') % ige.version.versionString, 1, color)
-    gdata.screen.blit(img, (5, gdata.screen.get_height() - 4 * img.get_height() - 5))
+    surface.blit(img, (5, surface.get_height() - 4 * img.get_height() - 5))
     # Pygame version
     img = font.render(_('Pygame %s') % pygame.version.ver, 1, color)
-    gdata.screen.blit(img, (5, gdata.screen.get_height() - 3 * img.get_height() - 5))
+    surface.blit(img, (5, surface.get_height() - 3 * img.get_height() - 5))
     # Python version
     img = font.render(_('Python %s') % sys.version, 1, color)
-    gdata.screen.blit(img, (5, gdata.screen.get_height() - 2 * img.get_height() - 5))
+    surface.blit(img, (5, surface.get_height() - 2 * img.get_height() - 5))
     # Video driver
     w, h = pygame.display.get_surface().get_size()
     d = pygame.display.get_surface().get_bitsize()
     img = font.render(_('Video Driver: %s [%dx%dx%d]') % (pygame.display.get_driver(), w, h, d), 1, color)
-    gdata.screen.blit(img, (5, gdata.screen.get_height() - 1 * img.get_height() - 5))
+    surface.blit(img, (5, surface.get_height() - 1 * img.get_height() - 5))
+    return surface
 
 # update function
 def update():
-    if gdata.showBackground:
-        drawBackground()
     rects = gdata.app.draw(gdata.screen)
     if gdata.cmdInProgress:
         img = osci.res.cmdInProgressImg
@@ -292,10 +287,6 @@ def runClient(options):
     cursorImg = pygame.image.load(resources.get('cursor.png')).convert_alpha()
 
 
-    pygame.event.clear()
-    drawBackground()
-    pygame.display.flip()
-
     # UI stuff
     if first:
             import pygameui as ui
@@ -305,8 +296,13 @@ def runClient(options):
     setSkinTheme(gdata, ui)
 
     app = ui.Application(update, theme = ui.SkinableTheme)
+    app.background = defineBackground()
+    app.draw(gdata.screen)
     app.windowSurfaceFlags = SWSURFACE | SRCALPHA
     gdata.app = app
+
+    pygame.event.clear()
+    #pygame.display.flip()
 
     # resources
     import osci.res

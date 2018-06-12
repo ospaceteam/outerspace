@@ -42,6 +42,8 @@ class Application:
         self.theme = theme
         self.theme.init()
         self.updateFunc = update
+        self.showBackground = True
+        self.background = None
         self.redrawWidgets = {}
         self.cursorPos = (0, 0)
         self.windowSurfaceFlags = 0
@@ -270,10 +272,14 @@ class Application:
 
     def draw(self, surface):
         """Draw all windows onto supplied surface."""
+        if self.showBackground:
+            surface.blit(self.background, (0, 0))
         changed = []
         #@print "App Draw"
         for window in self.windows:
             if window.visible:
+                if self.showBackground:
+                    window._fullUpdate = True
                 rect = window.draw(surface)
                 #@print " ", window, rect
                 if rect: changed.append(rect)
@@ -288,7 +294,7 @@ class Application:
         self.tooltip.__dict__['_changeReported'] = 0
         self.redrawWidgets = {}
         #@print "CHANGED", changed
-        if self._fullUpdate:
+        if self._fullUpdate or self.showBackground:
             #@print "FULL UPDATE"
             self._fullUpdate = False
             return [pygame.display.get_surface().get_rect()]
