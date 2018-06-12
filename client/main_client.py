@@ -167,10 +167,10 @@ def setSkinTheme(gdata, ui):
     theme = "green"
     if gdata.config.client.theme != None:
             theme = gdata.config.client.theme
-    ui.SkinableTheme.enableMusic(gdata.config.defaults.music == "yes")
+    #ui.SkinableTheme.enableMusic(gdata.config.defaults.music == "yes")
     ui.SkinableTheme.enableSound(gdata.config.defaults.sound == "yes")
     ui.SkinableTheme.setSkin(os.path.join(resources.get("themes"), theme))
-    ui.SkinableTheme.loadMusic(gdata.config.defaults.mymusic)
+    #ui.SkinableTheme.loadMusic(gdata.config.defaults.mymusic)
     if gdata.config.defaults.musicvolume:
             ui.SkinableTheme.setMusicVolume(float(gdata.config.defaults.musicvolume)/ 100.0)
     if gdata.config.defaults.soundvolume:
