@@ -23,7 +23,6 @@
 #
 from ige.ospace import Const
 
-showBackground = 1
 app = None
 mainGameDlg = None
 updateDlgs = []
