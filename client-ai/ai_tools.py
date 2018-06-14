@@ -21,10 +21,10 @@
 import copy
 import math
 from ige import log
-from ige.ospace.Const import *
 from ige.IDataHolder import IDataHolder
-import ige.ospace.Rules as Rules
-import ige.ospace.Utils as Utils
+from ige.ospace import Const
+from ige.ospace import Rules
+from ige.ospace import Utils
 
 data = IDataHolder()
 
@@ -68,7 +68,7 @@ def tool_parseDB(client, db):
             # TODO find out why there are these errors
             continue
         objType = getattr(obj, 'type', None)
-        if objType == T_PLANET:
+        if objType == Const.T_PLANET:
             ownerID = getattr(obj, 'owner', None)
             plSlots = getattr(obj, 'plSlots', 0)
             slots = getattr(obj, 'slots', [])
@@ -84,7 +84,7 @@ def tool_parseDB(client, db):
                 # myPlanets are later joined by myProdPlanets
                 data.myPlanets.add(objID)
                 data.mySystems.add(obj.compOf)
-            elif ownerID == OID_NONE and plSlots:
+            elif ownerID == Const.OID_NONE and plSlots:
                 data.freePlanets.add(objID)
             elif not plSlots:
                 data.unknownSystems.add(obj.compOf)
@@ -95,19 +95,19 @@ def tool_parseDB(client, db):
                 elif ownerID not in owners:
                     owners[ownerID] = client.get(ownerID, publicOnly = 1)
 
-                if not getattr(owners[ownerID], 'type', OID_NONE) == T_AIEDENPLAYER:
+                if not getattr(owners[ownerID], 'type', Const.OID_NONE) == Const.T_AIEDENPLAYER:
                     data.otherSystems.add(db[objID].compOf)
                     data.otherPlanets.add(objID)
-                if getattr(owners[ownerID], 'type', OID_NONE) in (T_AIPIRPLAYER, T_PIRPLAYER):
+                if getattr(owners[ownerID], 'type', Const.OID_NONE) in (Const.T_AIPIRPLAYER, Const.T_PIRPLAYER):
                     data.pirateSystems.add(db[objID].compOf)
-        elif objType == T_SYSTEM:
+        elif objType == Const.T_SYSTEM:
             if getattr(obj, "starClass", "a")[0] == 'b':
                 # black hole -> nothing to see here, let's ignore it completely
                 continue
             data.systems.add(objID)
             if not hasattr(db[objID], 'planets'):
                 data.unknownSystems.add(objID)
-        elif objType == T_FLEET:
+        elif objType == Const.T_FLEET:
             ownerID = getattr(obj, 'owner', None)
             if ownerID == playerID:
                 data.myFleets.add(objID)
@@ -127,21 +127,21 @@ def tool_parseDB(client, db):
     for fleetID in data.myFleets:
         fleet = db[fleetID]
         for orType, orTargID, orData in fleet.actions[fleet.actionIndex:]:
-            if orType == FLACTION_WAIT:
+            if orType == Const.FLACTION_WAIT:
                 continue
-            elif orType == FLACTION_REPEATFROM:
+            elif orType == Const.FLACTION_REPEATFROM:
                 continue
-            elif orType == FLACTION_REDIRECT:
-                if orTargID == OID_NONE:
+            elif orType == Const.FLACTION_REDIRECT:
+                if orTargID == Const.OID_NONE:
                     continue
             orTarg = db[orTargID]
-            if orTarg.type == T_SYSTEM:
+            if orTarg.type == Const.T_SYSTEM:
                 data.unknownSystems -= set([orTargID])
-            elif orTarg.type == T_PLANET:
+            elif orTarg.type == Const.T_PLANET:
                 data.unknownSystems -= set([orTarg.compOf])
             # deploy order removes target from free planets set
             # if deploying to non-free planet, change order TODO [non-systematic]
-            if orType == FLACTION_DEPLOY:
+            if orType == Const.FLACTION_DEPLOY:
                 if orTargID in data.freePlanets:
                     data.freePlanets -= set([orTargID])
                 else:
@@ -181,8 +181,8 @@ def tool_parseDB(client, db):
         fleet = db[fleetID]
         if getattr(fleet, 'target', None):
             targetID = getattr(fleet, 'target', None)
-        elif not getattr(fleet, 'orbiting', OID_NONE) == OID_NONE:
-            targetID = getattr(fleet, 'orbiting', OID_NONE)
+        elif not getattr(fleet, 'orbiting', Const.OID_NONE) == Const.OID_NONE:
+            targetID = getattr(fleet, 'orbiting', Const.OID_NONE)
         if targetID:
             if targetID in data.myPlanets:
                 data.myTargetedSystems.add(db[targetID].compOf)
@@ -260,7 +260,7 @@ def doDanger(client, db):
         fleet = db[fleetID]
         if not getattr(fleet, 'combatPwr', 0):
             continue
-        if not getattr(fleet, 'orbiting', OID_NONE) == OID_NONE:
+        if not getattr(fleet, 'orbiting', Const.OID_NONE) == Const.OID_NONE:
             targID = fleet.orbiting
         elif hasattr(fleet, 'target'):
             targID = fleet.target
@@ -688,7 +688,7 @@ def checkBuildQueues(client, db, systemID, prodPlanets):
         while len(planet.prodQueue) > validTasks:
             # validTasks is effectively the actual index
             task = planet.prodQueue[validTasks]
-            if task.targetID in data.myPlanets | data.freePlanets | set([OID_NONE, None]):
+            if task.targetID in data.myPlanets | data.freePlanets | set([Const.OID_NONE, None]):
                 validTasks += 1
             else:
                 planet.prodQueue, player.stratRes = client.cmdProxy.abortConstruction(planetID, validTasks)
@@ -738,7 +738,7 @@ def buildSystem(client, db, systemID, prodPlanets, finalSystemPlan):
         toBuild = getStructBuildEffectivity(client, db, planetID, structsToBuild.keys(), structsToBuild, structsToDemolish)
         for techID, targetPlanetID, targetTechID in toBuild:
             targetPlanet = db[targetPlanetID]
-            if len(targetPlanet.slots) == targetPlanet.plSlots and targetTechID == OID_NONE:
+            if len(targetPlanet.slots) == targetPlanet.plSlots and targetTechID == Const.OID_NONE:
                 continue
             deltaBio, deltaEn, deltaProd = getSystemStatsChange(client, db, techID, targetPlanetID, targetTechID)
             if structStats.bio + deltaBio >= 0 and structStats.en + deltaEn >= 0:
@@ -783,9 +783,9 @@ def getStructBuildEffectivity(client, db, planetID, targetIDs, structsToBuild, s
             eff = float(tech.prodProd) * techEff / (tech.buildProd * coeff) * sum([x*y/100.0 for x, y in zip(tech.prodProdMod, [target.plBio, target.plMin, target.plEn, 100])])
             eff = round(eff, 3)
             try:
-                possibilitiesBuild[eff].append((techID, targetID, OID_NONE))
+                possibilitiesBuild[eff].append((techID, targetID, Const.OID_NONE))
             except KeyError:
-                possibilitiesBuild[eff] = [(techID, targetID, OID_NONE)]
+                possibilitiesBuild[eff] = [(techID, targetID, Const.OID_NONE)]
         # if build over the another structure
         for targTechID in structsToDemo[targetID]:
             targTech = client.getFullTechInfo(targTechID)

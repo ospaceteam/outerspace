@@ -54,6 +54,10 @@ race2Name = {
     "B": "Bionic",
     "C": "Cyborg",
     "H": "Human",
+    "m": "Mutant",
+    "r": "Renegade",
+    "e": "EDEN",
+    "p": "Pirate",
 }
 
 import os
@@ -74,7 +78,7 @@ Rules.init(options.configDir)
 
 import ige.ospace.TechHandlers as TechHandlers
 import pygame
-from pygame.locals import *
+import pygame.locals
 
 def getDescription(tech):
     suffix = ""
@@ -285,12 +289,12 @@ class Grid:
 def waitForKey():
     while 1:
         evt = pygame.event.wait()
-        if evt.type == KEYUP:
+        if evt.type == pygame.locals.KEYUP:
             break
 
 #initialize SDL and prepare screen
 pygame.init()
-screen = pygame.display.set_mode((1000, 800), SWSURFACE, 32)
+screen = pygame.display.set_mode((1000, 800), pygame.locals.SWSURFACE, 32)
 pygame.mouse.set_visible(1)
 pygame.display.set_caption('Tech tree')
 

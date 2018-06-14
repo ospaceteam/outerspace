@@ -18,11 +18,11 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 from ige import log
-from ige.ospace.Const import *
-import ige.ospace.Rules as Rules
-import ige.ospace.Utils as Utils
+from ige.ospace import Const
+from ige.ospace import Rules
+from ige.ospace import Utils
 
-from ai_tools import *
+import ai_tools as tool
 
 client = None
 db = None
@@ -46,7 +46,7 @@ def run(aclient):
     player = client.getPlayer()
     playerID = client.getPlayerID()
 
-    tool_parseDB(client, db)
+    tool.tool_parseDB(client, db)
 
     shipDesignManager()
     planetManager()

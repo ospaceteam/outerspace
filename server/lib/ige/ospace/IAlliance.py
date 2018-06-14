@@ -18,11 +18,12 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-from ige import *
-from ige.IObject import IObject
-from ige.IDataHolder import IDataHolder
-from Const import *
+import ige
 import Rules
+
+from Const import *
+from ige import log
+from ige.IObject import IObject
 
 class IAlliance(IObject):
 
@@ -49,13 +50,13 @@ class IAlliance(IObject):
     def setRelation(self, tran, obj, objID, relation):
         anObj = tran.db[objID]
         if anObj.type != T_PLAYER and anObj.type != T_ALIANCE:
-            raise GameException('Relations can be set/changed only for players and aliances.')
+            raise ige.GameException('Relations can be set/changed only for players and aliances.')
         if relation == REL_UNDEF:
             if obj.relations.has_key(objID):
                 del obj[objID]
                 return
             else:
-                raise GameException('No such relation to delete.')
+                raise ige.GameException('No such relation to delete.')
         obj.relations[objID] = relation
 
     setRelation.public = 1

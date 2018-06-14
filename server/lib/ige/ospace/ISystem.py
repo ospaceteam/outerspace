@@ -17,14 +17,19 @@
 #  along with Outer Space; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
+import random
+import copy
 
-from ige import *
 from xml.dom.minidom import Node
+
+import ige
+import Rules
+import Utils
+
+from Const import *
+from ige import log
 from ige.IObject import IObject
 from ige.IDataHolder import IDataHolder
-from Const import *
-import Rules, Utils, math, random, copy
-from ige import log
 
 class ISystem(IObject):
 
@@ -164,7 +169,6 @@ class ISystem(IObject):
                     if ok and system.planets:
                         avail.append(systemID)
             # select random system
-            import random
             log.debug("Can copy", avail)
             try:
                 systemID = random.choice(avail)
@@ -841,17 +845,17 @@ class ISystem(IObject):
             if planet.owner == tran.session.cid:
                 haveOne = 1
         if not haveOne:
-            raise GameException('You cannot change name of this system - you have no planet in this system.')
+            raise ige.GameException('You cannot change name of this system - you have no planet in this system.')
         if anotherComm:
-            raise GameException('You cannot change name of this system - another commander in system.')
+            raise ige.GameException('You cannot change name of this system - another commander in system.')
         # check validity of name
         if not Utils.isCorrectName(newName):
-            raise GameException('Invalid name. Only characters, digits, space, dot and dash permitted, max. length is 30 characters.')
+            raise ige.GameException('Invalid name. Only characters, digits, space, dot and dash permitted, max. length is 30 characters.')
         # check if there is other system with this name
         galaxy = tran.db[obj.compOf]
         for systemID in galaxy.systems:
             if tran.db[systemID].name == newName and systemID != obj.oid:
-                raise GameException('This name is already used.')
+                raise ige.GameException('This name is already used.')
         # TODO you have to own this system longer than previous owner
         # one change per 1 day allowed
         turn = tran.db[OID_UNIVERSE].turn
@@ -866,7 +870,7 @@ class ISystem(IObject):
                 newNames.append(planet.name)
             obj.lastNameChng = turn
         else:
-            raise GameException('You cannot change name of this system - name has been changed recently (try it one day later).')
+            raise ige.GameException('You cannot change name of this system - name has been changed recently (try it one day later).')
         return newNames
 
     rename.public = 1
@@ -1062,7 +1066,7 @@ class ISystem(IObject):
                     planet.name = Utils.getPlanetName(obj.name, nType, orbit - 1)
                     orbit += 1
                 else:
-                    raise GameException('Unknown element %s' % name)
+                    raise ige.GameException('Unknown element %s' % name)
         #~ # compute rotational constants
         #~ galaxy = tran.db[obj.compOf]
         #~ dx = obj.x - galaxy.x

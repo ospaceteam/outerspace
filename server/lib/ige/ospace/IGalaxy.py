@@ -18,23 +18,31 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+import os.path
+import time
 import copy
 import random
 
-from ige.IObject import IObject
-from ige import *
-from Const import *
 from xml.dom.minidom import Node, parse
-from ige.IObject import IObject
-from ISystem import ISystem
-from ige.IDataHolder import IDataHolder
-import os.path, time, Utils, Rules
-from ige import log
-from Rules import Tech
-import IPlayer, IAIPlayer, IAIRenegadePlayer, IAIMutantPlayer, IAIPiratePlayer
-import IAIEDENPlayer, IPiratePlayer
 
+import ige
+import IPlayer
+import IAIPlayer
+import IAIEDENPlayer
+import IAIMutantPlayer
+import IAIPiratePlayer
+import IAIRenegadePlayer
+import Rules
 import Scanner
+import Utils
+
+from Const import *
+from ige import log
+from ige.IObject import IObject
+from ige.IDataHolder import IDataHolder
+from ISystem import ISystem
+from Rules import Tech
+
 
 class IGalaxy(IObject):
 
@@ -128,7 +136,7 @@ class IGalaxy(IObject):
             if db[planetID].owner == OID_NONE:
                 return planetID
             if not obj.startingPos:
-                raise GameException('No free starting point in the galaxy.')
+                raise ige.GameException('No free starting point in the galaxy.')
 
 
     def processINITPhase(self, tran, obj, data):
@@ -284,7 +292,7 @@ class IGalaxy(IObject):
                     self.loadDOMNode(tran, obj, node, x, y, name)
                     self.connectWormHoles(tran, obj)
                     return SUCC
-        raise GameException('No such id %s in resource' % galaxyType)
+        raise ige.GameException('No such id %s in resource' % galaxyType)
 
     loadFromXML.public = 1
     loadFromXML.accLevel = AL_ADMIN
@@ -308,7 +316,7 @@ class IGalaxy(IObject):
                     wormHole = tran.db[self.createWormHole(tran, obj)]
                     self.cmd(wormHole).loadDOMNode(tran, wormHole, xoff, yoff, elem)
                 else:
-                    raise GameException('Unknown element %s' % name)
+                    raise ige.GameException('Unknown element %s' % name)
         return SUCC
 
     def connectWormHoles(self, tran, obj):
@@ -323,12 +331,12 @@ class IGalaxy(IObject):
             if wormHole.type != T_WORMHOLE:
                 continue
             if len(wormHole.destination) == 0:
-                raise GameException('Wrong WormHole(%d) definition' % holeID)
+                raise ige.GameException('Wrong WormHole(%d) definition' % holeID)
             if wormHole.destination == wormHole.name:
-                raise GameException('Same destination as position for WormHole(%d)' % holeID)
+                raise ige.GameException('Same destination as position for WormHole(%d)' % holeID)
             destinationOid = wormHoles[wormHole.destination]
             if destinationOid == OID_NONE:
-                raise GameException('WormHole(%d) has wrong destination ''%s''' % (holeID, wormHole.destination))
+                raise ige.GameException('WormHole(%d) has wrong destination ''%s''' % (holeID, wormHole.destination))
             wormHole.destinationOid = destinationOid
 
     def createSystem(self, tran, obj):
@@ -426,7 +434,7 @@ class IGalaxy(IObject):
 
     def deleteSingle(self, tran, obj):
         if obj.scenario != SCENARIO_SINGLE:
-            raise GameException('Only Single Player galaxies can be deleted this way')
+            raise ige.GameException('Only Single Player galaxies can be deleted this way')
         log.debug(obj.oid, "GALAXY - singleplayer delete")
         self.delete(tran, obj)
 

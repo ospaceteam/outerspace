@@ -1,3 +1,5 @@
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ospaceteam/outerspace/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ospaceteam/outerspace/issues/master)
+
 # About Outer Space
 
 Outer Space is turn-base 4X multiplayer on-line strategy game. Your goal is to become an Imperator of the Galaxy, racing other human players for supremacy via diplomacy, economic strength of you empire and research. And if all other means fail, you may subdue your neighbours with you powerful fleets and superior strategic thinking.

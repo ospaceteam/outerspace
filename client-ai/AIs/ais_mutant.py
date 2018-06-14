@@ -20,11 +20,12 @@
 import random, copy, math
 
 from ige import log, GameException
-from ige.ospace.Const import *
-import ige.ospace.Rules as Rules
-import ige.ospace.Utils as Utils
+from ige.ospace import Const
+from ige.ospace import Rules
+from ige.ospace import Utils
 
-from ai_tools import *
+import ai_tools as tool
+from ai_tools import data
 
 client = None
 db = None
@@ -34,13 +35,13 @@ player = None
 def systemManager():
     global data, player, db
     for planetID in data.myPlanets:
-        sortStructures(client, db, planetID)
+        tool.sortStructures(client, db, planetID)
     for systemID in data.mySystems:
         system = db[systemID]
         # creation of final system plans
         finalSystemPlan = {}
-        actualStats = getSystemStructStats(client, db, systemID)
-        buildStats = getSystemStructStats(client, db, systemID, False)
+        actualStats = tool.getSystemStructStats(client, db, systemID)
+        buildStats = tool.getSystemStructStats(client, db, systemID, False)
         # create appropriate build plans
         for planetID in data.freePlanets & set(system.planets):
             finalSystemPlan[planetID] = {Rules.Tech.MUTANTBASE:1}
@@ -125,14 +126,14 @@ def systemManager():
                                             Rules.Tech.MUTANTPP1:noOfPPs,
                                             Rules.Tech.MUTANTFACT1:noOfFacts}
                 continue
-        idlePlanets = buildSystem(client, db, systemID, data.myProdPlanets & set(system.planets), finalSystemPlan)
+        idlePlanets = tool.buildSystem(client, db, systemID, data.myProdPlanets & set(system.planets), finalSystemPlan)
         # rest of the planets build ships
         # first get all our ships in the system
         system_fleet = {}
         for fleetID in getattr(system, 'fleets', []):
             fleet = db[fleetID]
-            if getattr(fleet, 'owner', OID_NONE) == playerID:
-                system_fleet = Utils.dictAddition(system_fleet, getFleetSheet(fleet))
+            if getattr(fleet, 'owner', Const.OID_NONE) == playerID:
+                system_fleet = Utils.dictAddition(system_fleet, tool.getFleetSheet(fleet))
         hasSeeders = False
         hasSeekers = False
         try:
@@ -150,10 +151,10 @@ def systemManager():
             if (not hasSeeders or not hasSeekers) and shipDraw < 9:
                 # there is 20% chance it won't build civilian ships, but military one
                 if not hasSeeders:
-                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 2, 1, planetID, True, False, OID_NONE)
+                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 2, 1, planetID, True, False, Const.OID_NONE)
                     continue
                 elif not hasSeekers:
-                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 3, 1, planetID, True, False, OID_NONE)
+                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 3, 1, planetID, True, False, Const.OID_NONE)
                     continue
             # rest is creation of ships based on current state + expected guard fighters
             try:
@@ -174,7 +175,7 @@ def systemManager():
                 # we have too many fighters - let's prefer bombers for now
                 weight_bomber += 1
             choice = Utils.weightedRandom([1,4], [weight_fighter, weight_bomber])
-            planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, choice, 2, planetID, True, False, OID_NONE)
+            planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, choice, 2, planetID, True, False, Const.OID_NONE)
 
 def expansionManager():
     global data, db
@@ -184,13 +185,13 @@ def expansionManager():
     while shouldRepeat:
         shouldRepeat = False
         for fleetID in copy.copy(seekerFleets & data.idleFleets):
-            maxRange = subfleetMaxRange(client, db, {3:1}, fleetID)
-            nearest = findNearest(db, db[fleetID], data.unknownSystems, maxRange)
+            maxRange = tool.subfleetMaxRange(client, db, {3:1}, fleetID)
+            nearest = tool.findNearest(db, db[fleetID], data.unknownSystems, maxRange)
             if len(nearest) > 0:
                 systemID = nearest[0]
                 # send the fleet
-                fleet, newFleet, myFleets = orderPartFleet(client, db,
-                    {3:1}, True, fleetID, FLACTION_MOVE, systemID, None)
+                fleet, newFleet, myFleets = tool.orderPartFleet(client, db,
+                    {3:1}, True, fleetID, Const.FLACTION_MOVE, systemID, None)
                 data.myFleetSheets[fleetID][3] -= 1
                 if data.myFleetSheets[fleetID][3] == 0:
                     del data.myFleetSheets[fleetID][3]
@@ -199,8 +200,8 @@ def expansionManager():
                     shouldRepeat = True
                 data.unknownSystems.remove(systemID)
         for fleetID in copy.copy(seederFleets & data.idleFleets):
-            maxRange = subfleetMaxRange(client, db, {2:1}, fleetID)
-            nearest = findNearest(db, db[fleetID], data.freeSystems, maxRange)
+            maxRange = tool.subfleetMaxRange(client, db, {2:1}, fleetID)
+            nearest = tool.findNearest(db, db[fleetID], data.freeSystems, maxRange)
             if len(nearest) > 0:
                 systemID = nearest[0]
                 # finding best planet for deployment
@@ -213,8 +214,8 @@ def expansionManager():
                         noOfSlots = planet.plSlots
                         biggestPlanet = planetID
                         # send the fleet
-                fleet, newFleet, myFleets = orderPartFleet(client, db,
-                    {2:1}, True, fleetID, FLACTION_DEPLOY, biggestPlanet, 2)
+                fleet, newFleet, myFleets = tool.orderPartFleet(client, db,
+                    {2:1}, True, fleetID, Const.FLACTION_DEPLOY, biggestPlanet, 2)
                 data.myFleetSheets[fleetID][2] -= 1
                 if data.myFleetSheets[fleetID][2] == 0:
                     del data.myFleetSheets[fleetID][2]
@@ -227,7 +228,7 @@ def expansionManager():
             else:
                 fleet = db[fleetID]
                 orbitingID = fleet.orbiting
-                if not orbitingID == OID_NONE:
+                if not orbitingID == Const.OID_NONE:
                     orbiting = db[orbitingID]
                     if set(orbiting.planets) & data.freePlanets and orbitingID in data.otherSystems:
                         noOfSlots = 0
@@ -238,8 +239,8 @@ def expansionManager():
                                 noOfSlots = planet.plSlots
                                 biggestPlanet = planetID
                         # issue the deploy order
-                        fleet, newFleet, myFleets = orderPartFleet(client, db,
-                            {2:1}, True, fleetID, FLACTION_DEPLOY, biggestPlanet, 2)
+                        fleet, newFleet, myFleets = tool.orderPartFleet(client, db,
+                            {2:1}, True, fleetID, Const.FLACTION_DEPLOY, biggestPlanet, 2)
                         data.myFleetSheets[fleetID][2] -= 1
                         if data.myFleetSheets[fleetID][2] == 0:
                             del data.myFleetSheets[fleetID][2]
@@ -268,31 +269,31 @@ def attackManager():
             minimum = 12
         else:
             minimum = systemWorthiness(system, [8,5,3,2]) + 10
-        if getattr(fleet, 'target', OID_NONE) == OID_NONE and getattr(fleet, 'ships', []):
+        if getattr(fleet, 'target', Const.OID_NONE) == Const.OID_NONE and getattr(fleet, 'ships', []):
             # this also covers fleets fighting over enemy systems - in that case, there
             # is slight chance the fleet will continue to the next system without conquering
             # the system first
             if fleet.orbiting in data.otherSystems and Utils.weightedRandom([True, False], [9,1]):
                 continue
-            if fleetContains(fleet, {1:minimum, 4:minimum}):
+            if tool.fleetContains(fleet, {1:minimum, 4:minimum}):
                 attackFleets.add(fleetID)
     for fleetID in copy.copy(attackFleets):
         fleet = db[fleetID]
         # send the attack fleet, if in range
-        sheet = getFleetSheet(fleet)
+        sheet = tool.getFleetSheet(fleet)
         noOfSowers = sheet[4]
         noOfSwarmers = min(sheet[1], math.ceil(noOfSowers * 1.5))
-        maxRange = 0.8 * subfleetMaxRange(client, db, {1:noOfSwarmers, 4:noOfSowers}, fleetID)
+        maxRange = 0.8 * tool.subfleetMaxRange(client, db, {1:noOfSwarmers, 4:noOfSowers}, fleetID)
         # four nearest systems are considered, with probability to be chosen based on order
-        nearest = findNearest(db, fleet, data.otherSystems, maxRange, 4)
+        nearest = tool.findNearest(db, fleet, data.otherSystems, maxRange, 4)
         if len(nearest):
             # range is adjusted to flatten probabilities a bit
             probability_map = map(lambda x: x ** 2, range(6, 2, -1))
             target = Utils.weightedRandom(nearest, probability_map)
 
-            fleet, newFleet, myFleets = orderPartFleet(client, db,
+            fleet, newFleet, myFleets = tool.orderPartFleet(client, db,
                 {1:noOfSwarmers, 4:noOfSowers}, True,
-                fleetID, FLACTION_MOVE, target, None)
+                fleetID, Const.FLACTION_MOVE, target, None)
             attackFleets.remove(fleetID)
 
 def logisticsManager():
@@ -302,14 +303,14 @@ def logisticsManager():
         relDist = data.distanceToRelevance[systemID]
         for fleetID in set(system.fleets) & data.idleFleets:
             fleet = db[fleetID]
-            subfleet = getSubfleet(fleet, {1:0, 4:0}, False)
+            subfleet = tool.getSubfleet(fleet, {1:0, 4:0}, False)
             if len(subfleet):
-                fleetRange = subfleetMaxRange(client, db, {1:0, 4:0}, fleetID)
-                relevantSysID = findNearest(db, system, data.myRelevantSystems, fleetRange)
+                fleetRange = tool.subfleetMaxRange(client, db, {1:0, 4:0}, fleetID)
+                relevantSysID = tool.findNearest(db, system, data.myRelevantSystems, fleetRange)
                 if relevantSysID:
                     relevantSysID = relevantSysID[0]
-                    fleet, newFleet, myFleets = orderPartFleet(client, db,
-                        {1:0, 4:0}, True, fleetID, FLACTION_MOVE, relevantSysID, None)
+                    fleet, newFleet, myFleets = tool.orderPartFleet(client, db,
+                        {1:0, 4:0}, True, fleetID, Const.FLACTION_MOVE, relevantSysID, None)
                     data.idleFleets -= set([fleetID])
                 else:
                     minDist = fleetRange
@@ -323,8 +324,8 @@ def logisticsManager():
                             minDistSysID = tempID
                             minDistRel = dist
                     if minDistSysID:
-                        fleet, newFleet, myFleets = orderPartFleet(client, db,
-                            {1:0, 4:0}, True, fleetID, FLACTION_MOVE, minDistSysID, None)
+                        fleet, newFleet, myFleets = tool.orderPartFleet(client, db,
+                            {1:0, 4:0}, True, fleetID, Const.FLACTION_MOVE, minDistSysID, None)
                         data.idleFleets -= set([fleetID])
 
 def systemWorthiness(system, weights):
@@ -352,8 +353,8 @@ def run(aclient):
     player = client.getPlayer()
     playerID = client.getPlayerID()
 
-    tool_parseDB(client, db)
-    doRelevance(client, db, 10)
+    tool.tool_parseDB(client, db)
+    tool.doRelevance(client, db, 10)
     shipDesignManager()
 
     logisticsManager()

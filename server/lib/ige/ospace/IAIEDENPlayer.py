@@ -18,13 +18,15 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-from ige import *
-from xml.dom.minidom import Node
-from IPlayer import IPlayer
-from ige.IDataHolder import IDataHolder
-import Rules, Utils
+import time
+
+import Rules
+import Utils
+
 from Const import *
-import math, time, random, os
+from ige import log
+from ige.IDataHolder import IDataHolder
+from IPlayer import IPlayer
 
 class IAIEDENPlayer(IPlayer):
 
