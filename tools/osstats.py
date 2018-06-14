@@ -7,8 +7,8 @@ baseDir = os.path.abspath(os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(baseDir, '..', 'server', "lib"))
 
 import types
-from ige.Const import *
-from ige.ospace.Const import *
+from ige import Const
+import ige.ospace.Const as osConst
 from ige.IDataHolder import IDataHolder
 from ige.SQLiteDatabase import Database, DatabaseString
 
@@ -27,41 +27,41 @@ def typeIdToString(obj):
     if not isinstance(obj, IDataHolder):
         return "?"
 
-    if obj.type == T_GALAXY:
+    if obj.type == osConst.T_GALAXY:
         return "T_GALAXY"
-    elif obj.type == T_SYSTEM:
+    elif obj.type == osConst.T_SYSTEM:
         return "T_SYSTEM"
-    elif obj.type == T_PLANET:
+    elif obj.type == osConst.T_PLANET:
         return "T_PLANET"
-    elif obj.type == T_FLEET:
+    elif obj.type == osConst.T_FLEET:
         return "T_FLEET"
-    elif obj.type == T_ALLIANCE:
+    elif obj.type == osConst.T_ALLIANCE:
         return "T_ALLIANCE"
-    elif obj.type == T_TECHNOLOGY:
+    elif obj.type == osConst.T_TECHNOLOGY:
         return "T_TECHNOLOGY"
-    elif obj.type == T_ASTEROID:
+    elif obj.type == osConst.T_ASTEROID:
         return "T_ASTEROID"
-    elif obj.type == T_NATURE:
+    elif obj.type == osConst.T_NATURE:
         return "T_NATURE"
-    elif obj.type == T_AIPLAYER:
+    elif obj.type == osConst.T_AIPLAYER:
         return "T_AIPLAYER"
-    elif obj.type == T_AIRENPLAYER:
+    elif obj.type == osConst.T_AIRENPLAYER:
         return "T_AIRENPLAYER"
-    elif obj.type == T_AIMUTPLAYER:
+    elif obj.type == osConst.T_AIMUTPLAYER:
         return "T_AIMUTPLAYER"
-    elif obj.type == T_AIPIRPLAYER:
+    elif obj.type == osConst.T_AIPIRPLAYER:
         return "T_AIPIRPLAYER"
-    elif obj.type == T_AIEDENPLAYER:
+    elif obj.type == osConst.T_AIEDENPLAYER:
         return "T_AIEDENPLAYER"
-    elif obj.type == T_PIRPLAYER:
+    elif obj.type == osConst.T_PIRPLAYER:
         return "T_PIRPLAYER"
-    elif obj.type == T_PLAYER:
+    elif obj.type == Const.T_PLAYER:
         return "T_PLAYER"
-    elif obj.type == T_UNIVERSE:
+    elif obj.type == Const.T_UNIVERSE:
         return "T_UNIVERSE"
-    elif obj.type == T_UNKNOWN:
+    elif obj.type == Const.T_UNKNOWN:
         return "T_UNKNOWN"
-    elif obj.type == T_OBJECT:
+    elif obj.type == Const.T_OBJECT:
         return "T_OBJECT"
     else:
         return "? (%d)" % obj.type
