@@ -20,17 +20,19 @@
 
 # Game manager
 # Multiple instances can be created (one for each game)
+import os
+import os.path
+import time
 
-from ige import *
 import ige
-from Database import Database
-from Transaction import Transaction
-from Index import Index
-from Const import *
-from ige.Const import ADMIN_LOGIN
-import os, os.path, time
 import log
+from Const import *
+from Database import Database
+from Index import Index
 from IObject import IDataHolder
+from Transaction import Transaction
+
+from ige.Const import ADMIN_LOGIN
 
 class GameMngr:
 
@@ -176,7 +178,7 @@ class GameMngr:
     def processTurn(self, sid, turns = 1):
         session = self.clientMngr.getSession(sid)
         if session.login != ADMIN_LOGIN:
-            raise SecurityException('You cannot issue this command.')
+            raise ige.SecurityException('You cannot issue this command.')
         for turn in xrange(turns):
             log.message("--- TURN PROCESSING STARTED ---")
             # commit player's changes
@@ -240,7 +242,7 @@ class GameMngr:
     def backup(self, sid, basename):
         session = self.clientMngr.getSession(sid)
         if session.login != ADMIN_LOGIN:
-            raise SecurityException('You cannot issue this command.')
+            raise ige.SecurityException('You cannot issue this command.')
         self.db.backup(basename)
         self.clientMngr.backup(basename)
         self.msgMngr.backup(basename)
@@ -249,7 +251,7 @@ class GameMngr:
     def commitDatabases(self, sid):
         session = self.clientMngr.getSession(sid)
         if session.login != ADMIN_LOGIN:
-            raise SecurityException('You cannot issue this command.')
+            raise ige.SecurityException('You cannot issue this command.')
         self.db.checkpoint()
         self.clientMngr.checkpoint()
         self.msgMngr.checkpoint()
@@ -275,20 +277,20 @@ class GameMngr:
 
         session = self.clientMngr.getSession(sid)
         if session.cid:
-            raise GameException('You already selected a player object.')
+            raise ige.GameException('You already selected a player object.')
         try:
             accounts_player_objects = self.db[OID_I_LOGIN2OID].get(session.login, [])
         except AttributeError:
-            raise SecurityException('Not logged in.')
+            raise ige.SecurityException('Not logged in.')
 
         if playerID not in accounts_player_objects:
-            raise NoAccountException('Player object not on this account.')
+            raise ige.NoAccountException('Player object not on this account.')
 
         log.debug('Adding cid to session', playerID)
         session.cid = playerID
         # validate client
         if not self.validateClient(session):
-            raise GameException('Wrong version of client.')
+            raise ige.GameException('Wrong version of client.')
         # notify object, that player has logged in
         player = self.db[playerID]
         self.cmdPool[player.type].loggedIn(Transaction(self), player)
@@ -347,25 +349,25 @@ class GameMngr:
         # check client id
         session = self.clientMngr.getSession(sid)
         if not session.cid:
-            raise SecurityException('No player object selected.')
+            raise ige.SecurityException('No player object selected.')
         if not self.validateClient(session):
-            raise GameException('Wrong version of client.')
+            raise ige.GameException('Wrong version of client.')
         # check game status (admin is allowed anytime)
         if self.status != GS_RUNNING and session.cid != OID_ADMIN:
-            raise ServerStatusException(self.status)
+            raise ige.ServerStatusException(self.status)
         # check existence of the commander
         if not self.db.has_key(session.cid):
-            raise GameException('This player does not exist. He/she could lose.')
+            raise ige.GameException('This player does not exist. He/she could lose.')
         # update client's liveness
         session.touch()
         # find correct object type
         try:
             obj = self.db[oid]
         except KeyError:
-            raise NoSuchObjectException('Object %d does not exist.' % oid)
+            raise ige.NoSuchObjectException('Object %d does not exist.' % oid)
         cmdObj = getattr(self.cmdPool[obj.type], command)
         if not hasattr(cmdObj, 'public') or not cmdObj.public:
-            raise SecurityException('Access denied - method is not public.')
+            raise ige.SecurityException('Access denied - method is not public.')
         # get acces level of the commander
         accLevel = AL_NONE
         if obj.owner == session.cid:
@@ -374,7 +376,7 @@ class GameMngr:
             accLevel = AL_ADMIN
         #@log.debug('access rights', accLevel, cmdObj.accLevel)
         if cmdObj.accLevel > accLevel:
-            raise SecurityException('Access denied - low access level.')
+            raise ige.SecurityException('Access denied - low access level.')
         # create transaction (TODO - cache it!)
         tran = Transaction(self, session.cid, session)
         # invoke command on it

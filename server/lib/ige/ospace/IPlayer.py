@@ -18,13 +18,19 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-from ige import *
+import math
+import re
+import time
+
+import ige
+import Rules
+import Utils
+import ShipUtils
+
 from ige import log
 from ige.IObject import IObject
 from ige.IDataHolder import IDataHolder
 from Const import *
-import Rules, Utils, math, ShipUtils, time
-import re
 
 class IPlayer(IObject):
 
@@ -307,30 +313,30 @@ class IPlayer(IObject):
 
     def startGlobalConstruction(self, tran, player, techID, quantity, isShip, reportFinished, queue):
         if len(player.prodQueues) <= queue:
-            raise GameException('Invalid queue.')
+            raise ige.GameException('Invalid queue.')
         if len(player.prodQueues[queue]) > Rules.maxProdQueueLen:
-            raise GameException('Queue is full.')
+            raise ige.GameException('Queue is full.')
         if quantity < 1:
-            raise GameException("Quantity must be greater than 0")
+            raise ige.GameException("Quantity must be greater than 0")
         if not player.techs.has_key(techID) and isShip == 0:
-            raise GameException('You do not own this kind of technology.')
+            raise ige.GameException('You do not own this kind of technology.')
         if not player.shipDesigns.has_key(techID) and isShip == 1:
-            raise GameException('You do not own this ship design.')
+            raise ige.GameException('You do not own this ship design.')
         if isShip:
             tech = player.shipDesigns[techID]
             if tech.upgradeTo:
-                raise GameException("You cannot build obsolete ship design.")
+                raise ige.GameException("You cannot build obsolete ship design.")
         else:
             tech = Rules.techs[techID]
             if tech.isStructure or not tech.isProject:
-                raise GameException('You cannot construct this technology.')
+                raise ige.GameException('You cannot construct this technology.')
             elif tech.globalDisabled:
-                raise GameException('You cannot construct targeted project.')
+                raise ige.GameException('You cannot construct targeted project.')
         neededSR = {}
         for sr in tech.buildSRes:
             nSR = neededSR.get(sr, 0) + tech.buildSRes[sr] * quantity
             if player.stratRes.get(sr, 0) < nSR:
-                raise GameException("You do not own required strategic resource(s)")
+                raise ige.GameException("You do not own required strategic resource(s)")
             neededSR[sr] = nSR
         # consume strategic resources
         for sr in neededSR:
@@ -351,10 +357,10 @@ class IPlayer(IObject):
 
     def changeGlobalConstruction(self, tran, player, queue, index, quantity):
         if index < 0 or index >= len(player.prodQueues[queue]):
-            raise GameException("No such item in the construction queue.")
+            raise ige.GameException("No such item in the construction queue.")
 
         if quantity < 1:
-            raise GameException("Quantity must be greater than 0")
+            raise ige.GameException("Quantity must be greater than 0")
 
         item = player.prodQueues[queue][index]
         if item.isShip:
@@ -368,7 +374,7 @@ class IPlayer(IObject):
         for sr in tech.buildSRes:
             nSR = neededSR.get(sr, 0) + tech.buildSRes[sr] * quantityChange
             if player.stratRes.get(sr, 0) < nSR:
-                raise GameException("You do not own required strategic resource(s)")
+                raise ige.GameException("You do not own required strategic resource(s)")
             neededSR[sr] = nSR
         # consume strategic resources
         for sr in neededSR:
@@ -383,9 +389,9 @@ class IPlayer(IObject):
 
     def abortGlobalConstruction(self, tran, player, queue, index):
         if len(player.prodQueues) <= queue or queue < 0:
-            raise GameException('Invalid queue.')
+            raise ige.GameException('Invalid queue.')
         if len(player.prodQueues[queue]) <= index or index < 0:
-            raise GameException('Invalid task.')
+            raise ige.GameException('Invalid task.')
         item = player.prodQueues[queue][index]
         # return strategic resources
         #is ship
@@ -403,9 +409,9 @@ class IPlayer(IObject):
 
     def moveGlobalConstrItem(self, tran, player, queue, index, rel):
         if index >= len(player.prodQueues[queue]):
-            raise GameException('No such item in the construction queue.')
+            raise ige.GameException('No such item in the construction queue.')
         if index + rel < 0 or index + rel >= len(player.prodQueues[queue]):
-            raise GameException('Cannot move.')
+            raise ige.GameException('Cannot move.')
         item = player.prodQueues[queue][index]
         del player.prodQueues[queue][index]
         player.prodQueues[queue].insert(index + rel, item)
@@ -430,9 +436,9 @@ class IPlayer(IObject):
         # TODO smarted conditions (like cannot resign twice a week or so)
         galaxy = tran.db[obj.galaxy]
         if galaxy.scenario == SCENARIO_SINGLE:
-            raise GameException('You cannot resign current game - it is single player game.')
+            raise ige.GameException('You cannot resign current game - it is single player game.')
         if not obj.timeEnabled:
-            raise GameException('You cannot resign current game - time is stopped.')
+            raise ige.GameException('You cannot resign current game - time is stopped.')
         log.debug("Resigning player", obj.oid)
         # morph player to AI
         obj.type = self.resignTo
@@ -469,7 +475,7 @@ class IPlayer(IObject):
         # cannot resign when time is stopped
         # TODO smarted conditions (like cannot resign twice a week or so)
         if not obj.timeEnabled:
-            raise GameException('You cannot resign current game - time is stopped.')
+            raise ige.GameException('You cannot resign current game - time is stopped.')
         player = tran.db[playerID]
         # give planets
         for planetID in obj.planets[:]: # needs a copy - changeOwner modifies this
@@ -496,21 +502,21 @@ class IPlayer(IObject):
         name = name.strip()
         # check technologies
         if hullID not in obj.techs:
-            raise GameException("You do not posses this hull type.")
+            raise ige.GameException("You do not posses this hull type.")
         for techID in eqIDs:
             if techID not in obj.techs:
-                raise GameException("You do not posses technology(ies) to construct this ship.")
+                raise ige.GameException("You do not posses technology(ies) to construct this ship.")
         # create spec (throws exception for invad ones)
         spec = ShipUtils.makeShipMinSpec(obj, name, hullID, eqIDs, [])
         # check number of designs
         if len(obj.shipDesigns) > Rules.shipMaxDesigns:
-            raise GameException("No space to store design.")
+            raise ige.GameException("No space to store design.")
         # check name of designs
         for designID in obj.shipDesigns:
             if obj.shipDesigns[designID].name == name:
-                raise GameException("Design name is already used.")
+                raise ige.GameException("Design name is already used.")
         if re.match("^\s*$",name):
-            raise GameException("Design name must not be entirely whitespace.")
+            raise ige.GameException("Design name must not be entirely whitespace.")
         # find free design id
         index = 1
         ids = obj.shipDesigns.keys()
@@ -533,10 +539,10 @@ class IPlayer(IObject):
                 del obj.buoys[systemID]
                 return obj.buoys
             else:
-                raise GameException("Buoy at specified system does not exist.")
+                raise ige.GameException("Buoy at specified system does not exist.")
 
         if type not in (BUOY_PRIVATE, BUOY_TO_ALLY, BUOY_TO_SCANNERSHARE):
-            raise GameException("Wrong bouy type.")
+            raise ige.GameException("Wrong bouy type.")
 
         # edit buoy
         if systemID in obj.buoys:
@@ -544,10 +550,10 @@ class IPlayer(IObject):
             return obj.buoys
 
         if len(obj.buoys) >= 30:
-            raise GameException("You cannot add more than 30 buoys.")
+            raise ige.GameException("You cannot add more than 30 buoys.")
 
         if tran.db[systemID].type not in (T_SYSTEM, T_WORMHOLE):
-            raise GameException("You can add buoy only to system.")
+            raise ige.GameException("You can add buoy only to system.")
 
         # new buoy
         if len(text) > 0:
@@ -563,7 +569,7 @@ class IPlayer(IObject):
             active ships using this design."""
         # check design ID
         if designID not in obj.shipDesigns:
-            raise GameException("No such design.")
+            raise ige.GameException("No such design.")
         # delete ships
         for fleetID in obj.fleets[:]: # make copy, fleet can be deleted
             fleet = tran.db[fleetID]
@@ -592,25 +598,25 @@ class IPlayer(IObject):
 
     def getShipDesign(self,tran,obj,designID):
         if designID not in obj.shipDesigns:
-            raise GameException("No such design.")
+            raise ige.GameException("No such design.")
         return obj.shipDesigns[designID]
 
     def upgradeShipDesign(self, tran, obj, oldDesignID, newDesignID):
         # check designs ID
         if oldDesignID not in obj.shipDesigns:
-            raise GameException("No such design.")
+            raise ige.GameException("No such design.")
         if newDesignID not in obj.shipDesigns:
-            raise GameException("No such design.")
+            raise ige.GameException("No such design.")
         if oldDesignID == newDesignID:
-            raise GameException("Designs are the same.")
+            raise ige.GameException("Designs are the same.")
         oldSpec = obj.shipDesigns[oldDesignID]
         newSpec = obj.shipDesigns[newDesignID]
         if oldSpec.upgradeTo:
-            raise GameException("Old design has already been made obsolete.")
+            raise ige.GameException("Old design has already been made obsolete.")
         if newSpec.upgradeTo:
-            raise GameException("New design has already been made obsolete.")
+            raise ige.GameException("New design has already been made obsolete.")
         if oldSpec.combatClass != newSpec.combatClass:
-            raise GameException("Designs must be of the same combat class.")
+            raise ige.GameException("Designs must be of the same combat class.")
         # set old design as upgradable
         oldSpec.upgradeTo = newDesignID
         # if something is upgraded to oldDesign change it to new design
@@ -649,7 +655,7 @@ class IPlayer(IObject):
     def cancelUpgradeShipDesign(self, tran, obj, designID):
         # check designs ID
         if designID not in obj.shipDesigns:
-            raise GameException("No such design.")
+            raise ige.GameException("No such design.")
         obj.shipDesigns[designID].upgradeTo = OID_NONE
         return obj.shipDesigns
 
@@ -658,33 +664,33 @@ class IPlayer(IObject):
 
     def startResearch(self, tran, obj, techID, improveToMax = 0):
         if len(obj.rsrchQueue) > Rules.maxRsrchQueueLen:
-            GameException('Queue is full.')
+            ige.GameException('Queue is full.')
         tech = Rules.techs[techID]
         # player has to be a right race
         if obj.race not in tech.researchRaces:
-            raise GameException("Your race cannot research this technology.")
+            raise ige.GameException("Your race cannot research this technology.")
         # item cannot be researched twice
         for tmpTech in obj.rsrchQueue:
             if tmpTech.techID == techID:
-                raise GameException('Technology is already sheduled for research.')
+                raise ige.GameException('Technology is already sheduled for research.')
         # disabled?
         for tmpTechID in obj.techs:
             if techID in Rules.techs[tmpTechID].researchDisables:
-                raise GameException("Previous research has disabled this technology.")
+                raise ige.GameException("Previous research has disabled this technology.")
         # check requirements
         for tmpTechID, improvement in tech.researchRequires:
             if not obj.techs.has_key(tmpTechID) or obj.techs[tmpTechID] < improvement:
-                raise GameException('You cannot research this technology yet.')
+                raise ige.GameException('You cannot research this technology yet.')
         improvement = obj.techs.get(techID, Rules.techBaseImprovement - 1) + 1
         if improvement > Rules.techMaxImprovement or improvement > tech.maxImprovement:
-            raise GameException('You cannot improve this technology further.')
+            raise ige.GameException('You cannot improve this technology further.')
         if tech.level > obj.techLevel:
-            raise GameException("Your technological level is insufficient.")
+            raise ige.GameException("Your technological level is insufficient.")
         # check strategic resources
         if improvement == 1:
             for stratRes in tech.researchReqSRes:
                 if obj.stratRes.get(stratRes, 0) < 1:
-                    raise GameException("Required strategy resource missing.")
+                    raise ige.GameException("Required strategy resource missing.")
         item = IDataHolder()
         item.techID = techID
         item.improvement = improvement
@@ -700,7 +706,7 @@ class IPlayer(IObject):
 
     def abortResearch(self, tran, obj, index):
         if index >= len(obj.rsrchQueue) or index < 0:
-            GameException('No such item in queue.')
+            ige.GameException('No such item in queue.')
         del obj.rsrchQueue[index]
         return obj.rsrchQueue
 
@@ -709,7 +715,7 @@ class IPlayer(IObject):
 
     def editResearch(self, tran, obj, index, improveToMax = 0):
         if index >= len(obj.rsrchQueue) or index < 0:
-            GameException('No such item in queue.')
+            ige.GameException('No such item in queue.')
         obj.rsrchQueue[index].improveToMax = improveToMax
         return obj.rsrchQueue
 
@@ -718,9 +724,9 @@ class IPlayer(IObject):
 
     def moveResearch(self, tran, obj, index, rel):
         if index >= len(obj.rsrchQueue):
-            raise GameException('No such item in the researcg queue.')
+            raise ige.GameException('No such item in the researcg queue.')
         if index + rel < 0 or index + rel >= len(obj.rsrchQueue):
-            raise GameException('Cannot move.')
+            raise ige.GameException('Cannot move.')
         item = obj.rsrchQueue[index]
         del obj.rsrchQueue[index]
         obj.rsrchQueue.insert(index + rel, item)
@@ -738,7 +744,7 @@ class IPlayer(IObject):
             if tran.db[planetID].owner == obj.oid:
                 ok = 1
         if not ok:
-            raise GameException("You must own planet in the source system")
+            raise ige.GameException("You must own planet in the source system")
         # check targetSystemID
         if targetSystemID != OID_NONE and 0: # TODO: switch on
             ok = 0
@@ -746,7 +752,7 @@ class IPlayer(IObject):
                 if tran.db[planetID].owner == obj.oid:
                     ok = 1
             if not ok:
-                raise GameException("You must own planet in the target system")
+                raise ige.GameException("You must own planet in the target system")
         # fine - record it
         log.debug(obj.oid, "Adding redirection", sourceSystemID, targetSystemID)
         if targetSystemID:
@@ -774,23 +780,23 @@ class IPlayer(IObject):
         log.debug("changePactCond", obj.oid, playerID, pactID)
         # must have a contact
         if playerID not in obj.diplomacyRels:
-            raise GameException('No contact with this player.')
+            raise ige.GameException('No contact with this player.')
         player = tran.db[playerID]
         # must be a player
         if player.type not in PLAYER_TYPES and player.type != T_ALLIANCE:
-            raise GameException('Pacts can be offered to players and aliances only.')
+            raise ige.GameException('Pacts can be offered to players and aliances only.')
         # check pactID
         pact = Rules.pactDescrs.get(pactID, None)
         if not pact:
-            raise GameException('No such pact type.')
+            raise ige.GameException('No such pact type.')
         # check state
         if state not in (PACT_OFF, PACT_INACTIVE, PACT_ACTIVE):
-            raise GameException("Wrong pact state")
+            raise ige.GameException("Wrong pact state")
         # check conditions
         for tmpPactID in conditions:
             pact = Rules.pactDescrs.get(tmpPactID, None)
             if not pact:
-                raise GameException('No such pact type.')
+                raise ige.GameException('No such pact type.')
         # record pact
         dipl = self.cmd(obj).getDiplomacyWith(tran, obj, playerID)
         dipl.pacts[pactID] = [state]
@@ -877,12 +883,12 @@ class IPlayer(IObject):
 
     def setVoteFor(self, tran, obj, playerID):
         if playerID not in obj.diplomacyRels and playerID != obj.oid and playerID != OID_NONE:
-            raise GameException("No contact with this commander.")
+            raise ige.GameException("No contact with this commander.")
         # check type
         if playerID != OID_NONE:
             player = tran.db[playerID]
             if player.type != T_PLAYER:
-                raise GameException("You cannot vote for this player.")
+                raise ige.GameException("You cannot vote for this player.")
         # set
         obj.voteFor = playerID
         return obj.voteFor
@@ -1003,7 +1009,7 @@ class IPlayer(IObject):
                 obj.dynamicMap[objID] = max(obj.dynamicMap.get(objID, 0), level)
                 contacts[object.owner] = None
             else:
-                raise GameException("Unsupported type %d" % object.type)
+                raise ige.GameException("Unsupported type %d" % object.type)
         if obj.oid in contacts:
             del contacts[obj.oid]
         if OID_NONE in contacts:

@@ -18,14 +18,21 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-from ige import *
+import copy
+import math
+import random
+
 from xml.dom.minidom import Node
+
+import ige
+import Rules
+import Utils
+import ShipUtils
+
+from Const import *
+from ige import log
 from ige.IObject import IObject
 from ige.IDataHolder import IDataHolder
-import Rules, Utils, ShipUtils
-from Const import *
-import math, random, copy
-from ige import log
 
 class IPlanet(IObject):
 
@@ -102,31 +109,31 @@ class IPlanet(IObject):
     def startConstruction(self, tran, obj, techID, quantity, targetID, isShip, reportFinished,
         demolishStruct):
         if len(obj.prodQueue) > Rules.maxProdQueueLen:
-            raise GameException('Queue is full.')
+            raise ige.GameException('Queue is full.')
         if quantity < 1:
-            raise GameException("Quantity must be greater than 0")
+            raise ige.GameException("Quantity must be greater than 0")
         player = tran.db[obj.owner]
         if not player.techs.has_key(techID) and isShip == 0:
-            raise GameException('You do not own this kind of technology.')
+            raise ige.GameException('You do not own this kind of technology.')
         if not player.shipDesigns.has_key(techID) and isShip == 1:
-            raise GameException('You do not own this ship design.')
+            raise ige.GameException('You do not own this ship design.')
         if targetID not in tran.db[obj.compOf].planets:
-            raise GameException('You can build only in the same system.')
+            raise ige.GameException('You can build only in the same system.')
         if isShip:
             tech = player.shipDesigns[techID]
             if tech.upgradeTo:
-                raise GameException("You cannot build obsolete ship design.")
+                raise ige.GameException("You cannot build obsolete ship design.")
         else:
             tech = Rules.techs[techID]
             if not (tech.isStructure or tech.isProject):
-                raise GameException('You cannot construct this technology.')
+                raise ige.GameException('You cannot construct this technology.')
             if not tech.validateConstrHandler(tran, obj, tran.db[targetID], tech):
-                raise GameException('Conditions for construction are not satisfied.')
+                raise ige.GameException('Conditions for construction are not satisfied.')
         neededSR = {}
         for sr in tech.buildSRes:
             nSR = neededSR.get(sr, 0) + quantity * tech.buildSRes[sr]
             if player.stratRes.get(sr, 0) < nSR:
-                raise GameException("You do not own enough of required strategic resource(s)")
+                raise ige.GameException("You do not own enough of required strategic resource(s)")
             neededSR[sr] = nSR
         # consume strategic resources
         for sr in neededSR:
@@ -151,10 +158,10 @@ class IPlanet(IObject):
 
     def changeConstruction(self, tran, obj, index, quantity):
         if index < 0 or index >= len(obj.prodQueue):
-            raise GameException("No such item in the construction queue.")
+            raise ige.GameException("No such item in the construction queue.")
 
         if quantity < 1:
-            raise GameException("Quantity must be greater than 0")
+            raise ige.GameException("Quantity must be greater than 0")
 
         player = tran.db[obj.owner]
         item = obj.prodQueue[index]
@@ -169,7 +176,7 @@ class IPlanet(IObject):
         for sr in tech.buildSRes:
             nSR = neededSR.get(sr, 0) + quantityChange * tech.buildSRes[sr]
             if player.stratRes.get(sr, 0) < nSR:
-                raise GameException("You do not own enough of required strategic resource(s)")
+                raise ige.GameException("You do not own enough of required strategic resource(s)")
             neededSR[sr] = nSR
         # consume strategic resources
         for sr in neededSR:
@@ -183,7 +190,7 @@ class IPlanet(IObject):
 
     def abortConstruction(self, tran, obj, index):
         if index >= len(obj.prodQueue):
-            raise GameException('No such item in the construction queue.')
+            raise ige.GameException('No such item in the construction queue.')
         # Free strategic resources
         player = tran.db[obj.owner]
         item = obj.prodQueue[index]
@@ -202,9 +209,9 @@ class IPlanet(IObject):
 
     def moveConstrItem(self, tran, obj, index, rel):
         if index >= len(obj.prodQueue):
-            raise GameException('No such item in the construction queue.')
+            raise ige.GameException('No such item in the construction queue.')
         if index + rel < 0 or index + rel >= len(obj.prodQueue):
-            raise GameException('Cannot move.')
+            raise ige.GameException('Cannot move.')
         item = obj.prodQueue[index]
         del obj.prodQueue[index]
         obj.prodQueue.insert(index + rel, item)
@@ -221,7 +228,7 @@ class IPlanet(IObject):
         elif obj.owner != OID_NONE and force == 0:
             # this planet is already owned!
             # TODO resolve conflict (based on player relations)
-            raise GameException('Planet is already owned by another commander.')
+            raise ige.GameException('Planet is already owned by another commander.')
         elif obj.owner != OID_NONE and force == 1:
             # remove planet from old owner
             try:
@@ -253,7 +260,7 @@ class IPlanet(IObject):
 
     def setStructOn(self, tran, obj, slotIdx, on):
         if slotIdx >= len(obj.slots) or slotIdx < 0:
-            raise GameException('No such structure.')
+            raise ige.GameException('No such structure.')
         if on:
             obj.slots[slotIdx][STRUCT_IDX_STATUS] |= STRUCT_STATUS_ON
         else:
@@ -268,9 +275,9 @@ class IPlanet(IObject):
         # planet surrenders
         #isCombat = tran.db[obj.compOf].combatCounter > 0
         #if isCombat and len(obj.slots) < obj.plSlots:
-        #    raise GameException("You cannot destroy this structure under fire - at least one slot is free.")
+        #    raise ige.GameException("You cannot destroy this structure under fire - at least one slot is free.")
         if slotIdx >= len(obj.slots) or slotIdx < 0:
-            raise GameException('No such structure.')
+            raise ige.GameException('No such structure.')
         del obj.slots[slotIdx]
         return obj.slots
 
@@ -279,9 +286,9 @@ class IPlanet(IObject):
 
     def moveStruct(self, tran, obj, slotIdx, rel):
         if slotIdx >= len(obj.slots) or slotIdx < 0:
-            raise GameException('No such structure.')
+            raise ige.GameException('No such structure.')
         if slotIdx + rel < 0 or slotIdx + rel >= len(obj.slots):
-            raise GameException('Cannot move.')
+            raise ige.GameException('Cannot move.')
         struct = obj.slots[slotIdx]
         del obj.slots[slotIdx]
         obj.slots.insert(slotIdx + rel, struct)
@@ -617,7 +624,7 @@ class IPlanet(IObject):
                     if item.reportFin and item.quantity == 1:
                         Utils.sendMessage(tran, obj, MSG_COMPLETED_PROJECT, target.oid, item.techID)
                 else:
-                    raise GameException('Unsupported type of technology %d ' % item.techID)
+                    raise ige.GameException('Unsupported type of technology %d ' % item.techID)
                 # remove item from prod queue
                 item.quantity -= 1
                 if item.quantity == 0:
@@ -877,7 +884,7 @@ class IPlanet(IObject):
                     galaxy.startingPos.append(obj.oid)
                     galaxy.numOfStartPos += 1
                 else:
-                    raise GameException('Unknown element %s' % name)
+                    raise ige.GameException('Unknown element %s' % name)
         return SUCC
 
     def update(self, tran, obj):
@@ -932,7 +939,7 @@ class IPlanet(IObject):
     def changePlanetsGlobalQueue(self, tran, obj, newQueue):
         player = tran.db[obj.owner]
         if newQueue < 0 or newQueue >= len(player.prodQueues):
-            raise GameException("Invalid queue")
+            raise ige.GameException("Invalid queue")
         obj.globalQueue = newQueue
         return obj.globalQueue
 

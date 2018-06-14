@@ -18,10 +18,13 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-from ige import *
 from xml.dom.minidom import Node
-from ISystem import ISystem
+
+import ige
+
 from Const import *
+from ige import log
+from ISystem import ISystem
 
 class IWormHole(ISystem):
 
@@ -43,7 +46,7 @@ class IWormHole(ISystem):
                 if name == 'properties':
                     self.loadDOMAttrs(obj, elem)
                 else:
-                    raise GameException('Unknown element %s' % name)
+                    raise ige.GameException('Unknown element %s' % name)
         return SUCC
 
     def getScanInfos(self, tran, obj, scanPwr, player):

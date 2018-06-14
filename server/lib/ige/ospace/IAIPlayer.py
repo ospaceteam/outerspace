@@ -17,14 +17,11 @@
 #  along with Outer Space; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
+import time
 
-from ige import *
-from xml.dom.minidom import Node
-from IPlayer import IPlayer
-from ige.IDataHolder import IDataHolder
-import Rules, Utils
 from Const import *
-import math, time, random, os
+from ige import log
+from IPlayer import IPlayer
 
 class IAIPlayer(IPlayer):
 
