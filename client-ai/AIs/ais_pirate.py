@@ -24,7 +24,8 @@ from ige.ospace import Const
 from ige.ospace import Rules
 from ige.ospace import Utils
 
-from ai_tools import *
+import ai_tools as tool
+from ai_tools import data
 
 client = None
 db = None
@@ -34,7 +35,7 @@ player = None
 def planetManager():
     global player, data
     for planetID in data.myPlanets:
-        sortStructures(client, db, planetID)
+        tool.sortStructures(client, db, planetID)
     for systemID in data.mySystems:
         system = db[systemID]
         # my planets in the system
@@ -215,7 +216,7 @@ def planetManager():
         for fleetID in systemFleets:
             fleet = db[fleetID]
             if getattr(fleet, 'owner', Const.OID_NONE) == playerID:
-                if fleetContains(fleet, {4:1}):
+                if tool.fleetContains(fleet, {4:1}):
                     hasScout = True
         for planetID in idlePlanets:
             if not hasScout:
@@ -261,50 +262,50 @@ def fleetsManager():
         if fleet.combatCounter and fleet.orbiting not in data.mySystems:
             # Send the fighting fleet back, if even the nearest system
             # is out of range
-            maxRange = subfleetMaxRange(client, db, None, fleetID)
-            nearestSysIDs = findNearest(db, fleet, data.mySystems)
+            maxRange = tool.subfleetMaxRange(client, db, None, fleetID)
+            nearestSysIDs = tool.findNearest(db, fleet, data.mySystems)
             if len(nearestSysIDs):
                 nearestSysID = nearestSysIDs[0]
                 targSys = db[nearestSysID]
                 distance = math.hypot(targSys.x-fleet.x, targSys.y-fleet.y)
                 if distance >= maxRange:
-                    orderFleet(client, db, fleetID, Const.FLACTION_MOVE, nearestSysID, None)
+                    tool.orderFleet(client, db, fleetID, Const.FLACTION_MOVE, nearestSysID, None)
         elif not fleet.orbiting in data.mySystems:
-            if fleetContains(fleet, attackMinimum):
+            if tool.fleetContains(fleet, attackMinimum):
                 attackFleets.add(fleetID)
             else:
-                nearestSysIDs = findNearest(db, fleet, data.mySystems)
+                nearestSysIDs = tool.findNearest(db, fleet, data.mySystems)
 
                 if len(nearestSysIDs):
                     nearestSysID = nearestSysIDs[0]
-                    orderFleet(client, db, fleetID, Const.FLACTION_MOVE, nearestSysID, None)
+                    tool.orderFleet(client, db, fleetID, Const.FLACTION_MOVE, nearestSysID, None)
         else:
-            if fleetContains(fleet, attackMinimum):
+            if tool.fleetContains(fleet, attackMinimum):
                 attackFleets.add(fleetID)
     for fleetID in copy.copy(attackFleets):
         fleet = db.get(fleetID, None)
-        sheet = getFleetSheet(fleet)
+        sheet = tool.getFleetSheet(fleet)
         ships = {}
         if fleet.orbiting in data.mySystems:
             ships[3] = min(sheet[1], sheet[2], sheet[3])
             ships[1] = ships[2] = ships[3]
             ships[4] = 1
-            maxRange = subfleetMaxRange(client, db, ships, fleetID)
-            nearestSysIDs = findNearest(db, fleet, data.otherSystems & data.relevantSystems, maxRange * 0.45)
+            maxRange = tool.subfleetMaxRange(client, db, ships, fleetID)
+            nearestSysIDs = tool.findNearest(db, fleet, data.otherSystems & data.relevantSystems, maxRange * 0.45)
             if len(nearestSysIDs):
                 nearestSys = nearestSysIDs[0]
-                orderPartFleet(client, db, ships, False, fleetID, Const.FLACTION_MOVE, nearestSys, None)
+                tool.orderPartFleet(client, db, ships, False, fleetID, Const.FLACTION_MOVE, nearestSys, None)
         else:
             maxRange = max(0, fleet.storEn - fleet.maxEn / 2) * fleet.speed / 24.0
-            nearestSysIDs = findNearest(db, fleet, data.otherSystems & data.relevantSystems, maxRange)
+            nearestSysIDs = tool.findNearest(db, fleet, data.otherSystems & data.relevantSystems, maxRange)
             if len(nearestSysIDs):
                 nearestSysID = nearestSysIDs[0]
-                orderFleet(client, db, fleetID, Const.FLACTION_MOVE, nearestSysID, None)
+                tool.orderFleet(client, db, fleetID, Const.FLACTION_MOVE, nearestSysID, None)
             else:
-                nearestSysIDs = findNearest(db, fleet, data.mySystems)
+                nearestSysIDs = tool.findNearest(db, fleet, data.mySystems)
                 if len(nearestSysIDs):
                     nearestSysID = nearestSysIDs[0]
-                    orderFleet(client, db, fleetID, Const.FLACTION_MOVE, nearestSysID, None)
+                    tool.orderFleet(client, db, fleetID, Const.FLACTION_MOVE, nearestSysID, None)
 
 
 def run(aclient):
@@ -314,8 +315,8 @@ def run(aclient):
     player = client.getPlayer()
     playerID = client.getPlayerID()
 
-    tool_parseDB(client, db)
-    doRelevance(client, db, Rules.pirateInfluenceRange)
+    tool.tool_parseDB(client, db)
+    tool.doRelevance(client, db, Rules.pirateInfluenceRange)
 
     shipDesignManager()
     planetManager()

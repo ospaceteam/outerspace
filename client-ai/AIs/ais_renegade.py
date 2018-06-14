@@ -24,7 +24,8 @@ from ige.ospace import Const
 from ige.ospace import Rules
 from ige.ospace import Utils
 
-from ai_tools import *
+import ai_tools as tool
+from ai_tools import data
 
 client = None
 db = None
@@ -34,13 +35,13 @@ player = None
 def systemManager():
     global data, player, db
     for planetID in data.myPlanets:
-        sortStructures(client, db, planetID)
+        tool.sortStructures(client, db, planetID)
     for systemID in data.mySystems:
         system = db[systemID]
         # creation of final system plans
         finalSystemPlan = {}
-        actualStats = getSystemStructStats(client, db, systemID)
-        buildStats = getSystemStructStats(client, db, systemID, False)
+        actualStats = tool.getSystemStructStats(client, db, systemID)
+        buildStats = tool.getSystemStructStats(client, db, systemID, False)
         # create appropriate build plans
         for planetID in data.freePlanets & set(system.planets):
             finalSystemPlan[planetID] = {Rules.Tech.RENEGADEBASE:1}
@@ -54,7 +55,7 @@ def systemManager():
                                         Rules.Tech.RENEGADEBASE3MINOR:max(planet.plSlots - 2, 0)}
                 continue
             elif planet.plStratRes and\
-                    compareBuildStructPlans(actualStats.planets[planetID], {
+                    tool.compareBuildStructPlans(actualStats.planets[planetID], {
                                                 Rules.Tech.RENEGADEBASE2:1,
                                                 Rules.Tech.RENEGADEBASE2MINOR:planet.plSlots - 1}):
                 finalSystemPlan[planetID] = {Rules.Tech.RENEGADEBASE3:1,
@@ -72,7 +73,7 @@ def systemManager():
             else:
                 finalSystemPlan[planetID] = {Rules.Tech.RENEGADEBASE:1}
                 continue
-        idlePlanets = buildSystem(client, db, systemID, data.myProdPlanets & set(system.planets), finalSystemPlan)
+        idlePlanets = tool.buildSystem(client, db, systemID, data.myProdPlanets & set(system.planets), finalSystemPlan)
         # build ships just in case cosmodrome is present
         hasCosmodrome = False
         for planetID in data.myPlanets & set(system.planets):
@@ -113,7 +114,7 @@ def run(aclient):
     player = client.getPlayer()
     playerID = client.getPlayerID()
 
-    tool_parseDB(client, db)
+    tool.tool_parseDB(client, db)
 
     researchManager()
     shipDesignManager()
