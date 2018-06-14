@@ -20,9 +20,9 @@
 import random, copy, math
 
 from ige import log, GameException
-from ige.ospace.Const import *
-import ige.ospace.Rules as Rules
-import ige.ospace.Utils as Utils
+from ige.ospace import Const
+from ige.ospace import Rules
+from ige.ospace import Utils
 
 from ai_tools import *
 
@@ -131,7 +131,7 @@ def systemManager():
         system_fleet = {}
         for fleetID in getattr(system, 'fleets', []):
             fleet = db[fleetID]
-            if getattr(fleet, 'owner', OID_NONE) == playerID:
+            if getattr(fleet, 'owner', Const.OID_NONE) == playerID:
                 system_fleet = Utils.dictAddition(system_fleet, getFleetSheet(fleet))
         hasSeeders = False
         hasSeekers = False
@@ -150,10 +150,10 @@ def systemManager():
             if (not hasSeeders or not hasSeekers) and shipDraw < 9:
                 # there is 20% chance it won't build civilian ships, but military one
                 if not hasSeeders:
-                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 2, 1, planetID, True, False, OID_NONE)
+                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 2, 1, planetID, True, False, Const.OID_NONE)
                     continue
                 elif not hasSeekers:
-                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 3, 1, planetID, True, False, OID_NONE)
+                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 3, 1, planetID, True, False, Const.OID_NONE)
                     continue
             # rest is creation of ships based on current state + expected guard fighters
             try:
@@ -174,7 +174,7 @@ def systemManager():
                 # we have too many fighters - let's prefer bombers for now
                 weight_bomber += 1
             choice = Utils.weightedRandom([1,4], [weight_fighter, weight_bomber])
-            planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, choice, 2, planetID, True, False, OID_NONE)
+            planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, choice, 2, planetID, True, False, Const.OID_NONE)
 
 def expansionManager():
     global data, db
@@ -190,7 +190,7 @@ def expansionManager():
                 systemID = nearest[0]
                 # send the fleet
                 fleet, newFleet, myFleets = orderPartFleet(client, db,
-                    {3:1}, True, fleetID, FLACTION_MOVE, systemID, None)
+                    {3:1}, True, fleetID, Const.FLACTION_MOVE, systemID, None)
                 data.myFleetSheets[fleetID][3] -= 1
                 if data.myFleetSheets[fleetID][3] == 0:
                     del data.myFleetSheets[fleetID][3]
@@ -214,7 +214,7 @@ def expansionManager():
                         biggestPlanet = planetID
                         # send the fleet
                 fleet, newFleet, myFleets = orderPartFleet(client, db,
-                    {2:1}, True, fleetID, FLACTION_DEPLOY, biggestPlanet, 2)
+                    {2:1}, True, fleetID, Const.FLACTION_DEPLOY, biggestPlanet, 2)
                 data.myFleetSheets[fleetID][2] -= 1
                 if data.myFleetSheets[fleetID][2] == 0:
                     del data.myFleetSheets[fleetID][2]
@@ -227,7 +227,7 @@ def expansionManager():
             else:
                 fleet = db[fleetID]
                 orbitingID = fleet.orbiting
-                if not orbitingID == OID_NONE:
+                if not orbitingID == Const.OID_NONE:
                     orbiting = db[orbitingID]
                     if set(orbiting.planets) & data.freePlanets and orbitingID in data.otherSystems:
                         noOfSlots = 0
@@ -239,7 +239,7 @@ def expansionManager():
                                 biggestPlanet = planetID
                         # issue the deploy order
                         fleet, newFleet, myFleets = orderPartFleet(client, db,
-                            {2:1}, True, fleetID, FLACTION_DEPLOY, biggestPlanet, 2)
+                            {2:1}, True, fleetID, Const.FLACTION_DEPLOY, biggestPlanet, 2)
                         data.myFleetSheets[fleetID][2] -= 1
                         if data.myFleetSheets[fleetID][2] == 0:
                             del data.myFleetSheets[fleetID][2]
@@ -268,7 +268,7 @@ def attackManager():
             minimum = 12
         else:
             minimum = systemWorthiness(system, [8,5,3,2]) + 10
-        if getattr(fleet, 'target', OID_NONE) == OID_NONE and getattr(fleet, 'ships', []):
+        if getattr(fleet, 'target', Const.OID_NONE) == Const.OID_NONE and getattr(fleet, 'ships', []):
             # this also covers fleets fighting over enemy systems - in that case, there
             # is slight chance the fleet will continue to the next system without conquering
             # the system first
@@ -292,7 +292,7 @@ def attackManager():
 
             fleet, newFleet, myFleets = orderPartFleet(client, db,
                 {1:noOfSwarmers, 4:noOfSowers}, True,
-                fleetID, FLACTION_MOVE, target, None)
+                fleetID, Const.FLACTION_MOVE, target, None)
             attackFleets.remove(fleetID)
 
 def logisticsManager():
@@ -309,7 +309,7 @@ def logisticsManager():
                 if relevantSysID:
                     relevantSysID = relevantSysID[0]
                     fleet, newFleet, myFleets = orderPartFleet(client, db,
-                        {1:0, 4:0}, True, fleetID, FLACTION_MOVE, relevantSysID, None)
+                        {1:0, 4:0}, True, fleetID, Const.FLACTION_MOVE, relevantSysID, None)
                     data.idleFleets -= set([fleetID])
                 else:
                     minDist = fleetRange
@@ -324,7 +324,7 @@ def logisticsManager():
                             minDistRel = dist
                     if minDistSysID:
                         fleet, newFleet, myFleets = orderPartFleet(client, db,
-                            {1:0, 4:0}, True, fleetID, FLACTION_MOVE, minDistSysID, None)
+                            {1:0, 4:0}, True, fleetID, Const.FLACTION_MOVE, minDistSysID, None)
                         data.idleFleets -= set([fleetID])
 
 def systemWorthiness(system, weights):

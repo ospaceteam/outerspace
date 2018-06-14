@@ -18,10 +18,10 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 from ige import log
-from ige.ospace.Const import PACT_ALLOW_CIVILIAN_SHIPS, PACT_ALLOW_TANKING, PACT_MINOR_SCI_COOP, PACT_MAJOR_SCI_COOP, PACT_MINOR_CP_COOP, PACT_MAJOR_CP_COOP, PACT_ACTIVE, PACT_INACTIVE
-import ige.ospace.Rules as Rules
-import ige.ospace.Utils as Utils
-import ige.ospace.TechHandlers as TechHandlers
+from ige.ospace import Const
+from ige.ospace import Rules
+from ige.ospace import Utils
+from ige.ospace import TechHandlers
 
 from ai_tools import *
 
@@ -78,11 +78,11 @@ def planetManager():
             if planet.plSlots > len(planet.slots):
                 if systemEn > prodTech.operEn and systemBio > prodTech.operWorkers / 100:
                     planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planet.oid,
-                        prodTech.id, 1, planetID, prodTech.id < 1000, 0, OID_NONE)
+                        prodTech.id, 1, planetID, prodTech.id < 1000, 0, Const.OID_NONE)
                     idlePlanets.remove(planetID)
                 else:
                     planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID,
-                        Rules.Tech.OUTPOST1, 1, planetID, Rules.Tech.OUTPOST1 < 1000, 0, OID_NONE)
+                        Rules.Tech.OUTPOST1, 1, planetID, Rules.Tech.OUTPOST1 < 1000, 0, Const.OID_NONE)
                     idlePlanets.remove(planetID)
         toColonize = data.freePlanets & set(system.planets)
         # colonize remaining planets
@@ -93,7 +93,7 @@ def planetManager():
                 target = db[targetID]
                 planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID,
                     Rules.Tech.OUTPOST1, 1,
-                    targetID, Rules.Tech.OUTPOST1 < 1000, 0, OID_NONE)
+                    targetID, Rules.Tech.OUTPOST1 < 1000, 0, Const.OID_NONE)
                 idlePlanets.remove(planetID)
 
         for planetID in copy.copy(idlePlanets):
@@ -102,21 +102,21 @@ def planetManager():
             hasScouts = False
             for fleetID in systemFleets:
                 fleet = db[fleetID]
-                if getattr(fleet, 'owner', OID_NONE) == playerID:
+                if getattr(fleet, 'owner', Const.OID_NONE) == playerID:
                     if fleetContains(fleet, {designs[3]:1}):
                         hasCS = True
                     if fleetContains(fleet, {designs[0]:1}):
                         hasScouts = True
             if not hasCS:
                 planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID,
-                    designs[3], 1, planetID, designs[3] < 1000, 0, OID_NONE)
+                    designs[3], 1, planetID, designs[3] < 1000, 0, Const.OID_NONE)
             elif not hasScouts:
                 planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID,
-                    designs[0], 1, planetID, designs[0] < 1000, 0, OID_NONE)
+                    designs[0], 1, planetID, designs[0] < 1000, 0, Const.OID_NONE)
             elif not sharedSystem:
                 # build fighters
                 planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID,
-                    designs[1], 1, planetID, designs[1] < 1000, 0, OID_NONE)
+                    designs[1], 1, planetID, designs[1] < 1000, 0, Const.OID_NONE)
 
 def empireManager():
     global player, db, data
@@ -124,7 +124,7 @@ def empireManager():
         return
     candidates = findPopCenterPlanets(db, data.myPlanets)
     candidatePlanets = candidates[:10]
-    govPosition = OID_NONE
+    govPosition = Const.OID_NONE
     govProductions = []
     for planetID in data.myPlanets:
         # find build gov center
@@ -230,7 +230,7 @@ def expansionManager():
                 systemID = nearest[0]
                 # send the fleet
                 fleet, newFleet, myFleets = orderPartFleet(client, db,
-                    {designs[0]:1}, True, fleetID, FLACTION_MOVE, systemID, None)
+                    {designs[0]:1}, True, fleetID, Const.FLACTION_MOVE, systemID, None)
                 data.myFleetSheets[fleetID][designs[0]] -= 1
                 if data.myFleetSheets[fleetID][designs[0]] == 0:
                     del data.myFleetSheets[fleetID][designs[0]]
@@ -254,7 +254,7 @@ def expansionManager():
                         biggestPlanet = planetID
                 # send the fleet
                 fleet, newFleet, myFleets = orderPartFleet(client, db,
-                    {designs[3]:1}, True, fleetID, FLACTION_DEPLOY, biggestPlanet, designs[3])
+                    {designs[3]:1}, True, fleetID, Const.FLACTION_DEPLOY, biggestPlanet, designs[3])
                 data.myFleetSheets[fleetID][designs[3]] -= 1
                 if data.myFleetSheets[fleetID][designs[3]] == 0:
                     del data.myFleetSheets[fleetID][designs[3]]
@@ -305,17 +305,17 @@ def diplomacyManager():
 #    rebels cannot be voted
     for contactID in player.diplomacyRels:
         dipl = client.getDiplomacyWith(contactID)
-        for pactID in [PACT_ALLOW_CIVILIAN_SHIPS, PACT_ALLOW_TANKING, PACT_MINOR_SCI_COOP, PACT_MAJOR_SCI_COOP, PACT_MINOR_CP_COOP, PACT_MAJOR_CP_COOP]:
+        for pactID in [Const.PACT_ALLOW_CIVILIAN_SHIPS, Const.PACT_ALLOW_TANKING, Const.PACT_MINOR_SCI_COOP, Const.PACT_MAJOR_SCI_COOP, Const.PACT_MINOR_CP_COOP, Const.PACT_MAJOR_CP_COOP]:
             pactSpec = Rules.pactDescrs[pactID]
             if dipl.relation < pactSpec.validityInterval[0] or dipl.relation > pactSpec.validityInterval[1]:
                 # not friendly enough
                 continue
-            if pactID in dipl.pacts and dipl.pacts[pactID][0] in [PACT_ACTIVE, PACT_INACTIVE]:
+            if pactID in dipl.pacts and dipl.pacts[pactID][0] in [Const.PACT_ACTIVE, Const.PACT_INACTIVE]:
                 # nothing more to do, move along
                 continue
             # hey, we should enable this pact!
             conditions = [pactID]
-            player.diplomacyRels = client.cmdProxy.changePactCond(playerID, contactID, pactID, PACT_INACTIVE, conditions)
+            player.diplomacyRels = client.cmdProxy.changePactCond(playerID, contactID, pactID, Const.PACT_INACTIVE, conditions)
 
 
 def defenseManager():
@@ -347,7 +347,7 @@ def defenseManager():
                 if quantity == 0:
                     continue
                 shipsLeft, milPwrSend = orderFromSystem(client, db,
-                    {designs[1]:quantity}, tempID, FLACTION_MOVE, systemID, None)
+                    {designs[1]:quantity}, tempID, Const.FLACTION_MOVE, systemID, None)
                 milPwr += milPwrSend
                 data.myMPPerSystem[tempID] -= milPwrSend
                 if milPwr > 0: break
@@ -361,7 +361,7 @@ def logisticsManager():
             nearest = findNearest(db, fleet, data.mySystems, 99999, 1)
             if len(nearest):
                 targetID = nearest[0]
-                orderFleet(client, db, fleetID, FLACTION_MOVE, targetID, None)
+                orderFleet(client, db, fleetID, Const.FLACTION_MOVE, targetID, None)
 
 def run(aclient):
     global client, db, player, playerID

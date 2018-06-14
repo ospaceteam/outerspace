@@ -19,8 +19,8 @@
 #
 
 from igeclient import IClient, IClientDB
+from ige.ospace import Const
 from ige.ospace import Rules
-from ige.ospace.Const import *
 from ige.IDataHolder import IDataHolder
 import ige, gdata, osci, math, time
 from ige import log
@@ -81,7 +81,7 @@ def updateDatabaseUnsafe(clearDB = 0, force = 0):
     """Update database by fetching data from the server."""
     global lastUpdate, nonexistingObj, db
     # get real turn
-    result = cmdProxy.getIntroInfo(OID_UNIVERSE)
+    result = cmdProxy.getIntroInfo(Const.OID_UNIVERSE)
     if not db:
         db = IClientDB.IClientDB(result.cid, result.turn, options.configDir, cmdProxy.gameID)
     if clearDB:
@@ -106,7 +106,7 @@ def updateDatabaseUnsafe(clearDB = 0, force = 0):
             obj.combatCounter = 0
         if not hasattr(obj, 'type'):
             del db[objID]
-        elif obj.type in (T_FLEET, T_ASTEROID):
+        elif obj.type in (Const.T_FLEET, Const.T_ASTEROID):
             del db[objID]
         elif hasattr(obj, 'owner') and obj.owner == db.playerID \
             and objID != db.playerID:
@@ -171,9 +171,9 @@ def updateIDs(objIDs):
 def getRelationTo(objID):
     obj = getPlayer()
     if obj.oid == objID:
-        return REL_UNITY
-    if objID == OID_NONE:
-        return REL_UNDEF
+        return Const.REL_UNITY
+    if objID == Const.OID_NONE:
+        return Const.REL_UNDEF
     dipl = obj.diplomacyRels.get(objID, None)
     if dipl:
         return dipl.relation
@@ -247,15 +247,15 @@ def getDiplomacyWith(contactID):
     if not dipl:
         # make default
         dipl = IDataHolder()
-        dipl.type = T_DIPLREL
+        dipl.type = Const.T_DIPLREL
         dipl.pacts = {
-            PACT_ALLOW_CIVILIAN_SHIPS: [PACT_ACTIVE, PACT_ALLOW_CIVILIAN_SHIPS]
+            Const.PACT_ALLOW_CIVILIAN_SHIPS: [Const.PACT_ACTIVE, Const.PACT_ALLOW_CIVILIAN_SHIPS]
         }
         dipl.relation = obj.defaultRelation
         dipl.relChng = 0
         dipl.lastContact = 0
         dipl.stats = None
-        dipl.contactType = CONTACT_NONE
+        dipl.contactType = Const.CONTACT_NONE
         obj.diplomacyRels[playerID] = dipl
     return dipl
 

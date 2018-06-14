@@ -20,9 +20,9 @@
 import random
 
 from ige import log
-from ige.ospace.Const import *
-import ige.ospace.Rules as Rules
-import ige.ospace.Utils as Utils
+from ige.ospace import Const
+from ige.ospace import Rules
+from ige.ospace import Utils
 
 from ai_tools import *
 
@@ -87,11 +87,11 @@ def systemManager():
                 # 2/10 - Corvette
                 # 7/10 - Fighter
                 if shipDraw == 1:
-                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 3, 1, planetID, True, False, OID_NONE)
+                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 3, 1, planetID, True, False, Const.OID_NONE)
                 elif shipDraw <= 3:
-                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 2, 1, planetID, True, False, OID_NONE)
+                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 2, 1, planetID, True, False, Const.OID_NONE)
                 else:
-                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 1, 1, planetID, True, False, OID_NONE)
+                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 1, 1, planetID, True, False, Const.OID_NONE)
 
 def shipDesignManager():
     # there are 3 basic designs    created by the server

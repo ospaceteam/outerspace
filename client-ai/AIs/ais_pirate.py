@@ -20,9 +20,9 @@
 import random, copy, math
 
 from ige import log
-from ige.ospace.Const import *
-import ige.ospace.Rules as Rules
-import ige.ospace.Utils as Utils
+from ige.ospace import Const
+from ige.ospace import Rules
+from ige.ospace import Utils
 
 from ai_tools import *
 
@@ -82,7 +82,7 @@ def planetManager():
                 log.debug(playerID, "PIRATEAI - building pirate den", planet.oid)
                 planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planet.oid,
                     Rules.Tech.PIRATEDEN, planet.plSlots - len(planet.slots),
-                    planet.oid, Rules.Tech.PIRATEDEN < 1000, 0, OID_NONE)
+                    planet.oid, Rules.Tech.PIRATEDEN < 1000, 0, Const.OID_NONE)
                 idlePlanets.remove(planetID)
                 noOfDensSystem[planetID] += planet.plSlots - len(planet.slots)
                 continue
@@ -116,14 +116,14 @@ def planetManager():
                 if target.owner == playerID:
                     planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID,
                         Rules.Tech.PIRATEDEN, 1,
-                        targetID, Rules.Tech.PIRATEDEN < 1000, 0, OID_NONE)
+                        targetID, Rules.Tech.PIRATEDEN < 1000, 0, Const.OID_NONE)
                     idlePlanets.remove(planetID)
                     noOfDensSystem[targetID] = 1
                     continue
                 else:
                     planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID,
                         Rules.Tech.PIRATEBASE, 1,
-                        targetID, Rules.Tech.PIRATEBASE < 1000, 0, OID_NONE)
+                        targetID, Rules.Tech.PIRATEBASE < 1000, 0, Const.OID_NONE)
                     idlePlanets.remove(planetID)
                     continue
         # second - build brewery, if not present in the system
@@ -178,10 +178,10 @@ def planetManager():
                 if planet.plSlots < planet.plMaxSlots:
                     planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID,
                         Rules.Tech.ADDSLOT3, 1, planetID,
-                        Rules.Tech.ADDSLOT3 < 1000, 0, OID_NONE)
+                        Rules.Tech.ADDSLOT3 < 1000, 0, Const.OID_NONE)
                     planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID,
                         Rules.Tech.PIRATEDEN, 1, planetID,
-                        Rules.Tech.PIRATEDEN < 1000, 0, OID_NONE)
+                        Rules.Tech.PIRATEDEN < 1000, 0, Const.OID_NONE)
                     idlePlanets.remove(planetID)
         # sixth - condensate and assembly all other planets
         for targetID in copy.copy(data.nonhabPlanets & set(system.planets)):
@@ -192,10 +192,10 @@ def planetManager():
                     planet = db[planetID]
                     planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID,
                         Rules.Tech.PLCOND5, 1, targetID,
-                        Rules.Tech.PLCOND5 < 1000, 0, OID_NONE)
+                        Rules.Tech.PLCOND5 < 1000, 0, Const.OID_NONE)
                     planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID,
                         Rules.Tech.PIRATEBASE, 1, targetID,
-                        Rules.Tech.PIRATEBASE < 1000, 0, OID_NONE)
+                        Rules.Tech.PIRATEBASE < 1000, 0, Const.OID_NONE)
                     data.nonhabPlanets.remove(targetID)
             elif Rules.Tech.PLASSEMBL5 in player.techs and target.plType == u'A':
                 if idlePlanets:
@@ -203,10 +203,10 @@ def planetManager():
                     planet = db[planetID]
                     planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID,
                         Rules.Tech.PLASSEMBL5, 1, targetID,
-                        Rules.Tech.PLASSEMBL5 < 1000, 0, OID_NONE)
+                        Rules.Tech.PLASSEMBL5 < 1000, 0, Const.OID_NONE)
                     planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID,
                         Rules.Tech.PIRATEBASE, 1, targetID,
-                        Rules.Tech.PIRATEBASE < 1000, 0, OID_NONE)
+                        Rules.Tech.PIRATEBASE < 1000, 0, Const.OID_NONE)
                     data.nonhabPlanets.remove(targetID)
         # ===============
         # last - remaining idle planets should start producing ships
@@ -214,20 +214,20 @@ def planetManager():
         hasScout = False
         for fleetID in systemFleets:
             fleet = db[fleetID]
-            if getattr(fleet, 'owner', OID_NONE) == playerID:
+            if getattr(fleet, 'owner', Const.OID_NONE) == playerID:
                 if fleetContains(fleet, {4:1}):
                     hasScout = True
         for planetID in idlePlanets:
             if not hasScout:
-                planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 4, 1, planetID, True, False, OID_NONE)
+                planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 4, 1, planetID, True, False, Const.OID_NONE)
             else:
                 dice = random.randint(1, 3)
                 if dice == 1:
-                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 1, 3, planetID, True, False, OID_NONE)
+                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 1, 3, planetID, True, False, Const.OID_NONE)
                 elif dice == 2:
-                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 2, 3, planetID, True, False, OID_NONE)
+                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 2, 3, planetID, True, False, Const.OID_NONE)
                 else:
-                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 3, 2, planetID, True, False, OID_NONE)
+                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 3, 2, planetID, True, False, Const.OID_NONE)
 
 def shipDesignManager():
     global client
@@ -268,7 +268,7 @@ def fleetsManager():
                 targSys = db[nearestSysID]
                 distance = math.hypot(targSys.x-fleet.x, targSys.y-fleet.y)
                 if distance >= maxRange:
-                    orderFleet(client, db, fleetID, FLACTION_MOVE, nearestSysID, None)
+                    orderFleet(client, db, fleetID, Const.FLACTION_MOVE, nearestSysID, None)
         elif not fleet.orbiting in data.mySystems:
             if fleetContains(fleet, attackMinimum):
                 attackFleets.add(fleetID)
@@ -277,7 +277,7 @@ def fleetsManager():
 
                 if len(nearestSysIDs):
                     nearestSysID = nearestSysIDs[0]
-                    orderFleet(client, db, fleetID, FLACTION_MOVE, nearestSysID, None)
+                    orderFleet(client, db, fleetID, Const.FLACTION_MOVE, nearestSysID, None)
         else:
             if fleetContains(fleet, attackMinimum):
                 attackFleets.add(fleetID)
@@ -293,18 +293,18 @@ def fleetsManager():
             nearestSysIDs = findNearest(db, fleet, data.otherSystems & data.relevantSystems, maxRange * 0.45)
             if len(nearestSysIDs):
                 nearestSys = nearestSysIDs[0]
-                orderPartFleet(client, db, ships, False, fleetID, FLACTION_MOVE, nearestSys, None)
+                orderPartFleet(client, db, ships, False, fleetID, Const.FLACTION_MOVE, nearestSys, None)
         else:
             maxRange = max(0, fleet.storEn - fleet.maxEn / 2) * fleet.speed / 24.0
             nearestSysIDs = findNearest(db, fleet, data.otherSystems & data.relevantSystems, maxRange)
             if len(nearestSysIDs):
                 nearestSysID = nearestSysIDs[0]
-                orderFleet(client, db, fleetID, FLACTION_MOVE, nearestSysID, None)
+                orderFleet(client, db, fleetID, Const.FLACTION_MOVE, nearestSysID, None)
             else:
                 nearestSysIDs = findNearest(db, fleet, data.mySystems)
                 if len(nearestSysIDs):
                     nearestSysID = nearestSysIDs[0]
-                    orderFleet(client, db, fleetID, FLACTION_MOVE, nearestSysID, None)
+                    orderFleet(client, db, fleetID, Const.FLACTION_MOVE, nearestSysID, None)
 
 
 def run(aclient):
