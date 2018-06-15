@@ -248,7 +248,7 @@
 		<discovery
 			researchMod="1.00 + 0.50"
 			level="2"
-			researchRequires="OUTPOST1-3"
+			researchRequires="COLONYMOD0-1"
 		/>
 		<shipequip
 			subtype="seq_struct"
@@ -288,7 +288,7 @@
 		<discovery
 			researchMod="1.00 + 0.50"
 			level="2"
-			researchRequires="MEDIUMHULL2-3"
+			researchRequires="ETANKS0-1"
 		/>
 		<shipequip
 			subtype="seq_mod"
@@ -341,7 +341,7 @@
 		<discovery
 			researchMod="1.00 + 0.50 + 0.50"
 			level="2"
-			researchRequires="SMALLHULL1-5"
+			researchRequires="SSROCKET0-1"
 		/>
 		<shipequip
 			subtype="seq_wpn"
@@ -362,7 +362,7 @@
 		<discovery
 			researchMod="1.00 + 0.50"
 			level="2"
-			researchRequires="MEDIUMHULL2-1"
+			researchRequires="SCOCKPIT1-3"
 		/>
 		<shipequip
 			subtype="seq_ctrl"
