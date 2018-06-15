@@ -900,7 +900,7 @@
 		<discovery
 			researchMod="1.00 + 0.50"
 			level="5"
-			researchRequires="LIVLARGEHULL5-3"
+			researchRequires="LIVBRIDGE4-3"
 			researchRaces="B"
 		/>
 		<shipequip
@@ -921,7 +921,7 @@
 		<discovery
 			researchMod="1.00 + 0.50"
 			level="5"
-			researchRequires="ADVLARGEHULL5-3"
+			researchRequires="MLBRIDGE4-3"
 			researchRaces="H"
 		/>
 		<shipequip
@@ -942,7 +942,7 @@
 		<discovery
 			researchMod="1.00 + 0.50"
 			level="5"
-			researchRequires="ADVLARGEHULL5-3"
+			researchRequires="COMPBRIDGE4-3"
 			researchRaces="C"
 		/>
 		<shipequip
@@ -963,7 +963,7 @@
 		<discovery
 			researchMod="1.00 + 1.00"
 			level="5"
-			researchRequires="COMPCOMDECK5-5"
+			researchRequires="ADVLARGEHULL5-5"
 			researchReqSRes="SR_TL5C"
 			researchDisables="BUNKERMOD"
 			researchRaces="C"

@@ -810,7 +810,7 @@
         <discovery
             researchMod="1.00 + 0.50"
             level="4"
-            researchRequires="LIVMEDIUMHULL4-3"
+            researchRequires="LIVCOCKPIT3-3"
             researchRaces="B"
         />
         <shipequip
@@ -831,7 +831,7 @@
         <discovery
             researchMod="1.00 + 0.50"
             level="4"
-            researchRequires="ADVMEDIUMHULL4-3"
+            researchRequires="MLCOCKPIT3-3"
             researchRaces="H"
         />
         <shipequip
@@ -852,7 +852,7 @@
         <discovery
             researchMod="1.00 + 0.50"
             level="4"
-            researchRequires="ADVMEDIUMHULL4-3"
+            researchRequires="COMPCOCKPIT3-3"
             researchRaces="C"
         />
         <shipequip

@@ -193,7 +193,7 @@
 		<discovery
 			researchMod="1.00"
 			level="1"
-			researchRequires="SMALLHULL1-5"
+			researchRequires="OUTPOST1-5"
 		/>
 		<structure
 			subtype="str600"
@@ -213,7 +213,7 @@
 		<discovery
 			researchMod="1.00 + 1.00"
 			level="1"
-			researchRequires="FACTORY1-3"
+			researchRequires="SMALLHULL0-1"
 		/>
 		<shiphull
 			buildProd="120"
@@ -233,7 +233,7 @@
 		<discovery
 			researchMod="1.00 + 1.00"
 			level="1"
-			researchRequires="SMALLHULL1-1"
+			researchRequires="FTLENG0-1"
 		/>
 		<shipequip
 			subtype="seq_eng"
@@ -251,7 +251,7 @@
 		<discovery
 			researchMod="1.00 + 0.50"
 			level="1"
-			researchRequires="SMALLHULL1-1"
+			researchRequires="SCOCKPIT0-1"
 		/>
 		<shipequip
 			subtype="seq_ctrl"
@@ -303,7 +303,7 @@
 		<discovery
 			researchMod="1.00 + 0.5 + 0.5"
 			level="1"
-			researchRequires="SMALLHULL1-3"
+			researchRequires="CANNON0-1"
 		/>
 		<shipequip
 			subtype="seq_wpn"
@@ -323,7 +323,7 @@
 		<discovery
 			researchMod="1.0 + 0.5 + 0.5"
 			level="1"
-			researchRequires="SMALLHULL1-5"
+			researchRequires="CONBOMB0-1"
 		/>
 		<shipequip
 			subtype="seq_wpn"

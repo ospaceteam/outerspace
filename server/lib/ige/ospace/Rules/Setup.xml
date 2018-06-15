@@ -531,12 +531,12 @@
 		/>
 		<shipequip
 			subtype="seq_eng"
-			buildProd="240"
-			storEn="384"
-			operEn="5"
+			buildProd="120"
+			storEn="96"
+			operEn="4"
 			slots="4"
 			weight="4"
-			engPwr="100"
+			engPwr="64"
 			signature="0"
 		/>
 	</technology>

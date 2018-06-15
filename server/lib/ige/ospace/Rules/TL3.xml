@@ -313,7 +313,7 @@
 		<discovery
 			researchMod="1.00 + 0.50"
 			level="3"
-			researchRequires="LARGEHULL3-1"
+			researchRequires="SBRIDGE1-3"
 		/>
 		<shipequip
 			subtype="seq_ctrl"
@@ -459,7 +459,7 @@
 		<discovery
 			researchMod="1.00 + 0.50 + 0.50"
 			level="3"
-			researchRequires="SSROCKET2-5"
+			researchRequires="TORPEDO0-1"
 		/>
 		<shipequip
 			subtype="seq_wpn"
