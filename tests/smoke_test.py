@@ -110,9 +110,11 @@ def checkPlayerProgress():
 parser = argparse.ArgumentParser()
 parser.add_argument("--slow", dest = "slow", default = False,
     action = "store_true", help = "Switches off multiprocessing of AI")
-parser.add_argument("--turns", dest = "turns", default = 40,
+parser.add_argument("--travis", dest = "travis", default = False,
+    action = "store_true", help = "Runs limited test, suitable for Travis CI")
+parser.add_argument("--turns", dest = "turns", default = 60,
     type = int, metavar = "N", help = "Process N turns on server")
-parser.add_argument("--turn-skip", dest = "turnSkip", default = 5,
+parser.add_argument("--turn-skip", dest = "turnSkip", default = 4,
     type = int, metavar = "N", help = "Process N turns on server")
 args = parser.parse_args()
 
@@ -122,35 +124,35 @@ c.initPaths()
 # test itself
 # check basic sanity
 if not c.startServer():
-    sys.exit()
+    sys.exit(1)
 atexit.register(c.killServer)
-c.createGalaxy("Circle1SP")
-c.createGalaxy("Circle3SP")
-c.createGalaxy("Circle9P")
-c.startServerTime()
-c.deleteGalaxy(10000) # legacy
-c.createGalaxy("Circle42P")
+c.createGalaxy("Test")
 c.startServerTime()
 c.doTurns(args.turnSkip, args.turnSkip, slow=args.slow)
-checkServerStatus()
+if not checkServerStatus():
+    sys.exit(1)
 c.stopServer()
 checkLogs(hard=True)
 
 # check upgrade sanity
 if not c.startServer(upgrade=True):
-    sys.exit()
+    sys.exit(1)
 c.doTurns(args.turnSkip, args.turnSkip, slow=args.slow)
-checkServerStatus()
+if not checkServerStatus():
+    sys.exit(1)
 c.stopServer()
 checkLogs(hard=True)
 
 # this block checks player progression
 if not c.startServer():
-    sys.exit()
+    sys.exit(1)
 c.doTurns(args.turns, args.turnSkip)
-c.makeScreenshots(os.path.join(c.TEMP_DIR, 'screens'))
-checkServerStatus()
+if not args.travis:
+    c.makeScreenshots(os.path.join(c.TEMP_DIR, 'screens'))
+if not checkServerStatus():
+    sys.exit(1)
 c.stopServer()
-checkPlayerProgress()
-checkLogs()
+if not checkPlayerProgress():
+    sys.exit(1)
+checkLogs(hard=True)
 

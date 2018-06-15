@@ -118,6 +118,8 @@ class BookingMngr(object):
         answers = {}
         # TODO: filter single player for users with limit
         for gal_type, template in self.offerings.iteritems():
+            if gal_type == "Test":
+                continue
             if hideSingle and template.scenario == Const.SCENARIO_SINGLE:
                 continue
             answer = IDataHolder()

@@ -1,0 +1,4 @@
+language: python
+
+script:
+    - ./tests/smoke_test.py --travis
