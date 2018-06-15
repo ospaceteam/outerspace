@@ -64,10 +64,7 @@ class IPiratePlayer(IPlayer):
         for techID in Rules.techs:
             tech = Rules.techs[techID]
             if tech.level == 1 and (tech.isShipEquip or tech.isShipHull) and not tech.unpackStruct:
-                obj.techs[techID] = Rules.techMaxImprovement
-        obj.techs[Rules.Tech.EMCANNONTUR] = Rules.techMaxImprovement
-        obj.techs[Rules.Tech.SSROCKET2] = Rules.techMaxImprovement
-        obj.techs[Rules.Tech.TORPEDO] = Rules.techMaxImprovement
+                obj.techs[techID] = tech.MaxImprovement
         obj.techs[Rules.Tech.PIRATEBASE] = Rules.techMaxImprovement
         obj.techs[Rules.Tech.PIRATEDEN] = Rules.techMaxImprovement
         obj.techs[Rules.Tech.PIRATESD] = Rules.techMaxImprovement
