@@ -201,20 +201,20 @@ def shipDesignManager():
             designs[3] = desID
     if 0 not in designs:
         designs[0] = client.cmdProxy.addShipDesign(playerID, 'Scout',
-                Rules.Tech.SMALLHULL1, {Rules.Tech.SCOCKPIT1:1,
-                Rules.Tech.SCANNERMOD1:1, Rules.Tech.FTLENG1:3})
+                Rules.Tech.SMALLHULL0, {Rules.Tech.SCOCKPIT0:1,
+                Rules.Tech.SCANNERMOD0:1, Rules.Tech.FTLENG0:3})
     if 1 not in designs:
         designs[1] = client.cmdProxy.addShipDesign(playerID, 'Fighter',
-                Rules.Tech.SMALLHULL1, {Rules.Tech.SCOCKPIT1:1,
-                Rules.Tech.CANNON1:1, Rules.Tech.FTLENG1:3})
+                Rules.Tech.SMALLHULL0, {Rules.Tech.SCOCKPIT0:1,
+                Rules.Tech.CANNON0:2, Rules.Tech.FTLENG0:3})
     if 2 not in designs:
         designs[2] = client.cmdProxy.addShipDesign(playerID, 'Bomber',
-                Rules.Tech.SMALLHULL1, {Rules.Tech.SCOCKPIT1:1,
-                Rules.Tech.CONBOMB1:1, Rules.Tech.FTLENG1:3})
+                Rules.Tech.SMALLHULL0, {Rules.Tech.SCOCKPIT0:1,
+                Rules.Tech.CONBOMB0:1, Rules.Tech.FTLENG0:3})
     if 3 not in designs:
         designs[3] = client.cmdProxy.addShipDesign(playerID, 'Colony Ship',
-                Rules.Tech.MEDIUMHULL1, {Rules.Tech.SCOCKPIT1:1,
-                Rules.Tech.COLONYMOD2:1, Rules.Tech.FTLENG1:4})
+                Rules.Tech.MEDIUMHULL0, {Rules.Tech.SCOCKPIT0:1,
+                Rules.Tech.COLONYMOD0:1, Rules.Tech.FTLENG0:4})
 
 def expansionManager():
     global data, db, designs
