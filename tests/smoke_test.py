@@ -112,9 +112,9 @@ parser.add_argument("--slow", dest = "slow", default = False,
     action = "store_true", help = "Switches off multiprocessing of AI")
 parser.add_argument("--travis", dest = "travis", default = False,
     action = "store_true", help = "Runs limited test, suitable for Travis CI")
-parser.add_argument("--turns", dest = "turns", default = 40,
+parser.add_argument("--turns", dest = "turns", default = 60,
     type = int, metavar = "N", help = "Process N turns on server")
-parser.add_argument("--turn-skip", dest = "turnSkip", default = 5,
+parser.add_argument("--turn-skip", dest = "turnSkip", default = 4,
     type = int, metavar = "N", help = "Process N turns on server")
 args = parser.parse_args()
 
@@ -126,10 +126,7 @@ c.initPaths()
 if not c.startServer():
     sys.exit(1)
 atexit.register(c.killServer)
-c.createGalaxy("Circle3BP")
-c.startServerTime()
-c.deleteGalaxy(10000) # legacy
-c.createGalaxy("Circle42P")
+c.createGalaxy("Test")
 c.startServerTime()
 c.doTurns(args.turnSkip, args.turnSkip, slow=args.slow)
 if not checkServerStatus():

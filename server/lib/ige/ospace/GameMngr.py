@@ -125,7 +125,6 @@ class GameMngr(IGEGameMngr):
     def createUniverse(self):
         universe = self.db[OID_UNIVERSE]
         tran = Transaction(self, OID_ADMIN)
-        self.cmdPool[universe.type].createNewSubscribedGalaxy(tran, universe, 'Legacy', 'Circle42P', [])
         # create 'NATURE' player
         player = self.cmdPool[T_NATURE].new(T_NATURE)
         self.registerPlayer(player.login, player, OID_NATURE)
