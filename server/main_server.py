@@ -187,7 +187,7 @@ def runServer(options):
     log.debug("Initializing game manager")
     game = GameMngr(gameName, config, clientMngr, msgMngr, gameDB, options.configDir)
     log.debug("Initializing booking manager")
-    bookingMngr = BookingMngr(clientMngr, game, bookingDB, options.threshold)
+    bookingMngr = BookingMngr(clientMngr, game, bookingDB)
 
     # either forced reset, or uninitialized server
     if options.reset or not gameDB.keys():

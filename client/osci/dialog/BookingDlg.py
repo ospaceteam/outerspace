@@ -20,10 +20,11 @@
 import time
 
 import pygameui as ui
-from osci import client, gdata, res
-from ige.ospace.Const import *
+
 import ige
-from MainGameDlg import MainGameDlg
+from osci import client
+from osci import gdata
+
 
 class BookingDlg:
     """ There you subscribe to the new galaxy."""
@@ -51,16 +52,18 @@ class BookingDlg:
 
     def _showMenu(self):
         items = []
-        for galaxyType in self.bookingInfo:
-            if galaxyType is None:
+        for bookID in self.bookingInfo:
+            if bookID < ige.Const.BID_FREESTART:
+                continue
+            book = self.bookingInfo[bookID]
+            if book.gal_type is None:
                 # this is helper value TODO: handle it different way
                 continue
-            booking = self.bookingInfo[galaxyType]
-            tPos = self.offering[galaxyType].players
-            tCur = booking.bookings
-            rawTime = booking.last_creation
-            tScenario = gdata.gameScenarios[self.offering[galaxyType].scenario]
-            isSelected = booking.is_booked
+            tPos = book.capacity
+            tCur = book.bookings
+            rawTime = book.last_creation
+            tScenario = gdata.gameScenarios[self.offering[book.gal_type].scenario]
+            isSelected = book.is_booked
             if rawTime:
                 tTime = time.strftime(_("%m-%d-%y %H:%M"), time.localtime(rawTime))
             else:
@@ -69,7 +72,7 @@ class BookingDlg:
                 tChoice = '*'
             else:
                 tChoice = ''
-            item = ui.Item(galaxyType, tPos = tPos, tCur = tCur, tTime = tTime,tChoice = tChoice, tScenario = tScenario)
+            item = ui.Item(book.gal_type, tPos = tPos, tCur = tCur, tTime = tTime,tChoice = tChoice, tScenario = tScenario, tOwner = book.owner, tID = bookID)
             items.append(item)
         self.win.vBooking.items = items
         self.win.vBooking.itemsChanged()
@@ -108,12 +111,12 @@ class BookingDlg:
     def onToggle(self, widget, action, data):
         selection = self.win.vBooking.selection
         try:
-            selectedType = selection[0].text
+            selectedBookID = selection[0].tID
         except IndexError:
-            selectedType = None
-        if selectedType:
-            result = client.cmdProxy.toggleBooking(selectedType)
-            if not result[None]:
+            return
+        if selectedBookID:
+            result = client.cmdProxy.toggleBooking(selectedBookID)
+            if not result[ige.Const.BID_TRIGGERED]:
                 # booking change is logged, no galaxy creation triggered
                 self.bookingInfo = result
                 self.show()

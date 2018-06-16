@@ -122,8 +122,8 @@ class IClient:
     def getBookingOffers(self):
         return apply(IProxy('getBookingOffers', None, self), ())
 
-    def toggleBooking(self, galaxy_type):
-        return apply(IProxy('toggleBooking', None, self), (galaxy_type,))
+    def toggleBooking(self, bookID):
+        return apply(IProxy('toggleBooking', None, self), (bookID,))
 
     def selectPlayer(self, playerID):
         return apply(IProxy('%s.selectPlayer' % self.gameID, None, self), (playerID,))
