@@ -149,7 +149,7 @@ class BookingDlg:
             tabChange = True
         )
         ui.Listbox(self.win, layout = (0, 0, 28, 6), id = 'vBooking',
-                             sortedBy = ('tPos', 1),
+                             sortedBy = ('text', 1),
             columns = (
                         ('', 'tChoice', 1, ui.ALIGN_NONE),
                         (_('Galaxy type'), 'text', 6, ui.ALIGN_NONE),
