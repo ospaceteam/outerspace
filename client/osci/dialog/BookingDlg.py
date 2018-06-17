@@ -242,11 +242,23 @@ class BookingDlg:
                         )
         self.win.subscribeAction('*', self)
 
-        ui.Button(self.win, layout = (0, 7, 8, 1), id = "vPublicToggle", text = _('Show personal bookings'), action = 'onPublicToggle')
+        ui.Button(self.win, layout = (0, 7, 8, 1), id = "vPublicToggle", text = _('Show personal bookings'), action = 'onPublicToggle',
+            tooltipTitle = _("Booking types"),
+            tooltip = _("Public Bookings\nPublic bookings are recommended way how to jump into new game.\nWhen queue is full, galaxy creation is triggered, and you can start adventure with group of strangers.\n\nPrivate Bookings\nPrivate bookings are the way to start game with group of your friends.\nEvery private booking requires password chosen by the owner.\nSingle player games cannot be privately booked (as they are private by definition).")
+                )
+        ui.Button(self.win, layout = (20, 7, 8, 1), id = "vCreatePrivate", text = _('Create private booking'), action = 'onCreatePrivate',
+                tooltipTitle = _("Create Private Booking"),
+                tooltip = _("Private bookings are way how to create games for group of friends.\n\
+Every booking has to be created password protected, so you have to tell others\n\
+what the password is.\n\n\
+Account has limit of {0} private bookings at the time. Created galaxies\n\
+no longers counts into the limit.".format(ige.ospace.Const.BOOKING_PRIVATE_LIMIT))
+                )
 
-        ui.Button(self.win, layout = (20, 7, 8, 1), id = "vCreatePrivate", text = _('Create private booking'), action = 'onCreatePrivate')
-
-        ui.Button(self.win, layout = (20, 7, 8, 1), id = "vDeletePrivate", text = _('Delete private booking'), action = 'onDeletePrivate')
+        ui.Button(self.win, layout = (20, 7, 8, 1), id = "vDeletePrivate", text = _('Delete private booking'), action = 'onDeletePrivate',
+                tooltipTitle = _("Delete Private Booking"),
+                tooltip = _("As the author of the booking, you can delete it at any time. No further warning will be issued.")
+                )
 
         ui.Button(self.win, layout = (7, 8.5, 14, 1.5), id = "vToggle", text = _('Toggle booking'), action = 'onToggleBooking')
         scrollBarInfo = ui.Scrollbar(self.win, layout = (27, 10.3, 1, 4.7))

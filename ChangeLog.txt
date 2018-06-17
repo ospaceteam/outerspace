@@ -1,6 +1,19 @@
 ﻿Outer Space Change Log
 ======================
 
+[2018-06-17]
+- Private bookings introduced [dahaic]
+  Private bookings are way how to create games for group of friends. Every
+  booking is created password protected, so you have to tell others what
+  the password is.
+
+  Currently, there is no support for non-passworded bookings apart from
+  official queues. There is probably no point in having them.
+
+  Account has limit of two private bookings at the time. When galaxy is
+  created, it no longers counts. One booking should suffice for everyday
+  use.
+
 [2018-05-27]
 - New game modes introduced, Coop and Brawl [dahaic]
   Coop is scenario where players tries to fight AI together. Implemented
