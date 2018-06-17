@@ -111,6 +111,7 @@ MSG_GNC_GALAXY_GENERATOR = 2007 # galaxy generator information
 MSG_GNC_GALAXY_AUTO_FINISHED = 2008 # Galaxy was automatically finished
 MSG_GNC_GALAXY_BRAWL_WON = 2009 # Brawl has only one commander left
 MSG_GNC_GALAXY_COOP_WON = 2010 # Coop has no enemies left
+MSG_GNC_GALAXY_CREATED = 2011 # Announcement of creation to set expectations when it starts
 
 ## relations
 REL_ENEMY_LO = 0

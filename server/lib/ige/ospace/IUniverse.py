@@ -130,6 +130,9 @@ class IUniverse(IObject):
     createAsteroid.accLevel = AL_ADMIN
 
     def processINITPhase(self, tran, obj, data):
+        for galaxyID in obj.galaxies:
+            galaxy = tran.db[galaxyID]
+            self.cmd(galaxy).enableTime(tran, galaxy)
         try:
             ## find active/inactive pacts
             # set all active/on pacts to active
@@ -619,6 +622,16 @@ class IUniverse(IObject):
     finishGalaxyAutomated.accLevel = AL_ADMIN
 
 
+    def _sendCreationMessage(self, tran, obj, galaxy):
+        message = {
+            "sender": "GNC",
+            "senderID": galaxy.oid,
+            "forum": "NEWS",
+            "data": (galaxy.oid, MSG_GNC_GALAXY_CREATED, galaxy.oid, obj.turn, (obj.turn)),
+            "topic": "EVENT",
+        }
+        self.cmd(galaxy).sendMsg(tran, galaxy, message)
+
     def createNewSubscribedGalaxy(self, tran, obj, galaxyName, galaxyType, listOfPlayers):
         galGen = GalaxyGenerator.GalaxyGenerator()
         galaxyRadius = galGen.getGalaxyTemplate(galaxyType).radius
@@ -640,6 +653,9 @@ class IUniverse(IObject):
         os.remove(galaxyFileName)
         for playerLogin in listOfPlayers:
             tran.gameMngr.createNewSubscribedPlayer(playerLogin, newGalaxyID)
+        if newGalaxy.scenario != SCENARIO_SINGLE:
+            # no point in announcing single scenario - it starts ticking right away
+            self._sendCreationMessage(tran, obj, newGalaxy)
         log.debug("Galaxy creation END")
         return newGalaxyID
 

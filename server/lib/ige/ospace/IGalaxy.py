@@ -61,8 +61,9 @@ class IGalaxy(IObject):
         obj.systems = []
         obj.startingPos = []
         obj.numOfStartPos = 0
-        obj.timeEnabled = 0 # TODO change to 0
-        obj.creationTime = 0.0
+        obj.timeEnabled = None # none instead of False, to know when first enablement is happening
+        obj.timePaused = False # this is only used for player-initiated pause, prevents autoenablement
+        obj.creationTurn = 0
         obj.imperator = OID_NONE
         obj.description = ""
         obj.scenario = SCENARIO_NONE
@@ -117,6 +118,7 @@ class IGalaxy(IObject):
         # TODO: remove after 0.5.73
         if not hasattr(obj, 'galaxyTurn'):
             obj.galaxyTurn = 0
+        obj.timeEnabled = bool(obj.timeEnabled)
 
 
     update.public = 0
@@ -225,8 +227,6 @@ class IGalaxy(IObject):
                 remove.append(planetID)
         for planetID in remove:
             obj.startingPos.remove(planetID)
-        #
-        #if obj.timeEnabled:
         return obj.systems
 
     processFINALPhase.public = 1
@@ -303,7 +303,7 @@ class IGalaxy(IObject):
         obj.y = float(y)
         xoff = x - float(node.getAttribute('x'))
         yoff = y - float(node.getAttribute('y'))
-        obj.creationTime = time.time()
+        obj.creationTurn = tran.db[OID_UNIVERSE].turn
         for elem in node.childNodes:
             if elem.nodeType == Node.ELEMENT_NODE:
                 name = elem.tagName
@@ -355,44 +355,48 @@ class IGalaxy(IObject):
 
     def toggleTime(self, tran, obj):
         player = tran.db[obj.owner]
-        obj.timeEnabled = 1 - obj.timeEnabled
-        self.trickleTimeToPlayers(tran, obj)
+        obj.timeEnabled = not obj.timeEnabled
+        obj.timePaused = not obj.timeEnabled
+        self._trickleTimeToPlayers(tran, obj)
         return obj.timeEnabled
 
     toggleTime.public = 1
     toggleTime.accLevel = AL_OWNER
 
-    def trickleTimeToPlayers(self, tran, obj):
+    def _trickleTimeToPlayers(self, tran, obj):
         # enable time for players
+        playerIDs = set()
         for systemID in obj.systems:
             system = tran.db[systemID]
             for planetID in system.planets:
                 planet = tran.db[planetID]
-                if planet.owner != OID_NONE:
-                    player = tran.db[planet.owner]
-                    if player.timeEnabled != obj.timeEnabled:
-                        player.timeEnabled = obj.timeEnabled
-                        player.lastLogin = time.time()
-                        if player.timeEnabled:
-                            Utils.sendMessage(tran, player, MSG_ENABLED_TIME, player.oid, None)
-                        else:
-                            Utils.sendMessage(tran, player, MSG_DISABLED_TIME, player.oid, None)
+                playerIDs.add(planet.owner)
+        playerIDs.discard(OID_NONE)
+        for playerID in playerIDs:
+            player = tran.db[playerID]
+            if player.timeEnabled != obj.timeEnabled:
+                player.timeEnabled = obj.timeEnabled
+                player.lastLogin = time.time()
+                if player.timeEnabled:
+                    Utils.sendMessage(tran, player, MSG_ENABLED_TIME, player.oid, None)
+                else:
+                    Utils.sendMessage(tran, player, MSG_DISABLED_TIME, player.oid, None)
 
-    def enableTime(self, tran, obj, force = 0, deleteSP = 0, enable = 1):
-        log.debug('IGalaxy', 'Checking for time...')
-        if not force:
-            if obj.timeEnabled:
-                return
-            canRun = 0
-            # We have to give players some time to prepare
-            # (as they might be waiting for very long time for this galaxy to be created).
-            if obj.creationTime < time.time() - 2 * 24 * 3600:
-                log.debug("Two days passed", obj.creationTime, time.time() - 2 * 24 * 3600)
-                canRun = 1
-            elif obj.scenario == SCENARIO_SINGLE:
-                canRun = 1
-            if not canRun:
-                return 0
+    def _isEligibleEnableTime(self, tran, obj):
+        if obj.timeEnabled or obj.timePaused:
+            # explicitly paused galaxy needs to be explicitly unpaused
+            return False
+        # We have to give players some time to prepare
+        # (as they might be waiting for very long time for this galaxy to be created).
+        currentTurn = tran.db[OID_UNIVERSE].turn
+        if obj.creationTurn + Rules.galaxyStartDelay <= currentTurn:
+            log.debug("Time to prepare has passed", obj.creationTurn, currentTurn)
+            return True
+        elif obj.scenario == SCENARIO_SINGLE:
+            return True
+        return False
+
+    def _firstEnableTime(self, tran, obj):
         # spawn rebel player on all vacant starting positions
         for positionID in copy.copy(obj.startingPos):
             obj.startingPos.remove(positionID)
@@ -416,18 +420,17 @@ class IGalaxy(IObject):
             system.scannerPwrs[playerID] = Rules.startingScannerPwr
         # do scanner evaluation because of all new players
         self.cmd(obj).processSCAN2Phase(tran, obj, None)
-            # add player to universe
-#            log.debug('Adding player to universe')
-#            universe = tran.db[OID_UNIVERSE]
-#            universe.players.append(playerID)
 
+    def enableTime(self, tran, obj, force = False):
+        log.debug('IGalaxy', 'Checking for time...')
+        if not force and not self._isEligibleEnableTime(tran, obj):
+            return
+        if obj.timeEnabled is None:
+            self._firstEnableTime(tran, obj)
         # ok, enable time
         log.message('IGalaxy', 'Enabling time for', obj.oid)
-        obj.timeEnabled = enable
-        # close galaxy
-        if deleteSP:
-            obj.startingPos = []
-        self.trickleTimeToPlayers(tran, obj)
+        obj.timeEnabled = True
+        self._trickleTimeToPlayers(tran, obj)
 
     enableTime.public = 1
     enableTime.accLevel = AL_ADMIN
