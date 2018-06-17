@@ -34,6 +34,11 @@ OID_I_NAME2OID = 101
 # Free oids starts at
 OID_FREESTART = 10000
 
+# reserved Booker IDs
+BID_TRIGGERED = 10
+
+BID_FREESTART = 100
+
 # Game status
 GS_INIT = 0
 GS_MAINT = 1

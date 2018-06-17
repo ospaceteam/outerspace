@@ -42,6 +42,9 @@ class ServerStatusException(Exception):
 class NoSuchObjectException(Exception):
     pass
 
+class BookingMngrException(Exception):
+    pass
+
 ## global settings
 # runtime mode, currently supported:
 #   1 - normal operations

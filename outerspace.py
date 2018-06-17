@@ -121,13 +121,6 @@ parser_server.add_argument("--mode", dest = "mode",
     default=1,
     help = "Server mode: 0 - debug, 1 - normal",
 )
-parser_server.add_argument("--threshold", dest = "threshold",
-    type = float,
-    metavar = "REALNUMBER",
-    default = 1.0,
-    help = ("Ratio of galaxy capacity, which is necessary to be booked "
-            "by players, before creation of galaxy is triggered.")
-)
 
 # ai
 parser_ai.add_argument("--login", dest = "login",

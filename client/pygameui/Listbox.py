@@ -18,6 +18,9 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+import re
+import types
+
 from pygame.locals import *
 from Const import *
 from Widget import registerWidget
@@ -25,7 +28,6 @@ from MetaWidget import MetaWidget
 from Scrollbar import Scrollbar
 from Entry import Entry
 from Button import Button
-import types
 
 class Listbox(MetaWidget):
 
@@ -256,27 +258,30 @@ class Listbox(MetaWidget):
                 label.highlighted = item.highlighted
                 columnIndex += 1
 
-    def itemsChanged(self):
-        if self.sortable and self.sortedBy[0] != None:
-            if self.sortedBy[1]:
-                if self.items and hasattr(self.items[0], self.sortedBy[0] + "_raw"):
-                    self.items.sort(lambda a, b, attr = self.sortedBy[0] + "_raw": cmp(getattr(a, attr), getattr(b, attr)))
-                else:
-                    self.items.sort(lambda a, b, attr = self.sortedBy[0]: cmp(getattr(a, attr), getattr(b, attr)))
-            else:
-                if self.items and hasattr(self.items[0], self.sortedBy[0] + "_raw"):
-                    self.items.sort(lambda a, b, attr = self.sortedBy[0] + "_raw": cmp(getattr(b, attr), getattr(a, attr)))
-                else:
-                    self.items.sort(lambda a, b, attr = self.sortedBy[0]: cmp(getattr(b, attr), getattr(a, attr)))
+    def _naturalSort(self, items, attr, reverse):
+        """ Code inspired by https://blog.codinghorror.com/sorting-for-humans-natural-sort-order/
+        Converts strings to lists of strings and numbers, always in STR, NUM, STR, NUM order (first STR
+        might be empty).
+        """
 
-        if self.items:
-            self.bar.slider.max = len(self.items)
-        else:
-            self.bar.slider.max = 1
+        convert = lambda text: int(text) if text.isdigit() else text.lower()
+        alphaNum = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ]
+        natSort = lambda a, b: cmp(alphaNum(getattr(a, attr)), alphaNum(getattr(b, attr)))
+        items.sort(natSort, reverse = reverse)
+
+    def itemsChanged(self):
+        if self.items and self.sortable and self.sortedBy[0] != None:
+            if hasattr(self.items[0], self.sortedBy[0] + "_raw"):
+                sortAttr = self.sortedBy[0] + "_raw"
+            else:
+                sortAttr = self.sortedBy[0]
+            self._naturalSort(self.items, sortAttr, not self.sortedBy[1])
+
+        self.bar.slider.max = max(1, len(self.items))
         index = 0
         pos = int(self.bar.slider.position)
         if pos >= len(self.items) - len(self.labels): pos = max(0, len(self.items) - len(self.labels))
-        # clear selection withouth triggering widget update
+        # clear selection without triggering widget update
         self.__dict__['selection'] = []
         for item in self.items:
             item.index = None

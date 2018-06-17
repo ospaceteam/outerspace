@@ -37,6 +37,7 @@ serverVersion = None
 ignoreMsgs = {}
 nonexistingObj = {}
 options = None
+account = None
 
 def initialize(aServer, aCallbackObj, anOptions):
     global callbackObj, server, options
@@ -64,10 +65,12 @@ def initCmdProxy(keepAliveTime):
 ## Authentication
 
 def login(gameid, login, password):
+    global account
     cmdProxy.connect(login)
     if gdata.config.client.keepAlive != None:
         cmdProxy.keepAliveTime = int(gdata.config.client.keepAlive)
     if cmdProxy.login(gameid, login, password):
+        account = cmdProxy.getAccountData()
         return 1
     return 0
 
@@ -86,11 +89,12 @@ def createAccount(login, password, nick, email):
     return cmdProxy.createAccount(login, password, nick, email)
 
 def logout():
-    global db, lastUpdate
+    global db, lastUpdate, account
     if cmdProxy and cmdProxy.logged:
         cmdProxy.logout()
     saveDB()
     db = None
+    account = None
     lastUpdate = -1
 
 def saveDB():

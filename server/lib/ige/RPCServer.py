@@ -149,6 +149,7 @@ def init(clientMngr, bookingMngr):
     callMap['hello'] = clientMngr.hello
     callMap['createAccount'] = clientMngr.createAccount
     callMap['changePassword'] = clientMngr.changePassword
+    callMap['getAccountData'] = clientMngr.getAccountData
     callMap['shutdown'] = clientMngr.serverShutdown
     callMap['cleanupSessions'] = clientMngr.cleanupSessions
     callMap['exportAccounts'] = clientMngr.exportAccounts
@@ -157,6 +158,8 @@ def init(clientMngr, bookingMngr):
     callMap['getBookingAnswers'] = bookingMngr.get_booking_answers
     callMap['getBookingOffers'] = bookingMngr.get_booking_offers
     callMap['toggleBooking'] = bookingMngr.toggle_booking
+    callMap['createPrivateBooking'] = bookingMngr.create_private_booking
+    callMap['deletePrivateBooking'] = bookingMngr.delete_private_booking
 
 def register(game):
     global callMap

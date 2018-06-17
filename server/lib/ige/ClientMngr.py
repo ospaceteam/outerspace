@@ -28,6 +28,7 @@ from ige.Const import ADMIN_LOGIN
 import Authentication
 from account import Account, AIAccount
 from ai_parser import AIList
+from IDataHolder import IDataHolder
 
 class ClientMngr:
 
@@ -180,6 +181,14 @@ class ClientMngr:
         account.lastLogin = time.time()
         account.addHostID(hostID)
         return 1, None
+
+    def getAccountData(self, sid):
+        session = self.getSession(sid)
+        result = IDataHolder()
+        result.login = session.login
+        result.nick = session.nick
+        result.email = session.email
+        return result, None
 
     def getSession(self, sid):
         session = self.sessions.get(sid, None)

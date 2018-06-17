@@ -18,86 +18,118 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+import hashlib
 import os
+import random
 import time
 
 import data
 import ige
 import log
+from ige.ospace import Const
+from ige.ospace import Utils
 
-from ige import GameException
+from ige import GameException, BookingMngrException
 from ige.Transaction import Transaction
 from ige.IDataHolder import IDataHolder
 from ige.ospace.GalaxyGenerator import GalaxyGenerator
-import ige.ospace.Const as Const
-
-class BookingMngrException(Exception):
-    pass
 
 class Booking(object):
-    def __init__(self):
-        self.booked_players = set([])
+    def __init__(self, gal_type):
+        self.players = set([])
+        self.gal_type = gal_type
         self.last_creation = None
         self.capacity = None
+        self.owner = None
+        self.owner_nick = None
+        self.pw_salt = hashlib.sha256(str(random.random())).hexdigest()
+        self.pw_hash = None
 
-    def toggle_booking(self, player, threshold):
+    def toggle_booking(self, player):
         try:
-            self.booked_players.remove(player)
+            self.players.remove(player)
         except KeyError:
-            self.booked_players.add(player)
-        return self.is_filled(threshold)
+            self.players.add(player)
+        return self.is_filled()
 
     def discard_booking(self, player):
-        self.booked_players.discard(player)
+        self.players.discard(player)
 
-    def is_filled(self, threshold):
-        return len(self.booked_players) >= self.capacity * min(1.0, threshold)
+    def is_filled(self):
+        return len(self.players) == self.capacity
+
+    def set_password(self, password):
+        self.pw_hash = hashlib.sha256(password + self.pw_salt).hexdigest()
+
+    def check_password(self, password):
+        pw_hash = hashlib.sha256(password + self.pw_salt).hexdigest()
+        return self.pw_hash == pw_hash
 
     def answer(self, player):
         answer = IDataHolder()
-        answer.bookings = len(self.booked_players)
+        answer.bookings = len(self.players)
         answer.last_creation = self.last_creation
-        answer.is_booked = player in self.booked_players
+        answer.is_booked = player in self.players
+        answer.owner_nick = self.owner_nick
+        answer.gal_type = self.gal_type
+        answer.capacity = self.capacity
         return answer
 
 class BookingMngr(object):
-    def __init__(self, clientMngr, gameMngr, database, threshold):
+    def __init__(self, clientMngr, gameMngr, db):
         self.clientMngr = clientMngr
         self.gameMngr = gameMngr
-        self.database = database
-        self.threshold = threshold
+        self.db = db
+        self.db.nextID = ige.Const.BID_FREESTART
         self.offerings = GalaxyGenerator().templates
         self.init_bookings()
 
+    def _create_booking(self, gal_type):
+        book = Booking(gal_type)
+        if self.offerings[gal_type].scenario == Const.SCENARIO_SINGLE:
+            # hardcoded 1, as some galaxies has rebels in them
+            book.capacity = 1
+        else:
+            book.capacity = self.offerings[gal_type].players
+        return book
+
     def init_bookings(self):
         for gal_type in self.offerings:
-            if not self.database.has_key(gal_type):
-                self.database.create(Booking(), gal_type)
-            if self.offerings[gal_type].scenario == Const.SCENARIO_SINGLE:
-                # hardcoded 1, as some galaxies has rebels in them
-                self.database[gal_type].capacity = 1
-            else:
-                self.database[gal_type].capacity = self.offerings[gal_type].players
+            bookings = self._get_type_bookings(gal_type)
+            if not bookings:
+                book = self._create_booking(gal_type)
+                self.db.create(book)
+                bookings.append(book)
+
         # cleanup of those not used anymore
-        for gal_type in self.database.keys():
+        for bookID in self.db.keys():
+            gal_type = self.db[bookID].gal_type
             if gal_type not in self.offerings:
-                del self.database[gal_type]
+                del self.db[bookID]
 
     def shutdown(self):
         log.message('Shutdown')
-        self.database.shutdown()
+        self.db.shutdown()
 
     def checkpoint(self):
-        self.database.checkpoint()
+        self.db.checkpoint()
 
     def clear(self):
-        self.database.clear()
+        self.db.clear()
 
     def backup(self, basename):
-        self.database.backup(basename)
+        self.db.backup(basename)
 
     def upgrade(self):
         return
+
+    def _get_type_bookings(self, gal_type):
+        bookings = []
+        for bookID in self.db.keys():
+            book = self.db[bookID]
+            if book.gal_type == gal_type:
+                bookings.append(book)
+        return bookings
 
     def _get_challenges(self, template):
         challenges = []
@@ -113,86 +145,129 @@ class BookingMngr(object):
             challenges.append(Const.T_AIEDENPLAYER)
         return challenges
 
-    def get_booking_offers(self, sid):
+    def _create_answer(self, gal_type):
+        template = self.offerings[gal_type]
+        answer = IDataHolder()
+        answer.scenario = template.scenario
+        answer.minPlanets = template.minPlanets
+        answer.maxPlanets = template.maxPlanets
+        answer.radius = template.radius
+        answer.players = template.players
+        answer.resources = template.resources.keys()
+        answer.challenges = self._get_challenges(template)
+
+        if not template.startR[0] or not template.startR[1]:
+            # that means grouping is used to maximize distance between players
+            # most likely brawl scenario
+            answer.playerGroup = 1
+        else:
+            answer.playerGroup = template.playerGroup
+        return answer
+
+    def _is_valid_offer(self, sid, gal_type):
         hideSingle = self.gameMngr.singleGamesLimit(sid)
+        template = self.offerings[gal_type]
+        if gal_type == "Test":
+            return False
+        if hideSingle and template.scenario == Const.SCENARIO_SINGLE:
+            return False
+        return True
+
+    def get_booking_offers(self, sid):
         answers = {}
-        # TODO: filter single player for users with limit
-        for gal_type, template in self.offerings.iteritems():
-            if gal_type == "Test":
+        for gal_type in self.offerings:
+            if not self._is_valid_offer(sid, gal_type):
                 continue
-            if hideSingle and template.scenario == Const.SCENARIO_SINGLE:
-                continue
-            answer = IDataHolder()
-            answer.scenario = template.scenario
-            answer.minPlanets = template.minPlanets
-            answer.maxPlanets = template.maxPlanets
-            answer.radius = template.radius
-            answer.players = template.players
-            answer.resources = template.resources.keys()
-            answer.challenges = self._get_challenges(template)
-
-            if not template.startR[0] or not template.startR[1]:
-                # that means grouping is used to maximize distance between players
-                # most likely brawl scenario
-                answer.playerGroup = 1
-            else:
-                answer.playerGroup = template.playerGroup
-
-            answers[gal_type] = answer
+            answers[gal_type] = self._create_answer(gal_type)
         return answers, None
+
+    def _get_booking_answers(self, sid):
+        login = self.clientMngr.getSession(sid).login
+        answers = {}
+        for bookID in self.db.keys():
+            book = self.db[bookID]
+            if not self._is_valid_offer(sid, book.gal_type):
+                continue
+            answers[bookID] = book.answer(login)
+        return answers
 
     def get_booking_answers(self, sid):
-        offers = self.get_booking_offers(sid)[0].keys()
-        player = self.clientMngr.getSession(sid).login
-        answers = {}
-        for key in self.database.keys():
-            if key not in offers:
-                # most likely single player limit reached
-                continue
-            answers[key] = self.database[key].answer(player)
-        return answers, None
+        return self._get_booking_answers(sid), None
 
-    def toggle_booking(self, sid, gal_type):
-        # we have to check single player limit
-        scenario = self.offerings[gal_type].scenario
-        if scenario == Const.SCENARIO_SINGLE and self.gameMngr.singleGamesLimit(sid):
+    def toggle_booking(self, sid, bookID, password):
+        session = self.clientMngr.getSession(sid)
+        book = self.db[bookID]
+        template = self.offerings[book.gal_type]
+        if book.owner:
+            # private booking
+            if book.owner == session.login:
+                raise BookingMngrException('Owners cannot toggle their own private bookings.')
+            if not book.check_password(password):
+                raise BookingMngrException('Incorrect password.')
+        if not self._is_valid_offer(sid, book.gal_type):
             # limit reached, no toggling allowed
-            raise GameException('Limit of single player galaxies reached.')
-
-        player = self.clientMngr.getSession(sid).login
-        log.debug("Player '{0}' toggled booking of '{1}'".format(player, gal_type))
+            raise BookingMngrException('Cannot toggle, limit of single player galaxies reached?')
+        log.debug("Player '{0}' toggled booking of '{1}/{2}'".format(session.login, book.gal_type, book.owner))
         triggered = False
-        if self.database[gal_type].toggle_booking(player, self.threshold):
-            self.trigger_galaxy_start(gal_type)
+        if book.toggle_booking(session.login):
+            self.trigger_galaxy_start(bookID)
             triggered = True
-        # get_booking_answers returns tuple, we only need first part
-        answers = self.get_booking_answers(sid)[0]
-        answers[None] = triggered
+        answers = self._get_booking_answers(sid)
+        answers[ige.Const.BID_TRIGGERED] = triggered
         return answers, None
 
-    def trigger_galaxy_start(self, gal_type):
-        log.debug("Triggering new subscribed galaxy '{0}'".format(gal_type))
-        # triggers galaxy start regardless booking numbers
-        booking = self.database[gal_type]
+    def _private_bookings_limit(self, login):
+        no_books = 0
+        for bookID in self.db.keys():
+            book = self.db[bookID]
+            if book.owner == login:
+                no_books += 1
+        return no_books >= Const.BOOKING_PRIVATE_LIMIT
 
-        players = list(booking.booked_players)
+    def create_private_booking(self, sid, bookID, password):
+        session = self.clientMngr.getSession(sid)
+        if not password:
+            raise BookingMngrException('Password is needed for private bookings.')
+        sourceBook = self.db[bookID]
+        scenario = self.offerings[sourceBook.gal_type].scenario
+        if scenario == Const.SCENARIO_SINGLE:
+            raise BookingMngrException('Single scenarios cannot be privately booked.')
+        if self._private_bookings_limit(session.login):
+            raise BookingMngrException('Limit of private bookings reached.')
+        book = self._create_booking(sourceBook.gal_type)
+        book.owner = session.login
+        book.owner_nick = session.nick
+        book.players.add(session.login)
+        book.set_password(password)
+        self.db.create(book)
+        return self.get_booking_answers(sid)
+
+    def delete_private_booking(self, sid, bookID):
+        login = self.clientMngr.getSession(sid).login
+        book = self.db[bookID]
+        if not book.owner == login:
+            raise BookingMngrException('Only the owner can delete private booking.')
+        del self.db[bookID]
+        return self.get_booking_answers(sid)
+
+    def trigger_galaxy_start(self, bookID):
+        book = self.db[bookID]
+        log.debug("Triggering new subscribed galaxy '{0}'".format(book.gal_type))
+        # triggers galaxy start regardless booking numbers
 
         # TODO: I don't know what I am doing, this seems to be a terrible hack
         universe = self.gameMngr.db[ige.Const.OID_UNIVERSE]
         tran = Transaction(self.gameMngr, ige.Const.OID_ADMIN)
-        name = self._find_galaxy_name(gal_type, players)
-        newGalaxyID = self.gameMngr.cmdPool[universe.type].createNewSubscribedGalaxy(tran, universe, name, gal_type, players)
-        # update booking data
-        booking.booked_players = set([])
-        booking.last_creation = time.time()
+        name = self._find_galaxy_name(book.gal_type, list(book.players))
+        new_galaxy_ID = self.gameMngr.cmdPool[universe.type].createNewSubscribedGalaxy(tran, universe, name, book.gal_type, list(book.players))
 
-        # for now, we need to remove bookings of player from other queues
-        # TODO: remove after decoupling account and player objects
-        for player in players:
-            log.debug("Removing other bookings of player '{0}'".format(player))
-            for key in self.database.keys():
-                self.database[key].discard_booking(player)
-        return newGalaxyID, None
+        if book.owner:
+            del self.db[bookID]
+        else:
+            book.players = set([])
+            book.last_creation = time.time()
+
+        return new_galaxy_ID, None
 
     def _find_galaxy_name(self, gal_type, players):
         scenario = self.offerings[gal_type].scenario
