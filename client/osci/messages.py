@@ -25,6 +25,7 @@ from ige.ospace.Const import *
 from ige import NoSuchObjectException
 import client, types, string, res, gdata
 from ige import log
+from ige.ospace import Rules
 
 #
 # Transform routines
@@ -67,6 +68,9 @@ def minesReport((damageCaused, killsCaused, minesTriggered)):
         lines.append(text)
     return '\n'.join(lines)
 
+def delayTurns(startTurn):
+    return res.formatTime(startTurn + Rules.galaxyStartDelay)
+
 def stratID2Name(resID):
     return _(gdata.stratRes[resID])
 
@@ -84,8 +88,7 @@ def queueID2Name(queueID):
 
 def votes2Txt((votes, voters)):
     lines = []
-    nominated = votes.keys()
-    nominated.sort(lambda a, b: cmp(votes[b], votes[a]))
+    nominated = sorted(votes, key=lambda a: votes[a], reverse = True)
     for playerName in nominated:
         if playerName == None:
             continue
@@ -196,6 +199,7 @@ addMsg(MSG_GNC_GALAXY_GENERATOR, N_("Galaxy %(1)s generation is completed. Galax
 addMsg(MSG_GNC_GALAXY_AUTO_FINISHED, N_("Galaxy %(1)s has ended\n\nToday the galaxy %(1)s has been automatically ended.\n\nReason:\n%(2)s"), (unicode, impMsg), severity = MAJ)
 addMsg(MSG_GNC_GALAXY_BRAWL_WON, N_("Galaxy %(1)s has ended\n\nAll hail to the conqueror! Galaxy %(1)s is finally on the brink of peace. After years of conquest, all opposition has been decimated and Sovereign %(2)s stands as the sole usurper of the galaxy."), (unicode, unicode), severity = MAJ)
 addMsg(MSG_GNC_GALAXY_COOP_WON, N_("Galaxy %(1)s has ended\n\nAll citizens of galaxy %(1)s rejoice. Peace is finally here!. After years of fending of attacks of barbaric empires, stalwart defence by %(2)s prevailed, and ensured further generations can live in prosperity."), (unicode, listing), severity = MAJ)
+addMsg(MSG_GNC_GALAXY_CREATED, N_("Boom of galactic civilizations is here\n\nDark ages are past, and new empires are reaching galactic age at breakneck speed and with fervor never seen before. True space race is predicted to start on %(1)s of universal time."), (delayTurns,), severity = MAJ)
 
 # i18n
 del N_

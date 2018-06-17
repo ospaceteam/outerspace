@@ -19,6 +19,7 @@
 #
 
 from IFleet import IFleet
+from ige.IObject import public
 from IPlanet import IPlanet
 from Const import *
 from ige.IDataHolder import IDataHolder
@@ -39,6 +40,7 @@ class IAsteroid(IFleet):
         obj.impactDelay = 0
         obj.target = OID_NONE
 
+    @public(AL_ADMIN)
     def create(self, tran, obj, x, y, targetID, speed, hp):
         obj.signature = hp / 50
         obj.x = x
@@ -75,9 +77,6 @@ class IAsteroid(IFleet):
         self.cmd(obj).addAction(tran, obj, 0, FLACTION_MOVE, targetID, None)
         #
         log.debug("Asteroid created", x, y, targetID, speed, hp)
-
-    create.public = 1
-    create.accLevel = AL_ADMIN
 
     def update(self, tran, obj):
         if obj.impactDelay > Rules.asteroidImpactDelay:
@@ -146,6 +145,7 @@ class IAsteroid(IFleet):
             pass
         return result
 
+    @public(AL_ADMIN)
     def processACTIONPhase(self, tran, obj, data):
         # ACTIONS
         if Utils.isIdleFleet(obj):
@@ -161,16 +161,11 @@ class IAsteroid(IFleet):
         else:
             raise GameException('Unsupported action %d' % action)
 
-    processACTIONPhase.public = 1
-    processACTIONPhase.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processFINALPhase(self, tran, obj, data):
         if obj.impactDelay > Rules.asteroidImpactDelay:
             # delete me
             self.cmd(obj).disbandFleet(tran, obj)
-
-    processFINALPhase.public = 1
-    processFINALPhase.accLevel = AL_ADMIN
 
     ##
     ## Combat related functions

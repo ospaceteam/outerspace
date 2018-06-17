@@ -26,6 +26,8 @@ import time
 import data
 import ige
 import log
+
+from ige.ClientMngr import Session
 from ige.ospace import Const
 from ige.ospace import Utils
 
@@ -256,8 +258,12 @@ class BookingMngr(object):
         # triggers galaxy start regardless booking numbers
 
         # TODO: I don't know what I am doing, this seems to be a terrible hack
+        # but right now, I don't see a way without faking admin access
         universe = self.gameMngr.db[ige.Const.OID_UNIVERSE]
         tran = Transaction(self.gameMngr, ige.Const.OID_ADMIN)
+        session = Session(None)
+        session.cid = ige.Const.OID_ADMIN
+        tran.session = session
         name = self._find_galaxy_name(book.gal_type, list(book.players))
         new_galaxy_ID = self.gameMngr.cmdPool[universe.type].createNewSubscribedGalaxy(tran, universe, name, book.gal_type, list(book.players))
 

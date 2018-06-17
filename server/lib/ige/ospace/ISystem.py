@@ -28,7 +28,7 @@ import Utils
 
 from Const import *
 from ige import log
-from ige.IObject import IObject
+from ige.IObject import IObject, public
 from ige.IDataHolder import IDataHolder
 
 class ISystem(IObject):
@@ -273,14 +273,13 @@ class ISystem(IObject):
                 result.hasmines = 2 # yes, and some aren't my mines
         return results
 
+    @public(AL_ADMIN)
     def processINITPhase(self, tran, obj, data):
         obj.scannerPwrs = {}
 
         return obj.planets
 
-    processINITPhase.public = 1
-    processINITPhase.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processPRODPhase(self, tran, obj, data):
         # mine deployment
         owners = []
@@ -292,9 +291,7 @@ class ISystem(IObject):
             self.deployMines(tran, obj, owner_id)
         return obj.planets
 
-    processPRODPhase.public = 1
-    processPRODPhase.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processACTIONPhase(self, tran, obj, data):
         # distribute resources
         planets = {}
@@ -395,9 +392,7 @@ class ISystem(IObject):
         #@log.debug("System close fleets", obj.oid, obj.closeFleets)
         return obj.planets[:] + obj.closeFleets[:]
 
-    processACTIONPhase.public = 1
-    processACTIONPhase.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def getObjectsInSpace(self, tran, obj):
         inSpace = obj.closeFleets[:]
         for fleetID in obj.fleets:
@@ -407,9 +402,7 @@ class ISystem(IObject):
                 log.warning(obj.oid, "Cannot remove fleet from closeFleets", fleetID, obj.fleets, obj.closeFleets)
         return inSpace
 
-    getObjectsInSpace.public = 1
-    getObjectsInSpace.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processBATTLEPhase(self, tran, obj, data):
         system = obj
         #@log.debug('ISystem', 'BATTLE - system', obj.oid)
@@ -796,9 +789,7 @@ class ISystem(IObject):
                     Utils.sendMessage(tran, winner, MSG_COMBAT_WON, system.oid, source.oid)
         return
 
-    processBATTLEPhase.public = 1
-    processBATTLEPhase.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processFINALPhase(self, tran, obj, data):
         # TODO find new starting points
         # clean up mines if system ownership was lost
@@ -812,18 +803,8 @@ class ISystem(IObject):
                 self.clearMines(obj, ownerid)
         return obj.planets[:] + obj.closeFleets[:]
 
-    processFINALPhase.public = 1
-    processFINALPhase.accLevel = AL_ADMIN
-
-    def cmpPlanetByEnergy(self, tran, planetID1, planetID2):
-        planet1 = tran.db[planetID1]
-        planet2 = tran.db[planetID2]
-        return cmp(planet2.plEn, planet1.plEn)
-
-    cmpPlanetByEnergy.public = 0
-
     def sortPlanets(self, tran, obj, data):
-        obj.planets.sort(lambda x, y: self.cmpPlanetByEnergy(tran, x, y))
+        obj.planets.sort(key=lambda planetID: tran.db[planetID].plEn, reverse = True)
         orbit = 1
         for planetID in obj.planets:
             planet = tran.db[planetID]
@@ -832,6 +813,7 @@ class ISystem(IObject):
 
     sortPlanets.public = 0
 
+    @public(AL_NONE)
     def rename(self, tran, obj, newName, nType):
         newName = newName.strip()
         # you have to own all planets
@@ -873,9 +855,6 @@ class ISystem(IObject):
             raise ige.GameException('You cannot change name of this system - name has been changed recently (try it one day later).')
         return newNames
 
-    rename.public = 1
-    rename.accLevel = AL_NONE
-
     def createPlanet(self, tran, obj):
         planet = self.new(T_PLANET)
         planet.compOf = obj.oid
@@ -883,6 +862,7 @@ class ISystem(IObject):
         obj.planets.append(oid)
         return oid
 
+    @public(AL_ADMIN)
     def deployMines(self, tran, obj, owner_id):
         """ Go through all mine control structures and attempt to add mines.
 
@@ -898,10 +878,7 @@ class ISystem(IObject):
             if self.addMine(tran, obj, owner_id, tech.mineclass, minenum, minerate):
                 log.debug('ISystem', 'Mine deployed for owner %d in system %d' % (owner_id, obj.oid))
 
-    deployMines.public = 1
-    deployMines.accLevel = AL_ADMIN
-
-
+    @public(AL_ADMIN)
     def addMine(self, tran, obj, owner_id, mine_tech_id, max_amount=None, mine_rate=None):
         """ Increment amount within particular minefield of particular player.
         Set current turn as a date of latest deployment.
@@ -934,9 +911,7 @@ class ISystem(IObject):
             obj.minefield[owner_id]= [(mine_tech_id, 1, current_turn)]
             return True
 
-    addMine.public = 1
-    addMine.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def removeMine(self, obj, owner_id, mine_tech_id):
         """ Decrement amount within particular minefield of particular player.
         If amount drops to zero, remove minefield.
@@ -960,10 +935,7 @@ class ISystem(IObject):
                 # all minefields are depleted, remove player record
                 del obj.minefield[owner_id]
 
-    removeMine.public = 1
-    removeMine.accLevel = AL_ADMIN
-
-
+    @public(AL_ADMIN)
     def getMines(self, obj, owner_id):
         """ Return list of tuples representing each minefield.
 
@@ -972,9 +944,6 @@ class ISystem(IObject):
             return obj.minefield[owner_id]
         else:
             return []
-
-    getMines.public = 1
-    getMines.accLevel = AL_ADMIN
 
     def clearMines(self, obj, owner_id):
         """ Remove all minefields of given owner from the system.
@@ -985,6 +954,7 @@ class ISystem(IObject):
 
     clearMines.public = 0
 
+    @public(AL_ADMIN)
     def fireMine(self, obj, owner_id): # shoot the mine
         if owner_id not in obj.minefield:
             return False, False, False, False
@@ -1001,9 +971,6 @@ class ISystem(IObject):
         attack = tech.weaponAtt
         ignore_shield = tech.weaponIgnoreShield
         return damage, attack, ignore_shield, mine
-
-    fireMine.public = 1
-    fireMine.accLevel = AL_ADMIN
 
     def getSystemMineLauncher(self, tran, obj, playerID):
         launchers = []

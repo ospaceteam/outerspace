@@ -28,7 +28,7 @@ import Utils
 import ShipUtils
 
 from ige import log
-from ige.IObject import IObject
+from ige.IObject import IObject, public
 from ige.IDataHolder import IDataHolder
 from Const import *
 
@@ -311,6 +311,7 @@ class IPlayer(IObject):
         tran.gameMngr.cmdPool[T_FLEET].addNewShip(tran, fleet, 2)
         tran.gameMngr.cmdPool[T_FLEET].addNewShip(tran, fleet, 4)
 
+    @public(AL_FULL)
     def startGlobalConstruction(self, tran, player, techID, quantity, isShip, reportFinished, queue):
         if len(player.prodQueues) <= queue:
             raise ige.GameException('Invalid queue.')
@@ -352,9 +353,7 @@ class IPlayer(IObject):
         player.prodQueues[queue].append(item)
         return player.prodQueues[queue], player.stratRes
 
-    startGlobalConstruction.public = 1
-    startGlobalConstruction.accLevel = AL_FULL
-
+    @public(AL_FULL)
     def changeGlobalConstruction(self, tran, player, queue, index, quantity):
         if index < 0 or index >= len(player.prodQueues[queue]):
             raise ige.GameException("No such item in the construction queue.")
@@ -384,9 +383,7 @@ class IPlayer(IObject):
         player.prodQueues[queue][index].const = tech.buildProd * quantity
         return player.prodQueues[queue], player.stratRes
 
-    changeGlobalConstruction.public = 1
-    changeGlobalConstruction.accLevel = AL_FULL
-
+    @public(AL_FULL)
     def abortGlobalConstruction(self, tran, player, queue, index):
         if len(player.prodQueues) <= queue or queue < 0:
             raise ige.GameException('Invalid queue.')
@@ -404,9 +401,7 @@ class IPlayer(IObject):
         player.prodQueues[queue].pop(index)
         return player.prodQueues[queue], player.stratRes
 
-    abortGlobalConstruction.public = 1
-    abortGlobalConstruction.accLevel = AL_FULL
-
+    @public(AL_FULL)
     def moveGlobalConstrItem(self, tran, player, queue, index, rel):
         if index >= len(player.prodQueues[queue]):
             raise ige.GameException('No such item in the construction queue.')
@@ -416,9 +411,6 @@ class IPlayer(IObject):
         del player.prodQueues[queue][index]
         player.prodQueues[queue].insert(index + rel, item)
         return player.prodQueues[queue]
-
-    moveGlobalConstrItem.public = 1
-    moveGlobalConstrItem.accLevel = AL_FULL
 
     def getReferences(self, tran, obj):
         return obj.fleets
@@ -430,6 +422,7 @@ class IPlayer(IObject):
 
     loggedIn.public = 0
 
+    @public(AL_OWNER)
     def resign(self, tran, obj):
         """Remove player from the game. Give remaining planets, ... to the REBELS"""
         # cannot resign when time is stopped
@@ -448,9 +441,7 @@ class IPlayer(IObject):
         tran.gameMngr.removePlayer(obj.oid)
         self.cmd(obj).register(tran, obj, obj.galaxy)
 
-    resign.public = 1
-    resign.accLevel = AL_OWNER
-
+    @public(AL_ADMIN)
     def delete(self, tran, obj):
         # check whether it is AI or normal player
         log.debug("Deleting player", obj.oid)
@@ -467,9 +458,7 @@ class IPlayer(IObject):
         except Exception:
             log.warning("Cannot remove player")
 
-    delete.public = 1
-    delete.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def giveUp(self, tran, obj, playerID):
         """Remove player from the game. Give remaining planets, ... to the specified player"""
         # cannot resign when time is stopped
@@ -493,9 +482,7 @@ class IPlayer(IObject):
         except ValueError:
             pass
 
-    giveUp.public = 1
-    giveUp.accLevel = AL_ADMIN
-
+    @public(AL_OWNER)
     def addShipDesign(self, tran, obj, name, hullID, eqIDs):
         """Add ship design to the database of designs."""
         # normalize design
@@ -528,9 +515,7 @@ class IPlayer(IObject):
         obj.shipDesigns[index] = spec
         return obj.shipDesigns, index
 
-    addShipDesign.public = 1
-    addShipDesign.accLevel = AL_OWNER
-
+    @public(AL_OWNER)
     def addBuoy(self, tran, obj, systemID, text, type):
         """Add new buoy to player buoys."""
         # delete buoy
@@ -561,9 +546,7 @@ class IPlayer(IObject):
 
         return obj.buoys
 
-    addBuoy.public = 1
-    addBuoy.accLevel = AL_OWNER
-
+    @public(AL_OWNER)
     def scrapShipDesign(self, tran, obj, designID):
         """Remove ship design from the database of designs and remove all
             active ships using this design."""
@@ -593,14 +576,12 @@ class IPlayer(IObject):
         del obj.shipDesigns[designID]
         return obj.shipDesigns, obj.fleets, obj.stratRes, obj.prodQueues
 
-    scrapShipDesign.public = 1
-    scrapShipDesign.accLevel = AL_OWNER
-
     def getShipDesign(self,tran,obj,designID):
         if designID not in obj.shipDesigns:
             raise ige.GameException("No such design.")
         return obj.shipDesigns[designID]
 
+    @public(AL_OWNER)
     def upgradeShipDesign(self, tran, obj, oldDesignID, newDesignID):
         # check designs ID
         if oldDesignID not in obj.shipDesigns:
@@ -649,9 +630,7 @@ class IPlayer(IObject):
             log.debug("upgradeShipDesing - NOT upgrading tasks")
         return obj.shipDesigns, obj.stratRes, tasksUpgraded, obj.prodQueues
 
-    upgradeShipDesign.public = 1
-    upgradeShipDesign.accLevel = AL_OWNER
-
+    @public(AL_OWNER)
     def cancelUpgradeShipDesign(self, tran, obj, designID):
         # check designs ID
         if designID not in obj.shipDesigns:
@@ -659,9 +638,7 @@ class IPlayer(IObject):
         obj.shipDesigns[designID].upgradeTo = OID_NONE
         return obj.shipDesigns
 
-    cancelUpgradeShipDesign.public = 1
-    cancelUpgradeShipDesign.accLevel = AL_OWNER
-
+    @public(AL_FULL)
     def startResearch(self, tran, obj, techID, improveToMax = 0):
         if len(obj.rsrchQueue) > Rules.maxRsrchQueueLen:
             ige.GameException('Queue is full.')
@@ -701,27 +678,21 @@ class IPlayer(IObject):
         obj.rsrchQueue.append(item)
         return obj.rsrchQueue
 
-    startResearch.public = 1
-    startResearch.accLevel = AL_FULL
-
+    @public(AL_FULL)
     def abortResearch(self, tran, obj, index):
         if index >= len(obj.rsrchQueue) or index < 0:
             ige.GameException('No such item in queue.')
         del obj.rsrchQueue[index]
         return obj.rsrchQueue
 
-    abortResearch.public = 1
-    abortResearch.accLevel = AL_FULL
-
+    @public(AL_FULL)
     def editResearch(self, tran, obj, index, improveToMax = 0):
         if index >= len(obj.rsrchQueue) or index < 0:
             ige.GameException('No such item in queue.')
         obj.rsrchQueue[index].improveToMax = improveToMax
         return obj.rsrchQueue
 
-    editResearch.public = 1
-    editResearch.accLevel = AL_FULL
-
+    @public(AL_FULL)
     def moveResearch(self, tran, obj, index, rel):
         if index >= len(obj.rsrchQueue):
             raise ige.GameException('No such item in the researcg queue.')
@@ -732,9 +703,7 @@ class IPlayer(IObject):
         obj.rsrchQueue.insert(index + rel, item)
         return obj.rsrchQueue
 
-    moveResearch.public = 1
-    moveResearch.accLevel = AL_FULL
-
+    @public(AL_FULL)
     def redirectShips(self, tran, obj, sourceSystemID, targetSystemID):
         # check sourceSystemID
         ok = 0
@@ -764,18 +733,14 @@ class IPlayer(IObject):
                 pass
         return obj.shipRedirections
 
-    redirectShips.public = 1
-    redirectShips.accLevel = AL_FULL
-
+    @public(AL_NONE)
     def getPublicInfo(self, tran, obj):
         result = IObject.getPublicInfo(self, tran, obj)
         result.type = obj.type
         result.name = obj.name
         return result
 
-    getPublicInfo.public = 1
-    getPublicInfo.accLevel = AL_NONE
-
+    @public(AL_OWNER)
     def changePactCond(self, tran, obj, playerID, pactID, state, conditions):
         log.debug("changePactCond", obj.oid, playerID, pactID)
         # must have a contact
@@ -811,9 +776,6 @@ class IPlayer(IObject):
                 dipl.pacts[pactID] = [PACT_OFF]
         return obj.diplomacyRels
 
-    changePactCond.public = 1
-    changePactCond.accLevel = AL_OWNER
-
     def getDiplomacyWith(self, tran, obj, playerID):
         if obj.governorOf:
             # player is a governor
@@ -839,6 +801,7 @@ class IPlayer(IObject):
                 log.debug("getDiplomacyWith myself", obj.oid)
         return dipl
 
+    @public(AL_OWNER)
     def getPartyDiplomacyRels(self, tran, obj, partyID):
         if partyID not in obj.diplomacyRels:
             return None, None
@@ -846,9 +809,6 @@ class IPlayer(IObject):
             return obj.diplomacyRels[partyID], None
         party = tran.db[partyID]
         return obj.diplomacyRels[partyID], party.diplomacyRels.get(obj.oid, None)
-
-    getPartyDiplomacyRels.public = 1
-    getPartyDiplomacyRels.accLevel = AL_OWNER
 
     def isPactActive(self, tran, obj, partnerID, pactID):
         #@log.debug("isPactActive", obj.oid, partnerID, pactID)
@@ -864,6 +824,7 @@ class IPlayer(IObject):
         if playerID in obj.diplomacyRels:
             del obj.diplomacyRels[playerID]
 
+    @public(AL_FULL)
     def getRelationTo(self, tran, obj, objID):
         if objID == OID_NONE:
             return REL_UNDEF
@@ -878,9 +839,7 @@ class IPlayer(IObject):
         else:
             return obj.defaultRelation
 
-    getRelationTo.public = 1
-    getRelationTo.accLevel = AL_FULL
-
+    @public(AL_OWNER)
     def setVoteFor(self, tran, obj, playerID):
         if playerID not in obj.diplomacyRels and playerID != obj.oid and playerID != OID_NONE:
             raise ige.GameException("No contact with this commander.")
@@ -893,9 +852,7 @@ class IPlayer(IObject):
         obj.voteFor = playerID
         return obj.voteFor
 
-    setVoteFor.public = 1
-    setVoteFor.accLevel = AL_OWNER
-
+    @public(AL_ADMIN)
     def processDIPLPhase(self, tran, obj, data):
         if not obj.timeEnabled:
             return
@@ -935,9 +892,7 @@ class IPlayer(IObject):
             dipl.relation = max(dipl.relation, REL_ENEMY_LO)
             #@log.debug('IPlayer', 'Final relation', obj.oid, partyID, dipl.relation, dipl.relChng)
 
-    processDIPLPhase.public = 1
-    processDIPLPhase.accLevel = AL_ADMIN
-
+    @public(AL_OWNER)
     def getScannerMap(self, tran, obj):
         scanLevels = {}
         # full map for the admin
@@ -994,9 +949,7 @@ class IPlayer(IObject):
 
         return map
 
-    getScannerMap.public = 1
-    getScannerMap.accLevel = AL_OWNER
-
+    #@public(AL_OWNER)
     def mergeScannerMap(self, tran, obj, map):
         #@log.debug(obj.oid, "Merging scanner map")
         contacts = {}
@@ -1026,9 +979,7 @@ class IPlayer(IObject):
             dipl.contactType = max(dipl.contactType, CONTACT_DYNAMIC)
             dipl.lastContact = tran.db[OID_UNIVERSE].turn
 
-    mergeScannerMap.public = 0
-    mergeScannerMap.accLevel = AL_OWNER
-
+    @public(AL_ADMIN)
     def processRSRCHPhase(self, tran, obj, data):
         if not obj.timeEnabled:
             return
@@ -1183,15 +1134,11 @@ class IPlayer(IObject):
 
         return
 
-    processRSRCHPhase.public = 1
-    processRSRCHPhase.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processACTIONPhase(self, tran, obj, data):
         return NotImplementedError()
 
-    processACTIONPhase.public = 1
-    processACTIONPhase.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processINITPhase(self, tran, obj, data):
         if not obj.timeEnabled:
             return
@@ -1243,9 +1190,7 @@ class IPlayer(IObject):
         # reset science points
         obj.sciPoints = 0
 
-    processINITPhase.public = 1
-    processINITPhase.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processFINALPhase(self, tran, obj, data):
         if not obj.timeEnabled:
             return
@@ -1388,9 +1333,6 @@ class IPlayer(IObject):
                                 obj.alliedBuoys[systemID] = [toAllyBuoy]
         return None
 
-    processFINALPhase.public = 1
-    processFINALPhase.accLevel = AL_ADMIN
-
     ## messaging
     def canSendMsg(self, tran, obj, oid, forum):
         if forum == "INBOX":
@@ -1403,6 +1345,7 @@ class IPlayer(IObject):
 
     canSendMsg.public = 0
 
+    @public(AL_OWNER)
     def cleanUpMsgs(self, tran, obj):
         # get messages
         msgs = self.cmd(obj).getMsgs(tran, obj)
@@ -1415,17 +1358,12 @@ class IPlayer(IObject):
         self.cmd(obj).deleteMsgs(tran, obj, delete)
         return 1
 
-    cleanUpMsgs.public = 1
-    cleanUpMsgs.accLevel = AL_OWNER
-
+    @public(AL_OWNER)
     def setResolution(self, tran, obj, x, y):
         if not hasattr(obj,'clientStats'):
             obj.clientStats = {}
         obj.clientStats['x'] = x;
         obj.clientStats['y'] = y;
-
-    setResolution.public = 1
-    setResolution.accLevel = AL_OWNER
 
     def getResolution(self, obj):
         if not hasattr(obj,'clientStats'):
@@ -1437,21 +1375,17 @@ class IPlayer(IObject):
 
     getResolution.public = 0
 
+    @public(AL_FULL)
     def addObsoleteTechs(self, tran, player, techID):
         # add tech
         temp = set([techID])
         player.obsoleteTechs = player.obsoleteTechs | temp
         return player.obsoleteTechs
 
-    addObsoleteTechs.public = 1
-    addObsoleteTechs.accLevel = AL_FULL
-
+    @public(AL_FULL)
     def delObsoleteTechs(self, tran, player, techID):
         # del tech
         temp = set([techID])
         player.obsoleteTechs = player.obsoleteTechs - temp
         return player.obsoleteTechs
-
-    delObsoleteTechs.public = 1
-    delObsoleteTechs.accLevel = AL_FULL
 

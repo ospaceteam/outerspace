@@ -40,6 +40,7 @@ from Const import *
 from ige import log
 from ige.IObject import IObject
 from ige.IDataHolder import IDataHolder
+from ige.IObject import public
 from ISystem import ISystem
 from Rules import Tech
 
@@ -61,8 +62,9 @@ class IGalaxy(IObject):
         obj.systems = []
         obj.startingPos = []
         obj.numOfStartPos = 0
-        obj.timeEnabled = 0 # TODO change to 0
-        obj.creationTime = 0.0
+        obj.timeEnabled = None # none instead of False, to know when first enablement is happening
+        obj.timePaused = False # this is only used for player-initiated pause, prevents autoenablement
+        obj.creationTurn = 0
         obj.imperator = OID_NONE
         obj.description = ""
         obj.scenario = SCENARIO_NONE
@@ -117,6 +119,7 @@ class IGalaxy(IObject):
         # TODO: remove after 0.5.73
         if not hasattr(obj, 'galaxyTurn'):
             obj.galaxyTurn = 0
+        obj.timeEnabled = bool(obj.timeEnabled)
 
 
     update.public = 0
@@ -138,7 +141,7 @@ class IGalaxy(IObject):
             if not obj.startingPos:
                 raise ige.GameException('No free starting point in the galaxy.')
 
-
+    @public(AL_ADMIN)
     def processINITPhase(self, tran, obj, data):
         if not obj.timeEnabled:
             return
@@ -172,25 +175,19 @@ class IGalaxy(IObject):
         self.cmd(obj).deleteOldMsgs(tran, obj)
         return obj.systems
 
-    processINITPhase.public = 1
-    processINITPhase.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processPRODPhase(self, tran, obj, data):
         if not obj.timeEnabled:
             return
         return obj.systems
 
-    processPRODPhase.public = 1
-    processPRODPhase.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processACTIONPhase(self, tran, obj, data):
         if not obj.timeEnabled:
             return
         return obj.systems
 
-    processACTIONPhase.public = 1
-    processACTIONPhase.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processSCAN2Phase(self, tran, obj, data):
         # data == True means forced scan (first after generating the galaxy)
         if not obj.timeEnabled and not data:
@@ -203,17 +200,13 @@ class IGalaxy(IObject):
             self.cmd(player).mergeScannerMap(tran, player, map)
         return
 
-    processSCAN2Phase.public = 1
-    processSCAN2Phase.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processBATTLEPhase(self, tran, obj, data):
         if not obj.timeEnabled:
             return
         return obj.systems
 
-    processBATTLEPhase.public = 1
-    processBATTLEPhase.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processFINALPhase(self, tran, obj, data):
         if not obj.timeEnabled:
             return
@@ -225,13 +218,9 @@ class IGalaxy(IObject):
                 remove.append(planetID)
         for planetID in remove:
             obj.startingPos.remove(planetID)
-        #
-        #if obj.timeEnabled:
         return obj.systems
 
-    processFINALPhase.public = 1
-    processFINALPhase.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processFINAL2Phase(self, tran, obj, data):
         if not obj.timeEnabled:
             return
@@ -277,10 +266,8 @@ class IGalaxy(IObject):
             print >>fh, '  </stats>'
             print >>fh, '</history>'
 
-    processFINAL2Phase.public = 1
-    processFINAL2Phase.accLevel = AL_ADMIN
 
-
+    @public(AL_ADMIN)
     def loadFromXML(self, tran, obj, file, galaxyType, x, y, name):
         log.message('IGalaxy', 'Parsing XML file...')
         dom = parse(os.path.join('data', file))
@@ -294,16 +281,13 @@ class IGalaxy(IObject):
                     return SUCC
         raise ige.GameException('No such id %s in resource' % galaxyType)
 
-    loadFromXML.public = 1
-    loadFromXML.accLevel = AL_ADMIN
-
     def loadDOMNode(self, tran, obj, node, x, y, name):
         obj.name = name
         obj.x = float(x)
         obj.y = float(y)
         xoff = x - float(node.getAttribute('x'))
         yoff = y - float(node.getAttribute('y'))
-        obj.creationTime = time.time()
+        obj.creationTurn = tran.db[OID_UNIVERSE].turn
         for elem in node.childNodes:
             if elem.nodeType == Node.ELEMENT_NODE:
                 name = elem.tagName
@@ -353,46 +337,48 @@ class IGalaxy(IObject):
         galaxy.systems.append(oid)
         return oid
 
+    @public(AL_OWNER)
     def toggleTime(self, tran, obj):
         player = tran.db[obj.owner]
-        obj.timeEnabled = 1 - obj.timeEnabled
-        self.trickleTimeToPlayers(tran, obj)
+        obj.timeEnabled = not obj.timeEnabled
+        obj.timePaused = not obj.timeEnabled
+        self._trickleTimeToPlayers(tran, obj)
         return obj.timeEnabled
 
-    toggleTime.public = 1
-    toggleTime.accLevel = AL_OWNER
-
-    def trickleTimeToPlayers(self, tran, obj):
+    def _trickleTimeToPlayers(self, tran, obj):
         # enable time for players
+        playerIDs = set()
         for systemID in obj.systems:
             system = tran.db[systemID]
             for planetID in system.planets:
                 planet = tran.db[planetID]
-                if planet.owner != OID_NONE:
-                    player = tran.db[planet.owner]
-                    if player.timeEnabled != obj.timeEnabled:
-                        player.timeEnabled = obj.timeEnabled
-                        player.lastLogin = time.time()
-                        if player.timeEnabled:
-                            Utils.sendMessage(tran, player, MSG_ENABLED_TIME, player.oid, None)
-                        else:
-                            Utils.sendMessage(tran, player, MSG_DISABLED_TIME, player.oid, None)
+                playerIDs.add(planet.owner)
+        playerIDs.discard(OID_NONE)
+        for playerID in playerIDs:
+            player = tran.db[playerID]
+            if player.timeEnabled != obj.timeEnabled:
+                player.timeEnabled = obj.timeEnabled
+                player.lastLogin = time.time()
+                if player.timeEnabled:
+                    Utils.sendMessage(tran, player, MSG_ENABLED_TIME, player.oid, None)
+                else:
+                    Utils.sendMessage(tran, player, MSG_DISABLED_TIME, player.oid, None)
 
-    def enableTime(self, tran, obj, force = 0, deleteSP = 0, enable = 1):
-        log.debug('IGalaxy', 'Checking for time...')
-        if not force:
-            if obj.timeEnabled:
-                return
-            canRun = 0
-            # We have to give players some time to prepare
-            # (as they might be waiting for very long time for this galaxy to be created).
-            if obj.creationTime < time.time() - 2 * 24 * 3600:
-                log.debug("Two days passed", obj.creationTime, time.time() - 2 * 24 * 3600)
-                canRun = 1
-            elif obj.scenario == SCENARIO_SINGLE:
-                canRun = 1
-            if not canRun:
-                return 0
+    def _isEligibleEnableTime(self, tran, obj):
+        if obj.timeEnabled or obj.timePaused:
+            # explicitly paused galaxy needs to be explicitly unpaused
+            return False
+        # We have to give players some time to prepare
+        # (as they might be waiting for very long time for this galaxy to be created).
+        currentTurn = tran.db[OID_UNIVERSE].turn
+        if obj.creationTurn + Rules.galaxyStartDelay <= currentTurn:
+            log.debug("Time to prepare has passed", obj.creationTurn, currentTurn)
+            return True
+        elif obj.scenario == SCENARIO_SINGLE:
+            return True
+        return False
+
+    def _firstEnableTime(self, tran, obj):
         # spawn rebel player on all vacant starting positions
         for positionID in copy.copy(obj.startingPos):
             obj.startingPos.remove(positionID)
@@ -416,31 +402,27 @@ class IGalaxy(IObject):
             system.scannerPwrs[playerID] = Rules.startingScannerPwr
         # do scanner evaluation because of all new players
         self.cmd(obj).processSCAN2Phase(tran, obj, None)
-            # add player to universe
-#            log.debug('Adding player to universe')
-#            universe = tran.db[OID_UNIVERSE]
-#            universe.players.append(playerID)
 
+    @public(AL_ADMIN)
+    def enableTime(self, tran, obj, force = False):
+        log.debug('IGalaxy', 'Checking for time...')
+        if not force and not self._isEligibleEnableTime(tran, obj):
+            return
+        if obj.timeEnabled is None:
+            self._firstEnableTime(tran, obj)
         # ok, enable time
         log.message('IGalaxy', 'Enabling time for', obj.oid)
-        obj.timeEnabled = enable
-        # close galaxy
-        if deleteSP:
-            obj.startingPos = []
-        self.trickleTimeToPlayers(tran, obj)
+        obj.timeEnabled = True
+        self._trickleTimeToPlayers(tran, obj)
 
-    enableTime.public = 1
-    enableTime.accLevel = AL_ADMIN
-
+    @public(AL_OWNER)
     def deleteSingle(self, tran, obj):
         if obj.scenario != SCENARIO_SINGLE:
             raise ige.GameException('Only Single Player galaxies can be deleted this way')
         log.debug(obj.oid, "GALAXY - singleplayer delete")
         self.delete(tran, obj)
 
-    deleteSingle.public = 1
-    deleteSingle.accLevel = AL_OWNER
-
+    @public(AL_ADMIN)
     def delete(self, tran, obj):
         log.debug(obj.oid, "GALAXY - delete")
         universe = tran.db[OID_UNIVERSE]
@@ -477,9 +459,7 @@ class IGalaxy(IObject):
         del tran.db[obj.oid]
         return 1
 
-    delete.public = 1
-    delete.accLevel = AL_ADMIN
-
+    @public(AL_NONE)
     def getPublicInfo(self, tran, obj):
         result = IDataHolder()
         result.oid = obj.oid
@@ -494,15 +474,11 @@ class IGalaxy(IObject):
         result.timeEnabled = obj.timeEnabled
         return result
 
-    getPublicInfo.public = 1
-    getPublicInfo.accLevel = AL_NONE
-
+    @public(AL_NONE)
     def getDescription(self,obj):
         return obj.description
 
-    getPublicInfo.public = 1
-    getPublicInfo.accLevel = AL_NONE
-
+    @public(AL_ADMIN)
     def setupEnvironment(self, tran, obj):
         universe = tran.db[OID_UNIVERSE]
         # we will first scan galaxy, to determine which environments are available
@@ -562,9 +538,6 @@ class IGalaxy(IObject):
                     IAIEDENPlayer.IAIEDENPlayer.setStartingPlanet(tran, planet)
                 elif playerType == T_AIMUTPLAYER:
                     IAIMutantPlayer.IAIMutantPlayer.setStartingPlanet(tran, planet)
-
-    setupEnvironment.public = 1
-    setupEnvironment.accLevel = AL_ADMIN
 
     ## messaging
     def canGetMsgs(self, tran, obj, oid):

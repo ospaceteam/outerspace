@@ -170,13 +170,13 @@ class StructTaskDlg:
 
         # sort methods
         if self.sort == 'none': # sort by name
-            items.sort(lambda a, b: cmp(a.name, b.name))
+            items.sort(key=lambda a: a.name)
         elif self.sort == 'tl': # sort by TL, subsort by name
-            items.sort(lambda a, b: cmp(a.name, b.name))
-            items.sort(lambda a, b: cmp(a.tl, b.tl))
+            items.sort(key=lambda a: a.name)
+            items.sort(key=lambda a: a.tl)
         elif self.sort == 'type': #sort by subtype, subsort by tl
-            items.sort(lambda a, b: cmp(a.tl, b.tl))
-            items.sort(lambda a, b: cmp(a.subtype, b.subtype))
+            items.sort(key=lambda a: a.tl)
+            items.sort(key=lambda a: a.subtype)
         self.win.vTechs.items = items
         self.win.vTechs.itemsChanged()
         if select:

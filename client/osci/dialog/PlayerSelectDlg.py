@@ -1,5 +1,5 @@
 #
-#  Copyright 2001 - 2016 Ludek Smid [http://www.ospace.net/]
+#  Copyright 2001 - 2018 Ludek Smid [http://www.ospace.net/]
 #
 #  This file is part of Outer Space.
 #
@@ -19,12 +19,17 @@
 #
 
 import pygameui as ui
-from osci import client, gdata, res
+
+import ige
+
+from osci import client
+from osci import gdata
 from ige.ospace.Const import *
+
 from MainGameDlg import MainGameDlg
 from ConfirmDlg import ConfirmDlg
 from BookingDlg import BookingDlg
-import ige
+from PasswordDlg import PasswordDlg
 
 class PlayerSelectDlg:
     """ Called for selection of active or picking a new player."""
@@ -35,6 +40,7 @@ class PlayerSelectDlg:
         self.needsPassword = False
         self.previousSelection = None # this is to fix connection lost/relog usability issue
         self.createUI()
+        self.passwordDlg = PasswordDlg(app)
         self.confirmDlg = ConfirmDlg(app)
         self.confirmDlg.setTitle(_("No free starting position"))
 
@@ -57,11 +63,7 @@ class PlayerSelectDlg:
         if self.wantsNew:
             items.extend(self.showStartPositions())
         self.win.vPos.setItems(items)
-        self.showPassword()
         return True
-
-    def showPassword(self):
-        self.win.vLPassword.visible = self.win.vPassword.visible = self.needsPassword
 
     def showActivePlayers(self):
         dataActive = client.cmdProxy.getActivePositions()
@@ -113,19 +115,20 @@ class PlayerSelectDlg:
             playerID = client.cmdProxy.takeOverAIPlayer(item.tObjID)
             self.win.setStatus(_('Command has been executed.'))
         elif item.tPosType == PLAYER_SELECT_PIRATE:
-            password = self.win.vPassword.text
-            if not password:
-                self.win.setStatus(_("Supply VIP password, please."))
-                return
-            self.win.setStatus(_('Executing TAKE OVER PIRATE FACTION command...'))
-            try:
-                playerID = client.cmdProxy.takeOverPirate(item.tObjID, password)
-            except ige.SecurityException:
-                self.win.setStatus(_("Supply valid VIP password."))
-                return
-            self.win.setStatus(_('Command has been executed.'))
+            playerID = self.passwordDlg.display(lambda x: self._takeOverPirate(item.tObjID, x))
+            return
         else:
             return
+        self._selectPlayer(playerID)
+
+    def _takeOverPirate(self, positionID, password):
+        self.win.setStatus(_('Executing TAKE OVER PIRATE FACTION command...'))
+        try:
+            playerID = client.cmdProxy.takeOverPirate(positionID, password)
+        except ige.SecurityException:
+            self.win.setStatus(_("Supply valid VIP password."))
+            return
+        self.win.setStatus(_('Command has been executed.'))
         self._selectPlayer(playerID)
 
     def _selectPlayer(self, playerID):
@@ -160,7 +163,6 @@ class PlayerSelectDlg:
         dirty = False
         if needsPassword != self.needsPassword:
             self.needsPassword = needsPassword
-            self.showPassword()
 
     def onBooking(self, widget, action, data):
         self.win.hide()
@@ -188,8 +190,6 @@ class PlayerSelectDlg:
             action = 'onListSelect',
             columnLabels = 1)
         self.win.subscribeAction('*', self)
-        ui.Label(self.win, layout = (8, 10, 5, 1), id = 'vLPassword', text = _("VIP Password:"))
-        ui.Entry(self.win, layout = (13, 10, 7, 1), id = 'vPassword', align = ui.ALIGN_W, showChar = '*', orderNo = 1 )
         ui.Button(self.win, layout = (20, 10, 8, 1), text = _('Book New Game'), action = 'onBooking', tooltipTitle = _("New galaxy"), tooltip = _("Allows you to either start new single player galaxy, or get in a queue for\ngame with other players. That game will start when queue fills the capacity,\nand will show up in this dialog as active.\n\nYou can queue for multiple galaxies. Only single player games has account limit."))
         ui.Button(self.win, layout = (0, 10, 8, 1), id = 'vToggle', text = _('Show Open Slots'), action = 'onToggleNew', tooltipTitle = _("Open slots"), tooltip = _("Slots available in already running galaxies, there is no telling\nwhat state the game or the empire is in."))
         ui.Title(self.win, layout = (0, 11, 20, 1), id = 'vStatusBar', align = ui.ALIGN_W)

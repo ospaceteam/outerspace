@@ -448,8 +448,8 @@ def formatTime(time,separator=':'):
     if time < 0:
         time = - time
         sign = '-'
-    days = time / 24
-    hours = time % 24
+    days = time / Rules.turnsPerDay
+    hours = time % Rules.turnsPerDay
     return '%s%d%s%02d' % (sign, days, separator, hours)
 
 def formatBE(b, e):

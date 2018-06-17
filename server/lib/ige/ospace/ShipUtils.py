@@ -364,7 +364,7 @@ def sortShips(ships):
     counters = {}
     for t in types:
         # take shield into account
-        types[t].sort(lambda a, b: cmp(a[SHIP_IDX_HP] + a[SHIP_IDX_SHIELDHP], b[SHIP_IDX_HP] + b[SHIP_IDX_SHIELDHP]))
+        types[t].sort(key=lambda a: a[SHIP_IDX_HP] + a[SHIP_IDX_SHIELDHP])
         incrs[t] = 1.0 / (float(len(types[t])) / len(ships))
         counters[t] = incrs[t]
 

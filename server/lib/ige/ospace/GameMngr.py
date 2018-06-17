@@ -329,7 +329,7 @@ class GameMngr(IGEGameMngr):
         log.debug('Processing scan phase')
         system.scannerPwrs[playerID] = Rules.startingScannerPwr
         self.cmdPool[T_GALAXY].processSCAN2Phase(tran, galaxy, True)
-        # check if galaxy can be "started"
+        # check if galaxy can be "started" (for purpose of single player games)
         self.cmdPool[T_GALAXY].enableTime(tran, galaxy)
         # save game info
         self.generateGameInfo()
@@ -379,7 +379,7 @@ class GameMngr(IGEGameMngr):
         stats = dict()
         universe = self.db[OID_UNIVERSE]
         stats["players"] = len(universe.players)
-        stats["turn"] = "%d:%02d" % (universe.turn / 24, universe.turn % 24)
+        stats["turn"] = "%d:%02d" % (universe.turn / Rules.turnsPerDay, universe.turn % Rules.turnsPerDay)
         galaxies = list()
         stats["galaxies"] = galaxies
         for galaxyID in universe.galaxies:
@@ -390,7 +390,7 @@ class GameMngr(IGEGameMngr):
                 freePositions = len(galaxy.startingPos),
                 players = 0,
                 rebels = 0,
-                age = int(((time.time() - galaxy.creationTime) / (24 * 3600))),
+                age = int((galaxy.galaxyTurn - galaxy.creationTurn) / Rules.turnsPerDay ),
                 running = galaxy.timeEnabled,
             )
             for playerID in universe.players:
@@ -510,10 +510,8 @@ class GameMngr(IGEGameMngr):
         fhres.close()
 
     def sortStatsBy(self, stats, attr):
-        order = stats.keys()
-        func = lambda a, b, stats = stats, attr = attr: cmp(getattr(stats[a], attr), getattr(stats[b], attr))
-        order.sort(func)
-        order.reverse()
+        keyF = lambda a: getattr(stats[a], attr)
+        order = sorted(stats.keys(), key=keyF, reverse = True)
         return order
 
     def printJSONStatsTable(self, fh, stats, order, galaxyID, galaxyName, imperatoroid, leaderoid, jsonComma):

@@ -31,7 +31,7 @@ import ShipUtils
 
 from Const import *
 from ige import log
-from ige.IObject import IObject
+from ige.IObject import IObject, public
 from ige.IDataHolder import IDataHolder
 
 class IPlanet(IObject):
@@ -106,6 +106,7 @@ class IPlanet(IObject):
         obj.maxShield = 0       #structural max sheild (best structure method)
         obj.prevShield = 0      #previous turn's shield level (for client growth calculation)
 
+    @public(AL_FULL)
     def startConstruction(self, tran, obj, techID, quantity, targetID, isShip, reportFinished,
         demolishStruct):
         if len(obj.prodQueue) > Rules.maxProdQueueLen:
@@ -153,9 +154,7 @@ class IPlanet(IObject):
         obj.prodQueue.append(item)
         return obj.prodQueue, player.stratRes
 
-    startConstruction.public = 1
-    startConstruction.accLevel = AL_FULL
-
+    @public(AL_FULL)
     def changeConstruction(self, tran, obj, index, quantity):
         if index < 0 or index >= len(obj.prodQueue):
             raise ige.GameException("No such item in the construction queue.")
@@ -185,9 +184,7 @@ class IPlanet(IObject):
         obj.prodQueue[index].quantity = quantity
         return obj.prodQueue, player.stratRes
 
-    changeConstruction.public = 1
-    changeConstruction.accLevel = AL_FULL
-
+    @public(AL_FULL)
     def abortConstruction(self, tran, obj, index):
         if index >= len(obj.prodQueue):
             raise ige.GameException('No such item in the construction queue.')
@@ -204,9 +201,7 @@ class IPlanet(IObject):
         del obj.prodQueue[index]
         return obj.prodQueue, player.stratRes
 
-    abortConstruction.public = 1
-    abortConstruction.accLevel = AL_FULL
-
+    @public(AL_FULL)
     def moveConstrItem(self, tran, obj, index, rel):
         if index >= len(obj.prodQueue):
             raise ige.GameException('No such item in the construction queue.')
@@ -217,9 +212,7 @@ class IPlanet(IObject):
         obj.prodQueue.insert(index + rel, item)
         return obj.prodQueue
 
-    moveConstrItem.public = 1
-    moveConstrItem.accLevel = AL_FULL
-
+    @public(AL_ADMIN)
     def changeOwner(self, tran, obj, ownerID, force = 0):
         oldOwnerID = obj.owner
         if obj.owner == ownerID:
@@ -255,9 +248,7 @@ class IPlanet(IObject):
             # notify player
             Utils.sendMessage(tran, obj, MSG_GAINED_PLANET, obj.oid, None)
 
-    changeOwner.public = 1
-    changeOwner.accLevel = AL_ADMIN
-
+    @public(AL_FULL)
     def setStructOn(self, tran, obj, slotIdx, on):
         if slotIdx >= len(obj.slots) or slotIdx < 0:
             raise ige.GameException('No such structure.')
@@ -267,9 +258,7 @@ class IPlanet(IObject):
             obj.slots[slotIdx][STRUCT_IDX_STATUS] &= ~STRUCT_STATUS_ON
         return obj.slots[slotIdx]
 
-    setStructOn.public = 1
-    setStructOn.accLevel = AL_FULL
-
+    @public(AL_FULL)
     def demolishStruct(self, tran, obj, slotIdx):
         # TODO implement special button for demolishing structures when
         # planet surrenders
@@ -281,9 +270,7 @@ class IPlanet(IObject):
         del obj.slots[slotIdx]
         return obj.slots
 
-    demolishStruct.public = 1
-    demolishStruct.accLevel = AL_FULL
-
+    @public(AL_FULL)
     def moveStruct(self, tran, obj, slotIdx, rel):
         if slotIdx >= len(obj.slots) or slotIdx < 0:
             raise ige.GameException('No such structure.')
@@ -294,18 +281,13 @@ class IPlanet(IObject):
         obj.slots.insert(slotIdx + rel, struct)
         return obj.slots
 
-    moveStruct.public = 1
-    moveStruct.accLevel = AL_FULL
-
+    @public(AL_ADMIN)
     def processINITPhase(self, tran, obj, data):
         # get rid of the NEW states
         for struct in obj.slots:
             struct[STRUCT_IDX_STATUS] &= STRUCT_STATUS_RESETFLGS
 
-    processINITPhase.public = 1
-    processINITPhase.accLevel = AL_ADMIN
-
-
+    @public(AL_ADMIN)
     def processPRODPhase(self, tran, obj, data):
         if obj.plType == "A":
             self.cmd(obj).generateAsteroid(tran, obj)
@@ -732,15 +714,11 @@ class IPlanet(IObject):
             self.cmd(obj).changeOwner(tran, obj, OID_NONE, force = 1)
             obj.storPop = 0
 
-    processPRODPhase.public = 1
-    processPRODPhase.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processACTIONPhase(self, tran, obj, data):
         return
 
-    processACTIONPhase.public = 1
-    processACTIONPhase.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processFINALPhase(self, tran, obj, data):
         if obj.storPop <= 0 and not obj.slots and obj.owner == OID_NONE:
             # do not process this planet
@@ -820,9 +798,6 @@ class IPlanet(IObject):
             homePlanet = tran.db[player.planets[0]]
             dist = int(math.sqrt((homePlanet.x - obj.x) ** 2 + (homePlanet.y - obj.y) ** 2))
             player.tmpPopDistr[dist] = player.tmpPopDistr.get(dist, 0) + obj.storPop
-
-    processFINALPhase.public = 1
-    processFINALPhase.accLevel = AL_ADMIN
 
     def getScanInfos(self, tran, obj, scanPwr, player):
         if scanPwr >= Rules.level1InfoScanPwr:
@@ -936,15 +911,13 @@ class IPlanet(IObject):
 
     update.public = 0
 
+    @public(AL_FULL)
     def changePlanetsGlobalQueue(self, tran, obj, newQueue):
         player = tran.db[obj.owner]
         if newQueue < 0 or newQueue >= len(player.prodQueues):
             raise ige.GameException("Invalid queue")
         obj.globalQueue = newQueue
         return obj.globalQueue
-
-    changePlanetsGlobalQueue.public = 1
-    changePlanetsGlobalQueue.accLevel = AL_FULL
 
     def popGlobalQueue(self, tran, obj):
         player = tran.db[obj.owner]

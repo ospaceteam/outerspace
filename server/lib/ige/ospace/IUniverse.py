@@ -24,7 +24,7 @@ import random
 import tempfile
 import time
 
-from ige.IObject import IObject
+from ige.IObject import IObject, public
 from ige.IDataHolder import IDataHolder
 from Const import *
 import Rules
@@ -61,6 +61,7 @@ class IUniverse(IObject):
         obj.galFilename = ''
         obj.galID = ''
 
+    @public(AL_NONE)
     def getIntroInfo(self, tran, obj):
         result = IDataHolder()
         result.cid = tran.cid
@@ -69,9 +70,7 @@ class IUniverse(IObject):
         result.version = ige.version.version
         return result
 
-    getIntroInfo.public = 1
-    getIntroInfo.accLevel = AL_NONE
-
+    @public(AL_NONE)
     def multiGetInfo(self, tran, obj, objIDs):
         result = []
         messages = []
@@ -91,9 +90,7 @@ class IUniverse(IObject):
             tran.session.messages[msgID] = data
         return result
 
-    multiGetInfo.public = 1
-    multiGetInfo.accLevel = AL_NONE
-
+    @public(AL_NONE)
     def multiGetMsgs(self, tran, obj, mailboxes):
         result = []
         messages = []
@@ -107,9 +104,7 @@ class IUniverse(IObject):
             tran.session.messages[msgID] = data
         return result
 
-    multiGetMsgs.public = 1
-    multiGetMsgs.accLevel = AL_NONE
-
+    @public(AL_ADMIN)
     def createGalaxy(self, tran, obj):
         galaxy = self.new(T_GALAXY)
         galaxy.compOf = obj.oid
@@ -117,19 +112,18 @@ class IUniverse(IObject):
         obj.galaxies.append(oid)
         return oid
 
-    createGalaxy.public = 1
-    createGalaxy.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def createAsteroid(self, tran, obj, x, y, targetID, speed, hp):
         asteroid = self.new(T_ASTEROID)
         tran.db.create(asteroid)
         self.cmd(asteroid).create(tran, asteroid, x, y, targetID, speed, hp)
         return asteroid.oid
 
-    createAsteroid.public = 1
-    createAsteroid.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processINITPhase(self, tran, obj, data):
+        for galaxyID in obj.galaxies:
+            galaxy = tran.db[galaxyID]
+            self.cmd(galaxy).enableTime(tran, galaxy)
         try:
             ## find active/inactive pacts
             # set all active/on pacts to active
@@ -190,33 +184,23 @@ class IUniverse(IObject):
         self.cmd(obj).deleteOldMsgs(tran, obj)
         return obj.players[:] + [OID_NATURE]
 
-    processINITPhase.public = 1
-    processINITPhase.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processPRODPhase(self, tran, obj, data):
         raise NotImplementedError()
 
-    processPRODPhase.public = 1
-    processPRODPhase.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processACTIONPhase(self, tran, obj, data):
         raise NotImplementedError()
 
-    processACTIONPhase.public = 1
-    processACTIONPhase.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processBATTLEPhase(self, tran, obj, data):
         raise NotImplementedError()
 
-    processBATTLEPhase.public = 1
-    processBATTLEPhase.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processFINALPhase(self, tran, obj, data):
         return obj.players[:] + [OID_NATURE]
 
-    processFINALPhase.public = 1
-    processFINALPhase.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processFINAL2Phase(self, tran, obj, data):
         # distribute stats to contacts
         for playerID in obj.players:
@@ -259,9 +243,6 @@ class IUniverse(IObject):
         # trash unused mailboxes
         tran.gameMngr.msgMngr.trashUnusedMailboxes(used)
         return obj.galaxies
-
-    processFINAL2Phase.public = 1
-    processFINAL2Phase.accLevel = AL_ADMIN
 
     def _announceImperatorVoting(self, tran, obj, galaxy):
         message = {
@@ -355,8 +336,7 @@ class IUniverse(IObject):
         votesByName, votesByID, voterNames = self._countVotes(tran, obj, galaxy)
         # check winner
         totalVotes = sum(votesByID.values())
-        nominated = votesByID.keys()
-        nominated.sort(lambda a, b: cmp(votesByID[b], votesByID[a]))
+        nominated = sorted(votesByID, key=lambda a: votesByID[a], reverse = True)
         winnerID = OID_NONE
         # OID_NONE is not valid target
         if OID_NONE in nominated:
@@ -410,7 +390,6 @@ class IUniverse(IObject):
             # voting
             self._processImperatorVoting(tran, obj, galaxy)
         self._autoFinishOuterspace(tran, obj, galaxy)
-
 
     def processScenarioSingle(self, tran, obj, galaxy):
         """ If owner of the galaxy is not present anymore, remove it.
@@ -501,7 +480,6 @@ class IUniverse(IObject):
         galaxy.owner = winner.oid
         return False
 
-
     def update(self, tran, obj):
         # check existence of all galaxies
         log.debug('Game turn is',obj.turn)
@@ -534,6 +512,7 @@ class IUniverse(IObject):
 
     getReferences.public = 0
 
+    @public(AL_ADMIN)
     def getActivePlayers(self, tran, obj):
         playerNames = []
         for playerID in obj.players:
@@ -542,9 +521,7 @@ class IUniverse(IObject):
                 playerNames.append(player.name)
         return playerNames
 
-    getActivePlayers.public = 1
-    getActivePlayers.accLevel = AL_ADMIN
-
+    @public(AL_NONE)
     def getPublicInfo(self, tran, obj):
         result = IDataHolder()
         result.oid = obj.oid
@@ -552,9 +529,6 @@ class IUniverse(IObject):
         result.name = obj.name
         result.turn = obj.turn
         return result
-
-    getPublicInfo.public = 1
-    getPublicInfo.accLevel = AL_NONE
 
     ## messaging
     def canGetMsgs(self, tran, obj, oid):
@@ -570,7 +544,8 @@ class IUniverse(IObject):
         return 0
 
     canSendMsg.public = 0
-
+    
+    @public(AL_NONE)
     def finishGalaxyImperator(self, tran, obj, galaxyID, imperatorMessage):
         log.debug("Finishing Galaxy", galaxyID)
         galaxy = tran.db[galaxyID]
@@ -597,10 +572,7 @@ class IUniverse(IObject):
         log.debug("Deleting galaxy", galaxyID)
         self.cmd(galaxy).delete(tran, galaxy)
 
-    finishGalaxyImperator.public = 1
-    finishGalaxyImperator.accLevel = AL_NONE
-
-
+    @public(AL_ADMIN)
     def finishGalaxyAutomated(self, tran, obj, galaxyID, imperatorMessage): #server-initiated restart
         log.debug("Restarting Galaxy", galaxyID)
         log.debug("Sending message", imperatorMessage)
@@ -616,10 +588,17 @@ class IUniverse(IObject):
         log.debug("Deleting galaxy", galaxyID)
         self.cmd(galaxy).delete(tran, galaxy)
 
-    finishGalaxyAutomated.public = 1
-    finishGalaxyAutomated.accLevel = AL_ADMIN
+    def _sendCreationMessage(self, tran, obj, galaxy):
+        message = {
+            "sender": "GNC",
+            "senderID": galaxy.oid,
+            "forum": "NEWS",
+            "data": (galaxy.oid, MSG_GNC_GALAXY_CREATED, galaxy.oid, obj.turn, (obj.turn)),
+            "topic": "EVENT",
+        }
+        self.cmd(galaxy).sendMsg(tran, galaxy, message)
 
-
+    @public(AL_ADMIN)
     def createNewSubscribedGalaxy(self, tran, obj, galaxyName, galaxyType, listOfPlayers):
         galGen = GalaxyGenerator.GalaxyGenerator()
         galaxyRadius = galGen.getGalaxyTemplate(galaxyType).radius
@@ -641,21 +620,19 @@ class IUniverse(IObject):
         os.remove(galaxyFileName)
         for playerLogin in listOfPlayers:
             tran.gameMngr.createNewSubscribedPlayer(playerLogin, newGalaxyID)
+        if newGalaxy.scenario != SCENARIO_SINGLE:
+            # no point in announcing single scenario - it starts ticking right away
+            self._sendCreationMessage(tran, obj, newGalaxy)
         log.debug("Galaxy creation END")
         return newGalaxyID
 
-    createNewSubscribedGalaxy.public = 1
-    createNewSubscribedGalaxy.accLevel = AL_ADMIN
-
-
+    @public(AL_ADMIN)
     def deleteGalaxy(self, tran, galaxyID):
         galaxy = tran.db[galaxyID]
         log.debug("Deleting galaxy", galaxyID)
         self.cmd(galaxy).delete(tran, galaxy)
 
-    deleteGalaxy.public = 1
-    deleteGalaxy.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def findSpotForGalaxy(self, tran, obj, new_gal_radius):
         """ We start with sum of surfaces of active galaxies (with borders) with this,
             we count the hypothetical square all galaxies should fit together. We then
@@ -698,6 +675,3 @@ class IUniverse(IObject):
                 magic_constant += magic_constant_step
                 attempts = attempts_amount
         return (pos_x, pos_y)
-
-    findSpotForGalaxy.public = 1
-    findSpotForGalaxy.accLevel = AL_ADMIN

@@ -19,11 +19,12 @@
 #
 
 import pygameui as ui
+
 from osci import gdata
 
 class PasswordDlg:
 
-    def __init__(self, app, hide):
+    def __init__(self, app, hide = True):
         self.app = app
         self.createUI()
         if hide:

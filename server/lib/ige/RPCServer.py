@@ -57,7 +57,7 @@ class igerpc(igerpc_handler.igerpc_handler):
         try:
             params = [packet.sid]
             params.extend(packet.params)
-            packet.result, packet.messages = apply(callMap[intern(packet.method)], params)
+            packet.result, packet.messages = callMap[intern(packet.method)](*params)
             packet.method = None
             packet.params = None
             return packet
@@ -107,7 +107,7 @@ class xmlrpc(xmlrpc_handler.xmlrpc_handler):
         log.debug('CALL', method, params)
         try:
             instanceName, methodName = method.split('.')
-            return apply(getattr(objMap[instanceName], 'rpc_%s' % methodName), params)
+            return getattr(objMap[instanceName], 'rpc_%s' % methodName)(*params)
             #except ige.NoAccountException, e:
             #    raise e
             #except ige.GameException, e:

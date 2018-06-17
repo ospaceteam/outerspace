@@ -26,6 +26,7 @@ import Utils
 from Const import *
 from ige import log
 from ige.IDataHolder import IDataHolder
+from ige.IObject import public
 from IPlayer import IPlayer
 
 class IAIRenegadePlayer(IPlayer):
@@ -56,6 +57,7 @@ class IAIRenegadePlayer(IPlayer):
         # grant techs and so on
         self.cmd(obj).update(tran, obj)
 
+    @public(AL_ADMIN)
     def processINITPhase(self, tran, obj, data):
         IPlayer.processINITPhase(self, tran, obj, data)
 
@@ -66,12 +68,10 @@ class IAIRenegadePlayer(IPlayer):
         if not obj.fleets and not obj.planets:
             self.cmd(obj).delete(tran, obj)
 
+    @public(AL_ADMIN)
     def processRSRCHPhase(self, tran, obj, data):
         # do not research anything
         return
-
-    processRSRCHPhase.public = 1
-    processRSRCHPhase.accLevel = AL_ADMIN
 
     def update(self, tran, obj):
         self.setStartingTechnologies(obj)
@@ -119,6 +119,7 @@ class IAIRenegadePlayer(IPlayer):
         dipl.stats = None
         return dipl
 
+    @public(AL_ADMIN)
     def processFINALPhase(self, tran, obj, data):
         IPlayer.processFINALPhase(self, tran, obj, data)
         # fix goverment power

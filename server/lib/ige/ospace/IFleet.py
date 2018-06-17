@@ -18,7 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-from ige.IObject import IObject
+from ige.IObject import IObject, public
 from Const import *
 from ige.IDataHolder import IDataHolder
 import Rules
@@ -110,9 +110,6 @@ class IFleet(IObject):
         # insert fleet into owner's fleets
         tran.db[obj.owner].fleets.append(obj.oid)
 
-    create.public = 0
-    create.accLevel = AL_ADMIN
-
     def addNewShip(self, tran, obj, designID):
         spec = tran.db[obj.owner].shipDesigns[designID]
         obj.ships.append([designID, spec.maxHP, spec.shieldHP, 0])
@@ -123,6 +120,7 @@ class IFleet(IObject):
 
     addNewShip.public = 0
 
+    @public(AL_OWNER)
     def removeShips(self, tran, obj, ships):
         for ship in ships:
             obj.ships.remove(ship)
@@ -133,9 +131,6 @@ class IFleet(IObject):
             self.cmd(obj).update(tran, obj)
         return obj
 
-    removeShips.public = 1
-    removeShips.accLevel = AL_OWNER
-
     def deleteDesign(self, tran, obj, designID):
         # remove design
         obj.ships = [ship for ship in obj.ships if ship[0] != designID]
@@ -143,7 +138,7 @@ class IFleet(IObject):
 
     deleteDesign.public = 0
 
-
+    @public(AL_FULL)
     def disbandFleet(self, tran, obj):
         log.debug('IFleet', 'disbanding fleet', obj.oid, 'of player', obj.owner)
         # remove from player's fleets
@@ -175,9 +170,7 @@ class IFleet(IObject):
         except KeyError:
             log.warning('IFleet', 'disbandFleet: cannot remove fleet from database.')
 
-    disbandFleet.public = 1
-    disbandFleet.accLevel = AL_FULL
-
+    @public(AL_FULL)
     def joinFleet(self, tran, obj, fleetID, force=False):
         if obj.orbiting == OID_NONE:
             # we are in space
@@ -228,9 +221,7 @@ class IFleet(IObject):
         log.debug('IFleet joinFleet, removing old fleet: source fleet',obj.oid,'; target fleet',fleet.oid)
         self.cmd(obj).disbandFleet(tran, obj)
 
-    joinFleet.public = 1
-    joinFleet.accLevel = AL_FULL
-
+    @public(AL_FULL)
     def splitFleet(self, tran, obj, ships, mEn):
         if not len(ships):
             raise GameException('No ships in the new fleet.')
@@ -271,9 +262,7 @@ class IFleet(IObject):
         # return new fleet, old fleet and player's fleets
         return fleet, obj, tran.db[obj.owner].fleets
 
-    splitFleet.public = 1
-    splitFleet.accLevel = AL_FULL
-
+    @public(AL_FULL)
     def renameFleet(self, tran, obj, name):
         if not Utils.isCorrectName(name):
             raise GameException('Invalid name. Only characters, digits, space, dot and dash permitted, max. length is 30 characters.')
@@ -287,24 +276,17 @@ class IFleet(IObject):
         obj.customname = name
         return obj.customname
 
-    renameFleet.public = 1
-    renameFleet.accLevel = AL_FULL
-
+    @public(AL_FULL)
     def removeFleetName(self, tran, obj):
         obj.customname = None
         return obj.name
 
-    removeFleetName.public = 1
-    removeFleetName.accLevel = AL_FULL
-
+    @public(AL_FULL)
     def setMergeState(self, tran, obj, state):
         if not state in [0,1,2]:
             raise GameException('Bad join fleet state.') #should we log this? Probably don't need to.
         obj.allowmerge = state
         return obj.allowmerge
-
-    setMergeState.public = 1
-    setMergeState.accLevel = AL_FULL
 
     def update(self, tran, obj):
         if not (hasattr(obj,'customname')): #added in 0.5.64
@@ -489,6 +471,7 @@ class IFleet(IObject):
             result.name = obj.name
         return [result]
 
+    @public(AL_FULL)
     def addAction(self, tran, obj, index, action, targetID, aData):
         # check if target is valid
         if action == FLACTION_REDIRECT:
@@ -542,9 +525,7 @@ class IFleet(IObject):
             obj.actionIndex = min(index, len(obj.actions) - 1)
         return obj.actions, obj.actionIndex
 
-    addAction.public = 1
-    addAction.accLevel = AL_FULL
-
+    @public(AL_FULL)
     def deleteAction(self, tran, obj, index):
         if index >= len(obj.actions) or index < 0:
             raise GameException('Index out of bounds.')
@@ -564,9 +545,7 @@ class IFleet(IObject):
             obj.actionIndex -= 1
         return obj.actions, obj.actionIndex
 
-    deleteAction.public = 1
-    deleteAction.accLevel = AL_FULL
-
+    @public(AL_FULL)
     def setActionIndex(self, tran, obj, index):
         if index >= len(obj.actions) or index < 0:
             raise GameException('Index out of bounds.')
@@ -575,9 +554,7 @@ class IFleet(IObject):
         obj.actionIndex = index
         return obj.actionIndex
 
-    setActionIndex.public = 1
-    setActionIndex.accLevel = AL_FULL
-
+    @public(AL_FULL)
     def moveAction(self, tran, fleet, index, rel):
         if index >= len(fleet.actions):
             raise GameException('No such item in the command list.')
@@ -594,9 +571,7 @@ class IFleet(IObject):
         fleet.actions.insert(index + rel, action)
         return fleet.actions
 
-    moveAction.public = 1
-    moveAction.accLevel = AL_FULL
-
+    @public(AL_FULL)
     def clearProcessedActions(self, tran, fleet):
         if fleet.actionIndex <= 0:
             return (fleet.actions, fleet.actionIndex)
@@ -608,9 +583,7 @@ class IFleet(IObject):
 
         return (fleet.actions, fleet.actionIndex)
 
-    clearProcessedActions.public = 1
-    clearProcessedActions.accLevel = AL_FULL
-
+    @public(AL_ADMIN)
     def processACTIONPhase(self, tran, obj, data):
         #@log.debug("Fleet", obj.oid, "ACTION")
         # update fleet data
@@ -737,9 +710,6 @@ class IFleet(IObject):
             obj.combatRetreatWait = 0
             # try to join some fleet
             self.cmd(obj).joinFleet(tran, obj, OID_NONE)
-
-    processACTIONPhase.public = 1
-    processACTIONPhase.accLevel = AL_ADMIN
 
     def actionRedirect(self, tran, obj, refuelled):
         if obj.orbiting != OID_NONE:
@@ -1208,15 +1178,13 @@ class IFleet(IObject):
 
     moveToTarget.public = 0
 
+    @public(AL_ADMIN)
     def processFINALPhase(self, tran, obj, data):
         # stats
         player = tran.db[obj.owner]
         player.stats.fleetPwr += obj.combatPwr
         player.stats.fleetSupportProd += obj.operProd
         #
-
-    processFINALPhase.public = 1
-    processFINALPhase.accLevel = AL_ADMIN
 
     ##
     ## Combat related functions
