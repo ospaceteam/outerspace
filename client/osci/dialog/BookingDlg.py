@@ -24,6 +24,7 @@ import pygameui as ui
 import ige
 from osci import client
 from osci import gdata
+from PasswordDlg import PasswordDlg
 
 
 class BookingDlg:
@@ -32,12 +33,15 @@ class BookingDlg:
     def __init__(self, app):
         self.app = app
         self.createUI()
+        self.passwordDlg = PasswordDlg(app, hide = False)
         self.displayGoal = False
+        self.displayPublic = True
         self.offering = client.cmdProxy.getBookingOffers()
         self.bookingInfo = client.cmdProxy.getBookingAnswers()
         self.selectionID = None
 
     def display(self, caller = None):
+        self.selectionID = None
         self.caller = caller
         if self.show():
             self.win.show()
@@ -46,19 +50,37 @@ class BookingDlg:
         self.win.hide()
 
     def show(self):
+        self._setButtons()
         self._showMenu()
         self._showSelection()
         return True
 
+    def _setButtons(self):
+        self.win.vBookingPublic.visible = self.displayPublic
+        self.win.vBookingPrivate.visible = not self.displayPublic
+        self.win.vCreatePrivate.visible = self.displayPublic
+        self.win.vDeletePrivate.visible = not self.displayPublic
+        if self.displayPublic:
+            self.win.vPublicToggle.text = _("Show private bookings")
+        else:
+            self.win.vPublicToggle.text = _("Show public bookings")
+        if self.selectionID:
+            book = self.bookingInfo[self.selectionID]
+            scenario = self.offering[book.gal_type].scenario
+            self.win.vCreatePrivate.enabled = scenario != ige.ospace.Const.SCENARIO_SINGLE
+            self.win.vDeletePrivate.enabled = book.owner_nick == client.account.nick
+            self.win.vToggle.enabled = book.owner_nick != client.account.nick
+        else:
+            self.win.vCreatePrivate.enabled = False
+            self.win.vDeletePrivate.enabled = False
+
     def _showMenu(self):
-        items = []
+        itemsPublic = []
+        itemsPrivate = []
         for bookID in self.bookingInfo:
             if bookID < ige.Const.BID_FREESTART:
                 continue
             book = self.bookingInfo[bookID]
-            if book.gal_type is None:
-                # this is helper value TODO: handle it different way
-                continue
             tPos = book.capacity
             tCur = book.bookings
             rawTime = book.last_creation
@@ -72,15 +94,21 @@ class BookingDlg:
                 tChoice = '*'
             else:
                 tChoice = ''
-            item = ui.Item(book.gal_type, tPos = tPos, tCur = tCur, tTime = tTime,tChoice = tChoice, tScenario = tScenario, tOwner = book.owner, tID = bookID)
-            items.append(item)
-        self.win.vBooking.items = items
-        self.win.vBooking.itemsChanged()
+            item = ui.Item(book.gal_type, tPos = tPos, tCur = tCur, tTime = tTime,tChoice = tChoice, tScenario = tScenario, tOwner = book.owner_nick, tID = bookID)
+            if book.owner_nick:
+                itemsPrivate.append(item)
+            else:
+                itemsPublic.append(item)
+        self.win.vBookingPublic.items = itemsPublic
+        self.win.vBookingPublic.itemsChanged()
+        self.win.vBookingPrivate.items = itemsPrivate
+        self.win.vBookingPrivate.itemsChanged()
 
     def _showSelection(self):
         if self.selectionID:
-            selection = self.offering[self.selectionID]
-            self._displayText(self.selectionID, selection.scenario)
+            book = self.bookingInfo[self.selectionID]
+            selection = self.offering[book.gal_type]
+            self._displayText(book.gal_type, selection.scenario)
             self.win.vInfo.offsetRow = 0
             self.win.vInfo.vertScrollbar.slider.position = 0
 
@@ -94,37 +122,54 @@ class BookingDlg:
             else:
                 self.win.vChallenges.text = ""
 
-    def _displayText(self, selectionID, scenario):
+    def _displayText(self, gal_type, scenario):
         try:
             if self.displayGoal:
                 self.win.vInfo.text = [gdata.gameScenarioDescriptions[scenario]]
             else:
-                self.win.vInfo.text = [gdata.galaxyTypeDescriptions[selectionID]]
+                self.win.vInfo.text = [gdata.galaxyTypeDescriptions[gal_type]]
         except KeyError:
             # this shouldn't happen
             self.win.vInfo.text = [_("Description missing.")]
 
     def onSelect(self, widget, action, data):
-        self.selectionID = data.text
+        self.selectionID = data.tID
+        self._setButtons()
         self._showSelection()
 
-    def onToggle(self, widget, action, data):
-        selection = self.win.vBooking.selection
-        try:
-            selectedBookID = selection[0].tID
-        except IndexError:
+    def onToggleBooking(self, widget, action, data):
+        if self.selectionID is None:
+            self.win.setStatus(_('Select booking entry to toggle.'))
             return
-        if selectedBookID:
-            result = client.cmdProxy.toggleBooking(selectedBookID)
-            if not result[ige.Const.BID_TRIGGERED]:
-                # booking change is logged, no galaxy creation triggered
-                self.bookingInfo = result
-                self.show()
-            else:
-                # galaxy creation has been triggered
-                self.hide()
-                self.caller.display()
-                self.caller.win.setStatus(_('New galaxy creation has been triggered.'))
+        if self.displayPublic:
+            self._onToggleBooking()
+        else:
+            self.passwordDlg.display(self._onToggleBooking)
+
+    def _handleResult(self, result):
+        triggerID = ige.Const.BID_TRIGGERED
+        if not triggerID in result or not result[triggerID]:
+            # booking change is logged, no galaxy creation triggered
+            self.bookingInfo = result
+            self.show()
+        else:
+            # galaxy creation has been triggered
+            self.hide()
+            self.caller.display()
+            self.caller.win.setStatus(_('New galaxy creation has been triggered.'))
+
+    def _onToggleBooking(self, password = None):
+        if self.selectionID:
+            try:
+                result = client.cmdProxy.toggleBooking(self.selectionID, password)
+                self._handleResult(result)
+            except ige.BookingMngrException:
+                self.win.setStatus(_('Wrong password.'))
+
+    def onPublicToggle(self, widget, action, data):
+        self.selectionID = None
+        self.displayPublic = not self.displayPublic
+        self.show()
 
     def onGoalToggle(self, widget, action, data):
         self.displayGoal = not self.displayGoal
@@ -133,6 +178,24 @@ class BookingDlg:
         else:
             self.win.vGoalToggle.text = _("Show goal info")
         self.show()
+
+    def onCreatePrivate(self, widget, action, data):
+        if self.selectionID is None:
+            self.win.setStatus(_('Select galaxy type to create private booking.'))
+            return
+        self.passwordDlg.display(self.onCreatePrivateConfirmed)
+
+    def onCreatePrivateConfirmed(self, password):
+        result = client.cmdProxy.createPrivateBooking(self.selectionID, password)
+        self._handleResult(result)
+
+    def onDeletePrivate(self, widget, action, data):
+        if self.selectionID is None:
+            self.win.setStatus(_('Select galaxy type to create private booking.'))
+            return
+        result = client.cmdProxy.deletePrivateBooking(self.selectionID)
+        self.selectionID = None
+        self._handleResult(result)
 
     def onCancel(self, widget, action, data):
         self.win.hide()
@@ -147,59 +210,80 @@ class BookingDlg:
             modal = 1,
             movable = 0,
             title = _('Select, which galaxy types do you want to play'),
-            rect = ui.Rect((w - 564) / 2, (h - 344) / 2, 564, 344),
+            rect = ui.Rect((w - 564) / 2, (h - 404) / 2, 564, 404),
             layoutManager = ui.SimpleGridLM(),
             tabChange = True
         )
-        ui.Listbox(self.win, layout = (0, 0, 28, 6), id = 'vBooking',
-                             sortedBy = ('text', 1),
-            columns = (
-                        ('', 'tChoice', 1, ui.ALIGN_NONE),
-                        (_('Galaxy type'), 'text', 6, ui.ALIGN_NONE),
-                        (_('Scenario'), 'tScenario', 6, ui.ALIGN_NONE),
-                        (_('Queue'), 'tCur', 3, ui.ALIGN_NONE),
-                        (_('Capacity'), 'tPos', 3, ui.ALIGN_NONE),
-                        (_('Last start'), 'tTime', 8, ui.ALIGN_E)
-                        ),
-                        columnLabels = 1, action = 'onSelect')
+        ui.Listbox(self.win, layout = (0, 0, 28, 7), id = 'vBookingPublic',
+                        sortedBy = ('text', 1),
+                        columns = (
+                                ('', 'tChoice', 1, ui.ALIGN_NONE),
+                                (_('Galaxy type'), 'text', 6, ui.ALIGN_NONE),
+                                (_('Scenario'), 'tScenario', 6, ui.ALIGN_NONE),
+                                (_('Queue'), 'tCur', 3, ui.ALIGN_NONE),
+                                (_('Capacity'), 'tPos', 3, ui.ALIGN_NONE),
+                                (_('Last start'), 'tTime', 8, ui.ALIGN_E)
+                                ),
+                        columnLabels = 1,
+                        action = 'onSelect',
+                        )
+        ui.Listbox(self.win, layout = (0, 0, 28, 7), id = 'vBookingPrivate',
+                        sortedBy = ('tOwner', 1),
+                        columns = (
+                                ('', 'tChoice', 1, ui.ALIGN_NONE),
+                                (_('Galaxy type'), 'text', 6, ui.ALIGN_NONE),
+                                (_('Scenario'), 'tScenario', 6, ui.ALIGN_NONE),
+                                (_('Queue'), 'tCur', 3, ui.ALIGN_NONE),
+                                (_('Capacity'), 'tPos', 3, ui.ALIGN_NONE),
+                                (_('Owner'), 'tOwner', 8, ui.ALIGN_E)
+                                ),
+                        columnLabels = 1,
+                        action = 'onSelect',
+                        )
         self.win.subscribeAction('*', self)
 
-        scrollBarInfo = ui.Scrollbar(self.win, layout = (27, 6, 1, 5))
-        textBox = ui.Text(self.win, layout = (9, 6.3, 18, 4.7), id = "vInfo", editable = 0)
+        ui.Button(self.win, layout = (0, 7, 8, 1), id = "vPublicToggle", text = _('Show personal bookings'), action = 'onPublicToggle')
+
+        ui.Button(self.win, layout = (20, 7, 8, 1), id = "vCreatePrivate", text = _('Create private booking'), action = 'onCreatePrivate')
+
+        ui.Button(self.win, layout = (20, 7, 8, 1), id = "vDeletePrivate", text = _('Delete private booking'), action = 'onDeletePrivate')
+
+        ui.Button(self.win, layout = (7, 8.5, 14, 1.5), id = "vToggle", text = _('Toggle booking'), action = 'onToggleBooking')
+        scrollBarInfo = ui.Scrollbar(self.win, layout = (27, 10.3, 1, 4.7))
+        textBox = ui.Text(self.win, layout = (9, 10.3, 18, 4.7), id = "vInfo", editable = 0)
         textBox.attachVScrollbar(scrollBarInfo)
 
-        ui.Button(self.win, layout = (0.5, 6.5, 8, 1), id = "vGoalToggle", text = _('Display Goals'), action = 'onGoalToggle')
-        ui.Label(self.win, layout = (0, 8, 4, 1), text = _("Planets:"), align = ui.ALIGN_W,
+        ui.Button(self.win, layout = (0.5, 10.5, 8, 1), id = "vGoalToggle", text = _('Display Goals'), action = 'onGoalToggle')
+        ui.Label(self.win, layout = (0, 12, 4, 1), text = _("Planets:"), align = ui.ALIGN_W,
                 tooltipTitle = _("Planets"),
                 tooltip = _("Range of number of planets. About half of them is not colonizable at the beginning.")
                 )
-        ui.Label(self.win, layout = (4, 8, 4.5, 1), id = "vPlanets", align = ui.ALIGN_E,
+        ui.Label(self.win, layout = (4, 12, 4.5, 1), id = "vPlanets", align = ui.ALIGN_E,
                 tooltipTitle = _("Planets"),
                 tooltip = _("Range of number of planets. About half of them is not colonizable at the beginning.")
                 )
-        ui.Label(self.win, layout = (0, 9, 4, 1), text = _("Radius:"), align = ui.ALIGN_W,
+        ui.Label(self.win, layout = (0, 13, 4, 1), text = _("Radius:"), align = ui.ALIGN_W,
                 tooltipTitle = _("Radius"),
                 tooltip = _("Galaxy radius, implies speed of game.")
                 )
-        ui.Label(self.win, layout = (4, 9, 4.5, 1), id = "vRadius", align = ui.ALIGN_E,
+        ui.Label(self.win, layout = (4, 13, 4.5, 1), id = "vRadius", align = ui.ALIGN_E,
                 tooltipTitle = _("Radius"),
                 tooltip = _("Galaxy radius, implies speed of game.")
                 )
-        ui.Label(self.win, layout = (0, 10, 4, 1), text = _("Grouping:"), align = ui.ALIGN_W,
+        ui.Label(self.win, layout = (0, 14, 4, 1), text = _("Grouping:"), align = ui.ALIGN_W,
                 tooltipTitle = _("Grouping"),
                 tooltip = _("How many starting positions are grouped together in vicinity.")
                 )
-        ui.Label(self.win, layout = (4, 10, 4.5, 1), id = "vPlayerGroup", align = ui.ALIGN_E,
+        ui.Label(self.win, layout = (4, 14, 4.5, 1), id = "vPlayerGroup", align = ui.ALIGN_E,
                 tooltipTitle = _("Grouping"),
                 tooltip = _("How many starting positions are grouped together.")
                 )
 
-        ui.Label(self.win, layout = (0, 11.2, 4, 1), text = _("Resources:"), align = ui.ALIGN_W)
-        ui.Text (self.win, layout = (4, 11.2, 23, 1.6), id = "vResources", editable = 0)
-        ui.Label(self.win, layout = (0, 13, 4, 1), text = _("Challenges:"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (4, 13, 24, 1), id = "vChallenges", align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (0, 15.2, 4, 1), text = _("Resources:"), align = ui.ALIGN_W)
+        ui.Text (self.win, layout = (4, 15.2, 23, 1.6), id = "vResources", editable = 0)
+        ui.Label(self.win, layout = (0, 17, 4, 1), text = _("Challenges:"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (4, 17, 24, 1), id = "vChallenges", align = ui.ALIGN_W)
 
-        ui.TitleButton(self.win, layout = (0, 14, 28, 1), text = _('Toggle booking'), action = 'onToggle')
-        ui.Title(self.win, layout = (0, 15, 24, 1), id = 'vStatusBar', align = ui.ALIGN_W)
-        ui.TitleButton(self.win, layout = (24, 15, 4, 1), text = _('Exit'), action = 'onCancel')
+        ui.Title(self.win, layout = (0, 18, 24, 1), id = 'vStatusBar', align = ui.ALIGN_W)
+        ui.TitleButton(self.win, layout = (24, 18, 4, 1), text = _('Exit'), action = 'onCancel')
         self.win.statusBar = self.win.vStatusBar

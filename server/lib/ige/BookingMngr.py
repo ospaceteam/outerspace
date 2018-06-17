@@ -18,7 +18,9 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+import hashlib
 import os
+import random
 import time
 
 import data
@@ -27,13 +29,10 @@ import log
 from ige.ospace import Const
 from ige.ospace import Utils
 
-from ige import GameException
+from ige import GameException, BookingMngrException
 from ige.Transaction import Transaction
 from ige.IDataHolder import IDataHolder
 from ige.ospace.GalaxyGenerator import GalaxyGenerator
-
-class BookingMngrException(Exception):
-    pass
 
 class Booking(object):
     def __init__(self, gal_type):
@@ -42,6 +41,8 @@ class Booking(object):
         self.last_creation = None
         self.capacity = None
         self.owner = None
+        self.owner_nick = None
+        self.pw_salt = hashlib.sha256(str(random.random())).hexdigest()
         self.pw_hash = None
 
     def toggle_booking(self, player):
@@ -57,12 +58,19 @@ class Booking(object):
     def is_filled(self):
         return len(self.players) == self.capacity
 
+    def set_password(self, password):
+        self.pw_hash = hashlib.sha256(password + self.pw_salt).hexdigest()
+
+    def check_password(self, password):
+        pw_hash = hashlib.sha256(password + self.pw_salt).hexdigest()
+        return self.pw_hash == pw_hash
+
     def answer(self, player):
         answer = IDataHolder()
         answer.bookings = len(self.players)
         answer.last_creation = self.last_creation
         answer.is_booked = player in self.players
-        answer.owner = self.owner
+        answer.owner_nick = self.owner_nick
         answer.gal_type = self.gal_type
         answer.capacity = self.capacity
         return answer
@@ -76,18 +84,22 @@ class BookingMngr(object):
         self.offerings = GalaxyGenerator().templates
         self.init_bookings()
 
+    def _create_booking(self, gal_type):
+        book = Booking(gal_type)
+        if self.offerings[gal_type].scenario == Const.SCENARIO_SINGLE:
+            # hardcoded 1, as some galaxies has rebels in them
+            book.capacity = 1
+        else:
+            book.capacity = self.offerings[gal_type].players
+        return book
+
     def init_bookings(self):
         for gal_type in self.offerings:
             bookings = self._get_type_bookings(gal_type)
             if not bookings:
-                book = Booking(gal_type)
+                book = self._create_booking(gal_type)
                 self.db.create(book)
                 bookings.append(book)
-                if self.offerings[gal_type].scenario == Const.SCENARIO_SINGLE:
-                    # hardcoded 1, as some galaxies has rebels in them
-                    book.capacity = 1
-                else:
-                    book.capacity = self.offerings[gal_type].players
 
         # cleanup of those not used anymore
         for bookID in self.db.keys():
@@ -133,7 +145,7 @@ class BookingMngr(object):
             challenges.append(Const.T_AIEDENPLAYER)
         return challenges
 
-    def _createAnswer(self, gal_type):
+    def _create_answer(self, gal_type):
         template = self.offerings[gal_type]
         answer = IDataHolder()
         answer.scenario = template.scenario
@@ -166,39 +178,77 @@ class BookingMngr(object):
         for gal_type in self.offerings:
             if not self._is_valid_offer(sid, gal_type):
                 continue
-            answers[gal_type] = self._createAnswer(gal_type)
+            answers[gal_type] = self._create_answer(gal_type)
         return answers, None
 
     def _get_booking_answers(self, sid):
-        player = self.clientMngr.getSession(sid).login
+        login = self.clientMngr.getSession(sid).login
         answers = {}
         for bookID in self.db.keys():
             book = self.db[bookID]
             if not self._is_valid_offer(sid, book.gal_type):
                 continue
-            answers[bookID] = book.answer(player)
+            answers[bookID] = book.answer(login)
         return answers
 
     def get_booking_answers(self, sid):
         return self._get_booking_answers(sid), None
 
-    def toggle_booking(self, sid, bookID):
+    def toggle_booking(self, sid, bookID, password):
+        session = self.clientMngr.getSession(sid)
         book = self.db[bookID]
         template = self.offerings[book.gal_type]
+        if book.owner:
+            # private booking
+            if book.owner == session.login:
+                raise BookingMngrException('Owners cannot toggle their own private bookings.')
+            if not book.check_password(password):
+                raise BookingMngrException('Incorrect password.')
         if not self._is_valid_offer(sid, book.gal_type):
             # limit reached, no toggling allowed
-            raise GameException('Cannot toggle, limit of single player galaxies reached?')
-
-        player = self.clientMngr.getSession(sid).login
-        log.debug("Player '{0}' toggled booking of '{1}/{2}'".format(player, book.gal_type, book.owner))
+            raise BookingMngrException('Cannot toggle, limit of single player galaxies reached?')
+        log.debug("Player '{0}' toggled booking of '{1}/{2}'".format(session.login, book.gal_type, book.owner))
         triggered = False
-        if book.toggle_booking(player):
+        if book.toggle_booking(session.login):
             self.trigger_galaxy_start(bookID)
             triggered = True
-        # get_booking_answers returns tuple, we only need first part
         answers = self._get_booking_answers(sid)
         answers[ige.Const.BID_TRIGGERED] = triggered
         return answers, None
+
+    def _private_bookings_limit(self, login):
+        no_books = 0
+        for bookID in self.db.keys():
+            book = self.db[bookID]
+            if book.owner == login:
+                no_books += 1
+        return no_books >= Const.BOOKING_PRIVATE_LIMIT
+
+    def create_private_booking(self, sid, bookID, password):
+        session = self.clientMngr.getSession(sid)
+        if not password:
+            raise BookingMngrException('Password is needed for private bookings.')
+        sourceBook = self.db[bookID]
+        scenario = self.offerings[sourceBook.gal_type].scenario
+        if scenario == Const.SCENARIO_SINGLE:
+            raise BookingMngrException('Single scenarios cannot be privately booked.')
+        if self._private_bookings_limit(session.login):
+            raise BookingMngrException('Limit of private bookings reached.')
+        book = self._create_booking(sourceBook.gal_type)
+        book.owner = session.login
+        book.owner_nick = session.nick
+        book.players.add(session.login)
+        book.set_password(password)
+        self.db.create(book)
+        return self.get_booking_answers(sid)
+
+    def delete_private_booking(self, sid, bookID):
+        login = self.clientMngr.getSession(sid).login
+        book = self.db[bookID]
+        if not book.owner == login:
+            raise BookingMngrException('Only the owner can delete private booking.')
+        del self.db[bookID]
+        return self.get_booking_answers(sid)
 
     def trigger_galaxy_start(self, bookID):
         book = self.db[bookID]
@@ -209,7 +259,7 @@ class BookingMngr(object):
         universe = self.gameMngr.db[ige.Const.OID_UNIVERSE]
         tran = Transaction(self.gameMngr, ige.Const.OID_ADMIN)
         name = self._find_galaxy_name(book.gal_type, list(book.players))
-        newGalaxyID = self.gameMngr.cmdPool[universe.type].createNewSubscribedGalaxy(tran, universe, name, book.gal_type, list(book.players))
+        new_galaxy_ID = self.gameMngr.cmdPool[universe.type].createNewSubscribedGalaxy(tran, universe, name, book.gal_type, list(book.players))
 
         if book.owner:
             del self.db[bookID]
@@ -217,7 +267,7 @@ class BookingMngr(object):
             book.players = set([])
             book.last_creation = time.time()
 
-        return newGalaxyID, None
+        return new_galaxy_ID, None
 
     def _find_galaxy_name(self, gal_type, players):
         scenario = self.offerings[gal_type].scenario

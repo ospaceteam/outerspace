@@ -125,8 +125,14 @@ class IClient:
     def getBookingOffers(self):
         return apply(IProxy('getBookingOffers', None, self), ())
 
-    def toggleBooking(self, bookID):
-        return apply(IProxy('toggleBooking', None, self), (bookID,))
+    def toggleBooking(self, bookID, password):
+        return apply(IProxy('toggleBooking', None, self), (bookID, password,))
+
+    def createPrivateBooking(self, bookID, password):
+        return apply(IProxy('createPrivateBooking', None, self), (bookID, password,))
+
+    def deletePrivateBooking(self, bookID):
+        return apply(IProxy('deletePrivateBooking', None, self), (bookID,))
 
     def selectPlayer(self, playerID):
         return apply(IProxy('%s.selectPlayer' % self.gameID, None, self), (playerID,))

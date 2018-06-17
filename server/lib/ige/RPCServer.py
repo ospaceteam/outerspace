@@ -158,6 +158,8 @@ def init(clientMngr, bookingMngr):
     callMap['getBookingAnswers'] = bookingMngr.get_booking_answers
     callMap['getBookingOffers'] = bookingMngr.get_booking_offers
     callMap['toggleBooking'] = bookingMngr.toggle_booking
+    callMap['createPrivateBooking'] = bookingMngr.create_private_booking
+    callMap['deletePrivateBooking'] = bookingMngr.delete_private_booking
 
 def register(game):
     global callMap
