@@ -76,7 +76,7 @@ class IClient:
         passwd = ige.Authentication.encode(password, self.challenge)
         #@log.debug(login, password, passwd)
         try:
-            apply(IProxy('login', None, self), (login, passwd, self.hostID))
+            IProxy('login', None, self)(login, passwd, self.hostID)
         except:
             log.warning('login failed')
             return 0
@@ -86,92 +86,92 @@ class IClient:
 
     def logout(self):
         self.logged = 0
-        return apply(IProxy('logout', None, self), ())
+        return IProxy('logout', None, self)()
 
     def shutdown(self):
         self.logged = 0
-        return apply(IProxy('shutdown', None, self), ())
+        return IProxy('shutdown', None, self)()
 
     def hello(self, login, clientID):
-        return apply(IProxy('hello', None, self), (login, clientID))
+        return IProxy('hello', None, self)(login, clientID)
 
     def getVersion(self):
-        return apply(IProxy('getVersion', None, self), ())
+        return IProxy('getVersion', None, self)()
 
     def getAccountData(self):
-        return apply(IProxy('getAccountData', None, self), ())
+        return IProxy('getAccountData', None, self)()
 
     def getRegisteredGames(self):
-        return apply(IProxy('getRegisteredGames', None, self), ())
+        return IProxy('getRegisteredGames', None, self)()
 
     def cleanupSessions(self):
-        return apply(IProxy('cleanupSessions', None, self), ())
+        return IProxy('cleanupSessions', None, self)()
 
     def reloadAccounts(self):
-        return apply(IProxy('reloadAccounts', None, self), ())
+        return IProxy('reloadAccounts', None, self)()
 
     def createAccount(self, login, password, nick, email):
-        return apply(IProxy('createAccount', None, self), (login, password, nick, email))
+        return IProxy('createAccount', None, self)(login, password, nick, email)
 
     def exportAccounts(self):
-        return apply(IProxy('exportAccounts', None, self), ())
+        return IProxy('exportAccounts', None, self)()
 
     def changePassword(self, old, new):
-        return apply(IProxy('changePassword', None, self), (old, new))
+        return IProxy('changePassword', None, self)(old, new)
 
     def getBookingAnswers(self):
-        return apply(IProxy('getBookingAnswers', None, self), ())
+        return IProxy('getBookingAnswers', None, self)()
 
     def getBookingOffers(self):
-        return apply(IProxy('getBookingOffers', None, self), ())
+        return IProxy('getBookingOffers', None, self)()
 
     def toggleBooking(self, bookID, password):
-        return apply(IProxy('toggleBooking', None, self), (bookID, password,))
+        return IProxy('toggleBooking', None, self)(bookID, password)
 
     def createPrivateBooking(self, bookID, password):
-        return apply(IProxy('createPrivateBooking', None, self), (bookID, password,))
+        return IProxy('createPrivateBooking', None, self)(bookID, password)
 
     def deletePrivateBooking(self, bookID):
-        return apply(IProxy('deletePrivateBooking', None, self), (bookID,))
+        return IProxy('deletePrivateBooking', None, self)(bookID)
 
     def selectPlayer(self, playerID):
-        return apply(IProxy('%s.selectPlayer' % self.gameID, None, self), (playerID,))
+        return IProxy('%s.selectPlayer' % self.gameID, None, self)(playerID)
 
     def selectAdmin(self):
-        return apply(IProxy('%s.selectPlayer' % self.gameID, None, self), (OID_ADMIN,))
+        return IProxy('%s.selectPlayer' % self.gameID, None, self)(OID_ADMIN)
 
     def createNewPlayer(self, galaxyID):
-        return apply(IProxy('%s.createNewPlayer' % self.gameID, None, self), (galaxyID,))
+        return IProxy('%s.createNewPlayer' % self.gameID, None, self)(galaxyID)
 
     def takeOverAIPlayer(self, playerID):
-        return apply(IProxy('%s.takeOverAIPlayer' % self.gameID, None, self), (playerID,))
+        return IProxy('%s.takeOverAIPlayer' % self.gameID, None, self)(playerID)
 
     def takeOverPirate(self, playerID, password):
-        return apply(IProxy('%s.takeOverPirate' % self.gameID, None, self), (playerID, password))
+        return IProxy('%s.takeOverPirate' % self.gameID, None, self)(playerID, password)
 
     def getActivePositions(self):
-        return apply(IProxy('%s.getActivePositions' % self.gameID, None, self), ())
+        return IProxy('%s.getActivePositions' % self.gameID, None, self)()
 
     def getStartingPositions(self):
-        return apply(IProxy('%s.getStartingPositions' % self.gameID, None, self), ())
+        return IProxy('%s.getStartingPositions' % self.gameID, None, self)()
 
     def processTurn(self):
-        return apply(IProxy('%s.processTurn' % self.gameID, None, self), ())
+        return IProxy('%s.processTurn' % self.gameID, None, self)()
 
     def processTurns(self, turns):
-        return apply(IProxy('%s.processTurn' % self.gameID, None, self), (turns,))
+        return IProxy('%s.processTurn' % self.gameID, None, self)(turns)
 
     def backup(self, basename):
-        return apply(IProxy('%s.backup' % self.gameID, None, self), (basename,))
+        return IProxy('%s.backup' % self.gameID, None, self)(basename)
 
     def commitDatabases(self):
-        return apply(IProxy('%s.commitDatabases' % self.gameID, None, self), ())
+        return IProxy('%s.commitDatabases' % self.gameID, None, self)()
 
     def getTurnData(self):
-        return apply(IProxy('%s.getTurnData' % self.gameID, None, self), ())
+        return IProxy('%s.getTurnData' % self.gameID, None, self)()
 
     def turnFinished(self):
-        return apply(IProxy('%s.turnFinished' % self.gameID, None, self), ())
+        return IProxy('%s.turnFinished' % self.gameID, None, self)()
 
     def doKeepAlive(self):
         return ((time.time() - self.lastCommand) > self.keepAliveTime) and self.logged
@@ -214,7 +214,7 @@ class IProxy:
 
     def __call__(self, *args):
         if self.client.msgHandler:
-            apply(self.client.msgHandler, (MSG_CMD_BEGIN, None))
+            self.client.msgHandler(MSG_CMD_BEGIN, None)
         # retry 'turn in progress' and server restart situations
         retries = 10
         ok = 0
@@ -231,10 +231,10 @@ class IProxy:
             except Exception, e:
                 log.warning("Cannot complete request")
                 if self.client.msgHandler:
-                    apply(self.client.msgHandler, (MSG_CMD_END, None))
+                    self.client.msgHandler(MSG_CMD_END, None)
                 raise e
         if self.client.msgHandler:
-            apply(self.client.msgHandler, (MSG_CMD_END, None))
+            self.client.msgHandler(MSG_CMD_END, None)
         if ok:
             return result
         else:
@@ -348,7 +348,7 @@ class IProxy:
         if self.client.msgHandler and packet.messages:
             for message in packet.messages:
                 log.debug('got message', message)
-                apply(self.client.msgHandler, message)
+                self.client.msgHandler(*message)
         elif packet.messages:
             log.debug('throwing away messages', packet.messages)
         log.debug("Stats: %d B IN / %d B OUT" % (self.client.statsBytesIn, self.client.statsBytesOut))

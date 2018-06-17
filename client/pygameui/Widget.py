@@ -87,7 +87,7 @@ class Widget:
             for handler in handlers:
                 if type(handler) == types.InstanceType:
                     handler = getattr(handler, actionName)
-                apply(handler, (widget, actionName, data))
+                handler(widget, actionName, data)
         else:
             self.parent.processAction(actionName, data, widget)
 

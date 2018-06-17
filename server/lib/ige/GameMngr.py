@@ -380,7 +380,7 @@ class GameMngr:
         # create transaction (TODO - cache it!)
         tran = Transaction(self, session.cid, session)
         # invoke command on it
-        result = apply(cmdObj, (tran, obj) + args)
+        result = cmdObj(*(tran, obj) + args)
         # commit transaction
         tran.commit()
         #@log.debug('result', result)
