@@ -815,15 +815,8 @@ class ISystem(IObject):
     processFINALPhase.public = 1
     processFINALPhase.accLevel = AL_ADMIN
 
-    def cmpPlanetByEnergy(self, tran, planetID1, planetID2):
-        planet1 = tran.db[planetID1]
-        planet2 = tran.db[planetID2]
-        return cmp(planet2.plEn, planet1.plEn)
-
-    cmpPlanetByEnergy.public = 0
-
     def sortPlanets(self, tran, obj, data):
-        obj.planets.sort(lambda x, y: self.cmpPlanetByEnergy(tran, x, y))
+        obj.planets.sort(key=lambda planetID: tran.db[planetID].plEn, reverse = True)
         orbit = 1
         for planetID in obj.planets:
             planet = tran.db[planetID]

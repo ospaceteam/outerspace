@@ -173,7 +173,7 @@ class NewTaskDlg:
                 if designID == self.techID:
                     select = item
         # sort it by level and then by name
-        items.sort(lambda a, b: cmp((100 - a.tLevel, a.text), (100 - b.tLevel, b.text)))
+        items.sort(key=lambda a: (100 - a.tLevel, a.text))
         self.win.vTechs.items = items
         self.win.vTechs.itemsChanged()
         self.win.vTechs.selectItem(select)

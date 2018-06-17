@@ -266,8 +266,8 @@ class Listbox(MetaWidget):
 
         convert = lambda text: int(text) if text.isdigit() else text.lower()
         alphaNum = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ]
-        natSort = lambda a, b: cmp(alphaNum(getattr(a, attr)), alphaNum(getattr(b, attr)))
-        items.sort(natSort, reverse = reverse)
+        keyF = lambda a: alphaNum(getattr(a, attr))
+        items.sort(key=keyF, reverse = reverse)
 
     def itemsChanged(self):
         if self.items and self.sortable and self.sortedBy[0] != None:

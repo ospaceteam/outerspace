@@ -84,8 +84,7 @@ def queueID2Name(queueID):
 
 def votes2Txt((votes, voters)):
     lines = []
-    nominated = votes.keys()
-    nominated.sort(lambda a, b: cmp(votes[b], votes[a]))
+    nominated = sorted(votes, key=lambda a: votes[a], reverse = True)
     for playerName in nominated:
         if playerName == None:
             continue

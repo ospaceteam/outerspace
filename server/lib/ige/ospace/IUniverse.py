@@ -355,8 +355,7 @@ class IUniverse(IObject):
         votesByName, votesByID, voterNames = self._countVotes(tran, obj, galaxy)
         # check winner
         totalVotes = sum(votesByID.values())
-        nominated = votesByID.keys()
-        nominated.sort(lambda a, b: cmp(votesByID[b], votesByID[a]))
+        nominated = sorted(votesByID, key=lambda a: votesByID[a], reverse = True)
         winnerID = OID_NONE
         # OID_NONE is not valid target
         if OID_NONE in nominated:

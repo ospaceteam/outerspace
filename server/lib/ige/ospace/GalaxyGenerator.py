@@ -750,7 +750,7 @@ def generateSystem(system, ranges = None):
             generatePlanet(zone, planet)
         zone += 1
     # sort planets by energy
-    system.planets.sort(lambda a, b: cmp(b.energy, a.energy))
+    system.planets.sort(key=lambda a: a.energy, reverse = True)
 
 def distributePlanets(num):
     num = int(num)

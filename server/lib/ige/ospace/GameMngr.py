@@ -510,10 +510,8 @@ class GameMngr(IGEGameMngr):
         fhres.close()
 
     def sortStatsBy(self, stats, attr):
-        order = stats.keys()
-        func = lambda a, b, stats = stats, attr = attr: cmp(getattr(stats[a], attr), getattr(stats[b], attr))
-        order.sort(func)
-        order.reverse()
+        keyF = lambda a: getattr(stats[a], attr)
+        order = sorted(stats.keys(), key=keyF, reverse = True)
         return order
 
     def printJSONStatsTable(self, fh, stats, order, galaxyID, galaxyName, imperatoroid, leaderoid, jsonComma):
