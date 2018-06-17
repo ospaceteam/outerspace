@@ -92,8 +92,8 @@ class Circle3BP(Circle1SP):
         super(Circle3BP, self).__init__()
 
         #self.galaxyDescription = "Tiny galaxy to brawl with two other commanders. No voting, no imperator. Conquest is the only solution."
-        self.minPlanets *= 1.3
-        self.maxPlanets *= 1.2
+        self.minPlanets = int(1.3 * self.minPlanets)
+        self.maxPlanets = int(1.2 * self.maxPlanets)
         self.scenario = Const.SCENARIO_BRAWL
         self.startR = (0.0, 0.0)
         self.players = 3
@@ -113,15 +113,15 @@ class Circle3SP(GalaxyTemplate):
 
         #self.galaxyDescription = "More complex single player galaxy with classic starting group of three. Mutant is the only agressive enemy. Endless game."
         self.scenario = Const.SCENARIO_SINGLE
-        self.minPlanets = 350
-        self.maxPlanets = 400
-        self.startR = (15.0, 17.0)
+        self.minPlanets = 280
+        self.maxPlanets = 350
+        self.startR = (13.0, 15.0)
         self.players = 3
         self.playerGroup = 3
         self.groupDist = 3
-        self.minR = 3
+        self.minR = 2
         # format {minRadius: density, nextCircleRadius: differentDensity}
-        self.density = {3: 3.5, 5: 4.5, 10: 4.5, 20: 4.5, 25: 5}
+        self.density = {2: 2.5, 6: 4, 12: 4.5, 20: 5}
         self.resources = {
             # format resourceID : [(minDist, maxDist, number of resources)]
             Const.SR_TL1A : [(15, 17, 3)],

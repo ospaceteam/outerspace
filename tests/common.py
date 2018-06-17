@@ -128,6 +128,7 @@ def doTurns(amount, skip, slow=False, verbose=True):
             log.info('Turn {0}'.format(turn + skip))
 
 def createGalaxy(galaxy_type, galaxy_name = None):
+    start_time = time.time()
     if galaxy_name is None:
         galaxy_name = galaxy_type
     args=[os.path.join(CODE_ROOT, 'tools', 'osclient_cli.py'),
@@ -136,10 +137,10 @@ def createGalaxy(galaxy_type, galaxy_name = None):
     if subprocess.call(args, stdout=UTILS_OUT, stderr=subprocess.STDOUT) != 0:
         log.error('Galaxy {0} has not been created'.format(galaxy_type))
     else:
+        name_string = ''
         if galaxy_name:
-            log.info('Galaxy {0} named {1} created'.format(galaxy_type, galaxy_name))
-        else:
-            log.info('Galaxy {0} created'.format(galaxy_type))
+            name_string = "named {0}".format(galaxy_name)
+        log.info('Galaxy {0} {1} created ({2:.2g}s)'.format(galaxy_type, name_string, time.time() - start_time))
 
 def deleteGalaxy(galaxy_id):
     args=[os.path.join(CODE_ROOT, 'tools', 'osclient_cli.py'),

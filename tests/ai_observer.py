@@ -56,7 +56,6 @@ if not c.startServer():
     sys.exit()
 atexit.register(c.killServer)
 if args.configdir is None:
-    c.deleteGalaxy(10000) # legacy galaxy - we want precisely what user asked for, so deleted
     if not args.galaxy_check:
         # default set
         c.createGalaxy("Circle1SP")
