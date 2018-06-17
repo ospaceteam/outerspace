@@ -149,6 +149,7 @@ def init(clientMngr, bookingMngr):
     callMap['hello'] = clientMngr.hello
     callMap['createAccount'] = clientMngr.createAccount
     callMap['changePassword'] = clientMngr.changePassword
+    callMap['getAccountData'] = clientMngr.getAccountData
     callMap['shutdown'] = clientMngr.serverShutdown
     callMap['cleanupSessions'] = clientMngr.cleanupSessions
     callMap['exportAccounts'] = clientMngr.exportAccounts
