@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/ospaceteam/outerspace.svg?branch=master)](https://travis-ci.org/ospaceteam/outerspace)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ospaceteam/outerspace/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ospaceteam/outerspace/issues/master)
 
 # About Outer Space
