@@ -185,6 +185,7 @@ gameScenarioDescriptions = {
 
 galaxyTypeDescriptions = {
     'Circle1SP': N_("Basic training galaxy, with mutant as the only agressive enemy. Recommended for new players."),
+    'Circle2CP': N_("Cooperative galaxy, where you and another commander fend off and defeat sprawling mutant menace. Recommended to inexperienced players."),
     'Circle3BP': N_("Tiny galaxy to brawl with two other commanders. Tactics prevail here, as there is not enough planets to make long term strategies viable."),
     'Circle3SP': N_("More complex single player galaxy, with classic starting group of three commanders. Mutant is the only agressive enemy, two friendly Rebels start in the vicinity."),
     'Circle3CP': N_("Cooperative galaxy, where you and two other commanders fend off and defeat sprawling mutant menace. Recommended to inexperienced players."),
