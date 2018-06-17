@@ -23,7 +23,7 @@ import Rules
 
 from Const import *
 from ige import log
-from ige.IObject import IObject
+from ige.IObject import IObject, public
 
 class IAlliance(IObject):
 
@@ -38,15 +38,14 @@ class IAlliance(IObject):
         obj.defRelation = REL_NEUTRAL
         obj.relationsCache = {}
 
+    @public(AL_NONE)
     def getPublicInfo(self, tran, obj):
         result = IObject.getPublicInfo(self, tran, obj)
         result.type = obj.type
         result.name = obj.name
         return result
 
-    getPublicInfo.public = 1
-    getPublicInfo.accLevel = AL_NONE
-
+    @public(AL_FULL)
     def setRelation(self, tran, obj, objID, relation):
         anObj = tran.db[objID]
         if anObj.type != T_PLAYER and anObj.type != T_ALIANCE:
@@ -59,9 +58,7 @@ class IAlliance(IObject):
                 raise ige.GameException('No such relation to delete.')
         obj.relations[objID] = relation
 
-    setRelation.public = 1
-    setRelation.accLevel = AL_FULL
-
+    @public(AL_ADMIN)
     def getRelationTo(self, tran, obj, objID):
         # check cache
         relation = obj.relationsCache.get(objID, REL_UNDEF)
@@ -91,7 +88,3 @@ class IAlliance(IObject):
         obj.relationsCache[objID] = relation
         anObj.relationsCache[obj.oid] = relation
         return relation
-
-
-    getRelationTo.public = 1
-    getRelationTo.accLevel = AL_ADMIN

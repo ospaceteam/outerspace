@@ -22,6 +22,7 @@ import time
 from Const import *
 from ige import log
 from ige.IDataHolder import IDataHolder
+from ige.IObject import public
 from IPlayer import IPlayer
 
 class INature(IPlayer):
@@ -34,25 +35,19 @@ class INature(IPlayer):
         obj.name = u'NATURE'
         obj.login = '*NATURE*'
 
+    @public(AL_ADMIN)
     def processINITPhase(self, tran, obj, data):
         IPlayer.processINITPhase(self, tran, obj, data)
         obj.lastLogin = time.time()
         log.debug("NATURE - asteroids", len(obj.fleets), obj.fleets)
 
-    processINITPhase.public = 1
-    processINITPhase.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processPRODPhase(self, tran, obj, data):
         return None
 
-    processPRODPhase.public = 1
-    processPRODPhase.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processBATTLEPhase(self, tran, obj, data):
         return None
-
-    processBATTLEPhase.public = 1
-    processBATTLEPhase.accLevel = AL_ADMIN
 
     def getDiplomacyWith(self, tran, obj, playerID):
         # this AI battles with overyone

@@ -24,6 +24,14 @@ from ige.IDataHolder import IDataHolder
 import types
 import log
 
+def public(access):
+    """ Decorator to mark methods public with appropriate access level. """
+    def public_decorator(func):
+        func.public = True
+        func.accLevel = access
+        return func
+    return public_decorator
+
 class IObject:
 
     typeID = T_OBJECT

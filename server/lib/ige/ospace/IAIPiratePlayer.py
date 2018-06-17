@@ -28,6 +28,7 @@ import Utils
 from Const import *
 from ige import log
 from ige.IDataHolder import IDataHolder
+from ige.IObject import public
 from IPlayer import IPlayer
 
 class IAIPiratePlayer(IPlayer):
@@ -157,10 +158,12 @@ class IAIPiratePlayer(IPlayer):
                 return PACT_ACTIVE
         return 0
 
+    @public(AL_ADMIN)
     def processDIPLPhase(self, tran, obj, data):
         self.forceAllyWithEDEN(tran,obj)
         IPlayer.processDIPLPhase(self,tran, obj, data)
 
+    @public(AL_ADMIN)
     def processFINALPhase(self, tran, obj, data):
         obj.govPwr = Rules.pirateGovPwr
         IPlayer.processFINALPhase(self, tran, obj, data)
@@ -173,15 +176,10 @@ class IAIPiratePlayer(IPlayer):
         # bonus for gained fame
         obj.prodEff += obj.pirateFame / 100.0
 
-    processFINALPhase.public = 1
-    processFINALPhase.accLevel = AL_ADMIN
-
+    @public(AL_ADMIN)
     def processRSRCHPhase(self, tran, obj, data):
         # do not research anything
         return
-
-    processRSRCHPhase.public = 1
-    processRSRCHPhase.accLevel = AL_ADMIN
 
     def distToNearestPiratePlanet(self,tran,obj,srcObj):
         # srcObj can be Planet or System type

@@ -24,6 +24,7 @@ import ige
 
 from Const import *
 from ige import log
+from ige.IObject import public
 from ISystem import ISystem
 
 class IWormHole(ISystem):
@@ -81,6 +82,7 @@ class IWormHole(ISystem):
                 results.extend(self.cmd(fleet).getScanInfos(tran, fleet, newPwr, player))
         return results
 
+    @public(AL_NONE)
     def getPublicInfo(self, tran, obj):
         result = ISystem.getPublicInfo(self, tran, obj)
         log.debug('here!');
@@ -89,9 +91,7 @@ class IWormHole(ISystem):
         result.destinationOid = obj.destinationOid
         return result
 
-    getPublicInfo.public = 1
-    getPublicInfo.accLevel = AL_NONE
-
+    @public(AL_NONE)
     def getInfo(self, tran, obj):
         result = ISystem.getInfo(self, tran, obj)
         log.debug('there!');
@@ -99,7 +99,4 @@ class IWormHole(ISystem):
         result.name = obj.name
         result.destinationOid = obj.destinationOid
         return result
-
-    getPublicInfo.public = 1
-    getPublicInfo.accLevel = AL_INFO
 

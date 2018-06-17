@@ -21,6 +21,7 @@ import time
 
 from Const import *
 from ige import log
+from ige.IObject import public
 from IPlayer import IPlayer
 
 class IAIPlayer(IPlayer):
@@ -50,6 +51,7 @@ class IAIPlayer(IPlayer):
         # grant techs and so on
         self.cmd(obj).update(tran, obj)
 
+    @public(AL_ADMIN)
     def processINITPhase(self, tran, obj, data):
         IPlayer.processINITPhase(self, tran, obj, data)
         obj.lastLogin = time.time()

@@ -26,6 +26,7 @@ import Utils
 from Const import *
 from ige import log
 from ige.IDataHolder import IDataHolder
+from ige.IObject import public
 from IPlayer import IPlayer
 
 class IAIEDENPlayer(IPlayer):
@@ -85,6 +86,7 @@ class IAIEDENPlayer(IPlayer):
     def setStartingShipDesigns(obj):
         pass
 
+    @public(AL_ADMIN) 
     def processINITPhase(self, tran, obj, data):
         IPlayer.processINITPhase(self, tran, obj, data)
         obj.lastLogin = time.time()
@@ -94,12 +96,10 @@ class IAIEDENPlayer(IPlayer):
         if not obj.fleets and not obj.planets:
             self.cmd(obj).delete(tran, obj)
 
+    @public(AL_ADMIN) 
     def processRSRCHPhase(self, tran, obj, data):
         # do not research anything
         return
-
-    processRSRCHPhase.public = 1
-    processRSRCHPhase.accLevel = AL_ADMIN
 
     def getDiplomacyWith(self, tran, obj, playerID):
         if obj.oid == playerID:
