@@ -32,7 +32,6 @@ def init(configDir):
 
 ## General
 turnsPerDay = 24
-rotationMod = 384.0
 galaxyStartDelay = turnsPerDay * 2
 playerTimeout = 60 * 60 * 24 * 28 # 28 days
 novicePlayerTimeout = 60 * 60 * 24 * 14 # 14 days

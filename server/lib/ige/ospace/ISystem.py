@@ -134,10 +134,6 @@ class ISystem(IObject):
             result.y = obj.y
             if hasattr(obj, 'destinationOid'):
                 result.destinationOid = obj.destinationOid
-            # multiply by 1000 to increase accuracy
-            #~ result.dist = obj.dist * 1000
-            #~ result.dAngle = obj.dAngle * 1000
-            #~ result.sAngle = obj.sAngle * 1000
             result.signature = obj.signature
             result.type = obj.type
             result.compOf = obj.compOf
@@ -268,23 +264,6 @@ class ISystem(IObject):
                                     break
                         #@log.debug('ISystem', 'Cannot move excess rsrcs on', planet.oid, excess)
                         setattr(planet, storRes, getattr(planet, maxRes) + excess)
-        #~ # rotate system around the galaxy core
-        #~ #log.debug("Rotate, old coords", obj.x, obj.y)
-        #~ turn = tran.db[OID_UNIVERSE].turn
-        #~ galaxy = tran.db[obj.compOf]
-        #~ angle = obj.sAngle + (turn / Rules.rotationMod) * obj.dAngle
-        #~ obj.x = galaxy.x + obj.dist * math.cos(angle)
-        #~ obj.y = galaxy.y + obj.dist * math.sin(angle)
-        #~ #log.debug("Rotate, new coords", obj.x, obj.y)
-        #~ # change positions of planets and orbitting fleets
-        #~ for planetID in obj.planets:
-            #~ planet = tran.db[planetID]
-            #~ planet.x = obj.x
-            #~ planet.y = obj.y
-        #~ for fleetID in obj.fleets:
-            #~ fleet = tran.db[fleetID]
-            #~ fleet.x = obj.x
-            #~ fleet.y = obj.y
         # process planets and fleets
         #@log.debug("System close fleets", obj.oid, obj.closeFleets)
         return obj.planets[:] + obj.closeFleets[:]
@@ -931,26 +910,4 @@ class ISystem(IObject):
                     orbit += 1
                 else:
                     raise ige.GameException('Unknown element %s' % name)
-        #~ # compute rotational constants
-        #~ galaxy = tran.db[obj.compOf]
-        #~ dx = obj.x - galaxy.x
-        #~ dy = obj.y - galaxy.y
-        #~ obj.dist = math.sqrt(dx * dx + dy * dy)
-        #~ if obj.dist > 0:
-            #~ obj.dAngle = math.sqrt(galaxy.centerWeight / obj.dist) / obj.dist
-        #~ else:
-            #~ obj.dAngle = 0.0
-        #~ if dx != 0:
-            #~ obj.sAngle = math.atan(dy / dx)
-            #~ if dx < 0: obj.sAngle += math.pi
-        #~ elif dy > 0:
-            #~ obj.sAngle = math.pi / 2
-        #~ elif dx < 0:
-            #~ obj.sAngle = math.pi * 3 / 2
-        #~ # this is a check only
-        #~ angle = obj.sAngle + (0 / 384.0) * obj.dAngle
-        #~ x = galaxy.x + obj.dist * math.cos(angle)
-        #~ y = galaxy.y + obj.dist * math.sin(angle)
-        #~ if x != obj.x or y != obj.y:
-            #~ log.warning(obj.name, obj.x, obj.y, dx, dy, obj.dist, obj.dAngle, obj.sAngle, x, y)
         return SUCC
