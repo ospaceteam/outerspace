@@ -27,7 +27,7 @@ import time
 import ige
 import log
 from Const import *
-from Database import Database
+from SQLiteDatabase import Database
 from Index import Index
 from IObject import IDataHolder
 from Transaction import Transaction
