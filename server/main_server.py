@@ -141,13 +141,7 @@ def runServer(options):
     gameName = 'Alpha'
 
     # open database
-    if config.server.dbbackend == "metakit":
-        # Legacy database backend
-        log.message("Using metakit database backend")
-        from ige.MetakitDatabase import Database, DatabaseString
-    else:
-        log.message("Using sqlite3 dabase backend")
-        from ige.SQLiteDatabase import Database, DatabaseString
+    from ige.SQLiteDatabase import Database, DatabaseString
     # set type of generated galaxies
     if not config.server.newgalaxytype:
         config.server.newgalaxytype = 'Circle42P'

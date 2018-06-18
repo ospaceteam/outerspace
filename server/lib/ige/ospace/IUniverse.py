@@ -499,11 +499,6 @@ class IUniverse(IObject):
                 log.debug("CONSISTENCY - player %d from universe %d is not a %s, it's %d" % (playerID, obj.oid, str(PLAYER_TYPES), tran.db[playerID].type))
                 log.debug("Removing reference to player", playerID)
                 obj.players.remove(playerID)
-        # create NATURE if needed
-        if not tran.db.has_key(OID_NATURE):
-            # create "nature player"
-            player = self.new(T_NATURE)
-            tran.gameMngr.registerPlayer(player.login, player, OID_NATURE)
 
     update.public = 0
 

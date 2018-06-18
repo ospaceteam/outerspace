@@ -97,25 +97,6 @@ class IGalaxy(IObject):
         # check compOf
         if not tran.db.has_key(obj.compOf) or tran.db[obj.compOf].type != T_UNIVERSE:
             log.debug("CONSISTENCY invalid compOf for galaxy", obj.oid, obj.compOf)
-        # TODO: remove after 0.5.72
-        if not hasattr(obj, 'scenario'):
-            if obj.isSingle:
-                obj.scenario = SCENARIO_SINGLE
-            else:
-                obj.scenario = SCENARIO_OUTERSPACE
-        if not hasattr(obj, 'scenarioData'):
-            obj.scenarioData = IDataHolder()
-        if obj.scenario == SCENARIO_SINGLE and not getattr(obj, 'owner', OID_NONE):
-            # singleplayer galaxy owner being the only player present
-            players = set([])
-            for systemID in obj.systems:
-                for planetID in tran.db[systemID].planets:
-                    players |= set([tran.db[planetID].owner])
-            for playerID in players - set([OID_NONE]):
-                player = tran.db[playerID]
-                if player.type in [T_PLAYER, T_PIRPLAYER]:
-                    obj.owner = playerID
-                    break
         # TODO: remove after 0.5.73
         if not hasattr(obj, 'galaxyTurn'):
             obj.galaxyTurn = 0

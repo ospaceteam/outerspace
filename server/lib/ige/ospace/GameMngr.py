@@ -123,7 +123,8 @@ class GameMngr(IGEGameMngr):
         return oid
 
     def createUniverse(self):
-        universe = self.db[OID_UNIVERSE]
+        universe = self.cmdPool[T_UNIVERSE].new(T_UNIVERSE)
+        self.db.create(universe, OID_UNIVERSE)
         tran = Transaction(self, OID_ADMIN)
         # create 'NATURE' player
         player = self.cmdPool[T_NATURE].new(T_NATURE)

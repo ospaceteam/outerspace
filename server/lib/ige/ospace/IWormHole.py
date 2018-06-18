@@ -60,10 +60,6 @@ class IWormHole(ISystem):
             result.oid = obj.oid
             result.x = obj.x
             result.y = obj.y
-            # multiply by 1000 to increase accuracy
-            #~ result.dist = obj.dist * 1000
-            #~ result.dAngle = obj.dAngle * 1000
-            #~ result.sAngle = obj.sAngle * 1000
             result.signature = obj.signature
             result.type = obj.type
             result.compOf = obj.compOf
