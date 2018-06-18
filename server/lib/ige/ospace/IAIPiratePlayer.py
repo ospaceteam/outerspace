@@ -109,10 +109,6 @@ class IAIPiratePlayer(IPlayer):
             self.cmd(obj).delete(tran, obj)
 
     def update(self, tran, obj):
-        # TODO: remove in 0.5.59
-        if not hasattr(self, "techs"):
-            self.techs = {}
-
         obj.techLevel = 99
         obj.race = "p"
         # call super method

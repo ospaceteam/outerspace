@@ -78,11 +78,6 @@ class IObject:
         # remove old
         for attr in old:
             if attr in new:
-                #if type(getattr(obj, attr)) != type(getattr(refObj, attr)):
-                    #@log.debug('IObject', 'Upgrade - chng', obj.oid, obj.type, attr, type(getattr(obj, attr)), 'to', type(getattr(refObj, attr)))
-                    # TODO - enable
-                    #setattr(obj, attr, getattr(refObj, attr))
-                    #changed = 1
                 new.remove(attr)
             else:
                 log.debug('IObject', 'Upgrade - del', obj.oid, obj.type, attr)

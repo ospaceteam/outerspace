@@ -289,28 +289,11 @@ class IFleet(IObject):
         return obj.allowmerge
 
     def update(self, tran, obj):
-        if not (hasattr(obj,'customname')): #added in 0.5.64
-            obj.customname = None
-            obj.allowmerge = 1
         # if there are no ships -> disband fleet
         if not len(obj.ships) or obj.owner == OID_NONE:
             log.warning(obj.oid, "FLEET - no ships in the fleet -- disbanding")
             self.cmd(obj).disbandFleet(tran, obj)
             return
-        # check for duplicates (TODO: remove me, bug was fixed)
-        #for ship1 in obj.ships:
-        #    duplicates = 0
-        #    for ship2 in obj.ships:
-        #        if ship1 is ship2:
-        #            duplicates += 1
-        #    if duplicates != 1:
-        #        # regenerate ships
-        #        newShips = []
-        #        for designID, hp, shield, exp in obj.ships:
-        #            newShips.append([designID, hp, shield, exp])
-        #        obj.ships = newShips
-        #        raise ServerException("Ship duplicates in %s" % obj)
-        #
         obj.origScannerPwr = 0
         obj.operEn = 0
         obj.operProd = 0.0
@@ -405,15 +388,6 @@ class IFleet(IObject):
                 obj.actions.remove(actionTuple)
         index = 0
         for action, target, actionData in obj.actions:
-            if action >= 2 and action <= 100:
-                # this is an old action -> replace it by move command if available
-                if target != OID_NONE:
-                    log.debug(obj.oid, "Replacing action", action, "by action MOVE")
-                    obj.actions[index][0] = FLACTION_MOVE
-                else:
-                    # replace by none action
-                    log.debug(obj.oid, "Replacing action", action, "by action NONE")
-                    obj.actions[index] = (FLACTION_NONE, None, None)
             if action == FLACTION_DEPLOY and actionData not in player.shipDesigns:
                 # deployment of scrapped ship
                 log.debug(obj.oid, "invalid ship to deploy")

@@ -168,7 +168,6 @@ class GameMngr:
         # create admin
         self.registerPlayer(ADMIN_LOGIN, self.createAdmin(), OID_ADMIN)
         # create universe
-        self.db.create(self.cmdPool[T_UNIVERSE].new(T_UNIVERSE), OID_UNIVERSE)
         self.createUniverse()
         # save all informations
         self.db.checkpoint()

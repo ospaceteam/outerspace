@@ -865,8 +865,6 @@ class IPlanet(IObject):
     def update(self, tran, obj):
         # clean up negative build queues and fix missing demolishStruct keys
         loopAgain = True
-        # 0.5.70 -> 0.5.71 removing option to set reserves, auto reserve only option
-        obj.autoMinStor = 1
 
         while loopAgain:
             deletedKey = False

@@ -45,10 +45,6 @@ class ISystem(IObject):
         obj.closeFleets = []
         obj.starClass = u'---' # Star clasification
         obj.signature = 100
-        # rotation
-        #~ obj.dist = 0.0
-        #~ obj.dAngle = 0.0
-        #~ obj.sAngle = 0.0
         # renaming
         obj.lastNameChng = 0
         # combat
@@ -66,28 +62,6 @@ class ISystem(IObject):
                     log.debug("CONSISTENCY - planet %d from system %d does not exists" % (planetID, obj.oid))
                 elif tran.db[planetID].type != T_PLANET:
                     log.debug("CONSISTENCY - planet %d from system %d is not a T_PLANET" % (planetID, obj.oid))
-        if not hasattr(obj,'minefield'):
-            obj.minefield = {}
-        # TODO: only needed for 0.5.72 update
-        old_minefields = False
-        for ownerID in obj.minefield:
-            if obj.minefield[ownerID] and type(obj.minefield[ownerID][0]) is not tuple:
-                old_minefields = True
-        if old_minefields:
-            for ownerID in obj.minefield:
-                temp_mine_dict = {}
-                for mine_id in obj.minefield[ownerID]:
-                    try:
-                        temp_mine_dict[mine_id] += 1
-                    except KeyError:
-                        temp_mine_dict[mine_id] = 1
-                # now translate dictionary into list of tuples
-                owners_minefields = []
-                turn = tran.db[OID_UNIVERSE].turn
-                for mine_id, amount in temp_mine_dict.iteritems():
-                    owners_minefields.append((mine_id, amount, turn))
-                obj.minefield[ownerID] = owners_minefields
-
         # check that all .fleet are in .closeFleets
         for fleetID in obj.fleets:
             if fleetID not in obj.closeFleets:
@@ -122,84 +96,7 @@ class ISystem(IObject):
                 obj.closeFleets.append(fleetID)
         if old != obj.closeFleets:
             log.debug("System close fleets fixed", obj.oid, old, obj.closeFleets)
-        # TODO: remove, no need to start players on random systems
-        # try to find starting planets
-        #starting = 0
-        #free = 1
-        #for planetID in obj.planets:
-        #    planet = tran.db[planetID]
-        #    if planet.plStarting:
-        #        starting = planetID
-        #    if planet.owner != OID_NONE:
-        #        free = 0
-        #if starting and free:
-        #    # good starting position
-        #    #@log.debug("Found starting position", obj.oid, starting)
-        #    # get galaxy
-        #    galaxy = tran.db[obj.compOf]
-        #    if starting not in galaxy.startingPos:
-        #        log.debug("Adding to starting positions of galaxy", galaxy.oid)
-        #        galaxy.startingPos.append(starting)
-        # check if system has planets
-        hasHabitable = 0
-        for planetID in obj.planets:
-            if tran.db[planetID].plSlots > 0:
-                hasHabitable = 1
-                break
-        if (not obj.planets or not hasHabitable) and obj.starClass[0] != "b" and obj.starClass != "wW0":
-            log.debug("No planet for system", obj.oid, obj.name, obj.starClass)
-            # delete old planets
-            for planetID in obj.planets:
-                del tran.db[planetID]
-            obj.planets = []
-            # find matching systems
-            avail = []
-            for systemID in tran.db[obj.compOf].systems:
-                system = tran.db[systemID]
-                if system.starClass[1] == obj.starClass[1] \
-                    or (obj.starClass[1] == "G" and system.starClass[1] == "F"):
-                    ok = 0
-                    for planetID in system.planets:
-                        planet = tran.db[planetID]
-                        if planet.plStarting:
-                            ok = 0
-                            break
-                        if planet.plSlots > 0:
-                            ok = 1
-                    if ok and system.planets:
-                        avail.append(systemID)
-            # select random system
-            log.debug("Can copy", avail)
-            try:
-                systemID = random.choice(avail)
-                # copy it
-                log.debug("Will copy system", systemID)
-                nType = Utils.getPlanetNamesType()
-                orbit = 1
-                for planetID in tran.db[systemID].planets:
-                    orig = tran.db[planetID]
-                    planet = tran.db[self.createPlanet(tran, obj)]
-                    planet.name = Utils.getPlanetName(obj.name, nType, orbit - 1)
-                    planet.x = obj.x
-                    planet.y = obj.y
-                    planet.plDiameter = orig.plDiameter
-                    planet.plType = orig.plType
-                    planet.plMin = orig.plMin
-                    planet.plBio = orig.plBio
-                    planet.plEn = orig.plEn
-                    planet.plEnv = orig.plEnv
-                    planet.plSlots = orig.plSlots
-                    planet.plMaxSlots = orig.plMaxSlots
-                    planet.plStratRes = 0
-                    planet.plDisease = 0
-                    planet.plStarting = 0
-                    planet.orbit = orbit
-                    planet.storPop = 0
-                    planet.slots = []
-                    orbit += 1
-            except:
-                log.debug("Copy failed")
-        # TODO: remove in version 0.5.73
+        # TODO: remove after 0.5.73
         if True:
             owners = []
             for planetID in obj.planets:

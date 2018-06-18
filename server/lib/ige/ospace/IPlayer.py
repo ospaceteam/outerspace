@@ -185,20 +185,6 @@ class IPlayer(IObject):
                     wip = 1
                     log.debug("Deleting tech", techID, "player", obj.oid)
                     if techID in obj.techs: del obj.techs[techID]
-                # disabled?
-                #for tmpTechID in obj.techs.keys():
-                #    if techID in Rules.techs[tmpTechID].researchDisables:
-                #        wip = 1
-                #        log.debug("Deleting tech", techID, "player", obj.oid)
-                #        if techID in obj.techs: del obj.techs[techID]
-                #        break
-                # check requirements
-                #for tmpTechID, improvement in tech.researchRequires:
-                #    if not obj.techs.has_key(tmpTechID) or obj.techs[tmpTechID] < improvement:
-                #        wip = 1
-                #        log.debug("Deleting tech", techID, "player", obj.oid)
-                #        if techID in obj.techs: del obj.techs[techID]
-                #        break
         for rTask in obj.rsrchQueue[:]:
             if rTask.techID not in Rules.techs:
                 log.debug("Deleting res task for nonexistent tech", rTask.techID, "player", obj.oid)
@@ -213,12 +199,6 @@ class IPlayer(IObject):
         if obj.oid not in universe.players and obj.oid not in (OID_NATURE, OID_ADMIN):
             log.debug(obj.oid, "Adding player to the universe")
             universe.players.append(obj.oid)
-        # check nick (TODO remove in 0.5.33)
-        if not hasattr(obj, "fullName"):
-            obj.fullName = obj.name
-        # TODO remove in 0.5.69
-        if not hasattr(obj, "prodQueues"):
-            obj.prodQueues = [[],[],[],[],[]]
         # check if player is a leader
         if not obj.galaxy:
             log.debug(obj.oid, obj.name, "IS NOT IN ANY GALAXY")

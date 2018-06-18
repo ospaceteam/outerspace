@@ -44,14 +44,6 @@ class IPiratePlayer(IPlayer):
     def update(self, tran, obj):
         # call super method
         IPlayer.update(self, tran, obj)
-        #
-        # grant special technologies
-        # grant all TL1 ship techs except for colony module(s)
-        # convert enslavedPop
-        if hasattr(obj, "enslavedPop"):
-            obj.pirateFame = int(obj.enslavedPop * 0.0005)
-            log.debug(obj.oid, "New pirate fame is", obj.pirateFame, obj.enslavedPop)
-            del obj.enslavedPop
 
     def setStartingPlanet(self, planet):
         planet.plSlots = max(planet.plSlots, 2)

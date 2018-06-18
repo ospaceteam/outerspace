@@ -47,24 +47,6 @@ class MsgMngr:
 
     def upgrade(self):
         return
-        # not needed if everything goes well
-        log.debug("UPGRADE mailboxes")
-        for name in self.getMailboxes():
-            log.debug("Checking mailbox", name)
-            try:
-                self.getMailbox(name, recreate = False).upgrade()
-            except MsgMngrException:
-                log.warning("Cannot upgrade mailbox")
-        # check for old style mailboxes
-        log.debug("Checking for old-style mailboxes")
-        for name in self.database.keys():
-            if len(name.split("-")) == 2:
-                log.debug("Checking mailbox", name)
-                try:
-                    self.getMailbox(name, recreate = False).upgrade()
-                    self.mailboxRoot.addMailbox(name)
-                except MsgMngrException:
-                    log.warning("Cannot upgrade mailbox")
 
     def getMailboxRoot(self):
         mailboxRoot = self.database.get(self.MAILBOXROOT_ID, None)
