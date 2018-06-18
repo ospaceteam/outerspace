@@ -50,7 +50,6 @@ from Item import Item
 
 # Themes
 import SkinableTheme
-import OSTheme
 
 # Other usefull goodies
 from pygame.locals import Rect
