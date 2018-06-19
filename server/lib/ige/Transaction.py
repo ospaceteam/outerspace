@@ -18,11 +18,11 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-from Const import *
+import Const
 
 class Transaction:
 
-    def __init__(self, gameMngr, cid = OID_NONE, session = None):
+    def __init__(self, gameMngr, cid = Const.OID_NONE, session = None):
         self.gameMngr = gameMngr
         self.db = gameMngr.db
         self.cid = cid

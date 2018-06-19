@@ -23,17 +23,17 @@ import copy
 from xml.dom.minidom import Node
 
 import ige
+import Const
 import Rules
 import Utils
 
-from Const import *
 from ige import log
 from ige.IObject import IObject, public
 from ige.IDataHolder import IDataHolder
 
 class ISystem(IObject):
 
-    typeID = T_SYSTEM
+    typeID = Const.T_SYSTEM
 
     def init(self, obj):
         IObject.init(self, obj)
@@ -60,8 +60,8 @@ class ISystem(IObject):
             for planetID in obj.planets:
                 if not tran.db.has_key(planetID):
                     log.debug("CONSISTENCY - planet %d from system %d does not exists" % (planetID, obj.oid))
-                elif tran.db[planetID].type != T_PLANET:
-                    log.debug("CONSISTENCY - planet %d from system %d is not a T_PLANET" % (planetID, obj.oid))
+                elif tran.db[planetID].type != Const.T_PLANET:
+                    log.debug("CONSISTENCY - planet %d from system %d is not a Const.T_PLANET" % (planetID, obj.oid))
         # check that all .fleet are in .closeFleets
         for fleetID in obj.fleets:
             if fleetID not in obj.closeFleets:
@@ -71,8 +71,8 @@ class ISystem(IObject):
         for fleetID in obj.closeFleets:
             if not tran.db.has_key(fleetID):
                 log.debug("CONSISTENCY - fleet %d from system %d does not exists" % (fleetID, obj.oid))
-            elif tran.db[fleetID].type not in (T_FLEET, T_ASTEROID):
-                log.debug("CONSISTENCY - fleet %d from system %d is not a T_FLEET" % (fleetID, obj.oid))
+            elif tran.db[fleetID].type not in (Const.T_FLEET, Const.T_ASTEROID):
+                log.debug("CONSISTENCY - fleet %d from system %d is not a Const.T_FLEET" % (fleetID, obj.oid))
         # delete nonexistent fleets
         index = 0
         while index < len(obj.closeFleets) and obj.closeFleets:
@@ -85,7 +85,7 @@ class ISystem(IObject):
             else:
                 index += 1
         # check compOf
-        if not tran.db.has_key(obj.compOf) or tran.db[obj.compOf].type != T_GALAXY:
+        if not tran.db.has_key(obj.compOf) or tran.db[obj.compOf].type != Const.T_GALAXY:
             log.debug("CONSISTENCY invalid compOf for system", obj.oid)
         # rebuild closeFleets attribute
         old = obj.closeFleets
@@ -101,15 +101,15 @@ class ISystem(IObject):
             owners = []
             for planetID in obj.planets:
                 planet = tran.db[planetID]
-                if planet.owner not in owners + [OID_NONE]:
+                if planet.owner not in owners + [Const.OID_NONE]:
                     owners.append(planet.owner)
             for owner_id in owners:
                 for tech, struct in self.getSystemMineLauncher(tran, obj, owner_id):
-                    if not struct[STRUCT_IDX_STATUS] & STRUCT_STATUS_ON:
+                    if not struct[Const.STRUCT_IDX_STATUS] & Const.STRUCT_STATUS_ON:
                         # structure is offline, reset timer
                         self.addMine(tran, obj, owner_id, tech.mineclass, 0)
                         continue
-                    efficiency = struct[STRUCT_IDX_HP] / float(tech.maxHP)
+                    efficiency = struct[Const.STRUCT_IDX_HP] / float(tech.maxHP)
                     minenum = int(tech.minenum * efficiency)
                     # by setting minerate to None, we are forcing a creation of one - so it grabs
                     # galaxyTurn instead of universe.turn
@@ -127,7 +127,7 @@ class ISystem(IObject):
         result = IDataHolder()
         results = [result]
         if scanPwr >= Rules.level1InfoScanPwr:
-            result._type = T_SCAN
+            result._type = Const.T_SCAN
             result.scanPwr = scanPwr
             result.oid = obj.oid
             result.x = obj.x
@@ -166,32 +166,32 @@ class ISystem(IObject):
                 result.hasmines = 2 # yes, and some aren't my mines
         return results
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processINITPhase(self, tran, obj, data):
         obj.scannerPwrs = {}
 
         return obj.planets
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processPRODPhase(self, tran, obj, data):
         # mine deployment
         owners = []
         for planetID in obj.planets:
             planet = tran.db[planetID]
-            if planet.owner not in owners + [OID_NONE]:
+            if planet.owner not in owners + [Const.OID_NONE]:
                 owners.append(planet.owner)
         for owner_id in owners:
             self.deployMines(tran, obj, owner_id)
         return obj.planets
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processACTIONPhase(self, tran, obj, data):
         # distribute resources
         planets = {}
         # group planets by owner
         for planetID in obj.planets:
             planet = tran.db[planetID]
-            if planet.owner != OID_NONE:
+            if planet.owner != Const.OID_NONE:
                 tmp = planets.get(planet.owner, [])
                 tmp.append(planet)
                 planets[planet.owner] = tmp
@@ -268,7 +268,7 @@ class ISystem(IObject):
         #@log.debug("System close fleets", obj.oid, obj.closeFleets)
         return obj.planets[:] + obj.closeFleets[:]
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def getObjectsInSpace(self, tran, obj):
         inSpace = obj.closeFleets[:]
         for fleetID in obj.fleets:
@@ -278,7 +278,7 @@ class ISystem(IObject):
                 log.warning(obj.oid, "Cannot remove fleet from closeFleets", fleetID, obj.fleets, obj.closeFleets)
         return inSpace
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processBATTLEPhase(self, tran, obj, data):
         system = obj
         #@log.debug('ISystem', 'BATTLE - system', obj.oid)
@@ -302,7 +302,7 @@ class ISystem(IObject):
             owner = tran.db[objID].owner
             owners[objID] = owner
             ownerIDs[owner] = owner
-            if owner != OID_NONE:
+            if owner != Const.OID_NONE:
                 isOwnedObject = 1
         for owner in ownerIDs:
             tempAtt, tempDef = self.getSystemCombatBonuses(tran, system, owner)
@@ -318,7 +318,7 @@ class ISystem(IObject):
         index = 1
         for obj1ID in objects:
             obj1 = tran.db[obj1ID]
-            if obj1.owner == OID_NONE:
+            if obj1.owner == Const.OID_NONE:
                 index += 1
                 continue
             commander = tran.db[obj1.owner]
@@ -326,23 +326,23 @@ class ISystem(IObject):
             #for obj2ID in objects[index:]:
             for obj2ID in objects:
                 obj2 = tran.db[obj2ID]
-                if obj2.owner == OID_NONE or obj1 is obj2:
+                if obj2.owner == Const.OID_NONE or obj1 is obj2:
                     continue
                 if obj1.owner == obj2.owner:
                     allies[obj1ID].append(obj2ID)
                     allies[obj2ID].append(obj1ID)
                     continue
                 # planet and military object
-                elif obj1.type == T_PLANET and obj2.isMilitary and \
-                    not self.cmd(commander).isPactActive(tran, commander, obj2.owner, PACT_ALLOW_MILITARY_SHIPS):
+                elif obj1.type == Const.T_PLANET and obj2.isMilitary and \
+                    not self.cmd(commander).isPactActive(tran, commander, obj2.owner, Const.PACT_ALLOW_MILITARY_SHIPS):
                     #@log.debug("ISystem pl - mil", obj1ID, obj2ID)
                     if obj2ID not in attack[obj1ID]:
                         attack[obj1ID].append(obj2ID)
                     if obj1ID not in attack[obj2ID]:
                         attack[obj2ID].append(obj1ID)
                 # planet and civilian object
-                elif obj1.type == T_PLANET and not obj2.isMilitary and \
-                    not self.cmd(commander).isPactActive(tran, commander, obj2.owner, PACT_ALLOW_CIVILIAN_SHIPS):
+                elif obj1.type == Const.T_PLANET and not obj2.isMilitary and \
+                    not self.cmd(commander).isPactActive(tran, commander, obj2.owner, Const.PACT_ALLOW_CIVILIAN_SHIPS):
                     #@log.debug("ISystem pl - civ", obj1ID, obj2ID)
                     if obj2ID not in attack[obj1ID]:
                         attack[obj1ID].append(obj2ID)
@@ -350,7 +350,7 @@ class ISystem(IObject):
                         attack[obj2ID].append(obj1ID)
                 # military and military object
                 elif obj1.isMilitary and obj2.isMilitary and \
-                    not self.cmd(commander).isPactActive(tran, commander, obj2.owner, PACT_ALLOW_MILITARY_SHIPS):
+                    not self.cmd(commander).isPactActive(tran, commander, obj2.owner, Const.PACT_ALLOW_MILITARY_SHIPS):
                     #@log.debug("ISystem mil - mil", obj1ID, obj2ID)
                     if obj2ID not in attack[obj1ID]:
                         attack[obj1ID].append(obj2ID)
@@ -358,24 +358,24 @@ class ISystem(IObject):
                         attack[obj2ID].append(obj1ID)
                 # military and civilian object
                 elif obj1.isMilitary and not obj2.isMilitary and \
-                    not self.cmd(commander).isPactActive(tran, commander, obj2.owner, PACT_ALLOW_CIVILIAN_SHIPS):
+                    not self.cmd(commander).isPactActive(tran, commander, obj2.owner, Const.PACT_ALLOW_CIVILIAN_SHIPS):
                     #@log.debug("ISystem mil - civ", obj1ID, obj2ID)
                     if obj2ID not in attack[obj1ID]:
                         attack[obj1ID].append(obj2ID)
                     if obj1ID not in attack[obj2ID]:
                         attack[obj2ID].append(obj1ID)
                 # planet and fleet
-                #elif obj1.type == T_PLANET and obj2.type == T_FLEET and \
+                #elif obj1.type == Const.T_PLANET and obj2.type == Const.T_FLEET and \
                 #    self.cmd(commander).isPactActive(tran, commander, obj2.owner, PACT_MUTUAL_DEFENCE):
                 #    allies[obj1ID].append(obj2ID)
                 #    allies[obj2ID].append(obj1ID)
                 # fleet and fleet
-                #elif obj1.type == T_FLEET and obj2.type == T_FLEET and \
+                #elif obj1.type == Const.T_FLEET and obj2.type == Const.T_FLEET and \
                 #    self.cmd(commander).isPactActive(tran, commander, obj2.owner, PACT_MUTUAL_OFFENCE):
                 #    allies[obj1ID].append(obj2ID)
                 #    allies[obj2ID].append(obj1ID)
                 # asteroid
-                if obj2.type == T_ASTEROID:
+                if obj2.type == Const.T_ASTEROID:
                     attack[obj1ID].append(obj2ID)
                     attack[obj2ID].append(obj1ID)
             index += 1
@@ -458,7 +458,7 @@ class ISystem(IObject):
                     targetID = random.choice(mineTargets) # select random target
                     targetobj = tran.db.get(targetID, None)
                     try:
-                        if targetobj.type == T_FLEET:
+                        if targetobj.type == Const.T_FLEET:
                             fleetOwners[targetID] = targetobj.owner
                             break # target found
                         mineTargets.remove(targetID)  # remove an object type that a mine can't hit from the temporary targets list
@@ -496,17 +496,17 @@ class ISystem(IObject):
             for mineID in damageCaused.keys():
                 damageCausedSum = damageCausedSum + damageCaused.get(mineID, 0)
                 killsCausedSum = killsCausedSum + killsCaused.get(mineID, 0)
-            Utils.sendMessage(tran, controllerPlanet, MSG_MINES_OWNER_RESULTS, system.oid, (players.keys(),(damageCaused, killsCaused, minesTriggered),damageCausedSum,killsCausedSum))
+            Utils.sendMessage(tran, controllerPlanet, Const.MSG_MINES_OWNER_RESULTS, system.oid, (players.keys(),(damageCaused, killsCaused, minesTriggered),damageCausedSum,killsCausedSum))
         # send messages to the players whose fleets got hit by minefields
         for targetID in damageTaken.keys():
             targetFleet = tran.db.get(targetID, None)
             if targetFleet:
-                Utils.sendMessage(tran, targetFleet, MSG_MINES_FLEET_RESULTS, system.oid, (damageTaken[targetID], shipsLost[targetID]))
+                Utils.sendMessage(tran, targetFleet, Const.MSG_MINES_FLEET_RESULTS, system.oid, (damageTaken[targetID], shipsLost[targetID]))
             else:
                 targetFleet = IDataHolder()
                 targetFleet.oid = fleetOwners[targetID]
-                Utils.sendMessage(tran, targetFleet, MSG_MINES_FLEET_RESULTS, system.oid, (damageTaken[targetID], shipsLost[targetID]))
-                Utils.sendMessage(tran, targetFleet, MSG_DESTROYED_FLEET, system.oid, ())
+                Utils.sendMessage(tran, targetFleet, Const.MSG_MINES_FLEET_RESULTS, system.oid, (damageTaken[targetID], shipsLost[targetID]))
+                Utils.sendMessage(tran, targetFleet, Const.MSG_DESTROYED_FLEET, system.oid, ())
         damageCaused = {}
         killsCaused = {}
         damageTaken = {}
@@ -542,7 +542,7 @@ class ISystem(IObject):
                     if obj == None:
                         continue # source already destroyed; move to next source
                     # if object is fleet, then it's signature is max
-                    if obj and obj.type == T_FLEET:
+                    if obj and obj.type == Const.T_FLEET:
                         obj.signature = Rules.maxSignature
                     # target preselection
                     totalClass = [0, 0, 0, 0]
@@ -613,10 +613,10 @@ class ISystem(IObject):
                 l = shipsLost.get(objID, 0)
                 if d1 or d2 or l:
                     # send only if damage is taken/caused
-                    Utils.sendMessage(tran, source, MSG_COMBAT_RESULTS, system.oid, (d1, d2, l, players.keys()))
+                    Utils.sendMessage(tran, source, Const.MSG_COMBAT_RESULTS, system.oid, (d1, d2, l, players.keys()))
                 if not obj:
                     # report DESTROYED status
-                    Utils.sendMessage(tran, source, MSG_DESTROYED_FLEET, system.oid, ())
+                    Utils.sendMessage(tran, source, Const.MSG_DESTROYED_FLEET, system.oid, ())
                 # modify diplomacy relations
                 objOwner = tran.db[owners[objID]]
                 for attackerID in attack[objID]:
@@ -642,7 +642,7 @@ class ISystem(IObject):
                 if not tran.db.has_key(allyID):
                     continue
                 ally = tran.db[allyID]
-                if firing[allyID] and ally.type != T_PLANET:
+                if firing[allyID] and ally.type != Const.T_PLANET:
                     surrenderTo = []
                     break
             if surrenderTo:
@@ -653,19 +653,19 @@ class ISystem(IObject):
                         source = tran.db.get(owners[objID], None)
                         log.debug('ISystem', 'BATTLE - surrender', objID, surrenderTo[index], surrenderTo)
                         if source:
-                            Utils.sendMessage(tran, source, MSG_COMBAT_LOST, system.oid, winner.oid)
-                            Utils.sendMessage(tran, winner, MSG_COMBAT_WON, system.oid, source.oid)
+                            Utils.sendMessage(tran, source, Const.MSG_COMBAT_LOST, system.oid, winner.oid)
+                            Utils.sendMessage(tran, winner, Const.MSG_COMBAT_WON, system.oid, source.oid)
                         else:
-                            Utils.sendMessage(tran, winner, MSG_COMBAT_WON, system.oid, obj.oid)
+                            Utils.sendMessage(tran, winner, Const.MSG_COMBAT_WON, system.oid, obj.oid)
                 else:
                     winner = tran.db[surrenderTo[index]]
                     source = tran.db[owners[objID]]
                     log.debug('ISystem', 'BATTLE - surrender', objID, surrenderTo[index], surrenderTo)
-                    Utils.sendMessage(tran, source, MSG_COMBAT_LOST, system.oid, winner.oid)
-                    Utils.sendMessage(tran, winner, MSG_COMBAT_WON, system.oid, source.oid)
+                    Utils.sendMessage(tran, source, Const.MSG_COMBAT_LOST, system.oid, winner.oid)
+                    Utils.sendMessage(tran, winner, Const.MSG_COMBAT_WON, system.oid, source.oid)
         return
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processFINALPhase(self, tran, obj, data):
         # TODO find new starting points
         # clean up mines if system ownership was lost
@@ -689,7 +689,7 @@ class ISystem(IObject):
 
     sortPlanets.public = 0
 
-    @public(AL_NONE)
+    @public(Const.AL_NONE)
     def rename(self, tran, obj, newName, nType):
         newName = newName.strip()
         # you have to own all planets
@@ -698,7 +698,7 @@ class ISystem(IObject):
         anotherComm = 0
         for planetID in obj.planets:
             planet = tran.db[planetID]
-            if planet.owner != tran.session.cid and planet.owner != OID_NONE:
+            if planet.owner != tran.session.cid and planet.owner != Const.OID_NONE:
                 anotherComm = 1
             if planet.owner == tran.session.cid:
                 haveOne = 1
@@ -716,7 +716,7 @@ class ISystem(IObject):
                 raise ige.GameException('This name is already used.')
         # TODO you have to own this system longer than previous owner
         # one change per 1 day allowed
-        turn = tran.db[OID_UNIVERSE].turn
+        turn = tran.db[Const.OID_UNIVERSE].turn
         if obj.lastNameChng + Rules.turnsPerDay <= turn:
             # rename system
             obj.name = newName
@@ -732,29 +732,29 @@ class ISystem(IObject):
         return newNames
 
     def createPlanet(self, tran, obj):
-        planet = self.new(T_PLANET)
+        planet = self.new(Const.T_PLANET)
         planet.compOf = obj.oid
         oid = tran.db.create(planet)
         obj.planets.append(oid)
         return oid
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def deployMines(self, tran, obj, owner_id):
         """ Go through all mine control structures and attempt to add mines.
 
         """
         for tech, struct in self.getSystemMineLauncher(tran, obj, owner_id):
-            if not struct[STRUCT_IDX_STATUS] & STRUCT_STATUS_ON:
+            if not struct[Const.STRUCT_IDX_STATUS] & Const.STRUCT_STATUS_ON:
                 # structure is offline, reset timer
                 self.addMine(tran, obj, owner_id, tech.mineclass, 0)
                 continue
-            efficiency = struct[STRUCT_IDX_HP] / float(tech.maxHP)
+            efficiency = struct[Const.STRUCT_IDX_HP] / float(tech.maxHP)
             minerate = int(tech.minerate / efficiency)
             minenum = int(tech.minenum * efficiency)
             if self.addMine(tran, obj, owner_id, tech.mineclass, minenum, minerate):
                 log.debug('ISystem', 'Mine deployed for owner %d in system %d' % (owner_id, obj.oid))
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def addMine(self, tran, obj, owner_id, mine_tech_id, max_amount=None, mine_rate=None):
         """ Increment amount within particular minefield of particular player.
         Set current turn as a date of latest deployment.
@@ -787,7 +787,7 @@ class ISystem(IObject):
             obj.minefield[owner_id]= [(mine_tech_id, 1, current_turn)]
             return True
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def removeMine(self, obj, owner_id, mine_tech_id):
         """ Decrement amount within particular minefield of particular player.
         If amount drops to zero, remove minefield.
@@ -811,7 +811,7 @@ class ISystem(IObject):
                 # all minefields are depleted, remove player record
                 del obj.minefield[owner_id]
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def getMines(self, obj, owner_id):
         """ Return list of tuples representing each minefield.
 
@@ -830,7 +830,7 @@ class ISystem(IObject):
 
     clearMines.public = 0
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def fireMine(self, obj, owner_id): # shoot the mine
         if owner_id not in obj.minefield:
             return False, False, False, False
@@ -854,7 +854,7 @@ class ISystem(IObject):
             planet = tran.db[planetID]
             if planet.owner == playerID:
                 for struct in planet.slots:
-                    tech = Rules.techs[struct[STRUCT_IDX_TECHID]]
+                    tech = Rules.techs[struct[Const.STRUCT_IDX_TECHID]]
                     if tech.mineclass:
                         launchtech = tech
                         launchers.append((launchtech, struct))
@@ -868,7 +868,7 @@ class ISystem(IObject):
             planet = tran.db[planetID]
             if planet.owner == playerID:
                 for struct in planet.slots:
-                    tech = Rules.techs[struct[STRUCT_IDX_TECHID]]
+                    tech = Rules.techs[struct[Const.STRUCT_IDX_TECHID]]
                     if tech.mineclass:
                         sources.append(planetID)
         return sources
@@ -882,8 +882,8 @@ class ISystem(IObject):
             planet = tran.db[planetID]
             if planet.owner == playerID:
                 for struct in planet.slots:
-                    tech = Rules.techs[struct[STRUCT_IDX_TECHID]]
-                    techEff = Utils.getTechEff(tran, struct[STRUCT_IDX_TECHID], planet.owner)
+                    tech = Rules.techs[struct[Const.STRUCT_IDX_TECHID]]
+                    techEff = Utils.getTechEff(tran, struct[Const.STRUCT_IDX_TECHID], planet.owner)
                     if tech.systemAtt > 0 or tech.systemDef > 0:
                         systemAtt = max(systemAtt, tech.systemAtt * techEff)
                         systemDef = max(systemDef, tech.systemDef * techEff)
@@ -910,4 +910,4 @@ class ISystem(IObject):
                     orbit += 1
                 else:
                     raise ige.GameException('Unknown element %s' % name)
-        return SUCC
+        return Const.SUCC

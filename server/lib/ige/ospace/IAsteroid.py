@@ -17,20 +17,19 @@
 #  along with Outer Space; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
+import Const
+import Rules
+import Utils
+
+from ige import GameException, log
+from ige.IDataHolder import IDataHolder
+from ige.IObject import public
 
 from IFleet import IFleet
-from ige.IObject import public
-from IPlanet import IPlanet
-from Const import *
-from ige.IDataHolder import IDataHolder
-import Rules
-import math
-import Utils
-from ige import GameException, log
 
 class IAsteroid(IFleet):
 
-    typeID = T_ASTEROID
+    typeID = Const.T_ASTEROID
 
     def init(self, obj):
         IFleet.init(self, obj)
@@ -38,9 +37,9 @@ class IAsteroid(IFleet):
         obj.asDiameter = 0 # diameter
         obj.asHP = 0
         obj.impactDelay = 0
-        obj.target = OID_NONE
+        obj.target = Const.OID_NONE
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def create(self, tran, obj, x, y, targetID, speed, hp):
         obj.signature = hp / 50
         obj.x = x
@@ -52,8 +51,8 @@ class IAsteroid(IFleet):
         obj.asDiameter = max(1, hp / 10)
         obj.asHP = hp
         obj.target = targetID
-        obj.owner = OID_NATURE
-        nature = tran.db[OID_NATURE]
+        obj.owner = Const.OID_NATURE
+        nature = tran.db[Const.OID_NATURE]
         nature.fleets.append(obj.oid)
         # create name
         counter = 1
@@ -74,7 +73,7 @@ class IAsteroid(IFleet):
         system.closeFleets.append(obj.oid)
         obj.closeSystem = system.oid
         # create script
-        self.cmd(obj).addAction(tran, obj, 0, FLACTION_MOVE, targetID, None)
+        self.cmd(obj).addAction(tran, obj, 0, Const.FLACTION_MOVE, targetID, None)
         #
         log.debug("Asteroid created", x, y, targetID, speed, hp)
 
@@ -85,15 +84,15 @@ class IAsteroid(IFleet):
             return
         # closest system
         if not hasattr(obj, "closeSystem") or not tran.db.has_key(obj.closeSystem):
-            if obj.orbiting == OID_NONE:
+            if obj.orbiting == Const.OID_NONE:
                 log.warning("No close system for asteroid", obj.oid)
                 # select any system
-                systemID = tran.db[tran.db[OID_UNIVERSE].galaxies[0]].systems[0]
+                systemID = tran.db[tran.db[Const.OID_UNIVERSE].galaxies[0]].systems[0]
                 obj.closeSystem = systemID
             else:
                 obj.closeSystem = obj.orbiting
                 system = tran.db[obj.closeSystem]
-                if system.type == T_SYSTEM:
+                if system.type == Const.T_SYSTEM:
                     if obj.oid not in system.closeFleets:
                         system.closeFleets.append(obj.oid)
                 else:
@@ -103,14 +102,14 @@ class IAsteroid(IFleet):
         # verify close system
         if tran.db.has_key(obj.closeSystem):
             system = tran.db[obj.closeSystem]
-            if system.type == T_SYSTEM:
+            if system.type == Const.T_SYSTEM:
                 if obj.oid not in system.closeFleets:
                     #@log.debug("Adding fleet", obj.oid, "into closeFleets", system.oid)
                     system.closeFleets.append(obj.oid)
             else:
-                obj.closeSystem = OID_NONE
+                obj.closeSystem = Const.OID_NONE
         else:
-            obj.closeSystem = OID_NONE
+            obj.closeSystem = Const.OID_NONE
 
     update.public = 0
 
@@ -119,11 +118,11 @@ class IAsteroid(IFleet):
             log.warning("Scan on own asteroid!", obj.oid)
             return
         if scanPwr >= Rules.level1InfoScanPwr:
-            self.cmd(player).addObjectToMap(tran, player, obj, scanPwr, CONTACT_NONE)
+            self.cmd(player).addObjectToMap(tran, player, obj, scanPwr, Const.CONTACT_NONE)
 
     def getScanInfo(self, tran, obj, scanPwr):
         result = IDataHolder()
-        result._type = T_SCAN
+        result._type = Const.T_SCAN
         result.scanPwr = scanPwr
         if scanPwr > Rules.level1InfoScanPwr:
             result.oid = obj.oid
@@ -145,7 +144,7 @@ class IAsteroid(IFleet):
             pass
         return result
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processACTIONPhase(self, tran, obj, data):
         # ACTIONS
         if Utils.isIdleFleet(obj):
@@ -154,14 +153,14 @@ class IAsteroid(IFleet):
             return
         action, target, actionData = obj.actions[obj.actionIndex]
         #@log.debug('IAsteroid', obj.oid, 'processing action', action)
-        if action == FLACTION_MOVE:
+        if action == Const.FLACTION_MOVE:
             if self.cmd(obj).moveToTarget(tran, obj, target):
                 # we are there
                 obj.actionIndex += 1
         else:
             raise GameException('Unsupported action %d' % action)
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processFINALPhase(self, tran, obj, data):
         if obj.impactDelay > Rules.asteroidImpactDelay:
             # delete me

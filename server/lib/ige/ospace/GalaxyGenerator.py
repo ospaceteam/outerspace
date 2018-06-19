@@ -26,7 +26,7 @@ import tempfile
 
 import data
 
-import ige.ospace.Const as Const
+import Const
 
 class GalaxyTemplate(object):
     def __init__(self):

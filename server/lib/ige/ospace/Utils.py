@@ -17,14 +17,16 @@
 #  along with Outer Space; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
+import random
 
-import Rules, ige
-from ige.IDataHolder import IDataHolder
-import random, string
-from Const import *
+import Const
+import Rules
+
+import ige
 from ige import log
+from ige.IDataHolder import IDataHolder
 
-def newStructure(tran, techID, playerID, status = STRUCT_STATUS_ON | STRUCT_STATUS_NEW, hpRatio = None):
+def newStructure(tran, techID, playerID, status = Const.STRUCT_STATUS_ON | Const.STRUCT_STATUS_NEW, hpRatio = None):
     tech = Rules.techs[techID]
     hp = int(tech.maxHP * getTechEff(tran, techID, playerID))
     if hpRatio is None:
@@ -36,7 +38,7 @@ def newStructure(tran, techID, playerID, status = STRUCT_STATUS_ON | STRUCT_STAT
     return s
 
 def getTechEff(tran, techID, playerID):
-    if playerID != OID_NONE:
+    if playerID != Const.OID_NONE:
         player = tran.db[playerID]
         techEff = Rules.techImprEff[player.techs.get(techID, Rules.techBaseImprovement)]
     else:
@@ -88,7 +90,7 @@ def isIdleFleet(fleet):
 
 # shortcut for send message
 def sendMessage(tran, obj, msgID, whereID, data):
-    when = tran.db[OID_UNIVERSE].turn
+    when = tran.db[Const.OID_UNIVERSE].turn
     tran.gameMngr.sendMessage(tran, obj.oid, msgID, whereID, when, data)
 
 validChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789- .'
@@ -121,9 +123,9 @@ def cmpPlanetsByDistAndPop(refPl, pl1, pl2):
 def getSpeedBoost(tran, player, objs):
     speedBoost = 10000.0
     for obj in objs:
-        if obj.type == T_PLANET:
+        if obj.type == Const.T_PLANET:
             system = tran.db[obj.compOf]
-        elif obj.type in (T_SYSTEM, T_WORMHOLE):
+        elif obj.type in (Const.T_SYSTEM, Const.T_WORMHOLE):
             system = obj
         else:
             raise ige.ServerException("Not a planet or system")
@@ -133,7 +135,7 @@ def getSpeedBoost(tran, player, objs):
             planet = tran.db[planetID]
             if planet.owner == player.oid:
                 tmpBoost = max(tmpBoost, planet.fleetSpeedBoost)
-            elif tran.gameMngr.cmdPool[player.type].isPactActive(tran, player, planet.owner, PACT_ALLOW_TANKING):
+            elif tran.gameMngr.cmdPool[player.type].isPactActive(tran, player, planet.owner, Const.PACT_ALLOW_TANKING):
                 tmpBoost = max(tmpBoost, planet.fleetSpeedBoost)
         speedBoost = min(speedBoost, tmpBoost)
     #@log.debug("Speed boost", speedBoost)

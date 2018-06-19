@@ -17,20 +17,23 @@
 #  along with Outer Space; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
-
-from ige.IObject import IObject, public
-from Const import *
-from ige.IDataHolder import IDataHolder
-import Rules
+import copy
 import math
 import random
-import Utils, ShipUtils, math, copy, re
-from sys import maxint
-from ige import GameException, ServerException, log
+import re
+
+import Const
+import Rules
+import ShipUtils
+import Utils
+
+from ige import GameException, log
+from ige.IObject import IObject, public
+from ige.IDataHolder import IDataHolder
 
 class IFleet(IObject):
 
-    typeID = T_FLEET
+    typeID = Const.T_FLEET
 
     def init(self, obj):
         IObject.init(self, obj)
@@ -39,13 +42,13 @@ class IFleet(IObject):
         obj.y = 0.0
         obj.oldX = 0.0
         obj.oldY = 0.0
-        obj.orbiting = OID_NONE
-        obj.closeSystem = OID_NONE
+        obj.orbiting = Const.OID_NONE
+        obj.closeSystem = Const.OID_NONE
         obj.speed = 0.0
         obj.maxSpeed = 0.0
         obj.signature = 0
         obj.eta = 0.0
-        obj.target = OID_NONE
+        obj.target = Const.OID_NONE
         #
         obj.operEn = 0
         obj.storEn = 0
@@ -75,16 +78,16 @@ class IFleet(IObject):
         obj.owner = owner
         obj.x = refObj.x
         obj.y = refObj.y
-        if refObj.type == T_SYSTEM:
+        if refObj.type == Const.T_SYSTEM:
             obj.orbiting = refObj.oid
             obj.closeSystem = refObj.oid
             refObj.fleets.append(obj.oid)
             refObj.closeFleets.append(obj.oid)
-            obj.target = OID_NONE
-        elif refObj.type == T_FLEET:
+            obj.target = Const.OID_NONE
+        elif refObj.type == Const.T_FLEET:
             obj.oldX = refObj.oldX
             obj.oldY = refObj.oldY
-            obj.orbiting = OID_NONE
+            obj.orbiting = Const.OID_NONE
             obj.closeSystem = refObj.closeSystem
             obj.actions = copy.deepcopy(refObj.actions)
             obj.actionIndex = refObj.actionIndex
@@ -120,7 +123,7 @@ class IFleet(IObject):
 
     addNewShip.public = 0
 
-    @public(AL_OWNER)
+    @public(Const.AL_OWNER)
     def removeShips(self, tran, obj, ships):
         for ship in ships:
             obj.ships.remove(ship)
@@ -138,19 +141,19 @@ class IFleet(IObject):
 
     deleteDesign.public = 0
 
-    @public(AL_FULL)
+    @public(Const.AL_FULL)
     def disbandFleet(self, tran, obj):
         log.debug('IFleet', 'disbanding fleet', obj.oid, 'of player', obj.owner)
         # remove from player's fleets
         try:
-            if obj.owner != OID_NONE:
+            if obj.owner != Const.OID_NONE:
                 tran.db[obj.owner].fleets.remove(obj.oid)
         except Exception:
             log.warning('IFleet', 'disbandFleet: cannot remove fleet from owner\'s fleet')
             pass
         # remove from orbit
         # remove from index if necessary
-        if obj.orbiting != OID_NONE:
+        if obj.orbiting != Const.OID_NONE:
             try:
                 if tran.db.has_key(obj.orbiting):
                     tran.db[obj.orbiting].fleets.remove(obj.oid)
@@ -158,7 +161,7 @@ class IFleet(IObject):
                 log.warning('IFleet', 'disbandFleet: cannot remove fleet from system.')
                 pass
         # remove from close fleets
-        if obj.closeSystem != OID_NONE:
+        if obj.closeSystem != Const.OID_NONE:
             try:
                 if tran.db.has_key(obj.closeSystem):
                     tran.db[obj.closeSystem].closeFleets.remove(obj.oid)
@@ -170,15 +173,15 @@ class IFleet(IObject):
         except KeyError:
             log.warning('IFleet', 'disbandFleet: cannot remove fleet from database.')
 
-    @public(AL_FULL)
+    @public(Const.AL_FULL)
     def joinFleet(self, tran, obj, fleetID, force=False):
-        if obj.orbiting == OID_NONE:
+        if obj.orbiting == Const.OID_NONE:
             # we are in space
             return
         if obj.allowmerge != 1:
             # owner has turned off auto-joins (join self with other)
             return
-        if fleetID == OID_NONE:
+        if fleetID == Const.OID_NONE:
             raiseExps = False
             # find suitable fleet
             system = tran.db[obj.orbiting]
@@ -191,12 +194,12 @@ class IFleet(IObject):
                     # owner has turned off auto-joins (join other with self)
                     continue
                 rel = self.cmd(player).getRelationTo(tran, player, fleet.owner)
-                if rel == REL_UNITY and Utils.isIdleFleet(fleet):
+                if rel == Const.REL_UNITY and Utils.isIdleFleet(fleet):
                     fleetID = tmpID
                     break
         else:
             raiseExps = True
-        if fleetID == OID_NONE:
+        if fleetID == Const.OID_NONE:
             return
         # join to selected fleet
         fleet = tran.db[fleetID]
@@ -221,7 +224,7 @@ class IFleet(IObject):
         log.debug('IFleet joinFleet, removing old fleet: source fleet',obj.oid,'; target fleet',fleet.oid)
         self.cmd(obj).disbandFleet(tran, obj)
 
-    @public(AL_FULL)
+    @public(Const.AL_FULL)
     def splitFleet(self, tran, obj, ships, mEn):
         if not len(ships):
             raise GameException('No ships in the new fleet.')
@@ -234,10 +237,10 @@ class IFleet(IObject):
                 raise GameException("No such ship(s) in the original fleet.")
             tmpShips.remove(ship)
         # create new fleet
-        fleet = self.new(T_FLEET)
+        fleet = self.new(Const.T_FLEET)
         tran.db.create(fleet)
         log.debug(obj.oid, "FLEET -- split fleet, new fleet is", fleet.oid)
-        if obj.orbiting != OID_NONE:
+        if obj.orbiting != Const.OID_NONE:
             refObj = tran.db[obj.orbiting]
         else:
             refObj = obj
@@ -262,7 +265,7 @@ class IFleet(IObject):
         # return new fleet, old fleet and player's fleets
         return fleet, obj, tran.db[obj.owner].fleets
 
-    @public(AL_FULL)
+    @public(Const.AL_FULL)
     def renameFleet(self, tran, obj, name):
         if not Utils.isCorrectName(name):
             raise GameException('Invalid name. Only characters, digits, space, dot and dash permitted, max. length is 30 characters.')
@@ -276,12 +279,12 @@ class IFleet(IObject):
         obj.customname = name
         return obj.customname
 
-    @public(AL_FULL)
+    @public(Const.AL_FULL)
     def removeFleetName(self, tran, obj):
         obj.customname = None
         return obj.name
 
-    @public(AL_FULL)
+    @public(Const.AL_FULL)
     def setMergeState(self, tran, obj, state):
         if not state in [0,1,2]:
             raise GameException('Bad join fleet state.') #should we log this? Probably don't need to.
@@ -290,7 +293,7 @@ class IFleet(IObject):
 
     def update(self, tran, obj):
         # if there are no ships -> disband fleet
-        if not len(obj.ships) or obj.owner == OID_NONE:
+        if not len(obj.ships) or obj.owner == Const.OID_NONE:
             log.warning(obj.oid, "FLEET - no ships in the fleet -- disbanding")
             self.cmd(obj).disbandFleet(tran, obj)
             return
@@ -304,7 +307,7 @@ class IFleet(IObject):
         #ships = {}
         # find
         player = tran.db.get(obj.owner, None)
-        if not player or player.type not in PLAYER_TYPES or obj.oid not in player.fleets:
+        if not player or player.type not in Const.PLAYER_TYPES or obj.oid not in player.fleets:
             # disband fleet when owner is invalid
             log.warning(obj.oid, "Disbanding fleet - invalid owner", obj)
             self.cmd(obj).disbandFleet(tran, obj)
@@ -348,11 +351,11 @@ class IFleet(IObject):
         else:
             log.debug("Skipping ship (re)sorting [fleet in combat]", obj.oid)
         # closest system
-        if not tran.db.has_key(obj.closeSystem) or tran.db[obj.closeSystem].type not in (T_SYSTEM, T_WORMHOLE):
-            if obj.orbiting == OID_NONE:
+        if not tran.db.has_key(obj.closeSystem) or tran.db[obj.closeSystem].type not in (Const.T_SYSTEM, Const.T_WORMHOLE):
+            if obj.orbiting == Const.OID_NONE:
                 log.debug("No close system for fleet", obj.oid)
                 # select any system
-                systemID = tran.db[tran.db[OID_UNIVERSE].galaxies[0]].systems[0]
+                systemID = tran.db[tran.db[Const.OID_UNIVERSE].galaxies[0]].systems[0]
                 obj.closeSystem = systemID
                 log.debug(obj.oid, "Setting NULL close system to", systemID)
             else:
@@ -364,16 +367,16 @@ class IFleet(IObject):
         # verify close system
         if tran.db.has_key(obj.closeSystem):
             system = tran.db[obj.closeSystem]
-            if system.type in (T_SYSTEM, T_WORMHOLE):
+            if system.type in (Const.T_SYSTEM, Const.T_WORMHOLE):
                 if obj.oid not in system.closeFleets:
                     log.debug("Adding fleet", obj.oid, "into closeFleets of", system.oid)
                     system.closeFleets.append(obj.oid)
             else:
                 log.debug(obj.oid, "Close system is not a system")
-                obj.closeSystem = OID_NONE
+                obj.closeSystem = Const.OID_NONE
         else:
             log.debug(obj.oid, "Close system does not exists")
-            obj.closeSystem = OID_NONE
+            obj.closeSystem = Const.OID_NONE
         # compute scanner pwr
         if obj.closeSystem:
                 system = tran.db[obj.closeSystem]
@@ -388,10 +391,10 @@ class IFleet(IObject):
                 obj.actions.remove(actionTuple)
         index = 0
         for action, target, actionData in obj.actions:
-            if action == FLACTION_DEPLOY and actionData not in player.shipDesigns:
+            if action == Const.FLACTION_DEPLOY and actionData not in player.shipDesigns:
                 # deployment of scrapped ship
                 log.debug(obj.oid, "invalid ship to deploy")
-                obj.actions[index] = (FLACTION_NONE, None, None)
+                obj.actions[index] = (Const.FLACTION_NONE, None, None)
             index += 1
 
     update.public = 0
@@ -401,7 +404,7 @@ class IFleet(IObject):
             return []
         if scanPwr >= Rules.level1InfoScanPwr:
             result = IDataHolder()
-            result._type = T_SCAN
+            result._type = Const.T_SCAN
             result.scanPwr = scanPwr
             result.oid = obj.oid
             result.x = obj.x
@@ -412,10 +415,10 @@ class IFleet(IObject):
             result.signature = obj.signature
             result.type = obj.type
             result.orbiting = obj.orbiting
-            if obj.orbiting == OID_NONE and obj.actionIndex < len(obj.actions):
+            if obj.orbiting == Const.OID_NONE and obj.actionIndex < len(obj.actions):
                 target = obj.actions[obj.actionIndex][1]
                 targetObj = tran.db[target]
-                if targetObj.type == T_PLANET:
+                if targetObj.type == Const.T_PLANET:
                     result.target = targetObj.compOf
                 else:
                     result.target = target
@@ -445,35 +448,35 @@ class IFleet(IObject):
             result.name = obj.name
         return [result]
 
-    @public(AL_FULL)
+    @public(Const.AL_FULL)
     def addAction(self, tran, obj, index, action, targetID, aData):
         # check if target is valid
-        if action == FLACTION_REDIRECT:
-            if targetID != OID_NONE:
+        if action == Const.FLACTION_REDIRECT:
+            if targetID != Const.OID_NONE:
                 raise GameException("This command has no target.")
-        elif action == FLACTION_WAIT or action == FLACTION_REPEATFROM:
-            if targetID != OID_NONE:
+        elif action == Const.FLACTION_WAIT or action == Const.FLACTION_REPEATFROM:
+            if targetID != Const.OID_NONE:
                 raise GameException("This command has no target.")
             aData = int(aData)
             if aData < 0:
                 raise GameException("Number equal or larger than 1 must be specified.")
-        elif action == FLACTION_DECLAREWAR:
-            if targetID != OID_NONE:
+        elif action == Const.FLACTION_DECLAREWAR:
+            if targetID != Const.OID_NONE:
                 raise GameException("This command has no target.")
-            if aData == OID_NONE or aData == obj.owner:
+            if aData == Const.OID_NONE or aData == obj.owner:
                 raise GameException("Invalid commander.")
         else:
             target = tran.db[targetID]
-            if target.type not in (T_SYSTEM, T_WORMHOLE, T_PLANET):
+            if target.type not in (Const.T_SYSTEM, Const.T_WORMHOLE, Const.T_PLANET):
                 raise GameException('Can target wormholes, systems or planets only.')
-            if action == FLACTION_ENTERWORMHOLE and target.type != T_WORMHOLE:
+            if action == Const.FLACTION_ENTERWORMHOLE and target.type != Const.T_WORMHOLE:
                 raise GameException('Can only traverse wormholes.')
-            if action == FLACTION_DEPLOY and target.type != T_PLANET:
+            if action == Const.FLACTION_DEPLOY and target.type != Const.T_PLANET:
                 raise GameException('Can build on/colonize planets only.')
             if len(obj.actions) + 1 > Rules.maxCmdQueueLen:
                 raise GameException('Too many commands in the queue.')
             #validate that the target is in the fleet owner's galaxy
-            if target.type == T_PLANET:
+            if target.type == Const.T_PLANET:
                 systemID = target.compOf
             else:
                 systemID = targetID
@@ -499,19 +502,19 @@ class IFleet(IObject):
             obj.actionIndex = min(index, len(obj.actions) - 1)
         return obj.actions, obj.actionIndex
 
-    @public(AL_FULL)
+    @public(Const.AL_FULL)
     def deleteAction(self, tran, obj, index):
         if index >= len(obj.actions) or index < 0:
             raise GameException('Index out of bounds.')
-        if index == obj.actionIndex and obj.orbiting == OID_NONE:
-            if obj.actions[index][0] == FLACTION_MOVE:
+        if index == obj.actionIndex and obj.orbiting == Const.OID_NONE:
+            if obj.actions[index][0] == Const.FLACTION_MOVE:
                 raise GameException('Move command in progress cannot be deleted.')
             else:
                 # convert action to the move command
                 action, targetID, aData = obj.actions[index]
-                obj.actions[index] = (FLACTION_MOVE, targetID, aData)
+                obj.actions[index] = (Const.FLACTION_MOVE, targetID, aData)
                 return obj.actions, obj.actionIndex
-        if index == obj.actionIndex and obj.actions[index][0] == FLACTION_WAIT:
+        if index == obj.actionIndex and obj.actions[index][0] == Const.FLACTION_WAIT:
             # reset wait counters
             obj.actionWaitCounter = 1
         del obj.actions[index]
@@ -519,16 +522,16 @@ class IFleet(IObject):
             obj.actionIndex -= 1
         return obj.actions, obj.actionIndex
 
-    @public(AL_FULL)
+    @public(Const.AL_FULL)
     def setActionIndex(self, tran, obj, index):
         if index >= len(obj.actions) or index < 0:
             raise GameException('Index out of bounds.')
-        if obj.orbiting == OID_NONE:
+        if obj.orbiting == Const.OID_NONE:
             raise GameException('Move command in progress cannot be changed.')
         obj.actionIndex = index
         return obj.actionIndex
 
-    @public(AL_FULL)
+    @public(Const.AL_FULL)
     def moveAction(self, tran, fleet, index, rel):
         if index >= len(fleet.actions):
             raise GameException('No such item in the command list.')
@@ -545,7 +548,7 @@ class IFleet(IObject):
         fleet.actions.insert(index + rel, action)
         return fleet.actions
 
-    @public(AL_FULL)
+    @public(Const.AL_FULL)
     def clearProcessedActions(self, tran, fleet):
         if fleet.actionIndex <= 0:
             return (fleet.actions, fleet.actionIndex)
@@ -557,7 +560,7 @@ class IFleet(IObject):
 
         return (fleet.actions, fleet.actionIndex)
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processACTIONPhase(self, tran, obj, data):
         #@log.debug("Fleet", obj.oid, "ACTION")
         # update fleet data
@@ -590,21 +593,21 @@ class IFleet(IObject):
                     if dmg >= hp:
                         destroyed.append(obj.ships[index])
                     else:
-                        obj.ships[index][SHIP_IDX_HP] -= dmg
+                        obj.ships[index][Const.SHIP_IDX_HP] -= dmg
                 index += 1
             self.cmd(obj).removeShips(tran, obj, destroyed)
             # if fleet has been destroyed -> abort action processing and send message
             if not tran.db.has_key(obj.oid):
                 if obj.orbiting:
                     system = tran.db[obj.orbiting]
-                    Utils.sendMessage(tran, player, MSG_FUEL_LOST_ORBITING, system.oid, (obj.name, system.oid))
+                    Utils.sendMessage(tran, player, Const.MSG_FUEL_LOST_ORBITING, system.oid, (obj.name, system.oid))
                 else:
                     action, target, actionData = obj.actions[obj.actionIndex]
-                    Utils.sendMessage(tran, player, MSG_FUEL_LOST_FLYING, target, (obj.name, target))
+                    Utils.sendMessage(tran, player, Const.MSG_FUEL_LOST_FLYING, target, (obj.name, target))
                 log.debug('IFleet', obj.oid, 'fleet destroyed')
                 return
         # upgrade ships
-        if obj.orbiting != OID_NONE:
+        if obj.orbiting != Const.OID_NONE:
             # autoRepair is part of serviceShips
             self.cmd(obj).serviceShips(tran, obj)
             # record scanner into system scanner overview
@@ -619,55 +622,55 @@ class IFleet(IObject):
             obj.oldX = obj.x
             obj.oldY = obj.y
             # there is nothing to do - try to join other fleets
-            self.cmd(obj).joinFleet(tran, obj, OID_NONE)
+            self.cmd(obj).joinFleet(tran, obj, Const.OID_NONE)
             return
         #@log.debug('IFleet', obj.oid, 'processing action', action)
         while not Utils.isIdleFleet(obj):
             action, target, actionData = obj.actions[obj.actionIndex]
-            if action == FLACTION_NONE:
+            if action == Const.FLACTION_NONE:
                 obj.actionIndex += 1
-            elif action == FLACTION_DEPLOY:
+            elif action == Const.FLACTION_DEPLOY:
                 if self.cmd(obj).actionDeploy(tran, obj):
                     obj.actionIndex += 1
                 break
-            elif action == FLACTION_WAIT:
+            elif action == Const.FLACTION_WAIT:
                 if obj.actionWaitCounter >= actionData:
                     obj.actionWaitCounter = 1
                     obj.actionIndex += 1
                 else:
                     obj.actionWaitCounter += 1
                 break #wait should wait, not let move; deindented this to act for completed waits also --RC
-            elif action == FLACTION_MOVE:
+            elif action == Const.FLACTION_MOVE:
                 if self.cmd(obj).moveToTarget(tran, obj, target):
                     # we are there
                     obj.actionIndex += 1
                 break
-            elif action == FLACTION_ENTERWORMHOLE:
+            elif action == Const.FLACTION_ENTERWORMHOLE:
                 if self.cmd(obj).moveToWormhole(tran, obj, target):
                     # we are there
                     obj.actionIndex += 1
                 break
-            elif action == FLACTION_DECLAREWAR:
+            elif action == Const.FLACTION_DECLAREWAR:
                 # switch off pact allow military ships
                 player = tran.db[obj.owner]
                 self.cmd(player).changePactCond(tran, player, actionData,
-                    PACT_ALLOW_MILITARY_SHIPS, PACT_OFF, [PACT_ALLOW_MILITARY_SHIPS])
+                    Const.PACT_ALLOW_MILITARY_SHIPS, Const.PACT_OFF, [Const.PACT_ALLOW_MILITARY_SHIPS])
                 # next action
                 obj.actionIndex +=1
-            elif action == FLACTION_REFUEL:
+            elif action == Const.FLACTION_REFUEL:
                 # check current refuel level
                 if self.cmd(obj).moveToTarget(tran, obj, target) and refuelled:
                     # next action
                     obj.actionIndex += 1
                 else:
                     break
-            elif action == FLACTION_REDIRECT:
+            elif action == Const.FLACTION_REDIRECT:
                 # ok, let's do some magic
                 if self.cmd(obj).actionRedirect(tran, obj, refuelled):
                     obj.actionIndex += 1
                 else:
                     break
-            elif action == FLACTION_REPEATFROM:
+            elif action == Const.FLACTION_REPEATFROM:
                 log.debug(obj.oid, "Setting action index to", data)
                 if actionData != None:
                     obj.actionIndex = actionData
@@ -683,10 +686,10 @@ class IFleet(IObject):
             # reset retreat counter
             obj.combatRetreatWait = 0
             # try to join some fleet
-            self.cmd(obj).joinFleet(tran, obj, OID_NONE)
+            self.cmd(obj).joinFleet(tran, obj, Const.OID_NONE)
 
     def actionRedirect(self, tran, obj, refuelled):
-        if obj.orbiting != OID_NONE:
+        if obj.orbiting != Const.OID_NONE:
             # try to find fleet with the redirect command (<10 ships)
             # and join it
             system = tran.db[obj.orbiting]
@@ -698,7 +701,7 @@ class IFleet(IObject):
                     continue
                 action, target, actionData = fleet.actions[fleet.actionIndex]
                 # same command, less than 20 ships in the resulting fleet
-                if action == FLACTION_REDIRECT and len(fleet.ships) + len(obj.ships) <= 20:
+                if action == Const.FLACTION_REDIRECT and len(fleet.ships) + len(obj.ships) <= 20:
                     # join it
                     log.debug("JOINING", obj.oid, fleetID)
                     self.cmd(obj).joinFleet(tran, obj, fleetID)
@@ -711,13 +714,13 @@ class IFleet(IObject):
                     return 0
         # move?
         action, target, actionData = obj.actions[obj.actionIndex]
-        if obj.orbiting == OID_NONE or target != OID_NONE:
+        if obj.orbiting == Const.OID_NONE or target != Const.OID_NONE:
             # ok, the target was already selected
             if not self.cmd(obj).moveToTarget(tran, obj, target):
                 # keep moving
                 return 0
         # we are in the system - delete target
-        obj.actions[obj.actionIndex] = (action, OID_NONE, actionData)
+        obj.actions[obj.actionIndex] = (action, Const.OID_NONE, actionData)
         # check if current system has a redirection
         player = tran.db[obj.owner]
         if obj.orbiting not in player.shipRedirections:
@@ -725,7 +728,7 @@ class IFleet(IObject):
             return 1
         # select a new target if tanks are full
         # departure every 6th turn
-        turn = tran.db[OID_UNIVERSE].turn
+        turn = tran.db[Const.OID_UNIVERSE].turn
         if refuelled and turn % 6 == 0:
             obj.actions[obj.actionIndex] = (action, player.shipRedirections[obj.orbiting], actionData)
         return 0
@@ -737,8 +740,8 @@ class IFleet(IObject):
             return 1
         # form new command queue
         obj.actions = [
-            [FLACTION_REFUEL, player.shipRedirections[obj.orbiting], None],
-            [FLACTION_REDIRECT, OID_NONE, None],
+            [Const.FLACTION_REFUEL, player.shipRedirections[obj.orbiting], None],
+            [Const.FLACTION_REDIRECT, Const.OID_NONE, None],
         ]
         obj.actionIndex = 0
         return 0
@@ -773,14 +776,14 @@ class IFleet(IObject):
                     if deployHandler.deployHandlerValidator(tran, obj, planet, deployHandler):
                         try:
                             deployHandler.deployHandlerFunction(tran, obj, planet, deployHandler)
-                            Utils.sendMessage(tran, obj, MSG_DEPLOY_HANDLER, planet.oid, deployHandlerID)
+                            Utils.sendMessage(tran, obj, Const.MSG_DEPLOY_HANDLER, planet.oid, deployHandlerID)
                             removeShip = 1
                         except GameException, e:
                             log.warning('IFleet -','Deploy handler error - internal error')
-                            Utils.sendMessage(tran, obj, MSG_CANNOTBUILD_SHLOST, planet.oid, None)
+                            Utils.sendMessage(tran, obj, Const.MSG_CANNOTBUILD_SHLOST, planet.oid, None)
                     else:
                         log.debug('IFleet -', 'Deploy handler - validation failed')
-                        Utils.sendMessage(tran, obj, MSG_CANNOTBUILD_SHLOST, planet.oid, None)
+                        Utils.sendMessage(tran, obj, Const.MSG_CANNOTBUILD_SHLOST, planet.oid, None)
 
                 for structTechID in tech.deployStructs:
                     if not (type(structTechID) in (int,long)): #just a double check...
@@ -794,15 +797,15 @@ class IFleet(IObject):
                                 structTech.finishConstrHandler(tran, obj, planet, structTech)
                                 planet.slots.insert(0, Utils.newStructure(tran, structTechID, obj.owner, hpRatio = Rules.structFromShipHpRatio))
                                 removeShip = 1
-                                Utils.sendMessage(tran, obj, MSG_COMPLETED_STRUCTURE, planet.oid, structTech.id)
+                                Utils.sendMessage(tran, obj, Const.MSG_COMPLETED_STRUCTURE, planet.oid, structTech.id)
                             except GameException, e:
                                 # cannot build (planet already occupied?)
                                 log.warning('IFleet -', 'Build on planet - cannot complete')
-                                Utils.sendMessage(tran, obj, MSG_CANNOTBUILD_SHLOST, planet.oid, None)
+                                Utils.sendMessage(tran, obj, Const.MSG_CANNOTBUILD_SHLOST, planet.oid, None)
                         else:
                             # no free slot
                             log.debug('IFleet -', 'Build on planet - no free slot')
-                            Utils.sendMessage(tran, obj, MSG_CANNOTBUILD_NOSLOT, planet.oid, None)
+                            Utils.sendMessage(tran, obj, Const.MSG_CANNOTBUILD_NOSLOT, planet.oid, None)
                     else:
                         # cannot build this here TODO report it
                         log.debug('IFleet -', 'Build on planet - cannot build here (validation)')
@@ -817,7 +820,7 @@ class IFleet(IObject):
         actionDeploy.public = 0
 
     def refuelAndRepairAndRecharge(self, tran, obj):
-        if obj.orbiting == OID_NONE:
+        if obj.orbiting == Const.OID_NONE:
             # we are in space
             return 0
         # find ALLIED PLANETS
@@ -828,13 +831,13 @@ class IFleet(IObject):
         repairShip = 0.0
         for planetID in system.planets:
             planet = tran.db[planetID]
-            if planet.owner == OID_NONE:
+            if planet.owner == Const.OID_NONE:
                 continue
             if planet.owner == player.oid:
                 refuelMax = max(refuelMax, planet.refuelMax)
                 refuelInc = max(refuelInc, planet.refuelInc)
                 repairShip = max(repairShip, planet.repairShip)
-            elif self.cmd(player).isPactActive(tran, player, planet.owner, PACT_ALLOW_TANKING):
+            elif self.cmd(player).isPactActive(tran, player, planet.owner, Const.PACT_ALLOW_TANKING):
                 refuelMax = max(refuelMax, planet.refuelMax)
                 refuelInc = max(refuelInc, planet.refuelInc)
                 repairShip = max(repairShip, planet.repairShip)
@@ -879,7 +882,7 @@ class IFleet(IObject):
             planet = tran.db[planetID]
             if planet.owner == player.oid and planet.upgradeShip > 0:
                 upgrPlanets.append(planet)
-            elif self.cmd(player).isPactActive(tran, player, planet.owner, PACT_ALLOW_TANKING) and planet.upgradeShip > 0:
+            elif self.cmd(player).isPactActive(tran, player, planet.owner, Const.PACT_ALLOW_TANKING) and planet.upgradeShip > 0:
                 upgrPlanets.append(planet)
             if planet.owner == player.oid and planet.trainShipInc > 0.0:
                 trainShipInc = max(trainShipInc, planet.trainShipInc)
@@ -887,11 +890,11 @@ class IFleet(IObject):
         # train ships
         if trainShipInc > 0:
             for index, ship in enumerate(obj.ships):
-                spec = player.shipDesigns[ship[SHIP_IDX_DESIGNID]]
-                if ship[SHIP_IDX_EXP] / spec.baseExp < trainShipMax and spec.isMilitary:
-                    ship[SHIP_IDX_EXP] = min(
+                spec = player.shipDesigns[ship[Const.SHIP_IDX_DESIGNID]]
+                if ship[Const.SHIP_IDX_EXP] / spec.baseExp < trainShipMax and spec.isMilitary:
+                    ship[Const.SHIP_IDX_EXP] = min(
                         spec.baseExp * trainShipMax,
-                        ship[SHIP_IDX_EXP] + max(int(trainShipInc * spec.baseExp), 1),
+                        ship[Const.SHIP_IDX_EXP] + max(int(trainShipInc * spec.baseExp), 1),
                     )
         if not upgrPlanets:
             # no service facility
@@ -913,7 +916,7 @@ class IFleet(IObject):
                 # scan all ships for design
                 designExists = 0
                 for index in xrange(0, len(obj.ships)):
-                    if obj.ships[index][SHIP_IDX_DESIGNID] == designID:
+                    if obj.ships[index][Const.SHIP_IDX_DESIGNID] == designID:
                         # find planet with free upgrade points
                         needsUPts = Rules.shipUpgradePts[upgradeToSpec.combatClass]
                         planet = None
@@ -939,7 +942,7 @@ class IFleet(IObject):
                         ok = 1
                         for sr in neededSR:
                             if player.stratRes.get(sr, 0) < neededSR[sr]:
-                                Utils.sendMessage(tran, obj, MSG_CANNOT_UPGRADE_SR, obj.oid, (spec.name, upgradeToSpec.name, sr))
+                                Utils.sendMessage(tran, obj, Const.MSG_CANNOT_UPGRADE_SR, obj.oid, (spec.name, upgradeToSpec.name, sr))
                                 # skip this ship
                                 ok = 0
                         if not ok:
@@ -951,14 +954,14 @@ class IFleet(IObject):
                         # upgrade ship
                         log.debug("Upgrading ship in fleet", obj.oid, needsUPts, planet.upgradeShip, planet.oid)
                         maxHPRatio = max(0.01, 1.0 - max(upgradeToSpec.buildProd - spec.buildProd, 0) / float(upgradeToSpec.buildProd))
-                        obj.ships[index][SHIP_IDX_DESIGNID] = spec.upgradeTo
-                        obj.ships[index][SHIP_IDX_HP] = max(1, min(
+                        obj.ships[index][Const.SHIP_IDX_DESIGNID] = spec.upgradeTo
+                        obj.ships[index][Const.SHIP_IDX_HP] = max(1, min(
                             obj.ships[index][1],
                             int(upgradeToSpec.maxHP * maxHPRatio)
                         ))
-                        obj.ships[index][SHIP_IDX_SHIELDHP] = upgradeToSpec.shieldHP
+                        obj.ships[index][Const.SHIP_IDX_SHIELDHP] = upgradeToSpec.shieldHP
                         # cap max experience based on equivilent percentage of experience transfer (prevent high baseExp ship upgrading to low baseExp ships with a higher bonus)
-                        obj.ships[index][SHIP_IDX_EXP] = min(obj.ships[index][SHIP_IDX_EXP],int(1.0 * upgradeToSpec.baseExp / spec.baseExp * obj.ships[index][SHIP_IDX_EXP]))
+                        obj.ships[index][Const.SHIP_IDX_EXP] = min(obj.ships[index][Const.SHIP_IDX_EXP],int(1.0 * upgradeToSpec.baseExp / spec.baseExp * obj.ships[index][Const.SHIP_IDX_EXP]))
                         upgraded += 1
                         #@log.debug("HP penalty", diff, upgradeToSpec.buildProd, maxHPRatio)
                         player.fleetUpgradePool -= diff
@@ -966,9 +969,9 @@ class IFleet(IObject):
                         # consume upgrade points
                         planet.upgradeShip -= needsUPts
                         # record last upgrade
-                        obj.lastUpgrade = tran.db[OID_UNIVERSE].turn
+                        obj.lastUpgrade = tran.db[Const.OID_UNIVERSE].turn
                         # send a message to the player
-                        # Utils.sendMessage(tran, obj, MSG_UPGRADED_SHIP, obj.oid, (spec.name, player.shipDesigns[spec.upgradeTo].name))
+                        # Utils.sendMessage(tran, obj, Const.MSG_UPGRADED_SHIP, obj.oid, (spec.name, player.shipDesigns[spec.upgradeTo].name))
                         if player.fleetUpgradePool < diff:
                             break
                 if player.fleetUpgradePool < diff:
@@ -993,13 +996,13 @@ class IFleet(IObject):
                     repairPerc = max(spec.autoRepairPerc, forceRepairPerc)
                 if repairFix > 0 or repairPerc > 0:
                     #&log.debug("IFleet - repairing ship", obj.oid, designID, hp, repairFix, repairPerc)
-                    obj.ships[idx][SHIP_IDX_HP] = int(min(
+                    obj.ships[idx][Const.SHIP_IDX_HP] = int(min(
                         spec.maxHP,
                         hp + repairFix + max(1, spec.maxHP * repairPerc),
                     ))
             if shields < spec.shieldHP and obj.storEn:
                 #@log.debug("IFleet - recharging shields", designID, shields, spec.shieldRechargeFix, spec.shieldRechargePerc)
-                obj.ships[idx][SHIP_IDX_SHIELDHP] = int(min(
+                obj.ships[idx][Const.SHIP_IDX_SHIELDHP] = int(min(
                     spec.shieldHP,
                     shields + spec.shieldRechargeFix + max(1, spec.shieldHP * spec.shieldRechargePerc),
                 ))
@@ -1013,7 +1016,7 @@ class IFleet(IObject):
             if not self.cmd(obj).moveToTarget(tran, obj, targetID):
                 return 0 #ship hasn't arrived
         # enter wormhole
-        if origin.type == T_WORMHOLE: #is wormhole, now enter it!
+        if origin.type == Const.T_WORMHOLE: #is wormhole, now enter it!
             destinationWormHole = tran.db[origin.destinationOid]
             if destinationWormHole.oid == targetID:
                 return 1
@@ -1031,11 +1034,11 @@ class IFleet(IObject):
             obj.x = destinationWormHole.x
             obj.y = destinationWormHole.y
             destinationWormHole.scannerPwrs[obj.owner] = max(obj.scannerPwr, destinationWormHole.scannerPwrs.get(obj.owner, 0))
-            Utils.sendMessage(tran, obj, MSG_ENTERED_WORMHOLE, destinationWormHole.oid , (origin.name,destinationWormHole.name))
+            Utils.sendMessage(tran, obj, Const.MSG_ENTERED_WORMHOLE, destinationWormHole.oid , (origin.name,destinationWormHole.name))
             arrived = 1
         else: #is not wormhole...how'd you ever execute this command? Or is there some weird "terraform wormhole" technology we never forsaw?
             log.warning('IFleet', 'Cannot enter non-existant wormhole at location ', origin.oid)
-            #Utils.sendMessage(tran, obj, MSG_ENTERED_WORMHOLE, destinationWormHole.oid , (origin.name,destinationWormHole.name))
+            #Utils.sendMessage(tran, obj, Const.MSG_ENTERED_WORMHOLE, destinationWormHole.oid , (origin.name,destinationWormHole.name))
             arrived = 1 #since the move part was successful, just ignore this problem for the player
         return arrived
 
@@ -1048,7 +1051,7 @@ class IFleet(IObject):
             # reset retreat counter
             obj.combatRetreatWait = 0
             return 1
-        if targetID == OID_NONE:
+        if targetID == Const.OID_NONE:
             # reset retreat counter
             obj.combatRetreatWait = 0
             return 1
@@ -1080,19 +1083,19 @@ class IFleet(IObject):
                 system.fleets.remove(obj.oid)
             except ValueError:
                 log.warning('IFleet', 'Problem with removing fleet from system.')
-            obj.orbiting = OID_NONE
+            obj.orbiting = Const.OID_NONE
             # change close system to target one
-            if obj.closeSystem != OID_NONE: # TODO remove condition in 0.6
+            if obj.closeSystem != Const.OID_NONE: # TODO remove condition in 0.6
                 system = tran.db[obj.closeSystem]
                 try:
                     system.closeFleets.remove(obj.oid)
                 except ValueError:
                     log.warning("IFleet", "Problem with changing the close system.")
-            if target.type == T_PLANET:
+            if target.type == Const.T_PLANET:
                 system = tran.db[target.compOf]
                 system.closeFleets.append(obj.oid)
                 obj.closeSystem = system.oid
-            elif target.type in (T_SYSTEM, T_WORMHOLE):
+            elif target.type in (Const.T_SYSTEM, Const.T_WORMHOLE):
                 target.closeFleets.append(obj.oid)
                 obj.closeSystem = target.oid
             else:
@@ -1108,12 +1111,12 @@ class IFleet(IObject):
             # we are at destination
             obj.x = target.x
             obj.y = target.y
-            if target.type == T_PLANET:
+            if target.type == Const.T_PLANET:
                 obj.orbiting = target.compOf
                 system = tran.db[obj.orbiting]
                 system.fleets.append(obj.oid)
                 arrived = 1
-            elif target.type == T_SYSTEM or target.type == T_WORMHOLE:
+            elif target.type == Const.T_SYSTEM or target.type == Const.T_WORMHOLE:
                 #@log.debug('IFleet', obj.oid, 'is aproaching orbit of', targetID)
                 obj.orbiting = target.oid
                 system = tran.db[obj.orbiting]
@@ -1129,7 +1132,7 @@ class IFleet(IObject):
             # (already moved 1 x maxDelta) (0.01 is acceptable error)
             obj.eta = math.ceil(dist / maxDelta - 1 - 0.01)
         if arrived:
-            obj.target = OID_NONE
+            obj.target = Const.OID_NONE
             # just make sure that this is reset
             obj.combatRetreatWait = 0
             # turn scanner on
@@ -1141,9 +1144,9 @@ class IFleet(IObject):
                 # damage is based on percentual difference
                 percHull = 1.0 - Rules.starGateDamage * (obj.speedBoost / speedBoost - 1.0)
                 log.debug(obj.oid, "fleet speed boost too low - damaging ships", speedBoost, obj.speedBoost, percHull)
-                Utils.sendMessage(tran, obj, MSG_DAMAGE_BY_SG, obj.orbiting, int((1.0 - percHull) * 100))
+                Utils.sendMessage(tran, obj, Const.MSG_DAMAGE_BY_SG, obj.orbiting, int((1.0 - percHull) * 100))
                 for ship in obj.ships:
-                    ship[SHIP_IDX_HP] = max(1, int(ship[SHIP_IDX_HP] * percHull))
+                    ship[Const.SHIP_IDX_HP] = max(1, int(ship[Const.SHIP_IDX_HP] * percHull))
                 # TODO: send message to player
             obj.speedBoost = 1.0
             # add ship to the scanner pwrs of the system
@@ -1152,7 +1155,7 @@ class IFleet(IObject):
 
     moveToTarget.public = 0
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processFINALPhase(self, tran, obj, data):
         # stats
         player = tran.db[obj.owner]

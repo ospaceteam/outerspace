@@ -23,7 +23,7 @@ import Rules
 import ShipUtils
 import Utils
 
-from Const import *
+import Const
 from ige import log
 from IPlayer import IPlayer
 from ige.IObject import public
@@ -31,7 +31,7 @@ from ige.IDataHolder import IDataHolder
 
 class IAIMutantPlayer(IPlayer):
 
-    typeID = T_AIMUTPLAYER
+    typeID = Const.T_AIMUTPLAYER
     forums = {"INBOX": 56, "OUTBOX": 56, "EVENTS": 0}
 
     def init(self, obj):
@@ -51,7 +51,7 @@ class IAIMutantPlayer(IPlayer):
                 counter += 1
                 continue
             tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
-            tran.db[OID_UNIVERSE].players.append(obj.oid)
+            tran.db[Const.OID_UNIVERSE].players.append(obj.oid)
             tran.gameMngr.clientMngr.createAIAccount(obj.login, obj.name, 'ais_mutant')
             break
         # grant techs and so on
@@ -59,7 +59,7 @@ class IAIMutantPlayer(IPlayer):
 
     @staticmethod
     def setStartingPlanet(tran, planet):
-        planet.slots.append(Utils.newStructure(tran, Rules.Tech.MUTANTBASE, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
+        planet.slots.append(Utils.newStructure(tran, Rules.Tech.MUTANTBASE, planet.owner, Const.STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
         planet.storPop = 3000
 
     @staticmethod
@@ -112,7 +112,7 @@ class IAIMutantPlayer(IPlayer):
         # call super method
         IPlayer.update(self, tran, obj)
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processRSRCHPhase(self, tran, obj, data):
         # do not research anything
         return
@@ -124,16 +124,16 @@ class IAIMutantPlayer(IPlayer):
 
     def getDiplomacyWith(self, tran, obj, playerID):
         if obj.oid == playerID:
-            return REL_UNITY
+            return Const.REL_UNITY
         # this AI battles with overyone
         # make default
         dipl = IDataHolder()
-        dipl.type = T_DIPLREL
+        dipl.type = Const.T_DIPLREL
         dipl.pacts = {}
-        dipl.relation = REL_ENEMY
+        dipl.relation = Const.REL_ENEMY
         dipl.relChng = 0
-        dipl.lastContact = tran.db[OID_UNIVERSE].turn
-        dipl.contactType = CONTACT_NONE
+        dipl.lastContact = tran.db[Const.OID_UNIVERSE].turn
+        dipl.contactType = Const.CONTACT_NONE
         dipl.stats = None
         return dipl
 

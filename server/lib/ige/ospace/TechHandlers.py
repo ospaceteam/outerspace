@@ -18,15 +18,19 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-import Rules, Utils
-from Const import *
+import math
 import random
+import sys
+
+import Const
+import Rules
+import Utils
+
 from ige import log
-import math, sys
 
 def spaceDocksTurn(tran, obj, tech):
     # skip unowned planets
-    if obj.owner == OID_NONE:
+    if obj.owner == Const.OID_NONE:
         return
     maxRepaired, repairHP = tech.data.split(",")
     eff = Utils.getTechEff(tran, tech.id, obj.owner)
@@ -36,7 +40,7 @@ def spaceDocksTurn(tran, obj, tech):
     # find damaged allied ship
     system = tran.db[obj.compOf]
     owner = tran.db[obj.owner]
-    for relation in (REL_UNITY, REL_ALLY_LO):
+    for relation in (Const.REL_UNITY, Const.REL_ALLY_LO):
         for fleetID in system.fleets:
             fleet = tran.db[fleetID]
             rel = tran.gameMngr.cmdPool[owner.type].getRelationTo(tran, owner, fleet.owner)
@@ -90,7 +94,7 @@ def finishStructGOVCENTER(tran, source, target, tech):
     slots.reverse()
     govStr = 0
     for slot in slots:
-        tech = Rules.techs[slot[STRUCT_IDX_TECHID]]
+        tech = Rules.techs[slot[Const.STRUCT_IDX_TECHID]]
         if tech.govPwr > 0 and planet.oid != target.oid:
             planet.slots.remove(slot)
             break
@@ -104,7 +108,7 @@ def finishStructGOVCENTER(tran, source, target, tech):
     player.planets.remove(target.oid)
     player.planets.insert(0, target.oid)
     # message
-    Utils.sendMessage(tran, target, MSG_NEW_GOVCENTER, target.oid, None)
+    Utils.sendMessage(tran, target, Const.MSG_NEW_GOVCENTER, target.oid, None)
 
 def validateTRUE(tran,source,target,tech):
     return 1;
@@ -191,7 +195,7 @@ def finishProjectPRODRSRC(tran, source, target, tech):
     target.storBio += int(tech.prodBio * techEff)
     target.storEn += int(tech.prodEn * techEff)
     # sci pts
-    if target.owner != OID_NONE:
+    if target.owner != Const.OID_NONE:
         owner = tran.db[target.owner]
         owner.sciPoints += int(tech.prodSci * techEff)
 
@@ -201,7 +205,7 @@ def finishProjectREPAIRSHIPS2(tran, source, target, tech):
 
 ## Produce strategic resource
 def finishProjectNF(tran, source, target, tech):
-    if target.owner != OID_NONE:
+    if target.owner != Const.OID_NONE:
         techEff = Utils.getTechEff(tran, tech.id, source.owner)
         # TODO success shall depend on the level of the technology
         owner = tran.db[target.owner]
@@ -210,19 +214,19 @@ def finishProjectNF(tran, source, target, tech):
 
 ## Antimatter transmutation
 def finishProjectNF2(tran, source, target, tech):
-    if target.owner != OID_NONE:
+    if target.owner != Const.OID_NONE:
         techEff = Utils.getTechEff(tran, tech.id, source.owner)
         # TODO success shall depend on the level of the technology
         owner = tran.db[target.owner]
         stratRes = int(tech.data)
         owner.stratRes[stratRes] = owner.stratRes.get(stratRes, 0) + 4 * Rules.stratResAmountBig
-        Utils.sendMessage(tran, target, MSG_EXTRACTED_ANTIMATTER_SYNTH, target.oid, stratRes)
+        Utils.sendMessage(tran, target, Const.MSG_EXTRACTED_ANTIMATTER_SYNTH, target.oid, stratRes)
 
 ## Upgrade ships
 def finishProjectUPGRADESHIPS(tran, source, target, tech):
     techEff = Utils.getTechEff(tran, tech.id, source.owner)
     # fleet upgrade pool
-    if target.owner != OID_NONE:
+    if target.owner != Const.OID_NONE:
         owner = tran.db[target.owner]
         owner.fleetUpgradePool += int(tech.prodProd * techEff)
 
@@ -309,7 +313,7 @@ def OLDgetPirateFameMod(tran, player, system):
         if planet.owner == player.oid:
             # minimum reached, don't check rest
             return 0.0
-        elif planet.plStratRes in (SR_TL3A, SR_TL3B, SR_TL3C):
+        elif planet.plStratRes in (Const.SR_TL3A, Const.SR_TL3B, Const.SR_TL3C):
             mod = min(mod, Rules.pirateTL3StratResColonyCostMod)
     return mod
 
@@ -327,10 +331,10 @@ def getPirateFameMod(tran, player, system):
     mod = 1.0
     for planetID in system.planets:
         planet = tran.db[planetID]
-        if getattr(planet, 'owner', OID_NONE) == player.oid:
+        if getattr(planet, 'owner', Const.OID_NONE) == player.oid:
             # minimum reached, don't check rest
             return 0.0
-        elif getattr(planet, 'plStratRes', None) in (SR_TL3A, SR_TL3B, SR_TL3C):
+        elif getattr(planet, 'plStratRes', None) in (Const.SR_TL3A, Const.SR_TL3B, Const.SR_TL3C):
             mod = min(mod, Rules.pirateTL3StratResColonyCostMod)
     dist = distToNearestPiratePlanet(tran, player, system)
     if Rules.pirateGainFamePropability(dist) > 0:
@@ -341,7 +345,7 @@ def getPirateFameMod(tran, player, system):
 
 def validateStructPIROUTPOST(tran, source, target, tech):
     player = tran.db[source.owner]
-    if source.type == T_FLEET and target.owner != player.oid:
+    if source.type == Const.T_FLEET and target.owner != player.oid:
         mod = getPirateFameMod(tran, player, tran.db[target.compOf])
         return player.pirateFame >= int(mod * Rules.pirateColonyCostMod * len(player.planets))
     else:
@@ -351,7 +355,7 @@ def finishStructPIROUTPOST(tran, source, target, tech):
     log.debug("Finishing PIRATE OUTPOST", tech.id, "target", target.oid)
     player = tran.db[source.owner]
     famePenalty = 0
-    if source.type == T_FLEET:
+    if source.type == Const.T_FLEET:
         mod = getPirateFameMod(tran, player, tran.db[target.compOf])
         log.debug(source.owner, "DEPLOYING MODULE -- BEFORE", player.pirateFame, mod)
         famePenalty = int(mod * Rules.pirateColonyCostMod * len(player.planets))

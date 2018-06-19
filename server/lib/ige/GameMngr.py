@@ -26,19 +26,18 @@ import time
 
 import ige
 import log
-from Const import *
+import Const
+
 from SQLiteDatabase import Database
 from Index import Index
 from IObject import IDataHolder
 from Transaction import Transaction
 
-from ige.Const import ADMIN_LOGIN
-
 class GameMngr:
 
     def __init__(self, gameID, config, clientMngr, msgMngr, database, configDir, gameName = None):
         log.debug("Runtime mode", ige.igeRuntimeMode)
-        self.status = GS_INIT
+        self.status = Const.GS_INIT
         self.gameID = gameID
         self.gameName = gameName or gameID
         self.clientMngr = clientMngr
@@ -54,39 +53,39 @@ class GameMngr:
         pass
 
     def start(self):
-        if self.status == GS_RUNNING:
+        if self.status == Const.GS_RUNNING:
             return
         # start timer
-        self.status = GS_RUNNING
+        self.status = Const.GS_RUNNING
 
     def stop(self, checkpoint = 1):
-        if self.status == GS_STOPPED:
+        if self.status == Const.GS_STOPPED:
             return
         # stop timer
-        self.status = GS_STOPPED
+        self.status = Const.GS_STOPPED
         if checkpoint:
             self.db.checkpoint()
             self.msgMngr.checkpoint()
             self.clientMngr.checkpoint()
 
     def shutdown(self):
-        if self.status == GS_SDOWN:
+        if self.status == Const.GS_SDOWN:
             return
         self.stop(checkpoint = 0)
-        self.status = GS_SDOWN
+        self.status = Const.GS_SDOWN
         self.db.shutdown()
 
     def upgrade(self):
         oldStatus = self.status
-        self.status = GS_MAINT
-        tran = Transaction(self, OID_ADMIN)
+        self.status = Const.GS_MAINT
+        tran = Transaction(self, Const.OID_ADMIN)
         # used objects
         objIDs = {}
         for objID in self.db.keys():
             objIDs[objID] = None
         del objIDs[1]
-        del objIDs[OID_ADMIN]
-        del objIDs[OID_I_LOGIN2OID]
+        del objIDs[Const.OID_ADMIN]
+        del objIDs[Const.OID_I_LOGIN2OID]
         # stats
         types = {}
         typesMin = {}
@@ -95,16 +94,16 @@ class GameMngr:
         # upgrade all objects in database
         # and collect all not referenced objects
         # TODO: remove after 0.5.73
-        for login, mapping in self.db[OID_I_LOGIN2OID].iteritems():
+        for login, mapping in self.db[Const.OID_I_LOGIN2OID].iteritems():
             try:
                 # this does not fail if upgrade is needed
                 mapping + 1
                 # fix stuff
-                self.db[OID_I_LOGIN2OID][login] = [mapping]
+                self.db[Const.OID_I_LOGIN2OID][login] = [mapping]
             except TypeError:
                 pass
         # make proper AI accounts TODO: remove after 0.5.73
-        for login, mapping in self.db[OID_I_LOGIN2OID].iteritems():
+        for login, mapping in self.db[Const.OID_I_LOGIN2OID].iteritems():
             if login.startswith('*AIP*'):
                 # let's replace this account with new, shiny one!
                 if "rebels" in login:
@@ -164,9 +163,9 @@ class GameMngr:
         self.db.clear()
         self.msgMngr.clear()
         # create indexes
-        self.db.create(Index(), OID_I_LOGIN2OID)
+        self.db.create(Index(), Const.OID_I_LOGIN2OID)
         # create admin
-        self.registerPlayer(ADMIN_LOGIN, self.createAdmin(), OID_ADMIN)
+        self.registerPlayer(Const.ADMIN_LOGIN, self.createAdmin(), Const.OID_ADMIN)
         # create universe
         self.createUniverse()
         # save all informations
@@ -176,7 +175,7 @@ class GameMngr:
 
     def processTurn(self, sid, turns = 1):
         session = self.clientMngr.getSession(sid)
-        if session.login != ADMIN_LOGIN:
+        if session.login != Const.ADMIN_LOGIN:
             raise ige.SecurityException('You cannot issue this command.')
         for turn in xrange(turns):
             log.message("--- TURN PROCESSING STARTED ---")
@@ -220,14 +219,14 @@ class GameMngr:
 
     def getTurnData(self, sid):
         # disable command execution during turn processing
-        self.status = GS_TURNINPROG
+        self.status = Const.GS_TURNINPROG
         return 1, None
 
     def turnFinished(self, sid):
         # notify logged player's about finished turn
         for sessionID in self.clientMngr.sessions.keys():
             session = self.clientMngr.getSession(sessionID)
-            session.messages[SMESSAGE_NEWTURN] = None
+            session.messages[Const.SMESSAGE_NEWTURN] = None
         # commit only in normal mode
         log.debug("Runtime mode", ige.igeRuntimeMode)
         if ige.igeRuntimeMode:
@@ -235,12 +234,12 @@ class GameMngr:
             self.msgMngr.checkpoint()
             self.clientMngr.checkpoint()
         # enable normal operations
-        self.status = GS_RUNNING
+        self.status = Const.GS_RUNNING
         return 1, None
 
     def backup(self, sid, basename):
         session = self.clientMngr.getSession(sid)
-        if session.login != ADMIN_LOGIN:
+        if session.login != Const.ADMIN_LOGIN:
             raise ige.SecurityException('You cannot issue this command.')
         self.db.backup(basename)
         self.clientMngr.backup(basename)
@@ -249,7 +248,7 @@ class GameMngr:
 
     def commitDatabases(self, sid):
         session = self.clientMngr.getSession(sid)
-        if session.login != ADMIN_LOGIN:
+        if session.login != Const.ADMIN_LOGIN:
             raise ige.SecurityException('You cannot issue this command.')
         self.db.checkpoint()
         self.clientMngr.checkpoint()
@@ -278,7 +277,7 @@ class GameMngr:
         if session.cid:
             raise ige.GameException('You already selected a player object.')
         try:
-            accounts_player_objects = self.db[OID_I_LOGIN2OID].get(session.login, [])
+            accounts_player_objects = self.db[Const.OID_I_LOGIN2OID].get(session.login, [])
         except AttributeError:
             raise ige.SecurityException('Not logged in.')
 
@@ -301,11 +300,11 @@ class GameMngr:
     def unregisterPlayer(self, playerObj):
         log.debug('unregisterPlayer', playerObj.login, playerObj.name)
         # preconditions
-        if not self.db[OID_I_LOGIN2OID].has_key(playerObj.login):
+        if not self.db[Const.OID_I_LOGIN2OID].has_key(playerObj.login):
             log.debug("Account %s does not exist" % playerObj.login)
         # try to remove it
         try:
-            self.db[OID_I_LOGIN2OID][playerObj.login].remove(playerObj.oid)
+            self.db[Const.OID_I_LOGIN2OID][playerObj.login].remove(playerObj.oid)
         except:
             log.warning("Cannot remove '%s' from LOGIN2OID index" % playerObj.login)
         try:
@@ -324,7 +323,7 @@ class GameMngr:
         #@log.debug('Message', sourceID, msgID, locationID, turn, data)
         obj = self.db[sourceID]
         # notify owner
-        if obj.owner == OID_NONE:
+        if obj.owner == Const.OID_NONE:
             log.warning('OID', sourceID, 'has no owner - no target for a message')
         else:
             owner = self.db[obj.owner]
@@ -339,7 +338,7 @@ class GameMngr:
             self.cmdPool[owner.type].sendAdminMsg(tran, owner, message)
             session = self.clientMngr.getSessionByCID(obj.owner)
             if session:
-                session.messages[SMESSAGE_NEWMESSAGE] = None
+                session.messages[Const.SMESSAGE_NEWMESSAGE] = None
 
     # dispatch command
     def execute(self, sid, command, oid, *args):
@@ -352,7 +351,7 @@ class GameMngr:
         if not self.validateClient(session):
             raise ige.GameException('Wrong version of client.')
         # check game status (admin is allowed anytime)
-        if self.status != GS_RUNNING and session.cid != OID_ADMIN:
+        if self.status != Const.GS_RUNNING and session.cid != Const.OID_ADMIN:
             raise ige.ServerStatusException(self.status)
         # check existence of the commander
         if not self.db.has_key(session.cid):
@@ -368,11 +367,11 @@ class GameMngr:
         if not hasattr(cmdObj, 'public') or not cmdObj.public:
             raise ige.SecurityException('Access denied - method is not public.')
         # get acces level of the commander
-        accLevel = AL_NONE
+        accLevel = Const.AL_NONE
         if obj.owner == session.cid:
-            accLevel = AL_OWNER
-        if session.cid == OID_ADMIN:
-            accLevel = AL_ADMIN
+            accLevel = Const.AL_OWNER
+        if session.cid == Const.OID_ADMIN:
+            accLevel = Const.AL_ADMIN
         #@log.debug('access rights', accLevel, cmdObj.accLevel)
         if cmdObj.accLevel > accLevel:
             raise ige.SecurityException('Access denied - low access level.')

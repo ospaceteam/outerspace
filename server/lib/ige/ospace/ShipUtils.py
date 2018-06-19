@@ -18,13 +18,15 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+import copy
+import random
+
+import Const
 import Rules
+
 from ige import GameException
 from ige import log
 from ige.IDataHolder import IDataHolder
-from Const import *
-import random
-import copy
 
 
 def makeShipMinSpec(player, name, hullID, eqIDs, improvements,
@@ -32,7 +34,7 @@ def makeShipMinSpec(player, name, hullID, eqIDs, improvements,
     ship = makeShipFullSpec(player, name, hullID, eqIDs, improvements, raiseExs)
     # make 'real' ship spec
     spec = IDataHolder()
-    spec.type = T_SHIP
+    spec.type = Const.T_SHIP
     spec.name = ship.name
     spec.hullID = ship.hullID
     spec.level = ship.level
@@ -76,7 +78,7 @@ def makeShipFullSpec(player, name, hullID, eqIDs, improvements, raiseExs = True)
     if not hull.isShipHull:
         raise GameException("Ship's hull must be specified.")
     ship = IDataHolder()
-    ship.type = T_SHIP
+    ship.type = Const.T_SHIP
     # initial values
     techEff = Rules.techImprEff[player.techs.get(hullID, Rules.techBaseImprovement)]
     ship.name = name
@@ -221,10 +223,10 @@ def makeShipFullSpec(player, name, hullID, eqIDs, improvements, raiseExs = True)
                 weapon = Rules.techs[techID]
                 ship.baseExp += (weapon.weaponDmgMin + weapon.weaponDmgMax) / 2 * weapon.weaponROF
             # deployables
-            if tech.unpackStruct != OID_NONE:
+            if tech.unpackStruct != Const.OID_NONE:
                 ship.deployStructs.append(tech.unpackStruct)
                 unpactStruct = 1
-            if tech.deployHandlerID != OID_NONE: #this calls another tech at execute time, so only need the ID
+            if tech.deployHandlerID != Const.OID_NONE: #this calls another tech at execute time, so only need the ID
                 ship.deployHandlers.append(tech.deployHandlerID)
                 deployHandler = 1
 
@@ -268,18 +270,18 @@ def makeShipFullSpec(player, name, hullID, eqIDs, improvements, raiseExs = True)
     if len(improvements) > Rules.shipMaxImprovements and raiseExs:
         raise GameException("Too many improvements.")
     for i in improvements:
-        if i == SI_SPEED:
+        if i == Const.SI_SPEED:
             ship.speed *= Rules.shipImprovementMod
-        elif i == SI_TANKS:
+        elif i == Const.SI_TANKS:
             ship.storEn *= Rules.shipImprovementMod
-        elif i == SI_ATT:
+        elif i == Const.SI_ATT:
             ship.combatAtt *= Rules.shipImprovementMod
-        elif i == SI_DEF:
+        elif i == Const.SI_DEF:
             ship.combatDef *= Rules.shipImprovementMod
             ship.missileDef *= Rules.shipImprovementMod
-        elif i == SI_HP:
+        elif i == Const.SI_HP:
             ship.maxHP *= Rules.shipImprovementMod
-        elif i == SI_SHIELDS:
+        elif i == Const.SI_SHIELDS:
             ship.shieldHP *= Rules.shipImprovementMod
     # round values down
     ship.storEn = int(ship.storEn)
@@ -354,7 +356,7 @@ def sortShips(ships):
     # split them
     types = {}
     for ship in ships:
-        t = ship[SHIP_IDX_DESIGNID]
+        t = ship[Const.SHIP_IDX_DESIGNID]
         if t not in types:
             types[t] = []
         types[t].append(ship)
@@ -364,7 +366,7 @@ def sortShips(ships):
     counters = {}
     for t in types:
         # take shield into account
-        types[t].sort(key=lambda a: a[SHIP_IDX_HP] + a[SHIP_IDX_SHIELDHP])
+        types[t].sort(key=lambda a: a[Const.SHIP_IDX_HP] + a[Const.SHIP_IDX_SHIELDHP])
         incrs[t] = 1.0 / (float(len(types[t])) / len(ships))
         counters[t] = incrs[t]
 

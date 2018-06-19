@@ -19,11 +19,11 @@
 #
 import time
 
-import ShipUtils
+import Const
 import Rules
+import ShipUtils
 import Utils
 
-from Const import *
 from ige import log
 from ige.IDataHolder import IDataHolder
 from ige.IObject import public
@@ -31,7 +31,7 @@ from IPlayer import IPlayer
 
 class IAIRenegadePlayer(IPlayer):
 
-    typeID = T_AIRENPLAYER
+    typeID = Const.T_AIRENPLAYER
     forums = {"INBOX": 56, "OUTBOX": 56, "EVENTS": 0}
 
     def init(self, obj):
@@ -51,13 +51,13 @@ class IAIRenegadePlayer(IPlayer):
                 counter += 1
                 continue
             tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
-            tran.db[OID_UNIVERSE].players.append(obj.oid)
+            tran.db[Const.OID_UNIVERSE].players.append(obj.oid)
             tran.gameMngr.clientMngr.createAIAccount(obj.login, obj.name, 'ais_renegade')
             break
         # grant techs and so on
         self.cmd(obj).update(tran, obj)
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processINITPhase(self, tran, obj, data):
         IPlayer.processINITPhase(self, tran, obj, data)
 
@@ -68,7 +68,7 @@ class IAIRenegadePlayer(IPlayer):
         if not obj.fleets and not obj.planets:
             self.cmd(obj).delete(tran, obj)
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processRSRCHPhase(self, tran, obj, data):
         # do not research anything
         return
@@ -80,7 +80,7 @@ class IAIRenegadePlayer(IPlayer):
 
     @staticmethod
     def setStartingPlanet(tran, planet):
-        planet.slots.append(Utils.newStructure(tran, Rules.Tech.RENEGADEBASE, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
+        planet.slots.append(Utils.newStructure(tran, Rules.Tech.RENEGADEBASE, planet.owner, Const.STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
         planet.storPop = 3000
 
     @staticmethod
@@ -106,20 +106,20 @@ class IAIRenegadePlayer(IPlayer):
 
     def getDiplomacyWith(self, tran, obj, playerID):
         if obj.oid == playerID:
-            return REL_UNITY
+            return Const.REL_UNITY
         # renegade battles with overyone
         # make default
         dipl = IDataHolder()
-        dipl.type = T_DIPLREL
+        dipl.type = Const.T_DIPLREL
         dipl.pacts = {}
-        dipl.relation = REL_ENEMY
+        dipl.relation = Const.REL_ENEMY
         dipl.relChng = 0
-        dipl.lastContact = tran.db[OID_UNIVERSE].turn
-        dipl.contactType = CONTACT_NONE
+        dipl.lastContact = tran.db[Const.OID_UNIVERSE].turn
+        dipl.contactType = Const.CONTACT_NONE
         dipl.stats = None
         return dipl
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processFINALPhase(self, tran, obj, data):
         IPlayer.processFINALPhase(self, tran, obj, data)
         # fix goverment power

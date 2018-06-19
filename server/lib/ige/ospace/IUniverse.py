@@ -24,20 +24,21 @@ import random
 import tempfile
 import time
 
-from ige.IObject import IObject, public
-from ige.IDataHolder import IDataHolder
-from Const import *
-import Rules
-from IGalaxy import IGalaxy
 import ige
 import ige.version
-from ige import log
+
+import Const
 import GalaxyGenerator
+import Rules
+
+from ige import log
+from ige.IObject import IObject, public
+from ige.IDataHolder import IDataHolder
 from ige import GameException, NoSuchObjectException
 
 class IUniverse(IObject):
 
-    typeID = T_UNIVERSE
+    typeID = Const.T_UNIVERSE
 
     forums = {
         # Official English forums
@@ -49,7 +50,7 @@ class IUniverse(IObject):
         #
         obj.name = "Outer Space"
         obj.turn = 0
-        obj.owner = OID_ADMIN
+        obj.owner = Const.OID_ADMIN
         obj.galaxies = []
         obj.players = []
         obj.waitingPlayers = []
@@ -61,7 +62,7 @@ class IUniverse(IObject):
         obj.galFilename = ''
         obj.galID = ''
 
-    @public(AL_NONE)
+    @public(Const.AL_NONE)
     def getIntroInfo(self, tran, obj):
         result = IDataHolder()
         result.cid = tran.cid
@@ -70,7 +71,7 @@ class IUniverse(IObject):
         result.version = ige.version.version
         return result
 
-    @public(AL_NONE)
+    @public(Const.AL_NONE)
     def multiGetInfo(self, tran, obj, objIDs):
         result = []
         messages = []
@@ -90,7 +91,7 @@ class IUniverse(IObject):
             tran.session.messages[msgID] = data
         return result
 
-    @public(AL_NONE)
+    @public(Const.AL_NONE)
     def multiGetMsgs(self, tran, obj, mailboxes):
         result = []
         messages = []
@@ -104,22 +105,22 @@ class IUniverse(IObject):
             tran.session.messages[msgID] = data
         return result
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def createGalaxy(self, tran, obj):
-        galaxy = self.new(T_GALAXY)
+        galaxy = self.new(Const.T_GALAXY)
         galaxy.compOf = obj.oid
         oid = tran.db.create(galaxy)
         obj.galaxies.append(oid)
         return oid
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def createAsteroid(self, tran, obj, x, y, targetID, speed, hp):
-        asteroid = self.new(T_ASTEROID)
+        asteroid = self.new(Const.T_ASTEROID)
         tran.db.create(asteroid)
         self.cmd(asteroid).create(tran, asteroid, x, y, targetID, speed, hp)
         return asteroid.oid
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processINITPhase(self, tran, obj, data):
         for galaxyID in obj.galaxies:
             galaxy = tran.db[galaxyID]
@@ -139,11 +140,11 @@ class IUniverse(IObject):
                             log.debug(playerID, "Deleting invalid pact with", partyID, "pact", pactID)
                             del dipl.pacts[pactID]
                             continue
-                        if dipl.pacts[pactID][0] > PACT_OFF:
-                            dipl.pacts[pactID][0] = PACT_ACTIVE
+                        if dipl.pacts[pactID][0] > Const.PACT_OFF:
+                            dipl.pacts[pactID][0] = Const.PACT_ACTIVE
             # inactivate all pact that does not satisfy conditions
             changed = 1
-            defaultPact = [PACT_OFF]
+            defaultPact = [Const.PACT_OFF]
             while changed:
                 changed = 0
                 log.debug("Inactivate pacts iteration starting...")
@@ -166,48 +167,48 @@ class IUniverse(IObject):
                             pactSpec = Rules.pactDescrs[pactID]
                             if (dipl.relation < pactSpec.validityInterval[0] or \
                                 dipl.relation > pactSpec.validityInterval[1]) and \
-                                dipl.pacts[pactID][0] == PACT_ACTIVE:
+                                dipl.pacts[pactID][0] == Const.PACT_ACTIVE:
                                 #@log.debug("Inactivating pact (validity interval)", playerID, pactID)
-                                dipl.pacts[pactID][0] = PACT_INACTIVE
+                                dipl.pacts[pactID][0] = Const.PACT_INACTIVE
                                 changed = 1
                             # check conditions for the pact if pact is active
-                            if dipl.pacts[pactID][0] == PACT_ACTIVE:
+                            if dipl.pacts[pactID][0] == Const.PACT_ACTIVE:
                                 for condPactID in dipl.pacts[pactID][1:]:
                                     #@log.debug("Checking", playerID, pactID, "against", partyID, condPactID)
-                                    if partyDipl and partyDipl.pacts.get(condPactID, defaultPact)[0] != PACT_ACTIVE:
-                                        dipl.pacts[pactID][0] = PACT_INACTIVE
+                                    if partyDipl and partyDipl.pacts.get(condPactID, defaultPact)[0] != Const.PACT_ACTIVE:
+                                        dipl.pacts[pactID][0] = Const.PACT_INACTIVE
                                         changed = 1
         except Exception:
             log.warning("Cannot process diplomacy initialization")
         # TODO - send notifications if pacts are changed
         # remove old messages
         self.cmd(obj).deleteOldMsgs(tran, obj)
-        return obj.players[:] + [OID_NATURE]
+        return obj.players[:] + [Const.OID_NATURE]
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processPRODPhase(self, tran, obj, data):
         raise NotImplementedError()
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processACTIONPhase(self, tran, obj, data):
         raise NotImplementedError()
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processBATTLEPhase(self, tran, obj, data):
         raise NotImplementedError()
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processFINALPhase(self, tran, obj, data):
-        return obj.players[:] + [OID_NATURE]
+        return obj.players[:] + [Const.OID_NATURE]
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processFINAL2Phase(self, tran, obj, data):
         # distribute stats to contacts
         for playerID in obj.players:
             player = tran.db[playerID]
             for partyID in player.diplomacyRels:
                 dipl = player.diplomacyRels[partyID]
-                if dipl.contactType > CONTACT_NONE and tran.db.has_key(partyID):
+                if dipl.contactType > Const.CONTACT_NONE and tran.db.has_key(partyID):
                     dipl.stats = tran.db[partyID].stats
                 else:
                     dipl.stats = None
@@ -219,16 +220,16 @@ class IUniverse(IObject):
             if not galaxy.timeEnabled:
                 # skip this galaxy
                 continue
-            if galaxy.scenario == SCENARIO_OUTERSPACE:
+            if galaxy.scenario == Const.SCENARIO_OUTERSPACE:
                 self.processScenarioOuterspace(tran, obj, galaxy)
                 continue
-            elif galaxy.scenario == SCENARIO_SINGLE:
+            elif galaxy.scenario == Const.SCENARIO_SINGLE:
                 self.processScenarioSingle(tran, obj, galaxy)
                 continue
-            elif galaxy.scenario == SCENARIO_COOP:
+            elif galaxy.scenario == Const.SCENARIO_COOP:
                 self.processScenarioCoop(tran, obj, galaxy)
                 continue
-            elif galaxy.scenario == SCENARIO_BRAWL:
+            elif galaxy.scenario == Const.SCENARIO_BRAWL:
                 self.processScenarioBrawl(tran, obj, galaxy)
                 continue
 
@@ -249,13 +250,13 @@ class IUniverse(IObject):
             "sender": "GNC",
             "senderID": galaxy.oid,
             "forum": "NEWS",
-            "data": (galaxy.oid, MSG_GNC_VOTING_COMING, galaxy.oid, obj.turn, Rules.voteForImpAnnounceOffset),
+            "data": (galaxy.oid, Const.MSG_GNC_VOTING_COMING, galaxy.oid, obj.turn, Rules.voteForImpAnnounceOffset),
             "topic": "EVENT",
         }
         self.cmd(galaxy).sendMsg(tran, galaxy, message)
 
     def _countVotes(self, tran, obj, galaxy):
-        VALID_TYPES = [T_PLAYER, T_AIPLAYER]
+        VALID_TYPES = [Const.T_PLAYER, Const.T_AIPLAYER]
         log.debug("Voting for galaxy", galaxy.oid)
         # compute votes
         votesByName = {}
@@ -273,7 +274,7 @@ class IUniverse(IObject):
             tmpPlayer = tran.db.get(player.voteFor, None)
             if not tmpPlayer or tmpPlayer.type not in VALID_TYPES:
                 # reset vote
-                player.voteFor = OID_NONE
+                player.voteFor = Const.OID_NONE
                 votedName = None
             else:
                 votedName = tmpPlayer.name
@@ -290,7 +291,7 @@ class IUniverse(IObject):
     def _processElectedImperator(self, tran, obj, galaxy, imperator, votesByName, voterNames):
         # 2 imperator, 3+ winner
         imperator.imperator = max(2, imperator.imperator + 1)
-        if galaxy.imperator != OID_NONE and galaxy.imperator != imperator.oid:
+        if galaxy.imperator != Const.OID_NONE and galaxy.imperator != imperator.oid:
             tran.db[galaxy.imperator].imperator = 0
         galaxy.imperator = imperator.oid
         # send message
@@ -298,14 +299,14 @@ class IUniverse(IObject):
             "sender": "GNC",
             "senderID": galaxy.oid,
             "forum": "NEWS",
-            "data": (galaxy.oid, MSG_GNC_VOTING_IMPERATOR, galaxy.oid, obj.turn, (imperator.name, (votesByName, voterNames))),
+            "data": (galaxy.oid, Const.MSG_GNC_VOTING_IMPERATOR, galaxy.oid, obj.turn, (imperator.name, (votesByName, voterNames))),
             "topic": "EVENT",
         }
         self.cmd(galaxy).sendMsg(tran, galaxy, message)
 
     def _processElectedLeader(self, tran, obj, galaxy, leader, votesByName, voterNames):
         leader.imperator = 1
-        if galaxy.imperator != OID_NONE and galaxy.imperator != leader.oid:
+        if galaxy.imperator != Const.OID_NONE and galaxy.imperator != leader.oid:
             tran.db[galaxy.imperator].imperator = 0
         galaxy.imperator = leader.oid
         # send message
@@ -313,21 +314,21 @@ class IUniverse(IObject):
             "sender": "GNC",
             "senderID": galaxy.oid,
             "forum": "NEWS",
-            "data": (galaxy.oid, MSG_GNC_VOTING_LEADER, galaxy.oid, obj.turn, (leader.name, (votesByName, voterNames))),
+            "data": (galaxy.oid, Const.MSG_GNC_VOTING_LEADER, galaxy.oid, obj.turn, (leader.name, (votesByName, voterNames))),
             "topic": "EVENT",
         }
         self.cmd(galaxy).sendMsg(tran, galaxy, message)
 
     def _processNoWinner(self, tran, obj, galaxy, votesByName, voterNames):
         # nobody wins
-        if galaxy.imperator != OID_NONE:
+        if galaxy.imperator != Const.OID_NONE:
             tran.db[galaxy.imperator].imperator = 0
-            galaxy.imperator = OID_NONE
+            galaxy.imperator = Const.OID_NONE
         message = {
             "sender": "GNC",
             "senderID": galaxy.oid,
             "forum": "NEWS",
-            "data": (galaxy.oid, MSG_GNC_VOTING_NOWINNER, galaxy.oid, obj.turn, ((votesByName, voterNames),)),
+            "data": (galaxy.oid, Const.MSG_GNC_VOTING_NOWINNER, galaxy.oid, obj.turn, ((votesByName, voterNames),)),
             "topic": "EVENT",
         }
         self.cmd(galaxy).sendMsg(tran, galaxy, message)
@@ -337,10 +338,10 @@ class IUniverse(IObject):
         # check winner
         totalVotes = sum(votesByID.values())
         nominated = sorted(votesByID, key=lambda a: votesByID[a], reverse = True)
-        winnerID = OID_NONE
-        # OID_NONE is not valid target
-        if OID_NONE in nominated:
-            nominated.remove(OID_NONE)
+        winnerID = Const.OID_NONE
+        # Const.OID_NONE is not valid target
+        if Const.OID_NONE in nominated:
+            nominated.remove(Const.OID_NONE)
         # check winner
         try:
             winnerID = nominated[0]
@@ -365,11 +366,11 @@ class IUniverse(IObject):
             player = tran.db[playerID]
             if galaxy.oid != player.galaxy:
                 continue
-            if player.type == T_PIRPLAYER:
+            if player.type == Const.T_PIRPLAYER:
                 piratePlayer = True
                 activePlayerCount += 1
                 continue
-            if player.type != T_PLAYER:
+            if player.type != Const.T_PLAYER:
                 continue
             selfName = player.name
             activePlayerCount += 1
@@ -412,7 +413,7 @@ class IUniverse(IObject):
             self.cmd(galaxy).delete(tran, galaxy)
 
     def processScenarioCoop(self, tran, obj, galaxy):
-        ENEMIES = [T_AIEDENPLAYER, T_AIMUTPLAYER, T_AIPIRPLAYER]
+        ENEMIES = [Const.T_AIEDENPLAYER, Const.T_AIMUTPLAYER, Const.T_AIPIRPLAYER]
         clear = True
         players = []
         for playerID in obj.players:
@@ -422,9 +423,9 @@ class IUniverse(IObject):
             if player.type in ENEMIES:
                 clear = False
                 continue
-            if player.type == T_AIPLAYER:
+            if player.type == Const.T_AIPLAYER:
                 players.append(player)
-            if player.type != T_PLAYER:
+            if player.type != Const.T_PLAYER:
                 # skip non-regular players
                 continue
             players.append(player)
@@ -441,7 +442,7 @@ class IUniverse(IObject):
             "sender": "Galaxy %s" % galaxy.name,
             "senderID": tran.cid,
             "forum": "NEWS",
-            "data": (galaxy.oid, MSG_GNC_GALAXY_COOP_WON, galaxy.oid, obj.turn, (galaxy.name, victors)),
+            "data": (galaxy.oid, Const.MSG_GNC_GALAXY_COOP_WON, galaxy.oid, obj.turn, (galaxy.name, victors)),
             "topic": "EVENT",
         }
         self.cmd(obj).sendMsg(tran, obj, message)
@@ -453,7 +454,7 @@ class IUniverse(IObject):
             player = tran.db[playerID]
             if galaxy.oid != player.galaxy:
                 continue
-            if player.type != T_PLAYER:
+            if player.type != Const.T_PLAYER:
                 # skip non-regular players
                 continue
             players.append(player)
@@ -465,17 +466,17 @@ class IUniverse(IObject):
             self.cmd(galaxy).delete(tran, galaxy)
             return False
         # last man standing! Let's send announcement, and change the galaxy
-        # to SCENARIO_SINGLE for winner to enjoy it (and pause / finish at will)
+        # to Const.SCENARIO_SINGLE for winner to enjoy it (and pause / finish at will)
         winner = players[0]
         message = {
             "sender": "Galaxy %s" % galaxy.name,
             "senderID": tran.cid,
             "forum": "NEWS",
-            "data": (galaxy.oid, MSG_GNC_GALAXY_BRAWL_WON, galaxy.oid, obj.turn, (galaxy.name, winner.name)),
+            "data": (galaxy.oid, Const.MSG_GNC_GALAXY_BRAWL_WON, galaxy.oid, obj.turn, (galaxy.name, winner.name)),
             "topic": "EVENT",
         }
         self.cmd(obj).sendMsg(tran, obj, message)
-        galaxy.scenario = SCENARIO_SINGLE
+        galaxy.scenario = Const.SCENARIO_SINGLE
         galaxy.name += " won on {0}".format(obj.turn)
         galaxy.owner = winner.oid
         return False
@@ -487,36 +488,36 @@ class IUniverse(IObject):
             for galaxyID in obj.galaxies:
                 if not tran.db.has_key(galaxyID):
                     log.debug("CONSISTENCY - galaxy %d from universe %d does not exists" % (galaxyID, obj.oid))
-                elif tran.db[galaxyID].type != T_GALAXY:
-                    log.debug("CONSISTENCY - galaxy %d from universe %d is not a T_GALAXY" % (galaxyID, obj.oid))
+                elif tran.db[galaxyID].type != Const.T_GALAXY:
+                    log.debug("CONSISTENCY - galaxy %d from universe %d is not a Const.T_GALAXY" % (galaxyID, obj.oid))
         # check existence of all players
         for playerID in obj.players[:]:
             if not tran.db.has_key(playerID):
                 log.debug("CONSISTENCY - player %d from universe %d does not exists" % (playerID, obj.oid))
                 log.debug("Removing reference to player", playerID)
                 obj.players.remove(playerID)
-            elif tran.db[playerID].type not in PLAYER_TYPES:
-                log.debug("CONSISTENCY - player %d from universe %d is not a %s, it's %d" % (playerID, obj.oid, str(PLAYER_TYPES), tran.db[playerID].type))
+            elif tran.db[playerID].type not in Const.PLAYER_TYPES:
+                log.debug("CONSISTENCY - player %d from universe %d is not a %s, it's %d" % (playerID, obj.oid, str(Const.PLAYER_TYPES), tran.db[playerID].type))
                 log.debug("Removing reference to player", playerID)
                 obj.players.remove(playerID)
 
     update.public = 0
 
     def getReferences(self, tran, obj):
-        return obj.players[:] + obj.galaxies[:] + [OID_NATURE]
+        return obj.players[:] + obj.galaxies[:] + [Const.OID_NATURE]
 
     getReferences.public = 0
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def getActivePlayers(self, tran, obj):
         playerNames = []
         for playerID in obj.players:
             player = tran.db[playerID]
-            if not player.type in AI_PLAYER_TYPES:
+            if not player.type in Const.AI_PLAYER_TYPES:
                 playerNames.append(player.name)
         return playerNames
 
-    @public(AL_NONE)
+    @public(Const.AL_NONE)
     def getPublicInfo(self, tran, obj):
         result = IDataHolder()
         result.oid = obj.oid
@@ -540,11 +541,11 @@ class IUniverse(IObject):
 
     canSendMsg.public = 0
     
-    @public(AL_NONE)
+    @public(Const.AL_NONE)
     def finishGalaxyImperator(self, tran, obj, galaxyID, imperatorMessage):
         log.debug("Finishing Galaxy", galaxyID)
         galaxy = tran.db[galaxyID]
-        if galaxy.scenario == SCENARIO_OUTERSPACE:
+        if galaxy.scenario == Const.SCENARIO_OUTERSPACE:
             if galaxy.imperator == 0 or galaxy.imperator != tran.cid:
                 raise GameException('Only galaxy imperator can finish galaxy')
 
@@ -557,7 +558,7 @@ class IUniverse(IObject):
                 "sender": imperator.name,
                 "senderID": tran.cid,
                 "forum": "NEWS",
-                "data": (galaxyID, MSG_GNC_GALAXY_FINISHED, galaxyID, obj.turn, (imperator.name, galaxy.name, imperatorMessage)),
+                "data": (galaxyID, Const.MSG_GNC_GALAXY_FINISHED, galaxyID, obj.turn, (imperator.name, galaxy.name, imperatorMessage)),
                 "topic": "EVENT",
             }
             self.cmd(obj).sendMsg(tran, obj, message)
@@ -567,7 +568,7 @@ class IUniverse(IObject):
         log.debug("Deleting galaxy", galaxyID)
         self.cmd(galaxy).delete(tran, galaxy)
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def finishGalaxyAutomated(self, tran, obj, galaxyID, imperatorMessage): #server-initiated restart
         log.debug("Restarting Galaxy", galaxyID)
         log.debug("Sending message", imperatorMessage)
@@ -576,7 +577,7 @@ class IUniverse(IObject):
             "sender": "Galaxy %s" % galaxy.name,
             "senderID": tran.cid,
             "forum": "NEWS",
-            "data": (galaxyID, MSG_GNC_GALAXY_AUTO_FINISHED, galaxyID, obj.turn, (galaxy.name, imperatorMessage)),
+            "data": (galaxyID, Const.MSG_GNC_GALAXY_AUTO_FINISHED, galaxyID, obj.turn, (galaxy.name, imperatorMessage)),
             "topic": "EVENT",
         }
         self.cmd(obj).sendMsg(tran, obj, message)
@@ -588,12 +589,12 @@ class IUniverse(IObject):
             "sender": "GNC",
             "senderID": galaxy.oid,
             "forum": "NEWS",
-            "data": (galaxy.oid, MSG_GNC_GALAXY_CREATED, galaxy.oid, obj.turn, (obj.turn)),
+            "data": (galaxy.oid, Const.MSG_GNC_GALAXY_CREATED, galaxy.oid, obj.turn, (obj.turn)),
             "topic": "EVENT",
         }
         self.cmd(galaxy).sendMsg(tran, galaxy, message)
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def createNewSubscribedGalaxy(self, tran, obj, galaxyName, galaxyType, listOfPlayers):
         galGen = GalaxyGenerator.GalaxyGenerator()
         galaxyRadius = galGen.getGalaxyTemplate(galaxyType).radius
@@ -615,19 +616,19 @@ class IUniverse(IObject):
         os.remove(galaxyFileName)
         for playerLogin in listOfPlayers:
             tran.gameMngr.createNewSubscribedPlayer(playerLogin, newGalaxyID)
-        if newGalaxy.scenario != SCENARIO_SINGLE:
+        if newGalaxy.scenario != Const.SCENARIO_SINGLE:
             # no point in announcing single scenario - it starts ticking right away
             self._sendCreationMessage(tran, obj, newGalaxy)
         log.debug("Galaxy creation END")
         return newGalaxyID
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def deleteGalaxy(self, tran, galaxyID):
         galaxy = tran.db[galaxyID]
         log.debug("Deleting galaxy", galaxyID)
         self.cmd(galaxy).delete(tran, galaxy)
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def findSpotForGalaxy(self, tran, obj, new_gal_radius):
         """ We start with sum of surfaces of active galaxies (with borders) with this,
             we count the hypothetical square all galaxies should fit together. We then
