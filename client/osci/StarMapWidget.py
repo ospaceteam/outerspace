@@ -22,7 +22,7 @@
 from pygameui.Widget import Widget, registerWidget
 import pygameui as ui
 from pygameui.Fonts import *
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 import pygame, pygame.draw, pygame.key, pygame.image
 from pygame.locals import *
 from dialog.ShowBuoyDlg import ShowBuoyDlg
@@ -62,7 +62,7 @@ class StarMapWidget(Widget):
         # more data
         self.highlightPos = None
         self.alwaysShowRangeFor = None
-        self.activeObjID = OID_NONE
+        self.activeObjID = Const.OID_NONE
         self.activeObjIDs = []
         self.pressedObjIDs = []
         self._newCurrXY = 0
@@ -114,8 +114,8 @@ class StarMapWidget(Widget):
         self.star_map.rect = self.rect
         self.star_map.precompute()
         player = client.getPlayer()
-        if (player.type == T_PIRPLAYER or\
-            player.type == T_AIPIRPLAYER) and not self.control_modes['pirate_dialogs']:
+        if (player.type == Const.T_PIRPLAYER or\
+            player.type == Const.T_AIPIRPLAYER) and not self.control_modes['pirate_dialogs']:
             self.control_modes['pirate_dialogs'] = True
             if self.control_modes['hotbuttons']:
                 self.initHotbuttons() #reinit to add the pirate button
@@ -422,7 +422,7 @@ class StarMapWidget(Widget):
         if self.pressedObjIDs or self.pressedBuoyObjIDs:
             return ui.NoEvent
         else:
-            self.activeObjID = OID_NONE
+            self.activeObjID = Const.OID_NONE
             return ui.NoEvent
 
     def processMB1Up(self, evt):
@@ -461,7 +461,7 @@ class StarMapWidget(Widget):
             self.gotoObject(objIDs,bObjIDs)
             return ui.NoEvent
         else:
-            self.activeObjID = OID_NONE
+            self.activeObjID = Const.OID_NONE
             return ui.NoEvent
 
     def gotoObject(self,objIDs,bObjIDs):
@@ -473,7 +473,7 @@ class StarMapWidget(Widget):
                 self.pressedObjIDs = []
             else:
                 if self.selectobject:
-                    return OID_NONE
+                    return Const.OID_NONE
                 self.showBuoyDlg.display(bObjIDs[0])
                 self.pressedBuoyObjIDs = []
         else:
@@ -481,22 +481,22 @@ class StarMapWidget(Widget):
             items = []
             for objID in objIDs:
                 obj = client.get(objID)
-                if obj.type == T_SYSTEM:
+                if obj.type == Const.T_SYSTEM:
                     name = getattr(obj, "name", None)
                     name = _("System: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
-                elif obj.type == T_WORMHOLE:
+                elif obj.type == Const.T_WORMHOLE:
                     name = getattr(obj, "name", None)
                     name = _("Worm hole: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
-                elif obj.type == T_PLANET:
+                elif obj.type == Const.T_PLANET:
                     name = getattr(obj, "name", None)
                     name = _("Planet: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
-                elif obj.type == T_FLEET:
+                elif obj.type == Const.T_FLEET:
                     if hasattr(obj,'customname') and obj.customname:
                         name = obj.customname
                     else:
                         name = getattr(obj, "name", None)
                     name = _("Fleet: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
-                elif obj.type == T_ASTEROID:
+                elif obj.type == Const.T_ASTEROID:
                     name = getattr(obj, "name", None)
                     name = _("Asteroid: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
                 else:
@@ -505,10 +505,10 @@ class StarMapWidget(Widget):
                 items.append(item)
             for objID in bObjIDs:
                 obj = client.get(objID)
-                if obj.type == T_SYSTEM:
+                if obj.type == Const.T_SYSTEM:
                     name = getattr(obj, "name", None)
                     name = _("Buoy on system: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
-                elif obj.type == T_WORMHOLE:
+                elif obj.type == Const.T_WORMHOLE:
                     name = getattr(obj, "name", None)
                     name = _("Buoy on worm hole: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
                 else:
@@ -518,7 +518,7 @@ class StarMapWidget(Widget):
             self.popup.items = items
             self.popup.show()
         if self.selectobject:
-            return OID_NONE
+            return Const.OID_NONE
 
     def onObjectSelected(self, widget, action, data):
         self.processAction(self.action, data)
@@ -595,7 +595,7 @@ class StarMapWidget(Widget):
             return ui.NoEvent
         elif self._tempOverlayHotbutton: # cleanup if cursor not in zone
             self.toggleTempButton(False)
-        self.activeObjID = OID_NONE
+        self.activeObjID = Const.OID_NONE
         self.activeObjIDs = []
         for objID in self._actAreas.keys():
             rect = self._actAreas[objID]
@@ -701,10 +701,10 @@ class StarMapWidget(Widget):
         log.debug('Setting Key Object To:',objID)
         self.app.setStatus(_("Ready."))
         self.selectobject = False
-        if (objID == OID_NONE):
+        if (objID == Const.OID_NONE):
             return
         obj = client.get(objID)
-        if obj.type in (T_SYSTEM, T_PLANET, T_FLEET):
+        if obj.type in (Const.T_SYSTEM, Const.T_PLANET, Const.T_FLEET):
             gdata.objectFocus[self.setKey]=objID
 
     def gotoKeyObject(self,evtkey):

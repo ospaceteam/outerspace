@@ -21,7 +21,7 @@
 import pygameui as ui
 from osci.StarMapWidget import StarMapWidget
 from osci import gdata, res, client, messages
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from NewMessageDlg import NewMessageDlg
 from ConfirmDlg import ConfirmDlg
 import time
@@ -74,67 +74,67 @@ class MessagesDlg:
         player = client.getPlayer()
         objList = [player.oid]
         objList.append(player.galaxy)
-        objList.append(OID_UNIVERSE)
+        objList.append(Const.OID_UNIVERSE)
         # show forums
         items = []
         colors = [gdata.sevColors[gdata.INFO], gdata.sevColors[gdata.MIN]]
         ## Inbox
         msgs, new = self.getMsgsNumber(player.oid, "INBOX",'local')
         self.newMsgs += new
-        spec = gdata.mailboxSpec[T_PLAYER, "INBOX"]
+        spec = gdata.mailboxSpec[Const.T_PLAYER, "INBOX"]
         item = ui.Item(_(spec[0]), tObjID = player.oid, tForum = "INBOX",
-            tType = T_PLAYER, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
+            tType = Const.T_PLAYER, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
         items.append(item)
         # Events
         msgs, new = self.getMsgsNumber(player.oid, "EVENTS")
         self.newMsgs += new
-        spec = gdata.mailboxSpec[T_PLAYER, "EVENTS"]
+        spec = gdata.mailboxSpec[Const.T_PLAYER, "EVENTS"]
         eventsItem = ui.Item(_(spec[0]), tObjID = player.oid, tForum = "EVENTS",
-            tType = T_PLAYER, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
+            tType = Const.T_PLAYER, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
         items.append(eventsItem)
         # Outbox
         msgs, new = self.getMsgsNumber(player.oid, "OUTBOX")
         self.newMsgs += new
-        spec = gdata.mailboxSpec[T_PLAYER, "OUTBOX"]
+        spec = gdata.mailboxSpec[Const.T_PLAYER, "OUTBOX"]
         item = ui.Item(_(spec[0]), tObjID = player.oid, tForum = "OUTBOX",
-            tType = T_PLAYER, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
+            tType = Const.T_PLAYER, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
         items.append(item)
         ## galaxy
         galaxyID = player.galaxy
         galaxy = client.get(galaxyID)
         # folder
-        item = ui.Item(_("Galaxy %s") % galaxy.name, tObjID = OID_NONE, tForum = "", tMsgs = "", foreground = colors[0])
+        item = ui.Item(_("Galaxy %s") % galaxy.name, tObjID = Const.OID_NONE, tForum = "", tMsgs = "", foreground = colors[0])
         items.append(item)
         # news
         msgs, new = self.getMsgsNumber(galaxyID, "NEWS")
         self.newMsgs += new
-        spec = gdata.mailboxSpec[T_GALAXY, "NEWS"]
+        spec = gdata.mailboxSpec[Const.T_GALAXY, "NEWS"]
         item = ui.Item("   %s" % _(spec[0]), tObjID = galaxyID, tForum = "NEWS",
-            tType = T_GALAXY, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
+            tType = Const.T_GALAXY, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
         items.append(item)
         # public
         msgs, new = self.getMsgsNumber(galaxyID, "PUBLIC",'galaxy')
         self.newMsgs += new
-        spec = gdata.mailboxSpec[T_GALAXY, "PUBLIC"]
+        spec = gdata.mailboxSpec[Const.T_GALAXY, "PUBLIC"]
         item = ui.Item("   %s" % _(spec[0]), tObjID = galaxyID, tForum = "PUBLIC",
-            tType = T_GALAXY, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
+            tType = Const.T_GALAXY, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
         items.append(item)
         ## universe
-        item = ui.Item(_("Outer Space"), tObjID = OID_NONE, tForum = "", tMsgs = "", foreground = colors[0])
+        item = ui.Item(_("Outer Space"), tObjID = Const.OID_NONE, tForum = "", tMsgs = "", foreground = colors[0])
         items.append(item)
         # news
-        msgs, new = self.getMsgsNumber(OID_UNIVERSE, "NEWS")
+        msgs, new = self.getMsgsNumber(Const.OID_UNIVERSE, "NEWS")
         self.newMsgs += new
-        spec = gdata.mailboxSpec[T_UNIVERSE, "NEWS"]
-        item = ui.Item("   %s" % _(spec[0]), tObjID = OID_UNIVERSE, tForum = "NEWS",
-            tType = T_UNIVERSE, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
+        spec = gdata.mailboxSpec[Const.T_UNIVERSE, "NEWS"]
+        item = ui.Item("   %s" % _(spec[0]), tObjID = Const.OID_UNIVERSE, tForum = "NEWS",
+            tType = Const.T_UNIVERSE, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
         items.append(item)
         # public
-        msgs, new = self.getMsgsNumber(OID_UNIVERSE, "PUBLIC",'universe')
+        msgs, new = self.getMsgsNumber(Const.OID_UNIVERSE, "PUBLIC",'universe')
         self.newMsgs += new
-        spec = gdata.mailboxSpec[T_UNIVERSE, "PUBLIC"]
-        item = ui.Item("   %s" % _(spec[0]), tObjID = OID_UNIVERSE, tForum = "PUBLIC",
-            tType = T_UNIVERSE, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
+        spec = gdata.mailboxSpec[Const.T_UNIVERSE, "PUBLIC"]
+        item = ui.Item("   %s" % _(spec[0]), tObjID = Const.OID_UNIVERSE, tForum = "PUBLIC",
+            tType = Const.T_UNIVERSE, tMsgs = _("%d / %d") % (new, msgs), foreground = colors[new > 0])
         items.append(item)
         #
         self.win.vForums.items = items
@@ -181,7 +181,7 @@ class MessagesDlg:
 
     def onForumSelected(self, widget, action, data):
         selItem = self.win.vForums.selection[0]
-        if selItem.tObjID == OID_NONE:
+        if selItem.tObjID == Const.OID_NONE:
             # select last valid
             for item in self.win.vForums.items:
                 if item.tObjID == self.selectedObjID and \
@@ -207,7 +207,7 @@ class MessagesDlg:
             message = objMessages[messageID]
             if message["forum"] == selItem.tForum:
                 # ignore by universe, local (private messages), or galaxy
-                if selItem.tObjID == OID_UNIVERSE:
+                if selItem.tObjID == Const.OID_UNIVERSE:
                     if message["sender"] in self.uignore:
                         continue;
                 elif selItem.tObjID == playerid:
@@ -342,7 +342,7 @@ class MessagesDlg:
 
     def onShowLoc(self, widget, action, data):
         item = self.win.vMessages.selection[0]
-        if item.tLocationID != OID_NONE:
+        if item.tLocationID != Const.OID_NONE:
             obj = client.get(item.tLocationID, noUpdate = 1)
             if hasattr(obj, "x"):
                 gdata.mainGameDlg.win.vStarMap.highlightPos = (obj.x, obj.y)
@@ -363,7 +363,7 @@ class MessagesDlg:
         if item.tForum == "EVENTS" and re.match(('^%s(.*)')%(_('Research completed:')),item.text):
             gdata.mainGameDlg.researchDlg.display()
             return
-        if item.tSourceID != OID_NONE:
+        if item.tSourceID != Const.OID_NONE:
             gdata.mainGameDlg.onSelectMapObj(None, None, item.tSourceID)
             #self.hide()
             return

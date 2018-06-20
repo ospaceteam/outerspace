@@ -22,6 +22,7 @@ import time
 import pygameui as ui
 
 import ige
+import ige.ospace.Const as Const
 from osci import client
 from osci import gdata
 from PasswordDlg import PasswordDlg
@@ -67,7 +68,7 @@ class BookingDlg:
         if self.selectionID:
             book = self.bookingInfo[self.selectionID]
             scenario = self.offering[book.gal_type].scenario
-            self.win.vCreatePrivate.enabled = scenario != ige.ospace.Const.SCENARIO_SINGLE
+            self.win.vCreatePrivate.enabled = scenario != Const.SCENARIO_SINGLE
             self.win.vDeletePrivate.enabled = book.owner_nick == client.account.nick
             self.win.vToggle.enabled = book.owner_nick != client.account.nick
         else:
@@ -78,7 +79,7 @@ class BookingDlg:
         itemsPublic = []
         itemsPrivate = []
         for bookID in self.bookingInfo:
-            if bookID < ige.Const.BID_FREESTART:
+            if bookID < Const.BID_FREESTART:
                 continue
             book = self.bookingInfo[bookID]
             tPos = book.capacity
@@ -147,7 +148,7 @@ class BookingDlg:
             self.passwordDlg.display(self._onToggleBooking)
 
     def _handleResult(self, result):
-        triggerID = ige.Const.BID_TRIGGERED
+        triggerID = Const.BID_TRIGGERED
         if not triggerID in result or not result[triggerID]:
             # booking change is logged, no galaxy creation triggered
             self.bookingInfo = result
@@ -252,7 +253,7 @@ class BookingDlg:
 Every booking has to be created password protected, so you have to tell others\n\
 what the password is.\n\n\
 Account has limit of {0} private bookings at the time. Created galaxies\n\
-no longers counts into the limit.".format(ige.ospace.Const.BOOKING_PRIVATE_LIMIT))
+no longers counts into the limit.".format(Const.BOOKING_PRIVATE_LIMIT))
                 )
 
         ui.Button(self.win, layout = (20, 7, 8, 1), id = "vDeletePrivate", text = _('Delete private booking'), action = 'onDeletePrivate',

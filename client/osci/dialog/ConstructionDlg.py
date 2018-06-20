@@ -21,7 +21,7 @@
 import pygameui as ui
 from osci.StarMapWidget import StarMapWidget
 from osci import gdata, res, client, sequip
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige.ospace import ShipUtils, Rules
 from ConstrSelTechDlg import ConstrSelTechDlg
 from ConstrUpgradeDlg import ConstrUpgradeDlg
@@ -42,8 +42,8 @@ class ConstructionDlg:
 
     def display(self):
         self.itemCache = {}
-        self.hullID = OID_NONE
-        self.ctrlID = OID_NONE
+        self.hullID = Const.OID_NONE
+        self.ctrlID = Const.OID_NONE
         self.eqIDs = {}
         self.selectedEqID = None
         self.update()
@@ -86,7 +86,7 @@ class ConstructionDlg:
             for planetID in client.db.keys():
                 planet = client.get(planetID, noUpdate = 1)
                 # skip non-planets
-                if not hasattr(planet, "type") or planet.type != T_PLANET \
+                if not hasattr(planet, "type") or planet.type != Const.T_PLANET \
                     or not hasattr(planet, 'owner') or not planet.owner == player.oid \
                     or not planet.prodQueue:
                     continue
@@ -392,8 +392,8 @@ class ConstructionDlg:
         self.highlightedDesignID = None
         self.editMode = True
         self.win.vDesigns.selectItem(None)
-        self.hullID = OID_NONE
-        self.ctrlID = OID_NONE
+        self.hullID = Const.OID_NONE
+        self.ctrlID = Const.OID_NONE
         self.eqIDs = {}
         self.win.vName.text = _(" ")
         self.win.vDuplDesign.enabled = 0

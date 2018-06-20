@@ -20,7 +20,7 @@
 #
 
 from pygameui.Fonts import *
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige.ospace import Rules, Utils
 import pygame, pygame.draw, pygame.key, pygame.image
 from pygame.locals import *
@@ -109,12 +109,12 @@ class StarMap(object):
         anyY = 0.0
         player = client.getPlayer()
         for objID in client.db.keys():
-            if objID < OID_FREESTART:
+            if objID < Const.OID_FREESTART:
                 continue
             obj = client.get(objID, noUpdate = 1)
             if not hasattr(obj, "type"):
                 continue
-            if obj.type == T_PLAYER:
+            if obj.type == Const.T_PLAYER:
                 continue
             try:
                 if hasattr(obj, "x"):
@@ -124,19 +124,19 @@ class StarMap(object):
             except AttributeError, e:
                 log.warning('StarMap', 'Cannot render objID = %d' % objID)
                 continue
-            if obj.type == T_SYSTEM:
+            if obj.type == Const.T_SYSTEM:
                 self.precomputeSystems(obj, player, pirate_systems)
-            elif obj.type == T_WORMHOLE:
+            elif obj.type == Const.T_WORMHOLE:
                 self.precomputeWormholes(obj, player, pirate_systems)
-            elif obj.type == T_PLANET:
+            elif obj.type == Const.T_PLANET:
                 self.precomputePlanets(obj, player, pirate_systems)
-            elif obj.type == T_FLEET:
+            elif obj.type == Const.T_FLEET:
                 self.precomputeFleet(obj)
-            elif obj.type == T_ASTEROID:
+            elif obj.type == Const.T_ASTEROID:
                 self.precomputeAsteroid(obj)
-            elif obj.type in (T_GALAXY, T_AIPLAYER, T_AIRENPLAYER, T_AIMUTPLAYER, T_AIPIRPLAYER, T_AIEDENPLAYER, T_PIRPLAYER):
+            elif obj.type in (Const.T_GALAXY, Const.T_AIPLAYER, Const.T_AIRENPLAYER, Const.T_AIMUTPLAYER, Const.T_AIPIRPLAYER, Const.T_AIEDENPLAYER, Const.T_PIRPLAYER):
                 pass
-            elif obj.type == T_UNKNOWN:
+            elif obj.type == Const.T_UNKNOWN:
                 # pop up info
                 info = []
                 info.append(_('Unknown object [ID: %d]') % obj.oid)
@@ -157,20 +157,20 @@ class StarMap(object):
         pirate_systems = {}
         log.debug("Checking pirate planets and wormholes")
         for objID in client.db.keys():
-            if objID < OID_FREESTART:
+            if objID < Const.OID_FREESTART:
                 continue
             obj = client.get(objID, noUpdate = 1)
             if not hasattr(obj, "type"):
                 continue
-            if obj.type == T_WORMHOLE and not hasattr(obj, 'destinationOid'):
+            if obj.type == Const.T_WORMHOLE and not hasattr(obj, 'destinationOid'):
                 obj = client.get(objID, forceUpdate = 1, publicOnly = 1)
-            if obj.type == T_PLANET and hasattr(obj, "x"):
-                ownerID = getattr(obj, 'owner', OID_NONE)
-                if ownerID == OID_NONE:
+            if obj.type == Const.T_PLANET and hasattr(obj, "x"):
+                ownerID = getattr(obj, 'owner', Const.OID_NONE)
+                if ownerID == Const.OID_NONE:
                     continue
                 owner = client.get(ownerID, publicOnly = 1)
-                if hasattr(owner, "type") and (owner.type == T_PIRPLAYER or\
-                                                owner.type == T_AIPIRPLAYER):
+                if hasattr(owner, "type") and (owner.type == Const.T_PIRPLAYER or\
+                                                owner.type == Const.T_AIPIRPLAYER):
                     pirate_systems[obj.x, obj.y] = None
         return pirate_systems
 
@@ -179,7 +179,7 @@ class StarMap(object):
         icons = []
         name = getattr(obj, 'name', None)
         # TODO compute real relationship
-        #rel = REL_UNDEF
+        #rel = Const.REL_UNDEF
         refuelMax = 0
         refuelInc = 0
         hasRefuel = False
@@ -194,16 +194,16 @@ class StarMap(object):
         bio = -1
         slots = 0
         numPlanets = 0
-        stratRes = SR_NONE
+        stratRes = Const.SR_NONE
         isGovCentral = False
         #owner2 = 0
-        ownerID = OID_NONE
+        ownerID = Const.OID_NONE
         explored = False
         if hasattr(obj, 'planets'):
             hasPirate = False
             for planetID in obj.planets:
                 planet = client.get(planetID, noUpdate = 1)
-                owner = getattr(planet, 'owner', OID_NONE)
+                owner = getattr(planet, 'owner', Const.OID_NONE)
                 if hasattr(planet, "plType") and planet.plType not in ("A", "G"):
                     numPlanets += 1
                 if hasattr(planet, "plMin"):
@@ -212,7 +212,7 @@ class StarMap(object):
                     bio = max(bio,planet.plBio)
                 if hasattr(planet, "plSlots"):
                     slots += planet.plSlots
-                if hasattr(planet, "plStratRes") and planet.plStratRes != SR_NONE:
+                if hasattr(planet, "plStratRes") and planet.plStratRes != Const.SR_NONE:
                     stratRes = planet.plStratRes
                     stratRes = planet.plStratRes
                     icons.append(res.icons["sr_%d" % planet.plStratRes])
@@ -235,15 +235,15 @@ class StarMap(object):
                         sciPoints += planet.effProdSci
                     if hasattr(planet, "slots"):
                         for struct in planet.slots:
-                            tech = Rules.techs[struct[STRUCT_IDX_TECHID]]
+                            tech = Rules.techs[struct[Const.STRUCT_IDX_TECHID]]
                             if not tech.govPwr == 0:
                                 isGovCentral = True
                             if not hasattr(planet, "morale"): # ugly way to say "planets of other players"
                                 # operational status and tech effectivity
                                 maxTechHP = tech.maxHP
-                                opStatus = struct[STRUCT_IDX_OPSTATUS]/100.0
+                                opStatus = struct[Const.STRUCT_IDX_OPSTATUS]/100.0
                                 if opStatus != 0:
-                                    currHP = struct[STRUCT_IDX_HP]
+                                    currHP = struct[Const.STRUCT_IDX_HP]
                                     techEff = (currHP / opStatus) / maxTechHP
                                 else:
                                     techEff = 0
@@ -265,8 +265,8 @@ class StarMap(object):
         if morale==200:
             morale = -1
         pirProb = self.precomputePiratesProbability(obj, pirate_systems, icons)
-        if (player.type == T_PIRPLAYER or\
-                player.type == T_AIPIRPLAYER):
+        if (player.type == Const.T_PIRPLAYER or\
+                player.type == Const.T_AIPIRPLAYER):
             pirateFameCost = self.getPirateFameCost(player.oid,obj.oid,len(player.planets),pirate_systems)
         # refuelling
         if refuelMax > 0:
@@ -297,8 +297,8 @@ class StarMap(object):
         #   color = gdata.playerHighlightColor
         #else:
         #   color = res.getFFColorCode(rel)
-        if (player.type == T_PIRPLAYER or\
-                player.type == T_AIPIRPLAYER):
+        if (player.type == Const.T_PIRPLAYER or\
+                player.type == Const.T_AIPIRPLAYER):
             colors = res.getStarmapWidgetSystemColor(ownerID,bio,minerals,slots,numPlanets,speedBoost, refuelInc, upgradeShip, pirProb*100, stratRes, morale, pirateFameCost)
         else:
             colors = res.getStarmapWidgetSystemColor(ownerID,bio,minerals,slots,numPlanets,speedBoost, refuelInc, upgradeShip, pirProb*100, stratRes, morale)
@@ -325,8 +325,8 @@ class StarMap(object):
         info.append(_('Scan pwr: %d') % obj.scanPwr)
         info.append(_('Star Class: %s') % obj.starClass[1:])
         info.append(_('Star Type: %s') % _(gdata.starTypes[obj.starClass[0]]))
-        if (player.type == T_PIRPLAYER or\
-                player.type == T_AIPIRPLAYER):
+        if (player.type == Const.T_PIRPLAYER or\
+                player.type == Const.T_AIPIRPLAYER):
             info.append(_('Fame to Colonize: %d') % pirateFameCost)
         if refuelMax > 0:
             info.append(_("Refuel: %d %%/turn [%d %% max]") % (refuelInc, refuelMax))
@@ -341,12 +341,12 @@ class StarMap(object):
         self._popupInfo[obj.oid] = info
 
     def precomputeAsteroids(self, obj):
-        owner = getattr(obj, 'owner', OID_NONE)
+        owner = getattr(obj, 'owner', Const.OID_NONE)
         name = getattr(obj, 'name', None) or res.getUnknownName()
         color = (0xff, 0xff, 0xff)
         scannerPwr = getattr(obj, 'scannerPwr', 0)
         orbit = -1
-        if obj.orbiting != OID_NONE:
+        if obj.orbiting != Const.OID_NONE:
             orbit = self.fleetOrbit.get(obj.orbiting, 0)
             self.fleetOrbit[obj.orbiting] = orbit + 1
         eta = getattr(obj, 'eta', 0)
@@ -380,8 +380,8 @@ class StarMap(object):
         self.precomputeCombat(obj, icons)
         self.precomputeMines(obj, icons)
         self.precomputeBuoys(obj, player, icons)
-        color = res.getPlayerColor(OID_NONE)
-        namecolor = res.getPlayerColor(OID_NONE)
+        color = res.getPlayerColor(Const.OID_NONE)
+        namecolor = res.getPlayerColor(Const.OID_NONE)
         constPoints = 0
         sciPoints = 0
         isGovCentral = False
@@ -405,7 +405,7 @@ class StarMap(object):
         self._popupInfo[obj.oid] = info
 
     def precomputePlanets(self, obj, player, pirate_systems):
-        owner = getattr(obj, 'owner', OID_NONE)
+        owner = getattr(obj, 'owner', Const.OID_NONE)
         # set up color reference data
         biodata = -1
         mindata = -1
@@ -413,7 +413,7 @@ class StarMap(object):
         stargatedata = 0
         dockrefueldata = 0
         dockupgradedata = 0
-        stratresdata = SR_NONE
+        stratresdata = Const.SR_NONE
         moraledata = -1
         pirProb = self.precomputePiratesProbability(obj, pirate_systems, False)
         famedata = pirProb*100
@@ -423,10 +423,10 @@ class StarMap(object):
         dockrefueldata = getattr(obj, 'refuelInc', 0)
         dockupgradedata = getattr(obj, 'upgradeShip', 0)
         stargatedata = getattr(obj, 'fleetSpeedBoost', 0)
-        stratresdata = getattr(obj, 'plStratRes', SR_NONE)
+        stratresdata = getattr(obj, 'plStratRes', Const.SR_NONE)
         moraledata = getattr(obj, 'morale', -1)
-        if (player.type == T_PIRPLAYER or\
-                player.type == T_AIPIRPLAYER):
+        if (player.type == Const.T_PIRPLAYER or\
+                player.type == Const.T_AIPIRPLAYER):
             pirateFameCost = self.getPirateFameCost(player.oid,obj.compOf,len(player.planets),pirate_systems)
         # build system
         name = getattr(obj, 'name', None) or res.getUnknownName()
@@ -435,8 +435,8 @@ class StarMap(object):
             colors = gdata.sevColors[gdata.DISABLED]
         else:
             singlet = False
-            if (player.type == T_PIRPLAYER or\
-                    player.type == T_AIPIRPLAYER):
+            if (player.type == Const.T_PIRPLAYER or\
+                    player.type == Const.T_AIPIRPLAYER):
                 colors = res.getStarmapWidgetPlanetColor(owner,biodata,mindata,slotdata,stargatedata, dockrefueldata, dockupgradedata, famedata, stratresdata, moraledata, pirateFameCost)
             else:
                 colors = res.getStarmapWidgetPlanetColor(owner,biodata,mindata,slotdata,stargatedata, dockrefueldata, dockupgradedata, famedata, stratresdata, moraledata)
@@ -451,14 +451,14 @@ class StarMap(object):
         elif hasattr(obj, 'scannerPwr'): info.append(_('Scanner pwr: %d') % obj.scannerPwr)
         plType = gdata.planetTypes[getattr(obj, 'plType', None)]
         info.append(_('Type: %s') % _(plType))
-        if (player.type == T_PIRPLAYER or\
-                player.type == T_AIPIRPLAYER):
+        if (player.type == Const.T_PIRPLAYER or\
+                player.type == Const.T_AIPIRPLAYER):
             info.append(_('Fame to Colonize: %d') % pirateFameCost)
         if hasattr(obj, 'plBio'): info.append(_('Environment: %d') % obj.plBio)
         if hasattr(obj, 'plMin'): info.append(_('Minerals: %d') % obj.plMin)
         if hasattr(obj, 'plEn'): info.append(_('Energy: %d') % obj.plEn)
         if hasattr(obj, 'plSlots'): info.append(_('Slots: %d') % obj.plSlots)
-        if hasattr(obj, "plStratRes") and obj.plStratRes != SR_NONE:
+        if hasattr(obj, "plStratRes") and obj.plStratRes != Const.SR_NONE:
             info.append(_("Strat. resource: %s") % _(gdata.stratRes[obj.plStratRes]))
         if owner:
             ownerobj = client.get(owner, publicOnly = 1)
@@ -474,10 +474,10 @@ class StarMap(object):
         if hasattr(system,'planets') and system.planets:
             for planetID in system.planets:
                 planet = client.get(planetID, noUpdate = 1)
-                if getattr(planet, 'owner', OID_NONE) == playerID:
+                if getattr(planet, 'owner', Const.OID_NONE) == playerID:
                     # minimum reached, don't check rest
                     return 0.0
-                elif getattr(planet, 'plStratRes', None) in (SR_TL3A, SR_TL3B, SR_TL3C):
+                elif getattr(planet, 'plStratRes', None) in (Const.SR_TL3A, Const.SR_TL3B, Const.SR_TL3C):
                     mod = min(mod, Rules.pirateTL3StratResColonyCostMod)
         dist = 10000
         for pirX, pirY in pirate_systems:
@@ -499,7 +499,7 @@ class StarMap(object):
 
     def precomputeFleet(self,obj):
 
-        owner = getattr(obj, 'owner', OID_NONE)
+        owner = getattr(obj, 'owner', Const.OID_NONE)
         if hasattr(obj,'customname') and obj.customname:
             name = obj.customname
         else:
@@ -513,7 +513,7 @@ class StarMap(object):
             self._map[self.MAP_SCANNER1].append((obj.x, obj.y, scannerPwr))
         #  get orbital position
         orbit = -1
-        if obj.orbiting != OID_NONE:
+        if obj.orbiting != Const.OID_NONE:
             orbit = self.fleetOrbit.get(obj.orbiting, 0)
             self.fleetOrbit[obj.orbiting] = orbit + 1
         # set path and times
@@ -553,7 +553,7 @@ class StarMap(object):
             range = turns * obj.speed / Rules.turnsPerDay
             self._fleetRanges[obj.oid] = (obj.x, obj.y, range, range  / 2., range / 3., obj.speed * 6 / Rules.turnsPerDay, turns)
             info.append(_("Operational time: %s") % res.formatTime(turns))
-        if hasattr(obj, 'target') and obj.target != OID_NONE:
+        if hasattr(obj, 'target') and obj.target != Const.OID_NONE:
             target = client.get(obj.target, noUpdate=1)
             if hasattr(target, "x"):
                 self._fleetTarget[obj.oid] = (obj.x, obj.y, target.x, target.y)
@@ -594,7 +594,7 @@ class StarMap(object):
                 ))
         if hasattr(obj, 'actionIndex') and not Utils.isIdleFleet(obj):
             action, target, data = obj.actions[obj.actionIndex]
-            if target != OID_NONE:
+            if target != Const.OID_NONE:
                 targetName = getattr(client.get(target, noUpdate = 1), 'name', res.getUnknownName())
             else:
                 targetName = ""
@@ -611,9 +611,9 @@ class StarMap(object):
             for action, target, aData in obj.actions[obj.actionIndex:]:
                 if target:
                     # TODO add action colors
-                    if action == FLACTION_REFUEL: color = (0x00, 0x90, 0x00)
-                    elif action == FLACTION_DEPLOY: color = (0x90, 0x90, 0x00)
-                    elif action == FLACTION_REDIRECT: color = (0x20, 0x20, 0x80)
+                    if action == Const.FLACTION_REFUEL: color = (0x00, 0x90, 0x00)
+                    elif action == Const.FLACTION_DEPLOY: color = (0x90, 0x90, 0x00)
+                    elif action == Const.FLACTION_REDIRECT: color = (0x20, 0x20, 0x80)
                     else: color = (0x90, 0x90, 0x90)
                     trgt = client.get(target, noUpdate = 1)
                     if hasattr(trgt, 'x'):
@@ -777,7 +777,7 @@ class StarMap(object):
         currX = self.currX
         currY = self.currY
         scale = self.scale
-        namecolor = res.getPlayerColor(OID_NONE)
+        namecolor = res.getPlayerColor(Const.OID_NONE)
         if scale >= 30:
             for objID, x, y, name, img, color, namecolor, singlet, icons, constPoints, sciPoints, isGovCentral in self._map[self.MAP_SYSTEMS]:
                 sx = int((x - currX) * scale) + centerX

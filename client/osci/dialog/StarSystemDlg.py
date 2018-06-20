@@ -34,7 +34,7 @@ from MinefieldDlg import MinefieldDlg
 from ChangeQtyDlg import ChangeQtyDlg
 from LocateDlg import LocateDlg
 import ige
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige.ospace import Rules
 from ige import log
 import math
@@ -67,13 +67,13 @@ class StarSystemDlg:
     def display(self, objID):
         # set initial state
         obj = client.get(objID, noUpdate = 1)
-        if obj.type == T_PLANET:
+        if obj.type == Const.T_PLANET:
             self.systemID = obj.compOf
             self.planetID = objID
-        elif obj.type in (T_SYSTEM, T_WORMHOLE):
+        elif obj.type in (Const.T_SYSTEM, Const.T_WORMHOLE):
             self.systemID = objID
             self.planetID = None
-            if obj.type == T_WORMHOLE:
+            if obj.type == Const.T_WORMHOLE:
                 self.wormhole = 1
                 self.win.vSFWHExit.tags=['sys']
                 self.win.vSRedirect.tags=['hidden']
@@ -174,14 +174,14 @@ class StarSystemDlg:
         if hasattr(planet, 'slots'):
             index = 0
             for struct in planet.slots:
-                tech = client.getTechInfo(struct[STRUCT_IDX_TECHID])
-                icons = [(res.getTechImg(struct[STRUCT_IDX_TECHID]), ui.ALIGN_NONE)]
-                if not struct[STRUCT_IDX_STATUS] & STRUCT_STATUS_ON:
+                tech = client.getTechInfo(struct[Const.STRUCT_IDX_TECHID])
+                icons = [(res.getTechImg(struct[Const.STRUCT_IDX_TECHID]), ui.ALIGN_NONE)]
+                if not struct[Const.STRUCT_IDX_STATUS] & Const.STRUCT_STATUS_ON:
                     icons.append((res.structOffImg, ui.ALIGN_NE))
-                elif struct[STRUCT_IDX_STATUS] & ~STRUCT_STATUS_ON & ~STRUCT_STATUS_REPAIRING:
+                elif struct[Const.STRUCT_IDX_STATUS] & ~Const.STRUCT_STATUS_ON & ~Const.STRUCT_STATUS_REPAIRING:
                     icons.append((res.structProblemImg, ui.ALIGN_NE))
                 item = ui.Item(None, icons = icons, tooltip = tech.name, statustip = tech.name, index = index,
-                    align = ui.ALIGN_W, techID = struct[STRUCT_IDX_TECHID])
+                    align = ui.ALIGN_W, techID = struct[Const.STRUCT_IDX_TECHID])
                 items.append(item)
                 index += 1
 
@@ -518,12 +518,12 @@ class StarSystemDlg:
             for planetID in system.planets:
                 planet = client.get(planetID, noUpdate = 1)
                 owner = res.getUnknownName()
-                #rel = REL_UNDEF
-                ownerID = OID_NONE
+                #rel = Const.REL_UNDEF
+                ownerID = Const.OID_NONE
                 if hasattr(planet, 'owner'):
                     ownerID = planet.owner
-                    #if planet.owner != OID_NONE:
-                    if planet.owner == OID_NONE:
+                    #if planet.owner != Const.OID_NONE:
+                    if planet.owner == Const.OID_NONE:
                         #rel = client.getRelationTo(planet.owner)
                     #else:
                         owner = _('[Nobody]')
@@ -711,38 +711,38 @@ class StarSystemDlg:
             self.win.setTagAttr('slot', 'visible', 1)
             planet = client.get(self.planetID, noUpdate = 1)
             struct = planet.slots[self.plInfoData]
-            tech = client.getFullTechInfo(struct[STRUCT_IDX_TECHID])
+            tech = client.getFullTechInfo(struct[Const.STRUCT_IDX_TECHID])
             self.win.vITitle.text = _('Slot info: %s') % tech.name
-            if not struct[STRUCT_IDX_STATUS] & ~STRUCT_STATUS_ON:
+            if not struct[Const.STRUCT_IDX_STATUS] & ~Const.STRUCT_STATUS_ON:
                 info = _('None')
                 text = _('No problems.')
                 self.win.vISStatus.foreground = None
-            elif not struct[STRUCT_IDX_STATUS] & STRUCT_STATUS_ON:
+            elif not struct[Const.STRUCT_IDX_STATUS] & Const.STRUCT_STATUS_ON:
                 info = _('Switched OFF')
                 text = _('Structure is switched OFF.')
                 self.win.vISStatus.foreground = gdata.sevColors[gdata.CRI]
             else:
                 self.win.vISStatus.foreground = gdata.sevColors[gdata.CRI]
                 # extended status
-                status = struct[STRUCT_IDX_STATUS]
+                status = struct[Const.STRUCT_IDX_STATUS]
                 info = ''
                 text = ''
-                if status & STRUCT_STATUS_NOBIO:
+                if status & Const.STRUCT_STATUS_NOBIO:
                     text += _('Insufficient biomatter, ')
                     info += _('Bio/')
-                if status & STRUCT_STATUS_NOEN:
+                if status & Const.STRUCT_STATUS_NOEN:
                     text += _('Insufficient energy, ')
                     info += _('En/')
-                if status & STRUCT_STATUS_NOPOP:
+                if status & Const.STRUCT_STATUS_NOPOP:
                     text += _('Insufficient workers, ')
                     info += _('Wrk/')
-                if status & STRUCT_STATUS_DETER:
+                if status & Const.STRUCT_STATUS_DETER:
                     text += _('Deteriorating, ')
                     info += _('Deter/')
-                if status & STRUCT_STATUS_REPAIRING:
+                if status & Const.STRUCT_STATUS_REPAIRING:
                     text += _('Repairing, ')
                     info += _('Rep/')
-                if status & STRUCT_STATUS_NEW:
+                if status & Const.STRUCT_STATUS_NEW:
                     text += _('New structure, ')
                     info += _('New/')
                 text = text[:-2]
@@ -751,19 +751,19 @@ class StarSystemDlg:
             self.win.vISStatus.statustip = text
             self.win.vISStatus.tooltip = text
             # this is taken from server's code (IPlanet)
-            if planet.owner != OID_NONE:
+            if planet.owner != Const.OID_NONE:
                 player = client.get(planet.owner, noUpdate = 1)
                 if hasattr(player, 'techs'):
-                    techEff = Rules.techImprEff[player.techs.get(struct[STRUCT_IDX_TECHID], Rules.techBaseImprovement)]
+                    techEff = Rules.techImprEff[player.techs.get(struct[Const.STRUCT_IDX_TECHID], Rules.techBaseImprovement)]
                 else:
                     techEff = Rules.techImprEff[Rules.techBaseImprovement]
             else:
                 techEff = Rules.techImprEff[Rules.techBaseImprovement]
-            opStatus = struct[STRUCT_IDX_OPSTATUS] / 100.0
+            opStatus = struct[Const.STRUCT_IDX_OPSTATUS] / 100.0
             if hasattr(tech, 'maxHP') and planet.owner == client.getPlayerID():
-                self.win.vISHp.text = _('%d / %d') % (struct[STRUCT_IDX_HP], int(tech.maxHP * techEff))
+                self.win.vISHp.text = _('%d / %d') % (struct[Const.STRUCT_IDX_HP], int(tech.maxHP * techEff))
             else:
-                self.win.vISHp.text = _('%d / ?') % struct[STRUCT_IDX_HP]
+                self.win.vISHp.text = _('%d / ?') % struct[Const.STRUCT_IDX_HP]
             if hasattr(tech, 'prodBioMod'):
                 # bio
                 b, m, e, d = tech.prodBioMod
@@ -836,7 +836,7 @@ class StarSystemDlg:
         self.display(data)
 
     def onSelectPlanet(self, widget, action, data):
-        if data.planetID != OID_NONE:
+        if data.planetID != Const.OID_NONE:
             self.display(data.planetID)
 
     def onSlotHighlighted(self, widget, action, data):
@@ -954,7 +954,7 @@ class StarSystemDlg:
             planet = client.get(self.planetID, noUpdate = 1)
             struct = planet.slots[self.plInfoData]
             planet.slots[self.plInfoData] = client.cmdProxy.setStructOn(self.planetID, self.plInfoData,
-                not struct[STRUCT_IDX_STATUS] & STRUCT_STATUS_ON)
+                not struct[Const.STRUCT_IDX_STATUS] & Const.STRUCT_STATUS_ON)
             self.showPlanet()
             self.win.vPSlots.selectItem(self.win.vPSlots.items[self.plInfoData])
             self.win.setStatus(_('Command has been executed.'))
@@ -982,7 +982,7 @@ class StarSystemDlg:
 
     def onStructInfo(self, widget, action, data):
         planet = client.get(self.planetID, noUpdate = 1)
-        self.techInfoDlg.display(planet.slots[self.plInfoData][STRUCT_IDX_TECHID])
+        self.techInfoDlg.display(planet.slots[self.plInfoData][Const.STRUCT_IDX_TECHID])
 
     def onMoveTaskFirstLast(self, widget, action, data):
         try:
@@ -1092,7 +1092,7 @@ class StarSystemDlg:
 
     def onBuoy(self, widget, action, data):
         buoyText = ""
-        buoyType = BUOY_PRIVATE
+        buoyType = Const.BUOY_PRIVATE
         player = client.getPlayer()
         if hasattr(player, "buoys"):
             if self.systemID in player.buoys.keys():

@@ -21,7 +21,7 @@
 import pygameui as ui
 from TechInfoDlg import TechInfoDlg
 from ConfirmDlg import ConfirmDlg
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige.ospace import Rules
 from osci import gdata, client, res
 from ige import GameException
@@ -41,7 +41,7 @@ class StructTaskDlg:
         self.confirmDlg = ConfirmDlg(app)
         self.createUI()
 
-    def display(self, caller, planetID, extraSlot = False, structToDemolish = OID_NONE):
+    def display(self, caller, planetID, extraSlot = False, structToDemolish = Const.OID_NONE):
         if gdata.config.defaults.reportfinalization != None:
             val = gdata.config.defaults.reportfinalization
             self.win.vReportFin.checked = val == 'yes'
@@ -268,7 +268,7 @@ class StructTaskDlg:
                             return
                         client.cmdProxy.startConstruction(self.sourceID,
                             Rules.Tech.ADDSLOT3, 1, self.planetID, False,
-                            self.win.vReportFin.checked, OID_NONE)
+                            self.win.vReportFin.checked, Const.OID_NONE)
                         planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(self.sourceID,
                             data.techID, 1, self.planetID, data.techID < 1000,
                             self.win.vReportFin.checked, self.structToDemolish)

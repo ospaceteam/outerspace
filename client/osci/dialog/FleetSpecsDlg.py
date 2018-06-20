@@ -21,7 +21,7 @@
 import pygameui as ui
 from osci.StarMapWidget import StarMapWidget
 from osci import gdata, res, client, sequip
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige.ospace import ShipUtils, Rules
 from ige import GameException
 import math
@@ -30,8 +30,8 @@ class FleetSpecsDlg:
 
     def __init__(self, app):
         self.app = app
-        self.fleetID = OID_NONE
-        self.designID = OID_NONE
+        self.fleetID = Const.OID_NONE
+        self.designID = Const.OID_NONE
         self.showInheritance = 0
         self.showOnlyShieldPiercing = 0 #todo - add button and calculation system
         self.showMaxHPs = 0
@@ -52,7 +52,7 @@ class FleetSpecsDlg:
     def displayDesign(self, designID):
         #todo - make used somewhere
         self.setDefaults()
-        self.fleetID = OID_NONE
+        self.fleetID = Const.OID_NONE
         self.designID = designID
         self.win.title = _('Design Details')
         self.calcDesign(self.designID)
@@ -66,7 +66,7 @@ class FleetSpecsDlg:
 
     def displayFleet(self, fleetID):
         self.setDefaults()
-        self.designID = OID_NONE
+        self.designID = Const.OID_NONE
         self.fleetID = fleetID
         self.fleet = client.get(fleetID, noUpdate = 1)
         self.win.title = _('Fleet Details: %s') % getattr(self.fleet, 'name', res.getUnknownName())
@@ -90,9 +90,9 @@ class FleetSpecsDlg:
 
     def update(self):
         self.setDefaults()
-        if self.fleetID != OID_NONE: #MaxHPs or Shield Piercing flag might have changed, so recalc fleet
+        if self.fleetID != Const.OID_NONE: #MaxHPs or Shield Piercing flag might have changed, so recalc fleet
             self.calcFleet(self.fleet)
-        elif self.designID != OID_NONE:
+        elif self.designID != Const.OID_NONE:
             self.calcDesign(self.designID)
         self.show()
 

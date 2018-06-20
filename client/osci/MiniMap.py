@@ -19,7 +19,7 @@
 #
 
 from pygameui.Widget import Widget, registerWidget
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 import pygame, pygame.draw
 from pygame.locals import *
 from ige import log
@@ -56,17 +56,17 @@ class MiniMap:
         minX, maxX = galaxy.x - galaxy.radius, galaxy.x + galaxy.radius
         minY, maxY = galaxy.y - galaxy.radius, galaxy.y + galaxy.radius
         for objID in client.db.keys():
-            if objID < OID_FREESTART:
+            if objID < Const.OID_FREESTART:
                 continue
             obj = client.get(objID, noUpdate = 1)
             if not (hasattr(obj, "type")):
                 continue
-            if obj.type in (T_SYSTEM,T_WORMHOLE):
-                ownerID = OID_NONE
+            if obj.type in (Const.T_SYSTEM,Const.T_WORMHOLE):
+                ownerID = Const.OID_NONE
                 if hasattr(obj, 'planets'):
                     for planetID in obj.planets:
                         planet = client.get(planetID, noUpdate = 1)
-                        owner = getattr(planet, 'owner', OID_NONE)
+                        owner = getattr(planet, 'owner', Const.OID_NONE)
                         if int(owner) != 0:
                             ownerID = owner
                             break

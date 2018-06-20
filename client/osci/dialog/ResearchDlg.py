@@ -20,7 +20,7 @@
 
 import pygameui as ui
 from osci import client, res, gdata
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige.ospace import Rules, Utils, TechHandlers
 from TechInfoDlg import TechInfoDlg
 from ConfirmDlg import ConfirmDlg

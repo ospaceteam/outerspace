@@ -21,7 +21,7 @@
 import pygameui as ui
 from osci.StarMapWidget import StarMapWidget
 from osci import gdata, res, client
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige.ospace import Rules
 from ColorDefinitionDlg import ColorDefinitionDlg
 import ige
@@ -37,8 +37,8 @@ class DiplomacyDlg:
     def __init__(self, app):
         self.app = app
         self.createUI()
-        self.selectedPartyID = OID_NONE
-        self.selectedPactID = OID_NONE
+        self.selectedPartyID = Const.OID_NONE
+        self.selectedPactID = Const.OID_NONE
         self.galaxyScenario = None
         self.cDlg = ColorDefinitionDlg(self.app)
 
@@ -144,7 +144,7 @@ class DiplomacyDlg:
             tScience = getattr(player.stats, "prodSci", "?"),
             tFleetPwr = getattr(player.stats, "fleetPwr", "?"),
             tContact = "-",
-            foreground = res.getFFColorCode(REL_UNITY),
+            foreground = res.getFFColorCode(Const.REL_UNITY),
         )
         items.append(item)
         if self.selectedPartyID == player.oid:
@@ -153,11 +153,11 @@ class DiplomacyDlg:
         self.win.vContacts.selectItem(selected)
         self.win.vContacts.itemsChanged()
         # voting
-        if self.galaxyScenario == SCENARIO_OUTERSPACE:
+        if self.galaxyScenario == Const.SCENARIO_OUTERSPACE:
             # this is just in case we reloged
             self.win.vAbstain.visible = 1
             self.win.vVoteFor.visible = 1
-            self.win.vAbstain.enabled = player.voteFor != OID_NONE
+            self.win.vAbstain.enabled = player.voteFor != Const.OID_NONE
             if selected:
                 self.win.vVoteFor.enabled = selected.tContactID != player.voteFor
             else:
@@ -180,10 +180,10 @@ class DiplomacyDlg:
                 if pactID in dipl.pacts:
                     pactState1 = dipl.pacts[pactID][0]
                     if self.partyDipl:
-                        pactState2 = self.partyDipl.pacts.get(pactID, [PACT_OFF])[0]
+                        pactState2 = self.partyDipl.pacts.get(pactID, [Const.PACT_OFF])[0]
                         pactState2Text = _(gdata.pactStates[pactState2])
                     else:
-                        pactState2 = PACT_OFF
+                        pactState2 = Const.PACT_OFF
                         pactState2Text = _("N/A")
                     item = ui.Item(
                         _(gdata.pactNames[pactID]),
@@ -194,16 +194,16 @@ class DiplomacyDlg:
                     )
                 else:
                     if self.partyDipl:
-                        pactState2 = self.partyDipl.pacts.get(pactID, [PACT_OFF])[0]
+                        pactState2 = self.partyDipl.pacts.get(pactID, [Const.PACT_OFF])[0]
                         pactState2Text = _(gdata.pactStates[pactState2])
                     else:
-                        pactState2 = PACT_OFF
+                        pactState2 = Const.PACT_OFF
                         pactState2Text = _("N/A")
                     item = ui.Item(
                         _(gdata.pactNames[pactID]),
-                        tState1 = _(gdata.pactStates[PACT_OFF]),
+                        tState1 = _(gdata.pactStates[Const.PACT_OFF]),
                         tState2 = pactState2Text,
-                        tPactState = PACT_OFF,
+                        tPactState = Const.PACT_OFF,
                         foreground = gdata.sevColors[gdata.DISABLED]
                     )
                 item.tPactID = pactID
@@ -240,7 +240,7 @@ class DiplomacyDlg:
         self.win.vPactConditions.enabled = 1
         self.win.vPactCondReset.enabled = 1
         item = self.win.vPacts.selection[0]
-        if item.tPactState == PACT_OFF:
+        if item.tPactState == Const.PACT_OFF:
             self.win.vChangePactState.text = _("Enable")
             self.win.vChangePactState.data = "ENABLE"
         else:
@@ -279,9 +279,9 @@ class DiplomacyDlg:
         pitem = self.win.vPacts.selection[0]
         pactState = pitem.tPactState
         if widget.data == "ENABLE":
-            pactState = PACT_INACTIVE
+            pactState = Const.PACT_INACTIVE
         elif widget.data == "DISABLE":
-            pactState = PACT_OFF
+            pactState = Const.PACT_OFF
         if widget.data == "CONDSRESET":
             conditions = [pitem.tPactID]
         else:
@@ -316,7 +316,7 @@ class DiplomacyDlg:
         try:
             self.win.setStatus(_('Executing ELECT command...'))
             player = client.getPlayer()
-            player.voteFor = client.cmdProxy.setVoteFor(player.oid, OID_NONE)
+            player.voteFor = client.cmdProxy.setVoteFor(player.oid, Const.OID_NONE)
             self.win.setStatus(_('Command has been executed.'))
         except ige.GameException, e:
             self.win.setStatus(e.args[0])

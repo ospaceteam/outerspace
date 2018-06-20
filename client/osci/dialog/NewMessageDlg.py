@@ -20,7 +20,7 @@
 
 import pygameui as ui
 from osci import gdata, res, client
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 import ige, string
 
 class NewMessageDlg:

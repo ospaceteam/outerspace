@@ -20,7 +20,7 @@
 
 import pygameui as ui, string
 from osci import client, gdata
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 
 class ShowBuoyDlg:
 
@@ -33,7 +33,7 @@ class ShowBuoyDlg:
         text = []
         if hasattr(player, "buoys") and objID in player.buoys:
             label = _("Private buoy text")
-            if player.buoys[objID][1] == BUOY_TO_ALLY:
+            if player.buoys[objID][1] == Const.BUOY_TO_ALLY:
                 label = u"%s%s:" % (label, _(" (visible to allies)"))
             else:
                 label = u"%s:" % label

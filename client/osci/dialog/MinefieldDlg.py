@@ -21,7 +21,7 @@
 import pygameui as ui
 from osci.StarMapWidget import StarMapWidget
 from osci import gdata, res, client, sequip
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige.ospace import ShipUtils, Rules
 from ige import GameException, log
 import math
@@ -31,7 +31,7 @@ class MinefieldDlg:
     def __init__(self, app):
         self.app = app
         self.createUI()
-        self.systemID = OID_NONE
+        self.systemID = Const.OID_NONE
         self._mines = {}
 
     def display(self, systemID):

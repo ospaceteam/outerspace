@@ -39,8 +39,7 @@ from SearchDlg import SearchDlg
 import ProblemsDlg
 import DiplomacyDlg
 import EmpireOverviewDlg
-from ige.ospace.Const import *
-from ige.Const import *
+import ige.ospace.Const as Const
 from ige import log
 import resources
 import webbrowser, pygame
@@ -112,9 +111,9 @@ class MainGameDlg:
         if obj == None:
             self.app.setStatus(_('Cannot select object on map'))
             return
-        if obj.type in (T_PLANET, T_SYSTEM, T_WORMHOLE):
+        if obj.type in (Const.T_PLANET, Const.T_SYSTEM, Const.T_WORMHOLE):
             self.starSystemDlg.onSelectMapObj(None, None, data)
-        elif obj.type == T_FLEET:
+        elif obj.type == Const.T_FLEET:
             self.fleetDlg.display(data)
 
     def onResearch(self, widget, action, data):
@@ -216,20 +215,20 @@ class MainGameDlg:
         self.alterMenu(None, None, False)
 
     def onFinishConfirmedSingle(self):
-        self.onFinishConfirmed(None, SCENARIO_SINGLE)
+        self.onFinishConfirmed(None, Const.SCENARIO_SINGLE)
 
     def onFinishConfirmedOuterspace(self, imperatorMsg):
-        self.onFinishConfirmed(imperatorMsg, SCENARIO_OUTERSPACE)
+        self.onFinishConfirmed(imperatorMsg, Const.SCENARIO_OUTERSPACE)
 
     def onFinishConfirmed(self, imperatorMsg, scenario):
         self.win.setStatus(_('Galaxy finish in progress...'))
         oldMsgHandler = client.cmdProxy.msgHandler
         client.cmdProxy.msgHandler = None
         client.cmdProxy.keepAliveTime = 60 * 60 # do not try to connect to server (one hour)
-        if scenario == SCENARIO_SINGLE:
+        if scenario == Const.SCENARIO_SINGLE:
             client.cmdProxy.deleteSingle(client.getPlayer().galaxy)
-        elif scenario == SCENARIO_OUTERSPACE:
-            client.cmdProxy.finishGalaxyImperator(OID_UNIVERSE, client.getPlayer().galaxy, imperatorMsg)
+        elif scenario == Const.SCENARIO_OUTERSPACE:
+            client.cmdProxy.finishGalaxyImperator(Const.OID_UNIVERSE, client.getPlayer().galaxy, imperatorMsg)
         else:
             return
         client.db.clear()
@@ -281,7 +280,7 @@ class MainGameDlg:
             player = client.getPlayer()
             galaxy = client.get(player.galaxy)
             # player can restart (finish) it's own singleplayer galaxy anytime
-            if galaxy.scenario == SCENARIO_SINGLE:
+            if galaxy.scenario == Const.SCENARIO_SINGLE:
                 # depends on state of galaxy
                 if not galaxy.timeEnabled:
                     self.systemMenu.items[7].text = _("Resume galaxy")
@@ -291,7 +290,7 @@ class MainGameDlg:
                 self.systemMenu.items[6].enabled = True
                 self.systemMenu.items[7].enabled = True
 
-            elif galaxy.scenario == SCENARIO_OUTERSPACE:
+            elif galaxy.scenario == Const.SCENARIO_OUTERSPACE:
                 # standard behavior
                 if player.imperator > 2:
                     # player is imperator for more than two weeks - has right to finish galaxy
@@ -309,11 +308,11 @@ class MainGameDlg:
     def galaxyFinishButton(self, widget, action, data):
         player = client.getPlayer()
         galaxy = client.get(player.galaxy)
-        if galaxy.scenario == SCENARIO_OUTERSPACE and player.imperator > 2:
+        if galaxy.scenario == Const.SCENARIO_OUTERSPACE and player.imperator > 2:
             localTime = time.time()
             gdata.config.game.lastGalaxyFinishShown = str(localTime)
             self.galaxyFinishDlg.display(finishAction = self.onFinishConfirmedOuterspace)
-        elif galaxy.scenario == SCENARIO_SINGLE:
+        elif galaxy.scenario == Const.SCENARIO_SINGLE:
             self.confirmDlg.display(_('Are you really really sure you want to finish this single player galaxy of yours? You won\'t be able to get back.'), _('Finish'), _('No'), confirmAction = self.onFinishConfirmedSingle)
 
 
@@ -324,7 +323,7 @@ class MainGameDlg:
         if client.db != None:
             player = client.getPlayer()
             galaxy = client.get(player.galaxy)
-            if galaxy.scenario == SCENARIO_OUTERSPACE and player.imperator > 2:
+            if galaxy.scenario == Const.SCENARIO_OUTERSPACE and player.imperator > 2:
                 lastGalaxyFinishShown = gdata.config.game.lastGalaxyFinishShown
                 if lastGalaxyFinishShown != None:
                     localTime = time.time()

@@ -21,7 +21,7 @@
 import pygameui as ui
 import re
 from osci import gdata, client
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige.ospace import Rules
 import string, math, fnmatch
 
@@ -72,7 +72,7 @@ class SearchDlg:
         found = False
         for objID in client.db.keys():
             obj = client.get(objID, noUpdate = 1)
-            if hasattr(obj, 'type') and obj.type in (T_SYSTEM, T_WORMHOLE):
+            if hasattr(obj, 'type') and obj.type in (Const.T_SYSTEM, Const.T_WORMHOLE):
                 name = string.lower(getattr(obj, "name", ""))
                 if len(name) > 0 and not name in self.founded and fnmatch.fnmatch(name, self.pattern):
                     if hasattr(obj, "x") and hasattr(obj, "y") and self.mapWidget:

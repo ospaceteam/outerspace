@@ -21,7 +21,7 @@
 import pygameui as ui, string
 from osci import client, gdata, res
 from ige import log
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 
 class KeyModHelp:
 

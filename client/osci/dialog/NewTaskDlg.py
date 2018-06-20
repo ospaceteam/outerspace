@@ -22,7 +22,7 @@ import pygameui as ui
 from TechInfoDlg import TechInfoDlg
 from ConstructionDlg import ConstructionDlg
 from ConfirmDlg import ConfirmDlg
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige.ospace import Rules
 from osci import gdata, client, res
 from ige import GameException
@@ -47,7 +47,7 @@ class NewTaskDlg:
         # set default sorting for technologies
         self.win.vTechs.setSort("text")
 
-    def display(self, caller, prodProd, structToDemolish = OID_NONE):
+    def display(self, caller, prodProd, structToDemolish = Const.OID_NONE):
         if gdata.config.defaults.reportfinalization != None:
             val = gdata.config.defaults.reportfinalization
             self.win.vReportFin.checked = val == 'yes'
@@ -155,7 +155,7 @@ class NewTaskDlg:
                 if not ((tech.isMilitary and showMilShip) or (not tech.isMilitary and showCivShip)):
                     continue
 
-                if tech.upgradeTo != OID_NONE:
+                if tech.upgradeTo != Const.OID_NONE:
                     # skip ships that are set to upgrade
                     continue
                 if self.prodProd > 0:
@@ -199,11 +199,11 @@ class NewTaskDlg:
             for planetID in system.planets:
                 planet = client.get(planetID, noUpdate = 1)
                 owner = res.getUnknownName()
-                #rel = REL_UNDEF
-                ownerID = OID_NONE
+                #rel = Const.REL_UNDEF
+                ownerID = Const.OID_NONE
                 if hasattr(planet, 'owner'):
                     ownerID = planet.owner
-                    if planet.owner != OID_NONE:
+                    if planet.owner != Const.OID_NONE:
                         owner = client.get(planet.owner, noUpdate = 1).name
                         #rel = client.getRelationTo(planet.owner)
                     else:
@@ -242,10 +242,10 @@ class NewTaskDlg:
                     item = ui.Item(_("Free slot"), techID = 0)
                     items.append(item)
                 for struct in target.slots:
-                    if not struct[STRUCT_IDX_TECHID] in techs:
-                        techs[struct[STRUCT_IDX_TECHID]] = 1
+                    if not struct[Const.STRUCT_IDX_TECHID] in techs:
+                        techs[struct[Const.STRUCT_IDX_TECHID]] = 1
                     else:
-                        techs[struct[STRUCT_IDX_TECHID]] += 1
+                        techs[struct[Const.STRUCT_IDX_TECHID]] += 1
                 for tech in techs.keys():
                     techInfo = client.getTechInfo(tech)
                     item = ui.Item("%s (%d)" % (techInfo.name, techs[tech]), techID = tech)
@@ -253,7 +253,7 @@ class NewTaskDlg:
 
         self.win.vTSlots.items = items
         self.win.vTSlots.itemsChanged()
-        self.structToDemolish = OID_NONE
+        self.structToDemolish = Const.OID_NONE
 
     def onSelectPlanet(self, widget, action, data):
         self.quantity = int(self.win.vQuantity.text)

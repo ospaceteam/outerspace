@@ -21,7 +21,7 @@
 import pygameui as ui
 from osci.StarMapWidget import StarMapWidget
 from osci import gdata, res, client, messages
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige import NoSuchObjectException
 
 class EventsDlg:
@@ -62,7 +62,7 @@ class EventsDlg:
             item.tTime = res.formatTime(turn - currTurn)
             item.message = (sourceID, msgID, locationID, turn, data)
             item.tSourceID = sourceID
-            if sourceID != OID_NONE and sourceID != player.oid:
+            if sourceID != Const.OID_NONE and sourceID != player.oid:
                 obj = client.get(sourceID, noUpdate = 1)
                 if obj:
                     item.tSource = getattr(obj, 'name', res.getUnknownName())
@@ -71,7 +71,7 @@ class EventsDlg:
             else:
                 item.tSource = _('-')
             item.tLocationID = locationID
-            if locationID != OID_NONE:
+            if locationID != Const.OID_NONE:
                 obj = client.get(locationID, noUpdate = 1)
                 item.tLocation = getattr(obj, 'name', res.getUnknownName())
             else:
@@ -136,7 +136,7 @@ class EventsDlg:
 
     def onShowLoc(self, widget, action, data):
         item = self.win.vMessages.selection[0]
-        if item.tLocationID != OID_NONE:
+        if item.tLocationID != Const.OID_NONE:
             obj = client.get(item.tLocationID, noUpdate = 1)
             if hasattr(obj, "x"):
                 gdata.mainGameDlg.win.vStarMap.highlightPos = (obj.x, obj.y)
@@ -151,7 +151,7 @@ class EventsDlg:
 
     def onShowSource(self, widget, action, data):
         item = self.win.vMessages.selection[0]
-        if item.tSourceID != OID_NONE:
+        if item.tSourceID != Const.OID_NONE:
             gdata.mainGameDlg.onSelectMapObj(None, None, item.tSourceID)
             #self.hide()
             return

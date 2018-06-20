@@ -29,7 +29,7 @@ from TechInfoDlg import TechInfoDlg
 from ConfirmDlg import ConfirmDlg
 from osci.StarMapWidget import StarMapWidget
 from osci import gdata, res, client, sequip
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige.ospace import ShipUtils, Rules
 from ige import GameException
 from ige import log

@@ -24,7 +24,7 @@ import ige
 
 from osci import client
 from osci import gdata
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 
 from MainGameDlg import MainGameDlg
 from ConfirmDlg import ConfirmDlg
@@ -69,10 +69,10 @@ class PlayerSelectDlg:
         dataActive = client.cmdProxy.getActivePositions()
         items = []
         for playerID, galaxyName, playerType in dataActive:
-            item = ui.Item(galaxyName, type = 'Active', tObjID = playerID, tPosType = PLAYER_SELECT_CONTINUE)
-            if playerType == T_PLAYER:
+            item = ui.Item(galaxyName, type = 'Active', tObjID = playerID, tPosType = Const.PLAYER_SELECT_CONTINUE)
+            if playerType == Const.T_PLAYER:
                 item.tPos = _('Continue playing.')
-            elif playerType == T_PIRPLAYER:
+            elif playerType == Const.T_PIRPLAYER:
                 item.tPos = _('Yarr!')
             else:
                 item.tPos = _('Unknown type of player.')
@@ -88,11 +88,11 @@ class PlayerSelectDlg:
         items = []
         for objID, galaxyName, posType in dataStart:
             item = ui.Item(galaxyName, type = _('Open'), tObjID = objID, tPosType = posType)
-            if posType == PLAYER_SELECT_NEWPLAYER:
+            if posType == Const.PLAYER_SELECT_NEWPLAYER:
                 item.tPos = _('Independent player')
-            elif posType == PLAYER_SELECT_AIPLAYER:
+            elif posType == Const.PLAYER_SELECT_AIPLAYER:
                 item.tPos = _("Rebel faction")
-            elif posType == PLAYER_SELECT_PIRATE:
+            elif posType == Const.PLAYER_SELECT_PIRATE:
                 item.tPos = _("Pirate faction [VIP password needed]")
             else:
                 item.tPos = _('Unknown. You cannot use this.')
@@ -104,17 +104,17 @@ class PlayerSelectDlg:
             self.win.setStatus(_('Select position.'))
             return
         item = self.win.vPos.selection[0]
-        if item.tPosType == PLAYER_SELECT_CONTINUE:
+        if item.tPosType == Const.PLAYER_SELECT_CONTINUE:
             playerID = item.tObjID
-        elif item.tPosType == PLAYER_SELECT_NEWPLAYER:
+        elif item.tPosType == Const.PLAYER_SELECT_NEWPLAYER:
             self.win.setStatus(_('Executing CREATE NEW PLAYER command...'))
             playerID = client.cmdProxy.createNewPlayer(item.tObjID)
             self.win.setStatus(_('Command has been executed.'))
-        elif item.tPosType == PLAYER_SELECT_AIPLAYER:
+        elif item.tPosType == Const.PLAYER_SELECT_AIPLAYER:
             self.win.setStatus(_('Executing TAKE OVER REBEL FACTION command...'))
             playerID = client.cmdProxy.takeOverAIPlayer(item.tObjID)
             self.win.setStatus(_('Command has been executed.'))
-        elif item.tPosType == PLAYER_SELECT_PIRATE:
+        elif item.tPosType == Const.PLAYER_SELECT_PIRATE:
             playerID = self.passwordDlg.display(lambda x: self._takeOverPirate(item.tObjID, x))
             return
         else:
@@ -156,10 +156,10 @@ class PlayerSelectDlg:
         self.show()
 
     def onListSelect(self, widget, action, data):
-        if data.tPosType == PLAYER_SELECT_CONTINUE:
+        if data.tPosType == Const.PLAYER_SELECT_CONTINUE:
             playerID = data.tObjID
             self._selectPlayer(playerID)
-        needsPassword = data.tPosType == PLAYER_SELECT_PIRATE
+        needsPassword = data.tPosType == Const.PLAYER_SELECT_PIRATE
         dirty = False
         if needsPassword != self.needsPassword:
             self.needsPassword = needsPassword

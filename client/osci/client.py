@@ -22,7 +22,7 @@ import os.path
 
 from igeclient import IClient, IClientDB
 from ige.ospace import Rules
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige.IDataHolder import IDataHolder
 import ige, gdata, osci, math, time
 from ige import log
@@ -108,9 +108,9 @@ def msgHandler(mid, data):
     if ignoreMsgs.has_key(mid):
         log.debug('OSClient', 'ignoring message', mid, data)
         return
-    if mid == SMESSAGE_NEWTURN:
+    if mid == Const.SMESSAGE_NEWTURN:
         updateDatabase()
-    elif mid == SMESSAGE_NEWMESSAGE:
+    elif mid == Const.SMESSAGE_NEWMESSAGE:
         getMessages()
     elif mid == IClient.MSG_CMD_BEGIN:
         callbackObj.onCmdBegin()
@@ -141,15 +141,15 @@ def updateDatabase(clearDB = 0):
         log.warning("Cannot update database")
     # again with clear
     callbackObj.onUpdateFinished()
-    messageEnable(SMESSAGE_NEWTURN)
-    messageEnable(SMESSAGE_NEWMESSAGE)
+    messageEnable(Const.SMESSAGE_NEWTURN)
+    messageEnable(Const.SMESSAGE_NEWMESSAGE)
     return updateDatabaseUnsafe(clearDB = 1, force = 1)
 
 def updateDatabaseUnsafe(clearDB = 0, force = 0):
     """Update database by fetching data from the server."""
     global lastUpdate, nonexistingObj, db
     # get real turn
-    result = cmdProxy.getIntroInfo(OID_UNIVERSE)
+    result = cmdProxy.getIntroInfo(Const.OID_UNIVERSE)
     if not db:
         dbLocation = os.path.join(options.configDir, 'player_data')
         db = IClientDB.IClientDB(result.cid, result.turn, dbLocation, cmdProxy.gameID)
@@ -163,8 +163,8 @@ def updateDatabaseUnsafe(clearDB = 0, force = 0):
     lastUpdate = db.turn
     nonexistingObj.clear()
     # start updating...
-    messageIgnore(SMESSAGE_NEWTURN)
-    messageIgnore(SMESSAGE_NEWMESSAGE)
+    messageIgnore(Const.SMESSAGE_NEWTURN)
+    messageIgnore(Const.SMESSAGE_NEWMESSAGE)
     callbackObj.onUpdateStarting()
     current = 0
     max = 1
@@ -180,7 +180,7 @@ def updateDatabaseUnsafe(clearDB = 0, force = 0):
             obj.combatCounter = 0
         if not hasattr(obj, 'type'):
             del db[objID]
-        elif obj.type in (T_FLEET, T_ASTEROID):
+        elif obj.type in (Const.T_FLEET, Const.T_ASTEROID):
             del db[objID]
         elif hasattr(obj, 'owner') and obj.owner == db.playerID \
             and objID != db.playerID:
@@ -212,8 +212,8 @@ def updateDatabaseUnsafe(clearDB = 0, force = 0):
     getMessages()
     log.message('IClient', 'Update finished.')
     callbackObj.onUpdateFinished()
-    messageEnable(SMESSAGE_NEWTURN)
-    messageEnable(SMESSAGE_NEWMESSAGE)
+    messageEnable(Const.SMESSAGE_NEWTURN)
+    messageEnable(Const.SMESSAGE_NEWMESSAGE)
 
 ## Basic functions
 
@@ -266,9 +266,9 @@ def updateIDs(objIDs):
 def getRelationTo(objID):
     obj = getPlayer()
     if obj.oid == objID:
-        return REL_UNITY
-    if objID == OID_NONE:
-        return REL_UNDEF
+        return Const.REL_UNITY
+    if objID == Const.OID_NONE:
+        return Const.REL_UNDEF
     dipl = obj.diplomacyRels.get(objID, None)
     if dipl:
         return dipl.relation
@@ -342,15 +342,15 @@ def getDiplomacyWith(contactID):
     if not dipl:
         # make default
         dipl = IDataHolder()
-        dipl.type = T_DIPLREL
+        dipl.type = Const.T_DIPLREL
         dipl.pacts = {
-            PACT_ALLOW_CIVILIAN_SHIPS: [PACT_ACTIVE, PACT_ALLOW_CIVILIAN_SHIPS]
+            Const.PACT_ALLOW_CIVILIAN_SHIPS: [Const.PACT_ACTIVE, Const.PACT_ALLOW_CIVILIAN_SHIPS]
         }
         dipl.relation = obj.defaultRelation
         dipl.relChng = 0
         dipl.lastContact = 0
         dipl.stats = None
-        dipl.contactType = CONTACT_NONE
+        dipl.contactType = Const.CONTACT_NONE
         obj.diplomacyRels[playerID] = dipl
     return dipl
 
@@ -361,9 +361,9 @@ def getMessages():
     galaxyID = getPlayer().galaxy
     if galaxyID:
         mailboxes.append((galaxyID, getMessagesLastID(galaxyID)))
-    mailboxes.append((OID_UNIVERSE, getMessagesLastID(OID_UNIVERSE)))
+    mailboxes.append((Const.OID_UNIVERSE, getMessagesLastID(Const.OID_UNIVERSE)))
     # get data
-    data = cmdProxy.multiGetMsgs(OID_UNIVERSE, mailboxes)
+    data = cmdProxy.multiGetMsgs(Const.OID_UNIVERSE, mailboxes)
     # process
     new = 0
     now = time.time()
