@@ -20,7 +20,6 @@
 
 import string
 import pygame
-from pygame.locals import *
 from Const import *
 import Fonts
 import os, os.path, sys, ConfigParser
@@ -195,7 +194,7 @@ def createBox(section):
         box.img = pygame.image.load(os.path.join(skinDir, filename)).convert_alpha()
         w, h = box.img.get_size()
         box.margins = x, y, r, b
-        box.rect = Rect(x, y, w - r, h - b)
+        box.rect = pygame.Rect(x, y, w - r, h - b)
         box.topleft = box.img.subsurface(0, 0, x, y)
         box.bottomleft = box.img.subsurface(0, h - b, x, b)
         box.topright = box.img.subsurface(w - r, 0, r, y)
@@ -305,12 +304,12 @@ def drawTextAndIcons(surface, widget, style):
     rect = widget.rect
     l, t, r, b = box.cMargins
     oldClip = surface.get_clip()
-    rect = Rect(rect.left + l, rect.top + t, rect.width - l - r, rect.height - t - b)
+    rect = pygame.Rect(rect.left + l, rect.top + t, rect.width - l - r, rect.height - t - b)
     surface.set_clip(rect)
     # icons
     if widget.icons:
         for img, align in widget.icons:
-            r = Rect(rect)
+            r = pygame.Rect(rect)
             if align & ALIGN_W:
                 rect.left += img.get_width()
                 rect.width -= img.get_width()
@@ -331,7 +330,7 @@ def drawTextAndIcons(surface, widget, style):
         background = widget.background
 
         img = Fonts.renderText(font, widget.text, 1, foreground, background)
-        r = Rect(rect)
+        r = pygame.Rect(rect)
         if widget.align & ALIGN_W: pass
         elif widget.align & ALIGN_E: r.left += rect.width - img.get_width()
         else: r.left += (rect.width - img.get_width()) / 2
@@ -431,7 +430,7 @@ themeDisabled = 0x80, 0x80, 0x80
 
 
 def getDRect(rect):
-    rect = Rect(rect)
+    rect = pygame.Rect(rect)
     rect.left += 1
     rect.top += 0
     rect.width -= 3
@@ -874,12 +873,12 @@ def drawTooltip(surface, widget):
     return title_r, body_r
 
 def drawScrollbar(surface, widget):
-    r = Rect(widget.rect)
+    r = pygame.Rect(widget.rect)
     surface.fill(themeBackground, r)
     return r
 
 def drawListbox(surface, widget):
-    r = Rect(widget.rect)
+    r = pygame.Rect(widget.rect)
     surface.fill(widget.background or themeBackground, r)
     return r
 

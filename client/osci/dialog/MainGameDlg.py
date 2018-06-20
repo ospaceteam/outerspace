@@ -43,7 +43,6 @@ import ige.ospace.Const as Const
 from ige import log
 import resources
 import webbrowser, pygame
-from pygame.locals import *
 import time
 import os.path
 import Utils
@@ -342,38 +341,38 @@ class MainGameDlg:
             self.win.vMessages.foreground = None
 
     def processKeyUp(self, evt):
-        if evt.key == K_F12 and pygame.key.get_mods() & KMOD_CTRL:
+        if evt.key == pygame.K_F12 and pygame.key.get_mods() & pygame.KMOD_CTRL:
             self.onExit(None, None, None)
         return ui.NoEvent
 
 
     def processKeyDown(self, evt):
         # Alt+M - Messages
-        if evt.unicode == u'\x6D' and pygame.key.get_mods() & KMOD_ALT:
+        if evt.unicode == u'\x6D' and pygame.key.get_mods() & pygame.KMOD_ALT:
             self.messagesDlg.display()
         # Alt+R - Research
-        elif evt.unicode == u'\x72' and pygame.key.get_mods() & KMOD_ALT:
+        elif evt.unicode == u'\x72' and pygame.key.get_mods() & pygame.KMOD_ALT:
             self.researchDlg.display()
         # Alt+D - Diplomacy
-        elif evt.unicode == u'\x64' and pygame.key.get_mods() & KMOD_ALT:
+        elif evt.unicode == u'\x64' and pygame.key.get_mods() & pygame.KMOD_ALT:
             self.diplomacyDlg.display()
         # Alt+C - Constr
-        elif evt.unicode == u'\x63' and pygame.key.get_mods() & KMOD_ALT:
+        elif evt.unicode == u'\x63' and pygame.key.get_mods() & pygame.KMOD_ALT:
             self.constructionDlg.display()
         # Alt+P - Planets
-        elif evt.unicode == u'\x70' and pygame.key.get_mods() & KMOD_ALT:
+        elif evt.unicode == u'\x70' and pygame.key.get_mods() & pygame.KMOD_ALT:
             self.onPlanetsMenu(False,False,False) # use onPlanetsMenu rather than direct control
         # Alt+F - Fleets
-        elif evt.unicode == u'\x66' and pygame.key.get_mods() & KMOD_ALT:
+        elif evt.unicode == u'\x66' and pygame.key.get_mods() & pygame.KMOD_ALT:
             self.onFleetsMenu(False,False,False) # use onFleetsMenu rather than direct control
         # Alt+O - Overview
-        elif evt.unicode == u'\x6F' and pygame.key.get_mods() & KMOD_ALT:
+        elif evt.unicode == u'\x6F' and pygame.key.get_mods() & pygame.KMOD_ALT:
             self.empireOverviewDlg.display()
         # Alt+B - Pro'b'lems
-        elif evt.unicode == u'\x62' and pygame.key.get_mods() & KMOD_ALT:
+        elif evt.unicode == u'\x62' and pygame.key.get_mods() & pygame.KMOD_ALT:
             self.problemsDlg.display()
         # Alt+N - Me'n'u
-        elif evt.unicode == u'\x6E' and pygame.key.get_mods() & KMOD_ALT:
+        elif evt.unicode == u'\x6E' and pygame.key.get_mods() & pygame.KMOD_ALT:
             self.onMenu(False,False,False) # use onMenu rather than direct control
 
     def createUI(self):

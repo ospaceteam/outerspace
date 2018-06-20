@@ -23,7 +23,6 @@ import pygameui as ui
 from pygameui import Fonts
 import ige.ospace.Const as Const
 import pygame, pygame.draw
-from pygame.locals import *
 import gdata, res, client
 from ige import log
 
@@ -153,13 +152,13 @@ class SystemMapWidget(Widget):
         # star
         if self._starImg:
             surface.blit(self._starImg, self.rect.topleft)
-            self._actAreas[self.systemID] = Rect(self.rect.topleft, self._starImg.get_size())
+            self._actAreas[self.systemID] = pygame.Rect(self.rect.topleft, self._starImg.get_size())
         # planets
         for planetID, img, name, ffColor in self._planetImgs:
             planet = client.get(planetID, noUpdate = 1)
             py = y - img.get_height() / 2
             surface.blit(img, (x, py))
-            self._actAreas[planetID] = Rect((x, py), img.get_size())
+            self._actAreas[planetID] = pygame.Rect((x, py), img.get_size())
             text = pygame.transform.rotate(Fonts.renderText('small', ' %s' % name, 1, ffColor), 90)
             py = height - text.get_height()
             px = x + img.get_width() / 2 - text.get_width() / 2
@@ -176,10 +175,10 @@ class SystemMapWidget(Widget):
                 gx, gy = self.theme.getGridParams()
                 gx = gx / 2
                 gy = gy / 2
-                rect = Rect((x + img.get_width() / 2 - gx / 2, y + img.get_height() / 2), (gx, gy))
+                rect = pygame.Rect((x + img.get_width() / 2 - gx / 2, y + img.get_height() / 2), (gx, gy))
                 pygame.draw.polygon(surface, self.theme.themeForeground,
                     (rect.bottomleft, rect.midtop, rect.bottomright), style)
-                rect = Rect((x + img.get_width() / 2 - gx / 2, y - img.get_height() / 2 - gy), (gx, gy))
+                rect = pygame.Rect((x + img.get_width() / 2 - gx / 2, y - img.get_height() / 2 - gy), (gx, gy))
                 pygame.draw.polygon(surface, self.theme.themeForeground,
                     (rect.topleft, rect.midbottom, rect.topright), style)
             x += int(img.get_width() * 1.25) + 10

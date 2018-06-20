@@ -18,7 +18,6 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-from pygame.locals import *
 from Const import *
 from Widget import registerWidget
 from MetaWidget import MetaWidget
@@ -52,7 +51,7 @@ class ButtonArray(MetaWidget):
     def layoutWidgets(self):
         gx, gy = self.theme.getGridParams()
         r = self.rect
-        self.bar.rect = Rect(r.width - gx, 0, gx, r.height)
+        self.bar.rect = pygame.Rect(r.width - gx, 0, gx, r.height)
         self.bar.visible = self.showSlider
         self.labels = []
         bwidth, bheight = self.buttonSize
@@ -67,7 +66,7 @@ class ButtonArray(MetaWidget):
                 y = row * gy * bheight
                 button = Button(self, action = 'onButtonPressed', rmbAction = 'onRButtonPressed', hoverAction = 'onButtonHighlighted', toggle = 1)
                 button.subscribeAction('*', self)
-                button.rect = Rect(x, y, bwidth * gx, bheight * gy)
+                button.rect = pygame.Rect(x, y, bwidth * gx, bheight * gy)
                 self.buttons.append(button)
         self.bar.slider.position = 0
         self.bar.slider.min = 0

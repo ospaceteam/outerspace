@@ -18,17 +18,16 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-from pygame.locals import *
 from Const import *
 from Widget import Widget, registerWidget
 
 # keys mapping
 mapping = {
-    K_KP0: K_0, K_KP1: K_1, K_KP2: K_2, K_KP3: K_3, K_KP4: K_4,
-    K_KP5: K_5, K_KP6: K_6, K_KP7: K_7, K_KP8: K_8, K_KP9: K_9,
-    K_KP_DIVIDE: K_SLASH, K_KP_MULTIPLY: K_ASTERISK,
-    K_KP_MINUS: K_MINUS, K_KP_PLUS: K_PLUS, K_KP_PERIOD: K_PERIOD,
-    K_KP_ENTER: K_RETURN, K_KP_EQUALS: K_EQUALS,
+    pygame.K_KP0: pygame.K_0, pygame.K_KP1: pygame.K_1, pygame.K_KP2: pygame.K_2, pygame.K_KP3: pygame.K_3, pygame.K_KP4: pygame.K_4,
+    pygame.K_KP5: pygame.K_5, pygame.K_KP6: pygame.K_6, pygame.K_KP7: pygame.K_7, pygame.K_KP8: pygame.K_8, pygame.K_KP9: pygame.K_9,
+    pygame.K_KP_DIVIDE: pygame.K_SLASH, pygame.K_KP_MULTIPLY: pygame.K_ASTERISK,
+    pygame.K_KP_MINUS: pygame.K_MINUS, pygame.K_KP_PLUS: pygame.K_PLUS, pygame.K_KP_PERIOD: pygame.K_PERIOD,
+    pygame.K_KP_ENTER: pygame.K_RETURN, pygame.K_KP_EQUALS: pygame.K_EQUALS,
 }
 
 class Entry(Widget):
@@ -64,26 +63,26 @@ class Entry(Widget):
         except KeyError:
             pass
 
-        if evt.key == K_BACKSPACE:
+        if evt.key == pygame.K_BACKSPACE:
             if self.cursorPos > 0:
                 self.text = '%s%s' % (self.text[:self.cursorPos - 1], self.text[self.cursorPos:])
                 self.cursorPos -= 1
-        elif evt.key == K_DELETE:
+        elif evt.key == pygame.K_DELETE:
             if self.cursorPos < len(self.text):
                 self.text = '%s%s' % (self.text[:self.cursorPos], self.text[self.cursorPos + 1:])
-        elif evt.key == K_RETURN:
+        elif evt.key == pygame.K_RETURN:
             self.app.setFocus(None)
-        elif evt.key == K_ESCAPE:
+        elif evt.key == pygame.K_ESCAPE:
             self.app.setFocus(None)
-        elif evt.key == K_HOME:
+        elif evt.key == pygame.K_HOME:
             self.cursorPos = 0
-        elif evt.key == K_END:
+        elif evt.key == pygame.K_END:
             self.cursorPos = len(self.text)
-        elif evt.key == K_LEFT:
+        elif evt.key == pygame.K_LEFT:
             if self.cursorPos > 0: self.cursorPos -= 1
-        elif evt.key == K_RIGHT:
+        elif evt.key == pygame.K_RIGHT:
             if self.cursorPos < len(self.text): self.cursorPos += 1
-        elif evt.key == K_TAB:
+        elif evt.key == pygame.K_TAB:
             pass
         elif hasattr(evt, 'unicode') and evt.unicode:
             # TODO this is ugly windows only hack needed for Win 9x and XP

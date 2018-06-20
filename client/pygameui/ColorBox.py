@@ -1,4 +1,3 @@
-from pygame.locals import *
 from Const import *
 from Widget import Widget, registerWidget
 

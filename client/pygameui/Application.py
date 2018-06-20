@@ -20,7 +20,6 @@
 
 import pygame
 import pygame, pygame.time, pygame.mouse
-from pygame.locals import *
 
 import SkinableTheme
 from Tooltip import Tooltip
@@ -77,7 +76,7 @@ class Application:
         return self
 
     def processEvent(self, evt):
-        if evt.type == VIDEOEXPOSE:
+        if evt.type == pygame.VIDEOEXPOSE:
             self.performFullUpdate()
         #
         if not pygame.key.get_focused():
@@ -90,7 +89,7 @@ class Application:
                 if self.mouseOverWidget:
                     self.tooltip.title = self.mouseOverWidget.tooltipTitle
                     self.tooltip.text = self.mouseOverWidget.tooltip
-                    self.tooltip.rect = Rect(pygame.mouse.get_pos(), (100, 100))
+                    self.tooltip.rect = pygame.Rect(pygame.mouse.get_pos(), (100, 100))
             # cursor
             self.cursorCount += 1
             if self.cursorCount == 5:
@@ -105,7 +104,7 @@ class Application:
                     self.processEvent(self.keyEvt)
                     self.keyCount = 4
             return NoEvent
-        elif evt.type == MOUSEBUTTONDOWN:
+        elif evt.type == pygame.MOUSEBUTTONDOWN:
             # mouse wheel
             if evt.button == 4 or evt.button == 5:
                 # TODO find window to deliver mouse wheel events to
@@ -143,7 +142,7 @@ class Application:
             else:
                 return self.focusWindowAt(evt)
             return evt
-        elif evt.type == MOUSEBUTTONUP:
+        elif evt.type == pygame.MOUSEBUTTONUP:
             # left and right mouse button
             if self.focusedWindow and self.focusedWindow.rect.collidepoint(evt.pos):
                 if evt.button == 1:
@@ -151,7 +150,7 @@ class Application:
                 elif evt.button == 3:
                     return self.focusedWindow.processMB3Up(evt)
             return evt
-        elif evt.type == MOUSEMOTION:
+        elif evt.type == pygame.MOUSEMOTION:
             if self.mouseOverCount < self.mouseOverThreshold:
                 # just moving across widget does not trigger tooltip
                 self.mouseOverCount = 0
@@ -159,7 +158,7 @@ class Application:
             if self.focusedWindow:
                 return self.focusedWindow.processMMotion(evt)
             return evt
-        elif evt.type == KEYDOWN:
+        elif evt.type == pygame.KEYDOWN:
             self.keyEvt = evt
             self.keyCount = 0
             if self.focusedWidget:
@@ -167,7 +166,7 @@ class Application:
             if evt != NoEvent and self.focusedWindow:
                 evt = self.focusedWindow.processKeyDown(evt)
             return evt
-        elif evt.type == KEYUP:
+        elif evt.type == pygame.KEYUP:
             self.keyEvt = None
             if self.focusedWidget:
                 evt = self.focusedWidget.processKeyUp(evt)
@@ -340,7 +339,7 @@ class Application:
         pygame.event.post(evt)
 
     def exit(self):
-        pygame.event.post(pygame.event.Event(QUIT))
+        pygame.event.post(pygame.event.Event(pygame.QUIT))
 
     def processAction(self, actionName, data = None, widget = None):
         """ There are no application wide actions supported yet."""

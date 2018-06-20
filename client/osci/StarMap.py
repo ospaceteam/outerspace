@@ -23,7 +23,6 @@ from pygameui import Fonts
 import ige.ospace.Const as Const
 from ige.ospace import Rules, Utils
 import pygame, pygame.draw, pygame.key, pygame.image
-from pygame.locals import *
 import gdata, client, res, math, string
 from ige import log
 
@@ -820,7 +819,7 @@ class StarMap(object):
                         mapSurf.blit(img, (sx - img.get_width() / 2, nSy + hh))
                         hh += img.get_height()
                     if maxW > 0:
-                        actRect = Rect(sx - maxW / 2, nSy, maxW, hh)
+                        actRect = pygame.Rect(sx - maxW / 2, nSy, maxW, hh)
                         actRect.move_ip(self.rect.left, self.rect.top)
                         self._actBuoyAreas[objID] = actRect
                 elif self.control_modes['alternative_mode']:
@@ -836,7 +835,7 @@ class StarMap(object):
                     mapSurf.blit(icon, (x, y))
                     x += icon.get_width() + 1
                 # active rectangle
-                actRect = Rect(sx - w / 2, sy - h / 2, w, h)
+                actRect = pygame.Rect(sx - w / 2, sy - h / 2, w, h)
                 actRect.move_ip(self.rect.left, self.rect.top)
                 self._actAreas[objID] = actRect
         else:
@@ -866,11 +865,11 @@ class StarMap(object):
                             mapSurf.blit(img, (sx - img.get_width() / 2, nSy + hh))
                             hh += img.get_height()
                         if maxW > 0:
-                            actRect = Rect(sx - maxW / 2, nSy, maxW, hh)
+                            actRect = pygame.Rect(sx - maxW / 2, nSy, maxW, hh)
                             actRect.move_ip(self.rect.left, self.rect.top)
                             self._actBuoyAreas[objID] = actRect
                 # active rectangle
-                actRect = Rect(sx - 6 / 2, sy - 6 / 2, 6, 6)
+                actRect = pygame.Rect(sx - 6 / 2, sy - 6 / 2, 6, 6)
                 actRect.move_ip(self.rect.left, self.rect.top)
                 self._actAreas[objID] = actRect
 
@@ -910,7 +909,7 @@ class StarMap(object):
                 sx = int((x - currX) * scale) + centerX
                 sy = maxY - (int((y - currY) * scale) + centerY)
                 orbit -= 1
-                actRect = Rect(sx + (orbit % 8) * rectSpace + 13, sy + 6 * (orbit / 8) - rectSize , rectSize, rectSize)
+                actRect = pygame.Rect(sx + (orbit % 8) * rectSpace + 13, sy + 6 * (orbit / 8) - rectSize , rectSize, rectSize)
 
                 mapSurf.fill(color, actRect)
                 actRect.move_ip(self.rect.left, self.rect.top)
@@ -922,7 +921,7 @@ class StarMap(object):
                 sx = int((x - currX) * scale) + centerX
                 sy = maxY - (int((y - currY) * scale) + centerY)
                 orbit -= 1
-                actRect = Rect(sx + (orbit % 8) * 3 + 7, sy - 3 * (orbit / 8) - 1, 2, 2)
+                actRect = pygame.Rect(sx + (orbit % 8) * 3 + 7, sy - 3 * (orbit / 8) - 1, 2, 2)
                 mapSurf.fill(color, actRect)
                 actRect.move_ip(self.rect.left, self.rect.top)
                 self._actAreas[objID] = actRect
@@ -958,7 +957,7 @@ class StarMap(object):
             sx = int((x - currX) * scale) + centerX
             sy = maxY - (int((y - currY) * scale) + centerY)
             if orbit >= 0 and scale >= 30:
-                actRect = Rect(sx + (orbit % 7) * rectSpace + 13 + 2 * (orbit % 7), sy + scale/6 * (orbit / 7) + 6, rectSize, rectSize)
+                actRect = pygame.Rect(sx + (orbit % 7) * rectSpace + 13 + 2 * (orbit % 7), sy + scale/6 * (orbit / 7) + 6, rectSize, rectSize)
                 # TODO this is a workaround - fix it when pygame gets fixed
                 # pygame.draw.polygon(mapSurf, color,
                 #    (actRect.midleft, actRect.midtop, actRect.midright, actRect.midbottom), 1)
@@ -970,7 +969,7 @@ class StarMap(object):
                 rectSizeFlying = rectSize+2
                 sox = int((oldX - currX) * scale) + centerX
                 soy = maxY - (int((oldY - currY) * scale) + centerY)
-                actRect = Rect(sx - rectSizeFlying / 2, sy - rectSizeFlying / 2, rectSizeFlying , rectSizeFlying)
+                actRect = pygame.Rect(sx - rectSizeFlying / 2, sy - rectSizeFlying / 2, rectSizeFlying , rectSizeFlying)
                 if military:
                     mColor = color
                 else:

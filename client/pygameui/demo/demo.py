@@ -23,7 +23,6 @@ sys.path.append('../..')
 
 # pygame initialization
 import pygame
-from pygame.locals import *
 
 #initialize SDL and prepare screen
 def update():
@@ -33,7 +32,7 @@ def update():
 
 pygame.init()
 
-screen = pygame.display.set_mode((800, 600), SWSURFACE, 32)
+screen = pygame.display.set_mode((800, 600), pygame.SWSURFACE, 32)
 pygame.mouse.set_visible(1)
 pygame.display.set_caption('PYGAME.UI 0.4 Test Client')
 
@@ -45,7 +44,7 @@ import pygameui as ui
 
 ui.SkinableTheme.setSkin("../OSSkin")
 app = ui.Application(update, theme = ui.SkinableTheme)
-app.windowSurfaceFlags = SWSURFACE
+app.windowSurfaceFlags = pygame.SWSURFACE
 
 def echoHandler(widget, action, data):
     print 'ACTION', widget, action, data
@@ -69,7 +68,7 @@ for i in xrange(0, 2):
     win = ui.Window(app, font = 'large-bold')
     win.title = 'Test WINDOW 1X'
     #win.alwaysInBackground = 1
-    win.rect = Rect(100 + 10 * i, 100 + 10 * i, 600, 500)
+    win.rect = pygame.Rect(100 + 10 * i, 100 + 10 * i, 600, 500)
     win.layoutManager = ui.SimpleGridLM()
     win.rightButtonClose = 0
     w1 = ui.Button(win,
@@ -227,10 +226,10 @@ while running:
 
     for evt in evts:
         evt = app.processEvent(evt)
-        if evt.type == QUIT:
+        if evt.type == pygame.QUIT:
             running = 0
             break
-        if evt.type == KEYUP and evt.key == K_ESCAPE:
+        if evt.type == pygame.KEYUP and evt.key == pygame.K_ESCAPE:
             running = 0
             break
 

@@ -18,7 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-from pygame.locals import *
+import pygame
 
 class SimpleGridLM:
 
@@ -43,4 +43,4 @@ class SimpleGridLM:
                 y = widget.layout[1] * self.rowSize
                 w = widget.layout[2] * self.colSize
                 h = widget.layout[3] * self.rowSize
-                widget.rect = Rect(int(x), int(y), int(w), int(h))
+                widget.rect = pygame.Rect(int(x), int(y), int(w), int(h))

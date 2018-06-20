@@ -21,7 +21,6 @@
 import re
 import types
 
-from pygame.locals import *
 from Const import *
 from Widget import registerWidget
 from MetaWidget import MetaWidget
@@ -76,7 +75,7 @@ class Listbox(MetaWidget):
     def layoutWidgets(self):
         gx, gy = self.theme.getGridParams()
         r = self.rect
-        self.bar.rect = Rect(r.width - gx, 0, gx, r.height)
+        self.bar.rect = pygame.Rect(r.width - gx, 0, gx, r.height)
 
         self.labels = []
         rows = r.height / gy
@@ -99,7 +98,7 @@ class Listbox(MetaWidget):
                 label.set(text = title, align = flags & ALIGN_MASK,
                     data = name, visible = 1)
                 if width == 0 or width > remains: width = remains
-                label.rect = Rect(x, y, width * gx, gy)
+                label.rect = pygame.Rect(x, y, width * gx, gy)
                 x += width * gx
                 remains -= width
             startRow = 1
@@ -129,7 +128,7 @@ class Listbox(MetaWidget):
                     label.set(align = flags & ALIGN_MASK, visible = 1)
                     label.redraw()
                 if width == 0 or width > remains: width = remains
-                label.rect = Rect(x, y, width * gx, gy)
+                label.rect = pygame.Rect(x, y, width * gx, gy)
                 x += width * gx
                 remains -= width
                 rowLabels.append(label)

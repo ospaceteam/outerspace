@@ -24,7 +24,6 @@ Member variables naming convention:
     *  'watched' variable (change of this variable will force widget update)
 """
 
-from pygame.locals import *
 from Const import *
 import types
 
@@ -59,7 +58,7 @@ class Widget:
         self.__dict__['tags'] = []
         self.__dict__['id'] = None
         self.__dict__['orderNo'] = 0
-        self.__dict__['rect'] = Rect((0, 0, 0, 0))
+        self.__dict__['rect'] = pygame.Rect((0, 0, 0, 0))
         self.__dict__['_handleMap'] = {'*': []}
         self.__dict__['data'] = DataHolder()
         # notify parent

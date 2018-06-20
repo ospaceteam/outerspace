@@ -21,7 +21,6 @@
 from pygameui.Widget import Widget, registerWidget
 import ige.ospace.Const as Const
 import pygame, pygame.draw
-from pygame.locals import *
 from ige import log
 import res, client
 
@@ -91,7 +90,7 @@ class MiniMap:
 
     def preDraw(self, surface):
         if not self._mapSurf:
-            self._mapSurf = pygame.Surface((self._width, self._height), SWSURFACE | SRCALPHA, surface)
+            self._mapSurf = pygame.Surface((self._width, self._height), pygame.SWSURFACE | pygame.SRCALPHA, surface)
             self._repaintMap = 1
         # redraw map
         self._mapSurf.fill((0x00, 0x00, 0x00))
@@ -122,7 +121,7 @@ class MiniMap:
         self._repaintMap = False
         self._repaintRect = False
         # blit map
-        rect = Rect(startX, startY, self._width, self._height)
+        rect = pygame.Rect(startX, startY, self._width, self._height)
         surface.blit(self._mapSurf, rect)
         return rect
 

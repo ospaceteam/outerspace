@@ -19,7 +19,6 @@
 #
 
 import types
-from pygame.locals import *
 from Const import *
 from Widget import widgets, registerWidget
 from MetaWidget import MetaWidget
@@ -142,12 +141,12 @@ class Window(MetaWidget):
             return MetaWidget.processMMotion(self, evt)
 
     def processKeyUp(self, evt):
-        if self.escKeyClose and evt.key == K_ESCAPE:
+        if self.escKeyClose and evt.key == pygame.K_ESCAPE:
             self.hide()
             return NoEvent
-        elif self.tabChange and evt.key == K_TAB and self.widgets:
+        elif self.tabChange and evt.key == pygame.K_TAB and self.widgets:
             self.focusNext()
-        elif self.acceptButton != None and evt.key == K_RETURN:
+        elif self.acceptButton != None and evt.key == pygame.K_RETURN:
             if isinstance(self.acceptButton, Button) and self.acceptButton.action != None:
                 self.processAction(self.acceptButton.action)
         if self.callEventHandler:

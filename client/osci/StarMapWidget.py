@@ -24,7 +24,6 @@ import pygameui as ui
 from pygameui import Fonts
 import ige.ospace.Const as Const
 import pygame, pygame.draw, pygame.key, pygame.image
-from pygame.locals import *
 from dialog.ShowBuoyDlg import ShowBuoyDlg
 from dialog.KeyModHelp import KeyModHelp
 import gdata, client, res
@@ -74,8 +73,8 @@ class StarMapWidget(Widget):
         self.callEventHandler = None
         self.showBuoyDlg = ShowBuoyDlg(self.app)
         self.KeyModHelp = KeyModHelp(self.app)
-        self._miniMapRect = Rect(0, 20, 175, 175)
-        self._hotbuttonsZone = Rect(0,0,0,0)
+        self._miniMapRect = pygame.Rect(0, 20, 175, 175)
+        self._hotbuttonsZone = pygame.Rect(0,0,0,0)
         self.initHotbuttons()
         self.miniMap = MiniMap(self._miniMapRect.width, self._miniMapRect.height)
         # flags
@@ -142,7 +141,7 @@ class StarMapWidget(Widget):
         self._miniMapRect.left = self.rect.width - self._miniMapRect.width
         self._miniMapRect.top = self.rect.top
         if not self._mapSurf:
-            mapSurf = pygame.Surface(self.rect.size, SWSURFACE, surface)
+            mapSurf = pygame.Surface(self.rect.size, pygame.SWSURFACE, surface)
         else:
             mapSurf = self._mapSurf
 
@@ -188,7 +187,7 @@ class StarMapWidget(Widget):
 
         for buttonkey in self._hotbuttons:
             button = self._hotbuttons[buttonkey]
-            self._hotbuttonRects[button[0]] = [button[0],Rect(button[2]+self._hotbuttonsZone.left,button[3]+self._hotbuttonsZone.top+15,button[4],button[5])]
+            self._hotbuttonRects[button[0]] = [button[0],pygame.Rect(button[2]+self._hotbuttonsZone.left,button[3]+self._hotbuttonsZone.top+15,button[4],button[5])]
             img = res.getButton(button[0],button[1])
             if (button[1] and not (self._tempOverlayHotbutton and self._tempOverlayHotbutton == button[0])) or (not button[1] and self._tempOverlayHotbutton and self._tempOverlayHotbutton == button[0]):
                 pygame.draw.rect(mapSurf,(0x90, 0x90, 0x90),(left+button[2]-1,top+15+button[3]-1,button[4]+2,button[5]+2),1)
@@ -207,7 +206,7 @@ class StarMapWidget(Widget):
         else:
             x = self.rect.left + 2
             y = self.rect.top
-        if not pygame.key.get_mods() & KMOD_SHIFT:
+        if not pygame.key.get_mods() & pygame.KMOD_SHIFT:
             for activeObjID in self.activeObjIDs:
                 index = 0
                 if self.star_map._popupInfo.has_key(activeObjID):
@@ -282,7 +281,7 @@ class StarMapWidget(Widget):
                 x, y, maxRange, operRange, halfRange, speed, turns = self.star_map._fleetRanges[activeObjID]
                 sx = int((x - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
                 sy = maxY - (int((y - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
-                if pygame.key.get_mods() & KMOD_SHIFT:
+                if pygame.key.get_mods() & pygame.KMOD_SHIFT:
                     # fleet ranges stepped by 6 turns
                     for i in xrange(1, turns / 6):
                         rng = int(i * speed * self.star_map.scale)
@@ -397,7 +396,7 @@ class StarMapWidget(Widget):
     def processMB1Down(self, evt):
         # handle SHIFT click as MB3
         mods = pygame.key.get_mods()
-        if mods & KMOD_SHIFT:
+        if mods & pygame.KMOD_SHIFT:
             return self.processMB3Down(evt)
         pos = evt.pos
         # show current position for debugging
@@ -428,7 +427,7 @@ class StarMapWidget(Widget):
     def processMB1Up(self, evt):
         # handle SHIFT click as MB3
         mods = pygame.key.get_mods()
-        if mods & KMOD_SHIFT:
+        if mods & pygame.KMOD_SHIFT:
             return self.processMB3Up(evt)
         pos = evt.pos
         if self.control_modes['minimap']:
@@ -621,14 +620,14 @@ class StarMapWidget(Widget):
         # ==== Object Hotkeys ====
         #I have not found unicode escape characters for Ctrl-0 through Ctrl-9, so using direct key reference (less preferred due to international keyboards)
         if evt.key in [49,50,51,52,53,54,55,56,57,48]:
-            if pygame.key.get_mods() & KMOD_CTRL:
+            if pygame.key.get_mods() & pygame.KMOD_CTRL:
                 log.debug('Set Key:',evt.key)
                 if gdata.config.defaults.displayhelp != 'no':
                     self.KeyModHelp.show()
                 self.selectobject = True
                 self.setKey = evt.key
                 self.app.setStatus(_("Select object to hotkey. ESC to cancel."))
-            elif pygame.key.get_mods() & KMOD_SHIFT:
+            elif pygame.key.get_mods() & pygame.KMOD_SHIFT:
                 log.debug('Focus Key:',evt.key)
                 self.focusOnKeyObject(evt.key)
             else:
@@ -636,7 +635,7 @@ class StarMapWidget(Widget):
                 self.gotoKeyObject(evt.key)
             return ui.NoEvent
         # ==== Map and Dialog Hotkeys ====
-        elif evt.key == K_ESCAPE and self.selectobject:
+        elif evt.key == pygame.K_ESCAPE and self.selectobject:
             log.debug('Canceled Key')
             if self.selectobject:
                 self.app.setStatus(_("Ready."))
@@ -668,25 +667,25 @@ class StarMapWidget(Widget):
             self.toggleHotbuttons('alternate')
         # Reserve CTRL-C for copy (future editor support)
         # Ctrl+F
-        elif evt.unicode == u'\x06' and pygame.key.get_mods() & KMOD_CTRL:
+        elif evt.unicode == u'\x06' and pygame.key.get_mods() & pygame.KMOD_CTRL:
             self.searchDlg.display()
         # Ctrl+G - Toggle grid
-        elif evt.unicode == u'\x07' and pygame.key.get_mods() & KMOD_CTRL:
+        elif evt.unicode == u'\x07' and pygame.key.get_mods() & pygame.KMOD_CTRL:
             self.toggleHotbuttons('grid')
         # Ctrl-H - Toggle visibility of civilian ships
-        elif evt.unicode == u'\x08' and pygame.key.get_mods() & KMOD_CTRL:
+        elif evt.unicode == u'\x08' and pygame.key.get_mods() & pygame.KMOD_CTRL:
             self.toggleHotbuttons('civ')
         # Ctrl+L - Toggle drawing fleet lines
-        elif evt.unicode == u'\x0C' and pygame.key.get_mods() & KMOD_CTRL:
+        elif evt.unicode == u'\x0C' and pygame.key.get_mods() & pygame.KMOD_CTRL:
             self.toggleHotbuttons('lines')
         # Ctrl+P - Toggle viewing of control areas (turns off scanner circles)
-        elif evt.unicode == u'\x10' and pygame.key.get_mods() & KMOD_CTRL:
+        elif evt.unicode == u'\x10' and pygame.key.get_mods() & pygame.KMOD_CTRL:
             self.toggleHotbuttons('pzone')
         # Ctrl+R - Toggle drawing redirects
-        elif evt.unicode == u'\x12' and pygame.key.get_mods() & KMOD_CTRL:
+        elif evt.unicode == u'\x12' and pygame.key.get_mods() & pygame.KMOD_CTRL:
             self.toggleHotbuttons('redir')
         # Ctrl+S - Toggle drawing scanners
-        elif evt.unicode == u'\x13' and pygame.key.get_mods() & KMOD_CTRL:
+        elif evt.unicode == u'\x13' and pygame.key.get_mods() & pygame.KMOD_CTRL:
             self.toggleHotbuttons('scanner')
         # Reserve CTRL-V,X,and Z for paste, cut, and undo (future editor support)
         # ==== Else ====
