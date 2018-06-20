@@ -17,9 +17,9 @@
 #  along with Pygame.UI; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
+import pygame
 
-import types
-from Const import *
+import Const
 from Widget import widgets, registerWidget
 from MetaWidget import MetaWidget
 from Button import Button
@@ -109,7 +109,7 @@ class Window(MetaWidget):
         )
         if self._widgetArea and not self._widgetArea.collidepoint(pos) and self.movable:
             self._dragging = 1
-            return NoEvent
+            return Const.NoEvent
         else:
             return MetaWidget.processMB1Down(self, evt)
 
@@ -124,7 +124,7 @@ class Window(MetaWidget):
     def processMB3Down(self, evt):
         if self.rightButtonClose:
             self.hide()
-            return NoEvent
+            return Const.NoEvent
         return MetaWidget.processMB3Down(self, evt)
 
     def processMMotion(self, evt):
@@ -133,17 +133,17 @@ class Window(MetaWidget):
             self.rect.top += evt.rel[1]
             self._fullUpdate = True
             self.parent.redrawWidgets[self] = None
-            return NoEvent
+            return Const.NoEvent
         elif self._dragging and not evt.buttons[0]:
             self._dragging = 0
-            return NoEvent
+            return Const.NoEvent
         else:
             return MetaWidget.processMMotion(self, evt)
 
     def processKeyUp(self, evt):
         if self.escKeyClose and evt.key == pygame.K_ESCAPE:
             self.hide()
-            return NoEvent
+            return Const.NoEvent
         elif self.tabChange and evt.key == pygame.K_TAB and self.widgets:
             self.focusNext()
         elif self.acceptButton != None and evt.key == pygame.K_RETURN:

@@ -18,7 +18,9 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-from Const import *
+import pygame
+
+import Const
 from Widget import Widget, registerWidget
 
 # keys mapping
@@ -97,7 +99,7 @@ class Entry(Widget):
             self.cursorPos += 1
         if (self.reportValueChanged):
             self.processAction("onValueChanged")
-        return Widget.processKeyDown(self, NoEvent)
+        return Widget.processKeyDown(self, Const.NoEvent)
 
     def onFocusGained(self):
         Widget.onFocusGained(self)

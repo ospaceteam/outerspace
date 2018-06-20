@@ -17,8 +17,9 @@
 #  along with Pygame.UI; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
+import pygame
 
-from Const import *
+import Const
 from Widget import registerWidget
 from MetaWidget import MetaWidget
 from Scrollbar import Scrollbar

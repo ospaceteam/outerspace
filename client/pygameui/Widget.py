@@ -24,7 +24,9 @@ Member variables naming convention:
     *  'watched' variable (change of this variable will force widget update)
 """
 
-from Const import *
+import pygame
+
+import Const
 import types
 
 class DataHolder:
@@ -36,14 +38,14 @@ class Widget:
         # bypass change detection
         self.__dict__['_changeReported'] = 0
         self.__dict__['parent'] = parent
-        self.__dict__['metaType'] = TYPE_WIDGET
+        self.__dict__['metaType'] = Const.TYPE_WIDGET
         self.__dict__['app'] = parent.getApp()
         self.__dict__['theme'] = self.app.theme
         self.__dict__['foreground'] = None
         self.__dict__['background'] = None
         self.__dict__['style'] = None
         self.__dict__['font'] = None
-        self.__dict__['align'] = ALIGN_NONE
+        self.__dict__['align'] = Const.ALIGN_NONE
         self.__dict__['tooltip'] = None
         self.__dict__['tooltipTitle'] = None
         self.__dict__['statustip'] = None
@@ -112,40 +114,40 @@ class Widget:
         return
 
     def processMB1Down(self, evt):
-        return NoEvent
+        return Const.NoEvent
 
     def processMB1Up(self, evt):
-        return NoEvent
+        return Const.NoEvent
 
     def processMB1UpMissed(self, evt):
-        return NoEvent
+        return Const.NoEvent
 
     def processMB2Down(self, evt):
-        return NoEvent
+        return Const.NoEvent
 
     def processMB2Up(self, evt):
-        return NoEvent
+        return Const.NoEvent
 
     def processMB2UpMissed(self, evt):
-        return NoEvent
+        return Const.NoEvent
 
     def processMB3Down(self, evt):
-        return NoEvent
+        return Const.NoEvent
 
     def processMB3Up(self, evt):
-        return NoEvent
+        return Const.NoEvent
 
     def processMB3UpMissed(self, evt):
-        return NoEvent
+        return Const.NoEvent
 
     def processMWUp(self, evt):
-        return NoEvent
+        return Const.NoEvent
 
     def processMWDown(self, evt):
-        return NoEvent
+        return Const.NoEvent
 
     def processMMotion(self, evt):
-        return NoEvent
+        return Const.NoEvent
 
     def processKeyDown(self, evt):
         return evt
@@ -163,7 +165,7 @@ class Widget:
     def __setattr__(self, name, value):
         #@name = intern(name)
         dict = self.__dict__
-        if value == dict.get(name, NoValue):
+        if value == dict.get(name, Const.NoValue):
             return
         dict[name] = value
         if name == 'visible' and self.parent:

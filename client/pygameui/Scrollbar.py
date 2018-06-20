@@ -17,8 +17,8 @@
 #  along with Pygame.UI; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
-
-from Const import *
+import pygame
+import Const
 from Widget import registerWidget
 from MetaWidget import MetaWidget
 
@@ -48,16 +48,16 @@ class Scrollbar(MetaWidget):
         if self.rect.width > self.rect.height:
             # horizontal
             self.button1.rect = pygame.Rect(0, 0, gx, gy)
-            self.button1.direction = ALIGN_W
+            self.button1.direction = Const.ALIGN_W
             self.button2.rect = pygame.Rect(r.width - gx, 0, gx, gy)
-            self.button2.direction = ALIGN_E
+            self.button2.direction = Const.ALIGN_E
             self.slider.rect = pygame.Rect(gx, 0, r.width - 2 * gx, gy)
         else:
             # vertical
             self.button1.rect = pygame.Rect(0, 0, gx, gy)
-            self.button1.direction = ALIGN_N
+            self.button1.direction = Const.ALIGN_N
             self.button2.rect = pygame.Rect(0, r.height - gy, gx, gy)
-            self.button2.direction = ALIGN_S
+            self.button2.direction = Const.ALIGN_S
             self.slider.rect = pygame.Rect(0, gy, gx, r.height - 2 * gy)
         MetaWidget.layoutWidgets(self)
 

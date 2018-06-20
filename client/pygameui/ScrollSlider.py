@@ -18,7 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-from Const import *
+import Const
 from Widget import Widget, registerWidget
 
 class ScrollSlider(Widget):
@@ -44,15 +44,15 @@ class ScrollSlider(Widget):
     def processMB1Down(self, evt):
         if self._handler and self._handler.collidepoint(evt.pos):
             self.dragging = 1
-        return NoEvent
+        return Const.NoEvent
 
     def processMB1Up(self, evt):
         self.dragging = 0
-        return NoEvent
+        return Const.NoEvent
 
     def processMB1UpMissed(self, evt):
         self.dragging = 0
-        return NoEvent
+        return Const.NoEvent
 
     def processMMotion(self, evt):
         if self.dragging and evt.buttons[0] == 1:
@@ -76,7 +76,7 @@ class ScrollSlider(Widget):
         if self.dragging and evt.buttons[0] == 1:
             self.processAction(self.action)
 
-        return NoEvent
+        return Const.NoEvent
 
     def processMWUp(self, evt):
         self.position -= 3
@@ -84,7 +84,7 @@ class ScrollSlider(Widget):
             self.position = self.min
 
         self.processAction(self.action)
-        return NoEvent
+        return Const.NoEvent
 
     def processMWDown(self, evt):
         self.position += 3
@@ -95,6 +95,6 @@ class ScrollSlider(Widget):
             self.position = self.min
 
         self.processAction(self.action)
-        return NoEvent
+        return Const.NoEvent
 
 registerWidget(ScrollSlider, 'scrollslider')

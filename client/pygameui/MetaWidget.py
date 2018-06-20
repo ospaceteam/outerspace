@@ -19,14 +19,14 @@
 #
 
 import pygame.event
-from Const import *
+import Const
 from Widget import Widget
 
 class MetaWidget(Widget):
 
     def __init__(self, parent, **kwargs):
         Widget.__init__(self, parent)
-        self.__dict__['metaType'] = TYPE_METAWIDGET
+        self.__dict__['metaType'] = Const.TYPE_METAWIDGET
         self.__dict__['_widgetArea'] = None
         self.__dict__['_widgetSurface'] = None
         self.__dict__['redrawMyself'] = 1
@@ -79,8 +79,8 @@ class MetaWidget(Widget):
         if name[:2] == '__':
             raise AttributeError(name)
         # access widgets
-        value = self.__dict__['widgetMap'].get(name, NoValue)
-        if value != NoValue:
+        value = self.__dict__['widgetMap'].get(name, Const.NoValue)
+        if value != Const.NoValue:
             return value
         else:
             raise AttributeError(name)
@@ -119,7 +119,7 @@ class MetaWidget(Widget):
             for widget in self.widgets:
                 if widget.visible:
                     self.redrawWidgets[widget] = None
-                    if widget.metaType == TYPE_METAWIDGET:
+                    if widget.metaType == Const.TYPE_METAWIDGET:
                         widget.__dict__['redrawMyself'] = 1
             self.__dict__['redrawMyself'] = 0
             changed = pygame.Rect(self._widgetSurface.get_rect())
@@ -154,11 +154,11 @@ class MetaWidget(Widget):
         evt = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos = self.transpose(evt.pos), button = evt.button)
         for widget in self.widgets:
             if widget.rect.collidepoint(evt.pos) and widget.enabled and widget.visible:
-                if widget.metaType == TYPE_WIDGET:
+                if widget.metaType == Const.TYPE_WIDGET:
                     self.app.setFocus(widget)
                 return widget.processMB1Down(evt)
         self.app.setFocus(None)
-        return NoEvent
+        return Const.NoEvent
 
     def processMB1Up(self, evt):
         evt = pygame.event.Event(pygame.MOUSEBUTTONUP, pos = self.transpose(evt.pos), button = evt.button)
@@ -168,17 +168,17 @@ class MetaWidget(Widget):
         for widget in self.widgets:
             if widget.rect.collidepoint(evt.pos) and widget.enabled and widget.visible:
                 return widget.processMB1Up(evt)
-        return NoEvent
+        return Const.NoEvent
 
     def processMB3Down(self, evt):
         evt = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos = self.transpose(evt.pos), button = evt.button)
         for widget in self.widgets:
             if widget.rect.collidepoint(evt.pos) and widget.enabled and widget.visible:
-                if widget.metaType == TYPE_WIDGET:
+                if widget.metaType == Const.TYPE_WIDGET:
                     self.app.setFocus(widget)
                 return widget.processMB3Down(evt)
         self.app.setFocus(None)
-        return NoEvent
+        return Const.NoEvent
 
     def processMB3Up(self, evt):
         evt = pygame.event.Event(pygame.MOUSEBUTTONUP, pos = self.transpose(evt.pos), button = evt.button)
@@ -188,17 +188,17 @@ class MetaWidget(Widget):
         for widget in self.widgets:
             if widget.rect.collidepoint(evt.pos) and widget.enabled and widget.visible:
                 return widget.processMB3Up(evt)
-        return NoEvent
+        return Const.NoEvent
 
     def processMMotion(self, evt):
         evt = pygame.event.Event(pygame.MOUSEMOTION, pos = self.transpose(evt.pos), rel = evt.rel, buttons = evt.buttons)
         for widget in self.widgets:
             if widget.rect.collidepoint(evt.pos) and widget.enabled and widget.visible:
-                if widget.metaType == TYPE_WIDGET:
+                if widget.metaType == Const.TYPE_WIDGET:
                     self.app.setMouseOver(widget)
                 return widget.processMMotion(evt)
         self.app.setMouseOver(None)
-        return NoEvent
+        return Const.NoEvent
 
     def processMWUp(self, evt):
         evt = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos = self.transpose(evt.pos), button = evt.button)
@@ -206,7 +206,7 @@ class MetaWidget(Widget):
             if widget.rect.collidepoint(evt.pos) and widget.enabled and widget.visible:
                 return widget.processMWUp(evt)
         self.app.setFocus(None)
-        return NoEvent
+        return Const.NoEvent
 
     def processMWDown(self, evt):
         evt = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos = self.transpose(evt.pos), button = evt.button)
@@ -214,7 +214,7 @@ class MetaWidget(Widget):
             if widget.rect.collidepoint(evt.pos) and widget.enabled and widget.visible:
                 return widget.processMWDown(evt)
         self.app.setFocus(None)
-        return NoEvent
+        return Const.NoEvent
 
     def onMouseOver(self):
         pass
@@ -225,7 +225,7 @@ class MetaWidget(Widget):
     def __setattr__(self, name, value):
         #@name = intern(name)
         dict = self.__dict__
-        if value == dict.get(name, NoValue):
+        if value == dict.get(name, Const.NoValue):
             return
         dict[name] = value
         if name == 'visible' and self.parent:

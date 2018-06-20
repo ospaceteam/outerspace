@@ -18,7 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-from Const import *
+import Const
 from WordUtils import *
 from Widget import Widget, registerWidget
 import pygame.key
@@ -110,7 +110,7 @@ class Text(Widget):
         # consume pygame.K_RETURN (acceptButton on Window will not work)
         # can be choosable on construction?
         if evt.key == pygame.K_RETURN:
-            return NoEvent
+            return Const.NoEvent
         else:
             return Widget.processKeyUp(self, evt)
 
@@ -371,7 +371,7 @@ class Text(Widget):
             )
             self.cursorColumn += 1
 
-        return Widget.processKeyDown(self, NoEvent)
+        return Widget.processKeyDown(self, Const.NoEvent)
 
     def onFocusGained(self):
         Widget.onFocusGained(self)

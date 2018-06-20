@@ -20,17 +20,16 @@
 
 from Exception import *
 import pygame
-import pygame.locals
 
-TIMEREVENT = pygame.locals.USEREVENT
-if TIMEREVENT >= pygame.locals.NUMEVENTS:
+TIMEREVENT = pygame.USEREVENT
+if TIMEREVENT >= pygame.NUMEVENTS:
     raise 'Cannot create TIMEREVENT.'
 
 USEREVENT = TIMEREVENT + 1
-if USEREVENT >= pygame.locals.NUMEVENTS:
+if USEREVENT >= pygame.NUMEVENTS:
     raise 'Cannot create USEREVENT.'
 
-NoEvent = pygame.event.Event(pygame.locals.NOEVENT)
+NoEvent = pygame.event.Event(pygame.NOEVENT)
 
 # Alignment
 ALIGN_NONE = 0x00
@@ -50,9 +49,6 @@ F_EDITABLE = 0x10
 # Special value
 class NoValue:
     pass
-
-# Class of Rect
-RectType = type(pygame.locals.Rect(0, 0, 0, 0))
 
 # Meta types of widgets
 TYPE_WIDGET = 0

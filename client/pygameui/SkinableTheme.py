@@ -20,7 +20,7 @@
 
 import string
 import pygame
-from Const import *
+import Const
 import Fonts
 import os, os.path, sys, ConfigParser
 from ige import log
@@ -310,17 +310,17 @@ def drawTextAndIcons(surface, widget, style):
     if widget.icons:
         for img, align in widget.icons:
             r = pygame.Rect(rect)
-            if align & ALIGN_W:
+            if align & Const.ALIGN_W:
                 rect.left += img.get_width()
                 rect.width -= img.get_width()
                 pass
-            elif align & ALIGN_E:
+            elif align & Const.ALIGN_E:
                 r.left += rect.width - img.get_width()
                 rect.width -= img.get_width()
             else:
                 r.left += (rect.width - img.get_width()) / 2
-            if align & ALIGN_N: pass
-            elif align & ALIGN_S: r.top += rect.height - img.get_height()
+            if align & Const.ALIGN_N: pass
+            elif align & Const.ALIGN_S: r.top += rect.height - img.get_height()
             else: r.top += (rect.height - img.get_height()) / 2
             surface.blit(img, r)
     # text
@@ -331,11 +331,11 @@ def drawTextAndIcons(surface, widget, style):
 
         img = Fonts.renderText(font, widget.text, 1, foreground, background)
         r = pygame.Rect(rect)
-        if widget.align & ALIGN_W: pass
-        elif widget.align & ALIGN_E: r.left += rect.width - img.get_width()
+        if widget.align & Const.ALIGN_W: pass
+        elif widget.align & Const.ALIGN_E: r.left += rect.width - img.get_width()
         else: r.left += (rect.width - img.get_width()) / 2
-        if widget.align & ALIGN_N: pass
-        elif widget.align & ALIGN_S: r.top += rect.height - img.get_height()
+        if widget.align & Const.ALIGN_N: pass
+        elif widget.align & Const.ALIGN_S: r.top += rect.height - img.get_height()
         else: r.top += (rect.height - img.get_height()) / 2
         surface.blit(img, r)
     surface.set_clip(oldClip)
@@ -460,13 +460,13 @@ def drawArrowButton(surface, widget):
     r.top += 3
     r.width -= 6
     r.height -= 6
-    if widget.direction == ALIGN_N:
+    if widget.direction == Const.ALIGN_N:
         points = (r.midtop, r.bottomright, r.bottomleft)
-    elif widget.direction == ALIGN_S:
+    elif widget.direction == Const.ALIGN_S:
         points = (r.midbottom, r.topleft, r.topright)
-    elif widget.direction == ALIGN_E:
+    elif widget.direction == Const.ALIGN_E:
         points = (r.midright, r.topleft, r.bottomleft)
-    elif widget.direction == ALIGN_W:
+    elif widget.direction == Const.ALIGN_W:
         points = (r.midleft, r.topright, r.bottomright)
     pygame.draw.lines(surface, fg, 1, points)
     return widget.rect
@@ -489,11 +489,11 @@ def drawTitleButton(surface, widget):
     if widget.icons:
         for img, align in widget.icons:
             r = getDRect(rect)
-            if align & ALIGN_W: r.left += 1
-            elif align & ALIGN_E: r.left += rect.width - img.get_width()
+            if align & Const.ALIGN_W: r.left += 1
+            elif align & Const.ALIGN_E: r.left += rect.width - img.get_width()
             else: r.left += (rect.width - img.get_width()) / 2
-            if align & ALIGN_N: r.top += 1
-            elif align & ALIGN_S: r.top += rect.height - img.get_height()
+            if align & Const.ALIGN_N: r.top += 1
+            elif align & Const.ALIGN_S: r.top += rect.height - img.get_height()
             else: r.top += (rect.height - img.get_height()) / 2
             surface.blit(img, r)
     # text
@@ -502,11 +502,11 @@ def drawTitleButton(surface, widget):
             foreground = themeHighlightfrg
         img = Fonts.renderText(font, widget.text, 1, foreground)
         r = getDRect(rect)
-        if widget.align & ALIGN_W: r.left += 2
-        elif widget.align & ALIGN_E: r.left += rect.width - img.get_width() - 1
+        if widget.align & Const.ALIGN_W: r.left += 2
+        elif widget.align & Const.ALIGN_E: r.left += rect.width - img.get_width() - 1
         else: r.left += (rect.width - img.get_width()) / 2
-        if widget.align & ALIGN_N: r.top += 2
-        elif widget.align & ALIGN_S: r.top += rect.height - img.get_height() - 1
+        if widget.align & Const.ALIGN_N: r.top += 2
+        elif widget.align & Const.ALIGN_S: r.top += rect.height - img.get_height() - 1
         else: r.top += (rect.height - img.get_height()) / 2
         surface.blit(img, r)
     surface.set_clip(oldClip)
@@ -529,22 +529,22 @@ def drawTitle(surface, widget):
     if widget.icons:
         for img, align in widget.icons:
             r = getDRect(rect)
-            if align & ALIGN_W: r.left += 1
-            elif align & ALIGN_E: r.left += rect.width - img.get_width()
+            if align & Const.ALIGN_W: r.left += 1
+            elif align & Const.ALIGN_E: r.left += rect.width - img.get_width()
             else: r.left += (rect.width - img.get_width()) / 2
-            if align & ALIGN_N: r.top += 1
-            elif align & ALIGN_S: r.top += rect.height - img.get_height()
+            if align & Const.ALIGN_N: r.top += 1
+            elif align & Const.ALIGN_S: r.top += rect.height - img.get_height()
             else: r.top += (rect.height - img.get_height()) / 2
             surface.blit(img, r)
     # text
     if widget.text != None:
         img = Fonts.renderText(font, widget.text, 1, foreground)
         r = getDRect(rect)
-        if widget.align & ALIGN_W: r.left += 2
-        elif widget.align & ALIGN_E: r.left += rect.width - img.get_width() - 1
+        if widget.align & Const.ALIGN_W: r.left += 2
+        elif widget.align & Const.ALIGN_E: r.left += rect.width - img.get_width() - 1
         else: r.left += (rect.width - img.get_width()) / 2
-        if widget.align & ALIGN_N: r.top += 2
-        elif widget.align & ALIGN_S: r.top += rect.height - img.get_height() - 1
+        if widget.align & Const.ALIGN_N: r.top += 2
+        elif widget.align & Const.ALIGN_S: r.top += rect.height - img.get_height() - 1
         else: r.top += (rect.height - img.get_height()) / 2
         surface.blit(img, r)
     surface.set_clip(oldClip)
@@ -597,14 +597,14 @@ def drawEntry(surface, widget):
 
     img = Fonts.renderText(font, text, 1, foreground)
 
-    if widget.align & ALIGN_E:
+    if widget.align & Const.ALIGN_E:
         r.left += rect.width - img.get_width() - 2
-    elif not widget.align & ALIGN_W:
+    elif not widget.align & Const.ALIGN_W:
         r.left += (rect.width - img.get_width()) / 2
 
-    if widget.align & ALIGN_N:
+    if widget.align & Const.ALIGN_N:
         r.top += 2
-    elif widget.align & ALIGN_S:
+    elif widget.align & Const.ALIGN_S:
         r.top += rect.height - img.get_height() - 1
     else:
         r.top += (rect.height - img.get_height()) / 2
