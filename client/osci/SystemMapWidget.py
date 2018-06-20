@@ -20,7 +20,7 @@
 
 from pygameui.Widget import Widget, registerWidget
 import pygameui as ui
-from pygameui.Fonts import *
+from pygameui import Fonts
 import ige.ospace.Const as Const
 import pygame, pygame.draw
 from pygame.locals import *
@@ -117,15 +117,15 @@ class SystemMapWidget(Widget):
         # mines
         if self.my_mines:
             if self.unknown_mines:
-                textSrfc = renderText('small', 'Minefield', 1, res.getFFColorCode(1250))
+                textSrfc = Fonts.renderText('small', 'Minefield', 1, res.getFFColorCode(1250))
                 surface.blit(textSrfc, (x, self.rect.top + textSrfc.get_height()))
-                textSrfc = renderText('small', 'Unknown Minefield Detected', 1, res.getFFColorCode(0))
+                textSrfc = Fonts.renderText('small', 'Unknown Minefield Detected', 1, res.getFFColorCode(0))
                 surface.blit(textSrfc, (x, self.rect.top + textSrfc.get_height()*2 + 5))
             else:
-                textSrfc = renderText('small', 'Minefield', 1, res.getFFColorCode(1250))
+                textSrfc = Fonts.renderText('small', 'Minefield', 1, res.getFFColorCode(1250))
                 surface.blit(textSrfc, (x, self.rect.top + textSrfc.get_height()))
         elif self.unknown_mines:
-            textSrfc = renderText('small', 'Unknown Minefield Detected', 1, res.getFFColorCode(0))
+            textSrfc = Fonts.renderText('small', 'Unknown Minefield Detected', 1, res.getFFColorCode(0))
             surface.blit(textSrfc, (x, self.rect.top + textSrfc.get_height()))
         # buoy
         if self.buoytext:
@@ -142,7 +142,7 @@ class SystemMapWidget(Widget):
                     line = u"%s..." % line[:MAX_BOUY_DISPLAY_LEN]
                 elif i == MAX_BOUY_DISPLAY_ROWS:
                     line = u"%s..." % line
-                textSrfc = renderText('small', line, 1, bouycolor)
+                textSrfc = Fonts.renderText('small', line, 1, bouycolor)
                 textSrfcs.append(textSrfc)
                 maxW = max(textSrfc.get_width(), maxW)
                 i += 1
@@ -160,13 +160,13 @@ class SystemMapWidget(Widget):
             py = y - img.get_height() / 2
             surface.blit(img, (x, py))
             self._actAreas[planetID] = Rect((x, py), img.get_size())
-            text = pygame.transform.rotate(renderText('small', ' %s' % name, 1, ffColor), 90)
+            text = pygame.transform.rotate(Fonts.renderText('small', ' %s' % name, 1, ffColor), 90)
             py = height - text.get_height()
             px = x + img.get_width() / 2 - text.get_width() / 2
             nameWidth = text.get_width()
             surface.blit(text, (px, py))
             if getattr(planet, 'owner', Const.OID_NONE) == player.oid:
-                text = pygame.transform.rotate(renderText('small', ' (%d)' % self.getFreeSlots(planetID), 1, ffColor), 90)
+                text = pygame.transform.rotate(Fonts.renderText('small', ' (%d)' % self.getFreeSlots(planetID), 1, ffColor), 90)
                 py = height - text.get_height()
                 px = x + img.get_width() / 2 - text.get_width() / 2 + nameWidth
                 surface.blit(text, (px, py))

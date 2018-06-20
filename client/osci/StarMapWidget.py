@@ -21,7 +21,7 @@
 
 from pygameui.Widget import Widget, registerWidget
 import pygameui as ui
-from pygameui.Fonts import *
+from pygameui import Fonts
 import ige.ospace.Const as Const
 import pygame, pygame.draw, pygame.key, pygame.image
 from pygame.locals import *
@@ -195,7 +195,7 @@ class StarMapWidget(Widget):
             mapSurf.blit(img,(left+button[2],top+15+button[3]))
         if self._tempOverlayHotbutton:
             text = self._hotbuttons[self._tempOverlayHotbutton][7]
-            textSrfc = renderText(self.star_map.textSize, text, 1, (0xEF, 0xEF, 0xEF))
+            textSrfc = Fonts.renderText(self.star_map.textSize, text, 1, (0xEF, 0xEF, 0xEF))
             mapSurf.blit(textSrfc, (left+2,top+1))
 
     def drawPopups(self, surface):
@@ -220,7 +220,7 @@ class StarMapWidget(Widget):
                     height = 0
                     # pygame.draw.line(surface, fg, (x1, y1), (x, y), 1)
                     for item in info:
-                        w, h = getTextSize('normal', item)
+                        w, h = Fonts.getTextSize('normal', item)
                         width = max(width, w)
                         height += h
                     if not moreIDs:
@@ -232,7 +232,7 @@ class StarMapWidget(Widget):
                     x += 1
                     tmpY = y + 1
                     for item in info:
-                        textSrfc = renderText('normal', item, 1, fg)
+                        textSrfc = Fonts.renderText('normal', item, 1, fg)
                         surface.blit(textSrfc, (x, tmpY))
                         tmpY += textSrfc.get_height()
                     x += width + 2
@@ -288,7 +288,7 @@ class StarMapWidget(Widget):
                         rng = int(i * speed * self.star_map.scale)
                         if rng > 1:
                             pygame.draw.circle(surface, (0x70, 0x70, 0x80), (sx, sy), rng, 1)
-                            textSrfc = renderText(self.star_map.textSize, res.formatTime(i * 6), 1, (0x70, 0x70, 0x80), (0x00, 0x00, 0x00))
+                            textSrfc = Fonts.renderText(self.star_map.textSize, res.formatTime(i * 6), 1, (0x70, 0x70, 0x80), (0x00, 0x00, 0x00))
                             surface.blit(textSrfc, (sx - rng, sy - textSrfc.get_height() / 2))
                             surface.blit(textSrfc, (sx + rng, sy - textSrfc.get_height() / 2))
                             surface.blit(textSrfc, (sx - textSrfc.get_width() / 2, sy - rng))

@@ -22,7 +22,6 @@ from pygame.locals import *
 from Const import *
 from WordUtils import *
 from Widget import Widget, registerWidget
-from Fonts import *
 import pygame.key
 
 # keys mapping
