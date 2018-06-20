@@ -21,7 +21,7 @@
 import pygameui as ui
 from osci.StarMapWidget import StarMapWidget
 from osci import gdata, res, client
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige.ospace import Rules
 import math
 
@@ -68,7 +68,7 @@ class FleetsOverviewDlg:
         for fleetID in client.db.keys():
             fleet = client.get(fleetID, noUpdate = 1)
             # skip non-fleets
-            if not hasattr(fleet, "type") or (fleet.type != T_FLEET and fleet.type != T_ASTEROID):
+            if not hasattr(fleet, "type") or (fleet.type != Const.T_FLEET and fleet.type != Const.T_ASTEROID):
                 continue
             # shall be shown?
             fgColor = None
@@ -84,15 +84,15 @@ class FleetsOverviewDlg:
                 ok = 0
                 if mine and fleet.owner == player.oid:
                     ok = 1
-                elif enemy and plRelation >= REL_ENEMY_LO and plRelation < REL_ENEMY_HI:
+                elif enemy and plRelation >= Const.REL_ENEMY_LO and plRelation < Const.REL_ENEMY_HI:
                     ok = 1
-                elif unfriendly and plRelation >= REL_UNFRIENDLY_LO and plRelation < REL_UNFRIENDLY_HI:
+                elif unfriendly and plRelation >= Const.REL_UNFRIENDLY_LO and plRelation < Const.REL_UNFRIENDLY_HI:
                     ok = 1
-                elif neutral and plRelation >= REL_NEUTRAL_LO and plRelation < REL_NEUTRAL_HI:
+                elif neutral and plRelation >= Const.REL_NEUTRAL_LO and plRelation < Const.REL_NEUTRAL_HI:
                     ok = 1
-                elif friendly and plRelation >= REL_FRIENDLY_LO and plRelation < REL_FRIENDLY_HI:
+                elif friendly and plRelation >= Const.REL_FRIENDLY_LO and plRelation < Const.REL_FRIENDLY_HI:
                     ok = 1
-                elif allied and plRelation >= REL_ALLY_LO and plRelation < REL_ALLY_HI:
+                elif allied and plRelation >= Const.REL_ALLY_LO and plRelation < Const.REL_ALLY_HI:
                     ok = 1
 
                 if not ok:
@@ -125,10 +125,10 @@ class FleetsOverviewDlg:
             if hasattr(fleet, 'actions'):
                 if fleet.actionIndex < len(fleet.actions):
                     action, target, data  = fleet.actions[fleet.actionIndex]
-                    if action == FLACTION_REDIRECT and not redirects:
+                    if action == Const.FLACTION_REDIRECT and not redirects:
                         continue
                     order = gdata.fleetActions[action]
-                    if target != OID_NONE:
+                    if target != Const.OID_NONE:
                         targetName = getattr(client.get(target, noUpdate = 1), 'name', res.getUnknownName())
                         order = "%s %s" % (order, targetName)
             # eta

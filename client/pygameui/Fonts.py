@@ -17,6 +17,7 @@
 #  along with Pygame.UI; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
+import pygame
 
 from pygame.ftfont import Font
 from types import StringType, UnicodeType

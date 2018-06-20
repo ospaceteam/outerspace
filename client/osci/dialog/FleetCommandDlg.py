@@ -22,7 +22,7 @@ import pygameui as ui
 from osci.StarMapWidget import StarMapWidget
 from ige.ospace import Rules
 from osci import gdata, res, client, sequip
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige import log
 import ige
 import math
@@ -35,8 +35,8 @@ class FleetCommandDlg:
     def __init__(self, app):
         self.app = app
         self.createUI()
-        self.targetID = OID_NONE
-        self.targetPlayerID = OID_NONE
+        self.targetID = Const.OID_NONE
+        self.targetPlayerID = Const.OID_NONE
 
     def display(self, fleetDlg, cmdIndex):
         self.fleetDlg = fleetDlg
@@ -47,7 +47,7 @@ class FleetCommandDlg:
         self.win.vStarMap.alwaysShowRangeFor = fleet.oid
         self.win.vStarMap.setPosition = 0
         self.win.vStarMap.precompute()
-        self.command = FLACTION_MOVE
+        self.command = Const.FLACTION_MOVE
         self.deplShipIndex = 0
         if self.targetID:
             target = client.get(self.targetID, noUpdate = 1)
@@ -70,13 +70,13 @@ class FleetCommandDlg:
         self.showCommands()
 
     def showCommands(self):
-        self.win.vMoveBtn.pressed =  self.command == FLACTION_MOVE
-        self.win.vAttackBtn.pressed =  self.command == FLACTION_DECLAREWAR
-        self.win.vDeplShipBtn.pressed =  self.command == FLACTION_DEPLOY
-        self.win.vWaitBtn.pressed =  self.command == FLACTION_WAIT
-        self.win.vRefuelBtn.pressed =  self.command == FLACTION_REFUEL
-        self.win.vRepeatBtn.pressed =  self.command == FLACTION_REPEATFROM
-        self.win.vWormholeBtn.pressed =  self.command == FLACTION_ENTERWORMHOLE
+        self.win.vMoveBtn.pressed =  self.command == Const.FLACTION_MOVE
+        self.win.vAttackBtn.pressed =  self.command == Const.FLACTION_DECLAREWAR
+        self.win.vDeplShipBtn.pressed =  self.command == Const.FLACTION_DEPLOY
+        self.win.vWaitBtn.pressed =  self.command == Const.FLACTION_WAIT
+        self.win.vRefuelBtn.pressed =  self.command == Const.FLACTION_REFUEL
+        self.win.vRepeatBtn.pressed =  self.command == Const.FLACTION_REPEATFROM
+        self.win.vWormholeBtn.pressed =  self.command == Const.FLACTION_ENTERWORMHOLE
         # hide/show widgets
         for widget in self.win.widgets:
             if widget.tags and self.command in widget.tags:
@@ -84,19 +84,19 @@ class FleetCommandDlg:
             elif widget.tags:
                 widget.visible = 0
         # target
-        if self.targetID == OID_NONE:
+        if self.targetID == Const.OID_NONE:
             info = _('No target selected')
-        elif self.command in (FLACTION_MOVE, FLACTION_REFUEL, FLACTION_ENTERWORMHOLE):
+        elif self.command in (Const.FLACTION_MOVE, Const.FLACTION_REFUEL, Const.FLACTION_ENTERWORMHOLE):
             target = client.get(self.targetID, noUpdate = 1)
             info = getattr(target, 'name', res.getUnknownName())
-        elif self.command == FLACTION_DEPLOY:
+        elif self.command == Const.FLACTION_DEPLOY:
             target = client.get(self.targetID, noUpdate = 1)
-            if target.type == T_PLANET:
+            if target.type == Const.T_PLANET:
                 info = getattr(target, 'name', res.getUnknownName())
             else:
                 info = _('No planet selected')
-        elif self.command == FLACTION_DECLAREWAR:
-            if self.targetPlayerID not in (OID_NONE, client.getPlayerID()):
+        elif self.command == Const.FLACTION_DECLAREWAR:
+            if self.targetPlayerID not in (Const.OID_NONE, client.getPlayerID()):
                 target = client.get(self.targetPlayerID, noUpdate = 1)
                 info = getattr(target, 'name', res.getUnknownName())
             else:
@@ -104,10 +104,10 @@ class FleetCommandDlg:
         else:
             info = _('?')
         self.win.vTarget.text = info
-        if self.targetID != OID_NONE:
+        if self.targetID != Const.OID_NONE:
             curTarget = client.get(self.targetID, noUpdate = 1)
             fleet = client.get(self.fleetDlg.fleetID, noUpdate = 1)
-            target = OID_NONE
+            target = Const.OID_NONE
             if len(fleet.actions) > 1:
                 if self.cmdIndex != 0 and self.cmdIndex < len(fleet.actions):
                     idx = self.cmdIndex
@@ -119,14 +119,14 @@ class FleetCommandDlg:
                         break
                     #print "idx", idx, fleet.actions[idx]
                     action, target, actionData = fleet.actions[idx]
-                    if target != OID_NONE:
+                    if target != Const.OID_NONE:
                         break
-            if fleet.orbiting != OID_NONE and target == OID_NONE:
+            if fleet.orbiting != Const.OID_NONE and target == Const.OID_NONE:
                 target = fleet.orbiting
-            elif target == OID_NONE:
+            elif target == Const.OID_NONE:
                 target = fleet.oid
 
-            if target != OID_NONE:
+            if target != Const.OID_NONE:
                 lastTarget = client.get(target, noUpdate = 1)
                 curX = curTarget.x
                 curY = curTarget.y
@@ -174,8 +174,8 @@ class FleetCommandDlg:
             self.win.vDeplShip.data = techID
         else:
             self.win.vDeplShipBtn.enabled = 0
-            if self.command == FLACTION_DEPLOY:
-                self.command == FLACTION_MOVE
+            if self.command == Const.FLACTION_DEPLOY:
+                self.command == Const.FLACTION_MOVE
                 self.showCommands()
 
     def onSelectCommand(self, widget, action, data):
@@ -184,15 +184,15 @@ class FleetCommandDlg:
 
     def onSelectMapObj(self, widget, action, data):
         target = client.get(data, noUpdate = 1)
-        if target.type == T_PLANET:
+        if target.type == Const.T_PLANET:
             self.targetID = target.oid
             self.win.vStarMap.highlightPos = (target.x, target.y)
-        elif target.type in (T_SYSTEM, T_WORMHOLE):
+        elif target.type in (Const.T_SYSTEM, Const.T_WORMHOLE):
             self.targetID = target.oid
             self.win.vStarMap.highlightPos = (target.x, target.y)
         else:
             self.win.vStarMap.hightlightPos = None
-        self.targetPlayerID = getattr(target, "owner", OID_NONE)
+        self.targetPlayerID = getattr(target, "owner", Const.OID_NONE)
         self.showCommands()
 
     def onCancel(self, widget, action, data):
@@ -204,36 +204,36 @@ class FleetCommandDlg:
 
     def onOrder(self, widget, action, data):
         targetID = self.targetID
-        if self.command in (FLACTION_MOVE, FLACTION_REFUEL):
-            if self.targetID == OID_NONE:
+        if self.command in (Const.FLACTION_MOVE, Const.FLACTION_REFUEL):
+            if self.targetID == Const.OID_NONE:
                 self.win.setStatus(_('Select target, please.'))
                 return
             commandData = None
-        elif self.command == FLACTION_ENTERWORMHOLE:
-            if self.targetID == OID_NONE:
+        elif self.command == Const.FLACTION_ENTERWORMHOLE:
+            if self.targetID == Const.OID_NONE:
                 self.win.setStatus(_('Select target, please.'))
                 return
             target = client.get(self.targetID, noUpdate = 1)
-            if target.type != T_WORMHOLE:
+            if target.type != Const.T_WORMHOLE:
                 self.win.setStatus(_('Can only traverse wormholes.'))
                 return
             commandData = None
-        elif self.command == FLACTION_DECLAREWAR:
-            if self.targetPlayerID == OID_NONE:
+        elif self.command == Const.FLACTION_DECLAREWAR:
+            if self.targetPlayerID == Const.OID_NONE:
                 self.win.setStatus(_('Select object with valid owner, please.'))
                 return
             commandData = self.targetPlayerID
-            targetID = OID_NONE
-        elif self.command == FLACTION_DEPLOY:
-            if self.targetID == OID_NONE:
+            targetID = Const.OID_NONE
+        elif self.command == Const.FLACTION_DEPLOY:
+            if self.targetID == Const.OID_NONE:
                 self.win.setStatus(_('Select target planet, please.'))
                 return
             target = client.get(self.targetID, noUpdate = 1)
-            if target.type != T_PLANET:
+            if target.type != Const.T_PLANET:
                 self.win.setStatus(_('You can build on planets only.'))
                 return
             commandData = self.win.vDeplShip.data
-        elif self.command == FLACTION_WAIT:
+        elif self.command == Const.FLACTION_WAIT:
             try:
                 commandData = int(self.win.vTurns.text)
             except ValueError:
@@ -242,8 +242,8 @@ class FleetCommandDlg:
             if commandData < 1:
                 self.win.setStatus(_('"Turns" must be 1 or greater.'))
                 return
-            targetID = OID_NONE
-        elif self.command == FLACTION_REPEATFROM:
+            targetID = Const.OID_NONE
+        elif self.command == Const.FLACTION_REPEATFROM:
             try:
                 commandData = int(self.win.vStartFrom.text)
             except ValueError:
@@ -253,7 +253,7 @@ class FleetCommandDlg:
                 self.win.setStatus(_('"Start from command #" must be 1 or greater'))
                 return
             commandData -= 1
-            targetID = OID_NONE
+            targetID = Const.OID_NONE
         else:
             self.win.setStatus(_('Command not supported yet.'))
             return
@@ -288,42 +288,42 @@ class FleetCommandDlg:
         ui.Title(self.win, layout = (0, 24, 40, 1), text = _('Select command'),
             font = 'normal-bold', align = ui.ALIGN_W)
         ui.Button(self.win, layout = (0, 25, 5, 1), text = _('Move'), toggle = 1,
-            id = 'vMoveBtn', action = 'onSelectCommand', data = FLACTION_MOVE)
+            id = 'vMoveBtn', action = 'onSelectCommand', data = Const.FLACTION_MOVE)
         ui.Button(self.win, layout = (5, 25, 5, 1), text = _('Refuel at'), toggle = 1,
-            id = 'vRefuelBtn', action = 'onSelectCommand', data = FLACTION_REFUEL)
+            id = 'vRefuelBtn', action = 'onSelectCommand', data = Const.FLACTION_REFUEL)
         ui.Button(self.win, layout = (10, 25, 5, 1), text = _('Deploy'), toggle = 1,
-            id = 'vDeplShipBtn', action = 'onSelectCommand', data = FLACTION_DEPLOY)
+            id = 'vDeplShipBtn', action = 'onSelectCommand', data = Const.FLACTION_DEPLOY)
         ui.Button(self.win, layout = (15, 25, 5, 1), text = _('Wait'), toggle = 1,
-            id = 'vWaitBtn', action = 'onSelectCommand', data = FLACTION_WAIT)
+            id = 'vWaitBtn', action = 'onSelectCommand', data = Const.FLACTION_WAIT)
         ui.Button(self.win, layout = (20, 25, 5, 1), text = _('Declare War'), toggle = 1,
-            id = 'vAttackBtn', action = 'onSelectCommand', data = FLACTION_DECLAREWAR)
+            id = 'vAttackBtn', action = 'onSelectCommand', data = Const.FLACTION_DECLAREWAR)
         ui.Button(self.win, layout = (25, 25, 5, 1), text = _('Repeat'), toggle = 1,
-            id = 'vRepeatBtn', action = 'onSelectCommand', data = FLACTION_REPEATFROM)
+            id = 'vRepeatBtn', action = 'onSelectCommand', data = Const.FLACTION_REPEATFROM)
         ui.Button(self.win, layout = (30, 25, 5, 1), text = _('Use Wormhole'), toggle = 1,
-            id = 'vWormholeBtn', action = 'onSelectCommand', data = FLACTION_ENTERWORMHOLE)
+            id = 'vWormholeBtn', action = 'onSelectCommand', data = Const.FLACTION_ENTERWORMHOLE)
         # Target indicator
         ui.Label(self.win, layout = (0, 26, 5, 1), text = _('Target'),
-            align = ui.ALIGN_W, tags = [FLACTION_MOVE, FLACTION_DEPLOY, FLACTION_REFUEL, FLACTION_ENTERWORMHOLE])
+            align = ui.ALIGN_W, tags = [Const.FLACTION_MOVE, Const.FLACTION_DEPLOY, Const.FLACTION_REFUEL, Const.FLACTION_ENTERWORMHOLE])
         ui.Label(self.win, layout = (0, 26, 5, 1), text = _('At commander'),
-            align = ui.ALIGN_W, tags = [FLACTION_DECLAREWAR])
+            align = ui.ALIGN_W, tags = [Const.FLACTION_DECLAREWAR])
         ui.Label(self.win, layout = (5, 26, 10, 1), id = 'vTarget',
-            align = ui.ALIGN_E, tags = [FLACTION_MOVE, FLACTION_DEPLOY,
-            FLACTION_DECLAREWAR, FLACTION_REFUEL, FLACTION_ENTERWORMHOLE])
+            align = ui.ALIGN_E, tags = [Const.FLACTION_MOVE, Const.FLACTION_DEPLOY,
+            Const.FLACTION_DECLAREWAR, Const.FLACTION_REFUEL, Const.FLACTION_ENTERWORMHOLE])
         # Delay indicator
         ui.Label(self.win, layout = (0, 26, 5, 1), text = _('Turns'),
-            align = ui.ALIGN_W, tags = [FLACTION_WAIT])
+            align = ui.ALIGN_W, tags = [Const.FLACTION_WAIT])
         ui.Entry(self.win, layout = (5, 26, 5, 1), id = 'vTurns', text = '1',
-            align = ui.ALIGN_E, tags = [FLACTION_WAIT], orderNo = 1)
+            align = ui.ALIGN_E, tags = [Const.FLACTION_WAIT], orderNo = 1)
         # Ship to deploy
         ui.Label(self.win, layout = (15, 26, 5, 1), text = _('Ship'),
-            align = ui.ALIGN_E, tags = [FLACTION_DEPLOY])
+            align = ui.ALIGN_E, tags = [Const.FLACTION_DEPLOY])
         ui.Button(self.win, layout = (20, 26, 10, 1), id = 'vDeplShip',
-            align = ui.ALIGN_NONE, tags = [FLACTION_DEPLOY], action = 'onDeplShipChange')
+            align = ui.ALIGN_NONE, tags = [Const.FLACTION_DEPLOY], action = 'onDeplShipChange')
         # Repeat
         ui.Label(self.win, layout = (0, 26, 10, 1), text = _('Start from command #'),
-            align = ui.ALIGN_W, tags = [FLACTION_REPEATFROM])
+            align = ui.ALIGN_W, tags = [Const.FLACTION_REPEATFROM])
         ui.Entry(self.win, layout = (10, 26, 5, 1), id = 'vStartFrom', text = _('1'),
-            align = ui.ALIGN_E, tags = [FLACTION_REPEATFROM], orderNo = 2)
+            align = ui.ALIGN_E, tags = [Const.FLACTION_REPEATFROM], orderNo = 2)
         ui.Label(self.win, layout = (36, 26, 2, 1), text = _("ETA:"), align = ui.ALIGN_W)
         ui.Label(self.win, layout = (38, 26, 2, 1), id = 'vEta', align = ui.ALIGN_E)
         # status bar + submit/cancel

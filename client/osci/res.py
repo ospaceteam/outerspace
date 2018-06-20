@@ -26,7 +26,7 @@ import re
 import gdata, client
 import pygame, pygame.image
 from osci import gdata
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige.ospace import Rules
 from ige import log
 
@@ -230,15 +230,15 @@ def OLDgetFFColorCode(relationship):
 def getFFColorCode(relationship):
     if relationship < 0:
         return (0xff, 0x00, 0xff)
-    elif relationship < REL_UNFRIENDLY_LO:
+    elif relationship < Const.REL_UNFRIENDLY_LO:
         return (0xff, 0x80, 0x80)
-    elif relationship < REL_NEUTRAL_LO:
+    elif relationship < Const.REL_NEUTRAL_LO:
         return (0xff, 0x90, 0x01)
-    elif relationship < REL_FRIENDLY_LO:
+    elif relationship < Const.REL_FRIENDLY_LO:
         return (0xff, 0xff, 0x00)
-    elif relationship < REL_ALLY_LO:
+    elif relationship < Const.REL_ALLY_LO:
         return (0xb0, 0xb0, 0xff)
-    elif relationship <= REL_ALLY_HI:
+    elif relationship <= Const.REL_ALLY_HI:
         return (0x80, 0xff, 0xff)
     elif relationship == 1250:
         return (0x00, 0xff, 0x00)
@@ -345,29 +345,29 @@ def getMoraleColors(morale):
     return (0xc0, 0xc0, 0xc0)
 
 def getPlayerColor(owner, onlyDiplo = False):
-    if owner == OID_NONE:
-        return getFFColorCode(REL_UNDEF)
+    if owner == Const.OID_NONE:
+        return getFFColorCode(Const.REL_UNDEF)
     if not onlyDiplo:
         if gdata.config.defaults.highlights == 'yes':
             if gdata.playersHighlightColors.has_key(owner):
                 return gdata.playersHighlightColors[owner]
-    rel = min(REL_UNDEF,client.getRelationTo(owner))
+    rel = min(Const.REL_UNDEF,client.getRelationTo(owner))
     return getFFColorCode(rel)
 
 def getControlColor(owner, onlyDiplo = False):
-    if owner == OID_NONE:
+    if owner == Const.OID_NONE:
         return False
     if not onlyDiplo:
         if gdata.config.defaults.highlights == 'yes':
             if gdata.playersHighlightColors.has_key(owner):
                 return fadeDarkColor(gdata.playersHighlightColors[owner])
-    rel = min(REL_UNDEF,client.getRelationTo(owner))
+    rel = min(Const.REL_UNDEF,client.getRelationTo(owner))
     return fadeDarkColor(getFFColorCode(rel))
 
 def getGateLineWidth(owner):
-    if owner == OID_NONE:
+    if owner == Const.OID_NONE:
         return 1
-    rel = min(REL_UNDEF,client.getRelationTo(owner))
+    rel = min(Const.REL_UNDEF,client.getRelationTo(owner))
     if rel == 1250:
         return 2
     return 1

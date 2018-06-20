@@ -21,7 +21,7 @@
 import pygameui as ui
 import re
 from osci import gdata, client
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige.ospace import Rules
 import string, math
 from PlanetsAnalysisDlg import PlanetsAnalysisDlg

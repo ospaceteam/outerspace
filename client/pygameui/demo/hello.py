@@ -23,12 +23,11 @@ sys.path.append('../..')
 
 # pygame initialization
 import pygame, pygame.font
-from pygame.locals import *
 
 #initialize SDL and prepare screen
 pygame.display.init()
 pygame.font.init()
-screen = pygame.display.set_mode((800, 600), SWSURFACE, 16)
+screen = pygame.display.set_mode((800, 600), pygame.SWSURFACE, 16)
 pygame.mouse.set_visible(1)
 pygame.display.set_caption('Hello World')
 pygame.display.update()
@@ -51,7 +50,7 @@ app = ui.Application()
 
 win = ui.Window(app,
     title = 'Hello',
-    rect = Rect(0, 0, 170, 120),
+    rect = pygame.Rect(0, 0, 170, 120),
     layoutManager = ui.SimpleGridLM(),
     rightButtonClose = 1
 )
@@ -75,9 +74,9 @@ while 1:
 
     evt = app.processEvent(evt)
 
-    if evt.type == QUIT:
+    if evt.type == pygame.QUIT:
         break
-    if evt.type == KEYUP and evt.key == K_ESCAPE:
+    if evt.type == pygame.KEYUP and evt.key == pygame.K_ESCAPE:
         break
     if app.needsUpdate():
         screen.fill((0, 0, 0))

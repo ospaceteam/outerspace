@@ -21,7 +21,7 @@
 import pygameui as ui
 from osci.StarMapWidget import StarMapWidget
 from osci import gdata, res, client, sequip
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 
 ENGINE = 1
 SMALL = 2
@@ -54,7 +54,7 @@ class ConstrSelTechDlg:
         self.createUI()
 
     def display(self, techType, techSubtype, selectCallback, selected = 0, hullID = 0):
-        self.techID = OID_NONE
+        self.techID = Const.OID_NONE
         self.selectCallback = selectCallback
         self.techType = techType
         self.techSubtype = techSubtype

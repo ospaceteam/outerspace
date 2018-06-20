@@ -18,7 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige.IDataHolder import makeIDataHolder
 
 from Techs import noop as techDefaultHandler
@@ -210,7 +210,7 @@ plShieldRegen = 0.05 #regen rate of planetary shield
 ## Diplomacy
 baseRelationChange = -5
 relLostWhenAttacked = -1000000
-defaultRelation = REL_NEUTRAL
+defaultRelation = Const.REL_NEUTRAL
 contactTimeout = 6 * turnsPerDay
 
 voteForImpAnnounceOffset = 2 * turnsPerDay
@@ -218,45 +218,45 @@ voteForImpPeriod = 6 * turnsPerDay
 ratioNeededForImp = 0.6666
 
 pactDescrs = {}
-pactDescrs[PACT_ALLOW_CIVILIAN_SHIPS] = makeIDataHolder(
+pactDescrs[Const.PACT_ALLOW_CIVILIAN_SHIPS] = makeIDataHolder(
     targetRel = 500,
     relChng = 10,
     validityInterval = (0, 10000),
 )
-pactDescrs[PACT_ALLOW_MILITARY_SHIPS] = makeIDataHolder(
+pactDescrs[Const.PACT_ALLOW_MILITARY_SHIPS] = makeIDataHolder(
     targetRel = 750,
     relChng = 8,
     validityInterval = (0, 10000),
 )
-pactDescrs[PACT_ALLOW_TANKING] = makeIDataHolder(
+pactDescrs[Const.PACT_ALLOW_TANKING] = makeIDataHolder(
     targetRel = 750,
     relChng = 7,
     validityInterval = (0, 10000),
 )
-pactDescrs[PACT_MINOR_CP_COOP] = makeIDataHolder(
+pactDescrs[Const.PACT_MINOR_CP_COOP] = makeIDataHolder(
     targetRel = 1000,
     relChng = 6,
     effectivity = 0.05,
     validityInterval = (625, 10000),
 )
-pactDescrs[PACT_MAJOR_CP_COOP] = makeIDataHolder(
+pactDescrs[Const.PACT_MAJOR_CP_COOP] = makeIDataHolder(
     targetRel = 1000,
     relChng = 1,
     effectivity = 0.05,
     validityInterval = (875, 10000),
 )
-pactDescrs[PACT_SHARE_SCANNER] = makeIDataHolder(
+pactDescrs[Const.PACT_SHARE_SCANNER] = makeIDataHolder(
     targetRel = 1000,
     relChng = 1,
     validityInterval = (625, 10000),
 )
-pactDescrs[PACT_MINOR_SCI_COOP] = makeIDataHolder(
+pactDescrs[Const.PACT_MINOR_SCI_COOP] = makeIDataHolder(
     targetRel = 750,
     relChng = 1,
     effectivity = 0.05,
     validityInterval = (625, 10000),
 )
-pactDescrs[PACT_MAJOR_SCI_COOP] = makeIDataHolder(
+pactDescrs[Const.PACT_MAJOR_SCI_COOP] = makeIDataHolder(
     targetRel = 1000,
     relChng = 1,
     effectivity = 0.05,

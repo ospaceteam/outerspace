@@ -17,12 +17,13 @@
 #  along with Outer Space; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
+import types
 
-from Const import *
+import Const
+import log
+
 from ige import GameException, SecurityException
 from ige.IDataHolder import IDataHolder
-import types
-import log
 
 def public(access):
     """ Decorator to mark methods public with appropriate access level. """
@@ -34,7 +35,7 @@ def public(access):
 
 class IObject:
 
-    typeID = T_OBJECT
+    typeID = Const.T_OBJECT
     forums = []
 
     def __init__(self, gameMngr):
@@ -53,10 +54,10 @@ class IObject:
         # call superclass
         pass
         # define new attributes
-        obj.oid = OID_NONE
+        obj.oid = Const.OID_NONE
         obj.type = self.typeID
-        obj.owner = OID_NONE
-        obj.compOf = OID_NONE
+        obj.owner = Const.OID_NONE
+        obj.compOf = Const.OID_NONE
         obj.name = u'Unnamed'
         # not needed
         # obj.accRights = {}
@@ -113,39 +114,32 @@ class IObject:
             else:
                 raise GameException('Unsupported attribute %s' % attr.nodeName)
 
+    @public(Const.AL_INFO)
     def getInfo(self, tran, obj):
         return obj
 
-    getInfo.public = 1
-    getInfo.accLevel = AL_INFO
-
+    @public(Const.AL_INFO)
     def get(self, tran, obj):
         return self.cmd(obj).getInfo(tran, obj)
 
-    get.public = 1
-    get.accLevel = AL_INFO
-
+    @public(Const.AL_NONE)
     def getPublicInfo(self, tran, obj):
         result = IDataHolder()
         result.oid = obj.oid
         return result
 
-    getPublicInfo.public = 1
-    getPublicInfo.accLevel = AL_NONE
-
+    @public(Const.AL_ADMIN)
     def set(self, tran, obj, attr, value):
         if hasattr(obj, attr):
             setattr(obj, attr, value)
             return 1
         raise GameException('No such attribute.')
 
-    set.public = 1
-    set.accLevel = AL_ADMIN
-
 
     ## messaging api
+    @public(Const.AL_NONE)
     def sendMsg(self, tran, obj, message):
-        if tran.session.cid != OID_ADMIN:
+        if tran.session.cid != Const.OID_ADMIN:
             message["sender"] = tran.session.nick
             message["senderID"] = tran.session.cid
         # check attributes
@@ -158,7 +152,7 @@ class IObject:
         if "data" not in message and "text" not in message:
             raise GameException("Text or structured data not specified.")
         # check permissions
-        if tran.session.cid != OID_ADMIN and \
+        if tran.session.cid != Const.OID_ADMIN and \
             not self.canSendMsg(tran, obj, message["senderID"], message["forum"]):
             raise SecurityException("You cannot send message to this entity.")
         #
@@ -167,9 +161,7 @@ class IObject:
         # send message
         return tran.gameMngr.msgMngr.send(tran.gameMngr.gameID, obj.oid, message)
 
-    sendMsg.public = 1
-    sendMsg.accLevel = AL_NONE
-
+    @public(Const.AL_ADMIN)
     def sendAdminMsg(self, tran, obj, message):
         # check attributes
         if "forum" not in message:
@@ -186,33 +178,24 @@ class IObject:
         # send message
         return tran.gameMngr.msgMngr.send(tran.gameMngr.gameID, obj.oid, message)
 
-    sendAdminMsg.public = 1
-    sendAdminMsg.accLevel = AL_ADMIN
-
+    @public(Const.AL_NONE)
     def getMsgs(self, tran, obj, lastID = -1):
         if not self.canGetMsgs(tran, obj, tran.session.cid):
             raise SecurityException("You cannot read messages of this entity.")
         # get messages
         return tran.gameMngr.msgMngr.get(tran.gameMngr.gameID, obj.oid, lastID)
 
-    getMsgs.public = 1
-    getMsgs.accLevel = AL_NONE
-
+    @public(Const.AL_NONE)
     def deleteMsgs(self, tran, obj, ids):
         if not self.canManageMsgs(tran, obj, tran.session.cid):
             raise SecurityException("You cannot manage messages of this entity.")
         # get messages
         return tran.gameMngr.msgMngr.delete(tran.gameMngr.gameID, obj.oid, ids)
 
-    deleteMsgs.public = 1
-    deleteMsgs.accLevel = AL_NONE
-
+    @public(Const.AL_ADMIN)
     def deleteOldMsgs(self, tran, obj):
         for forum in self.forums:
             tran.gameMngr.msgMngr.deleteOld(tran.gameMngr.gameID, obj.oid, forum, maxAge = self.forums[forum])
-
-    deleteOldMsgs.public = 1
-    deleteOldMsgs.accLevel = AL_ADMIN
 
     def canSendMsg(self, tran, obj, oid, forum):
         return 0
@@ -225,7 +208,7 @@ class IObject:
     canGetMsgs.public = 0
 
     def canManageMsgs(self, tran, obj, oid):
-        return oid == obj.oid or oid == OID_ADMIN
+        return oid == obj.oid or oid == Const.OID_ADMIN
 
     canManageMsgs.public = 0
 

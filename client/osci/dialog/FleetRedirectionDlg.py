@@ -21,7 +21,7 @@
 import pygameui as ui
 from osci.StarMapWidget import StarMapWidget
 from osci import gdata, res, client
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige import GameException
 
 class FleetRedirectionDlg:
@@ -29,7 +29,7 @@ class FleetRedirectionDlg:
     def __init__(self, app):
         self.app = app
         self.createUI()
-        self.targetID = OID_NONE
+        self.targetID = Const.OID_NONE
 
     def display(self, systemID, caller):
         system = client.get(systemID, noUpdate = 1)
@@ -67,9 +67,9 @@ class FleetRedirectionDlg:
 
     def onSelectMapObj(self, widget, action, data):
         target = client.get(data, noUpdate = 1)
-        if target.type == T_PLANET:
+        if target.type == Const.T_PLANET:
             self.win.setStatus(_("Select system, please."))
-        elif target.type in (T_SYSTEM, T_WORMHOLE):
+        elif target.type in (Const.T_SYSTEM, Const.T_WORMHOLE):
             self.targetID = target.oid
             self.win.vStarMap.highlightPos = (target.x, target.y)
         else:
@@ -97,7 +97,7 @@ class FleetRedirectionDlg:
         player = client.getPlayer()
         try:
             player.shipRedirections = client.cmdProxy.redirectShips(player.oid,
-                self.systemID,    OID_NONE)
+                self.systemID,    Const.OID_NONE)
             self.win.setStatus(_('Command has been executed.'))
             gdata.mainGameDlg.update()
             self.caller.update()

@@ -50,7 +50,6 @@ except ImportError:
 
 import pygame.image, pygame.ftfont, pygame.time, pygame.version
 import pygame.transform
-from pygame.locals import *
 
 from osci.config import Config
 import osci.gdata as gdata
@@ -112,7 +111,7 @@ def update():
         wx, wy = gdata.screen.get_size()
         x, y = img.get_size()
         gdata.screen.blit(img, (wx - x, 0))
-        rects.append(Rect(wx - x, 0, img.get_width(), img.get_height()))
+        rects.append(pygame.Rect(wx - x, 0, img.get_width(), img.get_height()))
     if gdata.isHWSurface:
         # paint mouse
         x, y = pygame.mouse.get_pos()
@@ -238,19 +237,19 @@ def runClient(options):
     os.environ['SDL_DEBUG'] = '1'
     pygame.init()
 
-    flags = SWSURFACE
+    flags = pygame.SWSURFACE
 
     gdata.isHWSurface = 0
 
     if gdata.config.display.flags != None:
             strFlags = gdata.config.display.flags.split(' ')
             flags = 0
-            if 'swsurface' in strFlags: flags |= SWSURFACE
+            if 'swsurface' in strFlags: flags |= pygame.SWSURFACE
             if 'hwsurface' in strFlags:
-                flags |= HWSURFACE
+                flags |= pygame.HWSURFACE
                 gdata.isHWSurface = 1
-            if 'doublebuf' in strFlags: flags |= DOUBLEBUF
-            if 'fullscreen' in strFlags: flags |= FULLSCREEN
+            if 'doublebuf' in strFlags: flags |= pygame.DOUBLEBUF
+            if 'fullscreen' in strFlags: flags |= pygame.FULLSCREEN
 
     DEFAULT_SCRN_SIZE = (800, 600)
     gdata.scrnSize = DEFAULT_SCRN_SIZE
@@ -298,7 +297,7 @@ def runClient(options):
     app = ui.Application(update, theme = ui.SkinableTheme)
     app.background = defineBackground()
     app.draw(gdata.screen)
-    app.windowSurfaceFlags = SWSURFACE | SRCALPHA
+    app.windowSurfaceFlags = pygame.SWSURFACE | pygame.SRCALPHA
     gdata.app = app
 
     pygame.event.clear()
@@ -367,21 +366,21 @@ def runClient(options):
                 saveDB = False
 
                 for evt in evts:
-                    if evt.type == QUIT:
+                    if evt.type == pygame.QUIT:
                         running = 0
                         break
                     if evt.type == (ui.USEREVENT) and evt.action == "localExit":
                         session = False
                         break
-                    if evt.type == ACTIVEEVENT:
+                    if evt.type == pygame.ACTIVEEVENT:
                         if evt.gain == 1 and evt.state == 6:
                             # pygame desktop window focus event
                             needsRefresh = True
-                    if evt.type == KEYUP and evt.key == K_F12:
-                        if not pygame.key.get_mods() & KMOD_CTRL:
+                    if evt.type == pygame.KEYUP and evt.key == pygame.K_F12:
+                        if not pygame.key.get_mods() & pygame.KMOD_CTRL:
                             running = 0
                             break
-                    if evt.type == KEYUP and evt.key == K_F9:
+                    if evt.type == pygame.KEYUP and evt.key == pygame.K_F9:
                         forceKeepAlive = True
                     evt = gdata.app.processEvent(evt)
 

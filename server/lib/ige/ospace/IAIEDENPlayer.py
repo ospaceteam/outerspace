@@ -20,10 +20,10 @@
 
 import time
 
+import Const
 import Rules
 import Utils
 
-from Const import *
 from ige import log
 from ige.IDataHolder import IDataHolder
 from ige.IObject import public
@@ -31,7 +31,7 @@ from IPlayer import IPlayer
 
 class IAIEDENPlayer(IPlayer):
 
-    typeID = T_AIEDENPLAYER
+    typeID = Const.T_AIEDENPLAYER
 
     def init(self, obj):
         IPlayer.init(self, obj)
@@ -50,7 +50,7 @@ class IAIEDENPlayer(IPlayer):
                 counter += 1
                 continue
             tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
-            tran.db[OID_UNIVERSE].players.append(obj.oid)
+            tran.db[Const.OID_UNIVERSE].players.append(obj.oid)
             tran.gameMngr.clientMngr.createAIAccount(obj.login, obj.name, 'ais_eden')
             break
         # grant techs and so on
@@ -66,8 +66,8 @@ class IAIEDENPlayer(IPlayer):
         planet.plSlots = max(planet.plSlots, 2)
         planet.plMaxSlots = max(planet.plMaxSlots, 2)
         planet.plDiameter = max(planet.plDiameter, 2000)
-        planet.slots.append(Utils.newStructure(tran, Rules.Tech.EDENBASE, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
-        planet.slots.append(Utils.newStructure(tran, Rules.Tech.EDENSTATION, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
+        planet.slots.append(Utils.newStructure(tran, Rules.Tech.EDENBASE, planet.owner, Const.STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
+        planet.slots.append(Utils.newStructure(tran, Rules.Tech.EDENSTATION, planet.owner, Const.STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
         planet.storPop = 3000
 
     @staticmethod
@@ -86,7 +86,7 @@ class IAIEDENPlayer(IPlayer):
     def setStartingShipDesigns(obj):
         pass
 
-    @public(AL_ADMIN) 
+    @public(Const.AL_ADMIN) 
     def processINITPhase(self, tran, obj, data):
         IPlayer.processINITPhase(self, tran, obj, data)
         obj.lastLogin = time.time()
@@ -96,29 +96,29 @@ class IAIEDENPlayer(IPlayer):
         if not obj.fleets and not obj.planets:
             self.cmd(obj).delete(tran, obj)
 
-    @public(AL_ADMIN) 
+    @public(Const.AL_ADMIN) 
     def processRSRCHPhase(self, tran, obj, data):
         # do not research anything
         return
 
     def getDiplomacyWith(self, tran, obj, playerID):
         if obj.oid == playerID:
-            return REL_UNITY
+            return Const.REL_UNITY
         player = tran.db.get(playerID, None)
-        if player.type in (T_AIPIRPLAYER, T_PIRPLAYER):
+        if player.type in (Const.T_AIPIRPLAYER, Const.T_PIRPLAYER):
             dipl = obj.diplomacyRels.get(playerID, None)
             if not dipl:
                 # make default
                 dipl = IDataHolder()
-                dipl.type = T_DIPLREL
+                dipl.type = Const.T_DIPLREL
                 dipl.pacts = {
-                        PACT_ALLOW_CIVILIAN_SHIPS: [PACT_ACTIVE, PACT_ALLOW_CIVILIAN_SHIPS],
-                        PACT_ALLOW_MILITARY_SHIPS: [PACT_ACTIVE, PACT_ALLOW_MILITARY_SHIPS]
+                        Const.PACT_ALLOW_CIVILIAN_SHIPS: [Const.PACT_ACTIVE, Const.PACT_ALLOW_CIVILIAN_SHIPS],
+                        Const.PACT_ALLOW_MILITARY_SHIPS: [Const.PACT_ACTIVE, Const.PACT_ALLOW_MILITARY_SHIPS]
                 }
-                dipl.relation = REL_FRIENDLY
+                dipl.relation = Const.REL_FRIENDLY
                 dipl.relChng = 0
-                dipl.lastContact = tran.db[OID_UNIVERSE].turn
-                dipl.contactType = CONTACT_NONE
+                dipl.lastContact = tran.db[Const.OID_UNIVERSE].turn
+                dipl.contactType = Const.CONTACT_NONE
                 dipl.stats = None
                 if playerID != obj.oid:
                     obj.diplomacyRels[playerID] = dipl
@@ -128,21 +128,21 @@ class IAIEDENPlayer(IPlayer):
         # this AI battles with overyone
         # make default
         dipl = IDataHolder()
-        dipl.type = T_DIPLREL
+        dipl.type = Const.T_DIPLREL
         dipl.pacts = {}
-        dipl.relation = REL_ENEMY
+        dipl.relation = Const.REL_ENEMY
         dipl.relChng = 0
-        dipl.lastContact = tran.db[OID_UNIVERSE].turn
-        dipl.contactType = CONTACT_NONE
+        dipl.lastContact = tran.db[Const.OID_UNIVERSE].turn
+        dipl.contactType = Const.CONTACT_NONE
         dipl.stats = None
         return dipl
 
     def isPactActive(self, tran, obj, partnerID, pactID):
-        if partnerID == OID_NONE:
+        if partnerID == Const.OID_NONE:
             return 0
         partner = tran.db.get(partnerID, None)
-        if partner.type in (T_AIPIRPLAYER, T_PIRPLAYER):
+        if partner.type in (Const.T_AIPIRPLAYER, Const.T_PIRPLAYER):
             # force the peace!
-            if pactID in (PACT_ALLOW_CIVILIAN_SHIPS, PACT_ALLOW_MILITARY_SHIPS):
-                return PACT_ACTIVE
+            if pactID in (Const.PACT_ALLOW_CIVILIAN_SHIPS, Const.PACT_ALLOW_MILITARY_SHIPS):
+                return Const.PACT_ACTIVE
         return 0

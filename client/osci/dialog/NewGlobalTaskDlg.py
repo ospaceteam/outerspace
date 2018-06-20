@@ -21,7 +21,7 @@
 import pygameui as ui
 from TechInfoDlg import TechInfoDlg
 from ConstructionDlg import ConstructionDlg
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige.ospace import Rules
 from osci import gdata, client, res
 from ige import GameException
@@ -43,7 +43,7 @@ class NewGlobalTaskDlg:
         # set default sorting for technologies
         self.win.vTechs.setSort("text")
 
-    def display(self, caller, queue, structToDemolish = OID_NONE):
+    def display(self, caller, queue, structToDemolish = Const.OID_NONE):
         if gdata.config.defaults.reportfinalization != None:
             val = gdata.config.defaults.reportfinalization
             self.win.vReportFin.checked = val == 'yes'
@@ -118,7 +118,7 @@ class NewGlobalTaskDlg:
                 if not ((tech.isMilitary and showMilShip) or (not tech.isMilitary and showCivShip)):
                     continue
 
-                if tech.upgradeTo != OID_NONE:
+                if tech.upgradeTo != Const.OID_NONE:
                     # skip ships that are set to upgrade
                     continue
                 etc = _("N/A")
@@ -164,10 +164,10 @@ class NewGlobalTaskDlg:
                     item = ui.Item(_("Free slot"), techID = 0)
                     items.append(item)
                 for struct in target.slots:
-                    if not struct[STRUCT_IDX_TECHID] in techs:
-                        techs[struct[STRUCT_IDX_TECHID]] = 1
+                    if not struct[Const.STRUCT_IDX_TECHID] in techs:
+                        techs[struct[Const.STRUCT_IDX_TECHID]] = 1
                     else:
-                        techs[struct[STRUCT_IDX_TECHID]] += 1
+                        techs[struct[Const.STRUCT_IDX_TECHID]] += 1
                 for tech in techs.keys():
                     techInfo = client.getTechInfo(tech)
                     item = ui.Item("%s (%d)" % (techInfo.name, techs[tech]), techID = tech)
@@ -175,7 +175,7 @@ class NewGlobalTaskDlg:
 
         self.win.vTSlots.items = items
         self.win.vTSlots.itemsChanged()
-        self.structToDemolish = OID_NONE
+        self.structToDemolish = Const.OID_NONE
 
 
     def onSelectTech(self, widget, action, data):

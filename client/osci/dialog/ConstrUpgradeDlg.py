@@ -21,9 +21,9 @@
 import pygameui as ui
 from osci.StarMapWidget import StarMapWidget
 from osci import gdata, res, client, sequip
-from ige.ospace.Const import *
-from ige.ospace import *
+import ige.ospace.Const as Const
 from ige import GameException
+from ige.ospace import Rules
 from ConfirmDlg import ConfirmDlg
 
 class ConstrUpgradeDlg:

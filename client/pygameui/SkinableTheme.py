@@ -20,9 +20,8 @@
 
 import string
 import pygame
-from pygame.locals import *
-from Const import *
-from Fonts import *
+import Const
+import Fonts
 import os, os.path, sys, ConfigParser
 from ige import log
 import time
@@ -163,15 +162,15 @@ def createFont():
             filename = None
         # load font
         if filename == None or os.path.exists(filename):
-            initFont('small', filename, config.getint(section, "small"))
-            initFont('small-bold', filename, config.getint(section, "small"), bold = 1)
-            initFont('small-italic', filename, config.getint(section, "small"), italic = 1)
-            initFont('normal', filename, config.getint(section, "normal"))
-            initFont('normal-bold', filename, config.getint(section, "normal"), bold = 1)
-            initFont('normal-italic', filename, config.getint(section, "normal"), italic = 1)
-            initFont('large', filename, config.getint(section, "large"))
-            initFont('large-bold', filename, config.getint(section, "large"), bold = 1)
-            initFont('large-italic', filename, config.getint(section, "large"), italic = 1)
+            Fonts.initFont('small', filename, config.getint(section, "small"))
+            Fonts.initFont('small-bold', filename, config.getint(section, "small"), bold = 1)
+            Fonts.initFont('small-italic', filename, config.getint(section, "small"), italic = 1)
+            Fonts.initFont('normal', filename, config.getint(section, "normal"))
+            Fonts.initFont('normal-bold', filename, config.getint(section, "normal"), bold = 1)
+            Fonts.initFont('normal-italic', filename, config.getint(section, "normal"), italic = 1)
+            Fonts.initFont('large', filename, config.getint(section, "large"))
+            Fonts.initFont('large-bold', filename, config.getint(section, "large"), bold = 1)
+            Fonts.initFont('large-italic', filename, config.getint(section, "large"), italic = 1)
             return
 
 def createBox(section):
@@ -195,7 +194,7 @@ def createBox(section):
         box.img = pygame.image.load(os.path.join(skinDir, filename)).convert_alpha()
         w, h = box.img.get_size()
         box.margins = x, y, r, b
-        box.rect = Rect(x, y, w - r, h - b)
+        box.rect = pygame.Rect(x, y, w - r, h - b)
         box.topleft = box.img.subsurface(0, 0, x, y)
         box.bottomleft = box.img.subsurface(0, h - b, x, b)
         box.topright = box.img.subsurface(w - r, 0, r, y)
@@ -305,23 +304,23 @@ def drawTextAndIcons(surface, widget, style):
     rect = widget.rect
     l, t, r, b = box.cMargins
     oldClip = surface.get_clip()
-    rect = Rect(rect.left + l, rect.top + t, rect.width - l - r, rect.height - t - b)
+    rect = pygame.Rect(rect.left + l, rect.top + t, rect.width - l - r, rect.height - t - b)
     surface.set_clip(rect)
     # icons
     if widget.icons:
         for img, align in widget.icons:
-            r = Rect(rect)
-            if align & ALIGN_W:
+            r = pygame.Rect(rect)
+            if align & Const.ALIGN_W:
                 rect.left += img.get_width()
                 rect.width -= img.get_width()
                 pass
-            elif align & ALIGN_E:
+            elif align & Const.ALIGN_E:
                 r.left += rect.width - img.get_width()
                 rect.width -= img.get_width()
             else:
                 r.left += (rect.width - img.get_width()) / 2
-            if align & ALIGN_N: pass
-            elif align & ALIGN_S: r.top += rect.height - img.get_height()
+            if align & Const.ALIGN_N: pass
+            elif align & Const.ALIGN_S: r.top += rect.height - img.get_height()
             else: r.top += (rect.height - img.get_height()) / 2
             surface.blit(img, r)
     # text
@@ -330,13 +329,13 @@ def drawTextAndIcons(surface, widget, style):
         foreground = box.foreground or widget.foreground or themeForeground
         background = widget.background
 
-        img = renderText(font, widget.text, 1, foreground, background)
-        r = Rect(rect)
-        if widget.align & ALIGN_W: pass
-        elif widget.align & ALIGN_E: r.left += rect.width - img.get_width()
+        img = Fonts.renderText(font, widget.text, 1, foreground, background)
+        r = pygame.Rect(rect)
+        if widget.align & Const.ALIGN_W: pass
+        elif widget.align & Const.ALIGN_E: r.left += rect.width - img.get_width()
         else: r.left += (rect.width - img.get_width()) / 2
-        if widget.align & ALIGN_N: pass
-        elif widget.align & ALIGN_S: r.top += rect.height - img.get_height()
+        if widget.align & Const.ALIGN_N: pass
+        elif widget.align & Const.ALIGN_S: r.top += rect.height - img.get_height()
         else: r.top += (rect.height - img.get_height()) / 2
         surface.blit(img, r)
     surface.set_clip(oldClip)
@@ -431,7 +430,7 @@ themeDisabled = 0x80, 0x80, 0x80
 
 
 def getDRect(rect):
-    rect = Rect(rect)
+    rect = pygame.Rect(rect)
     rect.left += 1
     rect.top += 0
     rect.width -= 3
@@ -461,13 +460,13 @@ def drawArrowButton(surface, widget):
     r.top += 3
     r.width -= 6
     r.height -= 6
-    if widget.direction == ALIGN_N:
+    if widget.direction == Const.ALIGN_N:
         points = (r.midtop, r.bottomright, r.bottomleft)
-    elif widget.direction == ALIGN_S:
+    elif widget.direction == Const.ALIGN_S:
         points = (r.midbottom, r.topleft, r.topright)
-    elif widget.direction == ALIGN_E:
+    elif widget.direction == Const.ALIGN_E:
         points = (r.midright, r.topleft, r.bottomleft)
-    elif widget.direction == ALIGN_W:
+    elif widget.direction == Const.ALIGN_W:
         points = (r.midleft, r.topright, r.bottomright)
     pygame.draw.lines(surface, fg, 1, points)
     return widget.rect
@@ -490,24 +489,24 @@ def drawTitleButton(surface, widget):
     if widget.icons:
         for img, align in widget.icons:
             r = getDRect(rect)
-            if align & ALIGN_W: r.left += 1
-            elif align & ALIGN_E: r.left += rect.width - img.get_width()
+            if align & Const.ALIGN_W: r.left += 1
+            elif align & Const.ALIGN_E: r.left += rect.width - img.get_width()
             else: r.left += (rect.width - img.get_width()) / 2
-            if align & ALIGN_N: r.top += 1
-            elif align & ALIGN_S: r.top += rect.height - img.get_height()
+            if align & Const.ALIGN_N: r.top += 1
+            elif align & Const.ALIGN_S: r.top += rect.height - img.get_height()
             else: r.top += (rect.height - img.get_height()) / 2
             surface.blit(img, r)
     # text
     if widget.text != None:
         if widget.pressed:
             foreground = themeHighlightfrg
-        img = renderText(font, widget.text, 1, foreground)
+        img = Fonts.renderText(font, widget.text, 1, foreground)
         r = getDRect(rect)
-        if widget.align & ALIGN_W: r.left += 2
-        elif widget.align & ALIGN_E: r.left += rect.width - img.get_width() - 1
+        if widget.align & Const.ALIGN_W: r.left += 2
+        elif widget.align & Const.ALIGN_E: r.left += rect.width - img.get_width() - 1
         else: r.left += (rect.width - img.get_width()) / 2
-        if widget.align & ALIGN_N: r.top += 2
-        elif widget.align & ALIGN_S: r.top += rect.height - img.get_height() - 1
+        if widget.align & Const.ALIGN_N: r.top += 2
+        elif widget.align & Const.ALIGN_S: r.top += rect.height - img.get_height() - 1
         else: r.top += (rect.height - img.get_height()) / 2
         surface.blit(img, r)
     surface.set_clip(oldClip)
@@ -530,22 +529,22 @@ def drawTitle(surface, widget):
     if widget.icons:
         for img, align in widget.icons:
             r = getDRect(rect)
-            if align & ALIGN_W: r.left += 1
-            elif align & ALIGN_E: r.left += rect.width - img.get_width()
+            if align & Const.ALIGN_W: r.left += 1
+            elif align & Const.ALIGN_E: r.left += rect.width - img.get_width()
             else: r.left += (rect.width - img.get_width()) / 2
-            if align & ALIGN_N: r.top += 1
-            elif align & ALIGN_S: r.top += rect.height - img.get_height()
+            if align & Const.ALIGN_N: r.top += 1
+            elif align & Const.ALIGN_S: r.top += rect.height - img.get_height()
             else: r.top += (rect.height - img.get_height()) / 2
             surface.blit(img, r)
     # text
     if widget.text != None:
-        img = renderText(font, widget.text, 1, foreground)
+        img = Fonts.renderText(font, widget.text, 1, foreground)
         r = getDRect(rect)
-        if widget.align & ALIGN_W: r.left += 2
-        elif widget.align & ALIGN_E: r.left += rect.width - img.get_width() - 1
+        if widget.align & Const.ALIGN_W: r.left += 2
+        elif widget.align & Const.ALIGN_E: r.left += rect.width - img.get_width() - 1
         else: r.left += (rect.width - img.get_width()) / 2
-        if widget.align & ALIGN_N: r.top += 2
-        elif widget.align & ALIGN_S: r.top += rect.height - img.get_height() - 1
+        if widget.align & Const.ALIGN_N: r.top += 2
+        elif widget.align & Const.ALIGN_S: r.top += rect.height - img.get_height() - 1
         else: r.top += (rect.height - img.get_height()) / 2
         surface.blit(img, r)
     surface.set_clip(oldClip)
@@ -568,7 +567,7 @@ def drawEntry(surface, widget):
     else:
         textToCursor = ''
 
-    textSize = getTextSize(font, text)
+    textSize = Fonts.getTextSize(font, text)
 
     r = getDRect(rect)
 
@@ -577,7 +576,7 @@ def drawEntry(surface, widget):
         text2 = textToCursor
         textToIdx = widget.cursorPos
         textFromIdx = 0
-        text2Size = getTextSize(font, text2)
+        text2Size = Fonts.getTextSize(font, text2)
 
         if text2Size[0] > r.width:
             # if text to cursor is longer then width
@@ -585,27 +584,27 @@ def drawEntry(surface, widget):
             while text2Size[0] > r.width:
                 text2 = text[textFromIdx:textToIdx]
                 textFromIdx += 1
-                text2Size = getTextSize(font, text2)
+                text2Size = Fonts.getTextSize(font, text2)
         else:
             # if text to cursor is shorter then width
             # then add some chars
             while text2Size[0] < r.width:
                 text2 = text[textFromIdx:textToIdx]
                 textToIdx += 1
-                text2Size = getTextSize(font, text2)
+                text2Size = Fonts.getTextSize(font, text2)
 
         text = text2
 
-    img = renderText(font, text, 1, foreground)
+    img = Fonts.renderText(font, text, 1, foreground)
 
-    if widget.align & ALIGN_E:
+    if widget.align & Const.ALIGN_E:
         r.left += rect.width - img.get_width() - 2
-    elif not widget.align & ALIGN_W:
+    elif not widget.align & Const.ALIGN_W:
         r.left += (rect.width - img.get_width()) / 2
 
-    if widget.align & ALIGN_N:
+    if widget.align & Const.ALIGN_N:
         r.top += 2
-    elif widget.align & ALIGN_S:
+    elif widget.align & Const.ALIGN_S:
         r.top += rect.height - img.get_height() - 1
     else:
         r.top += (rect.height - img.get_height()) / 2
@@ -613,7 +612,7 @@ def drawEntry(surface, widget):
     surface.blit(img, r)
 
     if widget.focused and widget.app.cursorOn:
-        offset = getTextSize(font, textToCursor)
+        offset = Fonts.getTextSize(font, textToCursor)
         if offset[0] < r.width:
             # draw cursor in middle of displayed text
             r.move_ip(offset[0], 0)
@@ -634,7 +633,7 @@ def drawDecoratedWindow(surface, window):
             color = themeForeground
         else:
             color = themeBackground
-        text = renderText(font, window.title, 1, color)
+        text = Fonts.renderText(font, window.title, 1, color)
         r = surface.get_clip()
         r.height = getGridParams()[1]
         # nicer background
@@ -776,7 +775,7 @@ def drawTooltip(surface, widget):
         body_font = body_font + "-italic"
 
     if widget.title:
-        title_img = renderText(title_font, widget.title, 1, foreground)
+        title_img = Fonts.renderText(title_font, widget.title, 1, foreground)
         title_width = title_img.get_width()
         title_height = title_img.get_height()
         max_width = title_width
@@ -788,7 +787,7 @@ def drawTooltip(surface, widget):
     text_images = []
     if widget.text:
         for line in string.split(widget.text, '\n'):
-            line_img = renderText(body_font, line, 1, foreground)
+            line_img = Fonts.renderText(body_font, line, 1, foreground)
             text_images += [line_img]
             max_height += line_img.get_height()
             max_width = max(max_width, line_img.get_width())
@@ -874,12 +873,12 @@ def drawTooltip(surface, widget):
     return title_r, body_r
 
 def drawScrollbar(surface, widget):
-    r = Rect(widget.rect)
+    r = pygame.Rect(widget.rect)
     surface.fill(themeBackground, r)
     return r
 
 def drawListbox(surface, widget):
-    r = Rect(widget.rect)
+    r = pygame.Rect(widget.rect)
     surface.fill(widget.background or themeBackground, r)
     return r
 
@@ -908,13 +907,13 @@ def drawProgressBar(surface, widget):
 
 def getTextDrawLines(widget):
     r = getDRect(widget.rect)
-    img = renderText(widget.font or 'normal', ' ', 1, widget.foreground or themeForeground)
+    img = Fonts.renderText(widget.font or 'normal', ' ', 1, widget.foreground or themeForeground)
     return r.height / img.get_height()
 
 def isTextBeyondEnd(widget, text):
     r = getDRect(widget.rect)
-    size = getTextSize(widget.font or 'normal', text)
-    #img = renderText(widget.font or 'normal', text, 1, widget.foreground or themeForeground)
+    size = Fonts.getTextSize(widget.font or 'normal', text)
+    #img = Fonts.renderText(widget.font or 'normal', text, 1, widget.foreground or themeForeground)
     return size[0] >= r.right
 
 def drawText(surface, widget):
@@ -928,7 +927,7 @@ def drawText(surface, widget):
     line = 0
     x = r.left
     y = r.top
-    img = renderText(font, ' ', 1, foreground)
+    img = Fonts.renderText(font, ' ', 1, foreground)
     row = 0
     if widget.selStart != None:
         # Reorder selStart and selEnd if needed
@@ -977,7 +976,7 @@ def drawText(surface, widget):
             # get words from current drawed chat to end of paragraph
             words = para[charIdx:].split(' ')
             # compute length of rendered first word
-            remainingWordSize = getTextSize(font, words[0])
+            remainingWordSize = Fonts.getTextSize(font, words[0])
             # if word doesn't fit to current line,
             # move to next line
             if x + remainingWordSize[0] + 10 > r.right:
@@ -998,7 +997,7 @@ def drawText(surface, widget):
                         surface.set_clip(oldClip)
                         return
             # render next char
-            img = renderText(font, char, 1, fore, back)
+            img = Fonts.renderText(font, char, 1, fore, back)
             # compute next char position
             previous_width = img.get_width()
             newX = x + previous_width

@@ -32,11 +32,11 @@ import IAIEDENPlayer
 import IAIMutantPlayer
 import IAIPiratePlayer
 import IAIRenegadePlayer
+import Const
 import Rules
 import Scanner
 import Utils
 
-from Const import *
 from ige import log
 from ige.IObject import IObject
 from ige.IDataHolder import IDataHolder
@@ -47,14 +47,14 @@ from Rules import Tech
 
 class IGalaxy(IObject):
 
-    typeID = T_GALAXY
+    typeID = Const.T_GALAXY
     forums = {"PUBLIC": 112, "NEWS": 112}
 
     def init(self, obj):
         IObject.init(self, obj)
         #
         obj.name = ""
-        obj.owner = OID_NONE
+        obj.owner = Const.OID_NONE
         obj.x = 0.0
         obj.y = 0.0
         obj.radius = 0.0
@@ -65,9 +65,9 @@ class IGalaxy(IObject):
         obj.timeEnabled = None # none instead of False, to know when first enablement is happening
         obj.timePaused = False # this is only used for player-initiated pause, prevents autoenablement
         obj.creationTurn = 0
-        obj.imperator = OID_NONE
+        obj.imperator = Const.OID_NONE
         obj.description = ""
-        obj.scenario = SCENARIO_NONE
+        obj.scenario = Const.SCENARIO_NONE
         obj.scenarioData = IDataHolder()
         # electromagnetic radiation
         obj.emrLevel = 1.0
@@ -82,8 +82,8 @@ class IGalaxy(IObject):
             for systemID in obj.systems:
                 if not tran.db.has_key(systemID):
                     log.debug("CONSISTENCY - system %d from galaxy %d does not exists" % (systemID, obj.oid))
-                elif tran.db[systemID].type not in (T_SYSTEM, T_WORMHOLE):
-                    log.debug("CONSISTENCY - system %d from galaxy %d is not a T_SYSTEM or T_WORMHOLE" % (systemID, obj.oid))
+                elif tran.db[systemID].type not in (Const.T_SYSTEM, Const.T_WORMHOLE):
+                    log.debug("CONSISTENCY - system %d from galaxy %d is not a Const.T_SYSTEM or Const.T_WORMHOLE" % (systemID, obj.oid))
         # validate starting positions
         for planetID in obj.startingPos[:]:
             if not tran.db.has_key(planetID):
@@ -91,11 +91,11 @@ class IGalaxy(IObject):
                 obj.startingPos.remove(planetID)
                 continue
             planet = tran.db[planetID]
-            if planet.type != T_PLANET:
+            if planet.type != Const.T_PLANET:
                 log.debug("REMOVING ??? from start pos", planetID)
                 obj.startingPos.remove(planetID)
         # check compOf
-        if not tran.db.has_key(obj.compOf) or tran.db[obj.compOf].type != T_UNIVERSE:
+        if not tran.db.has_key(obj.compOf) or tran.db[obj.compOf].type != Const.T_UNIVERSE:
             log.debug("CONSISTENCY invalid compOf for galaxy", obj.oid, obj.compOf)
         # TODO: remove after 0.5.73
         if not hasattr(obj, 'galaxyTurn'):
@@ -117,17 +117,17 @@ class IGalaxy(IObject):
             obj.startingPos.remove(planetID)
             log.debug('Starting point', planetID)
             log.debug('Starting point - owner', db[planetID].owner)
-            if db[planetID].owner == OID_NONE:
+            if db[planetID].owner == Const.OID_NONE:
                 return planetID
             if not obj.startingPos:
                 raise ige.GameException('No free starting point in the galaxy.')
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processINITPhase(self, tran, obj, data):
         if not obj.timeEnabled:
             return
         # compute emr level
-        turn = tran.db[OID_UNIVERSE].turn
+        turn = tran.db[Const.OID_UNIVERSE].turn
         # galaxy keeps track of it's own time (because of pauses)
         obj.galaxyTurn += 1
         obj.emrTime -= 1
@@ -143,7 +143,7 @@ class IGalaxy(IObject):
                         "sender": "GNC",
                         "senderID": obj.oid,
                         "forum": "NEWS",
-                        "data": (obj.oid, MSG_GNC_EMR_FORECAST, obj.oid, turn, (obj.emrTrend, obj.emrTime)),
+                        "data": (obj.oid, Const.MSG_GNC_EMR_FORECAST, obj.oid, turn, (obj.emrTrend, obj.emrTime)),
                         "topic": "EVENT",
                     }
                     self.cmd(obj).sendMsg(tran, obj, message)
@@ -156,19 +156,19 @@ class IGalaxy(IObject):
         self.cmd(obj).deleteOldMsgs(tran, obj)
         return obj.systems
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processPRODPhase(self, tran, obj, data):
         if not obj.timeEnabled:
             return
         return obj.systems
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processACTIONPhase(self, tran, obj, data):
         if not obj.timeEnabled:
             return
         return obj.systems
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processSCAN2Phase(self, tran, obj, data):
         # data == True means forced scan (first after generating the galaxy)
         if not obj.timeEnabled and not data:
@@ -181,13 +181,13 @@ class IGalaxy(IObject):
             self.cmd(player).mergeScannerMap(tran, player, map)
         return
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processBATTLEPhase(self, tran, obj, data):
         if not obj.timeEnabled:
             return
         return obj.systems
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processFINALPhase(self, tran, obj, data):
         if not obj.timeEnabled:
             return
@@ -195,18 +195,18 @@ class IGalaxy(IObject):
         remove = []
         for planetID in obj.startingPos:
             planet = tran.db[planetID]
-            if planet.owner != OID_NONE:
+            if planet.owner != Const.OID_NONE:
                 remove.append(planetID)
         for planetID in remove:
             obj.startingPos.remove(planetID)
         return obj.systems
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processFINAL2Phase(self, tran, obj, data):
         if not obj.timeEnabled:
             return
         # save history file
-        turn = tran.db[OID_UNIVERSE].turn
+        turn = tran.db[Const.OID_UNIVERSE].turn
         # TODO: reneable history when it's optimized
         if turn % 6 == 0 and False:
             log.debug("Saving history for galaxy", obj.oid, obj.name)
@@ -221,7 +221,7 @@ class IGalaxy(IObject):
                 owners = {}
                 for planetID in system.planets:
                     ownerID = tran.db[planetID].owner
-                    if ownerID != OID_NONE:
+                    if ownerID != Const.OID_NONE:
                         owners[ownerID] = tran.db[ownerID].name
                         players[ownerID] = None
                 print >>fh, '    <sys x="%.2f" y="%.2f" name="%s" owners="%s"/>' % (
@@ -248,7 +248,7 @@ class IGalaxy(IObject):
             print >>fh, '</history>'
 
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def loadFromXML(self, tran, obj, file, galaxyType, x, y, name):
         log.message('IGalaxy', 'Parsing XML file...')
         dom = parse(os.path.join('data', file))
@@ -259,7 +259,7 @@ class IGalaxy(IObject):
                 if node.getAttribute('galaxyType') == galaxyType:
                     self.loadDOMNode(tran, obj, node, x, y, name)
                     self.connectWormHoles(tran, obj)
-                    return SUCC
+                    return Const.SUCC
         raise ige.GameException('No such id %s in resource' % galaxyType)
 
     def loadDOMNode(self, tran, obj, node, x, y, name):
@@ -268,7 +268,7 @@ class IGalaxy(IObject):
         obj.y = float(y)
         xoff = x - float(node.getAttribute('x'))
         yoff = y - float(node.getAttribute('y'))
-        obj.creationTurn = tran.db[OID_UNIVERSE].turn
+        obj.creationTurn = tran.db[Const.OID_UNIVERSE].turn
         for elem in node.childNodes:
             if elem.nodeType == Node.ELEMENT_NODE:
                 name = elem.tagName
@@ -282,43 +282,43 @@ class IGalaxy(IObject):
                     self.cmd(wormHole).loadDOMNode(tran, wormHole, xoff, yoff, elem)
                 else:
                     raise ige.GameException('Unknown element %s' % name)
-        return SUCC
+        return Const.SUCC
 
     def connectWormHoles(self, tran, obj):
         wormHoles = {}
         for holeID in obj.systems:
             wormHole = tran.db[holeID]
-            if wormHole.type == T_WORMHOLE:
+            if wormHole.type == Const.T_WORMHOLE:
                 wormHoles[wormHole.name] = holeID
 
         for holeID in obj.systems:
             wormHole = tran.db[holeID]
-            if wormHole.type != T_WORMHOLE:
+            if wormHole.type != Const.T_WORMHOLE:
                 continue
             if len(wormHole.destination) == 0:
                 raise ige.GameException('Wrong WormHole(%d) definition' % holeID)
             if wormHole.destination == wormHole.name:
                 raise ige.GameException('Same destination as position for WormHole(%d)' % holeID)
             destinationOid = wormHoles[wormHole.destination]
-            if destinationOid == OID_NONE:
+            if destinationOid == Const.OID_NONE:
                 raise ige.GameException('WormHole(%d) has wrong destination ''%s''' % (holeID, wormHole.destination))
             wormHole.destinationOid = destinationOid
 
     def createSystem(self, tran, obj):
-        system = self.new(T_SYSTEM)
+        system = self.new(Const.T_SYSTEM)
         system.compOf = obj.oid
         oid = tran.db.create(system)
         obj.systems.append(oid)
         return oid
 
     def createWormHole(self, tran, galaxy):
-        hole = self.new(T_WORMHOLE)
+        hole = self.new(Const.T_WORMHOLE)
         hole.compOf = galaxy.oid
         oid = tran.db.create(hole)
         galaxy.systems.append(oid)
         return oid
 
-    @public(AL_OWNER)
+    @public(Const.AL_OWNER)
     def toggleTime(self, tran, obj):
         player = tran.db[obj.owner]
         obj.timeEnabled = not obj.timeEnabled
@@ -334,16 +334,16 @@ class IGalaxy(IObject):
             for planetID in system.planets:
                 planet = tran.db[planetID]
                 playerIDs.add(planet.owner)
-        playerIDs.discard(OID_NONE)
+        playerIDs.discard(Const.OID_NONE)
         for playerID in playerIDs:
             player = tran.db[playerID]
             if player.timeEnabled != obj.timeEnabled:
                 player.timeEnabled = obj.timeEnabled
                 player.lastLogin = time.time()
                 if player.timeEnabled:
-                    Utils.sendMessage(tran, player, MSG_ENABLED_TIME, player.oid, None)
+                    Utils.sendMessage(tran, player, Const.MSG_ENABLED_TIME, player.oid, None)
                 else:
-                    Utils.sendMessage(tran, player, MSG_DISABLED_TIME, player.oid, None)
+                    Utils.sendMessage(tran, player, Const.MSG_DISABLED_TIME, player.oid, None)
 
     def _isEligibleEnableTime(self, tran, obj):
         if obj.timeEnabled or obj.timePaused:
@@ -351,11 +351,11 @@ class IGalaxy(IObject):
             return False
         # We have to give players some time to prepare
         # (as they might be waiting for very long time for this galaxy to be created).
-        currentTurn = tran.db[OID_UNIVERSE].turn
+        currentTurn = tran.db[Const.OID_UNIVERSE].turn
         if obj.creationTurn + Rules.galaxyStartDelay <= currentTurn:
             log.debug("Time to prepare has passed", obj.creationTurn, currentTurn)
             return True
-        elif obj.scenario == SCENARIO_SINGLE:
+        elif obj.scenario == Const.SCENARIO_SINGLE:
             return True
         return False
 
@@ -364,8 +364,8 @@ class IGalaxy(IObject):
         for positionID in copy.copy(obj.startingPos):
             obj.startingPos.remove(positionID)
             # create new player
-            log.debug("Creating new Rebel player", T_AIPLAYER)
-            player = self.new(T_AIPLAYER)
+            log.debug("Creating new Rebel player", Const.T_AIPLAYER)
+            player = self.new(Const.T_AIPLAYER)
             self.cmd(player).register(tran, player, obj.oid)
             player.galaxy = obj.oid
             playerID = player.oid
@@ -384,7 +384,7 @@ class IGalaxy(IObject):
         # do scanner evaluation because of all new players
         self.cmd(obj).processSCAN2Phase(tran, obj, None)
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def enableTime(self, tran, obj, force = False):
         log.debug('IGalaxy', 'Checking for time...')
         if not force and not self._isEligibleEnableTime(tran, obj):
@@ -396,17 +396,17 @@ class IGalaxy(IObject):
         obj.timeEnabled = True
         self._trickleTimeToPlayers(tran, obj)
 
-    @public(AL_OWNER)
+    @public(Const.AL_OWNER)
     def deleteSingle(self, tran, obj):
-        if obj.scenario != SCENARIO_SINGLE:
+        if obj.scenario != Const.SCENARIO_SINGLE:
             raise ige.GameException('Only Single Player galaxies can be deleted this way')
         log.debug(obj.oid, "GALAXY - singleplayer delete")
         self.delete(tran, obj)
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def delete(self, tran, obj):
         log.debug(obj.oid, "GALAXY - delete")
-        universe = tran.db[OID_UNIVERSE]
+        universe = tran.db[Const.OID_UNIVERSE]
         # delete systems and planets
         for systemID in obj.systems:
             log.debug("Deleting system", systemID)
@@ -415,7 +415,7 @@ class IGalaxy(IObject):
             log.debug("-- fleets", system.fleets, system.closeFleets)
             for planetID in system.planets[:]:
                 planet = tran.db[planetID]
-                self.cmd(planet).changeOwner(tran, planet, OID_NONE, force = 1)
+                self.cmd(planet).changeOwner(tran, planet, Const.OID_NONE, force = 1)
                 del tran.db[planetID]
             for fleetID in system.closeFleets[:]:
                 fleet = tran.db[fleetID]
@@ -436,11 +436,11 @@ class IGalaxy(IObject):
                 log.debug("Player %d has still planets" % playerID, player.name, player.planets)
             self.cmd(player).delete(tran, player)
         # remove this galaxy from the list of the galaxies
-        tran.db[OID_UNIVERSE].galaxies.remove(obj.oid)
+        tran.db[Const.OID_UNIVERSE].galaxies.remove(obj.oid)
         del tran.db[obj.oid]
         return 1
 
-    @public(AL_NONE)
+    @public(Const.AL_NONE)
     def getPublicInfo(self, tran, obj):
         result = IDataHolder()
         result.oid = obj.oid
@@ -455,13 +455,13 @@ class IGalaxy(IObject):
         result.timeEnabled = obj.timeEnabled
         return result
 
-    @public(AL_NONE)
+    @public(Const.AL_NONE)
     def getDescription(self,obj):
         return obj.description
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def setupEnvironment(self, tran, obj):
-        universe = tran.db[OID_UNIVERSE]
+        universe = tran.db[Const.OID_UNIVERSE]
         # we will first scan galaxy, to determine which environments are available
         # this way, we will create only players that are needed, and not all types
         vacant_planets = {}
@@ -470,29 +470,29 @@ class IGalaxy(IObject):
             for planetID in system.planets:
                 planet = tran.db[planetID]
                 # renegades
-                if planet.plStratRes in (SR_TL1A, SR_TL1B) and planet.owner == OID_NONE:
+                if planet.plStratRes in (Const.SR_TL1A, Const.SR_TL1B) and planet.owner == Const.OID_NONE:
                     try:
-                        vacant_planets[T_AIRENPLAYER] += [planetID]
+                        vacant_planets[Const.T_AIRENPLAYER] += [planetID]
                     except KeyError:
-                        vacant_planets[T_AIRENPLAYER] = [planetID]
+                        vacant_planets[Const.T_AIRENPLAYER] = [planetID]
                 # pirates
-                if planet.plStratRes in (SR_TL3A, SR_TL3B, SR_TL3C) and planet.owner == OID_NONE:
+                if planet.plStratRes in (Const.SR_TL3A, Const.SR_TL3B, Const.SR_TL3C) and planet.owner == Const.OID_NONE:
                     try:
-                        vacant_planets[T_AIPIRPLAYER] += [planetID]
+                        vacant_planets[Const.T_AIPIRPLAYER] += [planetID]
                     except KeyError:
-                        vacant_planets[T_AIPIRPLAYER] = [planetID]
+                        vacant_planets[Const.T_AIPIRPLAYER] = [planetID]
                 # EDEN
-                if planet.plStratRes in (SR_TL5A, SR_TL5B, SR_TL5C) and planet.owner == OID_NONE:
+                if planet.plStratRes in (Const.SR_TL5A, Const.SR_TL5B, Const.SR_TL5C) and planet.owner == Const.OID_NONE:
                     try:
-                        vacant_planets[T_AIEDENPLAYER] += [planetID]
+                        vacant_planets[Const.T_AIEDENPLAYER] += [planetID]
                     except KeyError:
-                        vacant_planets[T_AIEDENPLAYER] = [planetID]
+                        vacant_planets[Const.T_AIEDENPLAYER] = [planetID]
                 # mutants
-                if planet.plDisease != 0 and planet.owner == OID_NONE:
+                if planet.plDisease != 0 and planet.owner == Const.OID_NONE:
                     try:
-                        vacant_planets[T_AIMUTPLAYER] += [planetID]
+                        vacant_planets[Const.T_AIMUTPLAYER] += [planetID]
                     except KeyError:
-                        vacant_planets[T_AIMUTPLAYER] = [planetID]
+                        vacant_planets[Const.T_AIMUTPLAYER] = [planetID]
         # iterate over types, create players if needed (it should be) and fill in vacant planets
         for playerType in vacant_planets:
             found = 0
@@ -511,13 +511,13 @@ class IGalaxy(IObject):
             for planetID in vacant_planets[playerType]:
                 planet = tran.db[planetID]
                 self.cmd(planet).changeOwner(tran, planet, player.oid, 1)
-                if playerType == T_AIRENPLAYER:
+                if playerType == Const.T_AIRENPLAYER:
                     IAIRenegadePlayer.IAIRenegadePlayer.setStartingPlanet(tran, planet)
-                elif playerType == T_AIPIRPLAYER:
+                elif playerType == Const.T_AIPIRPLAYER:
                     IAIPiratePlayer.IAIPiratePlayer.setStartingPlanet(tran, planet)
-                elif playerType == T_AIEDENPLAYER:
+                elif playerType == Const.T_AIEDENPLAYER:
                     IAIEDENPlayer.IAIEDENPlayer.setStartingPlanet(tran, planet)
-                elif playerType == T_AIMUTPLAYER:
+                elif playerType == Const.T_AIMUTPLAYER:
                     IAIMutantPlayer.IAIMutantPlayer.setStartingPlanet(tran, planet)
 
     ## messaging

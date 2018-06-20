@@ -26,7 +26,6 @@ from OpenGL.GLU import *
 
 # pygame initialization
 import pygame
-from pygame.locals import *
 
 #initialize SDL and prepare screen
 def update():
@@ -36,7 +35,7 @@ def update():
 
 pygame.init()
 
-screen = pygame.display.set_mode((800, 600), OPENGL | DOUBLEBUF, 32)
+screen = pygame.display.set_mode((800, 600), pygame.OPENGL | pygame.DOUBLEBUF, 32)
 pygame.mouse.set_visible(1)
 pygame.display.set_caption('PYGAME.UI 0.4 Test Client')
 
@@ -48,7 +47,7 @@ import pygameui as ui
 
 ui.SkinableTheme.setSkin("../OSSkin")
 app = ui.Application(update, theme = ui.SkinableTheme)
-app.windowSurfaceFlags = SWSURFACE
+app.windowSurfaceFlags = pygame.SWSURFACE
 
 def echoHandler(widget, action, data):
     print 'ACTION', widget, action, data
@@ -72,7 +71,7 @@ for i in xrange(0, 2):
     win = ui.Window(app, font = 'large-bold')
     win.title = 'Test WINDOW 1X'
     #win.alwaysInBackground = 1
-    win.rect = Rect(10 + 10 * i, 10 + 10 * i, 600, 500)
+    win.rect = pygame.Rect(10 + 10 * i, 10 + 10 * i, 600, 500)
     win.layoutManager = ui.SimpleGridLM()
     win.rightButtonClose = 0
     w1 = ui.Button(win,
@@ -85,24 +84,24 @@ for i in xrange(0, 2):
         text = 'WEST (m)',
         statustip = 'This is super new button.',
         tooltip = 'Really?',
-        align = ui.ALIGN_W,
+        align = ui.Const.ALIGN_W,
         layout = (0, 1, 4, 1),
         rmbAction = "menu",
         action = "menu",
     ).subscribeAction("menu", menuHandler)
     ui.Button(win,
         text = 'EAST',
-        align = ui.ALIGN_E,
+        align = ui.Const.ALIGN_E,
         layout = (0, 2, 4, 1)
     )
     ui.Button(win,
         text = 'NORTH',
-        align = ui.ALIGN_N,
+        align = ui.Const.ALIGN_N,
         layout = (0, 3, 4, 1)
     )
     ui.Button(win,
         text = 'SOUTH',
-        align = ui.ALIGN_S,
+        align = ui.Const.ALIGN_S,
         layout = (0, 4, 4, 1)
     )
     icon1 = pygame.image.load('img.png')
@@ -110,27 +109,27 @@ for i in xrange(0, 2):
     ui.Button(win,
         text = 'HELLO!',
         icons = (
-            (icon1, ui.ALIGN_NW),
-            (icon2, ui.ALIGN_NW),
-            (icon2, ui.ALIGN_NE),
-            (icon2, ui.ALIGN_SW),
-            (icon2, ui.ALIGN_SE),
+            (icon1, ui.Const.ALIGN_NW),
+            (icon2, ui.Const.ALIGN_NW),
+            (icon2, ui.Const.ALIGN_NE),
+            (icon2, ui.Const.ALIGN_SW),
+            (icon2, ui.Const.ALIGN_SE),
         ),
         layout = (0, 5, 5, 2)
     )
     statusBar = ui.Label(win,
-        align = ui.ALIGN_W,
+        align = ui.Const.ALIGN_W,
         tooltip = 'This is a status bar which contains reports about...',
         layout = (0, 7, 6, 1),
     )
     app.statusBar = statusBar
     ui.Entry(win,
-        align = ui.ALIGN_W,
+        align = ui.Const.ALIGN_W,
         tooltip = 'Enter anything you like.',
         layout = (0, 8, 4, 1),
     ).subscribeAction('*', echoHandler)
     x = 0
-    for align in (ui.ALIGN_N, ui.ALIGN_S, ui.ALIGN_E, ui.ALIGN_W):
+    for align in (ui.Const.ALIGN_N, ui.Const.ALIGN_S, ui.Const.ALIGN_E, ui.Const.ALIGN_W):
         ui.ArrowButton(win,
             direction = align,
             layout = (x, 9, 1, 1),
@@ -176,7 +175,7 @@ for i in xrange(0, 2):
         items = [ui.Item('One', size = 1), ui.Item('Two', size = 2), ui.Item('Three', size = 3),
         ui.Item('Four', size = 4), ui.Item('Five', size = 5), ui.Item('Six', size = 6),
         ui.Item('Seven', size = 7), ui.Item('Eight', size = 8), ui.Item('Nine', size = 9)],
-        columns = [('Name', 'text', 6, 0), ('Size', 'size', 6, ui.F_EDITABLE)],
+        columns = [('Name', 'text', 6, 0), ('Size', 'size', 6, ui.Const.F_EDITABLE)],
         layout = (8, 13, 12, 7),
         columnLabels = 1,
     ).subscribeAction('*', echoHandler)
@@ -191,7 +190,7 @@ for i in xrange(0, 2):
     )
     ui.Title(win,
         text = 'This is a title',
-        align = ui.ALIGN_W,
+        align = ui.Const.ALIGN_W,
         layout = (8, 12, 12, 1)
     )
     pBar = ui.ProgressBar(win, layout = (0, 20, 10, 1))
@@ -239,10 +238,10 @@ while running:
 
     for evt in evts:
         evt = app.processEvent(evt)
-        if evt.type == QUIT:
+        if evt.type == pygame.QUIT:
             running = 0
             break
-        if evt.type == KEYUP and evt.key == K_ESCAPE:
+        if evt.type == pygame.KEYUP and evt.key == pygame.K_ESCAPE:
             running = 0
             break
 

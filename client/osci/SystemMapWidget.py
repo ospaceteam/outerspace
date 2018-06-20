@@ -20,10 +20,9 @@
 
 from pygameui.Widget import Widget, registerWidget
 import pygameui as ui
-from pygameui.Fonts import *
-from ige.ospace.Const import *
+from pygameui import Fonts
+import ige.ospace.Const as Const
 import pygame, pygame.draw
-from pygame.locals import *
 import gdata, res, client
 from ige import log
 
@@ -42,14 +41,14 @@ class SystemMapWidget(Widget):
         self.action = None
         self.hoverAction = None
         # map
-        self.pressedObjID = OID_NONE
+        self.pressedObjID = Const.OID_NONE
         self._actAreas = {}
         self._starImg = None
         self._planetImgs = []
-        self.ObjID = OID_NONE
-        self.activeObjID = OID_NONE
-        self.selectedObjID = OID_NONE
-        self.systemID = OID_NONE
+        self.ObjID = Const.OID_NONE
+        self.activeObjID = Const.OID_NONE
+        self.selectedObjID = Const.OID_NONE
+        self.systemID = Const.OID_NONE
         self.unknown_mines = 0
         self.my_mines = 0
         self.buoytext = None
@@ -88,11 +87,11 @@ class SystemMapWidget(Widget):
                 #    ratio = planet.plDiameter / 180000.0
                 #img2 = pygame.transform.scale(img, (int(ratio * img.get_width()), int(ratio * img.get_height())))
                 name = getattr(planet, 'name', res.getUnknownName()).split(' ')[-1]
-                #rel = REL_UNDEF
+                #rel = Const.REL_UNDEF
                 if hasattr(planet, 'owner'):
                     ownerID = planet.owner
                 else:
-                    ownerID = OID_NONE
+                    ownerID = Const.OID_NONE
                 self._planetImgs.append((planetID, img, name, res.getPlayerColor(ownerID)))
 
     def computeBuoy(self):
@@ -117,15 +116,15 @@ class SystemMapWidget(Widget):
         # mines
         if self.my_mines:
             if self.unknown_mines:
-                textSrfc = renderText('small', 'Minefield', 1, res.getFFColorCode(1250))
+                textSrfc = Fonts.renderText('small', 'Minefield', 1, res.getFFColorCode(1250))
                 surface.blit(textSrfc, (x, self.rect.top + textSrfc.get_height()))
-                textSrfc = renderText('small', 'Unknown Minefield Detected', 1, res.getFFColorCode(0))
+                textSrfc = Fonts.renderText('small', 'Unknown Minefield Detected', 1, res.getFFColorCode(0))
                 surface.blit(textSrfc, (x, self.rect.top + textSrfc.get_height()*2 + 5))
             else:
-                textSrfc = renderText('small', 'Minefield', 1, res.getFFColorCode(1250))
+                textSrfc = Fonts.renderText('small', 'Minefield', 1, res.getFFColorCode(1250))
                 surface.blit(textSrfc, (x, self.rect.top + textSrfc.get_height()))
         elif self.unknown_mines:
-            textSrfc = renderText('small', 'Unknown Minefield Detected', 1, res.getFFColorCode(0))
+            textSrfc = Fonts.renderText('small', 'Unknown Minefield Detected', 1, res.getFFColorCode(0))
             surface.blit(textSrfc, (x, self.rect.top + textSrfc.get_height()))
         # buoy
         if self.buoytext:
@@ -142,7 +141,7 @@ class SystemMapWidget(Widget):
                     line = u"%s..." % line[:MAX_BOUY_DISPLAY_LEN]
                 elif i == MAX_BOUY_DISPLAY_ROWS:
                     line = u"%s..." % line
-                textSrfc = renderText('small', line, 1, bouycolor)
+                textSrfc = Fonts.renderText('small', line, 1, bouycolor)
                 textSrfcs.append(textSrfc)
                 maxW = max(textSrfc.get_width(), maxW)
                 i += 1
@@ -153,20 +152,20 @@ class SystemMapWidget(Widget):
         # star
         if self._starImg:
             surface.blit(self._starImg, self.rect.topleft)
-            self._actAreas[self.systemID] = Rect(self.rect.topleft, self._starImg.get_size())
+            self._actAreas[self.systemID] = pygame.Rect(self.rect.topleft, self._starImg.get_size())
         # planets
         for planetID, img, name, ffColor in self._planetImgs:
             planet = client.get(planetID, noUpdate = 1)
             py = y - img.get_height() / 2
             surface.blit(img, (x, py))
-            self._actAreas[planetID] = Rect((x, py), img.get_size())
-            text = pygame.transform.rotate(renderText('small', ' %s' % name, 1, ffColor), 90)
+            self._actAreas[planetID] = pygame.Rect((x, py), img.get_size())
+            text = pygame.transform.rotate(Fonts.renderText('small', ' %s' % name, 1, ffColor), 90)
             py = height - text.get_height()
             px = x + img.get_width() / 2 - text.get_width() / 2
             nameWidth = text.get_width()
             surface.blit(text, (px, py))
-            if getattr(planet, 'owner', OID_NONE) == player.oid:
-                text = pygame.transform.rotate(renderText('small', ' (%d)' % self.getFreeSlots(planetID), 1, ffColor), 90)
+            if getattr(planet, 'owner', Const.OID_NONE) == player.oid:
+                text = pygame.transform.rotate(Fonts.renderText('small', ' (%d)' % self.getFreeSlots(planetID), 1, ffColor), 90)
                 py = height - text.get_height()
                 px = x + img.get_width() / 2 - text.get_width() / 2 + nameWidth
                 surface.blit(text, (px, py))
@@ -176,10 +175,10 @@ class SystemMapWidget(Widget):
                 gx, gy = self.theme.getGridParams()
                 gx = gx / 2
                 gy = gy / 2
-                rect = Rect((x + img.get_width() / 2 - gx / 2, y + img.get_height() / 2), (gx, gy))
+                rect = pygame.Rect((x + img.get_width() / 2 - gx / 2, y + img.get_height() / 2), (gx, gy))
                 pygame.draw.polygon(surface, self.theme.themeForeground,
                     (rect.bottomleft, rect.midtop, rect.bottomright), style)
-                rect = Rect((x + img.get_width() / 2 - gx / 2, y - img.get_height() / 2 - gy), (gx, gy))
+                rect = pygame.Rect((x + img.get_width() / 2 - gx / 2, y - img.get_height() / 2 - gy), (gx, gy))
                 pygame.draw.polygon(surface, self.theme.themeForeground,
                     (rect.topleft, rect.midbottom, rect.topright), style)
             x += int(img.get_width() * 1.25) + 10
@@ -188,7 +187,7 @@ class SystemMapWidget(Widget):
         planet = client.get(planetID, noUpdate = 1)
         system = client.get(self.systemID, noUpdate = 1)
         player = client.getPlayer()
-        owner = getattr(planet, 'owner', OID_NONE)
+        owner = getattr(planet, 'owner', Const.OID_NONE)
         freeSlots = 0
         if owner == player.oid and hasattr(planet, 'slots') and hasattr(planet, 'plSlots'):
             freeSlots = planet.plSlots - len(planet.slots)
@@ -240,7 +239,7 @@ class SystemMapWidget(Widget):
             rect = self._actAreas[objID]
             if rect.collidepoint(pos):
                 if self.pressedObjID == objID and self.action:
-                    self.pressedObjID = OID_NONE
+                    self.pressedObjID = Const.OID_NONE
                     self.processAction(self.action, objID)
                 return ui.NoEvent
         if self.selectedObjID:

@@ -21,7 +21,7 @@
 import pygameui as ui
 from osci.StarMapWidget import StarMapWidget
 from osci import gdata, res, client, sequip
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige.ospace import ShipUtils, Rules
 from ige import GameException
 import math
@@ -72,17 +72,17 @@ class SystemOverviewDlg:
                 bio = 0
                 enres = 0
                 biores = 0
-                stratRes = SR_NONE
+                stratRes = Const.SR_NONE
                 refuelMax = 0
                 refuelInc = 0
                 upgradeShip = 0
                 repairShip = 0
                 speedBoost = 0
-                useOwner = OID_NONE
+                useOwner = Const.OID_NONE
                 for planetID in system.planets:
                     planet = client.get(planetID, noUpdate = 1)
-                    owner = getattr(planet, 'owner', OID_NONE)
-                    if owner != OID_NONE:
+                    owner = getattr(planet, 'owner', Const.OID_NONE)
+                    if owner != Const.OID_NONE:
                         useOwner = owner
                         if owner == player.oid:
                             planetsMine += 1
@@ -98,7 +98,7 @@ class SystemOverviewDlg:
                             enres += planet.storEn
                         if hasattr(planet, "storBio"):
                             biores += planet.storBio
-                        if hasattr(planet, "plStratRes") and planet.plStratRes != SR_NONE:
+                        if hasattr(planet, "plStratRes") and planet.plStratRes != Const.SR_NONE:
                             stratRes = gdata.stratRes[planet.plStratRes]
                         if hasattr(planet, "refuelMax"):
                             refuelMax = max(refuelMax, planet.refuelMax)
@@ -123,7 +123,7 @@ class SystemOverviewDlg:
                     enres = '?'
                     biores = '?'
                 if (planetsMine and self.showMine) or (planetsOwned and self.showOtherPlayers) or (planetsUnowned and self.showColonizable) or (planetsGA and self.showUncolonizable):
-                    if stratRes == SR_NONE:
+                    if stratRes == Const.SR_NONE:
                         stratRes = ' '
                     problem = (bio < 0 or en < 0)
                     if planetsMine > 0: #make sure you own it

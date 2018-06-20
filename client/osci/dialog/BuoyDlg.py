@@ -21,7 +21,7 @@
 import pygameui as ui, string
 from osci import client, gdata, res
 from ige import log
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 
 class BuoyDlg:
 
@@ -32,8 +32,8 @@ class BuoyDlg:
     def display(self, buoyText, buoyType, confirmAction = None):
         self.confirmAction = confirmAction
         self.win.vText.text = buoyText.split("\n")
-        self.win.vAllied.checked = buoyType == BUOY_TO_ALLY
-        self.win.vScanner.checked = buoyType == BUOY_TO_SCANNERSHARE
+        self.win.vAllied.checked = buoyType == Const.BUOY_TO_ALLY
+        self.win.vScanner.checked = buoyType == Const.BUOY_TO_SCANNERSHARE
         self.win.show()
         self.app.setFocus(self.win.vText)
         # register for updates
@@ -53,11 +53,11 @@ class BuoyDlg:
     def onOK(self, widget, action, data):
         self.buoyText = string.join(self.win.vText.text, "\n")
         if self.win.vAllied.checked:
-            self.buoyType = BUOY_TO_ALLY
+            self.buoyType = Const.BUOY_TO_ALLY
         elif self.win.vScanner.checked:
-            self.buoyType = BUOY_TO_SCANNERSHARE
+            self.buoyType = Const.BUOY_TO_SCANNERSHARE
         else:
-            self.buoyType = BUOY_PRIVATE
+            self.buoyType = Const.BUOY_PRIVATE
         self.hide()
         if self.confirmAction:
             self.confirmAction()

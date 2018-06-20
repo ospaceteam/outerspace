@@ -20,7 +20,7 @@
 
 import pygameui as ui
 from osci import gdata, client
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige.ospace import ShipUtils, Rules
 
 class FleetsAnalysisDlg:

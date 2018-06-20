@@ -27,7 +27,7 @@ from FleetScoutBloomDlg import FleetScoutBloomDlg
 from ConfirmDlg import ConfirmDlg
 from RenameFleetDlg import RenameFleetDlg
 from LocateDlg import LocateDlg
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige.ospace import Rules
 import ige
 import string
@@ -104,7 +104,7 @@ class FleetDlg:
         self.showShip(self.win.vShips.items[0].designID, self.win.vShips.items[0].tExp)
         # fleet info
         self.win.vFCoordinates.text = '[%.1f, %.1f]' % (fleet.x, fleet.y)
-        if fleet.orbiting != OID_NONE:
+        if fleet.orbiting != Const.OID_NONE:
             self.win.vFOrbiting.text = getattr(client.get(fleet.orbiting, noUpdate = 1), 'name', res.getUnknownName())
         else:
             self.win.vFOrbiting.text = _('N/A')
@@ -127,20 +127,20 @@ class FleetDlg:
         if hasattr(fleet, 'actions'):
             for action, target, data in fleet.actions:
                 info = "-"
-                if target != OID_NONE:
+                if target != Const.OID_NONE:
                     targetName = getattr(client.get(target, noUpdate = 1), 'name', res.getUnknownName())
                 else:
                     targetName = '-'
                 if index == fleet.actionIndex: current = '>'
                 else: current = ''
                 # additional info
-                if action == FLACTION_DECLAREWAR:
+                if action == Const.FLACTION_DECLAREWAR:
                     info = getattr(client.get(data, noUpdate = 1), 'name', res.getUnknownName())
-                elif action == FLACTION_DEPLOY:
+                elif action == Const.FLACTION_DEPLOY:
                     info = client.getPlayer().shipDesigns[data].name
-                elif action == FLACTION_REPEATFROM:
+                elif action == Const.FLACTION_REPEATFROM:
                     info = _("Command #%d") % (data + 1)
-                elif action == FLACTION_WAIT:
+                elif action == Const.FLACTION_WAIT:
                     info = _("%d / %d") % (fleet.actionWaitCounter, data)
                 # create item
                 item = ui.Item(gdata.fleetActions[action], targetName = targetName, data = info, tIndex = index + 1, current = current)
@@ -227,7 +227,7 @@ class FleetDlg:
             self.win.vCommands.selection = []
             if not all: # 0 from UI; 1 from "DeleteAll" function
                 self.win.setStatus(_('Command has been executed.'))
-                if item.text == gdata.fleetActions[FLACTION_WAIT]:
+                if item.text == gdata.fleetActions[Const.FLACTION_WAIT]:
                     fleet = client.get(self.fleetID,forceUpdate=1)
                 self.update()
                 gdata.mainGameDlg.update()

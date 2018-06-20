@@ -18,8 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-from pygame.locals import *
-from Const import *
+import Const
 from Widget import Widget, registerWidget
 
 class Check(Widget):
@@ -35,7 +34,7 @@ class Check(Widget):
         self.__dict__['checked'] = 0
         self.__dict__['_processingMB1'] = 0
         self.__dict__['_processingMB3'] = 0
-        self.align = ALIGN_W
+        self.align = Const.ALIGN_W
         self.processKWArguments(kwargs)
         parent.registerWidget(self)
 
@@ -46,12 +45,12 @@ class Check(Widget):
     def processMB1Down(self, evt):
         self.checked = not self.checked
         self._processingMB1 = 1
-        return NoEvent
+        return Const.NoEvent
 
     def processMB1Up(self, evt):
         self.processAction(self.action)
         self._processingMB1 = 0
-        return NoEvent
+        return Const.NoEvent
 
     def processMB1UpMissed(self, evt):
         self._processingMB1 = 0
@@ -74,12 +73,12 @@ class Check(Widget):
 
     def processMB3Down(self, evt):
         self._processingMB3 = 1
-        return NoEvent
+        return Const.NoEvent
 
     def processMB3Up(self, evt):
         if self._processingMB3:
             self.processAction(self.rmbAction)
         self._processingMB3 = 0
-        return NoEvent
+        return Const.NoEvent
 
 registerWidget(Check, 'check')

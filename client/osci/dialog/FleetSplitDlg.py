@@ -22,7 +22,7 @@ import types
 import pygameui as ui
 from osci.StarMapWidget import StarMapWidget
 from osci import gdata, res, client
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige.ospace import Rules
 import ige
 import math

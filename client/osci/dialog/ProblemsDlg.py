@@ -21,7 +21,7 @@
 import pygameui as ui
 import re
 from osci import gdata, client, res
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige.ospace import Utils, Rules
 import string, math, copy
 
@@ -78,12 +78,12 @@ class ProblemsDlg:
 
         # go through all objects
         for objID in objects:
-            if objID < OID_FREESTART:
+            if objID < Const.OID_FREESTART:
                 continue
             obj = client.get(objID, noUpdate = 1)
             if not hasattr(obj, "type"):
                 continue
-            if obj.type == T_SYSTEM:
+            if obj.type == Const.T_SYSTEM:
                 if not hasattr(obj, 'planets'):
                     continue
                 bio = 0
@@ -160,17 +160,17 @@ class ProblemsDlg:
                         # check for structures status
                         if hasattr(planet, 'slots') and self.win.vPlanets.checked:
                             for struct in planet.slots:
-                                status = struct[STRUCT_IDX_STATUS]
+                                status = struct[Const.STRUCT_IDX_STATUS]
                                 problem = None
-                                tech = client.getFullTechInfo(struct[STRUCT_IDX_TECHID])
+                                tech = client.getFullTechInfo(struct[Const.STRUCT_IDX_TECHID])
 
                                 if hasattr(player, 'techs'):
-                                    techEff = Rules.techImprEff[player.techs.get(struct[STRUCT_IDX_TECHID], Rules.techBaseImprovement)]
+                                    techEff = Rules.techImprEff[player.techs.get(struct[Const.STRUCT_IDX_TECHID], Rules.techBaseImprovement)]
                                 else:
                                     techEff = Rules.techImprEff[Rules.techBaseImprovement]
 
                                 HPturn = max(1, int(0.02 * tech.maxHP * techEff))
-                                turnsToDestroy = math.ceil(struct[STRUCT_IDX_HP] / HPturn)
+                                turnsToDestroy = math.ceil(struct[Const.STRUCT_IDX_HP] / HPturn)
 
                                 if turnsToDestroy < 48:
                                     dispDestr = major
@@ -182,35 +182,35 @@ class ProblemsDlg:
                                     dispDestr = minor
                                     fgColorDestr = None
 
-                                if not status & STRUCT_STATUS_ON:
+                                if not status & Const.STRUCT_STATUS_ON:
                                     # structure is off
                                     if dispDestr:
-                                        items.append(ui.Item(planet.name, tOID = planetID, tType = T_PLANET, foreground = fgColorDestr,
+                                        items.append(ui.Item(planet.name, tOID = planetID, tType = Const.T_PLANET, foreground = fgColorDestr,
                                             vDescription = _('Structure (%s) is off and will be destroyed in %s turns.') % (tech.name, res.formatTime(turnsToDestroy))))
 
-                                elif status & STRUCT_STATUS_DETER:
+                                elif status & Const.STRUCT_STATUS_DETER:
                                     problem = _('is deteriorating')
                                     disp = major
                                     fgColor = gdata.sevColors[gdata.MAJ]
-                                elif status & STRUCT_STATUS_NOBIO:
+                                elif status & Const.STRUCT_STATUS_NOBIO:
                                     problem = _('has insufficient supply of biomatter')
                                     disp = info
                                     fgColor = gdata.sevColors[gdata.INFO]
-                                elif status & STRUCT_STATUS_NOEN:
+                                elif status & Const.STRUCT_STATUS_NOEN:
                                     problem = _('has insufficient supply of energy')
                                     disp = info
                                     fgColor = gdata.sevColors[gdata.INFO]
-                                elif status & STRUCT_STATUS_NOPOP:
+                                elif status & Const.STRUCT_STATUS_NOPOP:
                                     problem = _('has insufficient supply of workers')
                                     disp = info
                                     fgColor = gdata.sevColors[gdata.INFO]
-                                elif status & STRUCT_STATUS_REPAIRING:
+                                elif status & Const.STRUCT_STATUS_REPAIRING:
                                     problem = _('is repairing')
                                     disp = info
                                     fgColor = gdata.sevColors[gdata.INFO]
 
                                 if problem and disp:
-                                    items.append(ui.Item(planet.name, tOID = planetID, tType = T_PLANET, foreground = fgColor,
+                                    items.append(ui.Item(planet.name, tOID = planetID, tType = Const.T_PLANET, foreground = fgColor,
                                         vDescription = _('Structure (%s) %s.') % (tech.name, problem)))
 
                 for planetID, quantity in buildingQuantity.items():
@@ -222,7 +222,7 @@ class ProblemsDlg:
                         for (sourceID, targetID), quantity in buildingInfo.items():
                             if planetID == targetID:
                                 source = client.get(sourceID, noUpdate = 1)
-                                items.append(ui.Item(source.name, tOID = sourceID, tType = T_PLANET, foreground = gdata.sevColors[gdata.MAJ],
+                                items.append(ui.Item(source.name, tOID = sourceID, tType = Const.T_PLANET, foreground = gdata.sevColors[gdata.MAJ],
                                             vDescription = _('There is no space for all constructed buildings on %s.') % (planet.name)))
 
                 # check bio for system
@@ -239,10 +239,10 @@ class ProblemsDlg:
 
                     if disp:
                         if totalBio > 0:
-                            items.append(ui.Item(obj.name, tOID = obj.oid, tType = T_SYSTEM, foreground = fgColor,
+                            items.append(ui.Item(obj.name, tOID = obj.oid, tType = Const.T_SYSTEM, foreground = fgColor,
                                          vDescription = _('Bio decreasing - last turn change %d, surplus %d (%s).') % (bio, totalBio,res.formatTime(surplusTurns))))
                         else:
-                            items.append(ui.Item(obj.name, tOID = obj.oid, tType = T_SYSTEM, foreground = fgColor,
+                            items.append(ui.Item(obj.name, tOID = obj.oid, tType = Const.T_SYSTEM, foreground = fgColor,
                                          vDescription = _('Bio decreasing - last turn change %d, surplus %d.') % (bio, totalBio)))
 
                 #check en for system
@@ -259,14 +259,14 @@ class ProblemsDlg:
 
                     if disp:
                         if totalEn > 0:
-                            items.append(ui.Item(obj.name, tOID = obj.oid, tType = T_SYSTEM, foreground = fgColor,
+                            items.append(ui.Item(obj.name, tOID = obj.oid, tType = Const.T_SYSTEM, foreground = fgColor,
                                         vDescription = _('Energy decreasing - last turn change %d, surplus %d (%s).') % (en, totalEn,res.formatTime(surplusTurns))))
                         else:
-                            items.append(ui.Item(obj.name, tOID = obj.oid, tType = T_SYSTEM, foreground = fgColor,
+                            items.append(ui.Item(obj.name, tOID = obj.oid, tType = Const.T_SYSTEM, foreground = fgColor,
                                          vDescription = _('Energy decreasing - last turn change %d, surplus %d.') % (en, totalEn)))
 
             # check fleets
-            elif obj.type == T_FLEET and self.win.vFleets.checked:
+            elif obj.type == Const.T_FLEET and self.win.vFleets.checked:
                 if hasattr(obj, 'owner') and obj.owner == player.oid:
                     energyReserve = obj.storEn  * 100 / obj.maxEn
                     system = None
@@ -283,7 +283,7 @@ class ProblemsDlg:
                                 if hasattr(planet, 'owner') and hasattr(planet, 'refuelMax'):
                                     if player.diplomacyRels.has_key(planet.owner):
                                         dipl = client.getDiplomacyWith(planet.owner)
-                                        if dipl.pacts.has_key(PACT_ALLOW_TANKING) and dipl.pacts[PACT_ALLOW_TANKING][0] == PACT_ACTIVE:
+                                        if dipl.pacts.has_key(Const.PACT_ALLOW_TANKING) and dipl.pacts[Const.PACT_ALLOW_TANKING][0] == Const.PACT_ACTIVE:
                                             maxRefuelMax = max(maxRefuelMax, planet.refuelMax)
                                     else:
                                         if planet.owner == player.oid:
@@ -321,10 +321,10 @@ class ProblemsDlg:
                         name = getattr(obj, "name", None)
 
                     if energyReserve == 100 and info and disp:
-                        items.append(ui.Item(systemName, tOID = obj.oid, tType = T_FLEET,foreground = gdata.sevColors[gdata.INFO],
+                        items.append(ui.Item(systemName, tOID = obj.oid, tType = Const.T_FLEET,foreground = gdata.sevColors[gdata.INFO],
                                     vDescription = _('Fleet "%s" has full fuel tanks.') % (name)))
                     elif disp:
-                        items.append(ui.Item(systemName, tOID = obj.oid, tType = T_FLEET,foreground = fgColor,
+                        items.append(ui.Item(systemName, tOID = obj.oid, tType = Const.T_FLEET,foreground = fgColor,
                                     vDescription = _('Fleet "%s" is low on fuel [%d %%]%s.') % (name, energyReserve, note)))
 
 
@@ -349,7 +349,7 @@ class ProblemsDlg:
 
             # check empty production queue
             if queueLen == 0 and planet.effProdProd > 0 and queConstValues[0] == 0 and critical:
-                items.append(ui.Item(planet.name, tOID = planetID, tType = T_PLANET,
+                items.append(ui.Item(planet.name, tOID = planetID, tType = Const.T_PLANET,
                     foreground = gdata.sevColors[gdata.CRI],
                     vDescription = _('Production queue is empty.')))
 
@@ -361,7 +361,7 @@ class ProblemsDlg:
                     disp = major
                     fgColor = gdata.sevColors[gdata.MAJ]
                     if disp:
-                        items.append(ui.Item(planet.name, tOID = planetID, tType = T_PLANET, foreground = fgColor,
+                        items.append(ui.Item(planet.name, tOID = planetID, tType = Const.T_PLANET, foreground = fgColor,
                             vDescription = _('Production queue may end in {0} turns ({1} directly in planet queue), {2} item(s) on list.'.format(res.formatTime(totalEtc+queEtc[0]), res.formatTime(totalEtc), queueLen))))
 
         # creation of items with global queue problems
@@ -370,7 +370,7 @@ class ProblemsDlg:
             quePlanets = globalQueueStats[queue][0]
             # check empty global production queue with at least one planet [so its relevant]
             if queConstValues[queue] == 0 and  quePlanets > 0 and critical:
-                items.append(ui.Item(_('Global queue ' + queName), tType = T_QUEUE,
+                items.append(ui.Item(_('Global queue ' + queName), tType = Const.T_QUEUE,
                     foreground = gdata.sevColors[gdata.CRI],
                     vDescription = _('Global production queue {0} used by {1} planet(s) is empty.'.format(queName, quePlanets))))
 
@@ -382,7 +382,7 @@ class ProblemsDlg:
                     disp = major
                     fgColor = gdata.sevColors[gdata.MAJ]
                 if disp:
-                    items.append(ui.Item(_('Global queue ' + queName), tType = T_QUEUE, foreground = fgColor,
+                    items.append(ui.Item(_('Global queue ' + queName), tType = Const.T_QUEUE, foreground = fgColor,
                         vDescription = _('Global production queue {0} used by {1} planet(s) runs out in {2} turns.'.format(queName, quePlanets, res.formatTime(queEtc[queue])))))
 
         # check research queue
@@ -415,7 +415,7 @@ class ProblemsDlg:
 
             # check empty research queue
             if totalEtc == 0 and len(player.rsrchQueue) == 0 and player.effSciPoints > 0 and major:
-                items.append(ui.Item(_('Research'), tType = T_TECHNOLOGY, foreground = gdata.sevColors[gdata.MAJ],
+                items.append(ui.Item(_('Research'), tType = Const.T_TECHNOLOGY, foreground = gdata.sevColors[gdata.MAJ],
                     vDescription = _('Research queue is empty.')))
             # check short reseach queue
             elif totalEtc < 48:
@@ -426,7 +426,7 @@ class ProblemsDlg:
                     fgColor = gdata.sevColors[gdata.MAJ]
 
                 if disp:
-                    items.append(ui.Item(_('Research'), tType = T_TECHNOLOGY, foreground = fgColor,
+                    items.append(ui.Item(_('Research'), tType = Const.T_TECHNOLOGY, foreground = fgColor,
                                 vDescription = _('Research queue ends in %s turns, %d item(s) on list.') % (res.formatTime(totalEtc), len(player.rsrchQueue))))
 
         self.win.vProblems.items = items
@@ -437,7 +437,7 @@ class ProblemsDlg:
 
     def onShowSource(self, widget, action, data):
         item = self.win.vProblems.selection[0]
-        if item.tType == T_FLEET:
+        if item.tType == Const.T_FLEET:
             object = client.get(item.tOID, noUpdate = 1)
             # center on map
             if hasattr(object, "x"):
@@ -445,20 +445,20 @@ class ProblemsDlg:
                 gdata.mainGameDlg.win.vStarMap.setPos(object.x, object.y)
                 self.hide()
                 return
-        elif item.tType in (T_SYSTEM, T_PLANET):
-            if item.tOID != OID_NONE:
+        elif item.tType in (Const.T_SYSTEM, Const.T_PLANET):
+            if item.tOID != Const.OID_NONE:
                 gdata.mainGameDlg.onSelectMapObj(None, None, item.tOID)
                 return
-        elif item.tType == T_TECHNOLOGY:
+        elif item.tType == Const.T_TECHNOLOGY:
             gdata.mainGameDlg.researchDlg.display()
             return
-        elif item.tType == T_QUEUE:
+        elif item.tType == Const.T_QUEUE:
             gdata.mainGameDlg.globalQueuesDlg.display()
         self.win.setStatus(_("Cannot show location."))
 
     def onShowLocation(self, widget, action, data):
         item = self.win.vProblems.selection[0]
-        if item.tType in (T_SYSTEM, T_PLANET, T_FLEET):
+        if item.tType in (Const.T_SYSTEM, Const.T_PLANET, Const.T_FLEET):
             object = client.get(item.tOID, noUpdate = 1)
             # center on map
             if hasattr(object, "x"):

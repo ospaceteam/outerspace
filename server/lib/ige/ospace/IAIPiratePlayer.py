@@ -22,10 +22,10 @@ import random
 import sys
 import time
 
+import Const
 import Rules
 import Utils
 
-from Const import *
 from ige import log
 from ige.IDataHolder import IDataHolder
 from ige.IObject import public
@@ -33,8 +33,8 @@ from IPlayer import IPlayer
 
 class IAIPiratePlayer(IPlayer):
 
-    typeID = T_AIPIRPLAYER
-    resignTo = T_PIRPLAYER
+    typeID = Const.T_AIPIRPLAYER
+    resignTo = Const.T_PIRPLAYER
     forums = {"INBOX": 56, "OUTBOX": 56, "EVENTS": 0}
 
     def init(self, obj):
@@ -61,7 +61,7 @@ class IAIPiratePlayer(IPlayer):
                 counter += 1
                 continue
             tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
-            tran.db[OID_UNIVERSE].players.append(obj.oid)
+            tran.db[Const.OID_UNIVERSE].players.append(obj.oid)
             tran.gameMngr.clientMngr.createAIAccount(obj.login, obj.name, 'ais_pirate')
             break
         # grant techs and so on
@@ -72,8 +72,8 @@ class IAIPiratePlayer(IPlayer):
         planet.plSlots = max(planet.plSlots, 2)
         planet.plMaxSlots = max(planet.plMaxSlots, 2)
         planet.plDiameter = max(planet.plDiameter, 2000)
-        planet.slots.append(Utils.newStructure(tran, Rules.Tech.PIRATEBASE, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
-        planet.slots.append(Utils.newStructure(tran, Rules.Tech.PIRATEDEN, planet.owner, STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
+        planet.slots.append(Utils.newStructure(tran, Rules.Tech.PIRATEBASE, planet.owner, Const.STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
+        planet.slots.append(Utils.newStructure(tran, Rules.Tech.PIRATEDEN, planet.owner, Const.STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
         planet.storPop = 6000
 
     @staticmethod
@@ -131,48 +131,48 @@ class IAIPiratePlayer(IPlayer):
 
     def getDiplomacyWith(self, tran, obj, playerID):
         if obj.oid == playerID:
-            return REL_UNITY
+            return Const.REL_UNITY
         # this AI battles with overyone
         # make default
         dipl = IDataHolder()
-        dipl.type = T_DIPLREL
+        dipl.type = Const.T_DIPLREL
         dipl.pacts = {}
-        dipl.relation = REL_ENEMY
+        dipl.relation = Const.REL_ENEMY
         dipl.relChng = 0
-        dipl.lastContact = tran.db[OID_UNIVERSE].turn
-        dipl.contactType = CONTACT_NONE
+        dipl.lastContact = tran.db[Const.OID_UNIVERSE].turn
+        dipl.contactType = Const.CONTACT_NONE
         dipl.stats = None
         return dipl
 
     def isPactActive(self, tran, obj, partnerID, pactID):
-        if partnerID == OID_NONE:
+        if partnerID == Const.OID_NONE:
             return 0
         partner = tran.db.get(partnerID, None)
-        if partner.type == T_AIEDENPLAYER:
+        if partner.type == Const.T_AIEDENPLAYER:
             # force the peace!
-            if pactID in (PACT_ALLOW_CIVILIAN_SHIPS, PACT_ALLOW_MILITARY_SHIPS):
-                return PACT_ACTIVE
+            if pactID in (Const.PACT_ALLOW_CIVILIAN_SHIPS, Const.PACT_ALLOW_MILITARY_SHIPS):
+                return Const.PACT_ACTIVE
         return 0
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processDIPLPhase(self, tran, obj, data):
         self.forceAllyWithEDEN(tran,obj)
         IPlayer.processDIPLPhase(self,tran, obj, data)
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processFINALPhase(self, tran, obj, data):
         obj.govPwr = Rules.pirateGovPwr
         IPlayer.processFINALPhase(self, tran, obj, data)
         # get fame every 1:00 turns
-        if tran.db[OID_UNIVERSE].turn % Rules.turnsPerDay == 0:
-            Utils.sendMessage(tran, obj, MSG_GAINED_FAME, obj.oid, Rules.pirateSurvivalFame)
+        if tran.db[Const.OID_UNIVERSE].turn % Rules.turnsPerDay == 0:
+            Utils.sendMessage(tran, obj, Const.MSG_GAINED_FAME, obj.oid, Rules.pirateSurvivalFame)
             obj.pirateFame += Rules.pirateSurvivalFame
         # fix goverment power
         obj.govPwrCtrlRange = 10000
         # bonus for gained fame
         obj.prodEff += obj.pirateFame / 100.0
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processRSRCHPhase(self, tran, obj, data):
         # do not research anything
         return
@@ -193,14 +193,14 @@ class IAIPiratePlayer(IPlayer):
         if random.random() <= Rules.pirateGainFamePropability(dist):
             log.debug(obj.oid, "Pirate captured planet + fame", dist, planet.oid)
             obj.pirateFame += Rules.pirateCaptureInRangeFame
-            Utils.sendMessage(tran, obj, MSG_GAINED_FAME, planet.oid, Rules.pirateCaptureInRangeFame)
+            Utils.sendMessage(tran, obj, Const.MSG_GAINED_FAME, planet.oid, Rules.pirateCaptureInRangeFame)
         elif random.random() <= Rules.pirateLoseFameProbability(dist):
             log.debug(obj.oid, "Pirate captured planet OUT OF range", dist, planet.oid)
             obj.pirateFame += Rules.pirateCaptureOutOfRangeFame
-            Utils.sendMessage(tran, obj, MSG_LOST_FAME, planet.oid, Rules.pirateCaptureOutOfRangeFame)
+            Utils.sendMessage(tran, obj, Const.MSG_LOST_FAME, planet.oid, Rules.pirateCaptureOutOfRangeFame)
 
     def stealTechs(self, tran, piratePlayer, oldOwnerID, stealFromPlanetID):
-        if oldOwnerID == OID_NONE:
+        if oldOwnerID == Const.OID_NONE:
             return
         log.debug(piratePlayer.oid, "IPiratePlayer stealing techs")
         oldOwner = tran.db[oldOwnerID]
@@ -228,30 +228,30 @@ class IAIPiratePlayer(IPlayer):
 
     def givePirateTech(self, tran, piratePlayer, oldOwner, techID, stealFromPlanetID):
         piratePlayer.techs[techID] = min(piratePlayer.techs.get(techID, 0) + 1, oldOwner.techs[techID])
-        Utils.sendMessage(tran, piratePlayer, MSG_GAINED_TECH, stealFromPlanetID, (techID, piratePlayer.techs[techID]))
+        Utils.sendMessage(tran, piratePlayer, Const.MSG_GAINED_TECH, stealFromPlanetID, (techID, piratePlayer.techs[techID]))
 
     def forceAllyWithEDEN(self,tran,obj):
         for partyID in obj.diplomacyRels.keys():
             party = tran.db.get(partyID, None)
-            if party.type == T_AIEDENPLAYER:
+            if party.type == Const.T_AIEDENPLAYER:
                 diplSelf = obj.diplomacyRels.get(party.oid, None)
                 log.debug("Allying Pirate with EDEN (forced)", obj.oid, partyID)
                 diplEDEN = IDataHolder()
-                diplEDEN.type = T_DIPLREL
+                diplEDEN.type = Const.T_DIPLREL
                 diplEDEN.pacts = {
-                    PACT_ALLOW_CIVILIAN_SHIPS: [PACT_ACTIVE, PACT_ALLOW_CIVILIAN_SHIPS],
-                    PACT_ALLOW_MILITARY_SHIPS: [PACT_ACTIVE, PACT_ALLOW_MILITARY_SHIPS]
+                    Const.PACT_ALLOW_CIVILIAN_SHIPS: [Const.PACT_ACTIVE, Const.PACT_ALLOW_CIVILIAN_SHIPS],
+                    Const.PACT_ALLOW_MILITARY_SHIPS: [Const.PACT_ACTIVE, Const.PACT_ALLOW_MILITARY_SHIPS]
                 }
-                diplEDEN.relation = REL_FRIENDLY
+                diplEDEN.relation = Const.REL_FRIENDLY
                 diplEDEN.relChng = 0
-                diplEDEN.lastContact = tran.db[OID_UNIVERSE].turn
-                diplEDEN.contactType = CONTACT_STATIC
+                diplEDEN.lastContact = tran.db[Const.OID_UNIVERSE].turn
+                diplEDEN.contactType = Const.CONTACT_STATIC
                 diplEDEN.stats = None
 
-                diplSelf.relation = REL_FRIENDLY
+                diplSelf.relation = Const.REL_FRIENDLY
                 diplSelf.pacts = {
-                    PACT_ALLOW_CIVILIAN_SHIPS: [PACT_ACTIVE, PACT_ALLOW_CIVILIAN_SHIPS],
-                    PACT_ALLOW_MILITARY_SHIPS: [PACT_ACTIVE, PACT_ALLOW_MILITARY_SHIPS]
+                    Const.PACT_ALLOW_CIVILIAN_SHIPS: [Const.PACT_ACTIVE, Const.PACT_ALLOW_CIVILIAN_SHIPS],
+                    Const.PACT_ALLOW_MILITARY_SHIPS: [Const.PACT_ACTIVE, Const.PACT_ALLOW_MILITARY_SHIPS]
                 }
 
                 obj.diplomacyRels[party.oid] = diplSelf

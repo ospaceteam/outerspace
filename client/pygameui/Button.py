@@ -18,8 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-from pygame.locals import *
-from Const import *
+import Const
 from Widget import Widget, registerWidget
 
 class Button(Widget):
@@ -49,7 +48,7 @@ class Button(Widget):
         self.theme.playButtonSound(self)
         self.pressed = not self.pressed
         self._processingMB1 = 1
-        return NoEvent
+        return Const.NoEvent
 
     def processMB1Up(self, evt):
         self._processingMB1 = 0
@@ -60,7 +59,7 @@ class Button(Widget):
             self.processAction(self.action)
         elif self.toggle:
             self.processAction(self.action)
-        return NoEvent
+        return Const.NoEvent
 
     def processMB1UpMissed(self, evt):
         self._processingMB1 = 0
@@ -93,7 +92,7 @@ class Button(Widget):
         self._processingMB3 = 1
         if self.rmbAction and not self.toggle:
             self.pressed = not self.pressed
-        return NoEvent
+        return Const.NoEvent
 
     def processMB3Up(self, evt):
         if self._processingMB3:
@@ -103,7 +102,7 @@ class Button(Widget):
                 self.theme.playButtonSound(self)
             self.pressed = 0
         self._processingMB3 = 0
-        return NoEvent
+        return Const.NoEvent
 
 
 registerWidget(Button, 'button')

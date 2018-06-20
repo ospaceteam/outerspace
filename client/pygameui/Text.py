@@ -18,17 +18,15 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-from pygame.locals import *
-from Const import *
+import Const
 from WordUtils import *
 from Widget import Widget, registerWidget
-from Fonts import *
 import pygame.key
 
 # keys mapping
 mapping = {
-    K_KP0: '0', K_KP1: '1', K_KP2: '2', K_KP3: '3', K_KP4: '4',
-    K_KP5: '5', K_KP6: '6', K_KP7: '7', K_KP8: '8', K_KP9: '9',
+    pygame.K_KP0: '0', pygame.K_KP1: '1', pygame.K_KP2: '2', pygame.K_KP3: '3', pygame.K_KP4: '4',
+    pygame.K_KP5: '5', pygame.K_KP6: '6', pygame.K_KP7: '7', pygame.K_KP8: '8', pygame.K_KP9: '9',
 }
 
 class Text(Widget):
@@ -109,10 +107,10 @@ class Text(Widget):
             self.selStart = self.selEnd = None
 
     def processKeyUp(self, evt):
-        # consume K_RETURN (acceptButton on Window will not work)
+        # consume pygame.K_RETURN (acceptButton on Window will not work)
         # can be choosable on construction?
-        if evt.key == K_RETURN:
-            return NoEvent
+        if evt.key == pygame.K_RETURN:
+            return Const.NoEvent
         else:
             return Widget.processKeyUp(self, evt)
 
@@ -121,7 +119,7 @@ class Text(Widget):
             return Widget.processKeyDown(self, evt)
 
         # process keys
-        if evt.key == K_BACKSPACE:
+        if evt.key == pygame.K_BACKSPACE:
             if self.selStart != None:
                 self.deleteSelection()
             elif self.cursorColumn > 0:
@@ -134,7 +132,7 @@ class Text(Widget):
                     del self.text[self.cursorRow]
                     self.cursorRow -= 1
 
-        elif evt.key == K_DELETE:
+        elif evt.key == pygame.K_DELETE:
             if self.selStart != None:
                 self.deleteSelection()
             elif self.cursorColumn < len(self.text[self.cursorRow]):
@@ -143,14 +141,14 @@ class Text(Widget):
                 self.text[self.cursorRow] = u'%s%s' % (self.text[self.cursorRow], self.text[self.cursorRow + 1])
                 del self.text[self.cursorRow + 1]
 
-        elif evt.key == K_ESCAPE:
+        elif evt.key == pygame.K_ESCAPE:
             self.app.setFocus(None)
 
-        elif evt.key == K_LEFT:
-            if evt.mod & KMOD_SHIFT:
+        elif evt.key == pygame.K_LEFT:
+            if evt.mod & pygame.KMOD_SHIFT:
                 if self.selStart == None:
                     self.selStart = (self.cursorRow,self.cursorColumn)
-            if evt.mod & KMOD_CTRL:
+            if evt.mod & pygame.KMOD_CTRL:
                 # move one word left
                 # take words on line
                 words = splitter(self.text[self.cursorRow])
@@ -197,7 +195,7 @@ class Text(Widget):
             elif self.cursorRow > 0:
                 self.cursorRow -= 1
                 self.cursorColumn = len(self.text[self.cursorRow])
-            if evt.mod & KMOD_SHIFT:
+            if evt.mod & pygame.KMOD_SHIFT:
                 self.selEnd = (self.cursorRow,self.cursorColumn)
                 if self.selStart == self.selEnd:
                     self.selStart = self.selEnd = None
@@ -205,11 +203,11 @@ class Text(Widget):
                 self.selStart = self.selEnd = None
 
 
-        elif evt.key == K_RIGHT:
-            if evt.mod & KMOD_SHIFT:
+        elif evt.key == pygame.K_RIGHT:
+            if evt.mod & pygame.KMOD_SHIFT:
                 if self.selStart == None:
                     self.selStart = (self.cursorRow,self.cursorColumn)
-            if evt.mod & KMOD_CTRL:
+            if evt.mod & pygame.KMOD_CTRL:
                 # move one word right
                 # take words on line
                 words = splitter(self.text[self.cursorRow])
@@ -271,15 +269,15 @@ class Text(Widget):
                 if self.cursorRow < len(self.text) - 1:
                     self.cursorRow += 1
                     self.cursorColumn = 0
-            if evt.mod & KMOD_SHIFT:
+            if evt.mod & pygame.KMOD_SHIFT:
                 self.selEnd = (self.cursorRow,self.cursorColumn)
                 if self.selStart == self.selEnd:
                     self.selStart = self.selEnd = None
             else:
                 self.selStart = self.selEnd = None
 
-        elif evt.key == K_UP:
-            if evt.mod & KMOD_SHIFT:
+        elif evt.key == pygame.K_UP:
+            if evt.mod & pygame.KMOD_SHIFT:
                 if self.selStart == None:
                     self.selStart = (self.cursorRow,self.cursorColumn)
 
@@ -290,15 +288,15 @@ class Text(Widget):
             if self.cursorRow - self.offsetRow < 0:
                 self.vertScrollbar.onButton1(self, "", "")
 
-            if evt.mod & KMOD_SHIFT:
+            if evt.mod & pygame.KMOD_SHIFT:
                 self.selEnd = (self.cursorRow,self.cursorColumn)
                 if self.selStart == self.selEnd:
                     self.selStart = self.selEnd = None
             else:
                 self.selStart = self.selEnd = None
 
-        elif evt.key == K_DOWN:
-            if evt.mod & KMOD_SHIFT:
+        elif evt.key == pygame.K_DOWN:
+            if evt.mod & pygame.KMOD_SHIFT:
                 if self.selStart == None:
                     self.selStart = (self.cursorRow,self.cursorColumn)
 
@@ -309,18 +307,18 @@ class Text(Widget):
             if self.cursorRow - self.offsetRow >= self.theme.getTextDrawLines(self):
                 self.vertScrollbar.onButton2(self, "", "")
 
-            if evt.mod & KMOD_SHIFT:
+            if evt.mod & pygame.KMOD_SHIFT:
                 self.selEnd = (self.cursorRow,self.cursorColumn)
                 if self.selStart == self.selEnd:
                     self.selStart = self.selEnd = None
             else:
                 self.selStart = self.selEnd = None
 
-        elif evt.key == K_TAB:
+        elif evt.key == pygame.K_TAB:
             pass
 
-        elif evt.key == K_END:
-            if evt.mod & KMOD_SHIFT:
+        elif evt.key == pygame.K_END:
+            if evt.mod & pygame.KMOD_SHIFT:
                 if self.selEnd != None:
                     self.selEnd = (self.selEnd[0], len(self.text[self.cursorRow]))
                 else:
@@ -331,8 +329,8 @@ class Text(Widget):
 
             self.cursorColumn = len(self.text[self.cursorRow])
 
-        elif evt.key == K_HOME:
-            if evt.mod & KMOD_SHIFT:
+        elif evt.key == pygame.K_HOME:
+            if evt.mod & pygame.KMOD_SHIFT:
                 if self.selStart != None:
                     self.selStart = (self.selStart[0], 0)
                 else:
@@ -343,7 +341,7 @@ class Text(Widget):
 
             self.cursorColumn = 0
 
-        elif evt.key == K_RETURN:
+        elif evt.key == pygame.K_RETURN:
             text1 = self.text[self.cursorRow][self.cursorColumn:]
             text2 = self.text[self.cursorRow][:self.cursorColumn]
             self.text[self.cursorRow] = text1
@@ -373,7 +371,7 @@ class Text(Widget):
             )
             self.cursorColumn += 1
 
-        return Widget.processKeyDown(self, NoEvent)
+        return Widget.processKeyDown(self, Const.NoEvent)
 
     def onFocusGained(self):
         Widget.onFocusGained(self)

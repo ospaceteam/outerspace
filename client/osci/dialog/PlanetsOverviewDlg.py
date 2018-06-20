@@ -21,7 +21,7 @@
 import pygameui as ui
 from osci.StarMapWidget import StarMapWidget
 from osci import gdata, res, client, sequip
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige.ospace import ShipUtils, Rules
 from ige import GameException
 import math
@@ -60,17 +60,17 @@ class PlanetsOverviewDlg:
         for planetID in client.db.keys():
             planet = client.get(planetID, noUpdate = 1)
             # skip non-planets
-            if not hasattr(planet, "type") or planet.type != T_PLANET:
+            if not hasattr(planet, "type") or planet.type != Const.T_PLANET:
                 continue
             # shall be shown?
             ok = 0
             if hasattr(planet, 'owner'):
                 if self.showMine and planet.owner == player.oid:
                     ok = 1
-                if self.showOtherPlayers and planet.owner != OID_NONE and \
+                if self.showOtherPlayers and planet.owner != Const.OID_NONE and \
                     planet.owner != player.oid:
                     ok = 1
-                if self.showColonizable and planet.owner == OID_NONE and \
+                if self.showColonizable and planet.owner == Const.OID_NONE and \
                     planet.plType not in ('G', 'A'):
                     ok = 1
                 if self.showUncolonizable and planet.plType in ('G', 'A'):
@@ -83,15 +83,15 @@ class PlanetsOverviewDlg:
             if not ok:
                 continue
             # fill in data
-            #rel = REL_UNDEF
+            #rel = Const.REL_UNDEF
             maxNA = 999999
             maxNone = 99999
-            ownerID = OID_NONE
+            ownerID = Const.OID_NONE
             if hasattr(planet, 'owner'):
                 ownerID = planet.owner
-                #if planet.owner != OID_NONE:
+                #if planet.owner != Const.OID_NONE:
                 #    rel = client.getRelationTo(planet.owner)
-                if planet.owner == OID_NONE:
+                if planet.owner == Const.OID_NONE:
                 #else:
                     owner = _('[Nobody]')
             if hasattr(planet, 'owner') and planet.owner == player.oid:

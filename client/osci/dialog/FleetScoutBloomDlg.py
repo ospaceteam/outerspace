@@ -22,7 +22,7 @@ import pygameui as ui
 from osci.StarMapWidget import StarMapWidget
 from ige.ospace import Rules
 from osci import gdata, res, client, sequip
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 from ige import log
 import ige
 import math
@@ -35,11 +35,11 @@ class FleetScoutBloomDlg:
     def __init__(self, app):
         self.app = app
         self.createUI()
-        self.targetID = OID_NONE
-        self.targetPlayerID = OID_NONE
+        self.targetID = Const.OID_NONE
+        self.targetPlayerID = Const.OID_NONE
         self.fleet = None
         self.sendShips = {}
-        self.selectedShip = OID_NONE
+        self.selectedShip = Const.OID_NONE
 
     def display(self, fleetDlg):
         self.fleetDlg = fleetDlg
@@ -79,28 +79,28 @@ class FleetScoutBloomDlg:
         self.showCommands()
 
     def showCommands(self):
-        if self.targetID == OID_NONE:
+        if self.targetID == Const.OID_NONE:
             info = _('No target selected')
         else:
             target = client.get(self.targetID, noUpdate = 1)
             info = getattr(target, 'name', res.getUnknownName())
         # correct buildingIndex
         if not self.sendShips:
-            self.selectedShip = OID_NONE
+            self.selectedShip = Const.OID_NONE
         elif self.selectedShip not in self.sendShips:
             self.selectedShip = self.sendShips.keys()[0]
         # get target data
         self.win.vTarget.text = info
         fleet = self.fleet
-        if self.targetID != OID_NONE:
+        if self.targetID != Const.OID_NONE:
             curTarget = client.get(self.targetID, noUpdate = 1)
-            target = OID_NONE
-            if fleet.orbiting != OID_NONE and target == OID_NONE:
+            target = Const.OID_NONE
+            if fleet.orbiting != Const.OID_NONE and target == Const.OID_NONE:
                 target = fleet.orbiting
-            elif target == OID_NONE:
+            elif target == Const.OID_NONE:
                 target = fleet.oid
 
-            if target != OID_NONE:
+            if target != Const.OID_NONE:
                 lastTarget = client.get(target, noUpdate = 1)
                 curX = curTarget.x
                 curY = curTarget.y
@@ -128,7 +128,7 @@ class FleetScoutBloomDlg:
         else:
             self.win.vSelectedShip.enabled = 0
             self.win.vSelectedShip.text = ""
-            self.win.vSelectedShip.data = OID_NONE
+            self.win.vSelectedShip.data = Const.OID_NONE
             self.win.setStatus(_("No ships found."))
 
     def onSelectMapObj(self, widget, action, data):
@@ -136,10 +136,10 @@ class FleetScoutBloomDlg:
         if not self.sendShips:
             self.win.setStatus(_("No ships found."))
             return
-        if target.type == T_PLANET:
+        if target.type == Const.T_PLANET:
             self.targetID = target.oid
             self.win.vStarMap.highlightPos = (target.x, target.y)
-        elif target.type in (T_SYSTEM, T_WORMHOLE):
+        elif target.type in (Const.T_SYSTEM, Const.T_WORMHOLE):
             self.targetID = target.oid
             self.win.vStarMap.highlightPos = (target.x, target.y)
         else:
@@ -185,7 +185,7 @@ class FleetScoutBloomDlg:
 
     def moveShip(self,fleet):
         self.targets.append(self.targetID)
-        client.cmdProxy.addAction(fleet.oid, 0, FLACTION_MOVE, self.targetID, 0)
+        client.cmdProxy.addAction(fleet.oid, 0, Const.FLACTION_MOVE, self.targetID, 0)
 
 
     def onDone(self, widget, action, data):
@@ -200,7 +200,7 @@ class FleetScoutBloomDlg:
             self.selectedShip = list_of_designs[(position + 1) % len(list_of_designs)]
         except ValueError:
             if not list_of_designs:
-                self.selectedShip = OID_NONE
+                self.selectedShip = Const.OID_NONE
             else:
                 self.selectedShip = list_of_designs[0]
         self.showCommands()

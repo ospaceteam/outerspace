@@ -18,8 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-from pygame.locals import *
-from Const import *
+import Const
 from Widget import registerWidget
 from Button import Button
 
@@ -28,7 +27,7 @@ class ArrowButton(Button):
     def __init__(self, parent, **kwargs):
         Button.__init__(self, parent)
         # data
-        self.direction = ALIGN_N
+        self.direction = Const.ALIGN_N
         # del
         del self.text
         del self.icons

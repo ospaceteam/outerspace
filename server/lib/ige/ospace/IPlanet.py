@@ -25,18 +25,18 @@ import random
 from xml.dom.minidom import Node
 
 import ige
+import Const
 import Rules
 import Utils
 import ShipUtils
 
-from Const import *
 from ige import log
 from ige.IObject import IObject, public
 from ige.IDataHolder import IDataHolder
 
 class IPlanet(IObject):
 
-    typeID = T_PLANET
+    typeID = Const.T_PLANET
 
     def init(self, obj):
         IObject.init(self, obj)
@@ -106,7 +106,7 @@ class IPlanet(IObject):
         obj.maxShield = 0       #structural max sheild (best structure method)
         obj.prevShield = 0      #previous turn's shield level (for client growth calculation)
 
-    @public(AL_FULL)
+    @public(Const.AL_FULL)
     def startConstruction(self, tran, obj, techID, quantity, targetID, isShip, reportFinished,
         demolishStruct):
         if len(obj.prodQueue) > Rules.maxProdQueueLen:
@@ -150,11 +150,11 @@ class IPlanet(IObject):
         item.isShip = bool(isShip)
         item.reportFin = bool(reportFinished)
         item.demolishStruct = demolishStruct
-        item.type = T_TASK
+        item.type = Const.T_TASK
         obj.prodQueue.append(item)
         return obj.prodQueue, player.stratRes
 
-    @public(AL_FULL)
+    @public(Const.AL_FULL)
     def changeConstruction(self, tran, obj, index, quantity):
         if index < 0 or index >= len(obj.prodQueue):
             raise ige.GameException("No such item in the construction queue.")
@@ -184,7 +184,7 @@ class IPlanet(IObject):
         obj.prodQueue[index].quantity = quantity
         return obj.prodQueue, player.stratRes
 
-    @public(AL_FULL)
+    @public(Const.AL_FULL)
     def abortConstruction(self, tran, obj, index):
         if index >= len(obj.prodQueue):
             raise ige.GameException('No such item in the construction queue.')
@@ -201,7 +201,7 @@ class IPlanet(IObject):
         del obj.prodQueue[index]
         return obj.prodQueue, player.stratRes
 
-    @public(AL_FULL)
+    @public(Const.AL_FULL)
     def moveConstrItem(self, tran, obj, index, rel):
         if index >= len(obj.prodQueue):
             raise ige.GameException('No such item in the construction queue.')
@@ -212,30 +212,30 @@ class IPlanet(IObject):
         obj.prodQueue.insert(index + rel, item)
         return obj.prodQueue
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def changeOwner(self, tran, obj, ownerID, force = 0):
         oldOwnerID = obj.owner
         if obj.owner == ownerID:
             # the owner is the same
             return
-        elif obj.owner != OID_NONE and force == 0:
+        elif obj.owner != Const.OID_NONE and force == 0:
             # this planet is already owned!
             # TODO resolve conflict (based on player relations)
             raise ige.GameException('Planet is already owned by another commander.')
-        elif obj.owner != OID_NONE and force == 1:
+        elif obj.owner != Const.OID_NONE and force == 1:
             # remove planet from old owner
             try:
                 oldOwner = tran.db[obj.owner]
                 oldOwner.planets.remove(obj.oid)
                 if tran.db.has_key(obj.owner):
-                    Utils.sendMessage(tran, obj, MSG_LOST_PLANET, obj.oid, None)
+                    Utils.sendMessage(tran, obj, Const.MSG_LOST_PLANET, obj.oid, None)
             except Exception:
                 log.warning("Cannot remove planet from owner", obj.oid, obj.owner)
-                oldOwnerID = OID_NONE
+                oldOwnerID = Const.OID_NONE
         # reset timer
-        obj.ownerSince = tran.db[OID_UNIVERSE].turn
+        obj.ownerSince = tran.db[Const.OID_UNIVERSE].turn
         # add planet to new owner's empire
-        if ownerID != OID_NONE:
+        if ownerID != Const.OID_NONE:
             newOwner = tran.db[ownerID]
             newOwner.planets.append(obj.oid)
         # reset some attributes
@@ -244,21 +244,21 @@ class IPlanet(IObject):
         obj.prodQueue = [] # clear production queue
         obj.globalQueue = 0 # default global queue
         obj.autoMinStor = 1 # storage is set to auto
-        if ownerID != OID_NONE:
+        if ownerID != Const.OID_NONE:
             # notify player
-            Utils.sendMessage(tran, obj, MSG_GAINED_PLANET, obj.oid, None)
+            Utils.sendMessage(tran, obj, Const.MSG_GAINED_PLANET, obj.oid, None)
 
-    @public(AL_FULL)
+    @public(Const.AL_FULL)
     def setStructOn(self, tran, obj, slotIdx, on):
         if slotIdx >= len(obj.slots) or slotIdx < 0:
             raise ige.GameException('No such structure.')
         if on:
-            obj.slots[slotIdx][STRUCT_IDX_STATUS] |= STRUCT_STATUS_ON
+            obj.slots[slotIdx][Const.STRUCT_IDX_STATUS] |= Const.STRUCT_STATUS_ON
         else:
-            obj.slots[slotIdx][STRUCT_IDX_STATUS] &= ~STRUCT_STATUS_ON
+            obj.slots[slotIdx][Const.STRUCT_IDX_STATUS] &= ~Const.STRUCT_STATUS_ON
         return obj.slots[slotIdx]
 
-    @public(AL_FULL)
+    @public(Const.AL_FULL)
     def demolishStruct(self, tran, obj, slotIdx):
         # TODO implement special button for demolishing structures when
         # planet surrenders
@@ -270,7 +270,7 @@ class IPlanet(IObject):
         del obj.slots[slotIdx]
         return obj.slots
 
-    @public(AL_FULL)
+    @public(Const.AL_FULL)
     def moveStruct(self, tran, obj, slotIdx, rel):
         if slotIdx >= len(obj.slots) or slotIdx < 0:
             raise ige.GameException('No such structure.')
@@ -281,13 +281,13 @@ class IPlanet(IObject):
         obj.slots.insert(slotIdx + rel, struct)
         return obj.slots
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processINITPhase(self, tran, obj, data):
         # get rid of the NEW states
         for struct in obj.slots:
-            struct[STRUCT_IDX_STATUS] &= STRUCT_STATUS_RESETFLGS
+            struct[Const.STRUCT_IDX_STATUS] &= Const.STRUCT_STATUS_RESETFLGS
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processPRODPhase(self, tran, obj, data):
         if obj.plType == "A":
             self.cmd(obj).generateAsteroid(tran, obj)
@@ -305,7 +305,7 @@ class IPlanet(IObject):
         obj.trainShipMax = 0
         obj.fleetSpeedBoost = 1.0
         #
-        if obj.storPop <= 0 and not obj.slots and obj.owner == OID_NONE:
+        if obj.storPop <= 0 and not obj.slots and obj.owner == Const.OID_NONE:
             # do not process this planet
             return
         obj.scannerPwr = Rules.scannerMinPwr
@@ -322,11 +322,11 @@ class IPlanet(IObject):
         emrLevel = galaxy.emrLevel
         # collect strategic resources
         owner = tran.db.get(obj.owner, None)
-        if owner and obj.plStratRes != SR_NONE:
-            turn = tran.db[OID_UNIVERSE].turn
+        if owner and obj.plStratRes != Const.SR_NONE:
+            turn = tran.db[Const.OID_UNIVERSE].turn
             if turn % Rules.stratResRate == 0:
                 owner.stratRes[obj.plStratRes] = owner.stratRes.get(obj.plStratRes, 0) + Rules.stratResAmountBig
-                Utils.sendMessage(tran, obj, MSG_EXTRACTED_STRATRES, obj.oid, obj.plStratRes)
+                Utils.sendMessage(tran, obj, Const.MSG_EXTRACTED_STRATRES, obj.oid, obj.plStratRes)
         # compute base morale
         if owner:
             homePlanet = tran.db[owner.planets[0]]
@@ -351,16 +351,16 @@ class IPlanet(IObject):
         obj.moraleModifiers[1] = 0
         for struct in obj.slots:
             # skip structure if it was built this turn
-            if struct[STRUCT_IDX_STATUS] & STRUCT_STATUS_NEW:
+            if struct[Const.STRUCT_IDX_STATUS] & Const.STRUCT_STATUS_NEW:
                 continue
-            tech = Rules.techs[struct[STRUCT_IDX_TECHID]]
+            tech = Rules.techs[struct[Const.STRUCT_IDX_TECHID]]
             # compute struct effectivity
-            techEff = Utils.getTechEff(tran, struct[STRUCT_IDX_TECHID], obj.owner)
+            techEff = Utils.getTechEff(tran, struct[Const.STRUCT_IDX_TECHID], obj.owner)
             # morale does not affect hit points of structures
             maxHP = int(tech.maxHP * techEff)
-            if maxHP < struct[STRUCT_IDX_HP]:
+            if maxHP < struct[Const.STRUCT_IDX_HP]:
                 # damage structure
-                struct[STRUCT_IDX_HP] = max(maxHP, struct[STRUCT_IDX_HP] - int(maxHP * Rules.decayRatio))
+                struct[Const.STRUCT_IDX_HP] = max(maxHP, struct[Const.STRUCT_IDX_HP] - int(maxHP * Rules.decayRatio))
             # auto regulation of min resources
             if obj.autoMinStor:
                 obj.minBio += tech.operBio * Rules.autoMinStorTurns
@@ -370,19 +370,19 @@ class IPlanet(IObject):
             # produce/consume resources
             # find most limitating condition
             try:
-                opStatus = min(1.0, float(struct[STRUCT_IDX_HP]) / maxHP)
+                opStatus = min(1.0, float(struct[Const.STRUCT_IDX_HP]) / maxHP)
             except:
                 opStatus = 0.0
-                log.warning('Invalid max HP of structure', STRUCT_IDX_TECHID)
+                log.warning('Invalid max HP of structure', Const.STRUCT_IDX_TECHID)
             if tech.operBio > 0:
                 opStatus = min(opStatus, float(obj.storBio) / tech.operBio)
             if tech.operEn > 0:
                 opStatus = min(opStatus, float(obj.storEn) / tech.operEn)
             if tech.operWorkers > 0:
                 opStatus = min(opStatus, float(obj.unemployedPop) / tech.operWorkers)
-            if not struct[STRUCT_IDX_STATUS] & STRUCT_STATUS_ON:
+            if not struct[Const.STRUCT_IDX_STATUS] & Const.STRUCT_STATUS_ON:
                 opStatus = 0.0
-            struct[STRUCT_IDX_OPSTATUS] = int(100 * opStatus)
+            struct[Const.STRUCT_IDX_OPSTATUS] = int(100 * opStatus)
             # solarmod effects ENV change and terraforming only if benificial
             if tech.solarMod * opStatus > 0:
                 obj.solarmod = max(obj.solarmod,tech.solarMod * techEff * opStatus)
@@ -390,9 +390,9 @@ class IPlanet(IObject):
                 obj.solarmod = min(obj.solarmod,tech.solarMod * techEff * opStatus)
             #@log.debug("IPlanet - oper status", obj.oid, struct, opStatus)
             # set status bits
-            if tech.operBio > obj.storBio: struct[STRUCT_IDX_STATUS] |= STRUCT_STATUS_NOBIO
-            if tech.operEn > obj.storEn: struct[STRUCT_IDX_STATUS] |= STRUCT_STATUS_NOEN
-            if tech.operWorkers > obj.unemployedPop: struct[STRUCT_IDX_STATUS] |= STRUCT_STATUS_NOPOP
+            if tech.operBio > obj.storBio: struct[Const.STRUCT_IDX_STATUS] |= Const.STRUCT_STATUS_NOBIO
+            if tech.operEn > obj.storEn: struct[Const.STRUCT_IDX_STATUS] |= Const.STRUCT_STATUS_NOEN
+            if tech.operWorkers > obj.unemployedPop: struct[Const.STRUCT_IDX_STATUS] |= Const.STRUCT_STATUS_NOPOP
             # produce/consume
             #@log.debug("Active structure", obj.oid, struct)
             # bio
@@ -440,19 +440,19 @@ class IPlanet(IObject):
             obj.moraleModifiers[1] += tech.moraleTrgt * techEff * opStatus
             # auto repair/damage
             # also damage structures on not owned planets
-            if struct[STRUCT_IDX_HP] < maxHP and opStatus > 0.0:
-                struct[STRUCT_IDX_HP] = min(maxHP, struct[STRUCT_IDX_HP] + max(int(maxHP * Rules.repairRunningRatio), 1))
-                struct[STRUCT_IDX_STATUS] |= STRUCT_STATUS_REPAIRING
-            elif struct[STRUCT_IDX_HP] > maxHP or opStatus <= 0.0:
+            if struct[Const.STRUCT_IDX_HP] < maxHP and opStatus > 0.0:
+                struct[Const.STRUCT_IDX_HP] = min(maxHP, struct[Const.STRUCT_IDX_HP] + max(int(maxHP * Rules.repairRunningRatio), 1))
+                struct[Const.STRUCT_IDX_STATUS] |= Const.STRUCT_STATUS_REPAIRING
+            elif struct[Const.STRUCT_IDX_HP] > maxHP or opStatus <= 0.0:
                 # flag only for non functional structure
                 if opStatus <= 0.0:
-                    struct[STRUCT_IDX_STATUS] |= STRUCT_STATUS_DETER
+                    struct[Const.STRUCT_IDX_STATUS] |= Const.STRUCT_STATUS_DETER
                 # damage it a bit
-                struct[STRUCT_IDX_HP] -= max(1, int(maxHP * Rules.decayRatio))
+                struct[Const.STRUCT_IDX_HP] -= max(1, int(maxHP * Rules.decayRatio))
                 if obj.storPop > 0:
                     # do not fall below 1% of HP for populated planets
-                    struct[STRUCT_IDX_HP] = max(struct[STRUCT_IDX_HP], maxHP / 100)
-                if struct[STRUCT_IDX_HP] <= 0:
+                    struct[Const.STRUCT_IDX_HP] = max(struct[Const.STRUCT_IDX_HP], maxHP / 100)
+                if struct[Const.STRUCT_IDX_HP] <= 0:
                     # destroy building only if there is no population
                     destroyed.append(struct)
         # do shield self generation
@@ -496,7 +496,7 @@ class IPlanet(IObject):
                 # do not generate this message when construction has been destroyed
                 # and do not lower morale too
                 if obj.storPop < obj.maxPop:
-                    #@Utils.sendMessage(tran, obj, MSG_NOSUPPORT_POP, obj.oid, None)
+                    #@Utils.sendMessage(tran, obj, Const.MSG_NOSUPPORT_POP, obj.oid, None)
                     obj.morale = max(obj.morale - Rules.moraleLostNoFood,0)
             elif obj.storPop < maxPop:
                 # born
@@ -537,7 +537,7 @@ class IPlanet(IObject):
                 if not tech.validateConstrHandler(tran, obj, target, tech):
                     index += 1
                     # message to player
-                    Utils.sendMessage(tran, obj, MSG_INVALID_TASK, obj.oid, item.techID)
+                    Utils.sendMessage(tran, obj, Const.MSG_INVALID_TASK, obj.oid, item.techID)
                     continue
                 # building on other planet is more expensive
                 if item.targetID == obj.oid:
@@ -567,20 +567,20 @@ class IPlanet(IObject):
                             fleet = tmpFleet
                             break
                     if not fleet or hasRedirection:
-                        fleet = self.new(T_FLEET)
+                        fleet = self.new(Const.T_FLEET)
                         tran.db.create(fleet)
                         self.cmd(fleet).create(tran, fleet, system, obj.owner)
-                        self.cmd(fleet).addAction(tran, fleet, 0, FLACTION_REDIRECT, OID_NONE, None)
+                        self.cmd(fleet).addAction(tran, fleet, 0, Const.FLACTION_REDIRECT, Const.OID_NONE, None)
                     # add ships to the fleet
                     self.cmd(fleet).addNewShip(tran, fleet, item.techID)
                     if item.reportFin and item.quantity == 1:
-                        Utils.sendMessage(tran, obj, MSG_COMPLETED_SHIP, obj.oid, item.techID)
+                        Utils.sendMessage(tran, obj, Const.MSG_COMPLETED_SHIP, obj.oid, item.techID)
                 elif tech.isStructure:
                     # if there is struct to demolish, find it and delete it
-                    if item.demolishStruct != OID_NONE:
+                    if item.demolishStruct != Const.OID_NONE:
                         structToDemolish = None
                         for struct in target.slots:
-                            if struct[STRUCT_IDX_TECHID] == item.demolishStruct:
+                            if struct[Const.STRUCT_IDX_TECHID] == item.demolishStruct:
                                 structToDemolish = struct
                                 break
                         if structToDemolish:
@@ -597,14 +597,14 @@ class IPlanet(IObject):
                         except Exception:
                             log.warning("Cannot execute finish constr handler")
                         if item.reportFin and item.quantity == 1:
-                            Utils.sendMessage(tran, obj, MSG_COMPLETED_STRUCTURE, target.oid, item.techID)
+                            Utils.sendMessage(tran, obj, Const.MSG_COMPLETED_STRUCTURE, target.oid, item.techID)
                     else:
                         # no free slot!
-                        Utils.sendMessage(tran, obj, MSG_CANNOTBUILD_NOSLOT, target.oid, None)
+                        Utils.sendMessage(tran, obj, Const.MSG_CANNOTBUILD_NOSLOT, target.oid, None)
                 elif tech.isProject:
                     tech.finishConstrHandler(tran, obj, target, tech)
                     if item.reportFin and item.quantity == 1:
-                        Utils.sendMessage(tran, obj, MSG_COMPLETED_PROJECT, target.oid, item.techID)
+                        Utils.sendMessage(tran, obj, Const.MSG_COMPLETED_PROJECT, target.oid, item.techID)
                 else:
                     raise ige.GameException('Unsupported type of technology %d ' % item.techID)
                 # remove item from prod queue
@@ -638,7 +638,7 @@ class IPlanet(IObject):
             owner.prodIncreasePool += prod
         #if prod > 1: # ignore rounding error
         #    # report wasting production points
-        #    Utils.sendMessage(tran, obj, MSG_WASTED_PRODPTS, obj.oid, (prod,))
+        #    Utils.sendMessage(tran, obj, Const.MSG_WASTED_PRODPTS, obj.oid, (prod,))
         # auto environment changes
         downgradeTo = Rules.planetSpec[obj.plType].downgradeTo
         solarminus = 0
@@ -668,7 +668,7 @@ class IPlanet(IObject):
                 obj.plEn + solarplus >= spec.upgradeEnReqs[0] and obj.plEn + solarminus <= spec.upgradeEnReqs[1]:
                 log.debug('IPlanet', obj.oid, 'Upgraded to', spec.upgradeTo)
                 obj.plType = spec.upgradeTo
-                Utils.sendMessage(tran, obj, MSG_UPGRADED_PLANET_ECO, obj.oid, spec.upgradeTo)
+                Utils.sendMessage(tran, obj, Const.MSG_UPGRADED_PLANET_ECO, obj.oid, spec.upgradeTo)
         while obj.plEnv >= Rules.envInterval:
             #@log.debug('IPlanet', obj.oid, 'Env improved')
             obj.plEnv -= Rules.envInterval
@@ -688,7 +688,7 @@ class IPlanet(IObject):
             if downgradeTo:
                 log.debug('IPlanet', obj.oid, 'Downgraded to', downgradeTo)
                 obj.plType = downgradeTo
-                Utils.sendMessage(tran, obj, MSG_DOWNGRADED_PLANET_ECO, obj.oid, downgradeTo)
+                Utils.sendMessage(tran, obj, Const.MSG_DOWNGRADED_PLANET_ECO, obj.oid, downgradeTo)
         # record changes
         obj.changeBio += obj.storBio
         obj.changeEn += obj.storEn
@@ -705,22 +705,22 @@ class IPlanet(IObject):
             owner.sciPoints += obj.effProdSci
         # planet with no population cannot have an owner
         # and planet with no owner cannot have population
-        if (obj.storPop <= 0 and obj.owner != OID_NONE) or obj.owner == OID_NONE:
+        if (obj.storPop <= 0 and obj.owner != Const.OID_NONE) or obj.owner == Const.OID_NONE:
             # TODO: remove
-            #if obj.owner != OID_NONE:
+            #if obj.owner != Const.OID_NONE:
             #    # send message
-            #    Utils.sendMessage(tran, obj, MSG_LOST_PLANET, obj.oid, None)
+            #    Utils.sendMessage(tran, obj, Const.MSG_LOST_PLANET, obj.oid, None)
             # remove this planet from owner's planets
-            self.cmd(obj).changeOwner(tran, obj, OID_NONE, force = 1)
+            self.cmd(obj).changeOwner(tran, obj, Const.OID_NONE, force = 1)
             obj.storPop = 0
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processACTIONPhase(self, tran, obj, data):
         return
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processFINALPhase(self, tran, obj, data):
-        if obj.storPop <= 0 and not obj.slots and obj.owner == OID_NONE:
+        if obj.storPop <= 0 and not obj.slots and obj.owner == Const.OID_NONE:
             # do not process this planet
             return
         # reset of "morale modifier by population" value
@@ -759,21 +759,21 @@ class IPlanet(IObject):
             # revolt?
             if obj.revoltLen > 0:
                 obj.revoltLen += 1
-            if obj.morale < Rules.revoltThr and obj.owner != OID_NONE and obj.revoltLen == 0:
+            if obj.morale < Rules.revoltThr and obj.owner != Const.OID_NONE and obj.revoltLen == 0:
                 chance = (Rules.revoltThr - obj.morale) * Rules.moralePerPointChance
                 #@log.debug('IPlanet', 'Start revolt? mor, mor trgt, reb thr, chance', obj.morale, obj.moraleTrgt, chance)
                 if  Utils.rand(0, 101) <= chance:
                     # rebelion starts
                     #@log.debug('IPlanet', 'Revolt on', obj.oid)
                     obj.revoltLen = 1
-                    Utils.sendMessage(tran, obj, MSG_REVOLT_STARTED, obj.oid, None)
+                    Utils.sendMessage(tran, obj, Const.MSG_REVOLT_STARTED, obj.oid, None)
             elif obj.revoltLen > 0 and obj.morale > Rules.revoltThr:
                 chance = (obj.morale - Rules.revoltThr) * Rules.moralePerPointChance
                 #@log.debug('IPlanet', 'Stop revolt? mor, mor trgt, reb thr, chance', obj.morale, obj.moraleTrgt, chance)
                 if Utils.rand(0, 101) <= chance:
                     # revolt ends
                     obj.revoltLen = 0
-                    Utils.sendMessage(tran, obj, MSG_REVOLT_ENDED, obj.oid, None)
+                    Utils.sendMessage(tran, obj, Const.MSG_REVOLT_ENDED, obj.oid, None)
             obj.morale = max(0.0, min(Rules.maxMorale, obj.morale))
             obj.changeMorale += obj.morale
             # when rebelling destroy some resources
@@ -785,7 +785,7 @@ class IPlanet(IObject):
             obj.storEn = min(obj.storEn, obj.maxEn)
             #obj.storPop = min(obj.storPop, obj.maxPop) TODO remove
         # collect stats
-        if obj.owner != OID_NONE:
+        if obj.owner != Const.OID_NONE:
             player = tran.db[obj.owner]
             player.stats.storPop += obj.storPop
             player.stats.prodProd += obj.prodProd
@@ -802,7 +802,7 @@ class IPlanet(IObject):
     def getScanInfos(self, tran, obj, scanPwr, player):
         if scanPwr >= Rules.level1InfoScanPwr:
             result = IDataHolder()
-            result._type = T_SCAN
+            result._type = Const.T_SCAN
             result.scanPwr = scanPwr
             result.oid = obj.oid
             result.signature = obj.signature
@@ -860,7 +860,7 @@ class IPlanet(IObject):
                     galaxy.numOfStartPos += 1
                 else:
                     raise ige.GameException('Unknown element %s' % name)
-        return SUCC
+        return Const.SUCC
 
     def update(self, tran, obj):
         # clean up negative build queues and fix missing demolishStruct keys
@@ -871,7 +871,7 @@ class IPlanet(IObject):
             for key in range(0,len(obj.prodQueue)):
                 item = obj.prodQueue[key]
                 if not hasattr(item, "demolishStruct"):
-                    item.demolishStruct = OID_NONE
+                    item.demolishStruct = Const.OID_NONE
                 if item.quantity < 0:
                     log.warning("Deleting negative item queue on", obj.oid,"for player",obj.owner)
                     if item.isShip:
@@ -889,18 +889,18 @@ class IPlanet(IObject):
             if not deletedKey:
                 loopAgain = False
 
-        # change owner to OID_NONE when owner is invalid
-        if obj.owner != OID_NONE:
+        # change owner to Const.OID_NONE when owner is invalid
+        if obj.owner != Const.OID_NONE:
             player = tran.db.get(obj.owner, None)
-            if not player or player.type not in PLAYER_TYPES or obj.oid not in player.planets:
+            if not player or player.type not in Const.PLAYER_TYPES or obj.oid not in player.planets:
                 # TODO this can be a probem - this planet cannot be attacked!
-                log.warning("Changing owner to OID_NONE - invalid owner", obj)
-                self.cmd(obj).changeOwner(tran, obj, OID_NONE, force = 1)
+                log.warning("Changing owner to Const.OID_NONE - invalid owner", obj)
+                self.cmd(obj).changeOwner(tran, obj, Const.OID_NONE, force = 1)
                 # kill all population
                 obj.storPop = 0
                 return
         # check compOf
-        if not tran.db.has_key(obj.compOf) or tran.db[obj.compOf].type != T_SYSTEM:
+        if not tran.db.has_key(obj.compOf) or tran.db[obj.compOf].type != Const.T_SYSTEM:
             log.debug("CONSISTENCY invalid compOf for planet", obj.oid)
         # fix signature
         obj.signature = 75
@@ -909,7 +909,7 @@ class IPlanet(IObject):
 
     update.public = 0
 
-    @public(AL_FULL)
+    @public(Const.AL_FULL)
     def changePlanetsGlobalQueue(self, tran, obj, newQueue):
         player = tran.db[obj.owner]
         if newQueue < 0 or newQueue >= len(player.prodQueues):
@@ -927,7 +927,7 @@ class IPlanet(IObject):
                 player.prodQueues[queue][0].quantity -= 1
             else:
                 if task.reportFin:
-                    Utils.sendMessage(tran, obj, MSG_QUEUE_TASK_ALLOTED, OID_NONE, (queue, task.techID))
+                    Utils.sendMessage(tran, obj, Const.MSG_QUEUE_TASK_ALLOTED, Const.OID_NONE, (queue, task.techID))
                 del player.prodQueues[queue][0]
             # add other demanded values, report finalization was used to report allot (to prevent reporting every unit)
             task.reportFin = 0
@@ -935,7 +935,7 @@ class IPlanet(IObject):
             task.isShip = task.techID < 1000
             task.targetID = obj.oid
             task.currProd = 0
-            task.demolishStruct = OID_NONE
+            task.demolishStruct = Const.OID_NONE
         return task
 
     popGlobalQueue.public = 0
@@ -995,7 +995,7 @@ class IPlanet(IObject):
             while True:
                 systemID = random.choice(objIDs)
                 tmpSystem = tran.db[systemID]
-                if tmpSystem.type == T_SYSTEM and systemID != system.oid:
+                if tmpSystem.type == Const.T_SYSTEM and systemID != system.oid:
                     break
             # select planet
             targetID = random.choice(tmpSystem.planets)
@@ -1007,7 +1007,7 @@ class IPlanet(IObject):
                     # don't target yourself
                     break
         # create asteroid
-        asteroid = self.new(T_ASTEROID)
+        asteroid = self.new(Const.T_ASTEROID)
         tran.db.create(asteroid)
         self.cmd(asteroid).create(tran, asteroid, system.x, system.y, targetID, speed, hp)
 
@@ -1018,7 +1018,7 @@ class IPlanet(IObject):
     def getPreCombatData(self, tran, obj):
         # scan buildings and fire their weapons
         shots = {0: [], 1: [], 2: [], 3: []}
-        if obj.owner == OID_NONE:
+        if obj.owner == Const.OID_NONE:
             return shots, [0, 0, 0, 8], False
         player = tran.db[obj.owner]
         system = tran.db[obj.compOf]
@@ -1027,8 +1027,8 @@ class IPlanet(IObject):
         systemAtt = 0;
         systemDef = 0;
         for struct in obj.slots:
-            structTechID = struct[STRUCT_IDX_TECHID]
-            opStatus = struct[STRUCT_IDX_OPSTATUS] / 100.0
+            structTechID = struct[Const.STRUCT_IDX_TECHID]
+            opStatus = struct[Const.STRUCT_IDX_OPSTATUS] / 100.0
             tech = Rules.techs[structTechID]
             desCount[structTechID] = desCount.get(structTechID, 0) + 1
             wpnCount = {}
@@ -1135,26 +1135,26 @@ class IPlanet(IObject):
                     #@log.debug('IPlanet', 'Most damaged structure hit')
                     struct = obj.slots[-1]
                     for tmpStruct in obj.slots:
-                        if tmpStruct[STRUCT_IDX_HP] <= struct[STRUCT_IDX_HP]:
+                        if tmpStruct[Const.STRUCT_IDX_HP] <= struct[Const.STRUCT_IDX_HP]:
                             struct = tmpStruct
                 # compute sum hp of all buildings
                 sumHP = 0
                 for tmpStruct in obj.slots:
-                    sumHP += tmpStruct[STRUCT_IDX_HP]
+                    sumHP += tmpStruct[Const.STRUCT_IDX_HP]
                 # damage building
-                struct[STRUCT_IDX_HP] -= dmg
+                struct[Const.STRUCT_IDX_HP] -= dmg
                 # "damage" population
-                tech = Rules.techs[struct[STRUCT_IDX_TECHID]]
+                tech = Rules.techs[struct[Const.STRUCT_IDX_TECHID]]
                 # compute struct effectivity
-                techEff = Utils.getTechEff(tran, struct[STRUCT_IDX_TECHID], obj.owner)
+                techEff = Utils.getTechEff(tran, struct[Const.STRUCT_IDX_TECHID], obj.owner)
                 maxHP = int(tech.maxHP * techEff)
                 dmgPop = int(tech.operWorkers * float(dmg) / maxHP * Rules.popKillMod)
                 obj.storPop = max(obj.storPop - dmgPop, 0)
                 obj.changePop -= dmgPop
                 # destroy building
-                if struct[STRUCT_IDX_HP] <= 0:
+                if struct[Const.STRUCT_IDX_HP] <= 0:
                     destroyed = 1
-                    dmg += struct[STRUCT_IDX_HP]
+                    dmg += struct[Const.STRUCT_IDX_HP]
                     obj.slots.remove(struct)
                 # compute morale penalty
                 if dmg:
@@ -1191,9 +1191,9 @@ class IPlanet(IObject):
         # we've lost the battle - we have a new owner
         #@log.debug('IPlanet', 'Surrender - surrending to', newOwnerID)
         newOwner = tran.db[newOwnerID]
-        if newOwner.type == T_PIRPLAYER or newOwner.type == T_AIPIRPLAYER:
+        if newOwner.type == Const.T_PIRPLAYER or newOwner.type == Const.T_AIPIRPLAYER:
             # special handling for pirates
-            currentTurn = tran.db[OID_UNIVERSE].turn
+            currentTurn = tran.db[Const.OID_UNIVERSE].turn
             # prevent abuse - require 8 turns between capturing the same planet and require the owner to control the planet at least 2 turns if you want to gain fame & tech (two turns prevents orbiting pirate fleet from immediately bombing)
             if (currentTurn - obj.lastPirCapture) > 8 and (currentTurn - obj.ownerSince) > 2:
                 # gain/lose fame
@@ -1204,13 +1204,13 @@ class IPlanet(IObject):
                 log.debug(obj.oid, "Pirate captured planet too soon after previous capture or colonization to gain bonuses", obj.oid)
             obj.storPop = 0
             obj.lastPirCapture = currentTurn
-            self.cmd(obj).changeOwner(tran, obj, OID_NONE, force = 1)
+            self.cmd(obj).changeOwner(tran, obj, Const.OID_NONE, force = 1)
         else:
             # change owner
             self.cmd(obj).changeOwner(tran, obj, newOwnerID, force = 1)
         # blow up all military buildings
         for struct in obj.slots[:]:
-            tech = Rules.techs[struct[STRUCT_IDX_TECHID]]
+            tech = Rules.techs[struct[Const.STRUCT_IDX_TECHID]]
             if tech.isMilitary:
                 obj.slots.remove(struct)
         return 1

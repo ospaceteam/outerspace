@@ -21,10 +21,9 @@
 
 from pygameui.Widget import Widget, registerWidget
 import pygameui as ui
-from pygameui.Fonts import *
-from ige.ospace.Const import *
+from pygameui import Fonts
+import ige.ospace.Const as Const
 import pygame, pygame.draw, pygame.key, pygame.image
-from pygame.locals import *
 from dialog.ShowBuoyDlg import ShowBuoyDlg
 from dialog.KeyModHelp import KeyModHelp
 import gdata, client, res
@@ -62,7 +61,7 @@ class StarMapWidget(Widget):
         # more data
         self.highlightPos = None
         self.alwaysShowRangeFor = None
-        self.activeObjID = OID_NONE
+        self.activeObjID = Const.OID_NONE
         self.activeObjIDs = []
         self.pressedObjIDs = []
         self._newCurrXY = 0
@@ -74,8 +73,8 @@ class StarMapWidget(Widget):
         self.callEventHandler = None
         self.showBuoyDlg = ShowBuoyDlg(self.app)
         self.KeyModHelp = KeyModHelp(self.app)
-        self._miniMapRect = Rect(0, 20, 175, 175)
-        self._hotbuttonsZone = Rect(0,0,0,0)
+        self._miniMapRect = pygame.Rect(0, 20, 175, 175)
+        self._hotbuttonsZone = pygame.Rect(0,0,0,0)
         self.initHotbuttons()
         self.miniMap = MiniMap(self._miniMapRect.width, self._miniMapRect.height)
         # flags
@@ -114,8 +113,8 @@ class StarMapWidget(Widget):
         self.star_map.rect = self.rect
         self.star_map.precompute()
         player = client.getPlayer()
-        if (player.type == T_PIRPLAYER or\
-            player.type == T_AIPIRPLAYER) and not self.control_modes['pirate_dialogs']:
+        if (player.type == Const.T_PIRPLAYER or\
+            player.type == Const.T_AIPIRPLAYER) and not self.control_modes['pirate_dialogs']:
             self.control_modes['pirate_dialogs'] = True
             if self.control_modes['hotbuttons']:
                 self.initHotbuttons() #reinit to add the pirate button
@@ -142,7 +141,7 @@ class StarMapWidget(Widget):
         self._miniMapRect.left = self.rect.width - self._miniMapRect.width
         self._miniMapRect.top = self.rect.top
         if not self._mapSurf:
-            mapSurf = pygame.Surface(self.rect.size, SWSURFACE, surface)
+            mapSurf = pygame.Surface(self.rect.size, pygame.SWSURFACE, surface)
         else:
             mapSurf = self._mapSurf
 
@@ -188,14 +187,14 @@ class StarMapWidget(Widget):
 
         for buttonkey in self._hotbuttons:
             button = self._hotbuttons[buttonkey]
-            self._hotbuttonRects[button[0]] = [button[0],Rect(button[2]+self._hotbuttonsZone.left,button[3]+self._hotbuttonsZone.top+15,button[4],button[5])]
+            self._hotbuttonRects[button[0]] = [button[0],pygame.Rect(button[2]+self._hotbuttonsZone.left,button[3]+self._hotbuttonsZone.top+15,button[4],button[5])]
             img = res.getButton(button[0],button[1])
             if (button[1] and not (self._tempOverlayHotbutton and self._tempOverlayHotbutton == button[0])) or (not button[1] and self._tempOverlayHotbutton and self._tempOverlayHotbutton == button[0]):
                 pygame.draw.rect(mapSurf,(0x90, 0x90, 0x90),(left+button[2]-1,top+15+button[3]-1,button[4]+2,button[5]+2),1)
             mapSurf.blit(img,(left+button[2],top+15+button[3]))
         if self._tempOverlayHotbutton:
             text = self._hotbuttons[self._tempOverlayHotbutton][7]
-            textSrfc = renderText(self.star_map.textSize, text, 1, (0xEF, 0xEF, 0xEF))
+            textSrfc = Fonts.renderText(self.star_map.textSize, text, 1, (0xEF, 0xEF, 0xEF))
             mapSurf.blit(textSrfc, (left+2,top+1))
 
     def drawPopups(self, surface):
@@ -207,7 +206,7 @@ class StarMapWidget(Widget):
         else:
             x = self.rect.left + 2
             y = self.rect.top
-        if not pygame.key.get_mods() & KMOD_SHIFT:
+        if not pygame.key.get_mods() & pygame.KMOD_SHIFT:
             for activeObjID in self.activeObjIDs:
                 index = 0
                 if self.star_map._popupInfo.has_key(activeObjID):
@@ -220,7 +219,7 @@ class StarMapWidget(Widget):
                     height = 0
                     # pygame.draw.line(surface, fg, (x1, y1), (x, y), 1)
                     for item in info:
-                        w, h = getTextSize('normal', item)
+                        w, h = Fonts.getTextSize('normal', item)
                         width = max(width, w)
                         height += h
                     if not moreIDs:
@@ -232,7 +231,7 @@ class StarMapWidget(Widget):
                     x += 1
                     tmpY = y + 1
                     for item in info:
-                        textSrfc = renderText('normal', item, 1, fg)
+                        textSrfc = Fonts.renderText('normal', item, 1, fg)
                         surface.blit(textSrfc, (x, tmpY))
                         tmpY += textSrfc.get_height()
                     x += width + 2
@@ -282,13 +281,13 @@ class StarMapWidget(Widget):
                 x, y, maxRange, operRange, halfRange, speed, turns = self.star_map._fleetRanges[activeObjID]
                 sx = int((x - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
                 sy = maxY - (int((y - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
-                if pygame.key.get_mods() & KMOD_SHIFT:
+                if pygame.key.get_mods() & pygame.KMOD_SHIFT:
                     # fleet ranges stepped by 6 turns
                     for i in xrange(1, turns / 6):
                         rng = int(i * speed * self.star_map.scale)
                         if rng > 1:
                             pygame.draw.circle(surface, (0x70, 0x70, 0x80), (sx, sy), rng, 1)
-                            textSrfc = renderText(self.star_map.textSize, res.formatTime(i * 6), 1, (0x70, 0x70, 0x80), (0x00, 0x00, 0x00))
+                            textSrfc = Fonts.renderText(self.star_map.textSize, res.formatTime(i * 6), 1, (0x70, 0x70, 0x80), (0x00, 0x00, 0x00))
                             surface.blit(textSrfc, (sx - rng, sy - textSrfc.get_height() / 2))
                             surface.blit(textSrfc, (sx + rng, sy - textSrfc.get_height() / 2))
                             surface.blit(textSrfc, (sx - textSrfc.get_width() / 2, sy - rng))
@@ -397,7 +396,7 @@ class StarMapWidget(Widget):
     def processMB1Down(self, evt):
         # handle SHIFT click as MB3
         mods = pygame.key.get_mods()
-        if mods & KMOD_SHIFT:
+        if mods & pygame.KMOD_SHIFT:
             return self.processMB3Down(evt)
         pos = evt.pos
         # show current position for debugging
@@ -422,13 +421,13 @@ class StarMapWidget(Widget):
         if self.pressedObjIDs or self.pressedBuoyObjIDs:
             return ui.NoEvent
         else:
-            self.activeObjID = OID_NONE
+            self.activeObjID = Const.OID_NONE
             return ui.NoEvent
 
     def processMB1Up(self, evt):
         # handle SHIFT click as MB3
         mods = pygame.key.get_mods()
-        if mods & KMOD_SHIFT:
+        if mods & pygame.KMOD_SHIFT:
             return self.processMB3Up(evt)
         pos = evt.pos
         if self.control_modes['minimap']:
@@ -461,7 +460,7 @@ class StarMapWidget(Widget):
             self.gotoObject(objIDs,bObjIDs)
             return ui.NoEvent
         else:
-            self.activeObjID = OID_NONE
+            self.activeObjID = Const.OID_NONE
             return ui.NoEvent
 
     def gotoObject(self,objIDs,bObjIDs):
@@ -473,7 +472,7 @@ class StarMapWidget(Widget):
                 self.pressedObjIDs = []
             else:
                 if self.selectobject:
-                    return OID_NONE
+                    return Const.OID_NONE
                 self.showBuoyDlg.display(bObjIDs[0])
                 self.pressedBuoyObjIDs = []
         else:
@@ -481,22 +480,22 @@ class StarMapWidget(Widget):
             items = []
             for objID in objIDs:
                 obj = client.get(objID)
-                if obj.type == T_SYSTEM:
+                if obj.type == Const.T_SYSTEM:
                     name = getattr(obj, "name", None)
                     name = _("System: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
-                elif obj.type == T_WORMHOLE:
+                elif obj.type == Const.T_WORMHOLE:
                     name = getattr(obj, "name", None)
                     name = _("Worm hole: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
-                elif obj.type == T_PLANET:
+                elif obj.type == Const.T_PLANET:
                     name = getattr(obj, "name", None)
                     name = _("Planet: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
-                elif obj.type == T_FLEET:
+                elif obj.type == Const.T_FLEET:
                     if hasattr(obj,'customname') and obj.customname:
                         name = obj.customname
                     else:
                         name = getattr(obj, "name", None)
                     name = _("Fleet: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
-                elif obj.type == T_ASTEROID:
+                elif obj.type == Const.T_ASTEROID:
                     name = getattr(obj, "name", None)
                     name = _("Asteroid: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
                 else:
@@ -505,10 +504,10 @@ class StarMapWidget(Widget):
                 items.append(item)
             for objID in bObjIDs:
                 obj = client.get(objID)
-                if obj.type == T_SYSTEM:
+                if obj.type == Const.T_SYSTEM:
                     name = getattr(obj, "name", None)
                     name = _("Buoy on system: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
-                elif obj.type == T_WORMHOLE:
+                elif obj.type == Const.T_WORMHOLE:
                     name = getattr(obj, "name", None)
                     name = _("Buoy on worm hole: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
                 else:
@@ -518,7 +517,7 @@ class StarMapWidget(Widget):
             self.popup.items = items
             self.popup.show()
         if self.selectobject:
-            return OID_NONE
+            return Const.OID_NONE
 
     def onObjectSelected(self, widget, action, data):
         self.processAction(self.action, data)
@@ -595,7 +594,7 @@ class StarMapWidget(Widget):
             return ui.NoEvent
         elif self._tempOverlayHotbutton: # cleanup if cursor not in zone
             self.toggleTempButton(False)
-        self.activeObjID = OID_NONE
+        self.activeObjID = Const.OID_NONE
         self.activeObjIDs = []
         for objID in self._actAreas.keys():
             rect = self._actAreas[objID]
@@ -621,14 +620,14 @@ class StarMapWidget(Widget):
         # ==== Object Hotkeys ====
         #I have not found unicode escape characters for Ctrl-0 through Ctrl-9, so using direct key reference (less preferred due to international keyboards)
         if evt.key in [49,50,51,52,53,54,55,56,57,48]:
-            if pygame.key.get_mods() & KMOD_CTRL:
+            if pygame.key.get_mods() & pygame.KMOD_CTRL:
                 log.debug('Set Key:',evt.key)
                 if gdata.config.defaults.displayhelp != 'no':
                     self.KeyModHelp.show()
                 self.selectobject = True
                 self.setKey = evt.key
                 self.app.setStatus(_("Select object to hotkey. ESC to cancel."))
-            elif pygame.key.get_mods() & KMOD_SHIFT:
+            elif pygame.key.get_mods() & pygame.KMOD_SHIFT:
                 log.debug('Focus Key:',evt.key)
                 self.focusOnKeyObject(evt.key)
             else:
@@ -636,7 +635,7 @@ class StarMapWidget(Widget):
                 self.gotoKeyObject(evt.key)
             return ui.NoEvent
         # ==== Map and Dialog Hotkeys ====
-        elif evt.key == K_ESCAPE and self.selectobject:
+        elif evt.key == pygame.K_ESCAPE and self.selectobject:
             log.debug('Canceled Key')
             if self.selectobject:
                 self.app.setStatus(_("Ready."))
@@ -668,25 +667,25 @@ class StarMapWidget(Widget):
             self.toggleHotbuttons('alternate')
         # Reserve CTRL-C for copy (future editor support)
         # Ctrl+F
-        elif evt.unicode == u'\x06' and pygame.key.get_mods() & KMOD_CTRL:
+        elif evt.unicode == u'\x06' and pygame.key.get_mods() & pygame.KMOD_CTRL:
             self.searchDlg.display()
         # Ctrl+G - Toggle grid
-        elif evt.unicode == u'\x07' and pygame.key.get_mods() & KMOD_CTRL:
+        elif evt.unicode == u'\x07' and pygame.key.get_mods() & pygame.KMOD_CTRL:
             self.toggleHotbuttons('grid')
         # Ctrl-H - Toggle visibility of civilian ships
-        elif evt.unicode == u'\x08' and pygame.key.get_mods() & KMOD_CTRL:
+        elif evt.unicode == u'\x08' and pygame.key.get_mods() & pygame.KMOD_CTRL:
             self.toggleHotbuttons('civ')
         # Ctrl+L - Toggle drawing fleet lines
-        elif evt.unicode == u'\x0C' and pygame.key.get_mods() & KMOD_CTRL:
+        elif evt.unicode == u'\x0C' and pygame.key.get_mods() & pygame.KMOD_CTRL:
             self.toggleHotbuttons('lines')
         # Ctrl+P - Toggle viewing of control areas (turns off scanner circles)
-        elif evt.unicode == u'\x10' and pygame.key.get_mods() & KMOD_CTRL:
+        elif evt.unicode == u'\x10' and pygame.key.get_mods() & pygame.KMOD_CTRL:
             self.toggleHotbuttons('pzone')
         # Ctrl+R - Toggle drawing redirects
-        elif evt.unicode == u'\x12' and pygame.key.get_mods() & KMOD_CTRL:
+        elif evt.unicode == u'\x12' and pygame.key.get_mods() & pygame.KMOD_CTRL:
             self.toggleHotbuttons('redir')
         # Ctrl+S - Toggle drawing scanners
-        elif evt.unicode == u'\x13' and pygame.key.get_mods() & KMOD_CTRL:
+        elif evt.unicode == u'\x13' and pygame.key.get_mods() & pygame.KMOD_CTRL:
             self.toggleHotbuttons('scanner')
         # Reserve CTRL-V,X,and Z for paste, cut, and undo (future editor support)
         # ==== Else ====
@@ -701,10 +700,10 @@ class StarMapWidget(Widget):
         log.debug('Setting Key Object To:',objID)
         self.app.setStatus(_("Ready."))
         self.selectobject = False
-        if (objID == OID_NONE):
+        if (objID == Const.OID_NONE):
             return
         obj = client.get(objID)
-        if obj.type in (T_SYSTEM, T_PLANET, T_FLEET):
+        if obj.type in (Const.T_SYSTEM, Const.T_PLANET, Const.T_FLEET):
             gdata.objectFocus[self.setKey]=objID
 
     def gotoKeyObject(self,evtkey):

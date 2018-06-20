@@ -19,38 +19,39 @@
 #
 
 import ige
+
+import Const
 import Rules
 
-from Const import *
 from ige import log
 from ige.IObject import IObject, public
 
 class IAlliance(IObject):
 
-    typeID = T_ALLIANCE
+    typeID = Const.T_ALLIANCE
 
     def init(self, obj):
         IObject.init(self, obj)
         obj.members = []
         #
         obj.relations = {}
-        obj.alliance = OID_NONE
-        obj.defRelation = REL_NEUTRAL
+        obj.alliance = Const.OID_NONE
+        obj.defRelation = Const.REL_NEUTRAL
         obj.relationsCache = {}
 
-    @public(AL_NONE)
+    @public(Const.AL_NONE)
     def getPublicInfo(self, tran, obj):
         result = IObject.getPublicInfo(self, tran, obj)
         result.type = obj.type
         result.name = obj.name
         return result
 
-    @public(AL_FULL)
+    @public(Const.AL_FULL)
     def setRelation(self, tran, obj, objID, relation):
         anObj = tran.db[objID]
-        if anObj.type != T_PLAYER and anObj.type != T_ALIANCE:
+        if anObj.type != Const.T_PLAYER and anObj.type != T_ALIANCE:
             raise ige.GameException('Relations can be set/changed only for players and aliances.')
-        if relation == REL_UNDEF:
+        if relation == Const.REL_UNDEF:
             if obj.relations.has_key(objID):
                 del obj[objID]
                 return
@@ -58,16 +59,16 @@ class IAlliance(IObject):
                 raise ige.GameException('No such relation to delete.')
         obj.relations[objID] = relation
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def getRelationTo(self, tran, obj, objID):
         # check cache
-        relation = obj.relationsCache.get(objID, REL_UNDEF)
-        if relation != REL_UNDEF:
+        relation = obj.relationsCache.get(objID, Const.REL_UNDEF)
+        if relation != Const.REL_UNDEF:
             return relation
         # compute relation - player preferences first
         anObj = tran.db[objID]
-        relation = min(obj.relations.get(objID, REL_UNDEF),    anObj.relations.get(obj.oid, REL_UNDEF))
-        if relation != REL_UNDEF:
+        relation = min(obj.relations.get(objID, Const.REL_UNDEF),    anObj.relations.get(obj.oid, Const.REL_UNDEF))
+        if relation != Const.REL_UNDEF:
             obj.relationsCache[objID] = relation
             anObj.relationsCache[obj.oid] = relation
             return relation

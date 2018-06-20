@@ -17,9 +17,8 @@
 #  along with Pygame.UI; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
-
-from pygame.locals import *
-from Const import *
+import pygame
+import Const
 from Window import Window
 from SimpleGridLM import SimpleGridLM
 from Title import Title
@@ -56,9 +55,9 @@ class Menu(Window):
         currentVert = 0
         for item in self.items:
             if not hasattr(item, 'align'):
-                item.align = ALIGN_W
+                item.align = Const.ALIGN_W
             elif not item.align:
-                item.align = ALIGN_W
+                item.align = Const.ALIGN_W
             if len(self._labels) <= index:
                 label = ActiveLabel(self, align = item.align, enabled = item.enabled)
                 label.subscribeAction("*", self.actionHandler)
@@ -80,7 +79,7 @@ class Menu(Window):
                 currentVert = 0
                 currentLeft += width
         rowSize, colSize = self.app.theme.getGridParams()
-        self.rect = Rect(pos[0], pos[1], self.width * colSize, (perColumn + 1) * rowSize)
+        self.rect = pygame.Rect(pos[0], pos[1], self.width * colSize, (perColumn + 1) * rowSize)
         return Window.show(self)
 
     def actionHandler(self, widget, action, data):
@@ -88,7 +87,7 @@ class Menu(Window):
         self.processAction(action, widget.data)
 
     def processKeyUp(self, evt):
-        return NoEvent
+        return Const.NoEvent
 
 
     def processKeyDown(self, evt):
@@ -100,6 +99,6 @@ class Menu(Window):
             elif getattr(item,'hotkey',False) == evt.unicode:
                 self.hide()
                 self.processAction(item.action, False)
-        if evt.key == K_ESCAPE:
+        if evt.key == pygame.K_ESCAPE:
             self.hide()
-        return NoEvent
+        return Const.NoEvent

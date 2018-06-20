@@ -21,8 +21,9 @@
 import re
 import types
 
-from pygame.locals import *
-from Const import *
+import pygame
+
+import Const
 from Widget import registerWidget
 from MetaWidget import MetaWidget
 from Scrollbar import Scrollbar
@@ -42,7 +43,7 @@ class Listbox(MetaWidget):
         self.__dict__["multiselection"] = 0
         self.__dict__["selection"] = []
         self.__dict__["highlight"] = None
-        self.__dict__["columns"] = [('Item', 'text', 0, ALIGN_W)]
+        self.__dict__["columns"] = [('Item', 'text', 0, Const.ALIGN_W)]
         self.__dict__["columnLabels"] = 0
         self.__dict__["scrollBar"] = 1
         self.__dict__["sortedBy"] = (None, 1)
@@ -76,7 +77,7 @@ class Listbox(MetaWidget):
     def layoutWidgets(self):
         gx, gy = self.theme.getGridParams()
         r = self.rect
-        self.bar.rect = Rect(r.width - gx, 0, gx, r.height)
+        self.bar.rect = pygame.Rect(r.width - gx, 0, gx, r.height)
 
         self.labels = []
         rows = r.height / gy
@@ -96,10 +97,10 @@ class Listbox(MetaWidget):
                     self._buttons.append(label)
                 label = self._buttons[bIndex]
                 bIndex += 1
-                label.set(text = title, align = flags & ALIGN_MASK,
+                label.set(text = title, align = flags & Const.ALIGN_MASK,
                     data = name, visible = 1)
                 if width == 0 or width > remains: width = remains
-                label.rect = Rect(x, y, width * gx, gy)
+                label.rect = pygame.Rect(x, y, width * gx, gy)
                 x += width * gx
                 remains -= width
             startRow = 1
@@ -109,9 +110,9 @@ class Listbox(MetaWidget):
             x = 0
             remains = (r.width - gx) / gx
             for title, name, width, flags in self.columns:
-                if flags & F_EDITABLE:
+                if flags & Const.F_EDITABLE:
                     if len(self._entries) <= eIndex:
-                        label = Entry(self, align = ALIGN_E, action = 'onNewValue')
+                        label = Entry(self, align = Const.ALIGN_E, action = 'onNewValue')
                         label.subscribeAction('*', self)
                         self._entries.append(label)
                     label = self._entries[eIndex]
@@ -126,10 +127,10 @@ class Listbox(MetaWidget):
                         self._labels.append(label)
                     label = self._labels[lIndex]
                     lIndex += 1
-                    label.set(align = flags & ALIGN_MASK, visible = 1)
+                    label.set(align = flags & Const.ALIGN_MASK, visible = 1)
                     label.redraw()
                 if width == 0 or width > remains: width = remains
-                label.rect = Rect(x, y, width * gx, gy)
+                label.rect = pygame.Rect(x, y, width * gx, gy)
                 x += width * gx
                 remains -= width
                 rowLabels.append(label)

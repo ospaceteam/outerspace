@@ -20,7 +20,7 @@
 
 import pygameui as ui
 from osci import gdata, client
-from ige.ospace.Const import *
+import ige.ospace.Const as Const
 
 class PlanetsAnalysisDlg:
     """Displays analysis on planets structures.
@@ -57,7 +57,7 @@ class PlanetsAnalysisDlg:
             planet = client.get(planetID)
             if hasattr(planet, "slots"):
                 for struct in planet.slots:
-                    techID = struct[STRUCT_IDX_TECHID]
+                    techID = struct[Const.STRUCT_IDX_TECHID]
                     if not techID in self.buildingsCount:
                         self.buildingsCount[techID] = 1
                     else:

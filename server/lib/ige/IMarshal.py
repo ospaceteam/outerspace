@@ -17,8 +17,8 @@
 #  along with Outer Space; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
+import types
 
-from types import *
 from IDataHolder import IDataHolder
 import zlib, string
 
@@ -70,15 +70,15 @@ class IMarshal:
 
     def __encodeV11(self, data, isKey = 0):
         t = type(data)
-        if t == NoneType:
+        if t == types.NoneType:
             return [u'|N']
-        elif t == IntType:
+        elif t == types.IntType:
             return [u'|I%d' % (data,)]
-        elif t == LongType:
+        elif t == types.LongType:
             return [u'|G%d' % (data,)]
-        elif t == FloatType:
+        elif t == types.FloatType:
             return [u'|F%.2f' % (data,)]
-        elif t == StringType:
+        elif t == types.StringType:
             # Profiling code TODO comment this code
             #if isKey:
             #    global stats
@@ -94,28 +94,28 @@ class IMarshal:
             if compress.has_key(data):
                 return [u'|C%s' % (compress[data])]
             return [u'|S%s' % (data.replace('\\','\\\\').replace('|', '\\/').replace('\n', '\\n').replace('\r', '\\r'),)]
-        elif t == UnicodeType:
+        elif t == types.UnicodeType:
             return [u'|U%s' % (data.replace('\\','\\\\').replace('|', '\\/').replace('\n', '\\n').replace('\r', '\\r'),)]
-        elif t == ListType:
+        elif t == types.ListType:
             result = [u'|L']
             for item in data:
                 result.extend(self.__encodeV11(item))
             result.append(u'|E')
             return result
-        elif t == TupleType:
+        elif t == types.TupleType:
             result = [u'|T']
             for item in data:
                 result.extend(self.__encodeV11(item))
             result.append(u'|E')
             return result
-        elif t == DictType:
+        elif t == types.DictType:
             result = [u'|D']
             for item in data.keys():
                 result.extend(self.__encodeV11(item, 1))
                 result.extend(self.__encodeV11(data[item]))
             result.append(u'|E')
             return result
-        elif t == InstanceType:
+        elif t == types.InstanceType:
             result = [u'|O']
             result.extend(self.__encodeV11('%s.%s' % (data.__class__.__module__, data.__class__.__name__), 1))
             for item in data.__dict__.keys():

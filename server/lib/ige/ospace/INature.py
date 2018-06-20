@@ -19,7 +19,8 @@
 #
 import time
 
-from Const import *
+import Const
+
 from ige import log
 from ige.IDataHolder import IDataHolder
 from ige.IObject import public
@@ -27,7 +28,7 @@ from IPlayer import IPlayer
 
 class INature(IPlayer):
 
-    typeID = T_NATURE
+    typeID = Const.T_NATURE
 
     def init(self, obj):
         IPlayer.init(self, obj)
@@ -35,17 +36,17 @@ class INature(IPlayer):
         obj.name = u'NATURE'
         obj.login = '*NATURE*'
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processINITPhase(self, tran, obj, data):
         IPlayer.processINITPhase(self, tran, obj, data)
         obj.lastLogin = time.time()
         log.debug("NATURE - asteroids", len(obj.fleets), obj.fleets)
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processPRODPhase(self, tran, obj, data):
         return None
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processBATTLEPhase(self, tran, obj, data):
         return None
 
@@ -53,15 +54,15 @@ class INature(IPlayer):
         # this AI battles with overyone
         # make default
         dipl = IDataHolder()
-        dipl.type = T_DIPLREL
+        dipl.type = Const.T_DIPLREL
         dipl.pacts = {}
         if obj.oid == playerID:
-            dipl.relation = REL_UNITY
+            dipl.relation = Const.REL_UNITY
         else:
-            dipl.relation = REL_ENEMY
+            dipl.relation = Const.REL_ENEMY
         dipl.relChng = 0
-        dipl.lastContact = tran.db[OID_UNIVERSE].turn
-        dipl.contactType = CONTACT_NONE
+        dipl.lastContact = tran.db[Const.OID_UNIVERSE].turn
+        dipl.contactType = Const.CONTACT_NONE
         dipl.stats = None
         return dipl
 

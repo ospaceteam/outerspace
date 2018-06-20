@@ -19,14 +19,15 @@
 #
 import time
 
-from Const import *
+import Const
+
 from ige import log
 from ige.IObject import public
 from IPlayer import IPlayer
 
 class IAIPlayer(IPlayer):
 
-    typeID = T_AIPLAYER
+    typeID = Const.T_AIPLAYER
 
     def init(self, obj):
         IPlayer.init(self, obj)
@@ -45,13 +46,13 @@ class IAIPlayer(IPlayer):
                 continue
             tran.gameMngr.registerPlayer(obj.login, obj, obj.oid)
             log.debug("Player registered")
-            tran.db[OID_UNIVERSE].players.append(obj.oid)
+            tran.db[Const.OID_UNIVERSE].players.append(obj.oid)
             tran.gameMngr.clientMngr.createAIAccount(obj.login, obj.name, 'ais_rebel')
             break
         # grant techs and so on
         self.cmd(obj).update(tran, obj)
 
-    @public(AL_ADMIN)
+    @public(Const.AL_ADMIN)
     def processINITPhase(self, tran, obj, data):
         IPlayer.processINITPhase(self, tran, obj, data)
         obj.lastLogin = time.time()
