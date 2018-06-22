@@ -112,14 +112,7 @@ def update():
         x, y = img.get_size()
         gdata.screen.blit(img, (wx - x, 0))
         rects.append(pygame.Rect(wx - x, 0, img.get_width(), img.get_height()))
-    if gdata.isHWSurface:
-        # paint mouse
-        x, y = pygame.mouse.get_pos()
-        gdata.screen.blit(cursorImg, (x - 1, y - 1))
-        pygame.display.flip()
-    else:
-        #@log.debug("Sreen update", rects)
-        pygame.display.update(rects)
+    pygame.display.update(rects)
     pygame.event.pump()
 
 def setDefaults(gdata, options):
@@ -239,21 +232,12 @@ def runClient(options):
 
     flags = pygame.SWSURFACE
 
-    gdata.isHWSurface = 0
-
-    if gdata.config.display.flags != None:
-            strFlags = gdata.config.display.flags.split(' ')
-            flags = 0
-            if 'swsurface' in strFlags: flags |= pygame.SWSURFACE
-            if 'hwsurface' in strFlags:
-                flags |= pygame.HWSURFACE
-                gdata.isHWSurface = 1
-            if 'doublebuf' in strFlags: flags |= pygame.DOUBLEBUF
-            if 'fullscreen' in strFlags: flags |= pygame.FULLSCREEN
-
     DEFAULT_SCRN_SIZE = (800, 600)
     gdata.scrnSize = DEFAULT_SCRN_SIZE
-    if gdata.config.display.resolution != None:
+    if gdata.config.display.resolution == "FULLSCREEN":
+            gdata.scrnSize = (0, 0)
+            flags |= pygame.FULLSCREEN
+    elif gdata.config.display.resolution is not None:
             width, height = gdata.config.display.resolution.split('x')
             gdata.scrnSize = (int(width), int(height))
 
@@ -266,8 +250,11 @@ def runClient(options):
     # initialize screen
     try:
         screen = pygame.display.set_mode(gdata.scrnSize, flags, bestdepth)
+        # gdata.scrnSize is used everywhere to setup windows
+        gdata.scrnSize = screen.get_size()
     except pygame.error:
         # for example if fullscreen is selected with resolution bigger than display
+        # TODO: as of now, fullscreen has automatic resolution
         gdata.scrnSize = DEFAULT_SCRN_SIZE
         screen = pygame.display.set_mode(gdata.scrnSize, flags, bestdepth)
     gdata.screen = screen
@@ -281,10 +268,6 @@ def runClient(options):
 
     # set icon
     pygame.display.set_icon(pygame.image.load(resources.get('icon48.png')).convert_alpha())
-
-    # load cursor
-    cursorImg = pygame.image.load(resources.get('cursor.png')).convert_alpha()
-
 
     # UI stuff
     if first:
@@ -301,7 +284,6 @@ def runClient(options):
     gdata.app = app
 
     pygame.event.clear()
-    #pygame.display.flip()
 
     # resources
     import osci.res
@@ -384,7 +366,7 @@ def runClient(options):
                         forceKeepAlive = True
                     evt = gdata.app.processEvent(evt)
 
-                if gdata.app.needsUpdate() or gdata.isHWSurface or needsRefresh:
+                if gdata.app.needsUpdate() or needsRefresh:
                     needsRefresh = False
                     update()
                 # keep alive connection
