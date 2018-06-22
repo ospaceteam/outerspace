@@ -52,7 +52,7 @@ class OptionsDlg:
         self.languages['cs']=_('Czech')
         self.languages['fr']=_('French')
         self.languages['de']=_('German')
-        self.resolutions = ["800x600","1024x768","1152x864","1280x960","1280x1024","1440x900","1400x1050","1600x900","1680x1050","1600x1200","1920x1200"]
+        self.resolutions = ["FULLSCREEN", "800x600", "1024x768", "1280x800", "1280x1024", "1366x768", "1440x900","1400x1050","1600x900","1680x1050","1600x1200","1920x1080","1920x1200"]
         self.curLang = gdata.config.client.language
         self.createUI()
 
@@ -72,22 +72,6 @@ class OptionsDlg:
             self.show()
 
     def show(self):
-        # reading display flags
-        if gdata.config.display.flags != None:
-            strFlags = gdata.config.display.flags.split(' ')
-            self.win.vSWSurface.checked = 0
-            self.win.vHWSurface.checked = 0
-            self.win.vDoublebuf.checked = 0
-            self.win.vFullscreen.checked = 0
-            if 'swsurface' in strFlags:
-                self.win.vSWSurface.checked = 1
-            if 'hwsurface' in strFlags:
-                self.win.vHWSurface.checked = 1
-            if 'doublebuf' in strFlags:
-                self.win.vDoublebuf.checked = 1
-            if 'fullscreen' in strFlags:
-                self.win.vFullscreen.checked = 1
-
         # reading resolution info
         if gdata.config.display.resolution != None:
             resolution = gdata.config.display.resolution
@@ -248,22 +232,6 @@ class OptionsDlg:
             self.caller.display()
 
     def onOK(self, widget, action, data):
-        #set display flags
-        flags = ''
-        if self.win.vHWSurface.checked:
-            flags += 'hwsurface '
-
-        if self.win.vSWSurface.checked:
-            flags += 'swsurface '
-
-        if self.win.vDoublebuf.checked:
-            flags += 'doublebuf '
-
-        if self.win.vFullscreen.checked:
-            flags += 'fullscreen '
-
-        gdata.config.display.flags = flags
-
         # set client language
         gdata.config.client.language = self.curLang
 
@@ -491,10 +459,11 @@ class OptionsDlg:
         if not self.reswin.vResolutions.selection:
             return
         curMode = self.reswin.vResolutions.selection[0].tRes
-        try:
-            width,height = curMode.split('x')
-        except:
-            self.win.setStatus(_("The mode you selected is not properly formatted."))
+        if curMode != "FULLSCREEN":
+            try:
+                width,height = curMode.split('x')
+            except:
+                self.win.setStatus(_("The mode you selected is not properly formatted."))
         gdata.config.display.resolution = curMode
         self.win.vResolution2.text = curMode
         self.reswin.hide()
@@ -617,18 +586,6 @@ class OptionsDlg:
         ui.TitleButton(self.twin, layout = (10, 11, 5, 1), text = _("Select"), action = 'onThemeSelected')
         ui.TitleButton(self.twin, layout = (5, 11, 5, 1), text = _("Cancel"), action = 'onThemeCancel')
         ui.Title(self.twin, id = 'vStatusBar', layout = (0, 11, 5, 1), align = ui.ALIGN_W)
-
-        # Screen flags
-        ui.Title(self.win, layout = (7, 1, 5, 1), text = _('Display flags'),
-            align = ui.ALIGN_NONE, font = 'normal-bold')
-        ui.Check(self.win, layout = (7, 2, 5, 1), text = _('Fullscreen'), id = 'vFullscreen',
-            checked = 0)
-        ui.Check(self.win, layout = (7, 3, 5, 1), text = _('Double buf.'), id = 'vDoublebuf',
-            checked = 0)
-        ui.Check(self.win, layout = (7, 4, 5, 1), text = _('HW surface'), id = 'vHWSurface',
-            checked = 0)
-        ui.Check(self.win, layout = (7, 5, 5, 1), text = _('SW surface'), id = 'vSWSurface',
-            checked = 0)
 
         # Defaults
         ui.Title(self.win, layout = (7, 7, 25, 1), text = _('Default settings'),
