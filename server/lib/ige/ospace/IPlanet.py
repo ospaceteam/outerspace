@@ -647,7 +647,8 @@ class IPlanet(IObject):
             # do not process this planet
             return
         obj.scannerPwr = Rules.scannerMinPwr
-        obj.prodProd = obj.prodSci = 0
+        obj.prodProd = Rules.basePlanetProdProd
+        obj.prodSci = 0
         obj.changeBio = - obj.storBio
         obj.changeEn = - obj.storEn
         obj.changePop = - obj.storPop
