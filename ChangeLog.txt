@@ -1,6 +1,45 @@
 ﻿Outer Space Change Log
 ======================
 
+[2018-06-24]
+- Revision bump to 0.5.73 [dahaic]
+
+Significant changes:
+- You can play multiple galaxies at the same time on same account.
+- New game modes, Brawl and Cooperative were introduced.
+- It is possible to book galaxy just with your friends, using passworded
+booking.
+
+Economy revamp:
+- Structures are now build for only 20 % of original CP costs, but are build
+  with only 10 % of HP.
+- Structures repair time is dependent on their CP costs, with the most
+expansive buildings being up to three times slower to repair than basic ones.
+- Structures are now deteoriating if not utilized to 100 %.
+- Every planet has base CP production of 5
+- TL-based population is now 100 * TL of player per slot, regardless building
+  on the slot.
+- Unemployed population makes planet happy, if there is full employment,
+morale gets a hit.
+
+Balancing:
+- Titanium Medium and Large hulls fixed (made heavier and smaller, to be in
+line with the rest).
+- Rebel players now accept economic pacts
+- Limited scan power of a system to 150 (some top scanners max it out)
+- Introduced primitive (ship) technologies, so players have more options how to
+  play start of the game. Primitive technologies are similar to their normal
+  counterparts, but are not upgradable, and are heavier, making ship options
+  more diverse, but more defensive by nature.
+
+Other:
+- Galaxy booking is now much more stable (no longer handled by separate
+service)
+- Booking dialog changed to be more user friendly.
+- New galaxy sizes available.
+- Construction dialog (ship design) has been updated to be easier to use.
+
+
 [2018-06-17]
 - Private bookings introduced [dahaic]
   Private bookings are way how to create games for group of friends. Every
