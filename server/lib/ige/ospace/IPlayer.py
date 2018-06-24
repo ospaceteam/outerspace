@@ -104,6 +104,8 @@ class IPlayer(IObject):
                 obj.galaxy = obj.galaxies[0]
             except IndexError:
                 obj.galaxy = None
+        # refresh technologies
+        self.setStartingTechnologies(obj)
         # update all designs
         for designID in obj.shipDesigns:
             old = obj.shipDesigns[designID]
@@ -231,8 +233,6 @@ class IPlayer(IObject):
             new.built = old.built
             new.upgradeTo = old.upgradeTo
             obj.shipDesigns[designID] = new
-        if not hasattr(obj, 'obsoleteTechs'):
-            obj.obsoleteTechs = set()
 
     update.public = 0
 
@@ -259,9 +259,8 @@ class IPlayer(IObject):
 
     @staticmethod
     def setStartingTechnologies(obj):
-        obj.techLevel = 1
         for techID, tech in Rules.techs.iteritems():
-            if tech.isStarting:
+            if tech.isStarting and techID not in obj.techs:
                 obj.techs[techID] = (Rules.techBaseImprovement + tech.maxImprovement) / 2
 
     @staticmethod
@@ -1037,7 +1036,7 @@ class IPlayer(IObject):
             return
         # oops we have negative epts
         while epts < 0:
-            log.debug("Not enought RP", epts, obj.oid)
+            log.debug("Not enough RP", epts, obj.oid)
             if obj.rsrchQueue:
                 item = obj.rsrchQueue[0]
                 if item.currSci > 0:

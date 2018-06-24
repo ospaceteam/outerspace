@@ -90,7 +90,7 @@ class IPlanet(IObject):
         obj.changeMorale = 0.0
         obj.moraleTrgt = 0.0
         # moraleModifiers [ base morale by distance from homeworld, from buildings, from population, from unemployment, summary 1+2+3+4 ]
-        obj.moraleModifiers = [ 0.0 , 0.0 , 0.0 , 0.0, 0.0]
+        obj.moraleModifiers = [0.0, 0.0, 0.0, 0.0, 0.0]
         obj.revoltLen = 0
         obj.combatExp = 0
         obj.isMilitary = 0
@@ -907,8 +907,9 @@ class IPlanet(IObject):
             log.debug("CONSISTENCY invalid compOf for planet", obj.oid)
         # fix signature
         obj.signature = 75
-        if not hasattr(obj, 'moraleModifiers'):
-            obj.moraleModifiers = [ 0.0 , 0.0 , 0.0 , 0.0, 0.0 ]
+        # TODO: remove after 0.5.73
+        if len(obj.moraleModifiers) == 4:
+            obj.moraleModifiers.append(0.0)
 
     update.public = 0
 
