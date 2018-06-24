@@ -116,23 +116,30 @@ parser.add_argument("--turns", dest = "turns", default = 60,
     type = int, metavar = "N", help = "Process N turns on server")
 parser.add_argument("--turn-skip", dest = "turnSkip", default = 4,
     type = int, metavar = "N", help = "Process N turns on server")
+parser.add_argument("--continue", dest = "continueDir", default = None,
+    metavar = "DIRECTORY", help = "Specify directory with previous run of smoke test. Useful for testing version migration.")
 args = parser.parse_args()
 
 
-c.initPaths()
+c.initPaths(args.continueDir)
 
 # test itself
-# check basic sanity
-if not c.startServer():
-    sys.exit(1)
-atexit.register(c.killServer)
-c.createGalaxy("Test")
-c.startServerTime()
-c.doTurns(args.turnSkip, args.turnSkip, slow=args.slow)
-if not checkServerStatus():
-    sys.exit(1)
-c.stopServer()
-checkLogs(hard=True)
+if args.continueDir is None:
+    # check basic sanity
+    if not c.startServer():
+        sys.exit(1)
+    atexit.register(c.killServer)
+    c.createGalaxy("Test")
+    c.startServerTime()
+    c.doTurns(args.turnSkip, args.turnSkip, slow=args.slow)
+    if not checkServerStatus():
+        sys.exit(1)
+    c.stopServer()
+    checkLogs(hard=True)
+else:
+    # we are testing migration path - directory with outcome of previous
+    # version is provided
+    log.info("Running migration scenario from '{0}'".format(args.continueDir))
 
 # check upgrade sanity
 if not c.startServer(upgrade=True):

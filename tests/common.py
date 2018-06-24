@@ -23,6 +23,7 @@
 import atexit
 import logging as log
 import os
+import shutil
 import signal
 import subprocess
 import tempfile
@@ -30,6 +31,11 @@ import time
 
 log.basicConfig(level=log.INFO, format='%(levelname)-7s: %(message)s')
 
+TEMP_DIR = None
+SERVER_OUT = None
+UTILS_OUT = None
+AI_OUT = None
+BUP_OUT = None
 CODE_ROOT=os.path.realpath(os.path.join(
           os.path.dirname(os.path.realpath(__file__)),
           '..'))
@@ -169,14 +175,15 @@ def closeLogs():
     AI_OUT.close()
     BUP_OUT.close()
 
-def initPaths(configdir = None):
+def initPaths(configDir = None):
     global TEMP_DIR, SERVER_OUT, UTILS_OUT, AI_OUT, BUP_OUT
-    if configdir is None:
-        # prepare logging
-        TEMP_DIR=tempfile.mkdtemp()
-        SERVER_OUT=open(os.path.join(TEMP_DIR, 'server.out'), 'w')
-        UTILS_OUT=open(os.path.join(TEMP_DIR, 'utils.out'), 'w')
-        AI_OUT=open(os.path.join(TEMP_DIR, 'ai.out'), 'w')
-        BUP_OUT=open(os.path.join(TEMP_DIR, 'bup.out'), 'w')
-        log.info('Location of logs: ' + str(TEMP_DIR))
-        atexit.register(closeLogs)
+    TEMP_DIR=tempfile.mkdtemp()
+    if configDir is not None:
+        os.rmdir(TEMP_DIR)
+        shutil.copytree(configDir, TEMP_DIR)
+    SERVER_OUT=open(os.path.join(TEMP_DIR, 'server.out'), 'a')
+    UTILS_OUT=open(os.path.join(TEMP_DIR, 'utils.out'), 'a')
+    AI_OUT=open(os.path.join(TEMP_DIR, 'ai.out'), 'a')
+    BUP_OUT=open(os.path.join(TEMP_DIR, 'bup.out'), 'a')
+    log.info('Location of logs: ' + str(TEMP_DIR))
+    atexit.register(closeLogs)
