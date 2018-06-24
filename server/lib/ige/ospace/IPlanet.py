@@ -293,7 +293,7 @@ class IPlanet(IObject):
 
     def _getOpStatus(self, obj, techProdMod, techOper, techProd, stor):
         prodMod = self._getStructProdMod(obj, techProdMod)
-        slope = techOper - techProd * prodMod
+        slope = techProd * prodMod - techOper
         if slope >= 0:
             # structure is self-sufficient in this aspect
             return 1.0
@@ -303,7 +303,7 @@ class IPlanet(IObject):
     def _getStructStatus(self, obj, struct, tech, maxHP):
         # find most limitating condition
         if not struct[Const.STRUCT_IDX_STATUS] & Const.STRUCT_STATUS_ON:
-            return 0.0
+            return 0.0, 0.0
         try:
             opStatusHP = min(1.0, float(struct[Const.STRUCT_IDX_HP]) / maxHP)
         except:
@@ -323,18 +323,17 @@ class IPlanet(IObject):
         struct[Const.STRUCT_IDX_OPSTATUS] = int(100 * opStatus)
         return opStatusHP, min(opStatusBio, opStatusEn, opStatusPop)
 
-    def _updateStructHP(self, obj, struct, opStatuses, maxHP):
+    def _updateStructHP(self, obj, struct, tech, opStatuses, maxHP):
         # auto repair/damage
         # also damage structures on not owned planets
         opStatusHP, opStatusOther = opStatuses
         properHP = opStatusOther * maxHP
-        repairDiff = min(properHP - struct[Const.STRUCT_IDX_HP], Rules.repairRunningRatio * maxHP)
-        decayDiff = min(struct[Const.STRUCT_IDX_HP] - properHP, Rules.decayRatio * maxHP)
         if struct[Const.STRUCT_IDX_HP] < properHP:
+            repairDiff = min(properHP - struct[Const.STRUCT_IDX_HP], Rules.repairRatioFunc(tech.buildProd) * maxHP)
             struct[Const.STRUCT_IDX_HP] += repairDiff
             struct[Const.STRUCT_IDX_STATUS] |= Const.STRUCT_STATUS_REPAIRING
         elif struct[Const.STRUCT_IDX_HP] > properHP:
-            # flag only for non functional structure
+            decayDiff = min(struct[Const.STRUCT_IDX_HP] - properHP, Rules.decayRatioFunc(tech.buildProd) * maxHP)
             struct[Const.STRUCT_IDX_STATUS] |= Const.STRUCT_STATUS_DETER
             # damage it a bit
             struct[Const.STRUCT_IDX_HP] -= decayDiff
@@ -360,7 +359,7 @@ class IPlanet(IObject):
                 obj.minEn += tech.operEn * Rules.autoMinStorTurns
             # produce/consume resources
             opStatuses = self._getStructStatus(obj, struct, tech, maxHP)
-            self._updateStructHP(obj, struct, opStatuses, maxHP)
+            self._updateStructHP(obj, struct, tech, opStatuses, maxHP)
             opStatus = min(opStatuses)
             # solarmod effects ENV change and terraforming only if benificial
             if tech.solarMod * opStatus > 0:
@@ -568,7 +567,7 @@ class IPlanet(IObject):
         # decay items not currently produced
         while index < len(obj.prodQueue):
             item = obj.prodQueue[index]
-            item.currProd = max(0, int(item.currProd - max(item.currProd * Rules.decayRatio, 1)))
+            item.currProd -= int(item.currProd * Rules.decayProdQueue)
             index += 1
         # use excess raw CP to increase production elsewhere
         prod += explicitIdleProd

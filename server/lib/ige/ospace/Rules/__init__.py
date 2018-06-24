@@ -17,6 +17,7 @@
 #  along with Outer Space; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
+import math
 
 import ige.ospace.Const as Const
 from ige.IDataHolder import makeIDataHolder
@@ -55,6 +56,17 @@ structDefaultHpRatio = 0.1 # structures are build with this percentage of HPs
 structDefaultCpCosts = 0.2 # structures costs this amount of what is in XMLs
 structFromShipHpRatio = 1.0 # structures from ships are build with this percentage of HPs
 structNewPlayerHpRatio = 1.0 # structures from ships are build with this percentage of HPs
+# as we now build structures damaged, repair and decay are part of economy revamp
+# repair ratio is dynamic on cost of building. it's full of magic constants
+# goal is to have 480 CP building to repair in ~2 days (which is twice the legacy repair
+# ratio), and the most expansive ones (adv. stargate) ~ 6 days.
+# We are using log10() as it's quicker than log()
+_magicBase = 1.0 / (turnsPerDay * 2)
+_repairMagicBase = math.log10(480 * structDefaultCpCosts) ** 2 * _magicBase
+repairRatioFunc = lambda x: _repairMagicBase / math.log10(x) ** 2
+# building decay ratio bigger or equivalent of 480 CP repair
+decayRatioFunc = lambda x: min( _magicBase, repairRatioFunc(x))
+decayProdQueue = 0.02
 
 ## Environment
 envInterval = 1000
@@ -201,10 +213,6 @@ maxEquipType = {
 }
 
 ## Buildings
-repairRatio = 0.02
-repairRunningRatio = 0.01
-decayRatio = 0.02
-storCapacityOfOfflineStruct = 1.0
 plShieldRegen = 0.05 #regen rate of planetary shield
 
 ## Diplomacy
