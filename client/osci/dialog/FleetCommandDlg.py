@@ -67,6 +67,18 @@ class FleetCommandDlg:
         self.win.vStarMap.precompute()
         self.showCommands()
 
+    def _evalEta(self, fleet, origin, target):
+        dx = origin.x - target.x
+        dy = origin.y - target.y
+        lnght = math.hypot(dx, dy)
+        speedBoost = getattr(fleet, "speedBoost", 1)
+        fleetSpeed = getattr(fleet, "speed", 0)
+        maxDelta = fleetSpeed / Rules.turnsPerDay * speedBoost
+        if maxDelta != 0:
+            return lnght / maxDelta
+        else:
+            return None
+
     def showCommands(self):
         self.win.vMoveBtn.pressed =  self.command == Const.FLACTION_MOVE
         self.win.vAttackBtn.pressed =  self.command == Const.FLACTION_DECLAREWAR
@@ -106,38 +118,24 @@ class FleetCommandDlg:
             curTarget = client.get(self.targetID, noUpdate = 1)
             fleet = client.get(self.fleetDlg.fleetID, noUpdate = 1)
             target = Const.OID_NONE
-            if len(fleet.actions) > 1:
-                if self.cmdIndex != 0 and self.cmdIndex < len(fleet.actions):
-                    idx = self.cmdIndex
-                else:
-                    idx = len(fleet.actions)
-                while True:
-                    idx -= 1
-                    if idx < 0:
-                        break
-                    #print "idx", idx, fleet.actions[idx]
-                    action, target, actionData = fleet.actions[idx]
-                    if target != Const.OID_NONE:
-                        break
-            if fleet.orbiting != Const.OID_NONE and target == Const.OID_NONE:
-                target = fleet.orbiting
-            elif target == Const.OID_NONE:
-                target = fleet.oid
+            oldTarget = fleet # we can hack it - only coordinates are necessary
+            if fleet.actions:
+                waitTurns = sum([x[2] for x in fleet.actions[fleet.actionIndex:] if x[0] == Const.FLACTION_WAIT])
+                eta = waitTurns # baseline
+                targetIDs = [x[1] for x in fleet.actions[fleet.actionIndex:]]
+                targetIDs.append(self.targetID)
+                for newTargetID in targetIDs:
+                    if newTargetID != Const.OID_NONE:
+                        newTarget = client.get(newTargetID)
+                        newEta = self._evalEta(fleet, oldTarget, newTarget)
+                        if newEta is not None:
+                            eta += newEta
+                        else:
+                            eta = None
+                            break
+                        oldTarget = newTarget
 
-            if target != Const.OID_NONE:
-                lastTarget = client.get(target, noUpdate = 1)
-                curX = curTarget.x
-                curY = curTarget.y
-                lstX = lastTarget.x
-                lstY = lastTarget.y
-                dx = curX - lstX
-                dy = curY - lstY
-                lnght = math.sqrt(dx*dx + dy*dy)
-                speedBoost = getattr(fleet, "speedBoost", 1)
-                fleetSpeed = getattr(fleet, "speed", 0)
-                maxDelta = fleetSpeed / Rules.turnsPerDay * speedBoost
-                if maxDelta != 0:
-                    eta = lnght / maxDelta
+                if eta is not None:
                     self.win.vEta.text = res.formatTime(eta)
                 else:
                     self.win.vEta.text = _("N/A")
