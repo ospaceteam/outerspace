@@ -33,8 +33,7 @@ class LocateDlg:
     def display(self, objID, caller):
         obj = client.get(objID, noUpdate = 1)
         self.caller = caller
-        self.win.vStarMap.star_map.currX = obj.x
-        self.win.vStarMap.star_map.currY = obj.y
+        self.win.vStarMap.centerPos = (obj.x, obj.y)
         self.win.vStarMap.setPosition = 0
         self.win.vStarMap.control_modes['minimap'] = 0
         self.win.vStarMap.control_modes['hotbuttons'] = 0

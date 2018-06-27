@@ -42,10 +42,8 @@ class FleetCommandDlg:
         self.fleetDlg = fleetDlg
         self.cmdIndex = cmdIndex
         fleet = client.get(self.fleetDlg.fleetID, noUpdate = 1)
-        self.win.vStarMap.currX = fleet.x
-        self.win.vStarMap.currY = fleet.y
+        self.win.vStarMap.centerPos = (fleet.x, fleet.y)
         self.win.vStarMap.alwaysShowRangeFor = fleet.oid
-        self.win.vStarMap.setPosition = 0
         self.win.vStarMap.precompute()
         self.command = Const.FLACTION_MOVE
         self.deplShipIndex = 0
