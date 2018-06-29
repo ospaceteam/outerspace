@@ -44,7 +44,7 @@ class IAIEDENPlayer(IPlayer):
         log.debug("Registering player", obj.oid)
         counter = 1
         while 1:
-            obj.name = u'E.D.E.N. [%d]' % counter
+            obj.name = u'E.D.E.N. %d' % counter
             obj.login = '*AIP*eden%d' % counter
             if galaxyID in tran.gameMngr.accountGalaxies(obj.login):
                 counter += 1
