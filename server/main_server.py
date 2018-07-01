@@ -101,6 +101,7 @@ def runServer(options):
         except:
             log.exception("Shutdown of the server failed")
 
+        config.save()
         log.message('Shutted down')
         log.message("Cleaning up...")
 
@@ -142,9 +143,9 @@ def runServer(options):
 
     # open database
     from ige.SQLiteDatabase import Database, DatabaseString
-    # set type of generated galaxies
-    if not config.server.newgalaxytype:
-        config.server.newgalaxytype = 'Circle42P'
+
+    if not config.vip.password:
+        config.vip.password = ''
 
     log.debug("Creating databases...")
     gameDB = Database(os.path.join(options.configDir,"db_data"), "game_%s" % gameName, cache = 15000)

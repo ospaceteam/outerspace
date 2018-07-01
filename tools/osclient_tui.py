@@ -142,15 +142,22 @@ def getPlayer(name):
 def showPlayers():
     un = s.getInfo(1)
     players = []
+    aiPlayers = []
     for playerID in un.players:
         player = s.getInfo(playerID)
         if not player.type in Const.AI_PLAYER_TYPES:
             players.append((playerID, player.name))
+        else:
+            aiPlayers.append((playerID, player.name))
 
     print
     print
     print "List of current players:"
     for pl in players:
+        print "%5d: %s" % pl
+
+    print "List of current AI players:"
+    for pl in aiPlayers:
         print "%5d: %s" % pl
 
     print

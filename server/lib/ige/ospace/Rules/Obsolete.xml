@@ -116,17 +116,4 @@
 		<description>Ecosystem initiation is a noble name for simply makeing planet alive.  This basic 'nature' usually contains only flora and some small animals. Water is filled with few weeds, but often not even that is used, as sometimes mutations can occur that might be very difficult to fight against. While all this is technologically very demaning and takes up considerable resources, harder still is to maintain and even improve current status, for usually planets capable of maintaining enough production power is usually antiecologically oriented at first, hence often the only viable option is to do this as cross-planetary project. Construction cost is of course doubled because of transportation cost, but it is usually well worth it as many farms should await on a planet with newly introduced ecosystem.</description>
 		<flavor>Ecosystem on Terminus Sigma proved to be a greatest challenge, Enataron scientist had to solve. Desert-type planet has been dead since its initial discovery. Local sun was emanating out unusually intense beta particles  that, while easily blocked by spacesuits, would disturb any organic matter and it would rot and die quickly. Even the smallest bacteria and viruses didn't survive long in searing temperatures and gamma rain. At last, one clever scientist came up with an idea to place ecosystem underground. Great subterran plants that live from minerals and internal heat that rises up from the core make great baseline. Other plantlife was derived from this one. Rodents and burrowers soon followed and whole project was very succesful. Unfortunately, some solar experimant acciddent froze the planet and nothing survived. There are no news of this underground life now.</flavor>
 	</technology>
-	<technology id="2800" symbol="REPAIRSHIPS2" name="Repair Ships">
-		<discovery
-			researchMod="1.00"
-			level="99"
-			researchRequires="REPAIR1-3"
-		/>
-		<project
-			buildProd="480"
-			data="5,2"
-			finishConstrHandler="finishProjectREPAIRSHIPS2"
-		/>
-		<preresearch>Factories can sometimes patch damaged ships on orbit, but do not expect miracles from this process.</preresearch>
-	</technology>
 </techtree>

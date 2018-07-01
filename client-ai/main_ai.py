@@ -20,6 +20,7 @@
 
 def runAIClient(options):
     import time
+    import traceback
     import sys
     import os
 
@@ -102,10 +103,11 @@ def runAIClient(options):
             continue
         client.login(options.game, login, password)
         client.cmdProxy.selectPlayer(playerID)
-        # event loop
         client.updateDatabase()
-        print(client.db.keys())
-        ai.run(client)
-        client.logout()
-        log.debug("Shut down")
-
+        try:
+            ai.run(client)
+        except Exception as e:
+            # This prints the type, value, and stack trace of the
+            # current exception being handled.
+            traceback.print_exc()
+            raise e

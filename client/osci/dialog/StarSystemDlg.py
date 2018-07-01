@@ -64,6 +64,15 @@ class StarSystemDlg:
         self.fleetRedirectionDlg = FleetRedirectionDlg(app)
         self.fleetMassRedirectionDlg = FleetMassRedirectionDlg(app)
 
+        self.planetID = None
+        self.systemID = None
+        self.wormhole = None
+        self.plInfoType = None
+        self.plInfoTypeSelected = None
+        self.plInfoData = None
+        self.plInfoDataSelected = None
+        self.playerOwnsSomePlanet = False
+
     def display(self, objID):
         # set initial state
         obj = client.get(objID, noUpdate = 1)
@@ -829,6 +838,8 @@ class StarSystemDlg:
     def onSelectMapObj(self, widget, action, data):
         self.win.vSystemMap.selectedObjID = data
         self.win.vSystemMap.activeObjID = data
+        self.win.vPQueue.selectItem(None)
+        self.win.vPSlots.selectItem(None)
         self.display(data)
 
     def onHighlightMapObj(self, widget, action, data):

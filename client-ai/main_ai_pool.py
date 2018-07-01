@@ -26,6 +26,7 @@ def runAIPool(options):
     import os
     import time
     import tempfile
+    import traceback
     import multiprocessing
     import re
     import copy
@@ -42,6 +43,7 @@ def runAIPool(options):
 
     aiPool = multiprocessing.Pool(processes = options.procs)
 
+    results = []
     for gameName in games:
         aiList = AIList(options.configDir)
         for record in aiList.getAll():
@@ -52,8 +54,15 @@ def runAIPool(options):
             optAI.ai = record.aiType
             optAI.game = gameName
             optAI.test = False
-            aiPool.apply_async(runAIClient, [optAI])
+            results.append(aiPool.apply_async(runAIClient, [optAI]))
     aiPool.close()
+    for result in results:
+        try:
+            result.get()
+        except Exception as exc:
+            # having pass or continue here prevents exception from being printed
+            # What the actual hell?
+            True
     aiPool.join()
     sys.exit()
 

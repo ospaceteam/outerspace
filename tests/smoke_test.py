@@ -130,6 +130,8 @@ if args.continueDir is None:
         sys.exit(1)
     atexit.register(c.killServer)
     c.createGalaxy("Test")
+    c.deleteGalaxy(10000) # 10000 is surely the Test galaxy
+    c.createGalaxy("Test")
     c.startServerTime()
     c.doTurns(args.turnSkip, args.turnSkip, slow=args.slow)
     if not checkServerStatus():

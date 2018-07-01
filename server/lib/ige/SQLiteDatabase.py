@@ -29,6 +29,7 @@ IDX_NEXT = 1
 class Database:
 
     dbSchema = "data(oid integer primary key asc, data blog not null)"
+    keyMethod = int
 
     def __init__(self, directory, dbName, cache = 128):
         log.message("Opening database", dbName)
@@ -60,7 +61,7 @@ class Database:
         self.statMiss = 0
         self.statCleanSwap = 0
 
-    def moveExistingCacheItem(self, key):
+    def _moveExistingCacheItem(self, key):
         #@log.debug("Cache MOVE ITEM", key, self.cacheLinks[key])
         # optimalization
         cl = self.cacheLinks
@@ -82,7 +83,7 @@ class Database:
         #    idx = item[IDX_NEXT]
         #log.debug("Cache CHAIN", " ".join(result))
 
-    def addNewCacheItem(self, key):
+    def _addNewCacheItem(self, key):
         #@log.debug("Cache ADD ITEM", key)
         # check cache size
         #@log.debug("Cache size", len(self.cache), self.cacheSize)
@@ -101,7 +102,7 @@ class Database:
                 if sys.getrefcount(self.cache[oldKey]) > 2:
                     #@log.debug("CANNOT swap out", oldKey, "refs", sys.getrefcount(self.cache[oldKey]) - 2)
                     # try next element
-                    self.moveExistingCacheItem(oldKey)
+                    self._moveExistingCacheItem(oldKey)
                     #@log.debug("Trying to swap out", current[IDX_NEXT])
                     continue
                 else:
@@ -132,12 +133,12 @@ class Database:
         #    idx = item[IDX_NEXT]
         #log.debug("Cache CHAIN", " ".join(result))
 
-    def updateCacheItem(self, key):
+    def _updateCacheItem(self, key):
         if key in self.cache:
-            return self.moveExistingCacheItem(key)
-        return self.addNewCacheItem(key)
+            return self._moveExistingCacheItem(key)
+        return self._addNewCacheItem(key)
 
-    def delCacheItem(self, key):
+    def _delCacheItem(self, key):
         #@log.debug("Cache DEL ITEM", key)
         prev, next = self.cacheLinks[key]
         self.cacheLinks[prev][IDX_NEXT] = next
@@ -145,10 +146,11 @@ class Database:
         del self.cacheLinks[key]
 
     def __getitem__(self, key):
+        key = self.keyMethod(key)
         self.statCount += 1
         if key in self.cache:
             self.statHit += 1
-            self.moveExistingCacheItem(key)
+            self._moveExistingCacheItem(key)
             return self.cache[key]
         self.statMiss += 1
         self.cursor.execute("select * from data where oid = ?", (key,))
@@ -156,16 +158,17 @@ class Database:
         if row is None:
             raise ige.NoSuchObjectException(key)
         item = pickle.loads(str(row[1]))
-        self.addNewCacheItem(key)
+        self._addNewCacheItem(key)
         self.cache[key] = item
         #TODOitem.setModified(0)
         return item
 
     def __setitem__(self, key, value):
+        key = self.keyMethod(key)
         if type(value) == types.InstanceType:
             value.oid = key
         # set value
-        self.updateCacheItem(key)
+        self._updateCacheItem(key)
         self.cache[key] = value
         #value.setModified(0)
         # write through new objects
@@ -173,23 +176,23 @@ class Database:
             raise ige.ServerException("'%s' created using set method" % key)
 
     def __delitem__(self, key):
+        key = self.keyMethod(key)
         if key in self.cache:
-            self.delCacheItem(key)
+            self._delCacheItem(key)
             del self.cache[key]
         self.cursor.execute("delete from data where oid = ?", (key,))
 
     def has_key(self, key):
+        key = self.keyMethod(key)
         self.cursor.execute("select oid from data where oid = ?", (key,))
         return self.cursor.fetchone() is not None
 
     def keys(self):
-        keys = []
         self.cursor.execute("select oid from data")
-        for row in self.cursor:
-            keys.append(row[0])
-        return keys
+        return [row[0] for row in self.cursor]
 
     def getItemLength(self, key):
+        key = self.keyMethod(key)
         self.cursor.execute("select * from data where oid = ?", (key,))
         row = self.cursor.fetchone()
         if row is None:
@@ -262,15 +265,19 @@ class Database:
             while self.has_key(id):
                 id += 1
             self.nextID = id + 1
+            id = self.keyMethod(id)
             object.oid = id
         elif hasattr(object, "oid") and object.oid != id:
+            id = self.keyMethod(id)
             log.message("Object OID '%s' != forced OID '%s' - FIXING" % (object.oid, id))
             object.oid = id
+        else:
+            id = self.keyMethod(id)
         #@log.debug("OID =", id)
         if self.has_key(id):
             raise ige.ServerException("'%s' created twice" % id)
         self.cache[id] = object
-        self.addNewCacheItem(id)
+        self._addNewCacheItem(id)
         self.put(id, pickle.dumps(object, pickle.HIGHEST_PROTOCOL))
         return id
 
@@ -328,6 +335,7 @@ class Database:
 class DatabaseString(Database):
 
     dbSchema = "data(oid text primary key asc, data blog not null)"
+    keyMethod = str
 
     def restore(self, filename, include = None):
         log.message("Restoring database from file", filename)

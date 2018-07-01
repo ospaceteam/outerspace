@@ -852,11 +852,11 @@ class IFleet(IObject):
             # don't burn any fuel if you can refuel
             obj.storEn = min(obj.maxEn, obj.storEn + obj.operEn)
             return 1
-        obj.storEn = min(
-            int(math.ceil(obj.maxEn * refuelInc / 100.0 + obj.operEn + obj.storEn)),
-            int(math.ceil(obj.maxEn * refuelMax / 100.0)),
+        obj.storEn = int(math.ceil(min(
+            obj.maxEn * refuelInc / 100.0 + obj.operEn + obj.storEn,
+            obj.maxEn * refuelMax / 100.0,
             obj.maxEn,
-        )
+        )))
         #@log.debug("Refuelling", obj.oid, refuelInc, refuelMax)
         currentLevel = 100.0 * obj.storEn / obj.maxEn
         #@log.debug(obj.oid, "After refuel", currentLevel, refuelMax)
@@ -996,16 +996,16 @@ class IFleet(IObject):
                     repairPerc = max(spec.autoRepairPerc, forceRepairPerc)
                 if repairFix > 0 or repairPerc > 0:
                     #&log.debug("IFleet - repairing ship", obj.oid, designID, hp, repairFix, repairPerc)
-                    obj.ships[idx][Const.SHIP_IDX_HP] = int(min(
+                    obj.ships[idx][Const.SHIP_IDX_HP] = int(math.ceil(min(
                         spec.maxHP,
                         hp + repairFix + max(1, spec.maxHP * repairPerc),
-                    ))
+                    )))
             if shields < spec.shieldHP and obj.storEn:
                 #@log.debug("IFleet - recharging shields", designID, shields, spec.shieldRechargeFix, spec.shieldRechargePerc)
-                obj.ships[idx][Const.SHIP_IDX_SHIELDHP] = int(min(
+                obj.ships[idx][Const.SHIP_IDX_SHIELDHP] = int(math.ceil(min(
                     spec.shieldHP,
                     shields + spec.shieldRechargeFix + max(1, spec.shieldHP * spec.shieldRechargePerc),
-                ))
+                )))
             idx += 1
 
     autoRepairAndRecharge.public = 0
