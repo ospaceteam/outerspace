@@ -28,38 +28,6 @@ import Utils
 
 from ige import log
 
-def spaceDocksTurn(tran, obj, tech):
-    # skip unowned planets
-    if obj.owner == Const.OID_NONE:
-        return
-    maxRepaired, repairHP = tech.data.split(",")
-    eff = Utils.getTechEff(tran, tech.id, obj.owner)
-    maxRepaired = int(int(maxRepaired) * eff)
-    repairHP = int(int(repairHP) * eff)
-    repaired = 0
-    # find damaged allied ship
-    system = tran.db[obj.compOf]
-    owner = tran.db[obj.owner]
-    for relation in (Const.REL_UNITY, Const.REL_ALLY_LO):
-        for fleetID in system.fleets:
-            fleet = tran.db[fleetID]
-            rel = tran.gameMngr.cmdPool[owner.type].getRelationTo(tran, owner, fleet.owner)
-            if rel >= relation:
-                # ok find ship to repair
-                pl = tran.db[fleet.owner]
-                index = 0
-                for designID, hp, shield, exp in fleet.ships:
-                    tech = pl.shipDesigns[designID]
-                    if hp < tech.maxHP:
-                        # repair damaged ship
-                        fleet.ships[index][1] = min(tech.maxHP, hp + repairHP)
-                        repaired += 1
-                    index += 1
-            if repaired >= maxRepaired:
-                break
-        if repaired >= maxRepaired:
-            break
-
 def finishStructOUTPOST(tran, source, target, tech):
     log.debug("Finishing OUTPOST", tech.id, "target", target.oid)
     # setup morale if colonizing noninhabited planet
@@ -198,10 +166,6 @@ def finishProjectPRODRSRC(tran, source, target, tech):
     if target.owner != Const.OID_NONE:
         owner = tran.db[target.owner]
         owner.sciPoints += int(tech.prodSci * techEff)
-
-## Repair ships
-def finishProjectREPAIRSHIPS2(tran, source, target, tech):
-    spaceDocksTurn(tran, source, tech)
 
 ## Produce strategic resource
 def finishProjectNF(tran, source, target, tech):
