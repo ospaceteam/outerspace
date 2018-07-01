@@ -32,9 +32,10 @@ class Config:
     existing section an instance of Section class
     is returned.
     """
-    def __init__(self, file, defaults = dict()):
+    def __init__(self, _file, defaults = dict()):
         self.__dict__["_config"] = ConfigParser(defaults)
-        self._config.read(file)
+        self.__dict__["_file"] = _file
+        self._config.read(_file)
 
     def __getitem__(self, name):
         return self.__getattr__(name)
@@ -54,10 +55,11 @@ class Config:
     def sections(self):
         return self._config.sections()
 
-    def save(self, file):
-        fh = open(file, 'w')
-        self._config.write(fh)
-        fh.close()
+    def save(self, _file = None):
+        if _file is None:
+            _file = self._file
+        with open(_file, 'w') as fh:
+            self._config.write(fh)
 
 class Section:
     """Represent section of ConfigParser class.
