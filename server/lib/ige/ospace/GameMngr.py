@@ -328,7 +328,12 @@ class GameMngr(IGEGameMngr):
         # initial scan
         system = self.db[planet.compOf]
         log.debug('Processing scan phase')
-        system.scannerPwrs[playerID] = Rules.startingScannerPwr
+        self.cmdPool[Const.T_PLANET].processPRODPhase(tran, planet, None)
+        # this only works for one planet starting scenarios, it might be imprecise, as it's
+        # calculated here
+        # TODO: make proper difference between getting stats, and acting on them, and utilize that
+        player.effSciPoints = planet.prodSci * (1 + ((Rules.baseGovPwr - planet.storPop)  / float(Rules.baseGovPwr) ) / 2.0)
+        system.scannerPwrs[playerID] = planet.scannerPwr = Rules.startingScannerPwr
         self.cmdPool[Const.T_GALAXY].processSCAN2Phase(tran, galaxy, True)
         # check if galaxy can be "started" (for purpose of single player games)
         self.cmdPool[Const.T_GALAXY].enableTime(tran, galaxy)
