@@ -118,6 +118,7 @@ class ConstructionDlg:
 
     def _setDetailButtons(self, player):
         if self.selectedDesignID:
+            self.win.vScrap.enabled = 1
             if player.shipDesigns[self.selectedDesignID].upgradeTo == 0:
                 self.win.vUpgrade.enabled = 1
                 self.win.vUpgrade.text = _("Upgrade")
@@ -126,6 +127,7 @@ class ConstructionDlg:
                 self.win.vUpgrade.text = _("Cancel Upgrd")
 
         if self.editMode:
+            self.win.vName.enabled = 1
             self.win.vEnginesButton.enabled = 1
             self.win.vWeaponsButton.enabled = 1
             self.win.vEquipmentButton.enabled = 1
@@ -136,19 +138,22 @@ class ConstructionDlg:
             # only view mode?
             # let's reset highlights in design listboxes
             self.selectedEqID = None
+            self.win.vName.enabled = 0
             self.win.vEngines.unselectAll()
             self.win.vWeapons.unselectAll()
             self.win.vEquipment.unselectAll()
 
-            self.win.vScrap.enabled = 1
             self.win.vDuplDesign.enabled = 1
             self.win.vConstruct.enabled = 0
             self.win.vEnginesButton.enabled = 0
             self.win.vWeaponsButton.enabled = 0
             self.win.vEquipmentButton.enabled = 0
+            if not self.selectedDesignID:
+                self.win.vScrap.enabled = 0
+                self.win.vUpgrade.enabled = 0
 
     def _designRepresentation(self, player):
-        if self.highlightedDesignID == None:
+        if self.highlightedDesignID is None:
             if self.editMode:
                 if self.ctrlID:
                     eqIDs = {self.ctrlID : 1}
@@ -158,6 +163,9 @@ class ConstructionDlg:
                     eqIDs[eqID] = self.eqIDs[eqID]
                 improvements = []
             else:
+                self.hullID = self.ctrlID = None
+                self.win.vName.text = ""
+                self.eqIDs = {}
                 eqIDs = {}
                 improvements = []
         else:
@@ -196,13 +204,17 @@ class ConstructionDlg:
         if self.hullID:
             tech = client.getTechInfo(self.hullID)
             self.win.vHull.text = tech.name # TODO _(tech.name)
-        else:
+        elif self.editMode:
             self.win.vHull.text = _("[Click to select]")
+        else:
+            self.win.vHull.text = ""
         if self.ctrlID:
             tech = client.getTechInfo(self.ctrlID)
             self.win.vCtrl.text = tech.name # TODO _(tech.name)
-        else:
+        elif self.editMode:
             self.win.vCtrl.text = _("[Click to select]")
+        else:
+            self.win.vCtrl.text = ""
         # equipments
         engines = []
         weapons = []
@@ -338,14 +350,16 @@ class ConstructionDlg:
         self.hide()
 
     def onSelectHull(self, widget, action, data):
-        self.selTechDlg.display('isShipHull', [], self.onHullSelected, self.hullID, self.hullID)
+        if self.editMode:
+            self.selTechDlg.display('isShipHull', [], self.onHullSelected, self.hullID, self.hullID)
 
     def onHullSelected(self, hullID):
         self.hullID = hullID
         self.showDetails()
 
     def onSelectCtrl(self, widget, action, data):
-        self.selTechDlg.display('isShipEquip', ["seq_ctrl"], self.onCtrlSelected, self.ctrlID, self.hullID)
+        if self.editMode:
+            self.selTechDlg.display('isShipEquip', ["seq_ctrl"], self.onCtrlSelected, self.ctrlID, self.hullID)
 
     def onCtrlSelected(self, ctrlID):
         self.ctrlID = ctrlID
@@ -367,8 +381,7 @@ class ConstructionDlg:
     def onSelectDesign(self, widget, action, data):
         item = self.win.vDesigns.selection[0]
         self.editMode = False
-        self.selectedDesignID = item.tDesignID
-        self.highlightedDesignID = item.tDesignID
+        self.selectedDesignID = self.highlightedDesignID = item.tDesignID
         self.showDetails()
 
     def onHighlightDesign(self, widget, action, data):
@@ -388,8 +401,7 @@ class ConstructionDlg:
         self.showDetails()
 
     def onNewDesign(self, widget, action, data):
-        self.selectedDesignID = None
-        self.highlightedDesignID = None
+        self.selectedDesignID = self.highlightedDesignID = None
         self.editMode = True
         self.win.vDesigns.selectItem(None)
         self.hullID = Const.OID_NONE
