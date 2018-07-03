@@ -18,6 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+import pygame
 import pygameui as ui
 from osci.StarMapWidget import StarMapWidget
 from osci import gdata, res, client, sequip
@@ -433,12 +434,18 @@ class ConstructionDlg:
     def onEqSelectedInListInc(self, widget, action, data):
         if self.editMode:
             self._onEqSelectedInList(widget)
-            self._onChangeEquipmentQty(1)
+            if not pygame.key.get_mods() & pygame.KMOD_SHIFT:
+                self._onChangeEquipmentQty(1)
+            else:
+                self._onChangeEquipmentQty(5)
 
     def onEqSelectedInListDec(self, widget, action, data):
         if self.editMode:
             self._onEqSelectedInList(widget)
-            self._onChangeEquipmentQty(-1)
+            if not pygame.key.get_mods() & pygame.KMOD_SHIFT:
+                self._onChangeEquipmentQty(-1)
+            else:
+                self._onChangeEquipmentQty(-5)
 
     def _onEqSelectedInList(self, widget):
         for old_select_widget in self._getSelectedWidget():
