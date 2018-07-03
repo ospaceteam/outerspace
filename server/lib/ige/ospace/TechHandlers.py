@@ -52,7 +52,7 @@ def finishStructSPORECOLONY(tran, source, target, tech):
 
     if target.plSlots > 1:
         for i in range(len(target.slots),target.plSlots-1):
-            target.slots.insert(0, Utils.newStructure(tran, 9013, source.owner, hpRatio = structFromShipHpRatio))
+            target.slots.insert(0, Utils.newStructure(tran, 9013, source.owner, hpRatio = Rules.structFromShipHpRatio))
 
 def finishStructGOVCENTER(tran, source, target, tech):
     player = tran.db[source.owner]
