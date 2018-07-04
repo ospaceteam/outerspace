@@ -58,6 +58,8 @@ class FleetCommandDlg:
 
     def hide(self):
         self.win.setStatus(_("Ready."))
+        self.targetID = Const.OID_NONE
+        self.win.vStarMap.highlightPos = None
         self.win.hide()
         # unregister updates
         if self in gdata.updateDlgs:
@@ -114,33 +116,31 @@ class FleetCommandDlg:
         else:
             info = _('?')
         self.win.vTarget.text = info
-        if self.targetID != Const.OID_NONE:
-            curTarget = client.get(self.targetID, noUpdate = 1)
-            fleet = client.get(self.fleetDlg.fleetID, noUpdate = 1)
-            target = Const.OID_NONE
-            oldTarget = fleet # we can hack it - only coordinates are necessary
-            if fleet.actions:
-                waitTurns = sum([x[2] for x in fleet.actions[fleet.actionIndex:] if x[0] == Const.FLACTION_WAIT])
-                eta = waitTurns # baseline
-                targetIDs = [x[1] for x in fleet.actions[fleet.actionIndex:]]
-                targetIDs.append(self.targetID)
-                for newTargetID in targetIDs:
-                    if newTargetID != Const.OID_NONE:
-                        newTarget = client.get(newTargetID)
-                        newEta = self._evalEta(fleet, oldTarget, newTarget)
-                        if newEta is not None:
-                            eta += newEta
-                        else:
-                            eta = None
-                            break
-                        oldTarget = newTarget
+        curTarget = client.get(self.targetID, noUpdate = 1)
+        fleet = client.get(self.fleetDlg.fleetID, noUpdate = 1)
+        target = Const.OID_NONE
+        oldTarget = fleet # we can hack it - only coordinates are necessary
 
-                if eta is not None:
-                    self.win.vEta.text = res.formatTime(eta)
+        waitTurns = sum([x[2] for x in fleet.actions[fleet.actionIndex:] if x[0] == Const.FLACTION_WAIT])
+        eta = waitTurns # baseline
+        targetIDs = [x[1] for x in fleet.actions[fleet.actionIndex:]]
+        if self.targetID != Const.OID_NONE:
+            targetIDs.append(self.targetID)
+        for newTargetID in targetIDs:
+            if newTargetID != Const.OID_NONE:
+                newTarget = client.get(newTargetID)
+                newEta = self._evalEta(fleet, oldTarget, newTarget)
+                if newEta is not None:
+                    eta += newEta
                 else:
-                    self.win.vEta.text = _("N/A")
-            else:
-                self.win.vEta.text = _("N/A")
+                    eta = None
+                    break
+                oldTarget = newTarget
+
+        if eta is None or not targetIDs:
+            self.win.vEta.text = _("N/A")
+        else:
+            self.win.vEta.text = res.formatTime(eta)
 
         # ships
         fleet = client.get(self.fleetDlg.fleetID, noUpdate = 1)
