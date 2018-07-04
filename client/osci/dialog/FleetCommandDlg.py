@@ -58,6 +58,8 @@ class FleetCommandDlg:
 
     def hide(self):
         self.win.setStatus(_("Ready."))
+        self.targetID = Const.OID_NONE
+        self.win.vStarMap.highlightPos = None
         self.win.hide()
         # unregister updates
         if self in gdata.updateDlgs:
