@@ -213,7 +213,7 @@ class FleetDlg:
         else:
             self.fleetCommandDlg.display(self, self.win.vCommands.items.index(sel[0]) + 1)
 
-    def onDeleteCommand(self, widget, action, data, all=0):
+    def onDeleteCommand(self, widget, action, data, update=True):
         sel = self.win.vCommands.selection
         if not sel:
             self.win.setStatus(_('Select command to delete.'))
@@ -225,7 +225,7 @@ class FleetDlg:
             fleet.actions, fleet.actionIndex = client.cmdProxy.deleteAction(self.fleetID,
                 item.tIndex - 1)
             self.win.vCommands.selection = []
-            if not all: # 0 from UI; 1 from "DeleteAll" function
+            if update:
                 self.win.setStatus(_('Command has been executed.'))
                 if item.text == gdata.fleetActions[Const.FLACTION_WAIT]:
                     fleet = client.get(self.fleetID,forceUpdate=1)
@@ -237,10 +237,10 @@ class FleetDlg:
             return 1
 
     def onDeleteAllCommands(self, widget, action, data):
-        index = 0
-        while len(self.win.vCommands.items) > index:
-            self.win.vCommands.selection = [self.win.vCommands.items[index]]
-            index += self.onDeleteCommand(widget, action, data, all=1)
+        # vCommands does not update in this cycle, so we have to use index
+        for i in range(len(self.win.vCommands.items), 0, -1):
+            self.win.vCommands.selection = [self.win.vCommands.items[i - 1]]
+            self.onDeleteCommand(widget, action, data, update=False)
         self.win.setStatus(_('Command has been executed.'))
         fleet = client.get(self.fleetID,forceUpdate=1)
         self.update()
