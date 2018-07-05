@@ -51,7 +51,8 @@ def add(subtype, detail, attr, text, filter, eff):
 # i18n (delayed translation)
 def N_(msg): return msg
 
-add("*", SHORT, "engPwr", N_("power %+d"), int, 1)
+add("*", SHORT, "engPwr", N_("FTL power %+d"), int, 1)
+add("*", SHORT, "engStlPwr", N_("STL power %+d"), int, 1)
 
 add("seq_wpn", LONG, "weaponAtt", N_("wpn att %+d"), int, 1)
 #add("seq_wpn", SHORT, "weaponClass", N_("trgt %s"), id2Class, 0)

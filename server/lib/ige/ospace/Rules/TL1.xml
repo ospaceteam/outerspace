@@ -299,6 +299,22 @@
 		/>
 		<preresearch>Small scanner suitable for small ships good for stealth reconnaissance of the enemy, but limited in range.</preresearch>
 	</technology>
+	<technology id="1405" symbol="STLENG1" name="STL Engine">
+		<starting/>
+		<discovery
+			researchMod="1.00 + 1.00"
+			level="1"
+		/>
+		<shipequip
+			subtype="seq_eng"
+			buildProd="120"
+			slots="2"
+			weight="1"
+			engStlPwr="48"
+			signature="0"
+		/>
+		<preresearch>Proven technology to move our ships around a star system. It's better suited for maneuvering during fights then the FTL engines.</preresearch>
+	</technology>
 	<technology id="1500" symbol="CANNON1" name="Cannon">
 		<discovery
 			researchMod="1.00 + 0.5 + 0.5"

@@ -106,6 +106,11 @@ class IPlayer(IObject):
                 obj.galaxy = None
         # refresh technologies
         self.setStartingTechnologies(obj)
+        # clean up obsoleted technologies
+        obsoleted = set(obj.techs.keys()).difference(Rules.techs.keys())
+        for techID in obsoleted:
+            log.debug("Deleting obsoleted technology", obj.oid, techID)
+            del obj.techs[techID]
         # update all designs
         for designID in obj.shipDesigns:
             old = obj.shipDesigns[designID]

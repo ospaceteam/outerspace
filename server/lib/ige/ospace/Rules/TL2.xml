@@ -419,6 +419,24 @@
 		/>
 		<preresearch>This flak cannon can be mounted on medium to large ships to help defend them against fighters.</preresearch>
 	</technology>
+	<technology id="2410" symbol="NSTLENG2" name="Nuclear STL Engine">
+		<discovery
+			researchMod="1.00 + 1.00"
+			level="2"
+			researchRequires="STLENG1-5"
+			researchReqSRes="SR_TL1A"
+		/>
+		<shipequip
+			buildSRes="SR_TL1A:stratResAmountSmall"
+			subtype="seq_eng"
+			buildProd="240"
+			slots="4"
+			weight="2"
+			engStlPwr="120"
+			signature="0"
+		/>
+		<preresearch>To tame brutal power of nuclear reaction, and use it to propel ships within normal space of star systems. It will give our fleets tactical edge over enemies.</preresearch>
+	</technology>
 	<technology id="2801" symbol="NFURANIUM" name="Nuclear Fusion - Uranium">
 		<discovery
 			researchMod="1.50 + 0.75"

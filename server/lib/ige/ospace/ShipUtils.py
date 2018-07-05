@@ -45,6 +45,7 @@ def makeShipMinSpec(player, name, hullID, eqIDs, improvements,
     spec.signature = ship.signature
     spec.scannerPwr = ship.scannerPwr
     spec.speed = ship.speed
+    spec.battleSpeed = ship.battleSpeed
     spec.maxHP = ship.maxHP
     spec.shieldHP = ship.shieldHP
     spec.combatAtt = ship.combatAtt
@@ -146,11 +147,11 @@ def _moduleCombat(ship, tech, techEff, combatExtra):
 def _finalizeCombat(ship):
     # compute base attack/defence
     ship.combatAtt += ship.combatAttBase
-    ship.combatAtt += int(ship.speed)
+    ship.combatAtt += int(ship.battleSpeed)
     ship.combatDef = int((ship.combatDef + ship.combatDefBase) * ship.combatDefMultiplier)
     ship.missileDef = int((ship.missileDef + ship.missileDefBase) * ship.missileDefMultiplier)
-    ship.combatDef += int(ship.speed)
-    ship.missileDef += int(ship.speed / 2.0)
+    ship.combatDef += int(ship.battleSpeed)
+    ship.missileDef += int(ship.battleSpeed / 2.0)
     for i in ship.improvements:
         if i == Const.SI_ATT:
             ship.combatAtt *= Rules.shipImprovementMod
@@ -200,6 +201,7 @@ def _moduleBase(ship, tech, techEff):
     ship.storEn += tech.storEn * techEff
     ship.operEn += tech.operEn
     ship.engPwr += tech.engPwr * techEff
+    ship.engStlPwr += tech.engStlPwr * techEff
     ship.scannerPwr = max(ship.scannerPwr, tech.scannerPwr * techEff)
 
 def _finalizeBase(ship, hull):
@@ -208,11 +210,14 @@ def _finalizeBase(ship, hull):
     ship.storEn = int(ship.storEn)
     ship.scannerPwr = int(ship.scannerPwr)
     ship.engPwr = int(ship.engPwr)
+    ship.engStlPwr = int(ship.engStlPwr)
     ship.speed = float(ship.engPwr) / ship.weight
+    ship.battleSpeed = float(ship.engPwr + ship.engStlPwr) / ship.weight
     # improvements
     for i in ship.improvements:
         if i == Const.SI_SPEED:
             ship.speed *= Rules.shipImprovementMod
+            ship.battleSpeed *= Rules.shipImprovementMod
         elif i == Const.SI_TANKS:
             ship.storEn *= Rules.shipImprovementMod
 
@@ -230,7 +235,7 @@ def _setCombatPower(ship, combatExtra):
         attackPwr += (att / float(att + refDefence) * dmg) / sizeCompensation
     hpEffect = ship.maxHP + ship.shieldHP
     attDefEffect = refAttack / (refAttack + ship.combatDef) * refDmg
-    speedEffect = min(1.33, max(0.5, (ship.speed / refSpeed)))
+    speedEffect = min(1.33, max(0.5, (ship.battleSpeed / refSpeed)))
     combatExtra += ship.damageAbsorb * 1500
     ship.combatPwr = int(attackPwr * hpEffect / attDefEffect * speedEffect + combatExtra)
 
@@ -259,6 +264,9 @@ def makeShipFullSpec(player, name, hullID, eqIDs, improvements, raiseExs = True)
     ship.slots = 0
     ship.scannerPwr = max(hull.scannerPwr * hullTechEff, Rules.scannerMinPwr)
     ship.engPwr = 0
+    ship.engStlPwr = 0
+    ship.speed = 0.0
+    ship.battleSpeed = 0.0
     # stats grouped as "Signature"
     ship.signature = hull.signature
     ship.negsignature = 0

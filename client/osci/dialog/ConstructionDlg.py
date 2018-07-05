@@ -267,7 +267,12 @@ class ConstructionDlg:
             hull = client.getTechInfo(result.hullID)
             self.win.vAClass.text = _(gdata.shipClasses[result.combatClass])
             self.win.vASignature.text = _("%d") % result.signature
-            self.win.vASpeed.text = _("%.2f") % result.speed
+            if result.speed == result.battleSpeed:
+                self.win.vSpeed.text = _("Speed")
+                self.win.vASpeed.text = _("%.2f") % result.speed
+            else:
+                self.win.vSpeed.text = _("Spd FTL (STL)")
+                self.win.vASpeed.text = _("%.2f (%.2f)") % (result.speed, result.battleSpeed)
             if result.shieldHP > 0:
                 self.win.vAHP.text = _("%d - %d") % (result.maxHP, result.shieldHP)
             else:
@@ -625,8 +630,8 @@ class ConstructionDlg:
 
         ui.Label(self.win, layout = (28, 20, 5, 1), text = _("Signature"), align = ui.ALIGN_W)
         ui.Label(self.win, layout = (33, 20, 5, 1), id = "vASignature", align = ui.ALIGN_E)
-        ui.Label(self.win, layout = (28, 21, 5, 1), text = _("Speed"), align = ui.ALIGN_W)
-        ui.Label(self.win, layout = (33, 21, 5, 1), id = "vASpeed", align = ui.ALIGN_E)
+        ui.Label(self.win, layout = (28, 21, 5, 1), id = "vSpeed", text = _("Speed"), align = ui.ALIGN_W)
+        ui.Label(self.win, layout = (34, 21, 5, 1), id = "vASpeed", align = ui.ALIGN_E)
         ui.Label(self.win, layout = (28, 22, 5, 1), text = _("Tanks"), align = ui.ALIGN_W)
         ui.Label(self.win, layout = (33, 22, 5, 1), id = "vATanks", align = ui.ALIGN_E)
         ui.Label(self.win, layout = (28, 23, 5, 1), text = _("Max. range"), align = ui.ALIGN_W)
