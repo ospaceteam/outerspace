@@ -88,6 +88,7 @@ class IAIRenegadePlayer(IPlayer):
         obj.techLevel = 2
         obj.techs[Rules.Tech.CANNON1] = 3
         obj.techs[Rules.Tech.SSROCKET] = 3
+        obj.techs[Rules.Tech.STLENG1] = 3
         obj.techs[Rules.Tech.RENEGADEBASE] = 3
         obj.techs[Rules.Tech.RENEGADEBASE2] = 3
         obj.techs[Rules.Tech.RENEGADEBASE2MINOR] = 3
@@ -98,11 +99,11 @@ class IAIRenegadePlayer(IPlayer):
     @staticmethod
     def setStartingShipDesigns(obj):
         obj.shipDesigns[1] = ShipUtils.makeShipMinSpec(obj, 'Fighter', Rules.Tech.SMALLHULL1,
-            {Rules.Tech.SCOCKPIT1:1, Rules.Tech.CANNON1:1}, [])
+            {Rules.Tech.SCOCKPIT1:1, Rules.Tech.CANNON1:1, Rules.Tech.STLENG1:2}, [])
         obj.shipDesigns[2] = ShipUtils.makeShipMinSpec(obj, 'Corvette', Rules.Tech.SMALLHULL1,
-            {Rules.Tech.SCOCKPIT1:1, Rules.Tech.CANNON1:2, Rules.Tech.STEELARM2:1}, [])
+            {Rules.Tech.SCOCKPIT1:1, Rules.Tech.CANNON1:2, Rules.Tech.STLENG1:1, Rules.Tech.STEELARM2:1}, [])
         obj.shipDesigns[3] = ShipUtils.makeShipMinSpec(obj, 'Frigate', Rules.Tech.MEDIUMHULL2,
-            {Rules.Tech.SBRIDGE1:1, Rules.Tech.CANNON1:2, Rules.Tech.SSROCKET:2}, [])
+            {Rules.Tech.SBRIDGE1:1, Rules.Tech.CANNON1:2, Rules.Tech.SSROCKET:2, Rules.Tech.STLENG1:2}, [])
 
     def getDiplomacyWith(self, tran, obj, playerID):
         if obj.oid == playerID:

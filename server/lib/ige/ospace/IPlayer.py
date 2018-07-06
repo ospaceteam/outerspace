@@ -106,6 +106,11 @@ class IPlayer(IObject):
                 obj.galaxy = None
         # refresh technologies
         self.setStartingTechnologies(obj)
+        # clean up obsoleted technologies
+        obsoleted = set(obj.techs.keys()).difference(Rules.techs.keys())
+        for techID in obsoleted:
+            log.debug("Deleting obsoleted technology", obj.oid, techID)
+            del obj.techs[techID]
         # update all designs
         for designID in obj.shipDesigns:
             old = obj.shipDesigns[designID]
@@ -245,7 +250,6 @@ class IPlayer(IObject):
             Utils.newStructure(tran, Rules.Tech.PWRPLANTNUK1, playerID, Const.STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
             Utils.newStructure(tran, Rules.Tech.FARM1, playerID, Const.STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
             Utils.newStructure(tran, Rules.Tech.FARM1, playerID, Const.STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
-            Utils.newStructure(tran, Rules.Tech.FARM1, playerID, Const.STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
             Utils.newStructure(tran, Rules.Tech.ANCFACTORY, playerID, Const.STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
             Utils.newStructure(tran, Rules.Tech.ANCFACTORY, playerID, Const.STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
             Utils.newStructure(tran, Rules.Tech.ANCRESLAB, playerID, Const.STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio),
@@ -271,8 +275,10 @@ class IPlayer(IObject):
                 {Rules.Tech.SCOCKPIT0:1, Rules.Tech.CANNON0:2, Rules.Tech.FTLENG0:3}, [])
         obj.shipDesigns[3] = ShipUtils.makeShipMinSpec(obj, 'Bomber', Rules.Tech.SMALLHULL0,
                 {Rules.Tech.SCOCKPIT0:1, Rules.Tech.CONBOMB0:1, Rules.Tech.FTLENG0:3}, [])
-        obj.shipDesigns[4] = ShipUtils.makeShipMinSpec(obj, 'Colony Ship', Rules.Tech.MEDIUMHULL0,
-                {Rules.Tech.SCOCKPIT0:1, Rules.Tech.COLONYMOD0:1, Rules.Tech.FTLENG0:4}, [])
+        obj.shipDesigns[4] = ShipUtils.makeShipMinSpec(obj, 'Patrol Corvette', Rules.Tech.SMALLHULL0,
+                {Rules.Tech.SCOCKPIT0:1, Rules.Tech.CANNON0:3, Rules.Tech.FTLENG0:1, Rules.Tech.STLENG1:2}, [])
+        obj.shipDesigns[5] = ShipUtils.makeShipMinSpec(obj, 'Colony Ship', Rules.Tech.MEDIUMHULL0,
+                {Rules.Tech.SCOCKPIT0:1, Rules.Tech.COLONYMOD0:1, Rules.Tech.FTLENG0:5}, [])
 
     @staticmethod
     def setStartingFleet(tran, playerID, system):
@@ -288,7 +294,7 @@ class IPlayer(IObject):
         tran.gameMngr.cmdPool[Const.T_FLEET].addNewShip(tran, fleet, 1)
         tran.gameMngr.cmdPool[Const.T_FLEET].addNewShip(tran, fleet, 2)
         tran.gameMngr.cmdPool[Const.T_FLEET].addNewShip(tran, fleet, 2)
-        tran.gameMngr.cmdPool[Const.T_FLEET].addNewShip(tran, fleet, 4)
+        tran.gameMngr.cmdPool[Const.T_FLEET].addNewShip(tran, fleet, 5)
 
     @public(Const.AL_FULL)
     def startGlobalConstruction(self, tran, player, techID, quantity, isShip, reportFinished, queue):

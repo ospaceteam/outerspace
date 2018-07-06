@@ -83,7 +83,7 @@ class ConstrSelTechDlg:
         self.show()
 
     def getTechType(self, tech):
-        if getattr(tech, "engPwr") > 0:
+        if getattr(tech, "subtype") == "seq_eng":
             return ENGINE
         if getattr(tech, "weaponClass") == 0 and getattr(tech, "weaponDmgMin") > 0:
             return SMALL

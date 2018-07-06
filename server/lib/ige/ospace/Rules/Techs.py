@@ -120,6 +120,7 @@ attrs = {
     "weight": 0,
     "maxWeight": 0,
     "engPwr": 0,
+    "engStlPwr": 0,
     "shieldPerc": 0.0, # how many percent of maxHP have shields
     "minHull": 0,
     "maxHull": 10, #just make this higher than the largest hull so we know it doesn't break anything
