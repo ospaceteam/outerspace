@@ -66,7 +66,6 @@ class StarMapWidget(Widget):
         self.pressedObjIDs = []
         self._newCurrXY = 0
         self.activePos = (0, 0)
-        self.centerPos = (0, 0)
 
         # the map itself!
         self.star_map = StarMap(self.control_modes)
@@ -112,7 +111,6 @@ class StarMapWidget(Widget):
 
     def precompute(self):
         self.star_map.rect = self.rect
-        self.star_map.currX, self.star_map.currY = self.centerPos
         self.star_map.precompute()
         player = client.getPlayer()
         if (player.type == Const.T_PIRPLAYER or\
