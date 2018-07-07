@@ -18,16 +18,39 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 from ige import log
-from ais_base import AI
+from ige.ospace import Const
+from ige.ospace import Rules
+from ige.ospace import Utils
 
-class EDEN(AI):
-    """ old empire is sleeping, regaining strength """
+import ai_tools as tool
+
+class AI(object):
+    def __init__(self, client):
+        self.client = client
+        self.db = client.db
+        self.player = client.getPlayer()
+
+        tool.tool_parseDB(self.client, self.db)
+
+    def economy_manager(self):
+        raise NotImplementedError
+
+    def defense_manager(self):
+        raise NotImplementedError
+
+    def offense_manager(self):
+        raise NotImplementedError
+
+    def research_manager(self):
+        raise NotImplementedError
+
+    def diplomacy_manager(self):
+        raise NotImplementedError
+
     def run(self):
-        return
-
-
-def run(aclient):
-    ai = EDEN(aclient)
-    ai.run()
-    aclient.saveDB()
-
+        self.economy_manager()
+        self.defense_manager()
+        self.offense_manager()
+        self.research_manager()
+        self.diplomacy_manager()
+        
