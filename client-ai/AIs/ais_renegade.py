@@ -32,6 +32,36 @@ db = None
 playerID = None
 player = None
 
+def _buildSpecialShips(player, planet):
+    uraniumSpec = player.shipDesigns[4]
+    titaniumSpec = player.shipDesigns[5]
+    if player.stratRes.get(Const.SR_TL1A, 0) >= uraniumSpec.buildSRes[Const.SR_TL1A]:
+        planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planet.oid, 4, 1, planet.oid, True, False, Const.OID_NONE)
+        return True
+    elif player.stratRes.get(Const.SR_TL1B, 0) >= titaniumSpec.buildSRes[Const.SR_TL1B]:
+        planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planet.oid, 5, 1, planet.oid, True, False, Const.OID_NONE)
+        return True
+
+def _buildNormalShips(player, planet):
+        shipDraw = random.randint(1, 10)
+        # if there is enough special resources for our unique designs, build those!
+        # 1/10 - Frigate
+        # 3/10 - Corvette
+        # 6/10 - Fighter
+        if shipDraw == 1:
+            planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planet.oid, 3, 1, planet.oid, True, False, Const.OID_NONE)
+        elif shipDraw <= 4:
+            planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planet.oid, 2, 1, planet.oid, True, False, Const.OID_NONE)
+        else:
+            planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planet.oid, 1, 1, planet.oid, True, False, Const.OID_NONE)
+
+def _buildShips(player, idlePlanets):
+    for planetID in idlePlanets:
+        planet = db[planetID]
+        if _buildSpecialShips(player, planet):
+            continue
+        _buildNormalShips(player, planet)
+
 def systemManager():
     global data, player, db
     for planetID in data.myPlanets:
@@ -81,24 +111,17 @@ def systemManager():
                 hasCosmodrome = True
                 break
         if hasCosmodrome:
-            for planetID in idlePlanets:
-                # there is our airbase in the system - we can build some random ship
-                shipDraw = random.randint(1, 10)
-                # 1/10 - Frigate
-                # 2/10 - Corvette
-                # 7/10 - Fighter
-                if shipDraw == 1:
-                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 3, 1, planetID, True, False, Const.OID_NONE)
-                elif shipDraw <= 3:
-                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 2, 1, planetID, True, False, Const.OID_NONE)
-                else:
-                    planet.prodQueue, player.stratRes = client.cmdProxy.startConstruction(planetID, 1, 1, planetID, True, False, Const.OID_NONE)
+            _buildShips(player, idlePlanets)
 
 def shipDesignManager():
-    # there are 3 basic designs    created by the server
-    # 1: Fighter [Small hull, Cockpit, 1x Cannon]
-    # 2: Corvette [Small hull, Cockpit, 2x Cannon, 1x Steel Armor
-    # 3: Frigate [Medium hull, Bridge, 2x Cannon, 2x SS Rocket]
+    # there are 5 basic designs created by the server
+    # 1: Fighter [Small hull, Cockpit, 1x Cannon, 2x STL Engine]
+    # 2: Corvette [Small hull, Cockpit, 2x Cannon, 1x Steel Armor, 1x STL Engine]
+    # 3: Frigate [Medium hull, Bridge, 2x Cannon, 2x SS Rocket, 2x STL Engine]
+    # special using uranium:
+    # 4: Destroyer [Medium hull, Bridge, 4x Cannon, 2x SS Rocket, 3x Nuclear STL Engine]
+    # special using titanium:
+    # 5: Frigate [Crude Titanium Medium hull, Bridge, 5x Cannon, 3x SS Rocket, 4x STL Engine]
     pass
 
 def researchManager():
@@ -106,6 +129,23 @@ def researchManager():
 
 def attackManager():
     pass
+
+def diplomacyManager():
+    # renegades are friendly, want to trade, and can help refuel civilian ships
+    global client, db, player, playerID
+    for contactID in player.diplomacyRels:
+        dipl = client.getDiplomacyWith(contactID)
+        for pactID in [Const.PACT_ALLOW_CIVILIAN_SHIPS, Const.PACT_ALLOW_TANKING, Const.PACT_MINOR_CP_COOP, Const.PACT_MAJOR_CP_COOP]:
+            pactSpec = Rules.pactDescrs[pactID]
+            if dipl.relation < pactSpec.validityInterval[0] or dipl.relation > pactSpec.validityInterval[1]:
+                # not friendly enough
+                continue
+            if pactID in dipl.pacts and dipl.pacts[pactID][0] in [Const.PACT_ACTIVE, Const.PACT_INACTIVE]:
+                # nothing more to do, move along
+                continue
+            # hey, we should enable this pact!
+            conditions = [pactID]
+            player.diplomacyRels = client.cmdProxy.changePactCond(playerID, contactID, pactID, Const.PACT_INACTIVE, conditions)
 
 def run(aclient):
     global client, db, player, playerID
@@ -119,6 +159,7 @@ def run(aclient):
     researchManager()
     shipDesignManager()
     systemManager()
+    diplomacyManager()
 
     attackManager()
     client.saveDB()
