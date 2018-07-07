@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+#
+#  Copyright 2001 - 2016 Ludek Smid [http://www.ospace.net/]
+#
+#  This file is part of Outer Space.
+#
+#  Outer Space is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  Outer Space is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with Outer Space; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+-->
+<techtree>
+	<technology id="9002" symbol="PIRATEBASE" name="Pirate Base">
+		<discovery
+			researchMod="1.0 + 0.5"
+			researchRaces="p"
+			level="1"
+		/>
+		<structure
+			buildProd="3840"
+			prodBio="80"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			prodEn="60"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			prodProd="8"
+			prodProdMod="0.0,0.0,0.0,1.0"
+			operWorkers="5000"
+			maxHP="2400"
+			combatAtt="10"
+			revoltThr="-100"
+			structWeapons="8,8,8,0,0"
+			unpackPop="6000"
+			finishConstrHandler="finishStructPIROUTPOST"
+			validateConstrHandler="validateStructPIROUTPOST"
+			isMilitary="1"
+			fullInfo="1"
+			refuelMax="60"
+			refuelInc="4"
+			repairShip="0.04"
+			upgradeShip="8"
+			scannerPwr="80"
+		/>
+		<description>The basic military structure of a pirate.</description>
+	</technology>	
+	<technology id="9006" symbol="PIRATEDEN" name="Pirate Den">
+		<discovery
+			researchMod="1.0 + 0.5"
+			researchRaces="p"
+			level="1"
+		/>
+		<structure
+			buildProd="240"
+			prodBio="60"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			prodEn="60"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			prodProd="16"
+			prodProdMod="0.0,0.0,0.0,1.0"
+			operWorkers="1000"
+			maxHP="400"
+			fullInfo="1"
+		/>
+		<description>We can build ships! The better to conquer the enemy with!</description>
+	</technology>
+	<technology id="9007" symbol="PIRATESD" name="Pirate Shipyards">
+		<discovery
+			researchMod="1.00"
+			researchRaces="p"
+			level="1"
+		/>
+		<structure
+			buildProd="480"
+			operEn="100"
+			prodProd="12"
+			prodProdMod="0.0,0.0,0.0,1.0"
+			operWorkers="1200"
+			maxHP="800"
+			refuelMax="80"
+			refuelInc="5"
+			repairShip="0.04"
+			upgradeShip="15"
+			combatAtt="25"
+			structWeapons="4,3,2,0,0"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+	</technology>
+	<technology id="9008" symbol="PIRATEFTLENG" name="Pirate FTL Engine">
+		<discovery
+			researchMod="1.00 + 1.00"
+			researchRaces="p"
+			level="1"
+		/>
+		<shipequip
+			subtype="seq_eng"
+			buildProd="120"
+			storEn="96"
+			operEn="4"
+			slots="4"
+			weight="4"
+			engPwr="64"
+			signature="0"
+		/>
+	</technology>
+	<technology id="9009" symbol="PIRCOLONYMOD" name="Pirate Colony Module">
+		<discovery
+			researchMod="1.00 + 0.50"
+			researchRaces="p"
+			level="1"
+		/>
+		<shipequip
+			subtype="seq_struct"
+			buildProd="3840"
+
+			storEn="960"
+			operEn="10"
+
+			slots="8"
+			weight="40"
+			unpackStruct="PIRATEBASE"
+			minHull="1"
+        />
+        <preresearch>Colony Module needs some fame to deploy. Consult your Empire Overview dialog. Deploys a Pirate Colony Module.</preresearch>
+	</technology>
+	<technology id="9010" symbol="PIRGOVERNMENT" name="Main Pirate Base">
+		<discovery
+			researchMod="1.50"
+			researchRaces="p"
+			level="1"
+		/>
+		<structure
+			subtype="str25"
+			buildProd="2880"
+			operEn="150"
+			operWorkers="7500"
+			maxHP="1800"
+			moraleTrgt="+10"
+			govPwr="500000"
+			finishConstrHandler="finishStructGOVCENTER"
+			isMilitary="1"
+		/>
+		<preresearch>Main pirate base that coordinates actions of pirates. Works like government center for ordinal commanders. So, don't loose it!</preresearch>
+	</technology>
+	<technology id="9030" symbol="PIRATEBREWERY" name="Pirate Brewery">
+		<discovery
+			researchMod="1.0 + 0.5"
+			researchRaces="p"
+			level="1"
+		/>
+		<structure
+			buildProd="1440"
+			operEn="25"
+			prodBio="20"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			operWorkers="1000"
+			maxHP="800"
+			isMilitary="1"
+			trainShipInc="0.02"
+			trainShipMax="7"
+			fullInfo="1"
+		/>
+		<description>A drunk pirate fights better!</description>
+	</technology>
+	<technology id="9031" symbol="PIRATEPRISON" name="Pirate Prison">
+		<discovery
+			researchMod="1.0 + 0.5"
+			researchRaces="p"
+			level="1"
+		/>
+		<structure
+			buildProd="1440"
+			operEn="50"
+			operWorkers="3000"
+			maxHP="400"
+			prodProd="28"
+			prodProdMod="0.0,0.0,0.0,1.0"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+		<description>Utilizing the power of slave labor, the pirates have found a way to greatly increase their production.</description>
+	</technology>
+	<technology id="9032" symbol="PIRATESMALLBASE" name="Pirate Small Base">
+		<discovery
+			researchMod="1.0 + 0.5"
+			researchRaces="p"
+			level="1"
+		/>
+		<structure
+			buildProd="1440"
+			prodBio="80"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			prodEn="60"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			prodProd="8"
+			prodProdMod="0.0,0.0,0.0,1.0"
+			operWorkers="5000"
+			maxHP="400"
+			combatAtt="5"
+			revoltThr="-100"
+			structWeapons="2,2,2,0,0"
+			unpackPop="6000"
+			finishConstrHandler="finishStructPIROUTPOST"
+			validateConstrHandler="validateStructPIROUTPOST"
+			isMilitary="1"
+			fullInfo="1"
+			refuelMax="60"
+			refuelInc="2"
+			repairShip="0.02"
+			upgradeShip="4"
+			scannerPwr="40"
+		/>
+		<description>A smaller version of the basic military structure of a pirate.</description>
+	</technology>
+	<technology id="9033" symbol="PIRSMCOLONYMOD" name="Pirate Small Colony Module">
+		<discovery
+			researchMod="1.00 + 0.50"
+			researchRaces="p"
+			level="1"
+		/>
+		<shipequip
+			subtype="seq_struct"
+			buildProd="720"
+
+			storEn="960"
+			operEn="10"
+
+			slots="8"
+			weight="40"
+			unpackStruct="PIRATESMALLBASE"
+			minHull="1"
+	        />
+		<description>Colony Module needs some fame to deploy. Consult your Empire Overview dialog. Deploys a Pirate Small Colony Module.</description>
+	</technology>
+</techtree>

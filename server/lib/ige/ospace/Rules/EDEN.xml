@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+#
+#  Copyright 2001 - 2016 Ludek Smid [http://www.ospace.net/]
+#
+#  This file is part of Outer Space.
+#
+#  Outer Space is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  Outer Space is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with Outer Space; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+-->
+<techtree>
+	<technology id="9003" symbol="EDENBASE" name="E.D.E.N. Base">
+		<discovery
+			researchMod="1.0 + 0.5"
+			researchRaces="e"
+			level="1"
+		/>
+		<structure
+			buildProd="2880"
+			prodBio="500"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			prodEn="120"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			prodProd="10"
+			prodProdMod="0.0,0.0,0.0,1.0"
+			operWorkers="1000"
+			scannerPwr="80"
+			maxHP="4800"
+			combatAtt="20"
+			revoltThr="-100"
+			structWeapons="12,12,12,0,0"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+	</technology>
+	<technology id="9020" symbol="EDENSTATION" name="Empire DEfense Network (E.D.E.N.) Flak Platform">
+		<discovery
+			researchMod="1.0 + 0.5"
+			researchRaces="e"
+			level="1"
+		/>
+		<structure
+			buildProd="10000"
+			operWorkers="2000"
+			prodBio="200"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			storPop="10000"
+			scannerPwr="80"
+			maxHP="12000"
+			combatAtt="40"
+			revoltThr="-100"
+			structWeapons="24,48,24,4,1"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+		<preresearch>The elite defensive structure of the long fallen Empire.</preresearch>
+		<description>The elite defensive structure of the long fallen Empire.</description>
+	</technology>
+	<technology id="9021" symbol="EDENCANNON" name="E.D.E.N. Spacial Disruptor">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			researchRaces="e"
+			level="1"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="1"
+			weight="2"
+			buildProd="200000"
+			buildSRes="SR_TL5A:stratResAmountSmall"
+			weaponDmgMin="20"
+			weaponDmgMax="30"
+			weaponAtt="20"
+			weaponClass="0"
+			weaponROF="6"
+			weaponIgnoreShield="1"
+		/>
+		<description>The Empire's most powerful anti-fighter weapon.</description>
+	</technology>
+	<technology id="9022" symbol="EDENMISSILE" name="E.D.E.N. Hunter-Seeker">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			researchRaces="e"
+			level="1"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="3"
+			weight="6"
+			buildProd="200000"
+			buildSRes="SR_TL5A:stratResAmountSmall"
+			weaponDmgMin="50"
+			weaponDmgMax="100"
+			weaponAtt="15"
+			weaponClass="1"
+			weaponROF="2"
+			weaponIsMissile="1"
+			weaponIgnoreShield="1"
+		/>
+		<description>The Empire's most powerful anti-frigate weapon.</description>
+	</technology>
+	<technology id="9023" symbol="EDENTORP" name="E.D.E.N. Atomizer">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			researchRaces="e"
+			level="1"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="3"
+			weight="3"
+			buildProd="300000"
+			buildSRes="SR_TL5A:stratResAmountSmall"
+			weaponDmgMin="200"
+			weaponDmgMax="300"
+			weaponAtt="12"
+			weaponClass="2"
+			weaponROF="2"
+			weaponIsMissile="1"
+			weaponIgnoreShield="1"
+		/>
+		<description>The Empire's most powerful anti-cruiser weapon.</description>
+	</technology>
+	<technology id="9024" symbol="EDENBOMB" name="E.D.E.N. Singularity Bomb">
+		<discovery
+			researchMod="1.00 + 0.5 + 0.5"
+			researchRaces="e"
+			level="1"
+		/>
+		<shipequip
+			subtype="seq_wpn"
+			slots="4"
+			weight="5"
+			buildProd="800000"
+			buildSRes="SR_TL5A:stratResAmountSmall"
+			weaponDmgMin="2000"
+			weaponDmgMax="3000"
+			weaponAtt="16"
+			weaponClass="3"
+			weaponROF="2"
+			weaponIgnoreShield="1"
+		/>
+		<description>The Empire's most powerful anti-planet weapon.</description>
+	</technology>
+	<technology id="9004" symbol="ANCFACTORY" name="Ancient Factory">
+		<discovery
+			researchMod="1.0"
+			level="99"
+		/>
+		<structure
+			buildProd="720"
+			operEn="50"
+			operWorkers="1500"
+			prodProd="34"
+			prodProdMod="0.0,1.0,0.0,0.0"
+			prodEnv="-6"
+			maxHP="600"
+			fullInfo="1"
+		/>
+	</technology>
+	<technology id="9005" symbol="ANCRESLAB" name="Ancient ResLab">
+		<discovery
+			researchMod="1.0"
+			level="99"
+		/>
+		<structure
+			buildProd="720"
+			operEn="30"
+			operWorkers="1500"
+			prodSci="40"
+			maxHP="600"
+			fullInfo="1"
+		/>
+	</technology>
+</techtree>
