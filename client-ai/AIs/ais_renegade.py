@@ -40,100 +40,105 @@ class Renegade(AI):
     5: Frigate [Crude Titanium Medium hull, Bridge, 5x Cannon, 3x SS Rocket, 4x STL Engine]
     """
 
-    def _buildSpecialShips(self, planet):
-        uraniumSpec = self.player.shipDesigns[4]
-        titaniumSpec = self.player.shipDesigns[5]
-        if self.player.stratRes.get(Const.SR_TL1A, 0) >= uraniumSpec.buildSRes[Const.SR_TL1A]:
+    def _build_special_ships(self, planet):
+        uranium_spec = self.player.shipDesigns[4]
+        titanium_spec = self.player.shipDesigns[5]
+        if self.player.stratRes.get(Const.SR_TL1A, 0) >= uranium_spec.buildSRes[Const.SR_TL1A]:
             planet.prodQueue, self.player.stratRes = self.client.cmdProxy.startConstruction(planet.oid, 4, 1, planet.oid, True, False, Const.OID_NONE)
             return True
-        elif self.player.stratRes.get(Const.SR_TL1B, 0) >= titaniumSpec.buildSRes[Const.SR_TL1B]:
+        elif self.player.stratRes.get(Const.SR_TL1B, 0) >= titanium_spec.buildSRes[Const.SR_TL1B]:
             planet.prodQueue, self.player.stratRes = self.client.cmdProxy.startConstruction(planet.oid, 5, 1, planet.oid, True, False, Const.OID_NONE)
             return True
 
-    def _buildNormalShips(self, planet):
-            shipDraw = random.randint(1, 10)
+    def _build_normal_ships(self, planet):
+            ship_draw = random.randint(1, 10)
             # if there is enough special resources for our unique designs, build those!
             # 1/10 - Frigate
             # 3/10 - Corvette
             # 6/10 - Fighter
-            if shipDraw == 1:
+            if ship_draw == 1:
                 planet.prodQueue, self.player.stratRes = self.client.cmdProxy.startConstruction(planet.oid, 3, 1, planet.oid, True, False, Const.OID_NONE)
-            elif shipDraw <= 4:
+            elif ship_draw <= 4:
                 planet.prodQueue, self.player.stratRes = self.client.cmdProxy.startConstruction(planet.oid, 2, 1, planet.oid, True, False, Const.OID_NONE)
             else:
                 planet.prodQueue, self.player.stratRes = self.client.cmdProxy.startConstruction(planet.oid, 1, 1, planet.oid, True, False, Const.OID_NONE)
 
-    def _buildShips(self, idlePlanets):
-        for planetID in idlePlanets:
-            planet = self.db[planetID]
-            if self._buildSpecialShips(planet):
+    def _build_ships(self, idle_planets):
+        for planet_id in idle_planets:
+            planet = self.db[planet_id]
+            if self._build_special_ships(planet):
                 continue
-            self._buildNormalShips(planet)
+            self._build_normal_ships(planet)
 
-    def _preparePlanetPlan(self, actualStats, planetID):
-        planet = self.db[planetID]
-        if Rules.Tech.RENEGADECOSMODROME in actualStats.planets[planetID] or\
-                Rules.Tech.RENEGADEBASE3 in actualStats.planets[planetID] or\
-                Rules.Tech.RENEGADEBASE3MINOR in actualStats.planets[planetID]:
+    def _prepare_free_planet_plan(self, planet_id):
+        return {Rules.Tech.RENEGADEBASE:1}
+
+    def _prepare_planet_plan(self, actual_stats, planet_id):
+        planet = self.db[planet_id]
+        if Rules.Tech.RENEGADECOSMODROME in actual_stats.planets[planet_id] or\
+                Rules.Tech.RENEGADEBASE3 in actual_stats.planets[planet_id] or\
+                Rules.Tech.RENEGADEBASE3MINOR in actual_stats.planets[planet_id]:
             return {Rules.Tech.RENEGADEBASE3:1,
                     Rules.Tech.RENEGADECOSMODROME:min(planet.plSlots - 1, 1),
                     Rules.Tech.RENEGADEBASE3MINOR:max(planet.plSlots - 2, 0)}
         elif planet.plStratRes and\
-                tool.compareBuildStructPlans(actualStats.planets[planetID], {
+                tool.compareBuildStructPlans(actual_stats.planets[planet_id], {
                                             Rules.Tech.RENEGADEBASE2:1,
                                             Rules.Tech.RENEGADEBASE2MINOR:planet.plSlots - 1}):
             return {Rules.Tech.RENEGADEBASE3:1,
                     Rules.Tech.RENEGADEBASE2MINOR:planet.plSlots - 1}
-        elif Rules.Tech.RENEGADEBASE2 in actualStats.planets[planetID]:
+        elif Rules.Tech.RENEGADEBASE2 in actual_stats.planets[planet_id]:
             return {Rules.Tech.RENEGADEBASE2:1,
                     Rules.Tech.RENEGADEBASE2MINOR:planet.plSlots - 1}
-        elif actualStats.planets[planetID].setdefault(Rules.Tech.RENEGADEBASE, 0) > 0:
+        elif Rules.Tech.RENEGADEBASE in actual_stats.planets[planet_id] and planet_id in self.data.myPlanets:
             planet.prodQueue, self.player.stratRes = \
-                    self.client.cmdProxy.startConstruction(planetID, Rules.Tech.RENEGADEBASE2,
-                                                      1, planetID, False, False, Rules.Tech.RENEGADEBASE)
-            return actualStats.planets[planetID]
+                    self.client.cmdProxy.startConstruction(planet_id, Rules.Tech.RENEGADEBASE2,
+                                                      1, planet_id, False, False, Rules.Tech.RENEGADEBASE)
+            return actual_stats.planets[planet_id]
         else:
             return {Rules.Tech.RENEGADEBASE:1}
 
-    def system_manager(self):
-        for planetID in self.data.myPlanets:
-            tool.sortStructures(self.client, self.db, planetID)
-        for systemID in self.data.mySystems:
-            system = self.db[systemID]
+    def economy_manager(self):
+        for planet_id in self.data.myPlanets:
+            tool.sortStructures(self.client, self.db, planet_id)
+        for system_id in self.data.mySystems:
+            system = self.db[system_id]
             # creation of final system plans
-            finalSystemPlan = {}
-            actualStats = tool.getSystemStructStats(self.data, self.client, self.db, systemID)
-            buildStats = tool.getSystemStructStats(self.data, self.client, self.db, systemID, False)
-            for planetID in (self.data.myPlanets | self.data.freePlanets) & set(system.planets):
-                finalSystemPlan[planetID] = self._preparePlanetPlan(actualStats, planetID)
-            idlePlanets = tool.buildSystem(self.data, self.client, self.db, systemID, self.data.myProdPlanets & set(system.planets), finalSystemPlan)
+            final_system_plan = {}
+            actual_stats = tool.getSystemStructStats(self.data, self.client, self.db, system_id)
+            build_stats = tool.getSystemStructStats(self.data, self.client, self.db, system_id, False)
+            for planet_id in self.data.myPlanets & set(system.planets):
+                final_system_plan[planet_id] = self._prepare_planet_plan(actual_stats, planet_id)
+            for planet_id in self.data.freePlanets & set(system.planets):
+                final_system_plan[planet_id] = self._prepare_free_planet_plan(planet_id)
+            idle_planets = tool.buildSystem(self.data, self.client, self.db, system_id, self.data.myProdPlanets & set(system.planets), final_system_plan)
             # build ships just in case cosmodrome is present, or being build, in the system
-            hasCosmodrome = False
-            for planetID in self.data.myPlanets & set(system.planets):
-                if Rules.Tech.RENEGADECOSMODROME in buildStats.planets[planetID]:
-                    hasCosmodrome = True
+            has_cosmodrome = False
+            for planet_id in self.data.myPlanets & set(system.planets):
+                if Rules.Tech.RENEGADECOSMODROME in build_stats.planets[planet_id]:
+                    has_cosmodrome = True
                     break
-            if hasCosmodrome:
-                self._buildShips(idlePlanets)
+            if has_cosmodrome:
+                self._build_ships(idle_planets)
 
     def diplomacy_manager(self):
         # renegades are friendly, want to trade, and can help refuel civilian ships
-        for contactID in self.player.diplomacyRels:
-            dipl = self.client.getDiplomacyWith(contactID)
-            for pactID in [Const.PACT_ALLOW_CIVILIAN_SHIPS, Const.PACT_ALLOW_TANKING, Const.PACT_MINOR_CP_COOP, Const.PACT_MAJOR_CP_COOP]:
-                pactSpec = Rules.pactDescrs[pactID]
-                if dipl.relation < pactSpec.validityInterval[0] or dipl.relation > pactSpec.validityInterval[1]:
+        for contact_id in self.player.diplomacyRels:
+            dipl = self.client.getDiplomacyWith(contact_id)
+            for pact_id in [Const.PACT_ALLOW_CIVILIAN_SHIPS, Const.PACT_ALLOW_TANKING, Const.PACT_MINOR_CP_COOP, Const.PACT_MAJOR_CP_COOP]:
+                pact_spec = Rules.pactDescrs[pact_id]
+                if dipl.relation < pact_spec.validityInterval[0] or dipl.relation > pact_spec.validityInterval[1]:
                     # not friendly enough
                     continue
-                if pactID in dipl.pacts and dipl.pacts[pactID][0] in [Const.PACT_ACTIVE, Const.PACT_INACTIVE]:
+                if pact_id in dipl.pacts and dipl.pacts[pact_id][0] in [Const.PACT_ACTIVE, Const.PACT_INACTIVE]:
                     # nothing more to do, move along
                     continue
                 # hey, we should enable this pact!
-                conditions = [pactID]
-                self.player.diplomacyRels = self.client.cmdProxy.changePactCond(self.player.oid, contactID, pactID, Const.PACT_INACTIVE, conditions)
+                conditions = [pact_id]
+                self.player.diplomacyRels = self.client.cmdProxy.changePactCond(self.player.oid, contact_id, pact_id, Const.PACT_INACTIVE, conditions)
 
     def run(self):
-        self.system_manager()
+        self.economy_manager()
         self.diplomacy_manager()
 
 
