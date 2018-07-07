@@ -26,7 +26,6 @@ from ige.ospace import Const
 from ige.ospace import Rules
 from ige.ospace import Utils
 
-data = IDataHolder()
 
 
 def tool_parseDB(client, db):
@@ -34,7 +33,7 @@ def tool_parseDB(client, db):
     means other players.
 
     """
-    global data
+    data = IDataHolder()
     data.myPlanets = set()
     data.myProdPlanets = set()
     data.mySystems = set()
@@ -190,9 +189,9 @@ def tool_parseDB(client, db):
             elif targetID in data.mySystems:
                 data.myTargetedSystems.add(targetID)
                 data.otherInboundFleets.add(fleetID)
-    return
+    return data
 
-def doRelevance(client, db, rangeOfRelevance):
+def doRelevance(data, client, db, rangeOfRelevance):
     """ This function finds all systems, which are nearer to the players
     system than is defined in rangeOfRelevance. This is saved in
     data.relevantSystems.
@@ -202,7 +201,6 @@ def doRelevance(client, db, rangeOfRelevance):
     distance to nearest relevant system of the player.
 
     """
-    global data
     for systemID in data.systems:
         system = db[systemID]
         for tempID in data.mySystems:
@@ -228,7 +226,7 @@ def doRelevance(client, db, rangeOfRelevance):
             relDist = min(relDist, distance)
         data.distanceToRelevance[systemID] = relDist
 
-def findInfluence(client, db, rangeOfInfluence, objectIDList):
+def findInfluence(data, client, db, rangeOfInfluence, objectIDList):
     """ Returns list of all systems, which distance to any object
     from the objectList    is less than rangeOfInfluence.
 
@@ -236,7 +234,6 @@ def findInfluence(client, db, rangeOfInfluence, objectIDList):
                   to have .x and .y numeric parameters.
 
     """
-    global data
     influencedSystems = set()
     for systemID in data.systems:
         system = db[systemID]
@@ -247,7 +244,7 @@ def findInfluence(client, db, rangeOfInfluence, objectIDList):
                 influencedSystems.add(systemID)
     return influencedSystems
 
-def doDanger(client, db):
+def doDanger(data, client, db):
     """ Fills data.endangeredSystems dictionary. Each system of the player,
     to which is heading some fleet of other player with military power
     got its own record consisting of military power and number of ships heading
@@ -255,7 +252,6 @@ def doDanger(client, db):
         Medium and large ships are counted as 2 and 4 ships each respectively.
 
     """
-    global data
     for fleetID in data.otherInboundFleets:
         fleet = db[fleetID]
         if not getattr(fleet, 'combatPwr', 0):
@@ -478,7 +474,7 @@ def findPopCenterPlanets(db, planetsIDs):
     fakeObj.y = y
     return findNearest(db, fakeObj, planetsIDs, maxDist=99999, number=len(planetsIDs))
 
-def orderFromSystem(client, db, ships, systemID, order, targetID, orderData):
+def orderFromSystem(data, client, db, ships, systemID, order, targetID, orderData):
     """ Tries to send ships defined by ships dictionary, and using all
     idle fleets in the system.
     ships - is dictionary with keys being design IDs, value is
@@ -587,7 +583,7 @@ def sortStructures(client, db, planetID):
         pos += 1
     return
 
-def getSystemStructStats(client, db, systemID, processQueues=True):
+def getSystemStructStats(data, client, db, systemID, processQueues=True):
     """ It go through all planets and structures, and creates IDataHolder
     object, with roster of buildings, surplus of bio and en.
 
@@ -679,7 +675,7 @@ def getSystemStatsChange(client, db, techID, targetPlanetID, targetTechID):
         deltaProd -= tech.prodProd * Rules.techImprEff[player.techs.get(techID, 1)] * sum([x*y/100.0 for x, y in zip(tech.prodProdMod, [planet.plBio, planet.plMin, planet.plEn, 100])])
     return deltaBio, deltaEn, deltaProd
 
-def checkBuildQueues(client, db, systemID, prodPlanets):
+def checkBuildQueues(data, client, db, systemID, prodPlanets):
     system = db[systemID]
     player = client.getPlayer()
     for planetID in prodPlanets:
@@ -693,7 +689,7 @@ def checkBuildQueues(client, db, systemID, prodPlanets):
             else:
                 planet.prodQueue, player.stratRes = client.cmdProxy.abortConstruction(planetID, validTasks)
 
-def buildSystem(client, db, systemID, prodPlanets, finalSystemPlan):
+def buildSystem(data, client, db, systemID, prodPlanets, finalSystemPlan):
     """ Assigns tasks to all idle planets with CP > 0 in one system, according
     to object finalSystemPlan. There is NO guaranty it will rebuild it correctly
     as no math model was made for it. It just try to build most effectively,
@@ -709,11 +705,11 @@ def buildSystem(client, db, systemID, prodPlanets, finalSystemPlan):
     """
     system = db[systemID]
     player = client.getPlayer()
-    structStats = getSystemStructStats(client, db, systemID)
+    structStats = getSystemStructStats(data, client, db, systemID)
     structsToBuild = {}
     structsToDemolish = {}
     difference = {}
-    checkBuildQueues(client, db, systemID, prodPlanets)
+    checkBuildQueues(data, client, db, systemID, prodPlanets)
     # parse final plan to set buildings which need to be build and those that
     # may be demolished
     for planetID in finalSystemPlan:

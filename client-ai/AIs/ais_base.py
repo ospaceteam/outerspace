@@ -30,7 +30,7 @@ class AI(object):
         self.db = client.db
         self.player = client.getPlayer()
 
-        tool.tool_parseDB(self.client, self.db)
+        self.data = tool.tool_parseDB(self.client, self.db)
 
     def economy_manager(self):
         raise NotImplementedError
