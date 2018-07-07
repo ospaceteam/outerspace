@@ -90,9 +90,13 @@ def checkPlayerProgress():
                 player_stats = stats[galaxy]['players'][player]
                 player_name = player_stats[0]
                 if 'E.D.E.N.' in player_name or 'order' == player: continue
+                if 'Renegade' in player_name:
+                    limit = 5
+                else:
+                    limit = 10
                 buildings = int(player_stats[3])
                 buildings_counts += [buildings]
-                if buildings < 10:
+                if buildings < limit:
                     log.error(player_stats)
                     problem = True
     if not something:

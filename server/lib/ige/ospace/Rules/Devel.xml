@@ -81,4 +81,79 @@
 		/>
 		<preresearch>This project maximize Mineral abundance of the planet, but beware of the side effects!</preresearch>
 	</technology>
+	<technology id="99001" symbol="COMSCANDEVEL" name="Developer Testing Comm/Scan Center">
+		<discovery
+			researchMod="1.0"
+			researchRaces="#"
+			level="99"
+		/>
+		<structure
+			subtype="str50"
+			buildProd="720"
+			operEn="50"
+			operWorkers="1500"
+			scannerPwr="1000"
+			maxHP="600"
+			isMilitary="1"
+			fleetSpeedBoost="2.0"
+		/>
+		<preresearch>Developer Testing Structure.</preresearch>
+	</technology>
+	<technology id="99002" symbol="FACTORYDEVEL" name="Developer Testing Factory">
+		<discovery
+			researchMod="1.0"
+			researchRaces="#"
+			level="99"
+		/>
+		<structure
+			subtype="str30"
+			buildProd="10"
+			operEn="15"
+			operWorkers="500"
+			prodProd="750"
+			prodProdMod="0.0,0.5,0.0,0.5"
+			prodBio="80"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			prodEn="60"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			prodEnv="0"
+			maxHP="600"
+		/>
+		<preresearch>Developer Testing Structure.</preresearch>
+	</technology>
+	<technology id="99003" symbol="FTLDEVEL" name="Developer FTL">
+		<discovery
+			researchMod="1.0"
+			researchRaces="#"
+			level="99"
+		/>
+		<shipequip
+			subtype="seq_eng"
+			buildProd="240"
+			storEn="384"
+                       operEn="5"
+                       slots="4"
+                       weight="4"
+                       engPwr="500"
+                       signature="0"
+               />
+               <preresearch>Developer Testing Structure.</preresearch>
+       </technology>
+       <technology id="99004" symbol="SCANNERDEVEL" name="Developer Scanner">
+               <discovery
+                       researchMod="1.0"
+                       researchRaces="#"
+                       level="99"
+               />
+               <shipequip
+                       subtype="seq_mod"
+                       buildProd="60"
+                       slots="1"
+                       weight="1"
+                       signature="+10"
+                       scannerPwr="1000"
+               />
+               <preresearch>Developer Testing Structure.</preresearch>
+       </technology>
+
 </techtree>

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+#
+#  Copyright 2001 - 2016 Ludek Smid [http://www.ospace.net/]
+#
+#  This file is part of Outer Space.
+#
+#  Outer Space is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  Outer Space is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with Outer Space; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+-->
+<techtree>
+	<technology id="9011" symbol="BUNKER" name="Bunker">
+		<discovery
+			researchMod="1.00"
+			level="99"
+			researchRaces="C"
+			maxImprovement="1"
+		/>
+		<structure
+			subtype="str45"
+			buildProd="3840"
+			buildSRes="SR_TL5C:stratResAmountBig"
+			operWorkers="1000"
+			unpackPop="5000"
+			prodBio="167"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			prodEn="14"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			maxHP="2334"
+			refuelMax="134"
+			refuelInc="7"
+			scannerPwr="67"
+			fleetSpeedBoost="2.67"
+			prodEnv="-7"
+			combatAtt="11"
+			structWeapons="10,6,4,0,1"
+			finishConstrHandler="finishStructOUTPOST"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+		<preresearch>A structure to aid the war effort.</preresearch>
+		<description>This building provides all the necessities for stoking the fires in the engine of war.  The Wolframium frame and outer wall reinforcements provide adequate protection against planetary assault deep behind enemy lines.  Housed within this armoured shell are fleet refuelling services, as well as a stargate useful in aiding the arrival of additional combat units as needed to ensure total victory.  A tactical scanner is also installed to keep track of enemy movements nearby.  We even managed to install an impressive array of automated defense weaponry, including ten of our best anti-small, six anti-medium, and four anti-large weapon emplacements.  Given the strategic value this installation provides, it is also capable of colonising freshly conquered planets, including its own workforce ready for activation.  All energy needs are met with an internal reactor.  Nutrient requirements are also provided by internal soil decomposition machinery capable of utilising any type of ground available.  No expenses were spared on repair and upgrade equipment, as with this utility available, none should be needed.  Success is ours!</description>
+	</technology>
+	<technology id="9012" symbol="SPOREOUTPOST" name="Spore">
+		<discovery
+			researchMod="1.00"
+			level="99"
+			researchRaces="B"
+			maxImprovement="1"
+		/>
+		<structure
+			subtype="str45"
+			buildProd="480"
+			operWorkers="100"
+			unpackPop="500"
+			storPop="2000"
+			prodBio="67"
+			prodBioMod="0,0.0,0.0,1"
+			prodEn="67"
+			prodEnMod="0,0.0,0.0,1"
+			prodProd="16"
+			prodProdMod="0,0.0,0.0,1"
+			maxHP="120"
+			refuelMax="60"
+			refuelInc="2"
+			scannerPwr="44"
+			prodEnv="10"
+			combatAtt="6"
+			structWeapons="2,2,2,0,0"
+			finishConstrHandler="finishStructSPORECOLONY"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+		<preresearch>Our spores colonize many planets.</preresearch>
+		<description>An advanced colony system that fully deploys across the target planet.</description>
+	</technology>
+	<technology id="9013" symbol="SPOREMINOR" name="Extra Spores">
+		<discovery
+			researchMod="1.00"
+			level="99"
+			researchRaces="B"
+			maxImprovement="1"
+		/>
+		<structure
+			subtype="str45"
+			buildProd="240"
+			operWorkers="10"
+			prodBio="12"
+			prodBioMod="0.5,0.0,0.0,0.5"
+			prodEn="12"
+			prodEnMod="0.5,0.0,0.0,0.5"
+			prodProd="12"
+			prodProdMod="0.75,0.0,0.0,0.25"
+			maxHP="10"
+			moraleTrgt="+4"
+			prodEnv="15"
+			combatAtt="4"
+			structWeapons="1,1,0,0,0"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+		<preresearch>Our spores colonize many planets.</preresearch>
+		<description>There were extra spores left over from the primary Spore Colony.</description>
+	</technology>
+	<technology id="9050" symbol="MINE_BASIC" name="Robotic Mine">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="99"
+		/>
+		<mine
+			weaponDmgMin="100"
+			weaponDmgMax="150" 
+			weaponAtt="8"
+			shortname="Robotic"
+	        />
+	</technology>
+	<technology id="9051" symbol="MINE_RAPID" name="Rapid-Deploy Mine">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="99"
+		/>
+		<mine
+			weaponDmgMin="20"
+			weaponDmgMax="30"
+			weaponAtt="12"
+			shortname="Rapid-Deploy"
+	        />
+	</technology>
+	<technology id="9052" symbol="MINE_PIERCE" name="Self-Aware Mine">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="99"
+		/>
+		<mine
+			weaponDmgMin="80"
+			weaponDmgMax="120"
+			weaponAtt="10"
+			weaponIgnoreShield="1"
+			shortname="Self-Aware"
+	        />
+	</technology>
+	<technology id="9053" symbol="MINE_HIGHDMG" name="Supernova Mine">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="99"
+		/>
+		<mine
+			weaponDmgMin="160"
+			weaponDmgMax="240"
+			weaponAtt="10"
+			shortname="Supernova"
+	        />
+	</technology>
+	<technology id="9054" symbol="MINE_MUTANT" name="Mutant Mine">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="99"
+		/>
+		<mine
+			weaponDmgMin="5"
+			weaponDmgMax="10"
+			weaponAtt="10"
+			weaponIgnoreShield="0"
+			shortname="Mutant"
+	        />
+	</technology>
+	<technology id="9055" symbol="MINE_SIMPLE" name="Simple Mine">
+		<discovery
+			researchMod="1.00 + 0.50"
+			level="99"
+		/>
+		<mine
+			weaponDmgMin="20"
+			weaponDmgMax="30"
+			weaponAtt="4"
+			weaponIgnoreShield="0"
+			shortname="Simple"
+	        />
+	</technology>
+</techtree>

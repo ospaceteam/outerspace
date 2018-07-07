@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+#
+#  Copyright 2001 - 2016 Ludek Smid [http://www.ospace.net/]
+#
+#  This file is part of Outer Space.
+#
+#  Outer Space is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  Outer Space is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with Outer Space; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+-->
+<techtree>
+	<technology id="9001" symbol="MUTANTBASE" name="Mutant Lodge">
+		<discovery
+			researchMod="1.0 + 0.5"
+			researchRaces="m"
+			level="1"
+		/>
+		<structure
+			buildProd="720"
+			prodBio="100"
+			prodBioMod="0.0,0.0,0.0,1.0"
+			prodEn="25"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			prodProd="30"
+			prodProdMod="0.0, 0.0, 0.0, 1.0"
+			operWorkers="1000"
+			prodEnv="+40"
+			scannerPwr="50"
+			maxHP="1200"
+			combatAtt="7"
+			revoltThr="-100"
+			structWeapons="4,0,0,0,1"
+			refuelMax="100"
+			refuelInc="1"
+			repairShip="0.01"
+			upgradeShip="2"
+			unpackPop="1000"
+			finishConstrHandler="finishStructOUTPOST"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+	</technology>
+	<technology id="9070" symbol="MUTANTBASE2" name="Mutant Den">
+		<discovery
+			researchMod="1.0 + 0.5"
+			researchRaces="m"
+			level="1"
+		/>
+		<structure
+			buildProd="1440"
+			prodBio="200"
+			prodBioMod="0.2, 0.0, 0.0, 0.8"
+			prodEn="50"
+			prodEnMod="0.2, 0.0, 0.0, 0.8"
+			prodProd="40"
+			prodProdMod="0.2, 0.0, 0.0, 0.8"
+			operWorkers="2000"
+			prodEnv="+45"
+			scannerPwr="65"
+			maxHP="1800"
+			combatAtt="7"
+			revoltThr="-100"
+			structWeapons="6,3,0,0,1"
+			refuelMax="100"
+			refuelInc="1"
+			repairShip="0.01"
+			upgradeShip="5"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+	</technology>
+	<technology id="9071" symbol="MUTANTBASE3" name="Mutant Hub">
+		<discovery
+			researchMod="1.0 + 0.5"
+			researchRaces="m"
+			level="1"
+		/>
+		<structure
+			buildProd="2880"
+			prodBio="250"
+			prodBioMod="0.4, 0.0, 0.0, 0.6"
+			prodEn="75"
+			prodEnMod="0.4, 0.0, 0.0, 0.6"
+			prodProd="50"
+			prodProdMod="0.4, 0.0, 0.0, 0.6"
+			operWorkers="3000"
+			prodEnv="+50"
+			scannerPwr="80"
+			maxHP="1800"
+			combatAtt="7"
+			revoltThr="-100"
+			structWeapons="6,6,3,0,1"
+			refuelMax="100"
+			refuelInc="2"
+			repairShip="0.02"
+			upgradeShip="10"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+	</technology>
+	<technology id="9072" symbol="MUTANTPP1" name="Geothermal Power Plant">
+		<discovery
+			researchMod="1.0 + 0.5"
+			researchRaces="m"
+			level="1"
+		/>
+		<structure
+			buildProd="480"
+			prodEn="100"
+			prodEnMod="0.0,0.0,0.0,1.0"
+			operWorkers="500"
+			maxHP="500"
+			fullInfo="1"
+		/>
+	</technology>
+	<technology id="9073" symbol="MUTANTPP2" name="Lightning Power Plant">
+		<discovery
+			researchMod="1.0 + 0.5"
+			researchRaces="m"
+			level="1"
+		/>
+		<structure
+			buildProd="720"
+			prodEn="200"
+			prodEnMod="0.5,0.0,0.0,0.5"
+			operWorkers="1000"
+			maxHP="750"
+			fullInfo="1"
+		/>
+	</technology>
+	<technology id="9074" symbol="MUTANTFACT1" name="Mutant Factory">
+		<discovery
+			researchMod="1.0 + 0.5"
+			researchRaces="m"
+			level="1"
+		/>
+		<structure
+			buildProd="480"
+			prodProd="8"
+			prodProdMod="0.0, 0.0, 0.0, 1.0"
+			operEn="25"
+			operWorkers="500"
+			maxHP="500"
+			fullInfo="1"
+		/>
+	</technology>
+	<technology id="9075" symbol="MUTANTFACT2" name="Mutant Military Factory">
+		<discovery
+			researchMod="1.0 + 0.5"
+			researchRaces="m"
+			level="1"
+		/>
+		<structure
+			buildProd="960"
+			prodProd="15"
+			prodProdMod="0.3, 0.0, 0.0, 0.7"
+			operEn="50"
+			operWorkers="1000"
+			prodEnv="+5"
+			scannerPwr="50"
+			maxHP="750"
+			combatAtt="7"
+			revoltThr="-100"
+			structWeapons="3,1,0,0,1"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+	</technology>
+	<technology id="9076" symbol="MUTANTMINES" name="Mutant Mine Field">
+		<discovery
+			researchMod="1.0 + 0.5"
+			researchRaces="m"
+			level="1"
+		/>
+		<structure
+			subtype="str612"
+			buildProd="3200"
+			operWorkers="1500"
+			operEn="50"
+			scannerPwr="30"
+			maxHP="750"
+			mineclass="9054"
+			minenum="15"
+			minerate="6"
+			combatAtt="6"
+			structWeapons="3,2,0,0,1"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+	</technology>
+	<technology id="9077" symbol="MUTANTBASE4" name="Mutant Junction">
+		<discovery
+			researchMod="1.0 + 0.5"
+			researchRaces="m"
+			level="1"
+		/>
+		<structure
+			buildProd="5760"
+			prodBio="400"
+			prodBioMod="0.6, 0.0, 0.0, 0.4"
+			prodEn="100"
+			prodEnMod="0.6, 0.0, 0.0, 0.4"
+			prodProd="100"
+			prodProdMod="0.6, 0.0, 0.0, 0.4"
+			operWorkers="10000"
+			prodEnv="+60"
+			scannerPwr="120"
+			maxHP="1800"
+			combatAtt="7"
+			revoltThr="-100"
+			structWeapons="9,9,6,0,1"
+			refuelMax="100"
+			refuelInc="3"
+			repairShip="0.04"
+			upgradeShip="20"
+			isMilitary="1"
+			fullInfo="1"
+		/>
+	</technology>
+	<technology id="9079" symbol="MUTANTPOD" name="Mutant planetary pod">
+		<discovery
+			researchMod="1.00 + 0.50"
+			researchRaces="m"
+			level="1"
+		/>
+		<shipequip
+			subtype="seq_struct"
+			buildProd="1440"
+
+			storEn="960"
+			operEn="10"
+
+			slots="8"
+			weight="20"
+			unpackStruct="MUTANTBASE"
+			minHull="1"
+	        />
+	</technology>
+</techtree>

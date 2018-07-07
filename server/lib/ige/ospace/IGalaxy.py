@@ -459,61 +459,67 @@ class IGalaxy(IObject):
     def getDescription(self,obj):
         return obj.description
 
-    @public(Const.AL_ADMIN)
-    def setupEnvironment(self, tran, obj):
-        universe = tran.db[Const.OID_UNIVERSE]
-        # we will first scan galaxy, to determine which environments are available
-        # this way, we will create only players that are needed, and not all types
-        vacant_planets = {}
+    def _environmentGetVacantPlanets(self, tran, obj):
+        vacantPlanets = {}
         for systemID in obj.systems:
             system = tran.db[systemID]
             for planetID in system.planets:
                 planet = tran.db[planetID]
-                # renegades
-                if planet.plStratRes in (Const.SR_TL1A, Const.SR_TL1B) and planet.owner == Const.OID_NONE:
-                    try:
-                        vacant_planets[Const.T_AIRENPLAYER] += [planetID]
-                    except KeyError:
-                        vacant_planets[Const.T_AIRENPLAYER] = [planetID]
-                # pirates
-                if planet.plStratRes in (Const.SR_TL3A, Const.SR_TL3B, Const.SR_TL3C) and planet.owner == Const.OID_NONE:
-                    try:
-                        vacant_planets[Const.T_AIPIRPLAYER] += [planetID]
-                    except KeyError:
-                        vacant_planets[Const.T_AIPIRPLAYER] = [planetID]
-                # EDEN
-                if planet.plStratRes in (Const.SR_TL5A, Const.SR_TL5B, Const.SR_TL5C) and planet.owner == Const.OID_NONE:
-                    try:
-                        vacant_planets[Const.T_AIEDENPLAYER] += [planetID]
-                    except KeyError:
-                        vacant_planets[Const.T_AIEDENPLAYER] = [planetID]
-                # mutants
-                if planet.plDisease != 0 and planet.owner == Const.OID_NONE:
-                    try:
-                        vacant_planets[Const.T_AIMUTPLAYER] += [planetID]
-                    except KeyError:
-                        vacant_planets[Const.T_AIMUTPLAYER] = [planetID]
+                if planet.owner != Const.OID_NONE:
+                    continue
+                if planet.plStratRes in (Const.SR_TL1A, Const.SR_TL1B):
+                    playerType = Const.T_AIRENPLAYER
+                elif planet.plStratRes in (Const.SR_TL3A, Const.SR_TL3B, Const.SR_TL3C):
+                    playerType = Const.T_AIPIRPLAYER
+                elif planet.plStratRes in (Const.SR_TL5A, Const.SR_TL5B, Const.SR_TL5C):
+                    playerType = Const.T_AIEDENPLAYER
+                elif planet.plDisease != 0:
+                    playerType = Const.T_AIMUTPLAYER
+                else:
+                    continue
+                try:
+                    vacantPlanets[playerType].append(planetID)
+                except KeyError:
+                    vacantPlanets[playerType] = [planetID]
+        return vacantPlanets
+
+    def _searchForPlayer(self, tran, obj, playerType):
+        universe = tran.db[Const.OID_UNIVERSE]
+        for playerID in universe.players:
+            player = tran.db[playerID]
+            if obj.oid == player.galaxy and player.type == playerType:
+                return player
+        # create new player
+        log.debug("Creating new player", playerType)
+        player = self.new(playerType)
+        self.cmd(player).register(tran, player, obj.oid)
+        player.galaxy = obj.oid
+        return player
+
+    def _setupEnvironmentRenegade(self, tran, obj, vacantPlanets):
+        renType = Const.T_AIRENPLAYER
+        planets = vacantPlanets.pop(renType)
+        for planetID in planets:
+            planet = tran.db[planetID]
+            log.debug("Creating new Renegade")
+            player = self.new(renType)
+            self.cmd(player).register(tran, player, obj.oid)
+            player.galaxy = obj.oid
+            self.cmd(planet).changeOwner(tran, planet, player.oid, 1)
+            IAIRenegadePlayer.IAIRenegadePlayer.setStartingPlanet(tran, planet)
+
+    @public(Const.AL_ADMIN)
+    def setupEnvironment(self, tran, obj):
+        vacantPlanets = self._environmentGetVacantPlanets(tran, obj)
+        self._setupEnvironmentRenegade(tran, obj, vacantPlanets)
         # iterate over types, create players if needed (it should be) and fill in vacant planets
-        for playerType in vacant_planets:
-            found = 0
-            for playerID in universe.players:
-                player = tran.db[playerID]
-                if obj.oid == player.galaxy and player.type == playerType:
-                    found = 1
-                    break
-            if not found:
-                # create new player
-                log.debug("Creating new player", playerType)
-                player = self.new(playerType)
-                self.cmd(player).register(tran, player, obj.oid)
-                player.galaxy = obj.oid
+        for playerType in vacantPlanets:
+            player = self._searchForPlayer(tran, obj, playerType)
             # now we have a player, let's iterate over vacant planets and set them up
-            for planetID in vacant_planets[playerType]:
+            for planetID in vacantPlanets[playerType]:
                 planet = tran.db[planetID]
                 self.cmd(planet).changeOwner(tran, planet, player.oid, 1)
-                if playerType == Const.T_AIRENPLAYER:
-                    IAIRenegadePlayer.IAIRenegadePlayer.setStartingPlanet(tran, planet)
-                elif playerType == Const.T_AIPIRPLAYER:
+                if playerType == Const.T_AIPIRPLAYER:
                     IAIPiratePlayer.IAIPiratePlayer.setStartingPlanet(tran, planet)
                 elif playerType == Const.T_AIEDENPLAYER:
                     IAIEDENPlayer.IAIEDENPlayer.setStartingPlanet(tran, planet)

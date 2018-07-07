@@ -86,9 +86,15 @@ class IAIRenegadePlayer(IPlayer):
     @staticmethod
     def setStartingTechnologies(obj):
         obj.techLevel = 2
+        obj.techs[Rules.Tech.SMALLHULL1] = 3
+        obj.techs[Rules.Tech.SCOCKPIT1] = 3
+        obj.techs[Rules.Tech.MEDIUMHULL2] = 3
+        obj.techs[Rules.Tech.SBRIDGE1] = 3
         obj.techs[Rules.Tech.CANNON1] = 3
         obj.techs[Rules.Tech.SSROCKET] = 3
-        obj.techs[Rules.Tech.STLENG1] = 3
+        obj.techs[Rules.Tech.STLENG1] = Rules.techMaxImprovement
+        obj.techs[Rules.Tech.NSTLENG2] = Rules.techMaxImprovement
+        obj.techs[Rules.Tech.RENEGADETITANIUMMHULL] = Rules.techMaxImprovement
         obj.techs[Rules.Tech.RENEGADEBASE] = 3
         obj.techs[Rules.Tech.RENEGADEBASE2] = 3
         obj.techs[Rules.Tech.RENEGADEBASE2MINOR] = 3
@@ -104,28 +110,8 @@ class IAIRenegadePlayer(IPlayer):
             {Rules.Tech.SCOCKPIT1:1, Rules.Tech.CANNON1:2, Rules.Tech.STLENG1:1, Rules.Tech.STEELARM2:1}, [])
         obj.shipDesigns[3] = ShipUtils.makeShipMinSpec(obj, 'Frigate', Rules.Tech.MEDIUMHULL2,
             {Rules.Tech.SBRIDGE1:1, Rules.Tech.CANNON1:2, Rules.Tech.SSROCKET:2, Rules.Tech.STLENG1:2}, [])
+        obj.shipDesigns[4] = ShipUtils.makeShipMinSpec(obj, 'Destroyer', Rules.Tech.MEDIUMHULL2,
+            {Rules.Tech.SBRIDGE1:1, Rules.Tech.CANNON1:4, Rules.Tech.SSROCKET:2, Rules.Tech.NSTLENG2:3}, [])
+        obj.shipDesigns[5] = ShipUtils.makeShipMinSpec(obj, 'Armored Cruiser', Rules.Tech.RENEGADETITANIUMMHULL,
+            {Rules.Tech.SBRIDGE1:1, Rules.Tech.CANNON1:5, Rules.Tech.SSROCKET:3, Rules.Tech.STLENG1:4}, [])
 
-    def getDiplomacyWith(self, tran, obj, playerID):
-        if obj.oid == playerID:
-            return Const.REL_UNITY
-        # renegade battles with overyone
-        # make default
-        dipl = IDataHolder()
-        dipl.type = Const.T_DIPLREL
-        dipl.pacts = {}
-        dipl.relation = Const.REL_ENEMY
-        dipl.relChng = 0
-        dipl.lastContact = tran.db[Const.OID_UNIVERSE].turn
-        dipl.contactType = Const.CONTACT_NONE
-        dipl.stats = None
-        return dipl
-
-    @public(Const.AL_ADMIN)
-    def processFINALPhase(self, tran, obj, data):
-        IPlayer.processFINALPhase(self, tran, obj, data)
-        # fix goverment power
-        obj.govPwrCtrlRange = 10000
-
-    # allow normal pacts
-    #def isPactActive(self, tran, obj, partnerID, pactID):
-    #    return 0
