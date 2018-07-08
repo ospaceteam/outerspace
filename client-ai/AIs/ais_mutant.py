@@ -25,7 +25,7 @@ from ige.ospace import Rules
 from ige.ospace import Utils
 
 import ai_tools as tool
-from ais_base import AI
+from ai import AI
 
 class Mutant(AI):
     def __init__(self, client):

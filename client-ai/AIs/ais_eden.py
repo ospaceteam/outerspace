@@ -18,7 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 from ige import log
-from ais_base import AI
+from ai import AI
 
 class EDEN(AI):
     """ old empire is sleeping, regaining strength """

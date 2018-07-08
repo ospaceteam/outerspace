@@ -24,7 +24,7 @@ from ige.ospace import Utils
 from ige.ospace import TechHandlers
 
 import ai_tools as tool
-from ais_base import AI
+from ai import AI
 
 import copy, random, math
 
