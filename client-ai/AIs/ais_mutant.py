@@ -202,57 +202,8 @@ class Mutant(AI):
                 choice = Utils.weightedRandom([1,4], [weight_fighter, weight_bomber])
                 planet.prodQueue, self.player.stratRes = self.client.cmdProxy.startConstruction(planet_id, choice, 2, planet_id, True, False, Const.OID_NONE)
 
-    def _explore(self, seeker_fleets):
-        should_repeat = False
-        for fleet_id in copy.copy(seeker_fleets & self.data.idleFleets):
-            max_range = tool.subfleetMaxRange(self.client, self.db, {3:1}, fleet_id)
-            nearest = tool.findNearest(self.db, self.db[fleet_id], self.data.unknownSystems, max_range)
-            if len(nearest) > 0:
-                system_id = nearest[0]
-                # send the fleet
-                fleet, new_fleet, my_fleets = tool.orderPartFleet(self.client, self.db,
-                    {3:1}, True, fleet_id, Const.FLACTION_MOVE, system_id, None)
-                self.data.myFleetSheets[fleet_id][3] -= 1
-                if self.data.myFleetSheets[fleet_id][3] == 0:
-                    del self.data.myFleetSheets[fleet_id][3]
-                    seeker_fleets.remove(fleet_id)
-                else:
-                    should_repeat = True
-                self.data.unknownSystems.remove(system_id)
-        return should_repeat
-
-    def _find_best_planet(self, planet_ids):
-        # right now, it's simply the largest one
-        max_slots = 0
-        largest_planet_id = None
-        for planet_id in planet_ids:
-            planet = self.db[planet_id]
-            if max_slots < planet.plSlots:
-                max_slots = planet.plSlots
-                largest_planet_id = planet_id
-        return largets_planet_id
-
-    def _colonize_free_systems(self, seeder_fleets):
-        should_repeat = False
-        for fleet_id in copy.copy(seeder_fleets & self.data.idleFleets):
-            max_range = tool.subfleetMaxRange(self.client, self.db, {2:1}, fleet_id)
-            nearest = tool.findNearest(self.db, self.db[fleet_id], self.data.freeSystems, max_range)
-            if len(nearest) > 0:
-                system_id = nearest[0]
-                system = self.db[system_id]
-                target_id = self._find_best_planet(system.planets)
-                fleet, new_fleet, my_fleets = tool.orderPartFleet(self.client, self.db,
-                    {2:1}, True, fleet_id, Const.FLACTION_DEPLOY, target_id, 2)
-                self.data.myFleetSheets[fleet_id][2] -= 1
-                if self.data.myFleetSheets[fleet_id][2] == 0:
-                    del self.data.myFleetSheets[fleet_id][2]
-                    seeder_fleets.remove(fleet_id)
-                else:
-                    should_repeat = True
-                self.data.freeSystems.remove(system_id)
-        return should_repeat
-
-    def _colonize_occupied_systems(self, seeder_fleets):
+    def _colonize_occupied_systems(self, seeder_id):
+        seeder_fleets = self.data.myFleetsWithDesign.get(seeder_id, set())
         should_repeat = False
         for fleet_id in copy.copy(seeder_fleets & self.data.idleFleets):
             fleet = self.db[fleet_id]
@@ -262,22 +213,22 @@ class Mutant(AI):
                 if set(orbit.planets) & self.data.freePlanets and orbit_id in self.data.otherSystems:
                     target_id = self._find_best_planet(set(orbit.planets) & self.data.freePlanets)
                     fleet, new_fleet, my_fleets = tool.orderPartFleet(self.client, self.db,
-                        {2:1}, True, fleet_id, Const.FLACTION_DEPLOY, target_id, 2)
-                    self.data.myFleetSheets[fleet_id][2] -= 1
-                    if self.data.myFleetSheets[fleet_id][2] == 0:
-                        del self.data.myFleetSheets[fleet_id][2]
+                        {seeder_id:1}, True, fleet_id, Const.FLACTION_DEPLOY, target_id, seeder_id)
+                    self.data.myFleetSheets[fleet_id][seeder_id] -= 1
+                    if self.data.myFleetSheets[fleet_id][seeder_id] == 0:
+                        del self.data.myFleetSheets[fleet_id][seeder_id]
                         seeder_fleets.remove(fleet_id)
         return should_repeat
 
     def _expansion_manager(self):
         should_repeat = True
-        seeker_fleets = self.data.myFleetsWithDesign.get(3, set())
-        seeder_fleets = self.data.myFleetsWithDesign.get(2, set())
+        seeker_id = 3
+        seeder_id = 2
         while should_repeat:
             should_repeat = False
-            should_repeat |= self._explore(seeker_fleets)
-            should_repeat |= self._colonize_free_systems(seeder_fleets)
-            should_repeat |= self._colonize_occupied_systems(seeder_fleets)
+            should_repeat |= self._explore(seeker_id)
+            should_repeat |= self._colonize_free_systems(copy.copy(self.data.freeSystems), seeder_id)
+            should_repeat |= self._colonize_occupied_systems(seeder_id)
 
     def _ship_design_manager(self):
         # there are 4 basic designs    created by the server
