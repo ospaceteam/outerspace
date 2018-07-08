@@ -121,25 +121,11 @@ class Renegade(AI):
             if has_cosmodrome:
                 self._build_ships(idle_planets)
 
-    def diplomacy_manager(self):
-        # renegades are friendly, want to trade, and can help refuel civilian ships
-        for contact_id in self.player.diplomacyRels:
-            dipl = self.client.getDiplomacyWith(contact_id)
-            for pact_id in [Const.PACT_ALLOW_CIVILIAN_SHIPS, Const.PACT_ALLOW_TANKING, Const.PACT_MINOR_CP_COOP, Const.PACT_MAJOR_CP_COOP]:
-                pact_spec = Rules.pactDescrs[pact_id]
-                if dipl.relation < pact_spec.validityInterval[0] or dipl.relation > pact_spec.validityInterval[1]:
-                    # not friendly enough
-                    continue
-                if pact_id in dipl.pacts and dipl.pacts[pact_id][0] in [Const.PACT_ACTIVE, Const.PACT_INACTIVE]:
-                    # nothing more to do, move along
-                    continue
-                # hey, we should enable this pact!
-                conditions = [pact_id]
-                self.player.diplomacyRels = self.client.cmdProxy.changePactCond(self.player.oid, contact_id, pact_id, Const.PACT_INACTIVE, conditions)
-
     def run(self):
         self.economy_manager()
-        self.diplomacy_manager()
+        self.diplomacy_manager(friendly_types=[Const.T_PLAYER, Const.T_AIPLAYER, Const.T_AIRENPLAYER],
+                               pacts=[Const.PACT_ALLOW_CIVILIAN_SHIPS, Const.PACT_ALLOW_TANKING,
+                                      Const.PACT_MINOR_CP_COOP, Const.PACT_MAJOR_CP_COOP])
 
 
 def run(aclient):

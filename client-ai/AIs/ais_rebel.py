@@ -238,21 +238,6 @@ class Rebel(AI):
                 tech_id = possibilities[0]
                 self.player.rsrchQueue = self.client.cmdProxy.startResearch(self.player.oid, tech_id)
 
-    def diplomacy_manager(self):
-        for contact_id in self.player.diplomacyRels:
-            dipl = self.client.getDiplomacyWith(contact_id)
-            for pact_id in [Const.PACT_ALLOW_CIVILIAN_SHIPS, Const.PACT_ALLOW_TANKING, Const.PACT_MINOR_SCI_COOP, Const.PACT_MAJOR_SCI_COOP, Const.PACT_MINOR_CP_COOP, Const.PACT_MAJOR_CP_COOP]:
-                pactSpec = Rules.pactDescrs[pact_id]
-                if dipl.relation < pactSpec.validityInterval[0] or dipl.relation > pactSpec.validityInterval[1]:
-                    # not friendly enough
-                    continue
-                if pact_id in dipl.pacts and dipl.pacts[pact_id][0] in [Const.PACT_ACTIVE, Const.PACT_INACTIVE]:
-                    # nothing more to do, move along
-                    continue
-                # hey, we should enable this pact!
-                conditions = [pact_id]
-                self.player.diplomacyRels = self.client.cmdProxy.changePactCond(self.player.oid, contact_id, pact_id, Const.PACT_INACTIVE, conditions)
-
     def _help_system(self):
         tool.doDanger(self.data, self.client, self.db)
         pirate_influenced_systems = tool.findInfluence(self.data, self.client, self.db, Rules.pirateInfluenceRange, self.data.pirateSystems)
@@ -308,7 +293,10 @@ class Rebel(AI):
     def run(self):
         self._ship_design_manager() # this fills self.designs, needs to go first
         self.research_manager()
-        self.diplomacy_manager()
+        self.diplomacy_manager(friendly_types=[Const.T_PLAYER, Const.T_AIPLAYER, Const.T_AIRENPLAYER],
+                               pacts=[Const.PACT_ALLOW_CIVILIAN_SHIPS, Const.PACT_ALLOW_TANKING,
+                                      Const.PACT_MINOR_SCI_COOP, Const.PACT_MAJOR_SCI_COOP,
+                                      Const.PACT_MINOR_CP_COOP, Const.PACT_MAJOR_CP_COOP])
         self.economy_manager()
         self.defense_manager()
         self.offense_manager()

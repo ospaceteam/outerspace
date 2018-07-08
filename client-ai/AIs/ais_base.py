@@ -101,6 +101,28 @@ class AI(object):
                 valid_systems.remove(system_id)
         return should_repeat
 
+    def diplomacy_manager(self, friendly_types = None, pacts = None):
+        if friendly_types is None:
+            return
+        if pacts is None:
+            return
+        for contact_id in self.player.diplomacyRels:
+            contact = self.client.get(contact_id, publicOnly = True)
+            if contact.type not in friendly_types:
+                continue
+            dipl = self.client.getDiplomacyWith(contact_id)
+            for pact_id in pacts:
+                pactSpec = Rules.pactDescrs[pact_id]
+                if dipl.relation < pactSpec.validityInterval[0] or dipl.relation > pactSpec.validityInterval[1]:
+                    # not friendly enough
+                    continue
+                if pact_id in dipl.pacts and dipl.pacts[pact_id][0] in [Const.PACT_ACTIVE, Const.PACT_INACTIVE]:
+                    # nothing more to do, move along
+                    continue
+                # hey, we should enable this pact!
+                conditions = [pact_id]
+                self.player.diplomacyRels = self.client.cmdProxy.changePactCond(self.player.oid, contact_id, pact_id, Const.PACT_INACTIVE, conditions)
+
     def run(self):
         self.economy_manager()
         self.defense_manager()
