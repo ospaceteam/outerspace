@@ -165,7 +165,7 @@ if not args.travis:
 if not checkServerStatus():
     sys.exit(1)
 c.stopServer()
+checkLogs()
 if not checkPlayerProgress():
     sys.exit(1)
-checkLogs(hard=True)
 
