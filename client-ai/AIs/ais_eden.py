@@ -18,39 +18,16 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 from ige import log
-from ige.ospace import Const
-from ige.ospace import Rules
-from ige.ospace import Utils
+from ai import AI
 
-import ai_tools as tool
+class EDEN(AI):
+    """ old empire is sleeping, regaining strength """
+    def run(self):
+        return
 
-client = None
-db = None
-playerID = None
-player = None
-
-def planetManager():
-    pass
-
-def shipDesignManager():
-    # currently no designs for EDEN
-    pass
-
-def attackManager():
-    pass
 
 def run(aclient):
-    global client, db, player, playerID
-    client = aclient
-    db = client.db
-    player = client.getPlayer()
-    playerID = client.getPlayerID()
-
-    tool.tool_parseDB(client, db)
-
-    shipDesignManager()
-    planetManager()
-
-    attackManager()
-    client.saveDB()
+    ai = EDEN(aclient)
+    ai.run()
+    aclient.saveDB()
 

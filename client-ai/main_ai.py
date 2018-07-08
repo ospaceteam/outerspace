@@ -59,8 +59,14 @@ def runAIClient(options):
     import ai_client as client
     from igeclient.IClient import IClientException
     if options.ai:
-        ai = __import__("AIs." + options.ai)
-        ai = sys.modules["AIs." + options.ai]
+        try:
+            ai = __import__("AIs." + options.ai)
+            ai = sys.modules["AIs." + options.ai]
+        except:
+            # This prints the type, value, and stack trace of the
+            # current exception being handled.
+            traceback.print_exc()
+            raise
     else:
         raise Exception, 'You have to provide AI.'
 
