@@ -178,7 +178,7 @@ class Rebel(AI):
             safe_systems = (self.data.freeSystems & self.data.relevantSystems) - pirate_influenced_systems
             should_repeat |= self._colonize_free_systems(safe_systems, self.designs["colony"])
 
-    def _ship_design_manager(self):
+    def _identify_basic_designs(self):
         for desID in self.player.shipDesigns:
             design = self.player.shipDesigns[desID]
             if design.name == 'Scout':
@@ -189,6 +189,18 @@ class Rebel(AI):
                 self.designs["bomber"] = desID
             elif design.name == 'Colony Ship':
                 self.designs["colony"] = desID
+
+    def _identify_advanced_designs(self):
+        for desID in self.player.shipDesigns:
+            design = self.player.shipDesigns[desID]
+            if design.name == 'Fighter 2':
+                self.designs["fighter0"] = self.designs["fighter"]
+                self.designs["fighter"] = desID
+            elif design.name == 'Bomber 2':
+                self.designs["bomber0"] = self.designs["bomber"]
+                self.designs["bomber"] = desID
+
+    def _create_basic_designs(self):
         if "scout" not in self.designs:
             self.designs["scout"] = self.client.cmdProxy.addShipDesign(self.player.oid, 'Scout',
                     Rules.Tech.SMALLHULL0, {Rules.Tech.SCOCKPIT0:1,
@@ -205,6 +217,60 @@ class Rebel(AI):
             self.designs["colony"] = self.client.cmdProxy.addShipDesign(self.player.oid, 'Colony Ship',
                     Rules.Tech.MEDIUMHULL0, {Rules.Tech.SCOCKPIT0:1,
                     Rules.Tech.COLONYMOD0:1, Rules.Tech.FTLENG0:4})
+
+    def _create_advanced_designs(self):
+        needed_tech = set([Rules.Tech.SMALLHULL1, Rules.Tech.SCOCKPIT1, Rules.Tech.CANNON1, Rules.Tech.FTLENG1])
+        if needed_tech.issubset(self.player.techs) and "fighter0" not in self.designs:
+            self.designs["fighter0"] = self.designs["fighter"]
+            self.designs["fighter"] = self.client.cmdProxy.addShipDesign(self.player.oid, 'Fighter 2',
+                    Rules.Tech.SMALLHULL1, {Rules.Tech.SCOCKPIT1:1,
+                    Rules.Tech.CANNON1:2, Rules.Tech.FTLENG1:3})
+        needed_tech = set([Rules.Tech.SMALLHULL1, Rules.Tech.SCOCKPIT1, Rules.Tech.CONBOMB1, Rules.Tech.FTLENG1])
+        if needed_tech.issubset(self.player.techs) and "bomber0" not in self.designs:
+            self.designs["bomber0"] = self.designs["bomber"]
+            self.designs["bomber"] = self.client.cmdProxy.addShipDesign(self.player.oid, 'Bomber 2',
+                    Rules.Tech.SMALLHULL1, {Rules.Tech.SCOCKPIT1:1,
+                    Rules.Tech.CONBOMB1:1, Rules.Tech.FTLENG1:3})
+
+    def _get_service_centers(self):
+        service_centers = []
+        for planet in [self.db[planetID] for planetID in self.data.myPlanets]:
+            # assumption: if it repairs, it also upgrades
+            if not planet.repairShip: continue
+            service_centers.append(planet.compOf)
+        return service_centers
+
+    def _get_outdated_fleets(self, obsolete_designs):
+        outdated_fleets = []
+        for fleet in [self.db[fleetID] for fleetID in self.data.idleFleets]:
+            if set(obsolete_designs).intersection([ship[0] for ship in fleet.ships]):
+                outdated_fleets.append(fleet)
+        return outdated_fleets
+
+    def _recall_to_upgrade(self, service_centers, outdated_fleets, obsolete_designs):
+        for fleet in outdated_fleets:
+            if fleet.orbiting in service_centers: continue
+            subfleet_sheet = {}.fromkeys(obsolete_designs, 0)
+            max_range = tool.subfleetMaxRange(self.client, self.db, subfleet_sheet, fleet.oid)
+            nearest = tool.findNearest(self.db, fleet, service_centers, max_range)
+            if not nearest: continue
+            nearest_service = nearest[0]
+            fleet, new_fleet, my_fleets = tool.orderPartFleet(self.client, self.db,
+                subfleet_sheet, True, fleet.oid, Const.FLACTION_MOVE, nearest_service, None)
+
+    def _upgrade_manager(self):
+        obsoleted = set(["fighter0", "bomber0"]).intersection(self.designs)
+        obsolete_designs = [self.designs[obsol] for obsol in obsoleted]
+
+        service_centers = self._get_service_centers()
+        outdated_fleets = self._get_outdated_fleets(obsolete_designs)
+        self._recall_to_upgrade(service_centers, outdated_fleets, obsolete_designs)
+
+    def _ship_design_manager(self):
+        self._identify_basic_designs()
+        self._identify_advanced_designs()
+        self._create_basic_designs()
+        self._create_advanced_designs()
 
     def research_manager(self):
         researchable = set()
@@ -289,6 +355,7 @@ class Rebel(AI):
         self._empire_manager()
         self._planet_manager()
         self._expansion_manager()
+        self._upgrade_manager()
 
     def run(self):
         self._ship_design_manager() # this fills self.designs, needs to go first
