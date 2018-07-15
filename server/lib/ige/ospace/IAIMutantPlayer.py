@@ -126,21 +126,3 @@ class IAIMutantPlayer(IPlayer):
         # fix goverment power
         obj.govPwrCtrlRange = 10000
 
-    def getDiplomacyWith(self, tran, obj, playerID):
-        if obj.oid == playerID:
-            return Const.REL_UNITY
-        # this AI battles with overyone
-        # make default
-        dipl = IDataHolder()
-        dipl.type = Const.T_DIPLREL
-        dipl.pacts = {}
-        dipl.relation = Const.REL_ENEMY
-        dipl.relChng = 0
-        dipl.lastContact = tran.db[Const.OID_UNIVERSE].turn
-        dipl.contactType = Const.CONTACT_NONE
-        dipl.stats = None
-        return dipl
-
-    # allow normal pacts
-    #def isPactActive(self, tran, obj, partnerID, pactID):
-    #    return 0

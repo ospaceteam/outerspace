@@ -26,12 +26,14 @@ from ige.ospace import Utils
 import ai_tools as tool
 
 class AI(object):
-    def __init__(self, client):
+    def __init__(self, client, enemyTypes=None):
+        if enemyTypes is None:
+            enemyTypes = []
         self.client = client
         self.db = client.db
         self.player = client.getPlayer()
 
-        self.data = tool.tool_parseDB(self.client, self.db)
+        self.data = tool.tool_parseDB(self.client, self.db, enemyTypes)
 
     def economy_manager(self):
         raise NotImplementedError
@@ -43,9 +45,6 @@ class AI(object):
         raise NotImplementedError
 
     def research_manager(self):
-        raise NotImplementedError
-
-    def diplomacy_manager(self):
         raise NotImplementedError
 
     def _find_best_planet(self, planet_ids):
