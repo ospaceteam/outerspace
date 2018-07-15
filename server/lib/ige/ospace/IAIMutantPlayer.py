@@ -59,6 +59,9 @@ class IAIMutantPlayer(IPlayer):
 
     @staticmethod
     def setStartingPlanet(tran, planet):
+        planet.plSlots = max(planet.plSlots, 9)
+        planet.plMaxSlots = max(planet.plMaxSlots, 9)
+        planet.plDiameter = max(planet.plDiameter, 9000)
         planet.slots.append(Utils.newStructure(tran, Rules.Tech.MUTANTBASE, planet.owner, Const.STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
         planet.storPop = 3000
 

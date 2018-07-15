@@ -26,12 +26,11 @@ import random
 from xml.dom.minidom import Node, parse
 
 import ige
-import IPlayer
-import IAIPlayer
-import IAIEDENPlayer
-import IAIMutantPlayer
-import IAIPiratePlayer
-import IAIRenegadePlayer
+from IAIPlayer import IAIPlayer
+from IAIEDENPlayer import IAIEDENPlayer
+from IAIMutantPlayer import IAIMutantPlayer
+from IAIPiratePlayer import IAIPiratePlayer
+from IAIRenegadePlayer import IAIRenegadePlayer
 import Const
 import Rules
 import Scanner
@@ -372,14 +371,14 @@ class IGalaxy(IObject):
             # TODO tweak more planet's attrs
             planet = tran.db[positionID]
             self.cmd(planet).changeOwner(tran, planet, playerID, 1)
-            IAIPlayer.IAIPlayer.setStartingTechnologies(player)
+            IAIPlayer.setStartingTechnologies(player)
             # fleet
             # add basic ships designs
             # add small fleet
             system = tran.db[planet.compOf]
-            IAIPlayer.IAIPlayer.setStartingShipDesigns(player)
-            IAIPlayer.IAIPlayer.setStartingPlanet(tran, playerID, planet)
-            IAIPlayer.IAIPlayer.setStartingFleet(tran, playerID, system)
+            IAIPlayer.setStartingShipDesigns(player)
+            IAIPlayer.setStartingPlanet(tran, playerID, planet)
+            IAIPlayer.setStartingFleet(tran, playerID, system)
             system.scannerPwrs[playerID] = Rules.startingScannerPwr
         # do scanner evaluation because of all new players
         self.cmd(obj).processSCAN2Phase(tran, obj, None)
@@ -496,22 +495,22 @@ class IGalaxy(IObject):
         player.galaxy = obj.oid
         return player
 
-    def _setupEnvironmentRenegade(self, tran, obj, vacantPlanets):
-        renType = Const.T_AIRENPLAYER
-        planets = vacantPlanets.pop(renType)
+    def _setupEnvironmentUniquePerPlanet(self, tran, obj, vacantPlanets, aiClass):
+        planets = vacantPlanets.pop(aiClass.typeID)
         for planetID in planets:
             planet = tran.db[planetID]
-            log.debug("Creating new Renegade")
-            player = self.new(renType)
+            log.debug("Creating new ai, type", aiClass.typeID)
+            player = self.new(aiClass.typeID)
             self.cmd(player).register(tran, player, obj.oid)
             player.galaxy = obj.oid
             self.cmd(planet).changeOwner(tran, planet, player.oid, 1)
-            IAIRenegadePlayer.IAIRenegadePlayer.setStartingPlanet(tran, planet)
+            aiClass.setStartingPlanet(tran, planet)
 
     @public(Const.AL_ADMIN)
     def setupEnvironment(self, tran, obj):
         vacantPlanets = self._environmentGetVacantPlanets(tran, obj)
-        self._setupEnvironmentRenegade(tran, obj, vacantPlanets)
+        self._setupEnvironmentUniquePerPlanet(tran, obj, vacantPlanets, IAIRenegadePlayer)
+        self._setupEnvironmentUniquePerPlanet(tran, obj, vacantPlanets, IAIMutantPlayer)
         # iterate over types, create players if needed (it should be) and fill in vacant planets
         for playerType in vacantPlanets:
             player = self._searchForPlayer(tran, obj, playerType)
@@ -520,11 +519,9 @@ class IGalaxy(IObject):
                 planet = tran.db[planetID]
                 self.cmd(planet).changeOwner(tran, planet, player.oid, 1)
                 if playerType == Const.T_AIPIRPLAYER:
-                    IAIPiratePlayer.IAIPiratePlayer.setStartingPlanet(tran, planet)
+                    IAIPiratePlayer.setStartingPlanet(tran, planet)
                 elif playerType == Const.T_AIEDENPLAYER:
-                    IAIEDENPlayer.IAIEDENPlayer.setStartingPlanet(tran, planet)
-                elif playerType == Const.T_AIMUTPLAYER:
-                    IAIMutantPlayer.IAIMutantPlayer.setStartingPlanet(tran, planet)
+                    IAIEDENPlayer.setStartingPlanet(tran, planet)
 
     ## messaging
     def canGetMsgs(self, tran, obj, oid):
