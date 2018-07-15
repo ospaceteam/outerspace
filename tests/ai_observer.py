@@ -73,6 +73,6 @@ for day in xrange(args.days):
     for _slice in xrange(24 / args.turnSkip):
         c.doTurns(args.turnSkip, args.turnSkip, verbose=False)
         c.makeScreenshots(args.history)
-    log.info("Day {0} rendered ({1:.2g}s).".format(day + 1, time.time() - start_time))
+    log.info("Day {0} rendered ({1}s).".format(day + 1, int(time.time() - start_time)))
 c.stopServer()
 

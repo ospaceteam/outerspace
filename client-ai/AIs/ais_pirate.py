@@ -30,7 +30,8 @@ from ai import AI
 
 class Pirate(AI):
     def __init__(self, client):
-        super(Pirate, self).__init__(client)
+        enemy_types = [Const.T_PLAYER, Const.T_AIPLAYER, Const.T_AIRENPLAYER, Const.T_AIMUTPLAYER]
+        super(Pirate, self).__init__(client, enemy_types)
         tool.doRelevance(self.data, self.client, self.db, Rules.pirateInfluenceRange)
 
     def _fill_with_dens(self, system_info):
@@ -275,14 +276,14 @@ class Pirate(AI):
         ships[1] = ships[2] = ships[3]
         ships[4] = 1
         max_range = tool.subfleetMaxRange(self.client, self.db, ships, fleet.oid)
-        nearest_sys_ids = tool.findNearest(self.db, fleet, self.data.otherSystems & self.data.relevantSystems, max_range * 0.45)
+        nearest_sys_ids = tool.findNearest(self.db, fleet, self.data.enemySystems & self.data.relevantSystems, max_range * 0.45)
         if len(nearest_sys_ids):
             nearestSys = nearest_sys_ids[0]
             tool.orderPartFleet(self.client, self.db, ships, False, fleet.oid, Const.FLACTION_MOVE, nearestSys, None)
 
     def _followup_attack(self, fleet):
         max_range = tool.subfleetMaxRange(self.client, self.db, None, fleet.oid)
-        nearest_sys_ids = tool.findNearest(self.db, fleet, self.data.otherSystems & self.data.relevantSystems, max_range)
+        nearest_sys_ids = tool.findNearest(self.db, fleet, self.data.enemySystems & self.data.relevantSystems, max_range)
         if len(nearest_sys_ids):
             nearest_sys_id = nearest_sys_ids[0]
             tool.orderFleet(self.client, self.db, fleet.oid, Const.FLACTION_MOVE, nearest_sys_id, None)

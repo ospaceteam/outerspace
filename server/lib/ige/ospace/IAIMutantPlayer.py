@@ -59,6 +59,9 @@ class IAIMutantPlayer(IPlayer):
 
     @staticmethod
     def setStartingPlanet(tran, planet):
+        planet.plSlots = max(planet.plSlots, 9)
+        planet.plMaxSlots = max(planet.plMaxSlots, 9)
+        planet.plDiameter = max(planet.plDiameter, 9000)
         planet.slots.append(Utils.newStructure(tran, Rules.Tech.MUTANTBASE, planet.owner, Const.STRUCT_STATUS_ON, Rules.structNewPlayerHpRatio))
         planet.storPop = 3000
 
@@ -123,21 +126,3 @@ class IAIMutantPlayer(IPlayer):
         # fix goverment power
         obj.govPwrCtrlRange = 10000
 
-    def getDiplomacyWith(self, tran, obj, playerID):
-        if obj.oid == playerID:
-            return Const.REL_UNITY
-        # this AI battles with overyone
-        # make default
-        dipl = IDataHolder()
-        dipl.type = Const.T_DIPLREL
-        dipl.pacts = {}
-        dipl.relation = Const.REL_ENEMY
-        dipl.relChng = 0
-        dipl.lastContact = tran.db[Const.OID_UNIVERSE].turn
-        dipl.contactType = Const.CONTACT_NONE
-        dipl.stats = None
-        return dipl
-
-    # allow normal pacts
-    #def isPactActive(self, tran, obj, partnerID, pactID):
-    #    return 0

@@ -29,7 +29,8 @@ from ai import AI
 
 class Mutant(AI):
     def __init__(self, client):
-        super(Mutant, self).__init__(client)
+        enemy_types = [Const.T_PLAYER, Const.T_AIPLAYER, Const.T_PIRPLAYER, Const.T_AIPIRPLAYER, Const.T_AIRENPLAYER]
+        super(Mutant, self).__init__(client, enemy_types)
         tool.doRelevance(self.data, self.client, self.db, 10)
 
     def _system_worthiness(self, system, weights):
@@ -285,7 +286,7 @@ class Mutant(AI):
                 # this also covers fleets fighting over enemy systems - in that case, there
                 # is slight chance the fleet will continue to the next system without conquering
                 # the system first
-                if fleet.orbiting in self.data.otherSystems and Utils.weightedRandom([True, False], [9,1]):
+                if fleet.orbiting in self.data.enemySystems and Utils.weightedRandom([True, False], [9,1]):
                     continue
                 if tool.fleetContains(fleet, {1:minimum, 4:minimum}):
                     attack_fleets.add(fleet_id)
@@ -300,7 +301,7 @@ class Mutant(AI):
             swarmers = min(sheet[1], math.ceil(sowers * 1.5))
             max_range = 0.8 * tool.subfleetMaxRange(self.client, self.db, {1:swarmers, 4:sowers}, fleet_id)
             # four nearest systems are considered, with probability to be chosen based on order
-            nearest = tool.findNearest(self.db, fleet, self.data.otherSystems, max_range, 4)
+            nearest = tool.findNearest(self.db, fleet, self.data.enemySystems, max_range, 4)
             if len(nearest):
                 # range is adjusted to flatten probabilities a bit
                 probability_map = map(lambda x: x ** 2, range(6, 2, -1))
@@ -320,6 +321,10 @@ class Mutant(AI):
         self._attack_manager()
 
     def run(self):
+        self.diplomacy_manager(friendly_types=[Const.T_AIMUTPLAYER],
+                               pacts=[Const.PACT_ALLOW_CIVILIAN_SHIPS, Const.PACT_ALLOW_MILITARY_SHIPS,
+                                      Const.PACT_ALLOW_TANKING, Const.PACT_SHARE_SCANNER,
+                                      Const.PACT_MINOR_CP_COOP, Const.PACT_MAJOR_CP_COOP])
         self.economy_manager()
         self.offense_manager()
 

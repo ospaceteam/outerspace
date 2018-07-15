@@ -28,7 +28,7 @@ from ige.ospace import Utils
 
 
 
-def tool_parseDB(client, db):
+def tool_parseDB(client, db, enemyTypes):
     """ Parses all data in db for needs of other tools. Other in the name
     means other players.
 
@@ -42,7 +42,9 @@ def tool_parseDB(client, db):
     data.nonhabPlanets = set()
     data.unknownSystems = set()
     data.otherPlanets = set()
+    data.enemyPlanets = set()
     data.otherSystems = set()
+    data.enemySystems = set()
     data.systems = set()
     data.myFleets = set()
     data.myMPPerSystem = {}
@@ -97,6 +99,9 @@ def tool_parseDB(client, db):
                 if not getattr(owners[ownerID], 'type', Const.OID_NONE) == Const.T_AIEDENPLAYER:
                     data.otherSystems.add(db[objID].compOf)
                     data.otherPlanets.add(objID)
+                if getattr(owners[ownerID], 'type', Const.OID_NONE) in enemyTypes:
+                    data.enemySystems.add(db[objID].compOf)
+                    data.enemyPlanets.add(objID)
                 if getattr(owners[ownerID], 'type', Const.OID_NONE) in (Const.T_AIPIRPLAYER, Const.T_PIRPLAYER):
                     data.pirateSystems.add(db[objID].compOf)
         elif objType == Const.T_SYSTEM:
