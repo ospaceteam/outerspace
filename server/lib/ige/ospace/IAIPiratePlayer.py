@@ -44,7 +44,7 @@ class IAIPiratePlayer(IPlayer):
         obj.login = '*'
         #
         obj.pirateFame = 0
-        obj.techLevel = 99
+        obj.techLevel = 3
         # grant all TL1 ship techs except for colony module(s)
         for techID in Rules.techs:
             tech = Rules.techs[techID]
