@@ -96,6 +96,10 @@ class Rebel(AI):
             elif not has_scouts:
                 planet.prodQueue, self.player.stratRes = self.client.cmdProxy.startConstruction(planet_id,
                     self.designs["scout"], 1, planet_id, self.designs["scout"] < 1000, 0, Const.OID_NONE)
+            elif Rules.Tech.UPGRADESHIPS in self.player.techs and self.player.fleetUpgradePool < 2000:
+                planet.prodQueue, self.player.stratRes = self.client.cmdProxy.startConstruction(planet_id,
+                    Rules.Tech.UPGRADESHIPS, 1, planet_id, Rules.Tech.UPGRADESHIPS < 1000, 0, Const.OID_NONE)
+
             elif not shared_system:
                 # build fighters
                 planet.prodQueue, self.player.stratRes = self.client.cmdProxy.startConstruction(planet_id,
@@ -232,6 +236,15 @@ class Rebel(AI):
                     Rules.Tech.SMALLHULL1, {Rules.Tech.SCOCKPIT1:1,
                     Rules.Tech.CONBOMB1:1, Rules.Tech.FTLENG1:3})
 
+    def _upgrade_obsolete_design(self, old_code_name, new_code_name):
+        if old_code_name in self.designs:
+            old_design_id = self.designs[old_code_name]
+            new_design_id = self.designs[new_code_name]
+            old_design = self.player.shipDesigns[old_design_id]
+            if not old_design.upgradeTo:
+                self.player.shipDesigns, self.player.stratRes, tasksUpgraded, self.player.prodQueues = \
+                        self.client.cmdProxy.upgradeShipDesign(self.player.oid, old_design_id, new_design_id)
+
     def _get_service_centers(self):
         service_centers = []
         for planet in [self.db[planetID] for planetID in self.data.myPlanets]:
@@ -259,12 +272,17 @@ class Rebel(AI):
                 subfleet_sheet, True, fleet.oid, Const.FLACTION_MOVE, nearest_service, None)
 
     def _upgrade_manager(self):
-        obsoleted = set(["fighter0", "bomber0"]).intersection(self.designs)
+        UPGRADABLE = ["fighter", "bomber"]
+        OBSOL_FUNC = lambda x: x + "0"
+        obsoleted = set(map(OBSOL_FUNC, UPGRADABLE)).intersection(self.designs)
         obsolete_designs = [self.designs[obsol] for obsol in obsoleted]
+        if not obsolete_designs: return
 
         service_centers = self._get_service_centers()
         outdated_fleets = self._get_outdated_fleets(obsolete_designs)
         self._recall_to_upgrade(service_centers, outdated_fleets, obsolete_designs)
+        for code_name in UPGRADABLE:
+            self._upgrade_obsolete_design(OBSOL_FUNC(code_name), code_name)
 
     def _ship_design_manager(self):
         self._identify_basic_designs()
@@ -290,7 +308,7 @@ class Rebel(AI):
             for task in self.player.rsrchQueue:
                 researchable -= set([task.techID])
             # some less useful technologies for AI - deprioritize
-            lessTechs = set([1102, 1104, 1107, 1110, 1112, 1404, 1510, 1800, 1801, 1802])
+            lessTechs = set([1102, 1104, 1107, 1110, 1112, 1404, 1510, 1800, 1802])
             if len(researchable - (lessTechs | set([1990, 1991, 1992]))) > 0:
                 researchable -= lessTechs
             # do not advance, for now
