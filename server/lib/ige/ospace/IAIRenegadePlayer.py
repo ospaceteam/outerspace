@@ -68,11 +68,6 @@ class IAIRenegadePlayer(IPlayer):
         if not obj.fleets and not obj.planets:
             self.cmd(obj).delete(tran, obj)
 
-    @public(Const.AL_ADMIN)
-    def processRSRCHPhase(self, tran, obj, data):
-        # do not research anything
-        return
-
     def update(self, tran, obj):
         self.setStartingTechnologies(obj)
         self.setStartingShipDesigns(obj)

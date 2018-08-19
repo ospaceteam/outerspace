@@ -116,11 +116,6 @@ class IAIMutantPlayer(IPlayer):
         # call super method
         IPlayer.update(self, tran, obj)
 
-    @public(Const.AL_ADMIN)
-    def processRSRCHPhase(self, tran, obj, data):
-        # do not research anything
-        return
-
     def processFINALPhase(self, tran, obj, data):
         IPlayer.processFINALPhase(self, tran, obj, data)
         # fix goverment power
