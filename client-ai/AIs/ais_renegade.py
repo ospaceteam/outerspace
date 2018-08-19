@@ -71,7 +71,11 @@ class Renegade(AI):
             self._build_normal_ships(planet)
 
     def _prepare_free_planet_plan(self, planet_id):
-        return {Rules.Tech.RENEGADEBASE:1}
+        planet = self.db[planet_id]
+        if planet.plStratRes:
+            return {Rules.Tech.RENEGADEBASE3:1}
+        else:
+            return {Rules.Tech.RENEGADEBASE2:1}
 
     def _prepare_planet_plan(self, actual_stats, planet_id):
         planet = self.db[planet_id]
@@ -122,9 +126,31 @@ class Renegade(AI):
                 self._build_ships(idle_planets)
 
     def run(self):
+        top_prio_tech = [Rules.Tech.RENEGADEBASE2MINOR,
+                         Rules.Tech.RENEGADEBASE3MINOR,
+                         Rules.Tech.RENEGADEBASE3,
+                         Rules.Tech.RENEGADEBASE2]
+        mid_importance_tech = [Rules.Tech.SMALLHULL1,
+                               Rules.Tech.STLENG1,
+                               Rules.Tech.CANNON1,
+                               Rules.Tech.SCOCKPIT1]
+        low_prio_tech = [Rules.Tech.MEDIUMHULL2,
+                   Rules.Tech.SBRIDGE1,
+                   Rules.Tech.SSROCKET,
+                   Rules.Tech.STEELARM2,
+                   Rules.Tech.NSTLENG2,
+                   Rules.Tech.RENEGADETITANIUMMHULL,
+                   Rules.Tech.RENEGADECOSMODROME]
+        ignored_tech = [Rules.Tech.RENEGADEBASE]
+        tech_prio = {10: top_prio_tech,
+                     3: mid_importance_tech,
+                     1: low_prio_tech,
+                     0: ignored_tech}
+        self.research_manager(tech_prio)
         self.economy_manager()
         self.diplomacy_manager(friendly_types=[Const.T_PLAYER, Const.T_AIPLAYER, Const.T_AIRENPLAYER],
                                pacts=[Const.PACT_ALLOW_CIVILIAN_SHIPS, Const.PACT_ALLOW_TANKING,
+                                      Const.PACT_MINOR_SCI_COOP, Const.PACT_MAJOR_SCI_COOP,
                                       Const.PACT_MINOR_CP_COOP, Const.PACT_MAJOR_CP_COOP])
 
 

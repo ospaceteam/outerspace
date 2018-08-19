@@ -214,6 +214,7 @@
 			researchMod="1.00 + 1.00"
 			level="1"
 			researchRequires="SMALLHULL0-1"
+			researchRaces="BCHr"
 		/>
 		<shiphull
 			buildProd="120"
@@ -234,6 +235,7 @@
 			researchMod="1.00 + 1.00"
 			level="1"
 			researchRequires="FTLENG0-1"
+			researchRaces="BCHr"
 		/>
 		<shipequip
 			subtype="seq_eng"
@@ -252,6 +254,7 @@
 			researchMod="1.00 + 0.50"
 			level="1"
 			researchRequires="SCOCKPIT0-1"
+			researchRaces="BCHr"
 		/>
 		<shipequip
 			subtype="seq_ctrl"
@@ -304,6 +307,7 @@
 		<discovery
 			researchMod="1.00 + 1.00"
 			level="1"
+			researchRaces="BCHr"
 		/>
 		<shipequip
 			subtype="seq_eng"
@@ -320,6 +324,7 @@
 			researchMod="1.00 + 0.5 + 0.5"
 			level="1"
 			researchRequires="CANNON0-1"
+			researchRaces="BCHr"
 		/>
 		<shipequip
 			subtype="seq_wpn"

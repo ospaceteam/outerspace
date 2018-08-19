@@ -84,21 +84,38 @@ class IAIRenegadePlayer(IPlayer):
     @staticmethod
     def setStartingTechnologies(obj):
         obj.techLevel = 2
-        obj.techs[Rules.Tech.SMALLHULL1] = 3
-        obj.techs[Rules.Tech.SCOCKPIT1] = 3
-        obj.techs[Rules.Tech.MEDIUMHULL2] = 3
-        obj.techs[Rules.Tech.SBRIDGE1] = 3
-        obj.techs[Rules.Tech.CANNON1] = 3
-        obj.techs[Rules.Tech.SSROCKET] = 3
-        obj.techs[Rules.Tech.STLENG1] = Rules.techMaxImprovement
-        obj.techs[Rules.Tech.NSTLENG2] = Rules.techMaxImprovement
-        obj.techs[Rules.Tech.RENEGADETITANIUMMHULL] = Rules.techMaxImprovement
-        obj.techs[Rules.Tech.RENEGADEBASE] = 3
-        obj.techs[Rules.Tech.RENEGADEBASE2] = 3
-        obj.techs[Rules.Tech.RENEGADEBASE2MINOR] = 3
-        obj.techs[Rules.Tech.RENEGADEBASE3] = 3
-        obj.techs[Rules.Tech.RENEGADEBASE3MINOR] = 3
-        obj.techs[Rules.Tech.RENEGADECOSMODROME] = 3
+        # primitives, which Renegade won't use (it's for tech tree to be correct)
+        be_one = [# primitives, which Renegade won't use (it's for tech tree usage only)
+                  Rules.Tech.SMALLHULL0,
+                  Rules.Tech.MEDIUMHULL0,
+                  Rules.Tech.SCOCKPIT0,
+                  Rules.Tech.SBRIDGE0,
+                  Rules.Tech.CANNON0,
+                  Rules.Tech.SSROCKET0,
+                  # rest
+                  Rules.Tech.SMALLHULL1,
+                  Rules.Tech.SCOCKPIT1,
+                  Rules.Tech.MEDIUMHULL2,
+                  Rules.Tech.SBRIDGE1,
+                  Rules.Tech.CANNON1,
+                  Rules.Tech.SSROCKET,
+                  Rules.Tech.STEELARM2,
+                  Rules.Tech.NSTLENG2,
+                  Rules.Tech.RENEGADETITANIUMMHULL,
+                  Rules.Tech.RENEGADEBASE3,
+                  Rules.Tech.RENEGADEBASE3MINOR,
+                  Rules.Tech.RENEGADECOSMODROME,
+                  Rules.Tech.RENEGADEBASE2,
+                  Rules.Tech.RENEGADEBASE2MINOR]
+        be_three = [Rules.Tech.STLENG1,
+                    Rules.Tech.RENEGADEBASE]
+
+        for tech in be_one:
+            if tech in obj.techs: continue
+            obj.techs[tech] = 1
+        for tech in be_three:
+            if tech in obj.techs: continue
+            obj.techs[tech] = 3
 
     @staticmethod
     def setStartingShipDesigns(obj):
