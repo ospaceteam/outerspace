@@ -175,7 +175,7 @@ def weightedRandom(choices, weights):
     """ Choose randomly from weighted choices
 
     """
-
+    assert len(choices) == len(weights)
     die = random.randint(1, sum(weights))
     for choice, weight in zip(choices, weights):
         die -= weight

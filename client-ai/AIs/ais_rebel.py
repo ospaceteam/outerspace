@@ -290,38 +290,6 @@ class Rebel(AI):
         self._create_basic_designs()
         self._create_advanced_designs()
 
-    def research_manager(self):
-        researchable = set()
-        if len(self.player.rsrchQueue) < 2:
-            for tech_id in self.player.techs.keys():
-                tech = self.client.getTechInfo(tech_id)
-                improvement = self.player.techs[tech_id]
-                if improvement < Rules.techMaxImprovement and\
-                        improvement < tech.maxImprovement:
-                    researchable.add(tech_id)
-            for tech_id in self.client.getAllTechIDs():
-                tech = self.client.getTechInfo(tech_id)
-                if not hasattr(tech, "partialData") or not hasattr(tech, 'researchMod'):
-                    continue
-                else:
-                    researchable.add(tech_id)
-            for task in self.player.rsrchQueue:
-                researchable -= set([task.techID])
-            # some less useful technologies for AI - deprioritize
-            lessTechs = set([1102, 1104, 1107, 1110, 1112, 1404, 1510, 1800, 1802])
-            if len(researchable - (lessTechs | set([1990, 1991, 1992]))) > 0:
-                researchable -= lessTechs
-            # do not advance, for now
-            researchable -= set([1990, 1991, 1992])
-            if len(researchable) > 0:
-                if Rules.Tech.OUTPOST1 in researchable:
-                    self.player.rsrchQueue = self.client.cmdProxy.startResearch(self.player.oid, Rules.Tech.OUTPOST1)
-                    return
-                possibilities = list(researchable)
-                random.shuffle(possibilities)
-                tech_id = possibilities[0]
-                self.player.rsrchQueue = self.client.cmdProxy.startResearch(self.player.oid, tech_id)
-
     def _help_system(self):
         tool.doDanger(self.data, self.client, self.db)
         pirate_influenced_systems = tool.findInfluence(self.data, self.client, self.db, Rules.pirateInfluenceRange, self.data.pirateSystems)
@@ -377,7 +345,37 @@ class Rebel(AI):
 
     def run(self):
         self._ship_design_manager() # this fills self.designs, needs to go first
-        self.research_manager()
+        top_prio_tech = [Rules.Tech.OUTPOST1,
+                         Rules.Tech.GOVCENTER1,
+                         Rules.Tech.FACTORY1,
+                         Rules.Tech.RESCENTRE1,
+                         Rules.Tech.FTLENG1,
+                         ]
+        mid_prio_tech = [Rules.Tech.SMALLHULL1,
+                         Rules.Tech.SCOCKPIT1,
+                         Rules.Tech.CANNON1,
+                         Rules.Tech.UPGRADESHIPS,
+                         ]
+        low_prio_tech = [Rules.Tech.PWRPLANTOIL1,
+                         Rules.Tech.FARM1,
+                         Rules.Tech.COMSCAN1,
+                         Rules.Tech.PWRPLANTSOL1,
+                         Rules.Tech.SPACEPORT,
+                         Rules.Tech.SCANNERMOD1,
+                         Rules.Tech.SCANNERMOD2,
+                         Rules.Tech.CONBOMB1,
+                         Rules.Tech.HOLIDAYS1,
+                         Rules.Tech.DEEPSPACESCAN,
+                         ]
+        ignored_tech = [Rules.Tech.BIONICTL2,
+                        Rules.Tech.HUMANTL2,
+                        Rules.Tech.ROBOTTL2,
+                        ]
+        tech_prio = {10: top_prio_tech,
+                     3: mid_prio_tech,
+                     1: low_prio_tech,
+                     0: ignored_tech}
+        self.research_manager(tech_prio)
         self.diplomacy_manager(friendly_types=[Const.T_PLAYER, Const.T_AIPLAYER, Const.T_AIRENPLAYER],
                                pacts=[Const.PACT_ALLOW_CIVILIAN_SHIPS, Const.PACT_ALLOW_TANKING,
                                       Const.PACT_MINOR_SCI_COOP, Const.PACT_MAJOR_SCI_COOP,

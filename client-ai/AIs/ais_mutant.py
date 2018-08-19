@@ -304,7 +304,7 @@ class Mutant(AI):
             nearest = tool.findNearest(self.db, fleet, self.data.enemySystems, max_range, 4)
             if len(nearest):
                 # range is adjusted to flatten probabilities a bit
-                probability_map = map(lambda x: x ** 2, range(6, 2, -1))
+                probability_map = map(lambda x: x ** 2, range(2 + len(nearest), 2, -1))
                 target = Utils.weightedRandom(nearest, probability_map)
 
                 fleet, new_fleet, my_fleets = tool.orderPartFleet(self.client, self.db,
