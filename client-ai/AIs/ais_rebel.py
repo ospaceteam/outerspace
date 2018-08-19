@@ -203,6 +203,9 @@ class Rebel(AI):
             elif design.name == 'Bomber 2':
                 self.designs["bomber0"] = self.designs["bomber"]
                 self.designs["bomber"] = desID
+            elif design.name == 'Colony Ship 2':
+                self.designs["colony0"] = self.designs["colony"]
+                self.designs["colony"] = desID
 
     def _create_basic_designs(self):
         if "scout" not in self.designs:
@@ -220,7 +223,7 @@ class Rebel(AI):
         if "colony" not in self.designs:
             self.designs["colony"] = self.client.cmdProxy.addShipDesign(self.player.oid, 'Colony Ship',
                     Rules.Tech.MEDIUMHULL0, {Rules.Tech.SCOCKPIT0:1,
-                    Rules.Tech.COLONYMOD0:1, Rules.Tech.FTLENG0:4})
+                    Rules.Tech.COLONYMOD0:1, Rules.Tech.FTLENG0:5})
 
     def _create_advanced_designs(self):
         needed_tech = set([Rules.Tech.SMALLHULL1, Rules.Tech.SCOCKPIT1, Rules.Tech.CANNON1, Rules.Tech.FTLENG1])
@@ -235,6 +238,12 @@ class Rebel(AI):
             self.designs["bomber"] = self.client.cmdProxy.addShipDesign(self.player.oid, 'Bomber 2',
                     Rules.Tech.SMALLHULL1, {Rules.Tech.SCOCKPIT1:1,
                     Rules.Tech.CONBOMB1:1, Rules.Tech.FTLENG1:3})
+        needed_tech = set([Rules.Tech.MEDIUMHULL0, Rules.Tech.SCOCKPIT1, Rules.Tech.COLONYMOD0, Rules.Tech.FTLENG1])
+        if needed_tech.issubset(self.player.techs) and "colony0" not in self.designs:
+            self.designs["colony0"] = self.designs["colony"]
+            self.designs["colony"] = self.client.cmdProxy.addShipDesign(self.player.oid, 'Colony Ship 2',
+                    Rules.Tech.MEDIUMHULL0, {Rules.Tech.SCOCKPIT1:1,
+                    Rules.Tech.COLONYMOD0:1, Rules.Tech.FTLENG1:5})
 
     def _upgrade_obsolete_design(self, old_code_name, new_code_name):
         if old_code_name in self.designs:
@@ -272,7 +281,7 @@ class Rebel(AI):
                 subfleet_sheet, True, fleet.oid, Const.FLACTION_MOVE, nearest_service, None)
 
     def _upgrade_manager(self):
-        UPGRADABLE = ["fighter", "bomber"]
+        UPGRADABLE = ["fighter", "bomber", "colony"]
         OBSOL_FUNC = lambda x: x + "0"
         obsoleted = set(map(OBSOL_FUNC, UPGRADABLE)).intersection(self.designs)
         obsolete_designs = [self.designs[obsol] for obsol in obsoleted]
@@ -317,7 +326,7 @@ class Rebel(AI):
                     quantity = int(math.ceil(temp_mp / float(one_fighter_mp)))
                     if quantity == 0:
                         continue
-                    ships_left, mil_pwrSend = tool.orderFromSystem(self.client, self.db,
+                    ships_left, mil_pwrSend = tool.orderFromSystem(self.data, self.client, self.db,
                         {self.designs["fighter"]:quantity}, temp_id, Const.FLACTION_MOVE, system_id, None)
                     mil_pwr += mil_pwrSend
                     self.data.myMPPerSystem[temp_id] -= mil_pwrSend
