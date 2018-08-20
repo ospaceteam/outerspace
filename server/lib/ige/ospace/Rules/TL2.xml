@@ -344,7 +344,7 @@
 			researchMod="1.00 + 0.50 + 0.50"
 			level="2"
 			researchRequires="SSROCKET0-1"
-			researchRaces="BCHr"
+			researchRaces="BCHmr"
 		/>
 		<shipequip
 			subtype="seq_wpn"
@@ -387,6 +387,7 @@
 			researchMod="1.00 + 0.5 + 0.5"
 			level="2"
 			researchRequires="CANNON1-3"
+			researchRaces="BCHm"
 		/>
 		<shipequip
 			subtype="seq_wpn"

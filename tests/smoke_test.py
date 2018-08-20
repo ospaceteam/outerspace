@@ -91,9 +91,9 @@ def checkPlayerProgress():
                 player_name = player_stats[0]
                 if 'E.D.E.N.' in player_name or 'order' == player: continue
                 elif 'Renegade' in player_name:
-                    limit = 9
+                    limit = 5
                 elif 'Mutant' in player_name:
-                    limit = 9
+                    limit = 5
                 else:
                     limit = 10
                 buildings = int(player_stats[3])
