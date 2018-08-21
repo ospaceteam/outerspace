@@ -69,24 +69,39 @@ class IAIMutantPlayer(IPlayer):
     def setStartingTechnologies(obj):
         obj.techLevel = 3
         # grant technologies
-        obj.techs[Rules.Tech.EMCANNON] = Rules.techMaxImprovement
-        obj.techs[Rules.Tech.SSROCKET] = Rules.techMaxImprovement
-        obj.techs[Rules.Tech.TORPEDO] = Rules.techMaxImprovement
-        obj.techs[Rules.Tech.STLENG1] = Rules.techMaxImprovement
-        obj.techs[Rules.Tech.FTLENG1] = 3
-        obj.techs[Rules.Tech.SMALLHULL1] = 3
-        obj.techs[Rules.Tech.SCOCKPIT1] = 3
-        obj.techs[Rules.Tech.SCANNERMOD1] = 3
-        obj.techs[Rules.Tech.CONBOMB1] = 3
-        obj.techs[Rules.Tech.MUTANTBASE] = 3
-        obj.techs[Rules.Tech.MUTANTBASE2] = 3
-        obj.techs[Rules.Tech.MUTANTBASE3] = 3
-        obj.techs[Rules.Tech.MUTANTBASE4] = 3
-        obj.techs[Rules.Tech.MUTANTPP1] = 3
-        obj.techs[Rules.Tech.MUTANTPP2] = 3
-        obj.techs[Rules.Tech.MUTANTFACT1] = 3
-        obj.techs[Rules.Tech.MUTANTFACT2] = 3
-        obj.techs[Rules.Tech.MUTANTMINES] = 3
+        starting_techs = [Rules.Tech.SMALLHULL0,
+                          Rules.Tech.MEDIUMHULL0,
+                          Rules.Tech.SCOCKPIT0,
+                          Rules.Tech.SBRIDGE0,
+                          Rules.Tech.CANNON0,
+                          Rules.Tech.CONBOMB0,
+                          Rules.Tech.TORPEDO0,
+                          Rules.Tech.SSROCKET0,
+                          Rules.Tech.FTLENG0,
+                          Rules.Tech.SCANNERMOD0,
+                          # technologies for ship design creation
+                          Rules.Tech.SMALLHULL1,
+                          Rules.Tech.SCOCKPIT1,
+                          Rules.Tech.SCANNERMOD1,
+                          Rules.Tech.CONBOMB1,
+                          Rules.Tech.EMCANNON,
+                          Rules.Tech.STLENG1,
+                          Rules.Tech.FTLENG1,
+                          Rules.Tech.MUTANTPOD,
+                          # structures
+                          Rules.Tech.MUTANTBASE,
+                          Rules.Tech.MUTANTBASE2,
+                          Rules.Tech.MUTANTBASE3,
+                          Rules.Tech.MUTANTBASE4,
+                          Rules.Tech.MUTANTPP1,
+                          Rules.Tech.MUTANTPP2,
+                          Rules.Tech.MUTANTFACT1,
+                          Rules.Tech.MUTANTFACT2,
+                          Rules.Tech.MUTANTMINES,
+                          ]
+        for tech in starting_techs:
+            if tech in obj.techs: continue
+            obj.techs[tech] = 1
 
     @staticmethod
     def setStartingShipDesigns(obj):
@@ -115,11 +130,6 @@ class IAIMutantPlayer(IPlayer):
         # player otherwise so it has to be done this way]
         # call super method
         IPlayer.update(self, tran, obj)
-
-    @public(Const.AL_ADMIN)
-    def processRSRCHPhase(self, tran, obj, data):
-        # do not research anything
-        return
 
     def processFINALPhase(self, tran, obj, data):
         IPlayer.processFINALPhase(self, tran, obj, data)

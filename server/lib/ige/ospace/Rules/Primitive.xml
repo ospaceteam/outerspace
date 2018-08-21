@@ -38,6 +38,7 @@ as well.
 			researchMod="1.00 + 1.00"
 			level="1"
 			maxImprovement="1"
+			researchRaces="BCHmr"
 		/>
 		<shiphull
 			buildProd="120"
@@ -58,6 +59,7 @@ as well.
 			researchMod="1.00 + 1.00"
 			level="1"
 			maxImprovement="1"
+			researchRaces="BCHr"
 		/>
 		<shiphull
 			buildProd="480"
@@ -98,6 +100,7 @@ as well.
 			researchMod="1.00 + 0.50"
 			level="1"
 			maxImprovement="1"
+			researchRaces="BCHmr"
 		/>
 		<shipequip
 			subtype="seq_ctrl"
@@ -117,6 +120,7 @@ as well.
 			researchMod="1.00 + 0.50"
 			level="1"
 			maxImprovement="1"
+			researchRaces="BCHr"
 		/>
 		<shipequip
 			subtype="seq_ctrl"
@@ -157,6 +161,7 @@ as well.
 			researchMod="1.00 + 0.5 + 0.5"
 			level="1"
 			maxImprovement="1"
+			researchRaces="BCHmr"
 		/>
 		<shipequip
 			subtype="seq_wpn"
@@ -198,6 +203,7 @@ as well.
 			researchMod="1.00 + 0.50 + 0.50"
 			level="1"
 			maxImprovement="1"
+			researchRaces="BCHmr"
 		/>
 		<shipequip
 			subtype="seq_wpn"
@@ -219,6 +225,7 @@ as well.
 			researchMod="1.00 + 0.50 + 0.50"
 			level="1"
 			maxImprovement="1"
+			researchRaces="BCHm"
 		/>
 		<shipequip
 			subtype="seq_wpn"
@@ -241,6 +248,7 @@ as well.
 			researchMod="1.0 + 0.5 + 0.5"
 			level="1"
 			maxImprovement="1"
+			researchRaces="BCHm"
 		/>
 		<shipequip
 			subtype="seq_wpn"
@@ -261,6 +269,7 @@ as well.
 			researchMod="1.00 + 1.00"
 			level="1"
 			maxImprovement="1"
+			researchRaces="BCHm"
 		/>
 		<shipequip
 			subtype="seq_eng"
@@ -279,6 +288,7 @@ as well.
 			researchMod="1.00 + 0.50"
 			level="1"
 			maxImprovement="1"
+			researchRaces="BCHm"
 		/>
 		<shipequip
 			subtype="seq_mod"

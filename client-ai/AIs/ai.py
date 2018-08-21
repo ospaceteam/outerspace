@@ -18,6 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 import copy
+import random
 from ige import log
 from ige.ospace import Const
 from ige.ospace import Rules
@@ -44,8 +45,51 @@ class AI(object):
     def offense_manager(self):
         raise NotImplementedError
 
-    def research_manager(self):
-        raise NotImplementedError
+    def _filter_res_requirements(self, techs):
+        for tech_id in copy.copy(techs):
+            tech = self.client.getTechInfo(tech_id)
+            failed_requirements = False
+            for req_tech, req_tech_improv in tech.researchRequires:
+                if req_tech not in self.player.techs or self.player.techs[req_tech] < req_tech_improv:
+                    failed_requirements = True
+                    break
+            if failed_requirements:
+                techs.remove(tech_id)
+
+    def _get_researchable(self):
+        researchable = set()
+        # already available
+        for tech_id in self.player.techs.keys():
+            tech = self.client.getTechInfo(tech_id)
+            improvement = self.player.techs[tech_id]
+            if improvement < Rules.techMaxImprovement and\
+                    improvement < tech.maxImprovement:
+                researchable.add(tech_id)
+        # new tech
+        for tech_id in self.client.getAllTechIDs():
+            tech = self.client.getTechInfo(tech_id)
+            if not hasattr(tech, "partialData") or not hasattr(tech, 'researchMod'):
+                continue
+        for task in self.player.rsrchQueue:
+            researchable -= set([task.techID])
+        self._filter_res_requirements(researchable)
+        return researchable
+
+    def research_manager(self, weighted_techs):
+        """ weighted_techs is dictionary, with weight:list_of_techs pairs
+        """
+        if len(self.player.rsrchQueue) >= 2:
+            return
+        researchable = self._get_researchable()
+        weights = []
+        tech_choices = []
+        for weight, techs in weighted_techs.iteritems():
+            for tech in researchable.intersection(techs):
+                weights.append(weight)
+                tech_choices.append(tech)
+        if sum(weights):
+            tech = Utils.weightedRandom(tech_choices, weights)
+            self.player.rsrchQueue = self.client.cmdProxy.startResearch(self.player.oid, tech)
 
     def _find_best_planet(self, planet_ids):
         # right now, it's simply the largest one

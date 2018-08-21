@@ -33,15 +33,16 @@
 			prodBioMod="0.0,0.0,0.0,1.0"
 			prodEn="25"
 			prodEnMod="0.0,0.0,0.0,1.0"
-			prodProd="30"
+			prodProd="20"
 			prodProdMod="0.0, 0.0, 0.0, 1.0"
+			prodSci="5"
 			operWorkers="1000"
 			prodEnv="+40"
 			scannerPwr="50"
-			maxHP="1200"
+			maxHP="800"
 			combatAtt="7"
 			revoltThr="-100"
-			structWeapons="4,0,0,0,1"
+			structWeapons="2,2,2,0,1"
 			refuelMax="100"
 			refuelInc="1"
 			repairShip="0.01"
@@ -57,6 +58,7 @@
 			researchMod="1.0 + 0.5"
 			researchRaces="m"
 			level="1"
+			researchRequires="MUTANTBASE-3"
 		/>
 		<structure
 			buildProd="1440"
@@ -64,15 +66,16 @@
 			prodBioMod="0.2, 0.0, 0.0, 0.8"
 			prodEn="50"
 			prodEnMod="0.2, 0.0, 0.0, 0.8"
-			prodProd="40"
+			prodProd="28"
 			prodProdMod="0.2, 0.0, 0.0, 0.8"
+			prodSci="10"
 			operWorkers="2000"
 			prodEnv="+45"
 			scannerPwr="65"
-			maxHP="1800"
+			maxHP="1200"
 			combatAtt="7"
 			revoltThr="-100"
-			structWeapons="6,3,0,0,1"
+			structWeapons="3,3,3,0,1"
 			refuelMax="100"
 			refuelInc="1"
 			repairShip="0.01"
@@ -85,7 +88,8 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="m"
-			level="1"
+			level="2"
+			researchRequires="MUTANTBASE2-3"
 		/>
 		<structure
 			buildProd="2880"
@@ -93,15 +97,16 @@
 			prodBioMod="0.4, 0.0, 0.0, 0.6"
 			prodEn="75"
 			prodEnMod="0.4, 0.0, 0.0, 0.6"
-			prodProd="50"
+			prodProd="36"
 			prodProdMod="0.4, 0.0, 0.0, 0.6"
+			prodSci="14"
 			operWorkers="3000"
 			prodEnv="+50"
 			scannerPwr="80"
 			maxHP="1800"
 			combatAtt="7"
 			revoltThr="-100"
-			structWeapons="6,6,3,0,1"
+			structWeapons="6,6,6,0,1"
 			refuelMax="100"
 			refuelInc="2"
 			repairShip="0.02"
@@ -115,13 +120,14 @@
 			researchMod="1.0 + 0.5"
 			researchRaces="m"
 			level="1"
+			researchRequires="MUTANTBASE-3"
 		/>
 		<structure
 			buildProd="480"
 			prodEn="100"
 			prodEnMod="0.0,0.0,0.0,1.0"
 			operWorkers="500"
-			maxHP="500"
+			maxHP="200"
 			fullInfo="1"
 		/>
 	</technology>
@@ -129,14 +135,15 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="m"
-			level="1"
+			level="2"
+			researchRequires="MUTANTBASE2-3"
 		/>
 		<structure
 			buildProd="720"
 			prodEn="200"
 			prodEnMod="0.5,0.0,0.0,0.5"
 			operWorkers="1000"
-			maxHP="750"
+			maxHP="600"
 			fullInfo="1"
 		/>
 	</technology>
@@ -145,14 +152,16 @@
 			researchMod="1.0 + 0.5"
 			researchRaces="m"
 			level="1"
+			researchRequires="MUTANTBASE-3"
 		/>
 		<structure
 			buildProd="480"
-			prodProd="8"
+			prodProd="6"
 			prodProdMod="0.0, 0.0, 0.0, 1.0"
+			prodSci="4"
 			operEn="25"
 			operWorkers="500"
-			maxHP="500"
+			maxHP="200"
 			fullInfo="1"
 		/>
 	</technology>
@@ -160,20 +169,22 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="m"
-			level="1"
+			level="3"
+			researchRequires="MUTANTBASE3-3"
 		/>
 		<structure
 			buildProd="960"
-			prodProd="15"
+			prodProd="12"
 			prodProdMod="0.3, 0.0, 0.0, 0.7"
+			prodSci="6"
 			operEn="50"
 			operWorkers="1000"
 			prodEnv="+5"
 			scannerPwr="50"
-			maxHP="750"
+			maxHP="600"
 			combatAtt="7"
 			revoltThr="-100"
-			structWeapons="3,1,0,0,1"
+			structWeapons="1,1,1,0,1"
 			isMilitary="1"
 			fullInfo="1"
 		/>
@@ -182,7 +193,8 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="m"
-			level="1"
+			level="3"
+			researchRequires="MUTANTBASE3-3"
 		/>
 		<structure
 			subtype="str612"
@@ -190,12 +202,11 @@
 			operWorkers="1500"
 			operEn="50"
 			scannerPwr="30"
-			maxHP="750"
+			maxHP="400"
 			mineclass="9054"
 			minenum="15"
 			minerate="6"
 			combatAtt="6"
-			structWeapons="3,2,0,0,1"
 			isMilitary="1"
 			fullInfo="1"
 		/>
@@ -204,7 +215,8 @@
 		<discovery
 			researchMod="1.0 + 0.5"
 			researchRaces="m"
-			level="1"
+			level="3"
+			researchRequires="MUTANTBASE3-3"
 		/>
 		<structure
 			buildProd="5760"
@@ -212,15 +224,16 @@
 			prodBioMod="0.6, 0.0, 0.0, 0.4"
 			prodEn="100"
 			prodEnMod="0.6, 0.0, 0.0, 0.4"
-			prodProd="100"
+			prodProd="60"
 			prodProdMod="0.6, 0.0, 0.0, 0.4"
+			prodSci="30"
 			operWorkers="10000"
 			prodEnv="+60"
 			scannerPwr="120"
-			maxHP="1800"
+			maxHP="2000"
 			combatAtt="7"
 			revoltThr="-100"
-			structWeapons="9,9,6,0,1"
+			structWeapons="9,9,9,0,1"
 			refuelMax="100"
 			refuelInc="3"
 			repairShip="0.04"
@@ -233,7 +246,7 @@
 		<discovery
 			researchMod="1.00 + 0.50"
 			researchRaces="m"
-			level="1"
+			level="2"
 		/>
 		<shipequip
 			subtype="seq_struct"

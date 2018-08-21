@@ -96,11 +96,6 @@ class IAIEDENPlayer(IPlayer):
         if not obj.fleets and not obj.planets:
             self.cmd(obj).delete(tran, obj)
 
-    @public(Const.AL_ADMIN) 
-    def processRSRCHPhase(self, tran, obj, data):
-        # do not research anything
-        return
-
     def getDiplomacyWith(self, tran, obj, playerID):
         if obj.oid == playerID:
             return Const.REL_UNITY

@@ -203,6 +203,9 @@ class Rebel(AI):
             elif design.name == 'Bomber 2':
                 self.designs["bomber0"] = self.designs["bomber"]
                 self.designs["bomber"] = desID
+            elif design.name == 'Colony Ship 2':
+                self.designs["colony0"] = self.designs["colony"]
+                self.designs["colony"] = desID
 
     def _create_basic_designs(self):
         if "scout" not in self.designs:
@@ -220,7 +223,7 @@ class Rebel(AI):
         if "colony" not in self.designs:
             self.designs["colony"] = self.client.cmdProxy.addShipDesign(self.player.oid, 'Colony Ship',
                     Rules.Tech.MEDIUMHULL0, {Rules.Tech.SCOCKPIT0:1,
-                    Rules.Tech.COLONYMOD0:1, Rules.Tech.FTLENG0:4})
+                    Rules.Tech.COLONYMOD0:1, Rules.Tech.FTLENG0:5})
 
     def _create_advanced_designs(self):
         needed_tech = set([Rules.Tech.SMALLHULL1, Rules.Tech.SCOCKPIT1, Rules.Tech.CANNON1, Rules.Tech.FTLENG1])
@@ -235,6 +238,12 @@ class Rebel(AI):
             self.designs["bomber"] = self.client.cmdProxy.addShipDesign(self.player.oid, 'Bomber 2',
                     Rules.Tech.SMALLHULL1, {Rules.Tech.SCOCKPIT1:1,
                     Rules.Tech.CONBOMB1:1, Rules.Tech.FTLENG1:3})
+        needed_tech = set([Rules.Tech.MEDIUMHULL0, Rules.Tech.SCOCKPIT1, Rules.Tech.COLONYMOD0, Rules.Tech.FTLENG1])
+        if needed_tech.issubset(self.player.techs) and "colony0" not in self.designs:
+            self.designs["colony0"] = self.designs["colony"]
+            self.designs["colony"] = self.client.cmdProxy.addShipDesign(self.player.oid, 'Colony Ship 2',
+                    Rules.Tech.MEDIUMHULL0, {Rules.Tech.SCOCKPIT1:1,
+                    Rules.Tech.COLONYMOD0:1, Rules.Tech.FTLENG1:5})
 
     def _upgrade_obsolete_design(self, old_code_name, new_code_name):
         if old_code_name in self.designs:
@@ -272,7 +281,7 @@ class Rebel(AI):
                 subfleet_sheet, True, fleet.oid, Const.FLACTION_MOVE, nearest_service, None)
 
     def _upgrade_manager(self):
-        UPGRADABLE = ["fighter", "bomber"]
+        UPGRADABLE = ["fighter", "bomber", "colony"]
         OBSOL_FUNC = lambda x: x + "0"
         obsoleted = set(map(OBSOL_FUNC, UPGRADABLE)).intersection(self.designs)
         obsolete_designs = [self.designs[obsol] for obsol in obsoleted]
@@ -289,38 +298,6 @@ class Rebel(AI):
         self._identify_advanced_designs()
         self._create_basic_designs()
         self._create_advanced_designs()
-
-    def research_manager(self):
-        researchable = set()
-        if len(self.player.rsrchQueue) < 2:
-            for tech_id in self.player.techs.keys():
-                tech = self.client.getTechInfo(tech_id)
-                improvement = self.player.techs[tech_id]
-                if improvement < Rules.techMaxImprovement and\
-                        improvement < tech.maxImprovement:
-                    researchable.add(tech_id)
-            for tech_id in self.client.getAllTechIDs():
-                tech = self.client.getTechInfo(tech_id)
-                if not hasattr(tech, "partialData") or not hasattr(tech, 'researchMod'):
-                    continue
-                else:
-                    researchable.add(tech_id)
-            for task in self.player.rsrchQueue:
-                researchable -= set([task.techID])
-            # some less useful technologies for AI - deprioritize
-            lessTechs = set([1102, 1104, 1107, 1110, 1112, 1404, 1510, 1800, 1802])
-            if len(researchable - (lessTechs | set([1990, 1991, 1992]))) > 0:
-                researchable -= lessTechs
-            # do not advance, for now
-            researchable -= set([1990, 1991, 1992])
-            if len(researchable) > 0:
-                if Rules.Tech.OUTPOST1 in researchable:
-                    self.player.rsrchQueue = self.client.cmdProxy.startResearch(self.player.oid, Rules.Tech.OUTPOST1)
-                    return
-                possibilities = list(researchable)
-                random.shuffle(possibilities)
-                tech_id = possibilities[0]
-                self.player.rsrchQueue = self.client.cmdProxy.startResearch(self.player.oid, tech_id)
 
     def _help_system(self):
         tool.doDanger(self.data, self.client, self.db)
@@ -349,7 +326,7 @@ class Rebel(AI):
                     quantity = int(math.ceil(temp_mp / float(one_fighter_mp)))
                     if quantity == 0:
                         continue
-                    ships_left, mil_pwrSend = tool.orderFromSystem(self.client, self.db,
+                    ships_left, mil_pwrSend = tool.orderFromSystem(self.data, self.client, self.db,
                         {self.designs["fighter"]:quantity}, temp_id, Const.FLACTION_MOVE, system_id, None)
                     mil_pwr += mil_pwrSend
                     self.data.myMPPerSystem[temp_id] -= mil_pwrSend
@@ -377,7 +354,37 @@ class Rebel(AI):
 
     def run(self):
         self._ship_design_manager() # this fills self.designs, needs to go first
-        self.research_manager()
+        top_prio_tech = [Rules.Tech.OUTPOST1,
+                         Rules.Tech.GOVCENTER1,
+                         Rules.Tech.FACTORY1,
+                         Rules.Tech.RESCENTRE1,
+                         Rules.Tech.FTLENG1,
+                         ]
+        mid_prio_tech = [Rules.Tech.SMALLHULL1,
+                         Rules.Tech.SCOCKPIT1,
+                         Rules.Tech.CANNON1,
+                         Rules.Tech.UPGRADESHIPS,
+                         ]
+        low_prio_tech = [Rules.Tech.PWRPLANTOIL1,
+                         Rules.Tech.FARM1,
+                         Rules.Tech.COMSCAN1,
+                         Rules.Tech.PWRPLANTSOL1,
+                         Rules.Tech.SPACEPORT,
+                         Rules.Tech.SCANNERMOD1,
+                         Rules.Tech.SCANNERMOD2,
+                         Rules.Tech.CONBOMB1,
+                         Rules.Tech.HOLIDAYS1,
+                         Rules.Tech.DEEPSPACESCAN,
+                         ]
+        ignored_tech = [Rules.Tech.BIONICTL2,
+                        Rules.Tech.HUMANTL2,
+                        Rules.Tech.ROBOTTL2,
+                        ]
+        tech_prio = {10: top_prio_tech,
+                     3: mid_prio_tech,
+                     1: low_prio_tech,
+                     0: ignored_tech}
+        self.research_manager(tech_prio)
         self.diplomacy_manager(friendly_types=[Const.T_PLAYER, Const.T_AIPLAYER, Const.T_AIRENPLAYER],
                                pacts=[Const.PACT_ALLOW_CIVILIAN_SHIPS, Const.PACT_ALLOW_TANKING,
                                       Const.PACT_MINOR_SCI_COOP, Const.PACT_MAJOR_SCI_COOP,

@@ -1040,8 +1040,9 @@ class IPlayer(IObject):
         if epts > 0 and 0: # TODO: remove me
             Utils.sendMessage(tran, obj, Const.MSG_WASTED_SCIPTS, Const.OID_NONE, epts)
             return
-        # oops we have negative epts
-        while epts < 0:
+        # oops we have negative epts (AI does not regress)
+        isAI = obj.type in Const.AI_PLAYER_TYPES
+        while epts < 0 and not isAI:
             log.debug("Not enough RP", epts, obj.oid)
             if obj.rsrchQueue:
                 item = obj.rsrchQueue[0]

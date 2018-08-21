@@ -304,7 +304,7 @@ class Mutant(AI):
             nearest = tool.findNearest(self.db, fleet, self.data.enemySystems, max_range, 4)
             if len(nearest):
                 # range is adjusted to flatten probabilities a bit
-                probability_map = map(lambda x: x ** 2, range(6, 2, -1))
+                probability_map = map(lambda x: x ** 2, range(2 + len(nearest), 2, -1))
                 target = Utils.weightedRandom(nearest, probability_map)
 
                 fleet, new_fleet, my_fleets = tool.orderPartFleet(self.client, self.db,
@@ -324,7 +324,37 @@ class Mutant(AI):
         self.diplomacy_manager(friendly_types=[Const.T_AIMUTPLAYER],
                                pacts=[Const.PACT_ALLOW_CIVILIAN_SHIPS, Const.PACT_ALLOW_MILITARY_SHIPS,
                                       Const.PACT_ALLOW_TANKING, Const.PACT_SHARE_SCANNER,
+                                      Const.PACT_MINOR_SCI_COOP, Const.PACT_MAJOR_SCI_COOP,
                                       Const.PACT_MINOR_CP_COOP, Const.PACT_MAJOR_CP_COOP])
+        top_prio_tech = [Rules.Tech.MUTANTBASE,
+                         Rules.Tech.MUTANTBASE2,
+                         Rules.Tech.MUTANTBASE3,
+                         Rules.Tech.MUTANTBASE4,
+                         Rules.Tech.MUTANTPP1,
+                         Rules.Tech.MUTANTPP2,
+                         Rules.Tech.MUTANTFACT1,
+                         Rules.Tech.MUTANTFACT2,
+                         Rules.Tech.MUTANTMINES,
+                         Rules.Tech.FTLENG1,
+                         ]
+        mid_prio_tech = [Rules.Tech.SMALLHULL1,
+                         Rules.Tech.SCOCKPIT1,
+                         Rules.Tech.SCANNERMOD1,
+                         Rules.Tech.CONBOMB1,
+                         Rules.Tech.EMCANNON,
+                         Rules.Tech.TORPEDO,
+                         Rules.Tech.SSROCKET2,
+                         Rules.Tech.STLENG1,
+                         Rules.Tech.MUTANTPOD,
+                         ]
+        low_prio_tech = [Rules.Tech.CANNON1,
+                         Rules.Tech.SSROCKET,
+                         ]
+        tech_prio = {10: top_prio_tech,
+                     5: mid_prio_tech,
+                     1: low_prio_tech,
+                     }
+        self.research_manager(tech_prio)
         self.economy_manager()
         self.offense_manager()
 

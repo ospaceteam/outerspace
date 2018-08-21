@@ -26,7 +26,8 @@ from optparse import OptionParser
 
 # setup system path
 baseDir = os.path.abspath(os.path.dirname(__file__))
-sys.path.insert(0, os.path.join(baseDir, '..', 'server', "lib"))
+sys.path.insert(0, os.path.join(baseDir, '..', 'server', 'lib'))
+sys.path.insert(0, os.path.join(baseDir, '..', 'client-ai'))
 
 import ige
 from ige import log
