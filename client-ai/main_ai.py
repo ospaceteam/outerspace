@@ -117,3 +117,4 @@ def runAIClient(options):
             # current exception being handled.
             traceback.print_exc()
             raise e
+        client.logout()

@@ -138,6 +138,7 @@ if args.continueDir is None:
     c.createGalaxy("Test")
     c.deleteGalaxy(10000) # 10000 is surely the Test galaxy
     c.createGalaxy("Test")
+    c.createGalaxy("Test", "Test2")
     c.startServerTime()
     c.doTurns(args.turnSkip, args.turnSkip, slow=args.slow)
     if not checkServerStatus():

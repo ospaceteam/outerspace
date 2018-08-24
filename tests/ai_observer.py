@@ -59,7 +59,12 @@ atexit.register(c.killServer)
 if args.configdir is None:
     if not args.galaxy_check:
         # default set
-        c.createGalaxy("Circle42P")
+        #c.createGalaxy("Circle1SP")
+        #c.createGalaxy("Circle3SP")
+        #c.createGalaxy("Circle2CP")
+        c.createGalaxy("Circle3CP")
+        #c.createGalaxy("Circle9P")
+        #c.createGalaxy("Circle42P")
     else:
         galaxy_type, quantity = args.galaxy_check[0], int(args.galaxy_check[1])
         for num in xrange(quantity):
