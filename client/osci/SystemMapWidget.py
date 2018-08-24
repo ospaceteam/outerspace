@@ -61,7 +61,7 @@ class SystemMapWidget(Widget):
         self.unknown_mines = 0
         self.my_mines = 0
         if hasattr(system, 'hasmines'):
-            if hasattr(system, 'minefield'):
+            if getattr(system, 'minefield', []):
                 if len(system.minefield) > 0:
                     self.my_mines = 1
                 if system.hasmines == 2:
