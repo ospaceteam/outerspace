@@ -44,10 +44,11 @@ class FleetScoutBloomDlg:
     def display(self, fleetDlg):
         self.fleetDlg = fleetDlg
         self.fleet = fleet = client.get(self.fleetDlg.fleetID, noUpdate = 1)
-        self.win.vStarMap.currX = fleet.x
-        self.win.vStarMap.currY = fleet.y
         self.win.vStarMap.alwaysShowRangeFor = fleet.oid
         self.win.vStarMap.setPosition = 0
+        self.win.vStarMap.control_modes['minimap'] = 0
+        self.win.vStarMap.control_modes['hotbuttons'] = 0
+        self.win.vStarMap.setPos(fleet.x, fleet.y)
         self.win.vStarMap.precompute()
         self.targets = []
         if self.targetID:
