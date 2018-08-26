@@ -33,6 +33,9 @@ registeredGames = {}
 
 running = 0
 
+def ping(obj):
+    return True, None
+
 ## Handlers
 def versionHandler(obj):
     result = {}
@@ -144,6 +147,7 @@ class xmlrpc(xmlrpc_handler.xmlrpc_handler):
 def init(clientMngr, bookingMngr):
     global callMap
 
+    callMap['ping'] = ping
     callMap['login'] = clientMngr.login
     callMap['logout'] = clientMngr.logout
     callMap['hello'] = clientMngr.hello

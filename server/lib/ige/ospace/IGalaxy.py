@@ -496,7 +496,10 @@ class IGalaxy(IObject):
         return player
 
     def _setupEnvironmentUniquePerPlanet(self, tran, obj, vacantPlanets, aiClass):
-        planets = vacantPlanets.pop(aiClass.typeID)
+        try:
+            planets = vacantPlanets.pop(aiClass.typeID)
+        except KeyError:
+            return
         for planetID in planets:
             planet = tran.db[planetID]
             log.debug("Creating new ai, type", aiClass.typeID)

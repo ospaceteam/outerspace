@@ -57,6 +57,8 @@ structDefaultHpRatio = 0.1 # structures are build with this percentage of HPs
 structDefaultCpCosts = 0.2 # structures costs this amount of what is in XMLs
 structFromShipHpRatio = 1.0 # structures from ships are build with this percentage of HPs
 structNewPlayerHpRatio = 1.0 # structures from ships are build with this percentage of HPs
+structTransferWaste = 0.5 # when replacing building, how much CP of old building is transfered to new one
+structTransferMaxRatio = 0.5 # when replacing building, what is maximum effect of transfered CPs
 # as we now build structures damaged, repair and decay are part of economy revamp
 # repair ratio is dynamic on cost of building. it's full of magic constants
 # goal is to have 480 CP building to repair in ~2 days (which is twice the legacy repair

@@ -35,9 +35,10 @@ class FleetRedirectionDlg:
         system = client.get(systemID, noUpdate = 1)
         self.caller = caller
         self.systemID = systemID
-        self.win.vStarMap.currX = system.x
-        self.win.vStarMap.currY = system.y
         self.win.vStarMap.setPosition = 0
+        self.win.vStarMap.control_modes['minimap'] = 0
+        self.win.vStarMap.control_modes['hotbuttons'] = 0
+        self.win.vStarMap.setPos(system.x, system.y)
         self.win.vStarMap.precompute()
         if self.targetID:
             target = client.get(self.targetID, noUpdate = 1)

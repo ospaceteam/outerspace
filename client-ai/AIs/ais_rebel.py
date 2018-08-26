@@ -207,21 +207,25 @@ class Rebel(AI):
                 self.designs["colony0"] = self.designs["colony"]
                 self.designs["colony"] = desID
 
+    def _add_design(self, name, hull_id, equip):
+        self.player.shipDesigns, index = self.client.cmdProxy.addShipDesign(self.player.oid, name, hull_id, equip)
+        return index
+
     def _create_basic_designs(self):
         if "scout" not in self.designs:
-            self.designs["scout"] = self.client.cmdProxy.addShipDesign(self.player.oid, 'Scout',
+            self.designs["scout"] = self._add_design('Scout',
                     Rules.Tech.SMALLHULL0, {Rules.Tech.SCOCKPIT0:1,
                     Rules.Tech.SCANNERMOD0:1, Rules.Tech.FTLENG0:3})
         if "fighter" not in self.designs:
-            self.designs["fighter"] = self.client.cmdProxy.addShipDesign(self.player.oid, 'Fighter',
+            self.designs["fighter"] = self._add_design('Fighter',
                     Rules.Tech.SMALLHULL0, {Rules.Tech.SCOCKPIT0:1,
                     Rules.Tech.CANNON0:2, Rules.Tech.FTLENG0:3})
         if "bomber" not in self.designs:
-            self.designs["bomber"] = self.client.cmdProxy.addShipDesign(self.player.oid, 'Bomber',
+            self.designs["bomber"] = self._add_design('Bomber',
                     Rules.Tech.SMALLHULL0, {Rules.Tech.SCOCKPIT0:1,
                     Rules.Tech.CONBOMB0:1, Rules.Tech.FTLENG0:3})
         if "colony" not in self.designs:
-            self.designs["colony"] = self.client.cmdProxy.addShipDesign(self.player.oid, 'Colony Ship',
+            self.designs["colony"] = self._add_design('Colony Ship',
                     Rules.Tech.MEDIUMHULL0, {Rules.Tech.SCOCKPIT0:1,
                     Rules.Tech.COLONYMOD0:1, Rules.Tech.FTLENG0:5})
 
@@ -229,19 +233,19 @@ class Rebel(AI):
         needed_tech = set([Rules.Tech.SMALLHULL1, Rules.Tech.SCOCKPIT1, Rules.Tech.CANNON1, Rules.Tech.FTLENG1])
         if needed_tech.issubset(self.player.techs) and "fighter0" not in self.designs:
             self.designs["fighter0"] = self.designs["fighter"]
-            self.designs["fighter"] = self.client.cmdProxy.addShipDesign(self.player.oid, 'Fighter 2',
+            self.designs["fighter"] = self._add_design('Fighter 2',
                     Rules.Tech.SMALLHULL1, {Rules.Tech.SCOCKPIT1:1,
                     Rules.Tech.CANNON1:2, Rules.Tech.FTLENG1:3})
         needed_tech = set([Rules.Tech.SMALLHULL1, Rules.Tech.SCOCKPIT1, Rules.Tech.CONBOMB1, Rules.Tech.FTLENG1])
         if needed_tech.issubset(self.player.techs) and "bomber0" not in self.designs:
             self.designs["bomber0"] = self.designs["bomber"]
-            self.designs["bomber"] = self.client.cmdProxy.addShipDesign(self.player.oid, 'Bomber 2',
+            self.designs["bomber"] = self._add_design('Bomber 2',
                     Rules.Tech.SMALLHULL1, {Rules.Tech.SCOCKPIT1:1,
                     Rules.Tech.CONBOMB1:1, Rules.Tech.FTLENG1:3})
         needed_tech = set([Rules.Tech.MEDIUMHULL0, Rules.Tech.SCOCKPIT1, Rules.Tech.COLONYMOD0, Rules.Tech.FTLENG1])
         if needed_tech.issubset(self.player.techs) and "colony0" not in self.designs:
             self.designs["colony0"] = self.designs["colony"]
-            self.designs["colony"] = self.client.cmdProxy.addShipDesign(self.player.oid, 'Colony Ship 2',
+            self.designs["colony"] = self._add_design('Colony Ship 2',
                     Rules.Tech.MEDIUMHULL0, {Rules.Tech.SCOCKPIT1:1,
                     Rules.Tech.COLONYMOD0:1, Rules.Tech.FTLENG1:5})
 

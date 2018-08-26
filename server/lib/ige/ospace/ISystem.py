@@ -96,25 +96,6 @@ class ISystem(IObject):
                 obj.closeFleets.append(fleetID)
         if old != obj.closeFleets:
             log.debug("System close fleets fixed", obj.oid, old, obj.closeFleets)
-        # TODO: remove after 0.5.73
-        if True:
-            owners = []
-            for planetID in obj.planets:
-                planet = tran.db[planetID]
-                if planet.owner not in owners + [Const.OID_NONE]:
-                    owners.append(planet.owner)
-            for owner_id in owners:
-                for tech, struct in self.getSystemMineLauncher(tran, obj, owner_id):
-                    if not struct[Const.STRUCT_IDX_STATUS] & Const.STRUCT_STATUS_ON:
-                        # structure is offline, reset timer
-                        self.addMine(tran, obj, owner_id, tech.mineclass, 0)
-                        continue
-                    efficiency = struct[Const.STRUCT_IDX_HP] / float(tech.maxHP)
-                    minenum = int(tech.minenum * efficiency)
-                    # by setting minerate to None, we are forcing a creation of one - so it grabs
-                    # galaxyTurn instead of universe.turn
-                    if self.addMine(tran, obj, owner_id, tech.mineclass, None, None):
-                        log.debug('ISystem', 'Mine timer reset for owner %d in system %d' % (owner_id, obj.oid))
 
     update.public = 0
 
@@ -158,12 +139,10 @@ class ISystem(IObject):
                     continue
                 newPwr = scanPwr * fleet.signature / obj.signature
                 results.extend(self.cmd(fleet).getScanInfos(tran, fleet, newPwr, player))
-            result.hasmines = 0 # no
-            if len(obj.minefield) > 0:
-                result.hasmines = 1 # yes
-            result.minefield = self.getMines(obj, player.oid) # only shows mines you own
-            if len(obj.minefield) > 1 or (len(obj.minefield) == 1 and len(result.minefield) == 0):
-                result.hasmines = 2 # yes, and some aren't my mines
+
+            result.minefield = self.getMines(obj, player.oid)
+            ownsMines = 1 if result.minefield else 0
+            result.hasmines = min(2, len(self.getAllMines(obj))) - ownsMines
         return results
 
     @public(Const.AL_ADMIN)
@@ -754,6 +733,19 @@ class ISystem(IObject):
             if self.addMine(tran, obj, owner_id, tech.mineclass, minenum, minerate):
                 log.debug('ISystem', 'Mine deployed for owner %d in system %d' % (owner_id, obj.oid))
 
+    def _expandExistingMinefield(self, minefields, index, current_turn, max_amount, mine_rate):
+        mine_id, amount, deploy_turn = minefields[index]
+        if max_amount is not None and amount >= max_amount:
+            # cannot add more, thus update deploy turn to current one
+            # (so replenish starts after that amount of turns if needed)
+            minefields[index] = (mine_id, amount, current_turn)
+            return False
+        if mine_rate and (current_turn - deploy_turn) < mine_rate:
+            # need more time to deploy new mine
+            return False
+        minefields[index] = (mine_id, amount + 1, current_turn)
+        return True
+
     @public(Const.AL_ADMIN)
     def addMine(self, tran, obj, owner_id, mine_tech_id, max_amount=None, mine_rate=None):
         """ Increment amount within particular minefield of particular player.
@@ -769,57 +761,56 @@ class ISystem(IObject):
                 index += 1
                 if mine_id != mine_tech_id:
                     continue
-                if max_amount is not None and amount >= max_amount:
-                    # cannot add more, thus update deploy turn to current one
-                    # (so replenish starts after that amount of turns if needed)
-                    obj.minefield[owner_id][index] = (mine_id, amount, current_turn)
-                    return False
-                if mine_rate and (current_turn - deploy_turn) < mine_rate:
-                    # need more time to deploy new mine
-                    return False
-                obj.minefield[owner_id][index] = (mine_id, amount + 1, current_turn)
-                return True
+                return self._expandExistingMinefield(obj.minefield[owner_id], index, current_turn, max_amount, mine_rate)
             # owner has some minefield, but not this type
-            obj.minefield[owner_id].append((mine_id, 1, current_turn))
+            obj.minefield[owner_id].append((mine_tech_id, 1, current_turn))
             return True
         else:
             # this will be owner's first minefield in this system
-            obj.minefield[owner_id]= [(mine_tech_id, 1, current_turn)]
-            return True
+            if mine_rate == 1 or mine_rate is None:
+                obj.minefield[owner_id] = [(mine_tech_id, 1, current_turn)]
+                return True
+            else:
+                obj.minefield[owner_id] = [(mine_tech_id, 0, current_turn - 1)]
+                return False
+
 
     @public(Const.AL_ADMIN)
     def removeMine(self, obj, owner_id, mine_tech_id):
         """ Decrement amount within particular minefield of particular player.
-        If amount drops to zero, remove minefield.
-        If all minefields are removed, remove player minefield record.
+        It's not possible to clean up records - it's expected to stay there till
+        the end of game like that.
 
         """
         if owner_id in obj.minefield:
             index = -1
             for mine_id, amount, deploy_turn in obj.minefield[owner_id]:
                 index += 1
-                if mine_id != mine_tech_id:
+                if mine_id != mine_tech_id or amount == 0:
                     continue
                 amount -= 1
-                if amount > 0:
-                    obj.minefield[owner_id][index] = (mine_id, amount, deploy_turn)
-                else:
-                    # we have depleted the minefield, remove any notion of it
-                    del obj.minefield[owner_id][index]
+                obj.minefield[owner_id][index] = (mine_id, amount, deploy_turn)
                 break
-            if not len(obj.minefield[owner_id]):
-                # all minefields are depleted, remove player record
-                del obj.minefield[owner_id]
 
-    @public(Const.AL_ADMIN)
     def getMines(self, obj, owner_id):
         """ Return list of tuples representing each minefield.
 
         """
-        if owner_id in obj.minefield:
-            return obj.minefield[owner_id]
-        else:
+        try:
+            return [mines for mines in obj.minefield[owner_id] if mines[Const.MINE_IDX_AMOUNT]]
+        except KeyError:
             return []
+
+    def getAllMines(self, obj):
+        """ Return list of tuples representing each minefield.
+
+        """
+        minefields = {}
+        for owner_id in obj.minefield:
+            mines = self.getMines(obj, owner_id)
+            if mines:
+                minefields[owner_id] = mines
+        return minefields
 
     def clearMines(self, obj, owner_id):
         """ Remove all minefields of given owner from the system.
@@ -840,6 +831,8 @@ class ISystem(IObject):
         for mine_id, amount, deploy_turn in obj.minefield[owner_id]:
             mine_ids.append(mine_id)
             amounts.append(amount)
+        if not sum(amounts):
+            return False, False, False, False
         mine = Utils.weightedRandom(mine_ids, amounts) # select random mine to detonate
         self.removeMine(obj, owner_id, mine)
         tech = Rules.techs[mine]

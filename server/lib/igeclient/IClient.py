@@ -177,9 +177,7 @@ class IClient:
         return ((time.time() - self.lastCommand) > self.keepAliveTime) and self.logged
 
     def keepAlive(self):
-        if time.time() - self.lastCommand > self.keepAliveTime and self.logged:
-            # get all messages
-            self.getIntroInfo(1)
+        return IProxy('ping', None, self)()
 
     def __nonzero__(self):
         return 1

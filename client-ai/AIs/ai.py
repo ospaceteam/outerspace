@@ -70,6 +70,7 @@ class AI(object):
             tech = self.client.getTechInfo(tech_id)
             if not hasattr(tech, "partialData") or not hasattr(tech, 'researchMod'):
                 continue
+            researchable.add(tech_id)
         for task in self.player.rsrchQueue:
             researchable -= set([task.techID])
         self._filter_res_requirements(researchable)
