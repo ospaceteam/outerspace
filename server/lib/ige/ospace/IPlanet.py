@@ -463,15 +463,27 @@ class IPlanet(IObject):
             Utils.sendMessage(tran, obj, Const.MSG_COMPLETED_SHIP, obj.oid, item.techID)
 
     def _buildStructure(self, tran, obj, item, tech, target):
-        # if there is struct to demolish, find it and delete it
-        if item.demolishStruct != Const.OID_NONE:
-            structToDemolish = None
-            for struct in target.slots:
-                if struct[Const.STRUCT_IDX_TECHID] == item.demolishStruct:
-                    target.slots.remove(struct)
-                    break
+        # if there is struct to demolish, find it, determine its CP value, and remove it
+        validStructs = [struct for struct in target.slots if struct[Const.STRUCT_IDX_TECHID] == item.demolishStruct]
+        if len(validStructs):
+            assert item.demolishStruct != Const.OID_NONE
+            oldStruct = validStructs[0]
+            target.slots.remove(oldStruct)
+            # replacement of structure means new struct will start in slightly more complete state
+            oldStructTech = Rules.techs[item.demolishStruct]
+            try:
+                oldStructImpr = tran.db[obj.owner].techs[item.demolishStruct]
+            except KeyError:
+                oldStructImpr = 1
+            maxHP = oldStructTech.maxHP * Rules.techImprEff[oldStructImpr]
+            structValue = oldStructTech.buildProd * float(oldStruct[Const.STRUCT_IDX_HP]) / maxHP
+            newStruct = Rules.techs[item.techID]
+            buildHPRatio = min(Rules.structTransferMaxRatio,
+                               Rules.structTransferWaste * structValue / newStruct.buildProd)
+        else:
+            buildHPRatio = Rules.structDefaultHpRatio
         if len(target.slots) < target.plSlots:
-            target.slots.append(Utils.newStructure(tran, item.techID, obj.owner))
+            target.slots.append(Utils.newStructure(tran, item.techID, obj.owner, hpRatio = buildHPRatio))
             try:
                 tech.finishConstrHandler(tran, obj, target, tech)
             except Exception:
