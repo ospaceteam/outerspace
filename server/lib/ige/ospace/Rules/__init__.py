@@ -163,7 +163,7 @@ stratResAmountSmall = 1
 
 ## Population
 popGrowthRate = 0.02
-popMinGrowthRate = int(1000 * popGrowthRate)
+popMinGrowthRate = int(5000 * popGrowthRate) # Increase the Minimum Population Growth from 20 to 100 per turn
 popDieRate = 0.1
 popMinDieRate = 100
 popKillMod = 0.25
