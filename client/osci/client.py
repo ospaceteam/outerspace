@@ -218,10 +218,15 @@ def updateDatabaseUnsafe(clearDB = 0, force = 0):
 ## Basic functions
 
 def keepAlive(force = False):
-    if cmdProxy and db:
+    if cmdProxy:
         try:
             if force or cmdProxy.doKeepAlive():
-                getMessages()
+                if db:
+                    # client is logged into the game
+                    getMessages()
+                else:
+                    # client is in player selection / galaxy booking phase
+                    cmdProxy.keepAlive()
         except ige.NoAccountException:
             pass
 
