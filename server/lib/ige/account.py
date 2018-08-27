@@ -37,16 +37,27 @@ class Account(object):
         self.confToken = None # e-mail confirmation token, if None e-mail has been confirmed
         self.hostIDs = {} # hostids and times
         self.isAI = False
+        self.passwdHash = "sha256" # None means 'plaintext', in that case passwdSalt not used
+        self.passwdSalt = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
 
     def addHostID(self, hostID):
         if hostID:
             self.hostIDs[hostID] = time.time()
+
+    def hashPassword(self, plainPassword):
+        if self.passwdHash is None:
+            return plainPassword
+        elif self.passwdHash == "sha256":
+            return hashlib.sha256(self.passwdSalt + plainPassword).hexdigest()
 
 class AIAccount(Account):
 
     def __init__(self):
         Account.__init__(self)
         self.passwd = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
+        # AI needs plaintext password for now
+        self.passwdHash = None
+        self.passwdSalt = None
 
         self.isAI = True
         self.aiType = None

@@ -54,7 +54,8 @@ class ClientMngr:
             self.createAccount(None, ADMIN_LOGIN, "tobechanged", "Administrator", "nospam@nospam.com")
         password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
         open(os.path.join(self.configDir, "token"), "w").write(password)
-        self.accounts[ADMIN_LOGIN].passwd = password
+        self.accounts[ADMIN_LOGIN].passwdHash = None # Needs plaintext login from token
+        self.accounts[ADMIN_LOGIN].passwd = self.accounts[ADMIN_LOGIN].hashPassword(password)
         self.generateAIList()
 
     def shutdown(self):
@@ -97,7 +98,7 @@ class ClientMngr:
         account = Account()
         # update
         account.login = login
-        account.passwd = passwd
+        account.passwd = account.hashPassword(passwd)
         account.nick = nick
         account.email = email
         account.confToken = hashlib.md5('%s%s%d' % (login, email, time.time())).hexdigest()
@@ -180,7 +181,7 @@ class ClientMngr:
         if not self.accounts.has_key(login):
             raise SecurityException('Wrong login and/or password.')
         account = self.accounts[login]
-        if not Authentication.verify(cpasswd, account.passwd, challenge):
+        if not Authentication.verify(cpasswd, account, challenge):
             raise SecurityException('Wrong login and/or password.')
         # setup session
         self.sessions[sid].setAttrs(account.login, account.nick, account.email)
