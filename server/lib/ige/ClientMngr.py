@@ -73,15 +73,17 @@ class ClientMngr:
     def __getitem__(self, login):
         return self.accounts[str(login)]
 
-    def createAccount(self, sid, login, passwd, nick, email):
+    def createAccount(self, sid, login, safePasswd, nick, email):
         log.message('Creating account', login, nick, email)
+        session = self.getSession(sid)
+        plainPassword = Authentication.unwrapUserPassword(safePasswd, session.challenge)
         login = login.strip()
-        passwd = passwd.strip()
+        plainPassword = plainPassword.strip()
         nick = nick.strip()
         # check requirement
         if len(login) < 4:
             raise SecurityException('Login is too short.')
-        if len(passwd) < 4:
+        if len(plainPassword) < 4:
             raise SecurityException('Password is too short.')
         if len(nick) < 4:
             raise SecurityException('Nick is too short.')
@@ -98,7 +100,7 @@ class ClientMngr:
         account = Account()
         # update
         account.login = login
-        account.passwd = account.hashPassword(passwd)
+        account.passwd = account.hashPassword(plainPassword)
         account.nick = nick
         account.email = email
         account.confToken = hashlib.md5('%s%s%d' % (login, email, time.time())).hexdigest()
@@ -151,10 +153,8 @@ class ClientMngr:
         self.generateAIList()
         return 1, None
 
-
-    def hello(self, sid, login, clientId):
-        log.debug(clientId, 'connected. User', repr(login))
-        login = str(login)
+    def hello(self, sid, clientId):
+        log.debug(clientId, 'connected. User', repr(clientId))
         # create sort of cookie
         while 1:
             sid = hashlib.sha256(str(random.random())).hexdigest()
@@ -165,7 +165,6 @@ class ClientMngr:
         session.challenge = challenge
         session.clientIdent = clientId
         self.sessions[sid] = session
-        account = self.accounts.get(login, None)
         return (sid, challenge), None
 
     def login(self, sid, login, cpasswd, hostID):

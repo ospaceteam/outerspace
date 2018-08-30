@@ -503,7 +503,7 @@ s = IClient('localhost:9080', None, msgHandler, None, 'IClient/osc')
 
 # get admin login from <configDir>/token
 password = open(os.path.join(options.configDir, "token"), "r").read()
-s.connect('admin')
+s.connect()
 s.login('Alpha', 'admin', password)
 s.selectAdmin()
 
