@@ -222,16 +222,18 @@ class ClientMngr:
         else:
             raise SecurityException('No such session id.')
 
-    def changePassword(self, sid, old, new):
+    def changePassword(self, sid, safeOld, safeNew):
         session = self.sessions[sid]
-        if session:
-            if self.accounts[session.login].passwd == old:
-                self.accounts[session.login].passwd = new
-                return 1, None
-            else:
-                raise SecurityException('Wrong password.')
-        else:
+        if not session:
             raise SecurityException('No such session id.')
+        challenge = session.challenge
+        account = self.accounts[session.login]
+        if not Authentication.verify(safeOld, account, challenge):
+            raise SecurityException('Wrong login and/or password.')
+        newPassword = Authentication.unwrapUserPassword(safeNew, challenge)
+        account.passwd = account.hashPassword(newPassword)
+        log.debug('Password of account {0} successfully changed.'.format(session.login))
+        return None, None
 
     def cleanupSessions(self, sid):
         session = self.sessions.get(sid, None)

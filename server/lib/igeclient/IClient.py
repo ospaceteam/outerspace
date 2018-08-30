@@ -111,13 +111,16 @@ class IClient:
         return IProxy('reloadAccounts', None, self)()
 
     def createAccount(self, login, password, nick, email):
-        return IProxy('createAccount', None, self)(login, password, nick, email)
+        safePassword = ige.Authentication.encode(password, self.challenge)
+        return IProxy('createAccount', None, self)(login, safePassword, nick, email)
 
     def exportAccounts(self):
         return IProxy('exportAccounts', None, self)()
 
     def changePassword(self, old, new):
-        return IProxy('changePassword', None, self)(old, new)
+        safeOld = ige.Authentication.encode(old, self.challenge)
+        safeNew = ige.Authentication.encode(new, self.challenge)
+        return IProxy('changePassword', None, self)(safeOld, safeNew)
 
     def getBookingAnswers(self):
         return IProxy('getBookingAnswers', None, self)()
