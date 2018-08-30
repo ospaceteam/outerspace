@@ -61,12 +61,12 @@ def initCmdProxy(keepAliveTime):
             proxy = gdata.config.proxy.http
         cmdProxy = IClient.IClient(server, proxy, msgHandler, idleHandler, 'OSClient/%s' % ige.version.versionString, keepAliveTime)
         callbackObj.onConnInitialized()
+        cmdProxy.connect()
 
 ## Authentication
 
 def login(gameid, login, password):
     global account
-    cmdProxy.connect(login)
     if gdata.config.client.keepAlive != None:
         cmdProxy.keepAliveTime = int(gdata.config.client.keepAlive)
     if cmdProxy.login(gameid, login, password):

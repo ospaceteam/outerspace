@@ -25,10 +25,12 @@ import re
 
 import pygame
 import pygameui as ui
-from osci import gdata, res
+from osci import client, gdata, res
 import ige.ospace.Const as Const
 from ige import log
 import resources
+
+from ChangePasswordDlg import ChangePasswordDlg
 
 class OptionsDlg:
     """Displays options dialog.
@@ -47,6 +49,7 @@ class OptionsDlg:
 
     def __init__(self, app):
         self.app = app
+        self.changePasswordDlg = ChangePasswordDlg(app)
         self.languages = {}
         self.languages['en']=_('English')
         self.languages['cs']=_('Czech')
@@ -56,8 +59,10 @@ class OptionsDlg:
         self.curLang = gdata.config.client.language
         self.createUI()
 
-    def display(self, caller = None):
+    def display(self, caller = None, message = None):
         self.caller = caller
+        if message is not None:
+            self.win.setStatus(message)
         self.show()
         # show window
         if not self.win.visible:
@@ -225,6 +230,8 @@ class OptionsDlg:
         # disabled because of a bug in pygame
         self.win.vMusicEnabled.enabled = False
         self.win.vMusicVolume.enabled = False
+
+        self.win.vChangePassword.enabled = client.db is not None
 
     def onCancel(self, widget, action, data):
         self.hide()
@@ -483,6 +490,9 @@ class OptionsDlg:
             self.win.vAutoLogin.enabled = False
             self.win.vAutoLogin.checked = False
 
+    def onChangePassword(self, widget, action, data):
+        self.changePasswordDlg.display(self)
+
     def createUI(self):
         screenWidth, screenHeight = gdata.scrnSize
         # size of dialog in layout metrics (for SimpleGridLM)
@@ -622,6 +632,7 @@ class OptionsDlg:
             checked = 0)
         ui.Check(self.win, layout = (7,14,8,1), text = _('Remember password'), id = 'vSavePassword',
             checked = 0, action = "onChangeSavePassword")
+        ui.Button(self.win, layout = (23.5, 13, 9, 1), id = "vChangePassword", text = _("Change password"), action = 'onChangePassword', align = ui.ALIGN_NONE)
 
         # proxy settings
         ui.Title(self.win, layout = (13, 1, 9, 1), text = _('Proxy'), font = 'normal-bold')

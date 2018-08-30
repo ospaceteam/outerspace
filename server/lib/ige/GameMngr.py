@@ -23,6 +23,7 @@
 import os
 import os.path
 import time
+import random, hashlib # TODO: remove after 0.5.74 release
 
 import ige
 import log
@@ -91,36 +92,25 @@ class GameMngr:
         typesMin = {}
         typesMax = {}
         typesSum = {}
+        # TODO: remove after 0.5.74
+        # hash passwords in database
+        for accountID in self.clientMngr.accounts.keys():
+            account = self.clientMngr.accounts[accountID]
+            if isinstance(account.passwd, unicode):
+                account.passwd = account.passwd.encode('utf-8')
+            elif not isinstance(account.passwd, str):
+                # unexpected!
+                raise TypeError
+            if not hasattr(account, 'passwdHash'):
+                if account.isAI:
+                    account.passwdHash = None
+                    account.passwdSalt = None
+                else:
+                    account.passwdHash = "sha256"
+                    account.passwdSalt = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
+                    account.passwd = account.hashPassword(account.passwd)
         # upgrade all objects in database
         # and collect all not referenced objects
-        # TODO: remove after 0.5.73
-        for login, mapping in self.db[Const.OID_I_LOGIN2OID].iteritems():
-            try:
-                # this does not fail if upgrade is needed
-                mapping + 1
-                # fix stuff
-                self.db[Const.OID_I_LOGIN2OID][login] = [mapping]
-            except TypeError:
-                pass
-        # make proper AI accounts TODO: remove after 0.5.73
-        for login, mapping in self.db[Const.OID_I_LOGIN2OID].iteritems():
-            if login.startswith('*AIP*'):
-                # let's replace this account with new, shiny one!
-                if "rebels" in login:
-                    ai = "ais_rebel"
-                elif "mutant" in login:
-                    ai = "ais_mutant"
-                elif "pirate" in login:
-                    ai = "ais_pirate"
-                elif "eden" in login:
-                    ai = "ais_eden"
-                else:
-                    # unknown type, ignore
-                    continue
-                old = self.clientMngr.accounts[login]
-                self.clientMngr.accounts.delete(login)
-                self.clientMngr.createAIAccount(login, old.nick, ai)
-
         for id in self.db.keys():
             try:
                 obj = self.db[id]

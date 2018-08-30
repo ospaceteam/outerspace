@@ -55,7 +55,7 @@ class IClient:
         self.statsBytesOut = 0
         self.lastClientVersion = None
 
-    def connect(self, login):
+    def connect(self):
         # to enable sending commands
         self.connected = 1
         # create connection
@@ -63,7 +63,7 @@ class IClient:
         # send hello message
         log.debug('Sending hello')
         try:
-            self.sid, self.challenge = self.hello(login, self.clientIdent)
+            self.sid, self.challenge = self.hello(self.clientIdent)
         except:
             log.warning('Cannot connect to the server.')
             self.connected = 0
@@ -92,8 +92,8 @@ class IClient:
         self.logged = 0
         return IProxy('shutdown', None, self)()
 
-    def hello(self, login, clientID):
-        return IProxy('hello', None, self)(login, clientID)
+    def hello(self, clientID):
+        return IProxy('hello', None, self)(clientID)
 
     def getVersion(self):
         return IProxy('getVersion', None, self)()
@@ -111,13 +111,16 @@ class IClient:
         return IProxy('reloadAccounts', None, self)()
 
     def createAccount(self, login, password, nick, email):
-        return IProxy('createAccount', None, self)(login, password, nick, email)
+        safePassword = ige.Authentication.encode(password, self.challenge)
+        return IProxy('createAccount', None, self)(login, safePassword, nick, email)
 
     def exportAccounts(self):
         return IProxy('exportAccounts', None, self)()
 
     def changePassword(self, old, new):
-        return IProxy('changePassword', None, self)(old, new)
+        safeOld = ige.Authentication.encode(old, self.challenge)
+        safeNew = ige.Authentication.encode(new, self.challenge)
+        return IProxy('changePassword', None, self)(safeOld, safeNew)
 
     def getBookingAnswers(self):
         return IProxy('getBookingAnswers', None, self)()

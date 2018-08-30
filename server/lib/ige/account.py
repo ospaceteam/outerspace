@@ -24,17 +24,19 @@ import time
 
 class Account(object):
 
-    def __init__(self):
+    def __init__(self, login, nick, email, passwd, passwdHash = "sha256"):
+        self._passwdSalt = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
         # credentials
-        self.login = None
-        self.nick = None
-        self.passwd = None
-        self.email = None
+        self.login = login
+        self.nick = nick
+        self.email = email
+        self.passwdHash = passwdHash
+        self.passwd = self.hashPassword(passwd)
         # account options
         self.lastLogin = 0
         self.blockedUntil = -1 # -1 for not blocked, > 0 for blocked
         self.blocked = 0 # 1 for blocked account
-        self.confToken = None # e-mail confirmation token, if None e-mail has been confirmed
+        self.confToken = hashlib.md5('%s%s%d' % (login, email, time.time())).hexdigest() # when None, it's confirmed TODO make it work
         self.hostIDs = {} # hostids and times
         self.isAI = False
 
@@ -42,12 +44,18 @@ class Account(object):
         if hostID:
             self.hostIDs[hostID] = time.time()
 
+    def hashPassword(self, plainPassword):
+        if self.passwdHash is None:
+            return plainPassword
+        elif self.passwdHash == "sha256":
+            return hashlib.sha256(self._passwdSalt + plainPassword).hexdigest()
+
 class AIAccount(Account):
 
-    def __init__(self):
-        Account.__init__(self)
-        self.passwd = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
+    def __init__(self, login, nick, aiType):
+        password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
+        Account.__init__(self, login, nick, None, password, passwdHash = None)
 
         self.isAI = True
-        self.aiType = None
+        self.aiType = aiType
         self.galaxyNames = []

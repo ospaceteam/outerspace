@@ -50,7 +50,7 @@ def initCmdProxy():
 ## Authentication
 
 def login(gameid, login, password):
-    cmdProxy.connect(login)
+    cmdProxy.connect()
     if cmdProxy.login(gameid, login, password):
         return 1
     return 0

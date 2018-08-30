@@ -130,7 +130,7 @@ s = IClient('localhost:9080', None, msgHandler, None, 'IClient/osc')
 
 with open(os.path.join(options.configDir, "token"), "r") as pw_file:
     password = pw_file.read()
-    s.connect('admin')
+    s.connect()
     s.login('Alpha', 'admin', password)
 
 s.selectAdmin()

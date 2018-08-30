@@ -23,6 +23,7 @@ import hashlib
 import random
 import time
 import log
+import ige
 from ige import SecurityException
 from ige.Const import ADMIN_LOGIN
 import Authentication
@@ -37,18 +38,16 @@ class ClientMngr:
         self.authMethod = authMethod
         if not self.authMethod:
             self.authMethod = Authentication.defaultMethod
+        if ige.igeRuntimeMode == 1:
+            Authentication.init(configDir, self.authMethod, 2048)
+        elif ige.igeRuntimeMode == 0:
+            # it is minimum to cater for AI generated passwords
+            Authentication.init(configDir, self.authMethod, 512)
         self._filename = os.path.join(self.configDir, 'accounts')
         self.sessions = {}
         #
         self.accounts = database
-        # create special key
-        if not self.accounts.has_key(ADMIN_LOGIN):
-            log.message("No administator account found! (looking for '%s')" % ADMIN_LOGIN)
-            log.message("Creating default account")
-            self.createAccount(None, ADMIN_LOGIN, "tobechanged", "Administrator", "nospam@nospam.com")
-        password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
-        open(os.path.join(self.configDir, "token"), "w").write(password)
-        self.accounts[ADMIN_LOGIN].passwd = password
+        self._initAdminAccount()
         self.generateAIList()
 
     def shutdown(self):
@@ -66,17 +65,35 @@ class ClientMngr:
     def __getitem__(self, login):
         return self.accounts[str(login)]
 
-    def createAccount(self, sid, login, passwd, nick, email):
+    def _initAdminAccount(self):
+        # create special key
+        password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
+        if self.accounts.has_key(ADMIN_LOGIN):
+            self.accounts[ADMIN_LOGIN].passwdHash = None # Needs plaintext login from token
+            self.accounts[ADMIN_LOGIN].passwd = self.accounts[ADMIN_LOGIN].hashPassword(password)
+        else:
+            log.message("No administator account found! (looking for '%s')" % ADMIN_LOGIN)
+            log.message("Creating default account")
+            # create account
+            account = Account(ADMIN_LOGIN, "Administrator", "nospam@nospam.com", password, passwdHash = None)
+            # update
+            self.accounts.create(account, id = str(account.login))
+        with open(os.path.join(self.configDir, "token"), "w") as tokenFile:
+            tokenFile.write(password)
+
+    def createAccount(self, sid, login, safePasswd, nick, email):
         log.message('Creating account', login, nick, email)
+        session = self.getSession(sid)
+        plainPassword = Authentication.unwrapUserPassword(safePasswd, session.challenge)
         login = login.strip()
-        passwd = passwd.strip()
+        plainPassword = plainPassword.strip()
         nick = nick.strip()
         # check requirement
-        if len(login) < 4:
+        if len(login) < ige.Const.ACCOUNT_LOGIN_MIN_LEN:
             raise SecurityException('Login is too short.')
-        if len(passwd) < 4:
+        if len(plainPassword) < ige.Const.ACCOUNT_PASSWD_MIN_LEN:
             raise SecurityException('Password is too short.')
-        if len(nick) < 4:
+        if len(nick) < ige.Const.ACCOUNT_NICK_MIN_LEN:
             raise SecurityException('Nick is too short.')
         # check login, nick and uid
         for key in self.accounts.keys():
@@ -88,13 +105,8 @@ class ClientMngr:
             elif account.email == email:
                 raise SecurityException('E-mail already used.')
         # create account
-        account = Account()
+        account = Account(login, nick, email, plainPassword)
         # update
-        account.login = login
-        account.passwd = passwd
-        account.nick = nick
-        account.email = email
-        account.confToken = hashlib.md5('%s%s%d' % (login, email, time.time())).hexdigest()
         self.accounts.create(account, id = str(account.login))
         log.message('Account created, confirmation token:', account.confToken)
         # TODO send confirmation token to the email address
@@ -110,11 +122,8 @@ class ClientMngr:
         login = login.strip()
         nick = nick.strip()
         # create account
-        account = AIAccount()
+        account = AIAccount(login, nick, aiType)
         # update
-        account.login = login
-        account.nick = nick
-        account.aiType = aiType
         self.accounts.create(account, id = str(account.login))
         log.message('AI account created')
         self.generateAIList()
@@ -144,10 +153,8 @@ class ClientMngr:
         self.generateAIList()
         return 1, None
 
-
-    def hello(self, sid, login, clientId):
-        log.debug(clientId, 'connected. User', repr(login))
-        login = str(login)
+    def hello(self, sid, clientId):
+        log.debug(clientId, 'connected. User', repr(clientId))
         # create sort of cookie
         while 1:
             sid = hashlib.sha256(str(random.random())).hexdigest()
@@ -158,7 +165,6 @@ class ClientMngr:
         session.challenge = challenge
         session.clientIdent = clientId
         self.sessions[sid] = session
-        account = self.accounts.get(login, None)
         return (sid, challenge), None
 
     def login(self, sid, login, cpasswd, hostID):
@@ -174,7 +180,7 @@ class ClientMngr:
         if not self.accounts.has_key(login):
             raise SecurityException('Wrong login and/or password.')
         account = self.accounts[login]
-        if not Authentication.verify(cpasswd, account.passwd, challenge):
+        if not Authentication.verify(cpasswd, account, challenge):
             raise SecurityException('Wrong login and/or password.')
         # setup session
         self.sessions[sid].setAttrs(account.login, account.nick, account.email)
@@ -216,16 +222,20 @@ class ClientMngr:
         else:
             raise SecurityException('No such session id.')
 
-    def changePassword(self, sid, old, new):
+    def changePassword(self, sid, safeOld, safeNew):
         session = self.sessions[sid]
-        if session:
-            if self.accounts[session.login].passwd == old:
-                self.accounts[session.login].passwd = new
-                return 1, None
-            else:
-                raise SecurityException('Wrong password.')
-        else:
+        if not session:
             raise SecurityException('No such session id.')
+        challenge = session.challenge
+        account = self.accounts[session.login]
+        if not Authentication.verify(safeOld, account, challenge):
+            raise SecurityException('Wrong login and/or password.')
+        newPassword = Authentication.unwrapUserPassword(safeNew, challenge)
+        if len(newPassword) < ige.Const.ACCOUNT_PASSWD_MIN_LEN:
+            raise SecurityException('Password is too short.')
+        account.passwd = account.hashPassword(newPassword)
+        log.debug('Password of account {0} successfully changed.'.format(session.login))
+        return None, None
 
     def cleanupSessions(self, sid):
         session = self.sessions.get(sid, None)
