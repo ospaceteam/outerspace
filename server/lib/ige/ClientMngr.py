@@ -81,11 +81,11 @@ class ClientMngr:
         plainPassword = plainPassword.strip()
         nick = nick.strip()
         # check requirement
-        if len(login) < 4:
+        if len(login) < ige.Const.ACCOUNT_LOGIN_MIN_LEN:
             raise SecurityException('Login is too short.')
-        if len(plainPassword) < 4:
+        if len(plainPassword) < ige.Const.ACCOUNT_PASSWD_MIN_LEN:
             raise SecurityException('Password is too short.')
-        if len(nick) < 4:
+        if len(nick) < ige.Const.ACCOUNT_NICK_MIN_LEN:
             raise SecurityException('Nick is too short.')
         # check login, nick and uid
         for key in self.accounts.keys():
@@ -231,6 +231,8 @@ class ClientMngr:
         if not Authentication.verify(safeOld, account, challenge):
             raise SecurityException('Wrong login and/or password.')
         newPassword = Authentication.unwrapUserPassword(safeNew, challenge)
+        if len(newPassword) < ige.Const.ACCOUNT_PASSWD_MIN_LEN:
+            raise SecurityException('Password is too short.')
         account.passwd = account.hashPassword(newPassword)
         log.debug('Password of account {0} successfully changed.'.format(session.login))
         return None, None
