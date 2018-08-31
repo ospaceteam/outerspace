@@ -182,6 +182,9 @@ class GameMngr(IGEGameMngr):
                 # no planets, definitely not a good starting position
                 continue
             galaxy = self.db[system.compOf]
+            if galaxy.scenario == Const.SCENARIO_SINGLE:
+                # single player scenarios are off limit :)
+                continue
             if player.type == Const.T_AIPLAYER and player.planets:
                 # check if home system is under attack
                 if system.combatCounter > 0:

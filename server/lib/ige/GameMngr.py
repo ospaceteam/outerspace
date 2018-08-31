@@ -104,10 +104,10 @@ class GameMngr:
             if not hasattr(account, 'passwdHash'):
                 if account.isAI:
                     account.passwdHash = None
-                    account.passwdSalt = None
+                    account._passwdSalt = None
                 else:
                     account.passwdHash = "sha256"
-                    account.passwdSalt = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
+                    account._passwdSalt = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
                     account.passwd = account.hashPassword(account.passwd)
         # upgrade all objects in database
         # and collect all not referenced objects
