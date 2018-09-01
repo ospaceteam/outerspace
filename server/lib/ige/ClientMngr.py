@@ -39,10 +39,10 @@ class ClientMngr:
         if not self.authMethod:
             self.authMethod = Authentication.defaultMethod
         if ige.igeRuntimeMode == 1:
-            Authentication.init(configDir, self.authMethod, 2048)
+            Authentication.init(self.authMethod, 2048)
         elif ige.igeRuntimeMode == 0:
             # it is minimum to cater for AI generated passwords
-            Authentication.init(configDir, self.authMethod, 512)
+            Authentication.init(self.authMethod, 512)
         self._filename = os.path.join(self.configDir, 'accounts')
         self.sessions = {}
         #

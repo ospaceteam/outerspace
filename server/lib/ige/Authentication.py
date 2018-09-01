@@ -11,37 +11,20 @@ defaultMethod = "rsa"
 publicKey = None
 privateKey = None
 
-def init(configDir, authMethod, size=2048):
+def init(authMethod, size=2048):
     # RSA needs init
     if authMethod == "rsa":
-        initRSAKeys(configDir, size)
+        initRSAKeys(size)
 
-def _generateKeys(privatePath, publicPath, size):
+def _generateKeys(size):
     global publicKey, privateKey
     # no keys, let's generate them
     log.message("Generating RSA keys of size {0}, please wait...".format(size))
     publicKey, privateKey = rsa.newkeys(size)
-    with open(privatePath, 'w') as privKeyFile:
-        privKeyFile.write(privateKey.save_pkcs1())
-    with open(publicPath, 'w') as pubKeyFile:
-        pubKeyFile.write(publicKey.save_pkcs1())
 
-def initRSAKeys(configDir, size):
+def initRSAKeys(size):
     """Load or generate and save RSA keys"""
-    global publicKey, privateKey
-    privatePath = os.path.join(configDir, 'private.pem')
-    publicPath = os.path.join(configDir, 'public.pem')
-    try:
-        log.message("Loading PRIVATE RSA key")
-        with open(privatePath, 'rb') as privKeyFile:
-            privateKey = rsa.PrivateKey.load_pkcs1(privKeyFile.read())
-        log.message("Loading PUBLIC RSA key")
-        with open(publicPath, 'rb') as pubKeyFile:
-            publicKey = rsa.PublicKey.load_pkcs1(pubKeyFile.read())
-    except ValueError:
-        _generateKeys(privatePath, publicPath, size)
-    except IOError:
-        _generateKeys(privatePath, publicPath, size)
+    _generateKeys(size)
 
 def getPublicKey():
     """Get current RSA public key"""
