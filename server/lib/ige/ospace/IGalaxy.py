@@ -96,11 +96,6 @@ class IGalaxy(IObject):
         # check compOf
         if not tran.db.has_key(obj.compOf) or tran.db[obj.compOf].type != Const.T_UNIVERSE:
             log.debug("CONSISTENCY invalid compOf for galaxy", obj.oid, obj.compOf)
-        # TODO: remove after 0.5.73
-        if not hasattr(obj, 'galaxyTurn'):
-            obj.galaxyTurn = 0
-        obj.timeEnabled = bool(obj.timeEnabled)
-
 
     def getReferences(self, tran, obj):
         return obj.systems

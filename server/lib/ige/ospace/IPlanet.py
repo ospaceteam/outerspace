@@ -919,9 +919,6 @@ class IPlanet(IObject):
             log.debug("CONSISTENCY invalid compOf for planet", obj.oid)
         # fix signature
         obj.signature = 75
-        # TODO: remove after 0.5.73
-        if len(obj.moraleModifiers) == 4:
-            obj.moraleModifiers.append(0.0)
 
     @public(Const.AL_FULL)
     def changePlanetsGlobalQueue(self, tran, obj, newQueue):

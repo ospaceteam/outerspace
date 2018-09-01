@@ -98,12 +98,6 @@ class IPlayer(IObject):
         obj.clientStats = {}
 
     def update(self, tran, obj):
-        # TODO: remove after 0.5.73
-        if hasattr(obj, 'galaxies'):
-            try:
-                obj.galaxy = obj.galaxies[0]
-            except IndexError:
-                obj.galaxy = None
         # refresh technologies
         self.setStartingTechnologies(obj)
         # clean up obsoleted technologies
