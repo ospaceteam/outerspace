@@ -501,12 +501,8 @@ class IUniverse(IObject):
                 log.debug("Removing reference to player", playerID)
                 obj.players.remove(playerID)
 
-    update.public = 0
-
     def getReferences(self, tran, obj):
         return obj.players[:] + obj.galaxies[:] + [Const.OID_NATURE]
-
-    getReferences.public = 0
 
     @public(Const.AL_ADMIN)
     def getActivePlayers(self, tran, obj):
@@ -530,16 +526,12 @@ class IUniverse(IObject):
     def canGetMsgs(self, tran, obj, oid):
         return 1
 
-    canGetMsgs.public = 0
-
     def canSendMsg(self, tran, obj, oid, forum):
         if forum.endswith("PUBLIC"):
             return 1
         elif forum.endswith("NEWS"):
             return 1
         return 0
-
-    canSendMsg.public = 0
     
     @public(Const.AL_NONE)
     def finishGalaxyImperator(self, tran, obj, galaxyID, imperatorMessage):

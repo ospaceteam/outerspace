@@ -250,11 +250,7 @@ class UpdateDlg:
 
     def setUpdateAction(self):
         response = self.serverVersion["clientURLs"].get(sys.platform, self.serverVersion["clientURLs"]["*"])
-        if len(response) == 1:
-            self.url = response
-        else:
-            # compatibility reasons in 0.5.69, TODO remove
-            action, self.url = response
+        self.url = response
         # if the game resides in git repository, leave it on user, otherwise volunteer to perform update
         gameDirectory = os.path.realpath(os.path.dirname(sys.argv[0]))
         gitDir = os.path.join(gameDirectory, '.git')

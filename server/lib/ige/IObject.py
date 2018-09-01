@@ -93,8 +93,6 @@ class IObject:
     def update(self, tran, obj):
         pass
 
-    update.public = 0
-
     def loadDOMAttrs(self, obj, elem):
         for index in xrange(0, elem.attributes.length):
             attr = elem.attributes.item(index)
@@ -200,19 +198,11 @@ class IObject:
     def canSendMsg(self, tran, obj, oid, forum):
         return 0
 
-    canSendMsg.public = 0
-
     def canGetMsgs(self, tran, obj, oid):
         return oid == obj.oid
-
-    canGetMsgs.public = 0
 
     def canManageMsgs(self, tran, obj, oid):
         return oid == obj.oid or oid == Const.OID_ADMIN
 
-    canManageMsgs.public = 0
-
     def getMailboxName(self, tran, obj):
         return (tran.gameMngr.gameID, obj.oid)
-
-    getMailboxName.public = 0

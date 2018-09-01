@@ -98,12 +98,6 @@ class IPlayer(IObject):
         obj.clientStats = {}
 
     def update(self, tran, obj):
-        # TODO: remove after 0.5.73
-        if hasattr(obj, 'galaxies'):
-            try:
-                obj.galaxy = obj.galaxies[0]
-            except IndexError:
-                obj.galaxy = None
         # refresh technologies
         self.setStartingTechnologies(obj)
         # clean up obsoleted technologies
@@ -238,8 +232,6 @@ class IPlayer(IObject):
             new.built = old.built
             new.upgradeTo = old.upgradeTo
             obj.shipDesigns[designID] = new
-
-    update.public = 0
 
     @staticmethod
     def setStartingPlanet(tran, playerID, planet):
@@ -400,12 +392,8 @@ class IPlayer(IObject):
     def getReferences(self, tran, obj):
         return obj.fleets
 
-    getReferences.public = 0
-
     def loggedIn(self, tran, obj):
         obj.lastLogin = time.time()
-
-    loggedIn.public = 0
 
     @public(Const.AL_OWNER)
     def resign(self, tran, obj):
@@ -1329,8 +1317,6 @@ class IPlayer(IObject):
             return obj.oid == oid
         return 0
 
-    canSendMsg.public = 0
-
     @public(Const.AL_OWNER)
     def cleanUpMsgs(self, tran, obj):
         # get messages
@@ -1358,8 +1344,6 @@ class IPlayer(IObject):
             return ("%s,%s" % (obj.clientStats['x'],obj.clientStats['y']))
         else:
             return "0,0"
-
-    getResolution.public = 0
 
     @public(Const.AL_FULL)
     def addObsoleteTechs(self, tran, player, techID):

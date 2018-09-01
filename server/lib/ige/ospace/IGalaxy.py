@@ -96,18 +96,9 @@ class IGalaxy(IObject):
         # check compOf
         if not tran.db.has_key(obj.compOf) or tran.db[obj.compOf].type != Const.T_UNIVERSE:
             log.debug("CONSISTENCY invalid compOf for galaxy", obj.oid, obj.compOf)
-        # TODO: remove after 0.5.73
-        if not hasattr(obj, 'galaxyTurn'):
-            obj.galaxyTurn = 0
-        obj.timeEnabled = bool(obj.timeEnabled)
-
-
-    update.public = 0
 
     def getReferences(self, tran, obj):
         return obj.systems
-
-    getReferences.public = 0
 
     @staticmethod
     def getFreeStartingPosition(db, obj):
@@ -530,13 +521,9 @@ class IGalaxy(IObject):
     def canGetMsgs(self, tran, obj, oid):
         return 1
 
-    canGetMsgs.public = 0
-
     def canSendMsg(self, tran, obj, oid, forum):
         if forum == "PUBLIC":
             return 1
         elif forum == "NEWS":
             return 1
         return 0
-
-    canSendMsg.public = 0
