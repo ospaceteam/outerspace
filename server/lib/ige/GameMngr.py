@@ -96,19 +96,19 @@ class GameMngr:
         # hash passwords in database
         for accountID in self.clientMngr.accounts.keys():
             account = self.clientMngr.accounts[accountID]
+            if hasattr(account, 'passwdHashed'):
+                continue
             if isinstance(account.passwd, unicode):
                 account.passwd = account.passwd.encode('utf-8')
             elif not isinstance(account.passwd, str):
                 # unexpected!
                 raise TypeError
-            if not hasattr(account, 'passwdHash'):
-                if account.isAI:
-                    account.passwdHash = None
-                    account._passwdSalt = None
-                else:
-                    account.passwdHash = "sha256"
-                    account._passwdSalt = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
-                    account.passwd = account.hashPassword(account.passwd)
+            # hash passwords of normal players
+            if account.isAI or account.login == Const.ADMIN_LOGIN:
+                account.passwdHashed = False
+            else:
+                account.passwdHashed = True
+                account.setPassword = account.passwd
         # upgrade all objects in database
         # and collect all not referenced objects
         for id in self.db.keys():

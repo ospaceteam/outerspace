@@ -12,12 +12,20 @@ The ```outerspace``` project consists of two big parts. One is graphic client, p
 #### Requirements
 * ```python-2.7```
 * ```pygame-1.9.2``` (for game client only)
+* ```passlib-1.7``` (for server only)
 
 #### Python
 Outerspace is written in Python2, ```Python 2.7``` to be more specific. You can grab it on [official pages](https://www.python.org/downloads/release/python-2713/), or in the repositories of you linux distributions. While selecting components during installation, make sure to have ```pip``` component enabled. On Windows machines, for advanced use of ```outerspace```, it is also helpful to select ```Add python.exe to Path```.
 
 #### PyGame
 *Outer Space client is able to install the PyGame requirement automatically. It will be installed  for active user only, so no administrator rights are needed.*
+
+#### PassLib
+To maintain security of player passwords saved on the server, passlib is required by the server part. As it is security feature and should be controlled by administrator, game won't install it automatically. You can install it using ```pip``` command.
+
+```
+python2 -m pip install -U passlib
+```
 
 #### Getting the Outer Space code
 The Outer Space itself has no specific needs, all you have to do is to clone git repository, or download [ZIP file with the latest version](https://github.com/ospaceteam/outerspace/releases/latest) and unpack it in directory of you choice.

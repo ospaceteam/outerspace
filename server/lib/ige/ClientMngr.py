@@ -27,7 +27,7 @@ import ige
 from ige import SecurityException
 from ige.Const import ADMIN_LOGIN
 import Authentication
-from account import Account, AIAccount
+from account import Account, AIAccount, AdminAccount, passwordGen
 from ai_parser import AIList
 from IDataHolder import IDataHolder
 
@@ -39,10 +39,10 @@ class ClientMngr:
         if not self.authMethod:
             self.authMethod = Authentication.defaultMethod
         if ige.igeRuntimeMode == 1:
-            Authentication.init(configDir, self.authMethod, 2048)
+            Authentication.init(self.authMethod, 2048)
         elif ige.igeRuntimeMode == 0:
             # it is minimum to cater for AI generated passwords
-            Authentication.init(configDir, self.authMethod, 512)
+            Authentication.init(self.authMethod, 512)
         self._filename = os.path.join(self.configDir, 'accounts')
         self.sessions = {}
         #
@@ -67,16 +67,18 @@ class ClientMngr:
 
     def _initAdminAccount(self):
         # create special key
-        password = hashlib.sha1(str(random.randrange(0, 1e10))).hexdigest()
+
         if self.accounts.has_key(ADMIN_LOGIN):
-            self.accounts[ADMIN_LOGIN].passwdHash = None # Needs plaintext login from token
-            self.accounts[ADMIN_LOGIN].passwd = self.accounts[ADMIN_LOGIN].hashPassword(password)
+            self.accounts[ADMIN_LOGIN].passwdHashed = False # Needs plaintext login from token
+            password = passwordGen()
+            self.accounts[ADMIN_LOGIN].setPassword(password)
         else:
             log.message("No administator account found! (looking for '%s')" % ADMIN_LOGIN)
             log.message("Creating default account")
             # create account
-            account = Account(ADMIN_LOGIN, "Administrator", "nospam@nospam.com", password, passwdHash = None)
+            account = AdminAccount()
             # update
+            password = account.passwd
             self.accounts.create(account, id = str(account.login))
         with open(os.path.join(self.configDir, "token"), "w") as tokenFile:
             tokenFile.write(password)
@@ -167,7 +169,7 @@ class ClientMngr:
         self.sessions[sid] = session
         return (sid, challenge), None
 
-    def login(self, sid, login, cpasswd, hostID):
+    def login(self, sid, login, safePassword, hostID):
         login = login.strip()
         if not login:
             raise SecurityException("Specify login, please.")
@@ -180,7 +182,8 @@ class ClientMngr:
         if not self.accounts.has_key(login):
             raise SecurityException('Wrong login and/or password.')
         account = self.accounts[login]
-        if not Authentication.verify(cpasswd, account, challenge):
+        plainPassword = Authentication.unwrapUserPassword(safePassword, challenge)
+        if not account.verifyPassword(plainPassword):
             raise SecurityException('Wrong login and/or password.')
         # setup session
         self.sessions[sid].setAttrs(account.login, account.nick, account.email)
@@ -228,12 +231,12 @@ class ClientMngr:
             raise SecurityException('No such session id.')
         challenge = session.challenge
         account = self.accounts[session.login]
-        if not Authentication.verify(safeOld, account, challenge):
+        if not account.verifyPassword(safeOld):
             raise SecurityException('Wrong login and/or password.')
         newPassword = Authentication.unwrapUserPassword(safeNew, challenge)
         if len(newPassword) < ige.Const.ACCOUNT_PASSWD_MIN_LEN:
             raise SecurityException('Password is too short.')
-        account.passwd = account.hashPassword(newPassword)
+        account.setPassword(newPassword)
         log.debug('Password of account {0} successfully changed.'.format(session.login))
         return None, None
 

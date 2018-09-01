@@ -1,4 +1,7 @@
 language: python
 
+install:
+  - pip install -q passlib
+
 script:
-    - ./tests/smoke_test.py --travis
+  - ./tests/smoke_test.py --travis
