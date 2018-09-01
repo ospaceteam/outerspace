@@ -923,8 +923,6 @@ class IPlanet(IObject):
         if len(obj.moraleModifiers) == 4:
             obj.moraleModifiers.append(0.0)
 
-    update.public = 0
-
     @public(Const.AL_FULL)
     def changePlanetsGlobalQueue(self, tran, obj, newQueue):
         player = tran.db[obj.owner]
@@ -954,8 +952,6 @@ class IPlanet(IObject):
             task.demolishStruct = Const.OID_NONE
         return task
 
-    popGlobalQueue.public = 0
-
     def deleteDesign(self, tran, obj, designID, keepWIP = 0):
         # TODO: handle stategic resources
         for task in obj.prodQueue[:]:
@@ -965,16 +961,12 @@ class IPlanet(IObject):
                 else:
                     self.cmd(obj).abortConstruction(tran, obj, obj.prodQueue.index(task))
 
-    deleteDesign.public = 0
-
     def changeShipDesign(self, tran, obj, oldDesignID, newDesignID):
         # TODO: handle strategic resources
         for task in obj.prodQueue[:]:
             if task.isShip and task.techID == oldDesignID:
                 task.techID = newDesignID
                 task.currProd = int(task.currProd / Rules.shipUpgradeMod)
-
-    changeShipDesign.public = 0
 
     ##
     ## Asteroids
@@ -1079,8 +1071,6 @@ class IPlanet(IObject):
         # +1 means population only hit
         return shots, [0, 0, 0, 8], firing
 
-    getPreCombatData.public = 0
-
     def applyShot(self, tran, obj, defense, attack, weaponID, cClass, count):
         #@log.debug('IPlanet', 'Apply shot', weaponID, attack, cClass, count)
         # compute chance to hit
@@ -1180,8 +1170,6 @@ class IPlanet(IObject):
         # when destroyed, only class 3 (structure) i valid
         return dmg+absorb, destroyed, 3
 
-    applyShot.public = 0
-
     def distributeExp(self, tran, obj):
         # TODO - will buildings have exp? Answ: NO
         if hasattr(obj, "maxHits"):
@@ -1189,8 +1177,6 @@ class IPlanet(IObject):
             del obj.hitCounter
             del obj.lastHitClass
             del obj.hitMod
-
-    distributeExp.public = 0
 
     def surrenderTo(self, tran, obj, newOwnerID):
         # morale is lost when this is called
@@ -1230,5 +1216,3 @@ class IPlanet(IObject):
             if tech.isMilitary:
                 obj.slots.remove(struct)
         return 1
-
-    surrenderTo.public = 0

@@ -121,8 +121,6 @@ class IFleet(IObject):
         # update fleet info
         self.cmd(obj).update(tran, obj)
 
-    addNewShip.public = 0
-
     @public(Const.AL_OWNER)
     def removeShips(self, tran, obj, ships):
         for ship in ships:
@@ -138,8 +136,6 @@ class IFleet(IObject):
         # remove design
         obj.ships = [ship for ship in obj.ships if ship[0] != designID]
         self.cmd(obj).update(tran, obj)
-
-    deleteDesign.public = 0
 
     @public(Const.AL_FULL)
     def disbandFleet(self, tran, obj):
@@ -396,8 +392,6 @@ class IFleet(IObject):
                 log.debug(obj.oid, "invalid ship to deploy")
                 obj.actions[index] = (Const.FLACTION_NONE, None, None)
             index += 1
-
-    update.public = 0
 
     def getScanInfos(self, tran, obj, scanPwr, player):
         if obj.owner == player.oid:
@@ -746,8 +740,6 @@ class IFleet(IObject):
         obj.actionIndex = 0
         return 0
 
-    actionRedirect.public = 0
-
     def actionDeploy(self, tran, obj):
         action, target, actionData = obj.actions[obj.actionIndex]
         if not self.cmd(obj).moveToTarget(tran, obj, target):
@@ -817,8 +809,6 @@ class IFleet(IObject):
         log.debug('IFleet -', 'Deploy ship - no suitable ship')
         return 1
 
-        actionDeploy.public = 0
-
     def refuelAndRepairAndRecharge(self, tran, obj):
         if obj.orbiting == Const.OID_NONE:
             # we are in space
@@ -862,8 +852,6 @@ class IFleet(IObject):
         #@log.debug(obj.oid, "After refuel", currentLevel, refuelMax)
         #@log.debug(obj.oid, "Tanks after refuel", obj.storEn, "/", obj.maxEn)
         return currentLevel >= refuelMax
-
-    refuelAndRepairAndRecharge.public = 0
 
     def serviceShips(self, tran, obj):
         player = tran.db[obj.owner]
@@ -980,8 +968,6 @@ class IFleet(IObject):
         if upgraded > 0:
             self.cmd(obj).update(tran, obj)
 
-    serviceShips.public = 0
-
     def autoRepairAndRecharge(self, tran, obj, forceRepairPerc = 0.0):
         player = tran.db[obj.owner]
         idx = 0
@@ -1007,8 +993,6 @@ class IFleet(IObject):
                     shields + spec.shieldRechargeFix + max(1, spec.shieldHP * spec.shieldRechargePerc),
                 )))
             idx += 1
-
-    autoRepairAndRecharge.public = 0
 
     def moveToWormhole(self, tran, obj, targetID):
         origin = tran.db[targetID]
@@ -1041,8 +1025,6 @@ class IFleet(IObject):
             #Utils.sendMessage(tran, obj, Const.MSG_ENTERED_WORMHOLE, destinationWormHole.oid , (origin.name,destinationWormHole.name))
             arrived = 1 #since the move part was successful, just ignore this problem for the player
         return arrived
-
-    moveToWormhole.public = 0
 
     def moveToTarget(self, tran, obj, targetID): #added action passthrough for wormhole move...needed
         # DON'T move fleet with speed == 0
@@ -1153,8 +1135,6 @@ class IFleet(IObject):
             system.scannerPwrs[obj.owner] = max(obj.scannerPwr, system.scannerPwrs.get(obj.owner, 0))
         return arrived
 
-    moveToTarget.public = 0
-
     @public(Const.AL_ADMIN)
     def processFINALPhase(self, tran, obj, data):
         # stats
@@ -1213,8 +1193,6 @@ class IFleet(IObject):
         log.debug(obj.oid, "Combat limit settings", obj.maxHits)
         return shots, targets, firing
 
-    getPreCombatData.public = 0
-
     def applyMine(self, tran, obj, attack, damage, ignoreshield):
         player = tran.db[obj.owner]
         targetindex = random.randrange(0,len(obj.ships))
@@ -1251,8 +1229,6 @@ class IFleet(IObject):
             else:
                 obj.ships[targetindex][1] -= damage
         return damage + blocked, destroyed
-
-    applyMine.public = 0
 
     def applyShot(self, tran, obj, defense, attack, weaponID, targetClass, target):
         #@log.debug(obj.oid, 'IFleet', 'Apply shot', attack, weaponID, targetClass, target)
@@ -1353,8 +1329,6 @@ class IFleet(IObject):
         #@log.debug(obj.oid, "Damaged", dmg, blocked, destroyed)
         return dmg + blocked, destroyed, destroyedClass
 
-    applyShot.public = 0
-
     def distributeExp(self, tran, obj):
         # TODO improve
         player = tran.db[obj.owner]
@@ -1377,10 +1351,6 @@ class IFleet(IObject):
         del obj.lastHitClass
         del obj.hitMods
 
-    distributeExp.public = 0
-
     def surrenderTo(self, tran, obj, newOwnerID):
         # we've lost the battle - issue MOVE command to the nearest player's star
         return 0
-
-    surrenderTo.public = 0

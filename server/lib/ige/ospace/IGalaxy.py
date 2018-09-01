@@ -102,12 +102,8 @@ class IGalaxy(IObject):
         obj.timeEnabled = bool(obj.timeEnabled)
 
 
-    update.public = 0
-
     def getReferences(self, tran, obj):
         return obj.systems
-
-    getReferences.public = 0
 
     @staticmethod
     def getFreeStartingPosition(db, obj):
@@ -530,13 +526,9 @@ class IGalaxy(IObject):
     def canGetMsgs(self, tran, obj, oid):
         return 1
 
-    canGetMsgs.public = 0
-
     def canSendMsg(self, tran, obj, oid, forum):
         if forum == "PUBLIC":
             return 1
         elif forum == "NEWS":
             return 1
         return 0
-
-    canSendMsg.public = 0

@@ -97,12 +97,8 @@ class ISystem(IObject):
         if old != obj.closeFleets:
             log.debug("System close fleets fixed", obj.oid, old, obj.closeFleets)
 
-    update.public = 0
-
     def getReferences(self, tran, obj):
         return obj.planets
-
-    getReferences.public = 0
 
     def getScanInfos(self, tran, obj, scanPwr, player):
         result = IDataHolder()
@@ -666,8 +662,6 @@ class ISystem(IObject):
             planet.orbit = orbit
             orbit += 1
 
-    sortPlanets.public = 0
-
     @public(Const.AL_NONE)
     def rename(self, tran, obj, newName, nType):
         newName = newName.strip()
@@ -819,8 +813,6 @@ class ISystem(IObject):
         if owner_id in obj.minefield:
             del obj.minefield[owner_id]
 
-    clearMines.public = 0
-
     @public(Const.AL_ADMIN)
     def fireMine(self, obj, owner_id): # shoot the mine
         if owner_id not in obj.minefield:
@@ -853,8 +845,6 @@ class ISystem(IObject):
                         launchers.append((launchtech, struct))
         return launchers
 
-    getSystemMineLauncher.public = 0
-
     def getSystemMineSource(self, tran, obj, playerID):
         sources = []
         for planetID in obj.planets:
@@ -865,8 +855,6 @@ class ISystem(IObject):
                     if tech.mineclass:
                         sources.append(planetID)
         return sources
-
-    getSystemMineSource.public = 0
 
     def getSystemCombatBonuses(self, tran, obj, playerID):
         systemAtt = 0;
@@ -881,8 +869,6 @@ class ISystem(IObject):
                         systemAtt = max(systemAtt, tech.systemAtt * techEff)
                         systemDef = max(systemDef, tech.systemDef * techEff)
         return (systemAtt, systemDef)
-
-    getSystemCombatBonuses.public = 0
 
     def loadDOMNode(self, tran, obj, xoff, yoff, node):
         obj.x = float(node.getAttribute('x')) + xoff

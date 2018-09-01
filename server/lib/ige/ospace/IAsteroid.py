@@ -111,8 +111,6 @@ class IAsteroid(IFleet):
         else:
             obj.closeSystem = Const.OID_NONE
 
-    update.public = 0
-
     def recordScanLevel(self, tran, obj, scanPwr, player, contactType):
         if obj.owner == player.oid:
             log.warning("Scan on own asteroid!", obj.oid)
@@ -198,8 +196,6 @@ class IAsteroid(IFleet):
             log.debug("Asteroid impact delay", obj.impactDelay)
             return [], [0, 0, 0, 1]
 
-    getPreCombatData.public = 0
-
     def applyShot(self, tran, obj, attack, weaponID, targetClass, target):
         #@log.debug('IAsteroid', 'Apply shot', attack, weaponID, attack, cClass, count)
         # compute if asteroid has been hit
@@ -221,15 +217,9 @@ class IAsteroid(IFleet):
         #@log.debug('IAsteroid', 'Shot applied', dmg, destroyed)
         return dmg, destroyed, 3
 
-    applyShot.public = 0
-
     def addExp(self, tran, obj, shipTechID, dmg):
         pass
-
-    addExp.public = 0
 
     def surrenderTo(self, tran, obj, newOwnerID):
         # never surrender
         return 0
-
-    surrenderTo.public = 0
