@@ -190,7 +190,7 @@ galaxyTypeDescriptions = {
     'Circle3SP': N_("More complex single player galaxy, with classic starting group of three commanders. Mutant is the only agressive enemy, two friendly Rebels start in the vicinity."),
     'Circle3CP': N_("Cooperative galaxy, where you and two other commanders fend off and defeat sprawling mutant menace. Recommended to inexperienced players."),
     'Circle5BP': N_("Small galaxy to brawl with four other commanders. Trust no one and keep watching your back."),
-    'Circle9P': N_("Smallest galaxy with Outer Space rules, recommended for beginners or those who seek more casual gameplay."),
+    'Circle9P': N_("Smallest galaxy that contains full diplomacy rules set, limited strategic resources, and fully implements game mechanics. This galaxy is recommended for beginners who seek more casual gameplay with other like minded players."),
     'Circle42P': N_("Original galaxy, place of epic battles and complex intrigues. Recommended only to the experienced players. It may become time consuming."),
     'Circle65P': N_("Majestic galaxy of unmatched size. Be prepared to work primarily through diplomacy, as management of huge empire required for conquest would take all your time. Only for veteran players of many galaxies."),
 }
