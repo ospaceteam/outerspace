@@ -67,6 +67,7 @@ SMESSAGE_NEWMESSAGE = 2
 
 # Admin
 ADMIN_LOGIN = 'admin'
+ADMIN_NICK = 'Administrator'
 
 # Account criteria
 ACCOUNT_LOGIN_MIN_LEN = 4

@@ -23,6 +23,7 @@ def runServer(options):
     import shutil
     import sys
     import time
+    import passlib # checking it early in the process
 
     # setup system path
     baseDir = os.path.abspath(os.path.dirname(__file__))

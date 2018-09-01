@@ -77,13 +77,6 @@ def encode(password, challenge):
         return binascii.hexlify(rsa.encrypt(password.encode('utf-8'), key))
     raise SecurityException("Unsupported authentication method %s" % str(method))
 
-def verify(encodedPassword, account, challenge):
-    """Verify password based on client encoded password and auth method"""
-    method = getMethod(challenge)
-    unwrappedPassword = unwrapUserPassword(encodedPassword, challenge)
-
-    return account.hashPassword(unwrappedPassword) == account.passwd
-
 def unwrapUserPassword(password, challenge):
     """Decode password according to auth method (if possible)"""
     method = getMethod(challenge)
