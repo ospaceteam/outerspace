@@ -1,6 +1,51 @@
 ﻿Outer Space Change Log
 ======================
 
+[2018-09-02]
+- Revision bump to 0.5.74 [dahaic]
+
+Significant changes:
+- Player passwords are no longer stored in plain text, and can be changed
+  anytime through the Options dialog.
+- Multiple Mutant and Renegade factions are now spawned in the galaxies,
+  instead of having one faction starting on multiple planets.
+- Mutant and Renegade now research technologies, and use pacts. Mutant
+  only pacts with other Mutant factions, but Renegade now works as good
+  trade partner to players. Starting level of technologies has been lowered
+  to make early gameplay more balanced.
+- STL engines introduced - provides cheaper combat agility for cases where
+  FTL speed is not needed.
+
+Balancing:
+- Ship repair amount is minimum of 1, to help small ships on low-repair
+  facitilities.
+- Renegade and Mutant now benefits from STL engines.
+- Rebel is now able to upgrade designs and ships, being able to move from
+  prototype technologies to proper TL1.
+- Renegade consumes special resource to build more powerful medium sized
+  ships.
+- HP of Renegade and Mutant structures has been reduced.
+- Flak defenses of Mutant structures has been transformed, now it follows
+  traditional pattern where all sizes have same amount of hardpoints.
+- Building structure over existing one will result in partial reuse of value
+  i.e. structure will spawn with higher HP amount, depending on value of
+  replaced one.
+- Minimal growth of planet population has been increased from 20 to 100.
+
+Fixes:
+- Fixed table sorting.
+- ETA of fleet command is now calculated properly during composition.
+- Various fleet / redirect widgets now center properly.
+- Game no longer freezes after inactivity in Galaxy Selection and Booking
+  dialogs.
+
+Other:
+- Techtree generator has been refactored to be more readable, by forcing
+  TLs into separate columns.
+
+Contributors:
+- Outer Space has new contributor, SummerGram. Welcome!
+
 [2018-06-24]
 - Revision bump to 0.5.73 [dahaic]
 

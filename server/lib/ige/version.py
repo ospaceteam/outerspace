@@ -20,7 +20,7 @@
 
 major = 0
 minor = 5
-revision = 73
+revision = 74
 # status must be either empty string or must start with a dash
 status = ""
 

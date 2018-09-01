@@ -108,7 +108,7 @@ class GameMngr:
                 account.passwdHashed = False
             else:
                 account.passwdHashed = True
-                account.setPassword = account.passwd
+                account.setPassword(account.passwd)
         # upgrade all objects in database
         # and collect all not referenced objects
         for id in self.db.keys():
