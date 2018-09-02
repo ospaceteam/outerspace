@@ -649,7 +649,7 @@ class ISystem(IObject):
             planet = tran.db[planetID]
             if planet.owner not in owners:
                 owners.append(planet.owner)
-        for ownerid in obj.minefield:
+        for ownerid in obj.minefield.keys():
             if ownerid not in owners:
                 self.clearMines(obj, ownerid)
         return obj.planets[:] + obj.closeFleets[:]
