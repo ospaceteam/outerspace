@@ -24,7 +24,7 @@ Outerspace is written in Python2, ```Python 2.7``` to be more specific. You can 
 To maintain security of player passwords saved on the server, passlib is required by the server part. As it is security feature and should be controlled by administrator, game won't install it automatically. You can install it using ```pip``` command.
 
 ```
-python2 -m pip install -U passlib
+python2 -m pip install --user -U passlib
 ```
 
 #### Getting the Outer Space code
