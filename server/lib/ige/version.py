@@ -22,7 +22,7 @@ major = 0
 minor = 5
 revision = 74
 # status must be either empty string or must start with a dash
-status = ""
+status = "-1"
 
 assert not status or status.startswith("-"), "Status MUST start with dash if set"
 
