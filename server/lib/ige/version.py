@@ -36,8 +36,5 @@ version = {
 versionString = "%(major)d.%(minor)d.%(revision)d%(status)s" % version
 
 clientURLs = {
-    "*": (
-        "browser",
-        "https://github.com/ospaceteam/outerspace/archive/%(major)d.%(minor)d.%(revision)d%(status)s.tar.gz" % version,
-    ),
+    "*": "https://github.com/ospaceteam/outerspace/archive/%(major)d.%(minor)d.%(revision)d%(status)s.tar.gz" % version,
 }
