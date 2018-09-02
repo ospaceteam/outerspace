@@ -249,9 +249,11 @@ class Grid(object):
             for sres in tech.researchReqSRes:
                 srList.append(stratRes[sres])
             suffix += " [%s]" % (", ".join(srList))
-        if tech.researchRaces != "BCH":
+        if set(tech.researchRaces) < set("BCH"):
             rList = []
             for race in tech.researchRaces:
+                if race not in "BCH":
+                    continue
                 rList.append(race2Name[race])
             suffix += " (%s)" % (", ".join(rList))
         if tech.finishResearchHandler == TechHandlers.finishResTLAdvance:
@@ -365,7 +367,9 @@ def techtree(filename, races):
     pygame.image.save(grid.print_SDL(), filename + ".png")
 
 pygame.init()
-techtree("techtree_all", "BCH")
+techtree("techtree", "BCH")
 techtree("techtree_bionic", "B")
 techtree("techtree_cyborg", "C")
 techtree("techtree_human", "H")
+techtree("techtree_mutant", "m")
+techtree("techtree_renegade", "r")

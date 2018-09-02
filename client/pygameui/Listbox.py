@@ -266,7 +266,7 @@ class Listbox(MetaWidget):
         """
 
         convert = lambda text: int(text) if text.isdigit() else text.lower()
-        alphaNum = lambda key: [ convert(c) for c in re.split('([0-9]+)', str(key)) ]
+        alphaNum = lambda key: [ convert(c) for c in re.split('([0-9]+)', unicode(key)) ]
         keyF = lambda a: alphaNum(getattr(a, attr))
         items.sort(key=keyF, reverse = reverse)
 

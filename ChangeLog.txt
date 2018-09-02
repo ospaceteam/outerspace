@@ -2,6 +2,14 @@
 ======================
 
 [2018-09-02]
+- Revision bump to 0.5.74-1 [dahaic]
+
+Hotfix to deal with two significant issues:
+- Changing password was not possible.
+- Ship building dialog crashed when non-ascii characters were used
+  in a ship name.
+
+[2018-09-02]
 - Revision bump to 0.5.74 [dahaic]
 
 Significant changes:
