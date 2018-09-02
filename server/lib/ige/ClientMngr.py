@@ -231,9 +231,10 @@ class ClientMngr:
             raise SecurityException('No such session id.')
         challenge = session.challenge
         account = self.accounts[session.login]
-        if not account.verifyPassword(safeOld):
-            raise SecurityException('Wrong login and/or password.')
+        oldPassword = Authentication.unwrapUserPassword(safeOld, challenge)
         newPassword = Authentication.unwrapUserPassword(safeNew, challenge)
+        if not account.verifyPassword(oldPassword):
+            raise SecurityException('Wrong login and/or password.')
         if len(newPassword) < ige.Const.ACCOUNT_PASSWD_MIN_LEN:
             raise SecurityException('Password is too short.')
         account.setPassword(newPassword)
