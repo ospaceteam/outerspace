@@ -480,8 +480,11 @@ class ConstructionDlg:
             for designID, hp, shieldHP, exp in fleet.ships:
                 if designID == self.selectedDesignID:
                     count += 1
-        self.confirmDlg.display(_('Deletion of this design dismantle %d ship(s). Are you sure to scrap it?') % count, _('Yes'),
-            _('No'), confirmAction = self.onScrapConfirmed)
+        self.confirmDlg.display(_('Deletion of this design dismantle %d ship(s). Are you sure to scrap it?') % count,
+                                _('Yes'),
+                                _('No'),
+                                confirmAction = self.onScrapConfirmed,
+                                agreementNeeded = count != 0)
 
     def onScrapConfirmed(self):
         self.win.vDuplDesign.enabled = 0

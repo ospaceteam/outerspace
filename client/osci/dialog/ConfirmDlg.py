@@ -24,10 +24,12 @@ from osci import client, gdata, res
 class ConfirmDlg:
 
     def __init__(self, app):
+        self._agreement = None
+        self.agreementNeeded = None
         self.app = app
         self.createUI()
 
-    def display(self, message, okText, cancelText, confirmAction = None, cancelAction = None):
+    def display(self, message, okText, cancelText, confirmAction = None, cancelAction = None, agreementNeeded = False):
         self.win.vText.text = [message]
         self.win.vConfirm.text = okText
         if cancelText:
@@ -36,14 +38,35 @@ class ConfirmDlg:
         else:
             self.win.vCancel.text = ""
             self.win.vCancel.enabled = False
+        self.agreementNeeded = agreementNeeded
         self.confirmAction = confirmAction
         self.cancelAction = cancelAction
+        self.manageAgreement()
         self.win.show()
+
+    def manageAgreement(self):
+        if self.agreementNeeded:
+            if self._agreement is None:
+                self._agreement = False
+            self.win.vAgree.enabled = True
+            self.win.vAgree.visible = True
+            self.win.vAgree.checked = False
+        else:
+            self.win.vAgree.enabled = False
+            self.win.vAgree.visible = False
+            self.win.vAgree.checked = True
 
     def hide(self):
         self.win.hide()
 
+    def onAgree(self, widget, action, data):
+        self._agreement = not self._agreement
+        pass
+
     def onConfirm(self, widget, action, data):
+        if not self.win.vAgree.checked:
+            self.win.setStatus(_("You have to agree explicitly to proceed."))
+            return
         self.hide()
         if self.confirmAction:
             self.confirmAction()
@@ -66,8 +89,9 @@ class ConfirmDlg:
             layoutManager = ui.SimpleGridLM(),
         )
         self.win.subscribeAction('*', self)
-        ui.Text(self.win, layout = (5, 0, 16, 4), id = 'vText', background = self.win.app.theme.themeBackground, editable = 0)
+        ui.Text(self.win, layout = (5, 0, 16, 3), id = 'vText', background = self.win.app.theme.themeBackground, editable = 0)
         ui.Label(self.win, layout = (0, 0, 5, 4), icons = ((res.loginLogoImg, ui.ALIGN_W),))
         ui.Title(self.win, layout = (0, 4, 13, 1), id = 'vStatusBar', align = ui.ALIGN_W)
+        ui.Check(self.win, layout = (17, 3, 4, 1), text = _('I agree'), id = 'vAgree', action = 'onAgree')
         ui.TitleButton(self.win, layout = (13, 4, 4, 1), id = 'vCancel', action = 'onCancel')
         ui.TitleButton(self.win, layout = (17, 4, 4, 1), id = 'vConfirm', action = 'onConfirm')
