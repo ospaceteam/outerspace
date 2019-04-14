@@ -258,9 +258,9 @@ class Application:
 
     def setStatus(self, text):
         self.statusBarText = text
-        if self.statusBar:
+        if self.statusBar and self.statusBar.text != text:
             self.statusBar.text = text
-        self.update()
+            self.redraw(self.statusBar)
 
     def setTempStatus(self, text):
         if self.statusBar:
