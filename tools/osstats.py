@@ -35,8 +35,6 @@ def typeIdToString(obj):
         return "T_PLANET"
     elif obj.type == osConst.T_FLEET:
         return "T_FLEET"
-    elif obj.type == osConst.T_ALLIANCE:
-        return "T_ALLIANCE"
     elif obj.type == osConst.T_TECHNOLOGY:
         return "T_TECHNOLOGY"
     elif obj.type == osConst.T_ASTEROID:

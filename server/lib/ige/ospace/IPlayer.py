@@ -75,7 +75,7 @@ class IPlayer(IObject):
         obj.voteFor = Const.OID_NONE
         obj.governorOf = Const.OID_NONE
         obj.governors = []
-        obj.alliance = Const.OID_NONE
+        # obj.alliance = Const.OID_NONE # not utilized, but can be in DB somewhere
         obj.imperator = 0
         # combat
         # anti-small, anti-medium, anti-large, shield generator
@@ -721,8 +721,8 @@ class IPlayer(IObject):
             raise ige.GameException('No contact with this player.')
         player = tran.db[playerID]
         # must be a player
-        if player.type not in Const.PLAYER_TYPES and player.type != Const.T_ALLIANCE:
-            raise ige.GameException('Pacts can be offered to players and aliances only.')
+        if player.type not in Const.PLAYER_TYPES:
+            raise ige.GameException('Pacts can be offered to players only.')
         # check pactID
         pact = Rules.pactDescrs.get(pactID, None)
         if not pact:
