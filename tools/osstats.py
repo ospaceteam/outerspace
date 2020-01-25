@@ -26,41 +26,14 @@ gameDB = Database(os.path.join(options.configDir, "db_data"), "game_Alpha", cach
 def typeIdToString(obj):
     if not isinstance(obj, IDataHolder):
         return "?"
-
-    if obj.type == osConst.T_GALAXY:
-        return "T_GALAXY"
-    elif obj.type == osConst.T_SYSTEM:
-        return "T_SYSTEM"
-    elif obj.type == osConst.T_PLANET:
-        return "T_PLANET"
-    elif obj.type == osConst.T_FLEET:
-        return "T_FLEET"
-    elif obj.type == osConst.T_TECHNOLOGY:
-        return "T_TECHNOLOGY"
-    elif obj.type == osConst.T_NATURE:
-        return "T_NATURE"
-    elif obj.type == osConst.T_AIPLAYER:
-        return "T_AIPLAYER"
-    elif obj.type == osConst.T_AIRENPLAYER:
-        return "T_AIRENPLAYER"
-    elif obj.type == osConst.T_AIMUTPLAYER:
-        return "T_AIMUTPLAYER"
-    elif obj.type == osConst.T_AIPIRPLAYER:
-        return "T_AIPIRPLAYER"
-    elif obj.type == osConst.T_AIEDENPLAYER:
-        return "T_AIEDENPLAYER"
-    elif obj.type == osConst.T_PIRPLAYER:
-        return "T_PIRPLAYER"
-    elif obj.type == Const.T_PLAYER:
-        return "T_PLAYER"
-    elif obj.type == Const.T_UNIVERSE:
-        return "T_UNIVERSE"
-    elif obj.type == Const.T_UNKNOWN:
-        return "T_UNKNOWN"
-    elif obj.type == Const.T_OBJECT:
-        return "T_OBJECT"
-    else:
-        return "? (%d)" % obj.type
+    for _type in ['T_GALAXY', 'T_SYSTEM', 'T_PLANET', 'T_FLEET', 'T_TECHNOLOGY', 'T_NATURE',
+                  'T_AIPLAYER', 'T_AIRENPLAYER', 'T_AIMUTPLAYER', 'T_AIPIRPLAYER', 'T_AIEDENPLAYER', 'T_PIRPLAYER']:
+        if obj.type == getattr(osConst, _type):
+            return _type
+    for _type in ['T_PLAYER', 'T_UNIVERSE', 'T_UNKNOWN', 'T_OBJECT']:
+        if obj.type == getattr(Const, _type):
+            return _type
+    return "? (%d)" % obj.type
 
 count = {}
 total = {}
