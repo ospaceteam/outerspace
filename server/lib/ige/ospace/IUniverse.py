@@ -114,13 +114,6 @@ class IUniverse(IObject):
         return oid
 
     @public(Const.AL_ADMIN)
-    def createAsteroid(self, tran, obj, x, y, targetID, speed, hp):
-        asteroid = self.new(Const.T_ASTEROID)
-        tran.db.create(asteroid)
-        self.cmd(asteroid).create(tran, asteroid, x, y, targetID, speed, hp)
-        return asteroid.oid
-
-    @public(Const.AL_ADMIN)
     def processINITPhase(self, tran, obj, data):
         for galaxyID in obj.galaxies:
             galaxy = tran.db[galaxyID]

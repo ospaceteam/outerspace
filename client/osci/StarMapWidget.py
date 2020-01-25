@@ -495,9 +495,6 @@ class StarMapWidget(Widget):
                     else:
                         name = getattr(obj, "name", None)
                     name = _("Fleet: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
-                elif obj.type == Const.T_ASTEROID:
-                    name = getattr(obj, "name", None)
-                    name = _("Asteroid: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
                 else:
                     name = _("Unknown object [ID: %d]") % obj.oid
                 item = ui.Item(name, action = "onObjectSelected", data = objID)

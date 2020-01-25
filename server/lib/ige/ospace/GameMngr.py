@@ -32,7 +32,7 @@ from ige.IDataHolder import IDataHolder
 from ige import GameException, SecurityException, CreatePlayerException
 
 import Const
-import IPlayer, IUniverse, IGalaxy, ISystem, IWormHole, IPlanet, IFleet, IAsteroid
+import IPlayer, IUniverse, IGalaxy, ISystem, IWormHole, IPlanet, IFleet
 import INature, IAIPlayer, IAIRenegadePlayer, IAIMutantPlayer, IAIPiratePlayer
 import GalaxyGenerator
 import IAIEDENPlayer, IPiratePlayer
@@ -56,7 +56,6 @@ class GameMngr(IGEGameMngr):
         self.registerObject(IWormHole.IWormHole)
         self.registerObject(IPlanet.IPlanet)
         self.registerObject(IFleet.IFleet)
-        self.registerObject(IAsteroid.IAsteroid)
         self.registerObject(INature.INature)
         self.registerObject(IAIPlayer.IAIPlayer)
         self.registerObject(IAIRenegadePlayer.IAIRenegadePlayer)

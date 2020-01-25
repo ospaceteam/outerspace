@@ -639,8 +639,6 @@ class IPlanet(IObject):
 
     @public(Const.AL_ADMIN)
     def processPRODPhase(self, tran, obj, data):
-        if obj.plType == "A":
-            self.cmd(obj).generateAsteroid(tran, obj)
         # max storage
         obj.maxPop = obj.plSlots * Rules.popPerSlot + Rules.popBaseStor
         obj.maxBio = obj.plSlots * Rules.bioPerSlot + Rules.bioBaseStor
@@ -964,57 +962,6 @@ class IPlanet(IObject):
             if task.isShip and task.techID == oldDesignID:
                 task.techID = newDesignID
                 task.currProd = int(task.currProd / Rules.shipUpgradeMod)
-
-    ##
-    ## Asteroids
-    ##
-
-    def generateAsteroid(self, tran, obj):
-        return
-        assert obj.plType == "A"
-        #
-        modifier = pow(
-            max(Rules.asteroidMinPlMinAbund / 100.0, obj.plMin / 100.0),
-            Rules.asteroidModPwr,
-        )
-        # get probability
-        prob = Rules.asteroidGenerPerc * modifier
-        #@log.debug("Asteroids ?", prob, modifier, int(Rules.asteroidMinHP * modifier), int(Rules.asteroidMaxHP * modifier))
-        if prob < random.random():
-            # bad luck
-            return
-        # new asteroid - gener hit points and speed
-        hp = random.randrange(
-            int(Rules.asteroidMinHP * modifier),
-            int(Rules.asteroidMaxHP * modifier)
-        )
-        speed = Rules.asteroidMinSpeed + random.random() * \
-            (Rules.asteroidMaxSpeed - Rules.asteroidMinSpeed)
-        # position
-        system = tran.db[obj.compOf]
-        # select target
-        if Rules.asteroidTargetInSystem < random.random():
-            # TODO: target nearby system
-            objIDs = []
-            # pick one target (except this system)
-            while True:
-                systemID = random.choice(objIDs)
-                tmpSystem = tran.db[systemID]
-                if tmpSystem.type == Const.T_SYSTEM and systemID != system.oid:
-                    break
-            # select planet
-            targetID = random.choice(tmpSystem.planets)
-        else:
-            # select planet in this system
-            while True:
-                targetID = random.choice(system.planets)
-                if targetID != obj.oid:
-                    # don't target yourself
-                    break
-        # create asteroid
-        asteroid = self.new(Const.T_ASTEROID)
-        tran.db.create(asteroid)
-        self.cmd(asteroid).create(tran, asteroid, system.x, system.y, targetID, speed, hp)
 
     ##
     ## Combat related functions

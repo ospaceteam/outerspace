@@ -68,7 +68,7 @@ class FleetsOverviewDlg:
         for fleetID in client.db.keys():
             fleet = client.get(fleetID, noUpdate = 1)
             # skip non-fleets
-            if not hasattr(fleet, "type") or (fleet.type != Const.T_FLEET and fleet.type != Const.T_ASTEROID):
+            if not hasattr(fleet, "type") or fleet.type != Const.T_FLEET:
                 continue
             # shall be shown?
             fgColor = None
@@ -104,10 +104,10 @@ class FleetsOverviewDlg:
                     ownerNameTip = owner
                     ownerTipTitle = _("Owner")
             else:
-                # asteroids has no owner
-                fgColor = res.getFFColorCode(0) #enemy
                 if not enemy:
                     continue
+                # with no owner assume enemy
+                fgColor = res.getFFColorCode(0) #enemy
 
             # check position of fleet
             system = None

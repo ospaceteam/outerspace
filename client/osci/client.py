@@ -180,7 +180,7 @@ def updateDatabaseUnsafe(clearDB = 0, force = 0):
             obj.combatCounter = 0
         if not hasattr(obj, 'type'):
             del db[objID]
-        elif obj.type in (Const.T_FLEET, Const.T_ASTEROID):
+        elif obj.type == Const.T_FLEET:
             del db[objID]
         elif hasattr(obj, 'owner') and obj.owner == db.playerID \
             and objID != db.playerID:

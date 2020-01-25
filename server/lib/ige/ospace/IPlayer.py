@@ -132,7 +132,7 @@ class IPlayer(IObject):
         for objID in obj.dynamicMap.keys():
             if obj.dynamicMap[objID] < Rules.level1InfoScanPwr:
                 del obj.dynamicMap[objID]
-            if not tran.db.has_key(objID) or tran.db[objID].type not in (Const.T_FLEET, Const.T_ASTEROID):
+            if not tran.db.has_key(objID) or tran.db[objID].type != Const.T_FLEET:
                 log.debug("Deleting obj %d from dynamic map of player %d" % (objID, objID))
                 del obj.dynamicMap[objID]
         # check if all planets are planets
@@ -165,7 +165,7 @@ class IPlayer(IObject):
                 if not tran.db.has_key(objID):
                     log.debug("Fleet does not exists - removing", obj.oid, objID)
                     obj.fleets.remove(objID)
-                if tran.db[objID].type not in  (Const.T_FLEET, Const.T_ASTEROID):
+                if tran.db[objID].type != Const.T_FLEET:
                     log.debug("Fleet is not a fleet - removing", obj.oid, objID)
                     obj.fleets.remove(objID)
             except:
@@ -931,7 +931,7 @@ class IPlayer(IObject):
             if object.type in (Const.T_SYSTEM, Const.T_WORMHOLE):
                 obj.staticMap[objID] = max(obj.staticMap.get(objID, 0), level)
                 contacts.update(object.scannerPwrs)
-            elif object.type in (Const.T_FLEET, Const.T_ASTEROID):
+            elif object.type == Const.T_FLEET:
                 obj.dynamicMap[objID] = max(obj.dynamicMap.get(objID, 0), level)
                 contacts[object.owner] = None
             else:
