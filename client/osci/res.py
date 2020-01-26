@@ -18,6 +18,7 @@
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+import bisect
 import glob
 import math
 import os
@@ -53,6 +54,7 @@ def initialize():
     global loginLogoImg
     loginLogoImg = pygame.image.load(resources.get('logo-login.png')).convert_alpha()
 
+
 def updateProgress(curr, progress_dlg):
     if not progress_dlg: return
     if curr % 30 == 0:
@@ -60,11 +62,13 @@ def updateProgress(curr, progress_dlg):
         progress_dlg.setProgress(_('Loading resources' + periods), curr)
 
 
-
 def loadResources(progress_dlg=None):
     curr = 0
-    max = len(glob.glob(resources.get('galaxy/*.png'))) + len(glob.glob(resources.get('techs/*.png'))) + \
-        len(glob.glob(resources.get('system/*.png'))) + len(glob.glob(resources.get('icons/*.png'))) + len(glob.glob(resources.get('buttons/*.png')))
+    max = len(glob.glob(resources.get('galaxy/*.png'))) \
+        + len(glob.glob(resources.get('techs/*.png'))) \
+        + len(glob.glob(resources.get('system/*.png'))) \
+        + len(glob.glob(resources.get('icons/*.png'))) \
+        + len(glob.glob(resources.get('buttons/*.png')))
     if progress_dlg:
         progress_dlg.display(_('Loading resources'), 0, max)
     # load star imgs
@@ -78,10 +82,10 @@ def loadResources(progress_dlg=None):
     # load tech imgs
     global techImgs
     techImgs = {}
-    white = pygame.Surface((37,37))
+    white = pygame.Surface((37, 37))
     white.fill((255, 255, 255))
     white.set_alpha(64)
-    red = pygame.Surface((37,37))
+    red = pygame.Surface((37, 37))
     red.fill((255, 0, 0))
     red.set_alpha(64)
     for filename in glob.glob(resources.get('techs/????.png')):
@@ -89,10 +93,10 @@ def loadResources(progress_dlg=None):
         imgID = int(name)
         techImgs[imgID] = pygame.image.load(filename).convert_alpha()
         copyImg = techImgs[imgID].convert_alpha()
-        copyImg.blit(white, (0,0))
+        copyImg.blit(white, (0, 0))
         techImgs[imgID + whiteShift] = copyImg
         copyImg = techImgs[imgID].convert_alpha()
-        copyImg.blit(red, (0,0))
+        copyImg.blit(red, (0, 0))
         techImgs[imgID + redShift] = copyImg
         curr += 1
         updateProgress(curr, progress_dlg)
@@ -160,150 +164,130 @@ def loadResources(progress_dlg=None):
     global structOffImg
     structOffImg = pygame.image.load(resources.get('struct_off.png')).convert_alpha()
 
+
 def prepareUIIcons(color):
     for image in ui_icons.values():
         image.fill((0, 0, 0, 255), None, pygame.BLEND_RGBA_MULT)
-        image.fill(color[0:3] + (0,), None, pygame.BLEND_RGBA_ADD)
+        image.fill(color[0:3] + (0, ), None, pygame.BLEND_RGBA_ADD)
+
 
 def getUIIcon(icon_name):
     return ui_icons["ui_" + str(icon_name)]
 
+
 def getTechImg(techID):
     return techImgs.get(techID, techImgs[0])
+
 
 def getShipImg(combatClass, isMilitary):
     return shipImgs.get(int(combatClass) * 10 + int(isMilitary), shipImgs[99])
 
+
 def getSmallStarImg(name):
     return smallStarImgs[name]
+
 
 def getBigStarImg(name):
     return bigStarImgs[name]
 
-def getPlanetImg(pltype,plid):
+
+def getPlanetImg(pltype, plid):
     global planetImgCnt
-    name = '%s%d' % (pltype,plid % planetImgCnt[pltype])
+    name = '%s%d' % (pltype, plid % planetImgCnt[pltype])
     return planetImgs[name]
 
-def getButton(name,state):
+
+def getButton(name, state):
     if state:
-        name = "%s_%s" % (name,'active')
+        name = "%s_%s" % (name, 'active')
     else:
-        name = "%s_%s" % (name,'inactive')
+        name = "%s_%s" % (name, 'inactive')
     return buttonImgs[name]
+
 
 def getUnknownName():
     return _('[Unknown]')
 
+
 def getNA():
     return _('N/A')
 
-def getSystemOverviewProblemColor(owner,problem):
+
+def getSystemOverviewProblemColor(owner, problem):
     if problem:
         return gdata.sevColors[gdata.CRI]
     else:
         return getPlayerColor(owner)
 
-def OLDgetFFColorCode(relationship):
-    if relationship < 0:
-        return (0xff, 0x00, 0xff)
-    elif relationship < 500 and relationship >= 0:
-        rel = relationship / 500.0
-        r = 0xff
-        g = int(0xff * rel)
-        b = 0x00
-        return (r, g, b)
-    elif relationship >= 500 and relationship <= 1000:
-        rel = (relationship - 500) / 500.0
-        #r = int(0xff * (1 - rel))
-        #g = 0xff
-        #b = int(0xff * rel)
-        r = 0xff
-        g = 0xff
-        b = int(0xff * rel)
-        return (r, g, b)
-    elif relationship == 1250:
-        return (0x00, 0xff, 0x00)
-    else:
-        return (0xc0, 0xc0, 0xc0)
 
 def getFFColorCode(relationship):
-    if relationship < 0:
-        return (0xff, 0x00, 0xff)
-    elif relationship < Const.REL_UNFRIENDLY_LO:
-        return (0xff, 0x80, 0x80)
-    elif relationship < Const.REL_NEUTRAL_LO:
-        return (0xff, 0x90, 0x01)
-    elif relationship < Const.REL_FRIENDLY_LO:
-        return (0xff, 0xff, 0x00)
-    elif relationship < Const.REL_ALLY_LO:
-        return (0xb0, 0xb0, 0xff)
-    elif relationship <= Const.REL_ALLY_HI:
-        return (0x80, 0xff, 0xff)
-    elif relationship == 1250:
-        return (0x00, 0xff, 0x00)
-    else:
+    if relationship == Const.REL_UNDEF:
         return (0xc0, 0xc0, 0xc0)
+    if relationship == Const.REL_UNITY:
+        return (0x00, 0xff, 0x00)
+    relColors = [(0xff, 0x80, 0x80),
+                 (0xff, 0x90, 0x01),
+                 (0xff, 0xff, 0x00),
+                 (0xb0, 0xb0, 0xff),
+                 (0x80, 0xff, 0xff)]
+    return relColors[bisect.bisect(Const.REL_BOUNDARIES, relationship)]
 
-def getHabitabilityColorCode(bio):
-    if bio < 0:
+
+def getHabitabilityColorCode(value):
+    if value < 0:
         return (0xff, 0x00, 0xff)
-    if bio < 26:
-        return((255),(5*bio),0x00) # end 255, 125, 0
-    if bio < 76:
-        return((255-2*(bio-25)),(125+2*(bio-25)),0x00) # end 155, 225, 0
-    if bio < 126:
-        return((155-3*(bio-75)),(225),0x00) #end 5, 225, 0
-    if bio < 201:
-        return(0x00,0xFF,(2*(bio-125))) #end 0, 225, 250
-    if bio > 200:
-        return (0x00, 0xff, 0xff)
-    return (0xc0, 0xc0, 0xc0)
+    colorCodes = [(255, 5 * value, 0),  # end 255, 125, 0
+                  (255 - 2 * (value - 25), 125 + 2 * (value - 25), 0),  # end 155, 225, 0
+                  (155 - 3 * (value - 75), 225, 0),  # end 5, 225, 0
+                  (0, 255, 2 * (value - 125)),  # end 0, 225, 250
+                  (0, 255, 255)]
+    boundaries = [25, 75, 125, 200]
+    return colorCodes[bisect.bisect(boundaries, value)]
+
 
 def getPirateColonyColorCode(pirate):
-    if not pirate:
+    if pirate is False:
         return (0xc0, 0xc0, 0xc0)
-    if pirate <= 0:
+    elif pirate == 0:
         return (0xff, 0x00, 0xff)
-    if pirate < 26:
-        return((255),(5*pirate),0x00) # end 255, 125, 0
-    if pirate < 76:
-        return((255-2*(pirate-25)),(125+2*(pirate-25)),0x00) # end 155, 225, 0
-    if pirate < 126:
-        return((155-3*(pirate-75)),(225),0x00) #end 5, 225, 0
-    if pirate < 201:
-        return(0x00,0xFF,(2*(pirate-125))) #end 0, 225, 250
-    if pirate > 200:
-        return (0x00, 0xff, 0xff)
-    return (0xc0, 0xc0, 0xc0)
+    else:
+        # rest is the same as Habitability
+        return getHabitabilityColorCode(pirate)
 
 def getFameColorCode(fame):
     if fame > 0 and fame < 200:
-        #log.debug(fame,(0xff,255 - int(255*(fame/200)),0x00))
-        return (0xff,255 - int(255*(fame/200.0)),0x00)
+        # log.debug(fame, (0xff, 255 - int(255*(fame/200)), 0x00))
+        return (0xff, 255 - int(255 * (fame / 200.0)), 0x00)
     if fame == 200:
-        return (0xff,0x00,0xff) #pirate colony
+        return (0xff, 0x00, 0xff)  # pirate colony
     return (0xc0, 0xc0, 0xc0)
+
 
 def getMineralColorCode(minerals):
     if minerals >= 0:
-        return (0xff,max(0,min(255,255 - int(255*(minerals/200.0)))),0x0) #use min, since it we occasionally get 201+ mineral levels, but it is so rare that we can ignore it for colors.
+        # use min, since it we occasionally get 201+ mineral levels,
+        # but it is so rare that we can ignore it for colors.
+        return (0xff, max(0, min(255, 255 - int(255 * (minerals / 200.0)))), 0x0)
     return (0xc0, 0xc0, 0xc0)
+
 
 def getSlotColorCode(slots):
     if slots > 20:
-        return (0x0,0xFF,min(255,(slots-20)*10)) #in case sometime in the future we have larger worlds available
+        # in case sometime in the future we have larger worlds available
+        return (0x0, 0xFF, min(255, (slots - 20) * 10))
     if slots > 0:
-        return (int(255*(slots/20.0)),255 - int(255*(slots/20.0)),0x0)
+        return (int(255 * (slots / 20.0)), 255 - int(255 * (slots / 20.0)), 0x0)
     return (0xc0, 0xc0, 0xc0)
 
-def getSlotSystemColorCode(slots,planets):
+
+def getSlotSystemColorCode(slots, planets):
     if planets > 0:
-        slots = int(float(slots)/planets)
+        slots = int(float(slots) / planets)
         if slots > 20:
-            return (0x0,0xFF,min(255,(slots-20)*10)) #in case sometime in the future we have larger worlds available
+            # in case sometime in the future we have larger worlds available
+            return (0x0, 0xFF, min(255, (slots - 20) * 10))
         if slots > 0:
-            return (int(255*(slots/20.0)),255 - int(255*(slots/20.0)),0x0)
+            return (int(255 * (slots / 20.0)), 255 - int(255 * (slots / 20.0)), 0x0)
         return (0xc0, 0xc0, 0xc0)
     else:
         return (0xc0, 0xc0, 0xc0)
@@ -311,38 +295,38 @@ def getSlotSystemColorCode(slots,planets):
 
 def getStargateColorCode(accel):
     accel = accel * 100 - 100
-    if accel < 1:
-        return (0xc0, 0xc0, 0xc0)
-    if accel < 50:
-        return (0xff, 0xff, 0x00)
-    if accel < 150:
-        return (0xff, 0xc0, 0x00)
-    if accel < 250:
-        return (0xff, 0x60, 0x00)
-    if accel < 350:
-        return (0xff, 0x00, 0x00)
-    if accel < 450:
-        return (0xff, 0x00, 0x80)
-    if accel > 449:
-        return (0xff, 0x00, 0xff)
+    colorCodes = [(0xc0, 0xc0, 0xc0),
+                  (0xff, 0xff, 0x00),
+                  (0xff, 0xc0, 0x00),
+                  (0xff, 0x60, 0x00),
+                  (0xff, 0x00, 0x00),
+                  (0xff, 0x00, 0x80),
+                  (0xff, 0x00, 0xff)]
+    boundaries = [1, 50, 150, 250, 350, 450]
+    return colorCodes[bisect.bisect(boundaries, accel)]
+
+
+def getDockColorCode(refuel, upgrades):
+    # refuel is based on best dock; upgrades are based on sum of all docks
+    # refuel range: 0...6
+    # upgrade range: 0...100 (cap 100)
+    if (refuel > 1 and upgrades > 0) or (refuel > 2):
+        # refuel > 2 for other player docks since they always read upgrades of 0
+        # this probably should be corrected for allies
+        refuelScale = max(0, min(1, (refuel - 1) / 5.0))
+        upgradeScale = max(0, min(1, upgrades / 50))
+        return (0xFF, int(refuelScale * (1 - upgradeScale) * 255), int(refuelScale * (upgradeScale) * 255))
+    if refuel > 0:
+        refuelScale = max(0, min(1, refuel / 2.0))
+        return (0x00, 100 + 100 * int(refuelScale), 100 + 100 * int(refuelScale))  # cyan
     return (0xc0, 0xc0, 0xc0)
 
-def getDockColorCode(refuel,upgrades): #refuel is based on best dock; upgrades are based on sum of all docks
-    #refuel range: 0...6
-    #upgrade range: 0...100 (cap 100)
-    if (refuel > 1 and upgrades > 0) or (refuel > 2): #refuel > 2 for other player docks since they always read upgrades of 0; this probably should be corrected for allies
-        refuelScale = max(0,min(1,(refuel-1)/5.0))
-        upgradeScale = max(0,min(1,upgrades/50))
-        return (0xFF,int(refuelScale*(1-upgradeScale)*255),int(refuelScale*(upgradeScale)*255))
-    if refuel > 0:
-        refuelScale = max(0,min(1,refuel/2.0))
-        return (0x00,100+100*int(refuelScale),100+100*int(refuelScale)) # cyan
-    return (0xc0, 0xc0, 0xc0)
 
 def getMoraleColors(morale):
     if morale >= 0:
-        return (255-int(255*(morale/100.0)),int(255*(morale/100.0)),0x0)
+        return (255 - int(255 * (morale / 100.0)), int(255 * (morale / 100.0)), 0x0)
     return (0xc0, 0xc0, 0xc0)
+
 
 def getPlayerColor(owner, onlyDiplo = False):
     if owner == Const.OID_NONE:
@@ -351,8 +335,9 @@ def getPlayerColor(owner, onlyDiplo = False):
         if gdata.config.defaults.highlights == 'yes':
             if gdata.playersHighlightColors.has_key(owner):
                 return gdata.playersHighlightColors[owner]
-    rel = min(Const.REL_UNDEF,client.getRelationTo(owner))
+    rel = min(Const.REL_UNDEF, client.getRelationTo(owner))
     return getFFColorCode(rel)
+
 
 def getControlColor(owner, onlyDiplo = False):
     if owner == Const.OID_NONE:
@@ -361,35 +346,49 @@ def getControlColor(owner, onlyDiplo = False):
         if gdata.config.defaults.highlights == 'yes':
             if gdata.playersHighlightColors.has_key(owner):
                 return fadeDarkColor(gdata.playersHighlightColors[owner])
-    rel = min(Const.REL_UNDEF,client.getRelationTo(owner))
+    rel = min(Const.REL_UNDEF, client.getRelationTo(owner))
     return fadeDarkColor(getFFColorCode(rel))
+
 
 def getGateLineWidth(owner):
     if owner == Const.OID_NONE:
         return 1
-    rel = min(Const.REL_UNDEF,client.getRelationTo(owner))
+    rel = min(Const.REL_UNDEF, client.getRelationTo(owner))
     if rel == 1250:
         return 2
     return 1
 
-def getStarmapWidgetPlanetColor(ownerid,bio,mineral,slot,stargate,dockfuel,dockupgrade,fame,stratres,morale,pirate=False):
+
+def getStarmapWidgetPlanetColor(ownerid, bio, mineral, slot,
+                                stargate, dockfuel, dockupgrade, fame,
+                                stratres, morale, pirate=False):
     colors = {}
     for datatype in gdata.OVERLAY_TYPES:
-        colors[datatype] = getStarmapWidgetPlanetColorPerDatatype(datatype,ownerid,bio,mineral,slot,stargate,dockfuel,dockupgrade,fame,stratres,morale,pirate)
-    return colors
-
-def getStarmapWidgetSystemColor(ownerid,bio,mineral,slot,num_planets,stargate,dockfuel,dockupgrade,fame,stratres,morale,pirate=False):
-    colors = {}
-    for datatype in gdata.OVERLAY_TYPES:
-        colors[datatype] = getStarmapWidgetSystemColorPerDatatype(datatype,ownerid,bio,mineral,slot,num_planets,stargate,dockfuel,dockupgrade,fame,stratres,morale,pirate)
+        colors[datatype] = getStarmapWidgetPlanetColorPerDatatype(datatype, ownerid, bio, mineral, slot,
+                                                                  stargate, dockfuel, dockupgrade, fame,
+                                                                  stratres, morale, pirate)
     return colors
 
 
-def getStarmapWidgetPlanetColorPerDatatype(datatype,ownerid,bio,mineral,slot,stargate,dockfuel,dockupgrade,fame,stratres,morale,pirate=False):
+def getStarmapWidgetSystemColor(ownerid, bio, mineral, slot,
+                                num_planets, stargate, dockfuel, dockupgrade, fame,
+                                stratres, morale, pirate=False):
+    # systems follow the same logic of the planets
+    colors = getStarmapWidgetPlanetColor(ownerid, bio, mineral, slot,
+                                         stargate, dockfuel, dockupgrade, fame,
+                                         stratres, morale, pirate)
+    # system has only one difference, which we have to override
+    colors[gdata.OVERLAY_SLOT] = getSlotSystemColorCode(slot, num_planets)
+    return colors
+
+
+def getStarmapWidgetPlanetColorPerDatatype(datatype, ownerid, bio, mineral, slot,
+                                           stargate, dockfuel, dockupgrade, fame,
+                                           stratres, morale, pirate):
     if (datatype == gdata.OVERLAY_OWNER):
         return getPlayerColor(ownerid)
     if (datatype == gdata.OVERLAY_DIPLO):
-        return getPlayerColor(ownerid,True)
+        return getPlayerColor(ownerid, True)
     if (datatype == gdata.OVERLAY_BIO):
         return getHabitabilityColorCode(bio)
     if (datatype == gdata.OVERLAY_MIN):
@@ -399,50 +398,25 @@ def getStarmapWidgetPlanetColorPerDatatype(datatype,ownerid,bio,mineral,slot,sta
     if (datatype == gdata.OVERLAY_STARGATE):
         return getStargateColorCode(stargate)
     if (datatype == gdata.OVERLAY_DOCK):
-        return getDockColorCode(dockfuel,dockupgrade)
+        return getDockColorCode(dockfuel, dockupgrade)
     if (datatype == gdata.OVERLAY_FAME):
         return getFameColorCode(fame)
     if (datatype == gdata.OVERLAY_PIRATECOLONYCOST):
         return getPirateColonyColorCode(pirate)
-#    if (datatype == "stratres"):
-#        return getMoraleColors(stratres)
     if (datatype == gdata.OVERLAY_MORALE):
         return getMoraleColors(morale)
-    return getPlayerColor(ownerid) #default
+    return getPlayerColor(ownerid)  # default
 
-
-def getStarmapWidgetSystemColorPerDatatype(datatype,ownerid,bio,mineral,slot,num_planets,stargate,dockfuel,dockupgrade,fame,stratres,morale,pirate=False):
-    if (datatype == gdata.OVERLAY_OWNER):
-        return getPlayerColor(ownerid)
-    if (datatype == gdata.OVERLAY_DIPLO):
-        return getPlayerColor(ownerid,True)
-    if (datatype == gdata.OVERLAY_BIO):
-        return getHabitabilityColorCode(bio)
-    if (datatype == gdata.OVERLAY_MIN):
-        return getMineralColorCode(mineral)
-    if (datatype == gdata.OVERLAY_SLOT):
-        return getSlotSystemColorCode(slot,num_planets)
-    if (datatype == gdata.OVERLAY_STARGATE):
-        return getStargateColorCode(stargate)
-    if (datatype == gdata.OVERLAY_DOCK):
-        return getDockColorCode(dockfuel,dockupgrade)
-    if (datatype == gdata.OVERLAY_FAME):
-        return getFameColorCode(fame)
-    if (datatype == gdata.OVERLAY_PIRATECOLONYCOST):
-        return getPirateColonyColorCode(pirate)
-#    if (datatype == "stratres"):
-#        return getMoraleColors(stratres)
-    if (datatype == gdata.OVERLAY_MORALE):
-        return getMoraleColors(morale)
-    return getPlayerColor(ownerid) #default
 
 def fadeColor(triplet):
-    return ((triplet[0]+0xc0)/2,(triplet[1]+0xc0)/2,(triplet[2]+0xc0)/2)
+    return ((triplet[0] + 0xc0) / 2, (triplet[1] + 0xc0) / 2, (triplet[2] + 0xc0) / 2)
+
 
 def fadeDarkColor(triplet):
-    return ((triplet[0]+0x00*2)/3,(triplet[1]+0x00*2)/3,(triplet[2]+0x00*2)/3)
+    return ((triplet[0] + 0x00 * 2) / 3, (triplet[1] + 0x00 * 2) / 3, (triplet[2] + 0x00 * 2) / 3)
 
-def formatTime(time,separator=':'):
+
+def formatTime(time, separator=':'):
     time = int(math.ceil(time))
     sign = ''
     if time < 0:
@@ -452,8 +426,10 @@ def formatTime(time,separator=':'):
     hours = time % Rules.turnsPerDay
     return '%s%d%s%02d' % (sign, days, separator, hours)
 
+
 def formatBE(b, e):
     return '%d / %d' % (b, e)
+
 
 def globalQueueName(index):
     return ['Default', 'Red', 'Blue', 'Yellow', 'Violet'][index]
