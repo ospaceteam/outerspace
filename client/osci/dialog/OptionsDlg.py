@@ -270,73 +270,25 @@ class OptionsDlg:
             gdata.config.proxy = None
 
         # defaults
-        if self.win.vReportFin.checked:
-            gdata.config.defaults.reportfinalization = 'yes'
-        else:
-            gdata.config.defaults.reportfinalization = 'no'
+        gdata.config.defaults.reportfinalization = 'yes' if self.win.vReportFin.checked else 'no'
+        gdata.config.defaults.showredirects = 'yes' if self.win.vRedirects.checked else 'no'
+        gdata.config.defaults.showcoords = 'yes' if self.win.vCoords.checked else 'no'
+        gdata.config.defaults.highlights = 'yes' if self.win.vHighlights.checked else 'no'
+        gdata.config.defaults.displayhelp = 'yes' if self.win.vDisplayHelp.checked else 'no'
+        gdata.config.defaults.showminimap = 'yes' if self.win.vShowMinimap.checked else 'no'
+        gdata.config.defaults.showgatesystems = 'yes' if self.win.vShowGateSystems.checked else 'no'
+        gdata.config.defaults.showmapgrid = 'yes' if self.win.vShowMapGrid.checked else 'no'
+        gdata.config.defaults.showmapscanners = 'yes' if self.win.vShowMapScanners.checked else 'no'
+        gdata.config.defaults.showfleetlines = 'yes' if self.win.vShowMapFleetLines.checked else 'no'
+        gdata.config.defaults.alternateviewmode = 'yes' if self.win.vShowAlternateView.checked else 'no'
+        gdata.config.defaults.showplayerzones = 'yes' if self.win.vShowPlayerZones.checked else 'no'
 
-        if self.win.vRedirects.checked:
-            gdata.config.defaults.showredirects = 'yes'
-        else:
-            gdata.config.defaults.showredirects = 'no'
+        gdata.config.defaults.sound = 'yes' if self.win.vSoundEnabled.checked else 'no'
+        gdata.config.defaults.soundvolume = self.win.vSoundVolume.slider.position
+        gdata.config.defaults.music = 'yes' if self.win.vMusicEnabled.checked else 'no'
+        gdata.config.defaults.musicvolume = self.win.vMusicVolume.slider.position
 
-        if self.win.vCoords.checked:
-            gdata.config.defaults.showcoords = 'yes'
-        else:
-            gdata.config.defaults.showcoords = 'no'
-
-        if self.win.vHighlights.checked:
-            gdata.config.defaults.highlights = 'yes'
-        else:
-            gdata.config.defaults.highlights = 'no'
-
-        if self.win.vDisplayHelp.checked:
-            gdata.config.defaults.displayhelp = 'yes'
-        else:
-            gdata.config.defaults.displayhelp = 'no'
-
-        if self.win.vShowMinimap.checked:
-            gdata.config.defaults.showminimap = 'yes'
-        else:
-            gdata.config.defaults.showminimap = 'no'
-
-        if self.win.vShowGateSystems.checked:
-            gdata.config.defaults.showgatesystems = 'yes'
-        else:
-            gdata.config.defaults.showgatesystems = 'no'
-
-        if self.win.vShowMapGrid.checked:
-            gdata.config.defaults.showmapgrid = 'yes'
-        else:
-            gdata.config.defaults.showmapgrid = 'no'
-
-        if self.win.vShowMapScanners.checked:
-            gdata.config.defaults.showmapscanners = 'yes'
-        else:
-            gdata.config.defaults.showmapscanners = 'no'
-
-        if self.win.vShowMapFleetLines.checked:
-            gdata.config.defaults.showfleetlines = 'yes'
-        else:
-            gdata.config.defaults.showfleetlines = 'no'
-
-        if self.win.vShowAlternateView.checked:
-            gdata.config.defaults.alternateviewmode = 'yes'
-        else:
-            gdata.config.defaults.alternateviewmode = 'no'
-
-
-        if self.win.vShowPlayerZones.checked:
-            gdata.config.defaults.showplayerzones = 'yes'
-        else:
-            gdata.config.defaults.showplayerzones = 'no'
-
-
-
-        if self.win.vAutoLogin.checked:
-            gdata.config.game.autologin = 'yes'
-        else:
-            gdata.config.game.autologin = 'no'
+        gdata.config.game.autologin = 'yes' if self.win.vAutoLogin.checked else 'no'
 
         if self.win.vSavePassword.checked:
             gdata.savePassword = True
@@ -344,10 +296,6 @@ class OptionsDlg:
             gdata.savePassword = False
             gdata.config.game.lastpasswordcrypted = None
 
-        gdata.config.defaults.sound = ("no", "yes")[int(self.win.vSoundEnabled.checked)]
-        gdata.config.defaults.soundvolume = self.win.vSoundVolume.slider.position
-        gdata.config.defaults.music = ("no", "yes")[int(self.win.vMusicEnabled.checked)]
-        gdata.config.defaults.musicvolume = self.win.vMusicVolume.slider.position
         ui.SkinableTheme.enableMusic(self.win.vMusicEnabled.checked)
         ui.SkinableTheme.enableSound(self.win.vSoundEnabled.checked)
 
@@ -356,27 +304,6 @@ class OptionsDlg:
             self.caller.display()    # Redisplay login dlg
         elif gdata.mainGameDlg:
             gdata.mainGameDlg.update(configUpdated=True) # redraw screen (highlights etc)
-
-
-    def onSmallRes(self, widget, action, data):
-        self.win.vLargeRes.pressed = 0
-        self.win.vMediumRes.pressed = 0
-
-    def onMediumRes(self, widget, action, data):
-        self.win.vSmallRes.pressed = 0
-        self.win.vLargeRes.pressed = 0
-
-    def onLargeRes(self, widget, action, data):
-        self.win.vSmallRes.pressed = 0
-        self.win.vMediumRes.pressed = 0
-
-    def onEnglish(self, widget, action, data):
-        self.win.vCzech.pressed = 0
-        self.win.vEnglish.pressed = 1
-
-    def onCzech(self, widget, action, data):
-        self.win.vEnglish.pressed = 0
-        self.win.vCzech.pressed = 1
 
     def onSelectTheme(self, widget, action, data):
         items = []
