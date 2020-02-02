@@ -236,6 +236,70 @@ class StarMapWidget(Widget):
                         tmpY += textSrfc.get_height()
                     x += width + 2
 
+    def _drawApproachingFleetLine(self, surface, activeObjID):
+        maxY = self._mapSurf.get_rect().height
+        centerX, centerY = self._mapSurf.get_rect().center
+        x, y, x1, y1 = self.star_map._fleetTarget[activeObjID]
+        sx = int((x - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
+        sy = maxY - (int((y - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
+        dx = int((x1 - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
+        dy = maxY - (int((y1 - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
+        pygame.draw.line(surface, (0xff, 0xff, 0x00), (sx, sy), (dx, dy), 2)
+
+    def _drawThickeningFleetOrderLines(self, surface, activeObjID):
+        maxY = self._mapSurf.get_rect().height
+        centerX, centerY = self._mapSurf.get_rect().center
+        for x, y, x1, y1, color in self.star_map._fordersTarget[activeObjID]:
+            sx = int((x - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
+            sy = maxY - (int((y - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
+            dx = int((x1 - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
+            dy = maxY - (int((y1 - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
+            pygame.draw.line(surface, color, (sx, sy), (dx, dy), 2)
+
+    def _drawFleetRangesTime(self, surface, activeObjID):
+        maxY = self._mapSurf.get_rect().height
+        centerX, centerY = self._mapSurf.get_rect().center
+        x, y, maxRange, operRange, halfRange, speed, turns = self.star_map._fleetRanges[activeObjID]
+        sx = int((x - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
+        sy = maxY - (int((y - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
+
+        for i in xrange(1, turns / 6):
+            rng = int(i * speed * self.star_map.scale)
+            if rng > 1:
+                pygame.draw.circle(surface, (0x70, 0x70, 0x80), (sx, sy), rng, 1)
+                textSrfc = Fonts.renderText(self.star_map.textSize, res.formatTime(i * 6), 1, (0x70, 0x70, 0x80), (0x00, 0x00, 0x00))
+                surface.blit(textSrfc, (sx - rng, sy - textSrfc.get_height() / 2))
+                surface.blit(textSrfc, (sx + rng, sy - textSrfc.get_height() / 2))
+                surface.blit(textSrfc, (sx - textSrfc.get_width() / 2, sy - rng))
+                surface.blit(textSrfc, (sx - textSrfc.get_width() / 2, sy + rng - textSrfc.get_height()))
+        rng = int(max(maxRange * self.star_map.scale, 0.2 * self.star_map.scale))
+        if rng > 1:
+            pygame.draw.circle(surface, (0xc0, 0x20, 0x20), (sx, sy), rng, 1)
+
+    def _drawFleetRangesFuel(self, surface, activeObjID):
+        maxY = self._mapSurf.get_rect().height
+        centerX, centerY = self._mapSurf.get_rect().center
+        x, y, maxRange, operRange, halfRange, speed, turns = self.star_map._fleetRanges[activeObjID]
+        sx = int((x - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
+        sy = maxY - (int((y - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
+
+        # fleet range based on fuel
+        rng = int(max(maxRange * self.star_map.scale, 0.2 * self.star_map.scale))
+        if rng > 1:
+            pygame.draw.circle(surface, (0xc0, 0x20, 0x20), (sx, sy), rng, 1)
+        rng = int(operRange * self.star_map.scale)
+        if rng > 1:
+            pygame.draw.circle(surface, (0x20, 0x80, 0x20), (sx, sy), rng, 1)
+        rng = int(halfRange * self.star_map.scale)
+        if rng > 1:
+            pygame.draw.circle(surface, (0x20, 0x20, 0x80), (sx, sy), rng, 1)
+
+    def _drawFleetRanges(self, surface, activeObjID):
+        if pygame.key.get_mods() & pygame.KMOD_SHIFT:
+            self._drawFleetRangesTime(surface, activeObjID)
+        else:
+            self._drawFleetRangesFuel(surface, activeObjID)
+
     def drawAdditions(self, surface):
         oldClip = surface.get_clip()
         surface.set_clip(self.rect)
@@ -248,64 +312,14 @@ class StarMapWidget(Widget):
             pygame.draw.circle(surface, (0xff, 0xff, 0xff), (sx, sy), 13, 2)
         # fleet range in case of selecting fleet orders
         if self.alwaysShowRangeFor and self.star_map._fleetRanges.has_key(self.alwaysShowRangeFor):
-            x, y, maxRange, operRange, halfRange, speed, turns = self.star_map._fleetRanges[self.alwaysShowRangeFor]
-            sx = int((x - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
-            sy = maxY - (int((y - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
-            rng = max(maxRange * self.star_map.scale, 0.2 * self.star_map.scale)
-            if rng > 1:
-                pygame.draw.circle(surface, (0xc0, 0x20, 0x20), (sx, sy), int(rng), 1)
-            rng = operRange * self.star_map.scale
-            if rng > 1:
-                pygame.draw.circle(surface, (0x20, 0x80, 0x20), (sx, sy), int(rng), 1)
-            rng = halfRange * self.star_map.scale
-            if rng > 1:
-                pygame.draw.circle(surface, (0x20, 0x20, 0x80), (sx, sy), int(rng), 1)
+            self._drawFleetRangesFuel(surface, self.alwaysShowRangeFor)
         for activeObjID in self.activeObjIDs:
             if activeObjID and activeObjID in self.star_map._fleetTarget:
-                # approaching fleet line
-                x, y, x1, y1 = self.star_map._fleetTarget[activeObjID]
-                sx = int((x - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
-                sy = maxY - (int((y - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
-                dx = int((x1 - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
-                dy = maxY - (int((y1 - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
-                pygame.draw.line(surface, (0xff, 0xff, 0x00), (sx, sy), (dx, dy), 2)
+                self._drawApproachingFleetLine(surface, activeObjID)
             if activeObjID and activeObjID in self.star_map._fordersTarget:
-                # thickening fleet order lines
-                for x, y, x1, y1, color in self.star_map._fordersTarget[activeObjID]:
-                    sx = int((x - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
-                    sy = maxY - (int((y - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
-                    dx = int((x1 - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
-                    dy = maxY - (int((y1 - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
-                    pygame.draw.line(surface, color, (sx, sy), (dx, dy), 2)
+                self._drawThickeningFleetOrderLines(surface, activeObjID)
             if activeObjID and activeObjID in self.star_map._fleetRanges:
-                x, y, maxRange, operRange, halfRange, speed, turns = self.star_map._fleetRanges[activeObjID]
-                sx = int((x - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
-                sy = maxY - (int((y - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
-                if pygame.key.get_mods() & pygame.KMOD_SHIFT:
-                    # fleet ranges stepped by 6 turns
-                    for i in xrange(1, turns / 6):
-                        rng = int(i * speed * self.star_map.scale)
-                        if rng > 1:
-                            pygame.draw.circle(surface, (0x70, 0x70, 0x80), (sx, sy), rng, 1)
-                            textSrfc = Fonts.renderText(self.star_map.textSize, res.formatTime(i * 6), 1, (0x70, 0x70, 0x80), (0x00, 0x00, 0x00))
-                            surface.blit(textSrfc, (sx - rng, sy - textSrfc.get_height() / 2))
-                            surface.blit(textSrfc, (sx + rng, sy - textSrfc.get_height() / 2))
-                            surface.blit(textSrfc, (sx - textSrfc.get_width() / 2, sy - rng))
-                            surface.blit(textSrfc, (sx - textSrfc.get_width() / 2, sy + rng - textSrfc.get_height()))
-                    rng = int(max(maxRange * self.star_map.scale, 0.2 * self.star_map.scale))
-                    if rng > 1:
-                        pygame.draw.circle(surface, (0xc0, 0x20, 0x20), (sx, sy), rng, 1)
-                else:
-                    # fleet range based on fuel
-                    rng = int(max(maxRange * self.star_map.scale, 0.2 * self.star_map.scale))
-                    if rng > 1:
-                        pygame.draw.circle(surface, (0xc0, 0x20, 0x20), (sx, sy), rng, 1)
-                    rng = int(operRange * self.star_map.scale)
-                    if rng > 1:
-                        pygame.draw.circle(surface, (0x20, 0x80, 0x20), (sx, sy), rng, 1)
-                    rng = int(halfRange * self.star_map.scale)
-                    if rng > 1:
-                        pygame.draw.circle(surface, (0x20, 0x20, 0x80), (sx, sy), rng, 1)
+                self._drawFleetRanges(surface, activeObjID)
         # restore clipping
         surface.set_clip(oldClip)
 
