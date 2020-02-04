@@ -929,14 +929,6 @@ def drawText(surface, widget):
     y = r.top
     img = Fonts.renderText(font, ' ', 1, foreground)
     row = 0
-    if widget.selStart != None:
-        # Reorder selStart and selEnd if needed
-        if widget.selStart and (widget.selEnd[0] < widget.selStart[0] or (widget.selEnd[0] == widget.selStart[0] and widget.selEnd[1] < widget.selStart[1])):
-            selStart = widget.selEnd
-            selEnd = widget.selStart
-        else:
-            selStart = widget.selStart
-            selEnd = widget.selEnd
     for para in widget.text:
         if row < widget.offsetRow:
             row += 1
@@ -949,31 +941,13 @@ def drawText(surface, widget):
         for char in para:
             fore = foreground
             back = None
-            if widget.selStart != None:
-                # last line in multiline selection OR
-                # lines between first and last line in multiline selection OR
-                # first line in multiline selection OR
-                # one line selection
-                if (line == selEnd[0] and \
-                    line > selStart[0] and \
-                    column < selEnd[1]) or \
-                    (line < selEnd[0] and \
-                    line > selStart[0]) or \
-                    (line == selStart[0] and \
-                    line < selEnd[0] and \
-                    column >= selStart[1]) or \
-                    (selStart[0] == selEnd[0] and \
-                    selStart[0] == line and \
-                    column >= selStart[1] and \
-                    column < selEnd[1]):
-                        #switch colors for foreground/background
-                        fore = background
-                        back = foreground
-            else:
-                back = None
+            if widget.selection and widget.selection.first <= (row, column) < widget.selection.last:
+                #switch colors for foreground/background
+                fore = background
+                back = foreground
 
             # simple hack to add word wrapping
-            # get words from current drawed chat to end of paragraph
+            # get words from the current char to end of paragraph
             words = para[charIdx:].split(' ')
             # compute length of rendered first word
             remainingWordSize = Fonts.getTextSize(font, words[0])
@@ -1013,7 +987,7 @@ def drawText(surface, widget):
 
             x = newX
 
-        # draw cursor in case of zero lenght paragraph or begining of line
+        # draw cursor in case of zero length paragraph or begining of line
         if (len(para) == 0 or widget.cursorColumn == 0) and \
             widget.editable and row == widget.cursorRow and \
             widget.focused and widget.app.cursorOn:
