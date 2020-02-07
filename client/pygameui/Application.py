@@ -99,19 +99,24 @@ class Application:
                 self.keyCount = 4
         return Const.NoEvent
 
+    def _processMouseWheel(self, evt):
+        assert evt.button in (4, 5)
+        # TODO find window to deliver mouse wheel events to
+        if self.focusedWindow:
+            if self.focusedWindow.rect.collidepoint(evt.pos):
+                if evt.button == 4:
+                    return self.focusedWindow.processMWUp(evt)
+                else:
+                    return self.focusedWindow.processMWDown(evt)
+            else:
+                return Const.NoEvent
+        else:
+            return evt
+
     def _processMouseButtonDown(self, evt):
         # mouse wheel
-        if evt.button == 4 or evt.button == 5:
-            # TODO find window to deliver mouse wheel events to
-            if self.focusedWindow:
-                if self.focusedWindow.rect.collidepoint(evt.pos):
-                    if evt.button == 4:
-                        return self.focusedWindow.processMWUp(evt)
-                    elif evt.button == 5:
-                        return self.focusedWindow.processMWDown(evt)
-            else:
-                return evt
-            return Const.NoEvent
+        if evt.button in (4, 5):
+            return self._processMouseWheel(evt)
         # TODO double click
         # check if focused window is top level one
         if self.focusedWindow != self.windows[-1]:

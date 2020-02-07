@@ -54,7 +54,7 @@ def init():
     except ConfigParser.Error:
         themeMusic = None
     pass
-    #setSkin(skinDir)
+    # setSkin(skinDir)
 
 def initMixer():
     global soundEnabled
@@ -409,16 +409,16 @@ def hex2color(text):
 ##
 
 themeForeground = 0x00, 0xd0, 0x00
-#themeWindowBck = 0x20, 0x30, 0x20
+# themeWindowBck = 0x20, 0x30, 0x20
 themeBackground = 0x20, 0x40, 0x20
 themeHighlightbck = 0x40, 0x60, 0x40
 themeHighlightfrg = 0x40, 0xf0, 0x40
-#themeGaugecolor = 0x00, 0x80, 0x00
+# themeGaugecolor = 0x00, 0x80, 0x00
 themeDefaultFont = 'normal'
 themeBoldFont = 'normal-bold'
 themeItalicFont = 'normal-italic'
-#themeSelectionFrg = 0x00, 0xd0, 0x00
-#themeSelectionBck = 0x40, 0x80, 0x40
+# themeSelectionFrg = 0x00, 0xd0, 0x00
+# themeSelectionBck = 0x40, 0x80, 0x40
 themeTitleLine1 = 0x30, 0x50, 0x30
 themeTitleLine2 = 0x40, 0x60, 0x40
 themeSliderMin = 18
@@ -913,7 +913,6 @@ def getTextDrawLines(widget):
 def isTextBeyondEnd(widget, text):
     r = getDRect(widget.rect)
     size = Fonts.getTextSize(widget.font or 'normal', text)
-    #img = Fonts.renderText(widget.font or 'normal', text, 1, widget.foreground or themeForeground)
     return size[0] >= r.right
 
 def drawText(surface, widget):
@@ -942,7 +941,7 @@ def drawText(surface, widget):
             fore = foreground
             back = None
             if widget.selection and widget.selection.first <= (row, column) < widget.selection.last:
-                #switch colors for foreground/background
+                # switch colors for foreground/background
                 fore = background
                 back = foreground
 
@@ -954,10 +953,10 @@ def drawText(surface, widget):
             # if word doesn't fit to current line,
             # move to next line
             if x + remainingWordSize[0] + 10 > r.right:
-                if x == (r.left + previous_width) or onlyword: #only word on line, and still too large! Render as much as we can, then move to next line.
+                if x == (r.left + previous_width) or onlyword:  # only word on line, and still too large! Render as much as we can, then move to next line.
                     onlyword = True
                     if x + 10 > r.right:
-                        if not r.left + remainingWordSize[0] + 10 > r.right: #finally, end of word
+                        if not r.left + remainingWordSize[0] + 10 > r.right:  # finally, end of word
                             onlyword = False
                         x = r.left;
                         y += remainingWordSize[1]
