@@ -17,15 +17,17 @@
 #  along with Outer Space; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
+import math
 
 import pygameui as ui
+
+from ige import GameException
+from ige.ospace import Rules
+import ige.ospace.Const as Const
+
+from osci import gdata, client, res
 from TechInfoDlg import TechInfoDlg
 from ConfirmDlg import ConfirmDlg
-import ige.ospace.Const as Const
-from ige.ospace import Rules
-from osci import gdata, client, res
-from ige import GameException
-import math
 
 class StructTaskDlg:
 
@@ -41,7 +43,7 @@ class StructTaskDlg:
         self.confirmDlg = ConfirmDlg(app)
         self.createUI()
 
-    def display(self, caller, planetID, extraSlot = False, structToDemolish = Const.OID_NONE):
+    def display(self, caller, planetID, extraSlot=False, structToDemolish=Const.OID_NONE):
         if gdata.config.defaults.reportfinalization != None:
             val = gdata.config.defaults.reportfinalization
             self.win.vReportFin.checked = val == 'yes'
@@ -77,23 +79,21 @@ class StructTaskDlg:
 
     def showPlanets(self):
         info = []
-        system = client.get(self.systemID, noUpdate = 1)
+        system = client.get(self.systemID, noUpdate=1)
         select = None
         playerID = client.getPlayerID()
         firstEnabled = None
         if hasattr(system, 'planets'):
             for planetID in system.planets:
                 # get planet
-                planet = client.get(planetID, noUpdate = 1)
+                planet = client.get(planetID, noUpdate=1)
                 # only player owned planets can be source planets
                 enabled = getattr(planet, "owner") == playerID
                 buttonText = "%s / %s" % (getattr(planet, 'name', res.getUnknownName()), getattr(planet, "effProdProd", "?"))
-                item = ui.Item(
-                    buttonText,
-                    planetID = planetID,
-                    enabled = enabled,
-                    align = ui.ALIGN_NONE,
-                )
+                item = ui.Item(buttonText,
+                               planetID=planetID,
+                               enabled=enabled,
+                               align=ui.ALIGN_NONE)
                 info.append(item)
                 # remember first players planet
                 if enabled and firstEnabled == None:
@@ -112,30 +112,22 @@ class StructTaskDlg:
         self.win.vPlanets.itemsChanged()
         self.win.vPlanets.selectItem(select)
 
-    def showTechs(self):
-        # techs
+    def _filterStructure(self, tech):
+        return ((self.win.vMilitary.checked and tech.isMilitary)
+                or (self.win.vBioProduction.checked and (getattr(tech, "prodBio", 0) or getattr(tech, "prodEnv", 0) > 0))
+                or (self.win.vEnProduction.checked and getattr(tech, "prodEn", 0))
+                or (self.win.vCPProduction.checked and getattr(tech, "prodProd", 0))
+                or (self.win.vRPProduction.checked and getattr(tech, "prodSci", 0))
+                or (self.win.vMorale.checked and getattr(tech, "moraleTrgt", 0)))
+
+    def _showStructures(self, prodProd):
         items = []
-        select = None
-        showMilitary = self.win.vMilitary.checked
-        showBio = self.win.vBioProduction.checked
-        showEn = self.win.vEnProduction.checked
-        showCP = self.win.vCPProduction.checked
-        showRP = self.win.vRPProduction.checked
-        showMorale = self.win.vMorale.checked
 
         for techID in client.getPlayer().techs.keys():
             tech = client.getTechInfo(techID)
-
-            if not ((tech.isMilitary and showMilitary) or \
-               ((getattr(tech, "prodBio", 0) > 0 or getattr(tech, "prodEnv", 0) > 0) and showBio) or \
-               (getattr(tech, "prodEn", 0) > 0 and showEn) or \
-               (getattr(tech, "prodProd", 0) > 0 and showCP) or \
-               (getattr(tech, "prodSci", 0) > 0 and showRP) or \
-               (getattr(tech, "moraleTrgt", 0) > 0 and showMorale)):
+            if not tech.isStructure or tech.level not in self.showLevels or \
+               (tech.isStructure and not self._filterStructure(tech)):
                 continue
-
-            sourcePlanet = client.get(self.sourceID, noUpdate = 1)
-            prodProd = getattr(sourcePlanet, "effProdProd", 0)
 
             if prodProd > 0:
                 etc = math.ceil(float(tech.buildProd) / prodProd)
@@ -146,27 +138,26 @@ class StructTaskDlg:
                 etc = _("N/A")
 
             item = ui.Item(etc,
-                techID = techID,
-                tIsShip = 0,
-                name = tech.name,
-                tl = tech.level,
-                subtype = tech.subtype,
-                icons = ((res.getTechImg(techID), ui.ALIGN_N),),
-                font = "small-bold",
-                align = ui.ALIGN_S,
-                tooltipTitle = _("Details"),
-                tooltip = "%s, %d %s, %s %d" % (tech.name, tech.buildProd,_("CP"),_("TL"), tech.level),
-                statustip = "%s, %d %s, %s %d" % (tech.name, tech.buildProd,_("CP"),_("TL"), tech.level),
-            )
-            if tech.level > self.maxTechLevel:
-                self.maxTechLevel = tech.level
-            # TODO FIX ME
-            if tech.level in self.showLevels and \
-                ((self.showStructures and tech.isStructure) or \
-                (self.showOther and (tech.isProject))) or tech.level == 99:
-                items.append(item)
-                if techID == self.techID:
-                    select = item
+                           techID=techID,
+                           tIsShip=0,
+                           name=tech.name,
+                           tl=tech.level,
+                           subtype=tech.subtype,
+                           icons=((res.getTechImg(techID), ui.ALIGN_N),),
+                           font="small-bold",
+                           align=ui.ALIGN_S,
+                           tooltipTitle=_("Details"),
+                           tooltip="%s, %d %s, %s %d" % (tech.name, tech.buildProd, _("CP"), _("TL"), tech.level),
+                           statustip="%s, %d %s, %s %d" % (tech.name, tech.buildProd, _("CP"), _("TL"), tech.level))
+            self.maxTechLevel = max(self.maxTechLevel, tech.level)
+            items.append(item)
+        return items
+
+    def showTechs(self):
+        sourcePlanet = client.get(self.sourceID, noUpdate=1)
+        prodProd = getattr(sourcePlanet, "effProdProd", 0)
+
+        items = self._showStructures(prodProd)
 
         # sort methods
         if self.sort == 'none': # sort by name
@@ -179,8 +170,6 @@ class StructTaskDlg:
             items.sort(key=lambda a: a.subtype)
         self.win.vTechs.items = items
         self.win.vTechs.itemsChanged()
-        if select:
-            self.win.vTechs.selectItem(select)
 
         # filter
         for i in xrange(1, 10):
@@ -248,7 +237,7 @@ class StructTaskDlg:
         else:
             try:
                 self.win.setStatus(_('Executing START CONSTRUCTION command...'))
-                planet = client.get(self.sourceID, noUpdate = 1)
+                planet = client.get(self.sourceID, noUpdate=1)
                 player = client.getPlayer()
                 if self.extraSlot:
                     # check required special resources, if not available, do not continue
@@ -312,78 +301,77 @@ class StructTaskDlg:
         dlgWidth = cols * 20 + 4
         dlgHeight = rows * 20 + 4
         self.win = ui.Window(self.app,
-            modal = 1,
-            escKeyClose = 1,
-            movable = 0,
-            title = _('Select structure to construct'),
-            rect = ui.Rect((w - dlgWidth) / 2, (h - dlgHeight) / 2, dlgWidth, dlgHeight),
-            layoutManager = ui.SimpleGridLM(),
-        )
+                             modal=1,
+                             escKeyClose=1,
+                             movable=0,
+                             title=_('Select structure to construct'),
+                             rect=ui.Rect((w - dlgWidth) / 2, (h - dlgHeight) / 2, dlgWidth, dlgHeight),
+                             layoutManager=ui.SimpleGridLM())
         self.win.subscribeAction('*', self)
         rows -= 1 # title
 
-        ui.Title(self.win, layout = (0, 0, cols, 1), text = _('Production planet'),
-            align = ui.ALIGN_W, font = 'normal-bold')
-        ui.ButtonArray(self.win, layout = (0, 1, cols, 3), id = 'vPlanets',
-            buttonSize = (8, 1), showSlider = 0, action = 'onSelectPlanet')
+        ui.Title(self.win, layout=(0, 0, cols, 1), text=_('Production planet'),
+                 align=ui.ALIGN_W, font='normal-bold')
+        ui.ButtonArray(self.win, layout=(0, 1, cols, 3), id='vPlanets',
+                       buttonSize=(8, 1), showSlider=0, action='onSelectPlanet')
 
-        ui.Title(self.win, layout = (0, 4, cols - 10, 1), text = _('Structures to construct'),
-            align = ui.ALIGN_W, font = 'normal-bold')
-        ui.Title(self.win, layout = (cols - 10, 4, 10, 1), text = _('(right click for technology info)'),
-            align = ui.ALIGN_E, font = 'normal')
-        ui.ButtonArray(self.win, layout = (0, 5, cols, 9), id = 'vTechs',
-            buttonSize = (2, 3), showSlider = 0, action = 'onConstruct', rmbAction = 'onInfo')
+        ui.Title(self.win, layout=(0, 4, cols - 10, 1), text=_('Structures to construct'),
+                 align=ui.ALIGN_W, font='normal-bold')
+        ui.Title(self.win, layout=(cols - 10, 4, 10, 1), text=_('(right click for technology info)'),
+                 align=ui.ALIGN_E, font='normal')
+        ui.ButtonArray(self.win, layout=(0, 5, cols, 9), id='vTechs',
+                       buttonSize=(2, 3), showSlider=0, action='onConstruct', rmbAction='onInfo')
 
-        ui.Title(self.win, layout = (0, 14, 18, 1), text = _('Filters'),
-            align = ui.ALIGN_W, font = 'normal-bold')
-        ui.Label(self.win, layout = (0, 15, 6, 1), text = _('Technology levels:'), align = ui.ALIGN_W)
-        ui.Button(self.win, layout = (6, 15, 1, 1), text = _('1'), id = 'vLevel1',
-            toggle = 1, action = 'onToggleLevel', data = 1)
-        ui.Button(self.win, layout = (7, 15, 1, 1), text = _('2'), id = 'vLevel2',
-            toggle = 1, action = 'onToggleLevel', data = 2)
-        ui.Button(self.win, layout = (8, 15, 1, 1), text = _('3'), id = 'vLevel3',
-            toggle = 1, action = 'onToggleLevel', data = 3)
-        ui.Button(self.win, layout = (9, 15, 1, 1), text = _('4'), id = 'vLevel4',
-            toggle = 1, action = 'onToggleLevel', data = 4)
-        ui.Button(self.win, layout = (10, 15, 1, 1), text = _('5'), id = 'vLevel5',
-            toggle = 1, action = 'onToggleLevel', data = 5)
-        ui.Button(self.win, layout = (11, 15, 1, 1), text = _('6'), id = 'vLevel6',
-            toggle = 1, action = 'onToggleLevel', data = 6)
-        ui.Button(self.win, layout = (12, 15, 1, 1), text = _('7'), id = 'vLevel7',
-            toggle = 1, action = 'onToggleLevel', data = 7)
-        ui.Button(self.win, layout = (13, 15, 1, 1), text = _('8'), id = 'vLevel8',
-            toggle = 1, action = 'onToggleLevel', data = 8)
-        ui.Button(self.win, layout = (14, 15, 1, 1), text = _('9'), id = 'vLevel9',
-            toggle = 1, action = 'onToggleLevel', data = 9)
+        ui.Title(self.win, layout=(0, 14, 18, 1), text=_('Filters'),
+                 align=ui.ALIGN_W, font='normal-bold')
+        ui.Label(self.win, layout=(0, 15, 6, 1), text=_('Technology levels:'), align=ui.ALIGN_W)
+        ui.Button(self.win, layout=(6, 15, 1, 1), text=_('1'), id='vLevel1',
+                  toggle=1, action='onToggleLevel', data=1)
+        ui.Button(self.win, layout=(7, 15, 1, 1), text=_('2'), id='vLevel2',
+                  toggle=1, action='onToggleLevel', data=2)
+        ui.Button(self.win, layout=(8, 15, 1, 1), text=_('3'), id='vLevel3',
+                  toggle=1, action='onToggleLevel', data=3)
+        ui.Button(self.win, layout=(9, 15, 1, 1), text=_('4'), id='vLevel4',
+                  toggle=1, action='onToggleLevel', data=4)
+        ui.Button(self.win, layout=(10, 15, 1, 1), text=_('5'), id='vLevel5',
+                  toggle=1, action='onToggleLevel', data=5)
+        ui.Button(self.win, layout=(11, 15, 1, 1), text=_('6'), id='vLevel6',
+                  toggle=1, action='onToggleLevel', data=6)
+        ui.Button(self.win, layout=(12, 15, 1, 1), text=_('7'), id='vLevel7',
+                  toggle=1, action='onToggleLevel', data=7)
+        ui.Button(self.win, layout=(13, 15, 1, 1), text=_('8'), id='vLevel8',
+                  toggle=1, action='onToggleLevel', data=8)
+        ui.Button(self.win, layout=(14, 15, 1, 1), text=_('9'), id='vLevel9',
+                  toggle=1, action='onToggleLevel', data=9)
 
-        ui.Check(self.win, layout = (0, 16, 6, 1), text = _('Bio production'),
-            id = 'vBioProduction', checked = 1, align = ui.ALIGN_W, action = 'onFilter')
-        ui.Check(self.win, layout = (0, 17, 6, 1), text = _('En production'),
-            id = 'vEnProduction', checked = 1, align = ui.ALIGN_W, action = 'onFilter')
-        ui.Check(self.win, layout = (6, 16, 6, 1), text = _('CP production'),
-            id = 'vCPProduction', checked = 1, align = ui.ALIGN_W, action = 'onFilter')
-        ui.Check(self.win, layout = (6, 17, 6, 1), text = _('RP production'),
-            id = 'vRPProduction', checked = 1, align = ui.ALIGN_W, action = 'onFilter')
-        ui.Check(self.win, layout = (12, 16, 6, 1), text = _('Military'),
-            id = 'vMilitary', checked = 1, align = ui.ALIGN_W, action = 'onFilter')
-        ui.Check(self.win, layout = (12, 17, 6, 1), text = _('Morale'),
-            id = 'vMorale', checked = 1, align = ui.ALIGN_W, action = 'onFilter')
+        ui.Check(self.win, layout=(0, 16, 6, 1), text=_('Bio production'),
+                 id='vBioProduction', checked=1, align=ui.ALIGN_W, action='onFilter')
+        ui.Check(self.win, layout=(0, 17, 6, 1), text=_('En production'),
+                 id='vEnProduction', checked=1, align=ui.ALIGN_W, action='onFilter')
+        ui.Check(self.win, layout=(6, 16, 6, 1), text=_('CP production'),
+                 id='vCPProduction', checked=1, align=ui.ALIGN_W, action='onFilter')
+        ui.Check(self.win, layout=(6, 17, 6, 1), text=_('RP production'),
+                 id='vRPProduction', checked=1, align=ui.ALIGN_W, action='onFilter')
+        ui.Check(self.win, layout=(12, 16, 6, 1), text=_('Military'),
+                 id='vMilitary', checked=1, align=ui.ALIGN_W, action='onFilter')
+        ui.Check(self.win, layout=(12, 17, 6, 1), text=_('Morale'),
+                 id='vMorale', checked=1, align=ui.ALIGN_W, action='onFilter')
 
-        ui.Title(self.win, layout = (18, 14, 6, 1), text = _('Sort'),
-            align = ui.ALIGN_W, font = 'normal-bold')
-        ui.Check(self.win, layout = (18, 15, 6, 1), text = _('Type'),
-            id = 'vSortType', checked = 1, align = ui.ALIGN_W, action = 'onSort', data ='type')
-        ui.Check(self.win, layout = (18, 16, 6, 1), text = _('Tech Level'),
-            id = 'vSortTL', checked = 0, align = ui.ALIGN_W, action = 'onSort', data ='tl')
-        ui.Check(self.win, layout = (18, 17, 6, 1), text = _('Name'),
-            id = 'vSortNone', checked = 0, align = ui.ALIGN_W, action = 'onSort', data ='none')
+        ui.Title(self.win, layout=(18, 14, 6, 1), text=_('Sort'),
+                 align=ui.ALIGN_W, font='normal-bold')
+        ui.Check(self.win, layout=(18, 15, 6, 1), text=_('Type'),
+                 id='vSortType', checked=1, align=ui.ALIGN_W, action='onSort', data='type')
+        ui.Check(self.win, layout=(18, 16, 6, 1), text=_('Tech Level'),
+                 id='vSortTL', checked=0, align=ui.ALIGN_W, action='onSort', data='tl')
+        ui.Check(self.win, layout=(18, 17, 6, 1), text=_('Name'),
+                 id='vSortNone', checked=0, align=ui.ALIGN_W, action='onSort', data='none')
 
-        ui.Title(self.win, layout = (24, 14, 8, 1), text = _('Options'),
-            align = ui.ALIGN_W, font = 'normal-bold')
-        ui.Label(self.win, layout = (24, 15, 3, 1), text = _('Quantity'), align = ui.ALIGN_W)
-        ui.Entry(self.win, layout = (27, 15, 5, 1), id = 'vQuantity', align = ui.ALIGN_E)
-        ui.Check(self.win, layout = (26, 16, 8, 1), id = 'vReportFin', text = _('Report finalization'),
-            align = ui.ALIGN_W)
+        ui.Title(self.win, layout=(24, 14, 8, 1), text=_('Options'),
+                 align=ui.ALIGN_W, font='normal-bold')
+        ui.Label(self.win, layout=(24, 15, 3, 1), text=_('Quantity'), align=ui.ALIGN_W)
+        ui.Entry(self.win, layout=(27, 15, 5, 1), id='vQuantity', align=ui.ALIGN_E)
+        ui.Check(self.win, layout=(26, 16, 8, 1), id='vReportFin', text=_('Report finalization'),
+                 align=ui.ALIGN_W)
 
-        ui.Title(self.win, layout = (0, rows - 1, cols - 5, 1), align = ui.ALIGN_W)
-        ui.TitleButton(self.win, layout = (cols - 5, rows - 1, 5, 1), text = _('Cancel'), action = 'onCancel')
+        ui.Title(self.win, layout=(0, rows - 1, cols - 5, 1), align=ui.ALIGN_W)
+        ui.TitleButton(self.win, layout=(cols - 5, rows - 1, 5, 1), text=_('Cancel'), action='onCancel')
