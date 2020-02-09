@@ -35,47 +35,48 @@ def noop(*args, **kwargs):
     return 1
 
 attrs = {
+    'id': 0,
     # types of technologies
-    'isDiscovery' : 0,
-    'isStructure' : 0,
+    'isDiscovery': 0,
+    'isStructure': 0,
     'isProject': 0,
-    'isShipEquip' : 0,
-    'isShipHull' : 0,
-    'isMine' : 0,
-    'isStarting' : 0,
+    'isShipEquip': 0,
+    'isShipHull': 0,
+    'isMine': 0,
+    'isStarting': 0,
     "subtype": "techSubtype",
     "level": 0,
-    "maxImprovement": 5, #Rules.techMaxImprovement,
+    "maxImprovement": 5,  # Rules.techMaxImprovement,
     "isMilitary": 0,
-    "globalDisabled": 0, # to disallow some projects in global queues
+    "globalDisabled": 0,  # to disallow some projects in global queues
     # dialog info
-    'shortname': '', #for TechInfoDlg tech linkages
+    'shortname': '',  # for TechInfoDlg tech linkages
     # construction costs & conditions
-    'buildProd' : 0,
-    'buildTurns' : 1,
-    'buildSRes': {'resource' : 'amount'},
+    'buildProd': 0,
+    'buildTurns': 1,
+    'buildSRes': {'resource': 'amount'},
     # operation costs
-    'operBio' : 0,
-    'operEn' : 0,
+    'operBio': 0,
+    'operEn': 0,
     "operWorkers": 0,
     # production
-    'prodBio' : 0, # bio
-    'prodEn' : 0, # energy
-    'prodProd' : 0, # production
-    'prodSci' : 0, # science
-    'prodEnv': 0, # enviromental effect
-    'prodPop': 0, # produce population
-    'prodBioMod': [0.0, 0.0, 0.0, 0.0], # tuple of (plBio, plMin, plEn, default)
-    'prodEnMod': [0.0, 0.0, 0.0, 0.0], # dtto
-    'prodProdMod': [0.0, 0.0, 0.0, 0.0], # dtto
-    'prodSciMod' : [0.0, 0.0, 0.0, 1.0], # ditto; default is 1.0 for legacy support
+    'prodBio': 0,  # bio
+    'prodEn': 0,  # energy
+    'prodProd': 0,  # production
+    'prodSci': 0,  # science
+    'prodEnv': 0,  # enviromental effect
+    'prodPop': 0,  # produce population
+    'prodBioMod': [0.0, 0.0, 0.0, 0.0],  # tuple of (plBio, plMin, plEn, default)
+    'prodEnMod': [0.0, 0.0, 0.0, 0.0],  # dtto
+    'prodProdMod': [0.0, 0.0, 0.0, 0.0],  # dtto
+    'prodSciMod': [0.0, 0.0, 0.0, 1.0],  # ditto; default is 1.0 for legacy support
     # env
-    'solarMod': 0, # - : cloak solar radiation / + : create thermal radiation
+    'solarMod': 0,  # -: cloak solar radiation / +: create thermal radiation
     # storage
-    'storBio' : 0,
-    'storProd' : 0,
-    'storEn' : 0,
-    'storPop' : 0,
+    'storBio': 0,
+    'storProd': 0,
+    'storEn': 0,
+    'storPop': 0,
     # morale affecting
     'revoltThr': 0,
     'moraleTrgt': 0,
@@ -83,54 +84,54 @@ attrs = {
     # military
     'scannerPwr': 0,
     "structWeapons": [0],
-    "planetShield": 0, #planetary shield; when structure built, shield = 0; shield will regenerate at 2% per turn until equal to this value. Structures do not add shield strength; strongest shield = planet shield
+    "planetShield": 0,  # planetary shield; when structure built, shield = 0; shield will regenerate at 2% per turn until equal to this value. Structures do not add shield strength; strongest shield = planet shield
     "systemAtt": 0,
     "systemDef": 0,
     "refuelMax": 0,
     "refuelInc": 0,
     "repairShip": 0.0,
     "upgradeShip": 0,
-    "trainShipInc": 0.0, # how many exp/turn
-    "trainShipMax": 0, # exp. cap (in base exps), not affected by techEff
-    "fleetSpeedBoost": 0.0, # speed boost for stargates
+    "trainShipInc": 0.0,  # how many exp/turn
+    "trainShipMax": 0,  # exp. cap (in base exps), not affected by techEff
+    "fleetSpeedBoost": 0.0,  # speed boost for stargates
     # misc
     "unpackPop": 0,
-    'envDmg' : 0,
-    'maxHP' : 0,
-    "fullInfo": 0, # if True, show full tech info even player not own tech
+    'envDmg': 0,
+    'maxHP': 0,
+    "fullInfo": 0,  # if True, show full tech info even player not own tech
     # ship equipment
-    'equipType' : '', # identifier of subtype seq_mod's equipment type; see maxEquipType in Rules/__init__
-    "addMP" : 0, #for extra MP to be added to ship equipment
-    'combatClass' : 0,
-    'combatAtt': 0, #not cumulative for equipment; cumulative for hull, drives, cockpits, etc
-    'combatDef': 0, #not cumulative for equipment; cumulative for hull, drives, cockpits, etc
-    "missileDef": 0, #not cumulative for equipment; cumulative for hull, drives, cockpits, etc
-    "combatAttPerc": 1.0, #multiplier of ATT; min of 100%; not cumulative
-    "combatDefPerc": 1.0, #multiplier of DEF; min of 100%; not cumulative
-    "missileDefPerc": 1.0, #multiplier of missile DEF; min of 100%; not cumulative
+    'equipType': '',  # identifier of subtype seq_mod's equipment type; see maxEquipType in Rules/__init__
+    "addMP": 0,  # for extra MP to be added to ship equipment
+    'combatClass': 0,
+    'combatAtt': 0,  # not cumulative for equipment; cumulative for hull, drives, cockpits, etc
+    'combatDef': 0,  # not cumulative for equipment; cumulative for hull, drives, cockpits, etc
+    "missileDef": 0,  # not cumulative for equipment; cumulative for hull, drives, cockpits, etc
+    "combatAttPerc": 1.0,  # multiplier of ATT; min of 100%; not cumulative
+    "combatDefPerc": 1.0,  # multiplier of DEF; min of 100%; not cumulative
+    "missileDefPerc": 1.0,  # multiplier of missile DEF; min of 100%; not cumulative
     'unpackStruct': '',
-    'deployHandlerID' : '', #technology ID of tech to find deployHandlerFunction & deployHandlerValidator (this can be the deployable device OR a project)
-    'deployHandlerFunction' : noop, #function name of TechHandler
-    'deployHandlerValidator' : noop, #function name of TechHandler Validator
-    'signature': 0, #**** NOT cumulative (change effective 0.5.63)
-    'signatureCloak': 1.0, # max of 1.0 is effective; not cumulative
-    'signatureDecloak': 1.0, # min of 1.0 is effective; not cumulative
+    'deployHandlerID': '',  # technology ID of tech to find deployHandlerFunction & deployHandlerValidator (this can be the deployable device OR a project)
+    'deployHandlerFunction': noop,  # function name of TechHandler
+    'deployHandlerValidator': noop,  # function name of TechHandler Validator
+    'signature': 0,  # **** NOT cumulative (change effective 0.5.63)
+    'signatureCloak': 1.0,  # max of 1.0 is effective; not cumulative
+    'signatureDecloak': 1.0,  # min of 1.0 is effective; not cumulative
     "minSignature": 0,
     "slots": 0,
     "weight": 0,
     "maxWeight": 0,
     "engPwr": 0,
     "engStlPwr": 0,
-    "shieldPerc": 0.0, # how many percent of maxHP have shields
+    "shieldPerc": 0.0,  # how many percent of maxHP have shields
     "minHull": 0,
-    "maxHull": 10, #just make this higher than the largest hull so we know it doesn't break anything
+    "maxHull": 10,  # just make this higher than the largest hull so we know it doesn't break anything
     "maxInstallations": 0,
-    "shieldRechargeFix": 0, # fixed amount of HP/turn to recharge
-    "shieldRechargePerc": 0.0, # how many percent of shieldHP/turn is recharged
-    "hardShield": 0.0, #shield penetrating weapons will penetrate at 100%; use as 1-hardShield for penentration level (hardShield percent = %damage absorbed by shield)
-    "autoRepairFix": 0, # fixed amount of HP/turn to repair
-    "autoRepairPerc": 0.0, # how many percent of maxHP/turn is repaired
-    "damageAbsorb": 0, #amount of damage absorbed by the hull (not shield!); max sum is 5 damage (set in Rules)
+    "shieldRechargeFix": 0,  # fixed amount of HP/turn to recharge
+    "shieldRechargePerc": 0.0,  # how many percent of shieldHP/turn is recharged
+    "hardShield": 0.0,  # shield penetrating weapons will penetrate at 100%; use as 1-hardShield for penentration level (hardShield percent = %damage absorbed by shield)
+    "autoRepairFix": 0,  # fixed amount of HP/turn to repair
+    "autoRepairPerc": 0.0,  # how many percent of maxHP/turn is repaired
+    "damageAbsorb": 0,  # amount of damage absorbed by the hull (not shield!); max sum is 5 damage (set in Rules)
     # weapons
     'weaponDmgMin': 0,
     'weaponDmgMax': 0,
@@ -140,10 +141,10 @@ attrs = {
     "weaponIgnoreShield": 0,
     "weaponIsMissile": 0,
     "weaponGoodForFlak": 1,
-    #mines
-    'mineclass':0, #tech id of the mine; usually level 99 tech - structure in the system with the highest tech id will always deploy; others will be ignored (per player)
-    'minenum':0, #number of mines this control structure supports; if another structure built more mines, mines will not self destruct
-    'minerate':0, #number of turns between mine deployments; note that system will deploy mines on: turn%minerate==0
+    # mines
+    'mineclass':0,  # tech id of the mine; usually level 99 tech - structure in the system with the highest tech id will always deploy; others will be ignored (per player)
+    'minenum':0,  # number of mines this control structure supports; if another structure built more mines, mines will not self destruct
+    'minerate':0,  # number of turns between mine deployments; note that system will deploy mines on: turn%minerate==0
     # research
     'researchRequires': ['technology'],
     'researchEnables': ['technology'],
@@ -155,15 +156,15 @@ attrs = {
     # misc
     "data": "none",
     "recheckWhenTechLost": 0,
-    "deprecated": 0, # this tech is no longer active
+    "deprecated": 0,  # this tech is no longer active
     # before build handler
-    'validateConstrHandler' : noop,
+    'validateConstrHandler': noop,
     # after build handler
-    'finishConstrHandler' : noop,
+    'finishConstrHandler': noop,
     # after research handler
-    'finishResearchHandler' : noop,
+    'finishResearchHandler': noop,
     # names
-    'name' : u'Unspecified',
+    'name': u'Unspecified',
     # textual description
     'textPreRsrch': u'Not specified',
     'textDescr': u'Not specified',
@@ -270,12 +271,10 @@ techs = {}
 # parse TechTree.xml and create all tech objects
 class TechTreeContentHandler(ContentHandler):
     def startDocument(self):
-        #@log.message('Parsing tech tree...')
         self.state = 1
         self.text = ''
 
     def endDocument(self):
-        #@log.message('Tech tree created')
         if self.state != 1:
             raise 'Wrong TechTree specification'
 
@@ -346,7 +345,6 @@ class TechTreeContentHandler(ContentHandler):
             self.state = 1
         elif self.state == 3 and name == 'technology':
             self.state = 2
-            #log.debug(repr(self.tech))
         elif self.state == 4 and name == 'preresearch':
             self.tech.textPreRsrch = self.text
             self.state = 3
@@ -378,7 +376,6 @@ def init(configDir):
         for filename in names:
             if os.path.splitext(filename)[1] in ('.xml', '.py'):
                 log.debug('Checking file', filename)
-                # read file
                 fh = open(os.path.join(dirname, filename), 'rb')
                 chsum.update(fh.read())
                 fh.close()
@@ -448,13 +445,11 @@ def init(configDir):
             # convert symbolic names to numbers
             techIDs = []
             for techSymName in tech.researchRequires:
-                #@log.debug('Converting REQ', techSymName)
                 symName, improvement = techSymName.split('-')
                 techIDs.append((getattr(Tech, symName), int(improvement)))
             tech.researchRequires = techIDs
             techIDs = {1: [], 2:[], 3:[], 4:[], 5:[], 6:[]}
             for techSymName in tech.researchEnables:
-                #@log.debug('Converting EN', techSymName)
                 improvement, symName = techSymName.split('-')
                 techIDs[int(improvement)].append(getattr(Tech, symName))
             tech.researchEnables = techIDs
@@ -492,26 +487,17 @@ def init(configDir):
                 tech.researchMod = 1.0
             else:
                 tech.researchMod = eval(tech.researchMod)
-            #~ # convert weapons
-            #~ techIDs = []
-            #~ for weaponName in tech.weapons:
-                #~ techIDs.append(getattr(Tech, weaponName))
-            #~ tech.weapons = techIDs
 
         # link
         log.message('Linking tech tree...')
         for techID in techs.keys():
             tech = techs[techID]
-            #@log.debug(techID, 'Req', tech.researchRequires)
-            #@log.debug(techID, 'En', tech.researchEnables)
             for tmpTechID, improvement in tech.researchRequires:
                 if techID not in techs[tmpTechID].researchEnables[improvement]:
-                    #@log.debug('Adding', tmpTechID, improvement, 'ENABLES', techID)
                     techs[tmpTechID].researchEnables[improvement].append(techID)
             for improvement in tech.researchEnables.keys():
                 for tmpTechID in tech.researchEnables[improvement]:
                     if (techID, improvement) not in techs[tmpTechID].researchRequires:
-                        #@log.debug('Adding', tmpTechID, 'REQUIRES', techID, improvement)
                         techs[tmpTechID].researchRequires.append((techID, improvement))
 
         changed = 1
@@ -542,49 +528,3 @@ def init(configDir):
         fh.close()
 
         log.message("There is %d technologies" % len(techs))
-
-#~ # save DOT file
-#~ dotName = os.path.join(os.path.dirname(__file__), "techtree.dot")
-#~ fh = open(dotName, "w+")
-#~ print >> fh, """
-#~ digraph {
-    #~ rankdir=LR;
-    #~ ranksep=0.25;
-    #~ nodesep=0.25;
-    #~ overlap=scale;
-    #~ spline=false;
-    #~ node[shape=record,fontsize=10,height=0.25,fontname=Tahoma];
-    #~ edge[fontsize=8,fontname=Tahoma]
-    #~ {
-        #~ TL1 -> TL2 -> TL3 -> TL4 -> TL5;
-    #~ }
-#~ """
-#~ # process nodes
-#~ for level in range(1,6):
-    #~ print >>fh, "\tsubgraph xcluster_%d {" % level
-    #~ print >>fh, "\t\tcolor = black;"
-    #~ print >>fh, "\t\tTL%d;" % level,
-    #~ for techID in techs:
-        #~ tech = techs[techID]
-        #~ if tech.level != level:
-            #~ continue
-        #~ print >>fh, '"{%s|%d}";' % (tech.name, tech.level),
-    #~ print >>fh
-    #~ print >>fh, "\t}"
-    #~ for techID in techs:
-        #~ tech = techs[techID]
-        #~ if tech.level != level:
-            #~ continue
-        #~ for tech2ID, impr in tech.researchRequires:
-            #~ tech2 = techs[tech2ID]
-            #~ print >> fh, '\t"{%s|%d}" -> "{%s|%d}" [label = "%d"];' % (
-                #~ tech2.name,
-                #~ tech2.level,
-                #~ tech.name,
-                #~ tech.level,
-                #~ impr,
-            #~ )
-#~ print >> fh, """
-#~ }
-#~ """
-#~ fh.close()
