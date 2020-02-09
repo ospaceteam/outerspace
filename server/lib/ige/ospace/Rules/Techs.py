@@ -142,9 +142,9 @@ attrs = {
     "weaponIsMissile": 0,
     "weaponGoodForFlak": 1,
     # mines
-    'mineclass':0,  # tech id of the mine; usually level 99 tech - structure in the system with the highest tech id will always deploy; others will be ignored (per player)
-    'minenum':0,  # number of mines this control structure supports; if another structure built more mines, mines will not self destruct
-    'minerate':0,  # number of turns between mine deployments; note that system will deploy mines on: turn%minerate==0
+    'mineclass': 0,  # tech id of the mine; usually level 99 tech - structure in the system with the highest tech id will always deploy; others will be ignored (per player)
+    'minenum': 0,  # number of mines this control structure supports; if another structure built more mines, mines will not self destruct
+    'minerate': 0,  # number of turns between mine deployments; note that system will deploy mines on: turn%minerate==0
     # research
     'researchRequires': ['technology'],
     'researchEnables': ['technology'],
