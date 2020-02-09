@@ -40,7 +40,6 @@ class INature(IPlayer):
     def processINITPhase(self, tran, obj, data):
         IPlayer.processINITPhase(self, tran, obj, data)
         obj.lastLogin = time.time()
-        log.debug("NATURE - asteroids", len(obj.fleets), obj.fleets)
 
     @public(Const.AL_ADMIN)
     def processPRODPhase(self, tran, obj, data):

@@ -131,8 +131,6 @@ class StarMap(object):
                 self.precomputePlanets(obj, player, pirate_systems)
             elif obj.type == Const.T_FLEET:
                 self.precomputeFleet(obj)
-            elif obj.type == Const.T_ASTEROID:
-                self.precomputeAsteroid(obj)
             elif obj.type in (Const.T_GALAXY, Const.T_AIPLAYER, Const.T_AIRENPLAYER, Const.T_AIMUTPLAYER, Const.T_AIPIRPLAYER, Const.T_AIEDENPLAYER, Const.T_PIRPLAYER):
                 pass
             elif obj.type == Const.T_UNKNOWN:
@@ -337,37 +335,6 @@ class StarMap(object):
             info.append(_("Fleet speed: +%d %%") % (speedBoost * 100))
         if pirProb > 0.0:
             info.append(_("Pirate get fame chance: %d %%") % (pirProb * 100))
-        self._popupInfo[obj.oid] = info
-
-    def precomputeAsteroids(self, obj):
-        owner = getattr(obj, 'owner', Const.OID_NONE)
-        name = getattr(obj, 'name', None) or res.getUnknownName()
-        color = (0xff, 0xff, 0xff)
-        scannerPwr = getattr(obj, 'scannerPwr', 0)
-        orbit = -1
-        if obj.orbiting != Const.OID_NONE:
-            orbit = self.fleetOrbit.get(obj.orbiting, 0)
-            self.fleetOrbit[obj.orbiting] = orbit + 1
-        eta = getattr(obj, 'eta', 0)
-        self._map[self.MAP_FLEETS].append((obj.oid, obj.x, obj.y, obj.oldX, obj.oldY, orbit, res.formatTime(eta), color,
-            obj.signature / 25, 0))
-        # pop up info
-        info = []
-        info.append(_('Asteroid: %s [ID: %d]') % (name, obj.oid))
-        if hasattr(obj, 'scanPwr'): info.append(_('Scan pwr: %d') % obj.scanPwr)
-        info.append(_('Coordinates: [%.2f, %.2f]') % (obj.x, obj.y))
-        info.append(_('Signature: %d') % obj.signature)
-        if hasattr(obj, 'asDiameter'): info.append(_('Diameter: %d') % obj.asDiameter)
-        if hasattr(obj, 'asHP'): info.append(_('HP: %d') % obj.asHP)
-        if hasattr(obj, 'speed'): info.append(_('Speed: %.2f') % obj.speed)
-        if eta:
-            info.append(_('ETA: %s') % res.formatTime(eta))
-        if owner:
-            ownerobj = client.get(owner, publicOnly = 1)
-            info.append(_('Owner: %s [ID: %s]') % (
-                getattr(ownerobj, 'name', res.getUnknownName()),
-                getattr(ownerobj, 'oid', '?')
-            ))
         self._popupInfo[obj.oid] = info
 
     def precomputeWormholes(self, obj, player, pirate_systems):

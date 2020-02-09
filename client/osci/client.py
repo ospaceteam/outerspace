@@ -180,7 +180,7 @@ def updateDatabaseUnsafe(clearDB = 0, force = 0):
             obj.combatCounter = 0
         if not hasattr(obj, 'type'):
             del db[objID]
-        elif obj.type in (Const.T_FLEET, Const.T_ASTEROID):
+        elif obj.type == Const.T_FLEET:
             del db[objID]
         elif hasattr(obj, 'owner') and obj.owner == db.playerID \
             and objID != db.playerID:
@@ -291,10 +291,7 @@ def getTechInfo(techID):
     player = db[db.playerID]
     tech = Rules.techs[techID]
     # player possess this technology
-    if player.techs.has_key(techID):
-        return tech
-
-    if tech.fullInfo:
+    if techID in player.techs or tech.fullInfo:
         return tech
 
     # player can research this technology
@@ -302,7 +299,7 @@ def getTechInfo(techID):
     if player.race not in tech.researchRaces:
         canResearch = 0
     for tmpTechID, improvement in tech.researchRequires:
-        if not player.techs.has_key(tmpTechID) or player.techs[tmpTechID] < improvement:
+        if tmpTechID not in player.techs or player.techs[tmpTechID] < improvement:
             canResearch = 0
             break
     for stratRes in tech.researchReqSRes:
@@ -319,7 +316,7 @@ def getTechInfo(techID):
     if canResearch:
         result = IDataHolder()
         result.partialData = None
-        for attr in ['name', 'isDiscovery', 'isStructure',
+        for attr in ["id", 'name', 'isDiscovery', 'isStructure',
             'isProject', 'isShipEquip', 'isShipHull', 'researchMod',
             'researchTurns', 'textPreRsrch', 'researchRequires', 'subtype',
             "researchReqSRes", "researchDisables", "level", "researchRaces"]:
@@ -328,7 +325,7 @@ def getTechInfo(techID):
     # player should know only basic params about tech
     result = IDataHolder()
     result.partialData = None
-    for attr in ["name", "researchRequires", "subtype", "level", "researchRaces"]:
+    for attr in ["id", "name", "researchRequires", "subtype", "level", "researchRaces"]:
         setattr(result, attr, getattr(tech, attr))
     return result
 

@@ -17,13 +17,14 @@
 #  along with Outer Space; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
+import bisect
+import math
 
 import pygameui as ui
 from osci.StarMapWidget import StarMapWidget
 from osci import gdata, res, client
 import ige.ospace.Const as Const
 from ige.ospace import Rules
-import math
 
 class FleetsOverviewDlg:
 
@@ -52,137 +53,129 @@ class FleetsOverviewDlg:
     def update(self):
         self.show()
 
-    def show(self):
+    def _analyzeRelations(self, playerID, fleet):
+        # this evaluates color, and if it should be shown at all
         # get check box selections
-        mine = self.win.vMine.checked
-        enemy = self.win.vEnemy.checked
-        unfriendly = self.win.vUnfriendy.checked
-        neutral = self.win.vNeutral.checked
-        friendly = self.win.vFriendly.checked
-        allied = self.win.vAllied.checked
-        redirects = self.win.vRedirects.checked
+        checkBoxes = [self.win.vEnemy.checked,
+                      self.win.vUnfriendy.checked,
+                      self.win.vNeutral.checked,
+                      self.win.vFriendly.checked,
+                      self.win.vAllied.checked]
 
-        player = client.getPlayer()
-        #
-        items = []
-        for fleetID in client.db.keys():
-            fleet = client.get(fleetID, noUpdate = 1)
-            # skip non-fleets
-            if not hasattr(fleet, "type") or (fleet.type != Const.T_FLEET and fleet.type != Const.T_ASTEROID):
-                continue
-            # shall be shown?
-            fgColor = None
+        # check fleet color and decide if display the fleet
+        if hasattr(fleet, 'owner'):
+            plRelation = client.getRelationTo(fleet.owner)
+            fgColor = res.getPlayerColor(fleet.owner)
+            if fleet.owner == playerID and self.win.vMine.checked:
+                return fgColor
+            return fgColor if checkBoxes[bisect.bisect(Const.REL_BOUNDARIES, plRelation)] else None
+        else:
+            # with no owner assume enemy
+            return res.getFFColorCode(Const.REL_ENEMY_LO) if checkBoxes[0] else None
 
-            ownerTipTitle = ""
+    def _populateName(self, fleet):
+        return fleet.customname if hasattr(fleet, 'customname') and fleet.customname \
+                                else getattr(fleet, 'name', res.getUnknownName())
+
+    def _populatePopup(self, playerID, fleet):
+        if hasattr(fleet, 'owner') and playerID != fleet.owner:
+            owner = getattr(client.get(fleet.owner, noUpdate=1), "name", res.getUnknownName())
+            ownerName = " (%s)" % owner
+            ownerNameTip = owner
+            ownerTipTitle = _("Owner")
+        else:
             ownerName = ""
             ownerNameTip = ""
+            ownerTipTitle = ""
+        return ownerName, ownerNameTip, ownerTipTitle
 
-            # check fleet color and if display fleet
-            if hasattr(fleet, 'owner'):
-                plRelation = client.getRelationTo(fleet.owner)
-                fgColor = res.getPlayerColor(fleet.owner)
-                ok = 0
-                if mine and fleet.owner == player.oid:
-                    ok = 1
-                elif enemy and plRelation >= Const.REL_ENEMY_LO and plRelation < Const.REL_ENEMY_HI:
-                    ok = 1
-                elif unfriendly and plRelation >= Const.REL_UNFRIENDLY_LO and plRelation < Const.REL_UNFRIENDLY_HI:
-                    ok = 1
-                elif neutral and plRelation >= Const.REL_NEUTRAL_LO and plRelation < Const.REL_NEUTRAL_HI:
-                    ok = 1
-                elif friendly and plRelation >= Const.REL_FRIENDLY_LO and plRelation < Const.REL_FRIENDLY_HI:
-                    ok = 1
-                elif allied and plRelation >= Const.REL_ALLY_LO and plRelation < Const.REL_ALLY_HI:
-                    ok = 1
+    def _populateLocation(self, playerID, fleet):
+        systemName = "-"
+        if hasattr(fleet, 'orbiting') and fleet.orbiting:
+            system = client.get(fleet.orbiting, noUpdate=1)
+            systemName = getattr(system, "name", res.getUnknownName())
+        elif hasattr(fleet, 'closeSystem'):
+            system = client.get(fleet.closeSystem, noUpdate=1)
+            systemName = _("%s (dst)") % getattr(system, "name", res.getUnknownName())
+        return systemName
 
-                if not ok:
-                    continue
+    def _populateOrder(self, fleet):
+        # get fleet current action and target of action
+        order = "-"
+        targetName = "-"
+        if hasattr(fleet, 'actions') and fleet.actionIndex < len(fleet.actions):
+            action, target, data = fleet.actions[fleet.actionIndex]
+            if action == Const.FLACTION_REDIRECT and not self.win.vRedirects.checked:
+                # ok, not interested then
+                return None
+            order = gdata.fleetActions[action]
+            if target != Const.OID_NONE:
+                targetName = getattr(client.get(target, noUpdate=1), 'name', res.getUnknownName())
+                order = "%s %s" % (order, targetName)
+        return order
 
-                if fleet.owner != player.oid:
-                    owner = getattr(client.get(fleet.owner, noUpdate = 1), "name", res.getUnknownName())
-                    ownerName = " (%s)" % owner
-                    ownerNameTip = owner
-                    ownerTipTitle = _("Owner")
-            else:
-                # asteroids has no owner
-                fgColor = res.getFFColorCode(0) #enemy
-                if not enemy:
-                    continue
+    def _populateEta(self, fleet):
+        return res.formatTime(fleet.eta) if hasattr(fleet, "eta") else "?"
 
-            # check position of fleet
-            system = None
-            systemName = "-"
-            if hasattr(fleet, 'orbiting') and fleet.orbiting:
-                system = client.get(fleet.orbiting, noUpdate = 1)
-                systemName = getattr(system, "name", res.getUnknownName())
-            elif hasattr(fleet, 'closeSystem'):
-                system = client.get(fleet.closeSystem, noUpdate = 1)
-                systemName = _("%s (dst)") % getattr(system, "name", res.getUnknownName())
+    def _populateFuel(self, fleet):
+        if hasattr(fleet, "storEn"):
+            fuel = 100 * fleet.storEn / fleet.maxEn if fleet.maxEn > 0 else 0
+        else:
+            fuel = "?"
+        return fuel
 
-            # get fleet current action and target of action
-            order = "-"
-            targetName = "-"
-            if hasattr(fleet, 'actions'):
-                if fleet.actionIndex < len(fleet.actions):
-                    action, target, data  = fleet.actions[fleet.actionIndex]
-                    if action == Const.FLACTION_REDIRECT and not redirects:
-                        continue
-                    order = gdata.fleetActions[action]
-                    if target != Const.OID_NONE:
-                        targetName = getattr(client.get(target, noUpdate = 1), 'name', res.getUnknownName())
-                        order = "%s %s" % (order, targetName)
-            # eta
-            if hasattr(fleet, "eta"): eta = res.formatTime(fleet.eta)
-            else: eta = "?"
+    def _populateOpTime(self, fleet):
+        if hasattr(fleet, 'storEn') and hasattr(fleet, 'operEn'):
+            turns = fleet.storEn / fleet.operEn if fleet.operEn > 0 else 100000
+            rawRange = turns * fleet.speed / Rules.turnsPerDay
+            _range = "%.2f" % rawRange
+            opTime = res.formatTime(turns)
+        else:
+            _range = "?"
+            opTime = "?"
+        return opTime, _range
 
-            # fuel
-            if hasattr(fleet, "storEn"):
-                if fleet.maxEn > 0: fuel = 100 * fleet.storEn / fleet.maxEn
-                else: fuel = 0
-            else:
-                fuel = "?"
+    def _populateLastUpgrade(self, fleet):
+        return res.formatTime(fleet.lastUpgrade) if hasattr(fleet, "lastUpgrade") else "?"
 
-            # operational time
-            if hasattr(fleet, 'storEn') and hasattr(fleet, 'operEn'):
-                turns = 100000
-                if fleet.operEn > 0: turns = fleet.storEn / fleet.operEn
-                rawRange = turns * fleet.speed / Rules.turnsPerDay
-                range = "%.2f" % rawRange
-                opTime = res.formatTime(turns)
-            else:
-                rawRange = 0
-                range = "?"
-                opTime = "?"
+    def show(self):
+        player = client.getPlayer()
+        items = []
+        for fleetID in client.db.keys():
+            fleet = client.get(fleetID, noUpdate=1)
+            # skip non-fleets
+            if not hasattr(fleet, "type") or fleet.type != Const.T_FLEET:
+                continue
 
-            # last upgrade
-            if hasattr(fleet, "lastUpgrade"):
-                lastUpgrade = res.formatTime(fleet.lastUpgrade)
-            else:
-                lastUpgrade = "?"
+            fgColor = self._analyzeRelations(player.oid, fleet)
+            if fgColor is None:
+                # nothing to show
+                continue
 
-            if hasattr(fleet,'customname') and fleet.customname:
-                fleetname = fleet.customname
-            else:
-                fleetname = getattr(fleet, 'name', res.getUnknownName())
+            order = self._populateOrder(fleet)
+            if order is None:
+                # nothing to show - redirect, which is not ticked
+                continue
+
+            ownerName, ownerNameTip, ownerTipTitle = self._populatePopup(player.oid, fleet)
+            opTime, _range = self._populateOpTime(fleet)
 
             # create ListBox Item for fleet
             item = ui.Item(
-                "%s %s" % (fleetname, ownerName),
-                tooltipTitle = ownerTipTitle,
-                tooltip = ownerNameTip,
-                tLocation = systemName,
-                tOrder = order,
-                tMP = getattr(fleet, "combatPwr", "?"),
-                tETA = eta,
-                tETA_raw = getattr(fleet, "eta", 0),
-                tSignature = getattr(fleet, "signature", "?"),
-                tFuel = fuel,
-                tOpTime = opTime,
-                tRange = range,
-                tRange_raw = rawRange,
-                tLastUpgrade = lastUpgrade,
-                tFleetID = fleetID,
-                foreground = fgColor)
+                "%s %s" % (self._populateName(fleet), ownerName),
+                tooltipTitle=ownerTipTitle,
+                tooltip=ownerNameTip,
+                tLocation=self._populateLocation(player.oid, fleet),
+                tOrder=self._populateOrder(fleet),
+                tMP=getattr(fleet, "combatPwr", "?"),
+                tETA=self._populateEta(fleet),
+                tSignature=getattr(fleet, "signature", "?"),
+                tFuel=self._populateFuel(fleet),
+                tOpTime=opTime,
+                tRange=_range,
+                tLastUpgrade=self._populateLastUpgrade(fleet),
+                tFleetID=fleetID,
+                foreground=fgColor)
             items.append(item)
 
         self.win.vFleets.items = items
@@ -190,7 +183,7 @@ class FleetsOverviewDlg:
 
     def onSelectFleet(self, widget, action, data):
         item = self.win.vFleets.selection[0]
-        fleet = client.get(item.tFleetID, noUpdate = 1)
+        fleet = client.get(item.tFleetID, noUpdate=1)
         if hasattr(fleet, "owner") and fleet.owner == client.getPlayerID():
             # show dialog
             gdata.mainGameDlg.onSelectMapObj(None, None, item.tFleetID)
@@ -205,7 +198,7 @@ class FleetsOverviewDlg:
 
     def onShowLocation(self, widget, action, data):
         item = self.win.vFleets.selection[0]
-        fleet = client.get(item.tFleetID, noUpdate = 1)
+        fleet = client.get(item.tFleetID, noUpdate=1)
         # center on map
         if hasattr(fleet, "x"):
             gdata.mainGameDlg.win.vStarMap.highlightPos = (fleet.x, fleet.y)

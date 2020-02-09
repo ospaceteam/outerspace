@@ -72,34 +72,3 @@ def splitter(text, delims = None):
         result.append((word, start, i))
 
     return result
-
-def getIdxFromColumn(words, cursorColumn):
-    """Returns tuple with word indexes where cursorColumn points.
-
-    If cursor is before first word, (-1, 0) is returned. If cursor
-    is after last word, (len(words) - 1, -1) is returned. If cursor
-    is in word i, (i, i) is returned. And if cursor is between word
-    i and i + 1, (i, i + 1) is returned.
-    """
-    if len(words) == 0 or cursorColumn < 0:
-        return (-1, -1)
-
-    #cursor is before first word
-    if words[0][1] >= cursorColumn:
-        return (-1, 0)
-
-    #cursor is after last word
-    if words[len(words) - 1][2] <= cursorColumn:
-        return (len(words) - 1, -1)
-
-    #cursor is somewhere on line
-    for i in range(len(words)):
-        #cursor in middle of word
-        if cursorColumn > words[i][1] and cursorColumn < words[i][2]:
-            return (i, i)
-        #cursor between end of word and begining of next word
-        if cursorColumn >= words[i][2] and cursorColumn <= words[i + 1][1]:
-            return (i, i + 1)
-
-    # should never be returned
-    return (-1, -1)

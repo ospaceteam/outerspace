@@ -71,7 +71,7 @@ class ISystem(IObject):
         for fleetID in obj.closeFleets:
             if not tran.db.has_key(fleetID):
                 log.debug("CONSISTENCY - fleet %d from system %d does not exists" % (fleetID, obj.oid))
-            elif tran.db[fleetID].type not in (Const.T_FLEET, Const.T_ASTEROID):
+            elif tran.db[fleetID].type != Const.T_FLEET:
                 log.debug("CONSISTENCY - fleet %d from system %d is not a Const.T_FLEET" % (fleetID, obj.oid))
         # delete nonexistent fleets
         index = 0
@@ -349,10 +349,6 @@ class ISystem(IObject):
                 #    self.cmd(commander).isPactActive(tran, commander, obj2.owner, PACT_MUTUAL_OFFENCE):
                 #    allies[obj1ID].append(obj2ID)
                 #    allies[obj2ID].append(obj1ID)
-                # asteroid
-                if obj2.type == Const.T_ASTEROID:
-                    attack[obj1ID].append(obj2ID)
-                    attack[obj2ID].append(obj1ID)
             index += 1
         #@log.debug('ISystem', 'Targets:', targets)
         #@log.debug('ISystem', 'Allies:', allies)

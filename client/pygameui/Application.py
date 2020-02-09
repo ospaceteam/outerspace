@@ -75,104 +75,126 @@ class Application:
     def getApp(self):
         return self
 
+    def _processTimerEvent(self, evt):
+        # tooltips
+        self.mouseOverCount += 1
+        if self.mouseOverCount == self.mouseOverThreshold:
+            # show tooltip
+            if self.mouseOverWidget:
+                self.tooltip.title = self.mouseOverWidget.tooltipTitle
+                self.tooltip.text = self.mouseOverWidget.tooltip
+                self.tooltip.rect = pygame.Rect(pygame.mouse.get_pos(), (100, 100))
+        # cursor
+        self.cursorCount += 1
+        if self.cursorCount == 5:
+            self.cursorOn = not self.cursorOn
+            self.cursorCount = 0
+            if self.focusedWidget:
+                self.focusedWidget.onCursorChanged()
+        # keyboard repeat
+        if self.keyEvt:
+            self.keyCount += 1
+            if self.keyCount == 6:
+                self.processEvent(self.keyEvt)
+                self.keyCount = 4
+        return Const.NoEvent
+
+    def _processMouseWheel(self, evt):
+        assert evt.button in (4, 5)
+        # TODO find window to deliver mouse wheel events to
+        if self.focusedWindow:
+            if self.focusedWindow.rect.collidepoint(evt.pos):
+                if evt.button == 4:
+                    return self.focusedWindow.processMWUp(evt)
+                else:
+                    return self.focusedWindow.processMWDown(evt)
+            else:
+                return Const.NoEvent
+        else:
+            return evt
+
+    def _processMouseButtonDown(self, evt):
+        # mouse wheel
+        if evt.button in (4, 5):
+            return self._processMouseWheel(evt)
+        # TODO double click
+        # check if focused window is top level one
+        if self.focusedWindow != self.windows[-1]:
+            window = self.focusedWindow
+            self.focusWindowAt(evt)
+            # consume event, when focus has been changed
+            if self.focusedWindow != window:
+                return Const.NoEvent
+        # left and right mouse button
+        if self.focusedWindow:
+            if self.focusedWindow.rect.collidepoint(evt.pos):
+                if evt.button == 1:
+                    return self.focusedWindow.processMB1Down(evt)
+                elif evt.button == 3:
+                    return self.focusedWindow.processMB3Down(evt)
+            elif self.focusedWindow.modal:
+                return Const.NoEvent
+            elif self.focusedWindow.looseFocusClose:
+                self.focusedWindow.hide()
+                return self.focusWindowAt(evt)
+            else:
+                return self.focusWindowAt(evt)
+        else:
+            return self.focusWindowAt(evt)
+        return evt
+
+    def _processMouseButtonUp(self, evt):
+        # left and right mouse button
+        if self.focusedWindow and self.focusedWindow.rect.collidepoint(evt.pos):
+            if evt.button == 1:
+                return self.focusedWindow.processMB1Up(evt)
+            elif evt.button == 3:
+                return self.focusedWindow.processMB3Up(evt)
+        return evt
+
+    def _processMouseMotion(self, evt):
+        if self.mouseOverCount < self.mouseOverThreshold:
+            # just moving across widget does not trigger tooltip
+            self.mouseOverCount = 0
+        self.cursorPos = evt.pos
+        if self.focusedWindow:
+            return self.focusedWindow.processMMotion(evt)
+        return evt
+
+    def _processKeyDown(self, evt):
+        self.keyEvt = evt
+        self.keyCount = 0
+        if self.focusedWidget:
+            evt = self.focusedWidget.processKeyDown(evt)
+        if evt != Const.NoEvent and self.focusedWindow:
+            evt = self.focusedWindow.processKeyDown(evt)
+        return evt
+
+    def _processKeyUp(self, evt):
+        self.keyEvt = None
+        if self.focusedWidget:
+            evt = self.focusedWidget.processKeyUp(evt)
+        if evt != Const.NoEvent and self.focusedWindow:
+            evt = self.focusedWindow.processKeyUp(evt)
+        return evt
+
     def processEvent(self, evt):
         if evt.type == pygame.VIDEOEXPOSE:
             self.performFullUpdate()
-        #
         if not pygame.key.get_focused():
             return Const.NoEvent
         elif evt.type == Const.TIMEREVENT:
-            # tooltips
-            self.mouseOverCount += 1
-            if self.mouseOverCount == self.mouseOverThreshold:
-                # show tooltip
-                if self.mouseOverWidget:
-                    self.tooltip.title = self.mouseOverWidget.tooltipTitle
-                    self.tooltip.text = self.mouseOverWidget.tooltip
-                    self.tooltip.rect = pygame.Rect(pygame.mouse.get_pos(), (100, 100))
-            # cursor
-            self.cursorCount += 1
-            if self.cursorCount == 5:
-                self.cursorOn = not self.cursorOn
-                self.cursorCount = 0
-                if self.focusedWidget:
-                    self.focusedWidget.onCursorChanged()
-            # keyboard repeat
-            if self.keyEvt:
-                self.keyCount += 1
-                if self.keyCount == 6:
-                    self.processEvent(self.keyEvt)
-                    self.keyCount = 4
-            return Const.NoEvent
+            self._processTimerEvent(evt)
         elif evt.type == pygame.MOUSEBUTTONDOWN:
-            # mouse wheel
-            if evt.button == 4 or evt.button == 5:
-                # TODO find window to deliver mouse wheel events to
-                if self.focusedWindow:
-                    if self.focusedWindow.rect.collidepoint(evt.pos):
-                        if evt.button == 4:
-                            return self.focusedWindow.processMWUp(evt)
-                        elif evt.button == 5:
-                            return self.focusedWindow.processMWDown(evt)
-                else:
-                    return evt
-                return Const.NoEvent
-            # TODO double click
-            # check if focused window is top level one
-            if self.focusedWindow != self.windows[-1]:
-                window = self.focusedWindow
-                self.focusWindowAt(evt)
-                # consume event, when focus has been changed
-                if self.focusedWindow != window:
-                    return Const.NoEvent
-            # left and right mouse button
-            if self.focusedWindow:
-                if self.focusedWindow.rect.collidepoint(evt.pos):
-                    if evt.button == 1:
-                        return self.focusedWindow.processMB1Down(evt)
-                    elif evt.button == 3:
-                        return self.focusedWindow.processMB3Down(evt)
-                elif self.focusedWindow.modal:
-                    return Const.NoEvent
-                elif self.focusedWindow.looseFocusClose:
-                    self.focusedWindow.hide()
-                    return self.focusWindowAt(evt)
-                else:
-                    return self.focusWindowAt(evt)
-            else:
-                return self.focusWindowAt(evt)
-            return evt
+            self._processMouseButtonDown(evt)
         elif evt.type == pygame.MOUSEBUTTONUP:
-            # left and right mouse button
-            if self.focusedWindow and self.focusedWindow.rect.collidepoint(evt.pos):
-                if evt.button == 1:
-                    return self.focusedWindow.processMB1Up(evt)
-                elif evt.button == 3:
-                    return self.focusedWindow.processMB3Up(evt)
-            return evt
+            self._processMouseButtonUp(evt)
         elif evt.type == pygame.MOUSEMOTION:
-            if self.mouseOverCount < self.mouseOverThreshold:
-                # just moving across widget does not trigger tooltip
-                self.mouseOverCount = 0
-            self.cursorPos = evt.pos
-            if self.focusedWindow:
-                return self.focusedWindow.processMMotion(evt)
-            return evt
+            self._processMouseMotion(evt)
         elif evt.type == pygame.KEYDOWN:
-            self.keyEvt = evt
-            self.keyCount = 0
-            if self.focusedWidget:
-                evt = self.focusedWidget.processKeyDown(evt)
-            if evt != Const.NoEvent and self.focusedWindow:
-                evt = self.focusedWindow.processKeyDown(evt)
-            return evt
+            self._processKeyDown(evt)
         elif evt.type == pygame.KEYUP:
-            self.keyEvt = None
-            if self.focusedWidget:
-                evt = self.focusedWidget.processKeyUp(evt)
-            if evt != Const.NoEvent and self.focusedWindow:
-                evt = self.focusedWindow.processKeyUp(evt)
-            return evt
+            self._processKeyUp(evt)
         else:
             return evt
 

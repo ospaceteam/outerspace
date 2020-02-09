@@ -53,145 +53,108 @@ class PlanetsOverviewDlg:
     def update(self):
         self.show()
 
+    def _shallShow(self, planet, player):
+        if hasattr(planet, 'owner'):
+            return ((self.showMine and planet.owner == player.oid)
+                    or (self.showOtherPlayers and planet.owner != Const.OID_NONE and planet.owner != player.oid)
+                    or (self.showColonizable and planet.owner == Const.OID_NONE and planet.plType not in ('G', 'A'))
+                    or (self.showUncolonizable and planet.plType in ('G', 'A')))
+        elif hasattr(planet, 'plType'):
+            return ((self.showColonizable and planet.plType not in ('G', 'A'))
+                    or (self.showUncolonizable and planet.plType in ('G', 'A')))
+        return False
+
+    def _getTaskProd(self, task, tech, planetID):
+        anotherPlanet = Rules.buildOnAnotherPlanetMod if task.targetID != planetID else 1
+
+        prodFirst = tech.buildProd * anotherPlanet - task.currProd
+        prodNext = (task.quantity - 1) * tech.buildProd * anotherPlanet
+        return prodFirst, prodNext
+
+    def _processProdQueue(self, planet):
+        player = client.getPlayer()
+        if planet.prodQueue and planet.effProdProd > 0:
+            index = 0
+            totalProd = 0
+            for task in planet.prodQueue:
+                if task.isShip:
+                    tech = player.shipDesigns[task.techID]
+                else:
+                    tech = client.getFullTechInfo(task.techID)
+                prodFirst, prodNext = self._getTaskProd(task, tech, planet.oid)
+                if index == 0:
+                    constrInfo = tech.name
+                    etc = math.ceil(float(prodFirst) / planet.effProdProd)
+                totalProd += prodFirst + prodNext
+                index += 1
+            etc = res.formatTime(etc)
+            totalEtc = res.formatTime(math.ceil(float(totalProd) / planet.effProdProd))
+        elif planet.prodQueue:
+            task = planet.prodQueue[0]
+            if task.isShip:
+                tech = player.shipDesigns[task.techID]
+            else:
+                tech = client.getTechInfo(task.techID)
+            constrInfo = tech.name
+            etc = _('N/A')
+            totalEtc = _("N/A")
+        else:
+            constrInfo = _("-")
+            etc = "-"
+            totalEtc = _("-")
+        return constrInfo, etc, totalEtc
+
+
     def show(self):
         player = client.getPlayer()
-        #
+
         items = []
         for planetID in client.db.keys():
-            planet = client.get(planetID, noUpdate = 1)
+            planet = client.get(planetID, noUpdate=1)
             # skip non-planets
             if not hasattr(planet, "type") or planet.type != Const.T_PLANET:
                 continue
-            # shall be shown?
-            ok = 0
-            if hasattr(planet, 'owner'):
-                if self.showMine and planet.owner == player.oid:
-                    ok = 1
-                if self.showOtherPlayers and planet.owner != Const.OID_NONE and \
-                    planet.owner != player.oid:
-                    ok = 1
-                if self.showColonizable and planet.owner == Const.OID_NONE and \
-                    planet.plType not in ('G', 'A'):
-                    ok = 1
-                if self.showUncolonizable and planet.plType in ('G', 'A'):
-                    ok = 1
-            elif hasattr(planet, 'plType'):
-                if self.showColonizable and planet.plType not in ('G', 'A'):
-                    ok = 1
-                if self.showUncolonizable and planet.plType in ('G', 'A'):
-                    ok = 1
-            if not ok:
+            if not self._shallShow(planet, player):
                 continue
             # fill in data
-            #rel = Const.REL_UNDEF
-            maxNA = 999999
-            maxNone = 99999
-            ownerID = Const.OID_NONE
-            if hasattr(planet, 'owner'):
-                ownerID = planet.owner
-                #if planet.owner != Const.OID_NONE:
-                #    rel = client.getRelationTo(planet.owner)
-                if planet.owner == Const.OID_NONE:
-                #else:
-                    owner = _('[Nobody]')
+            ownerID = getattr(planet, 'owner', Const.OID_NONE)
             if hasattr(planet, 'owner') and planet.owner == player.oid:
-                if planet.prodQueue and planet.effProdProd > 0:
-                    index = 0
-                    totalEtc = 0
-                    for task in planet.prodQueue:
-                        if task.isShip:
-                            tech = client.getPlayer().shipDesigns[task.techID]
-                        else:
-                            tech = client.getFullTechInfo(task.techID)
-                        if index == 0:
-                            constrInfo = tech.name
-                        # etc
-                        if task.targetID != planetID:
-                            if index == 0:
-                                etc = math.ceil(float(tech.buildProd * Rules.buildOnAnotherPlanetMod - task.currProd) / planet.effProdProd)
-                                totalEtc += etc
-                                totalEtc += math.ceil((task.quantity - 1) * float(tech.buildProd * Rules.buildOnAnotherPlanetMod) / planet.effProdProd)
-                            else:
-                                totalEtc += math.ceil(float(tech.buildProd * Rules.buildOnAnotherPlanetMod - task.currProd) / planet.effProdProd)
-                                totalEtc += math.ceil((task.quantity - 1) * float(tech.buildProd * Rules.buildOnAnotherPlanetMod) / planet.effProdProd)
-                        else:
-                            if index == 0:
-                                etc = math.ceil(float(tech.buildProd - task.currProd) / planet.effProdProd)
-                                totalEtc += etc
-                                totalEtc += math.ceil((task.quantity - 1)* float(tech.buildProd) / planet.effProdProd)
-                            else:
-                                totalEtc += math.ceil(task.quantity * float(tech.buildProd - task.currProd) / planet.effProdProd)
-                                totalEtc += math.ceil((task.quantity - 1) * float(tech.buildProd) / planet.effProdProd)
-                        index += 1
-                    etc_raw = etc
-                    etc = res.formatTime(etc)
-                    totalEtc_raw = totalEtc
-                    totalEtc = res.formatTime(totalEtc)
-                elif planet.prodQueue:
-                    task = planet.prodQueue[0]
-                    if task.isShip:
-                        tech = client.getPlayer().shipDesigns[task.techID]
-                    else:
-                        tech = client.getTechInfo(task.techID)
-                    constrInfo = tech.name
-                    etc = _('N/A')
-                    etc_raw = maxNA
-                    totalEtc = _("N/A")
-                    totalEtc_raw = maxNA
-                elif planet.effProdProd > 0:
-                    constrInfo = _("-")
-                    etc = "-"
-                    etc_raw = 0
-                    totalEtc = _("-")
-                    totalEtc_raw = 0
-                else:
-                    constrInfo = _("-")
-                    etc = "-"
-                    etc_raw = maxNone
-                    totalEtc = _("-")
-                    totalEtc_raw = maxNone
+                constrInfo, etc, totalEtc = self._processProdQueue(planet)
             else:
                 constrInfo = '?'
                 etc = '?'
-                etc_raw = maxNA
                 totalEtc = '?'
-                totalEtc_raw = maxNA
             # used slots
-            if hasattr(planet, 'slots'):
+            try:
                 freeSlots = planet.plSlots - len(planet.slots)
-            else:
+            except AttributeError:
                 freeSlots = '?'
             # morale
-            if hasattr(planet, "morale"):
+            try:
                 morale = int(planet.morale)
-            else:
+            except AttributeError:
                 morale = "?"
-            #
+
             plType = gdata.planetTypes[getattr(planet, 'plType', None)]
             # list item
-            item = ui.Item(
-                getattr(planet, 'name', res.getUnknownName()),
-                tPlType = _(plType),
-                tPlBio = getattr(planet, 'plBio', '?'),
-                tPlMin = getattr(planet, 'plMin', '?'),
-                tPlEn = getattr(planet, 'plEn', '?'),
-                tChangeBio = getattr(planet, 'changeBio', '?'),
-                tChangeEn = getattr(planet, 'changeEn', '?'),
-                tETC = etc,
-                tETC_raw = etc_raw,
-                tTotalETC = totalEtc,
-                tTotalETC_raw = totalEtc_raw,
-                tConstrInfo = constrInfo,
-                tFree = freeSlots,
-                tMorale = morale,
-                tSpace = getattr(planet, 'plSlots', '?'),
-                tDiam = getattr(planet, 'plDiameter',0)/1000,
-                tProd = getattr(planet, 'effProdProd', '?'),
-                tSci = getattr(planet, 'effProdSci', '?'),
-                tPlanetID = planetID,
-                #foreground = res.getFFColorCode(rel),
-                foreground = res.getPlayerColor(ownerID),
-            )
+            item = ui.Item(getattr(planet, 'name', res.getUnknownName()),
+                           tPlType=_(plType),
+                           tPlBio=getattr(planet, 'plBio', '?'),
+                           tPlMin=getattr(planet, 'plMin', '?'),
+                           tPlEn=getattr(planet, 'plEn', '?'),
+                           tChangeBio=getattr(planet, 'changeBio', '?'),
+                           tChangeEn=getattr(planet, 'changeEn', '?'),
+                           tETC=etc,
+                           tTotalETC=totalEtc,
+                           tConstrInfo=constrInfo,
+                           tFree=freeSlots,
+                           tMorale=morale,
+                           tSpace=getattr(planet, 'plSlots', '?'),
+                           tDiam=getattr(planet, 'plDiameter', 0) / 1000,
+                           tProd=getattr(planet, 'effProdProd', '?'),
+                           tSci=getattr(planet, 'effProdSci', '?'),
+                           tPlanetID=planetID,
+                           foreground=res.getPlayerColor(ownerID))
             items.append(item)
         self.win.vPlanets.items = items
         self.win.vPlanets.itemsChanged()
@@ -203,7 +166,7 @@ class PlanetsOverviewDlg:
 
     def onSelectPlanet(self, widget, action, data):
         item = self.win.vPlanets.selection[0]
-        planet = client.get(item.tPlanetID, noUpdate = 1)
+        planet = client.get(item.tPlanetID, noUpdate=1)
         if hasattr(planet, "owner") and planet.owner == client.getPlayerID():
             # show dialog
             gdata.mainGameDlg.onSelectMapObj(None, None, item.tPlanetID)
@@ -218,7 +181,7 @@ class PlanetsOverviewDlg:
 
     def onShowLocation(self, widget, action, data):
         item = self.win.vPlanets.selection[0]
-        planet = client.get(item.tPlanetID, noUpdate = 1)
+        planet = client.get(item.tPlanetID, noUpdate=1)
         # center on map
         if hasattr(planet, "x"):
             gdata.mainGameDlg.win.vStarMap.highlightPos = (planet.x, planet.y)
@@ -237,43 +200,41 @@ class PlanetsOverviewDlg:
     def createUI(self):
         w, h = gdata.scrnSize
         self.win = ui.Window(self.app,
-            modal = 1,
-            escKeyClose = 1,
-            titleOnly = w == 800 and h == 600,
-            movable = 0,
-            title = _('Planets Overview'),
-            rect = ui.Rect((w - 800 - 4 * (w != 800)) / 2, (h - 600 - 4 * (h != 600)) / 2, 800 + 4 * (w != 800), 580 + 4 * (h != 600)),
-            layoutManager = ui.SimpleGridLM(),
-        )
+                             modal=1,
+                             escKeyClose=1,
+                             titleOnly=w == 800 and h == 600,
+                             movable=0,
+                             title=_('Planets Overview'),
+                             rect=ui.Rect((w - 800 - 4 * (w != 800)) / 2, (h - 600 - 4 * (h != 600)) / 2, 800 + 4 * (w != 800), 580 + 4 * (h != 600)),
+                             layoutManager=ui.SimpleGridLM())
         self.win.subscribeAction('*', self)
         # playets listbox
-        ui.Listbox(self.win, layout = (0, 0, 40, 26), id = 'vPlanets',
-            columns = [(_('Planet'), 'text', 6, ui.ALIGN_W),
-            (_('Type'), 'tPlType', 3.5, ui.ALIGN_W),
-            (_('Env'), 'tPlBio', 1.5, ui.ALIGN_E),
-            (_('Min'), 'tPlMin', 1.5, ui.ALIGN_E),
-            (_('En'), 'tPlEn', 1.5, ui.ALIGN_E),
-            (_('Bio+-'), 'tChangeBio', 2.0, ui.ALIGN_E),
-            (_('En+-'), 'tChangeEn', 2.0, ui.ALIGN_E),
-            (_('Free'), 'tFree', 2.0, ui.ALIGN_E),
-            (_('Sl.'), 'tSpace', 1.5, ui.ALIGN_E),
-            (_('D.'),'tDiam',1.5, ui.ALIGN_E),
-            (_('Mrl'), 'tMorale', 2, ui.ALIGN_E),
-            (_('CP'), 'tProd', 2, ui.ALIGN_E),
-            (_('RP'), 'tSci', 2, ui.ALIGN_E),
-            (_('ETC'), 'tETC', 2.5, ui.ALIGN_E),
-            (_('Tot.ETC'), 'tTotalETC', 2.5, ui.ALIGN_E),
-            (_('Constructing'), 'tConstrInfo', 7.0, ui.ALIGN_W)],
-            columnLabels = 1, action = 'onSelectPlanet', rmbAction = "onShowLocation")
-        ui.Button(self.win, layout = (0, 26, 5, 1), text = _('My planets'), id = "vMine",
-            toggle = 1,    action = "onToggleCondition", data = "showMine")
-        ui.Button(self.win, layout = (5, 26, 5, 1), text = _('Other cmdrs'), id = "vOtherPlayers",
-            toggle = 1,    action = "onToggleCondition", data = "showOtherPlayers")
-        ui.Button(self.win, layout = (10, 26, 5, 1), text = _('Colonizable'), id = "vColonizable",
-            toggle = 1,    action = "onToggleCondition", data = "showColonizable")
-        ui.Button(self.win, layout = (15, 26, 5, 1), text = _('Uncolonizable'), id = "vUncolonizable",
-            toggle = 1,    action = "onToggleCondition", data = "showUncolonizable")
+        ui.Listbox(self.win, layout=(0, 0, 40, 26), id='vPlanets',
+                   columns=[(_('Planet'), 'text', 6, ui.ALIGN_W),
+                   (_('Type'), 'tPlType', 3.5, ui.ALIGN_W),
+                   (_('Env'), 'tPlBio', 1.5, ui.ALIGN_E),
+                   (_('Min'), 'tPlMin', 1.5, ui.ALIGN_E),
+                   (_('En'), 'tPlEn', 1.5, ui.ALIGN_E),
+                   (_('Bio+-'), 'tChangeBio', 2.0, ui.ALIGN_E),
+                   (_('En+-'), 'tChangeEn', 2.0, ui.ALIGN_E),
+                   (_('Free'), 'tFree', 2.0, ui.ALIGN_E),
+                   (_('Sl.'), 'tSpace', 1.5, ui.ALIGN_E),
+                   (_('D.'), 'tDiam', 1.5, ui.ALIGN_E),
+                   (_('Mrl'), 'tMorale', 2, ui.ALIGN_E),
+                   (_('CP'), 'tProd', 2, ui.ALIGN_E),
+                   (_('RP'), 'tSci', 2, ui.ALIGN_E),
+                   (_('ETC'), 'tETC', 2.5, ui.ALIGN_E),
+                   (_('Tot.ETC'), 'tTotalETC', 2.5, ui.ALIGN_E),
+                   (_('Constructing'), 'tConstrInfo', 7.0, ui.ALIGN_W)],
+                   columnLabels=1, action='onSelectPlanet', rmbAction="onShowLocation")
+        ui.Button(self.win, layout=(0, 26, 5, 1), text=_('My planets'), id="vMine",
+                  toggle=1, action="onToggleCondition", data="showMine")
+        ui.Button(self.win, layout=(5, 26, 5, 1), text=_('Other cmdrs'), id="vOtherPlayers",
+                  toggle=1, action="onToggleCondition", data="showOtherPlayers")
+        ui.Button(self.win, layout=(10, 26, 5, 1), text=_('Colonizable'), id="vColonizable",
+                  toggle=1, action="onToggleCondition", data="showColonizable")
+        ui.Button(self.win, layout=(15, 26, 5, 1), text=_('Uncolonizable'), id="vUncolonizable",
+                  toggle=1, action="onToggleCondition", data="showUncolonizable")
         # status bar + submit/cancel
-        ui.TitleButton(self.win, layout = (35, 27, 5, 1), text = _('Close'), action = 'onClose')
-        ui.Title(self.win, id = 'vStatusBar', layout = (0, 27, 35, 1), align = ui.ALIGN_W)
-        #self.win.statusBar = self.win.vStatusBar
+        ui.TitleButton(self.win, layout=(35, 27, 5, 1), text=_('Close'), action='onClose')
+        ui.Title(self.win, id='vStatusBar', layout=(0, 27, 35, 1), align=ui.ALIGN_W)

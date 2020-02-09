@@ -175,6 +175,9 @@ class Database:
         if not self.has_key(key):
             raise ige.ServerException("'%s' created using set method" % key)
 
+    def __contains__(self, key):
+        return self.has_key(key)
+
     def __delitem__(self, key):
         key = self.keyMethod(key)
         if key in self.cache:
@@ -186,6 +189,7 @@ class Database:
         key = self.keyMethod(key)
         self.cursor.execute("select oid from data where oid = ?", (key,))
         return self.cursor.fetchone() is not None
+
 
     def keys(self):
         self.cursor.execute("select oid from data")

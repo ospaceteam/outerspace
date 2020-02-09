@@ -75,7 +75,7 @@ class IPlayer(IObject):
         obj.voteFor = Const.OID_NONE
         obj.governorOf = Const.OID_NONE
         obj.governors = []
-        obj.alliance = Const.OID_NONE
+        # obj.alliance = Const.OID_NONE # not utilized, but can be in DB somewhere
         obj.imperator = 0
         # combat
         # anti-small, anti-medium, anti-large, shield generator
@@ -126,19 +126,19 @@ class IPlayer(IObject):
             obj.staticMap[objID] = min(obj.staticMap[objID], Rules.maxScanPwr)
             if obj.staticMap[objID] < Rules.level1InfoScanPwr:
                 del obj.staticMap[objID]
-            if not tran.db.has_key(objID) or tran.db[objID].type not in (Const.T_SYSTEM, Const.T_WORMHOLE):
+            if objID not in tran.db or tran.db[objID].type not in (Const.T_SYSTEM, Const.T_WORMHOLE):
                 log.debug("Deleting non system %d from static map of player %d" % (objID, obj.oid))
                 del obj.staticMap[objID]
         for objID in obj.dynamicMap.keys():
             if obj.dynamicMap[objID] < Rules.level1InfoScanPwr:
                 del obj.dynamicMap[objID]
-            if not tran.db.has_key(objID) or tran.db[objID].type not in (Const.T_FLEET, Const.T_ASTEROID):
+            if objID not in tran.db or tran.db[objID].type != Const.T_FLEET:
                 log.debug("Deleting obj %d from dynamic map of player %d" % (objID, objID))
                 del obj.dynamicMap[objID]
         # check if all planets are planets
         for objID in obj.planets[:]:
             try:
-                if not tran.db.has_key(objID):
+                if objID not in tran.db:
                     log.debug("Planet does not exists - removing", obj.oid, objID)
                     obj.planets.remove(objID)
                 if tran.db[objID].type != Const.T_PLANET:
@@ -150,7 +150,7 @@ class IPlayer(IObject):
         # check if systems in buoys are systems
         for objID in obj.buoys.keys():
             try:
-                if not tran.db.has_key(objID):
+                if objID not in tran.db:
                     log.debug("System for buoy does not exists - removing", obj.oid, objID)
                     del obj.buoys[objID]
                 if tran.db[objID].type not in (Const.T_SYSTEM, Const.T_WORMHOLE):
@@ -162,10 +162,10 @@ class IPlayer(IObject):
         # check if fleets are fleets
         for objID in obj.fleets[:]:
             try:
-                if not tran.db.has_key(objID):
+                if objID not in tran.db:
                     log.debug("Fleet does not exists - removing", obj.oid, objID)
                     obj.fleets.remove(objID)
-                if tran.db[objID].type not in  (Const.T_FLEET, Const.T_ASTEROID):
+                if tran.db[objID].type != Const.T_FLEET:
                     log.debug("Fleet is not a fleet - removing", obj.oid, objID)
                     obj.fleets.remove(objID)
             except:
@@ -296,9 +296,9 @@ class IPlayer(IObject):
             raise ige.GameException('Queue is full.')
         if quantity < 1:
             raise ige.GameException("Quantity must be greater than 0")
-        if not player.techs.has_key(techID) and isShip == 0:
+        if techID not in player.techs and isShip == 0:
             raise ige.GameException('You do not own this kind of technology.')
-        if not player.shipDesigns.has_key(techID) and isShip == 1:
+        if techID not in player.shipDesigns and isShip == 1:
             raise ige.GameException('You do not own this ship design.')
         if isShip:
             tech = player.shipDesigns[techID]
@@ -629,7 +629,7 @@ class IPlayer(IObject):
                 raise ige.GameException("Previous research has disabled this technology.")
         # check requirements
         for tmpTechID, improvement in tech.researchRequires:
-            if not obj.techs.has_key(tmpTechID) or obj.techs[tmpTechID] < improvement:
+            if tmpTechID not in obj.techs or obj.techs[tmpTechID] < improvement:
                 raise ige.GameException('You cannot research this technology yet.')
         improvement = obj.techs.get(techID, Rules.techBaseImprovement - 1) + 1
         if improvement > Rules.techMaxImprovement or improvement > tech.maxImprovement:
@@ -721,8 +721,8 @@ class IPlayer(IObject):
             raise ige.GameException('No contact with this player.')
         player = tran.db[playerID]
         # must be a player
-        if player.type not in Const.PLAYER_TYPES and player.type != Const.T_ALLIANCE:
-            raise ige.GameException('Pacts can be offered to players and aliances only.')
+        if player.type not in Const.PLAYER_TYPES:
+            raise ige.GameException('Pacts can be offered to players only.')
         # check pactID
         pact = Rules.pactDescrs.get(pactID, None)
         if not pact:
@@ -931,7 +931,7 @@ class IPlayer(IObject):
             if object.type in (Const.T_SYSTEM, Const.T_WORMHOLE):
                 obj.staticMap[objID] = max(obj.staticMap.get(objID, 0), level)
                 contacts.update(object.scannerPwrs)
-            elif object.type in (Const.T_FLEET, Const.T_ASTEROID):
+            elif object.type == Const.T_FLEET:
                 obj.dynamicMap[objID] = max(obj.dynamicMap.get(objID, 0), level)
                 contacts[object.owner] = None
             else:
@@ -1340,7 +1340,7 @@ class IPlayer(IObject):
     def getResolution(self, obj):
         if not hasattr(obj,'clientStats'):
             obj.clientStats = {}
-        if obj.clientStats.has_key('x') and obj.clientStats.has_key('y'):
+        if 'x' in obj.clientStats and 'y' in obj.clientStats:
             return ("%s,%s" % (obj.clientStats['x'],obj.clientStats['y']))
         else:
             return "0,0"

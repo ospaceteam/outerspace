@@ -306,22 +306,6 @@ revoltPenalty = 0.75
 ## Messages
 messageMaxAge = turnsPerDay * 3
 
-## Asteroid
-asteroidPerHPBioMod = - 0.01
-asteroidPerHPMinMod = + 0.001
-asteroidGenerPerc = 0.001
-asteroidMinPlMinAbund = 10
-asteroidModPwr = 2.0
-asteroidTargetInSystem = 0.2
-asteroidMinHP = 100
-asteroidMaxHP = 1000
-asteroidMinSpeed = 2.0
-asteroidMaxSpeed = 4.0
-asteroidMisDef = 1
-asteroidDef = 4
-asteroidAttack = 4
-asteroidImpactDelay = 6
-
 ## Projects
 projECOINIT3PlBio = 1
 

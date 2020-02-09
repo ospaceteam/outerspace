@@ -64,95 +64,87 @@ class DiplomacyDlg:
             self.galaxyScenario = galaxy.scenario
         self.show()
 
-    def show(self):
-        player_highlight = -1
-        if gdata.config.game.highlight != None:
-            player_highlight = gdata.config.game.highlight
-        player = client.getPlayer()
-        # build contact list
-        items = []
-        if self.win.vContacts.selection:
-            self.selectedPartyID = self.win.vContacts.selection[0].tContactID
+    def _getContactEntry(self, contactID):
+        contact = client.get(contactID, publicOnly=1)
+        dipl = client.getDiplomacyWith(contactID)
+        if dipl.relChng > 0:
+            suffix = _(" +")
+        elif dipl.relChng < 0:
+            suffix = _(" -")
         else:
-            self.selectedPartyID = None
+            suffix = _("")
+        relation = _("%s%s") % (_(gdata.relationNames[int(dipl.relation / 125)]), suffix)
+        contactName = _("%s [elect]") % contact.name if client.getPlayer().voteFor == contactID else contact.name
+        if getattr(dipl, "stats", None):
+            return ui.Item(contactName,
+                           tContactID=contactID,
+                           tRelation=relation,
+                           tRelation_raw=dipl.relation,
+                           tPopulation=dipl.stats.storPop,
+                           tPlanets=dipl.stats.planets,
+                           tStructures=dipl.stats.structs,
+                           tProduction=dipl.stats.prodProd,
+                           tScience=dipl.stats.prodSci,
+                           tFleetPwr=dipl.stats.fleetPwr,
+                           tContact=(_("-"), _("Mobile"), _("Static"))[dipl.contactType],
+                           foreground=res.getPlayerColor(contactID),
+                           tooltipTitle=_("Relation"),
+                           tooltip=_("Relation %d, change %+d") % (dipl.relation, dipl.relChng),
+                           statustip=_("Relation %d, change %+d") % (dipl.relation, dipl.relChng))
+        else:
+            return ui.Item(contactName,
+                           tContactID=contactID,
+                           tRelation=relation,
+                           tRelation_raw=dipl.relation,
+                           tPopulation="-",
+                           tPlanets="-",
+                           tStructures="-",
+                           tProduction="-",
+                           tScience="-",
+                           tFleetPwr="-",
+                           tContact=(_("None"), _("Mobile"), _("Static"))[dipl.contactType],
+                           foreground=res.getPlayerColor(contactID))
+
+    def _getPlayerEntry(self):
+        player = client.getPlayer()
+
+        contactName = _("%s [elect]") % player.name if player.voteFor == player.oid else player.name
+        return ui.Item(contactName,
+                       tContactID=player.oid,
+                       tRelation="-",
+                       tRelation_raw=10000,
+                       tPopulation=getattr(player.stats, "storPop", "?"),
+                       tPlanets=getattr(player.stats, "planets", "?"),
+                       tStructures=getattr(player.stats, "structs", "?"),
+                       tProduction=getattr(player.stats, "prodProd", "?"),
+                       tScience=getattr(player.stats, "prodSci", "?"),
+                       tFleetPwr=getattr(player.stats, "fleetPwr", "?"),
+                       tContact="-",
+                       foreground=res.getFFColorCode(Const.REL_UNITY))
+
+    def _buildContactList(self):
+        player = client.getPlayer()
+
+        items = []
         selected = None
         for contactID in player.diplomacyRels:
-            contact = client.get(contactID,publicOnly = 1)
-            dipl = client.getDiplomacyWith(contactID)
-            if dipl.relChng > 0:
-                relation = _("%s +") % _(gdata.relationNames[int(dipl.relation / 125)])
-            elif dipl.relChng < 0:
-                relation = _("%s -") % _(gdata.relationNames[int(dipl.relation / 125)])
-            else:
-                relation = _("%s") % _(gdata.relationNames[int(dipl.relation / 125)])
-            if player.voteFor == contactID:
-                contactName = _("%s [elect]") % contact.name
-            else:
-                contactName = contact.name
-            #f int(player_highlight) == (contactID):
-            #    colortemp = gdata.playerHighlightColor
-            #lse:
-            #    colortemp = res.getFFColorCode(dipl.relation)
-            colortemp = res.getPlayerColor(contactID)
-            if hasattr(dipl, "stats") and dipl.stats:
-                item = ui.Item(contactName,
-                    tContactID = contactID,
-                    tRelation = relation,
-                    tRelation_raw = dipl.relation,
-                    tPopulation = dipl.stats.storPop,
-                    tPlanets = dipl.stats.planets,
-                    tStructures = dipl.stats.structs,
-                    tProduction = dipl.stats.prodProd,
-                    tScience = dipl.stats.prodSci,
-                    tFleetPwr = dipl.stats.fleetPwr,
-                    tContact = (_("-"), _("Mobile"), _("Static"))[dipl.contactType],
-                    foreground = colortemp,
-                    tooltipTitle = _("Relation"),
-                    tooltip = _("Relation %d, change %+d") % (dipl.relation, dipl.relChng),
-                    statustip = _("Relation %d, change %+d") % (dipl.relation, dipl.relChng),
-                )
-            else:
-                item = ui.Item(contactName,
-                    tContactID = contactID,
-                    tRelation = relation,
-                    tRelation_raw = dipl.relation,
-                    tPopulation = "-",
-                    tPlanets = "-",
-                    tStructures = "-",
-                    tProduction = "-",
-                    tScience = "-",
-                    tFleetPwr = "-",
-                    tContact = (_("None"), _("Mobile"), _("Static"))[dipl.contactType],
-                    foreground = colortemp,
-                )
+            item = self._getContactEntry(contactID)
             items.append(item)
             if self.selectedPartyID == contactID:
                 selected = item
         # player
-        if player.voteFor == player.oid:
-            contactName = _("%s [elect]") % player.name
-        else:
-            contactName = player.name
-        item = ui.Item(contactName,
-            tContactID = player.oid,
-            tRelation = "-",
-            tRelation_raw = 10000,
-            tPopulation = getattr(player.stats, "storPop", "?"),
-            tPlanets = getattr(player.stats, "planets", "?"),
-            tStructures = getattr(player.stats, "structs", "?"),
-            tProduction = getattr(player.stats, "prodProd", "?"),
-            tScience = getattr(player.stats, "prodSci", "?"),
-            tFleetPwr = getattr(player.stats, "fleetPwr", "?"),
-            tContact = "-",
-            foreground = res.getFFColorCode(Const.REL_UNITY),
-        )
+        item = self._getPlayerEntry()
         items.append(item)
         if self.selectedPartyID == player.oid:
             selected = item
         self.win.vContacts.items = items
         self.win.vContacts.selectItem(selected)
         self.win.vContacts.itemsChanged()
-        # voting
+        return selected
+
+    def _processVoting(self, selected):
+        player = client.getPlayer()
+
         if self.galaxyScenario == Const.SCENARIO_OUTERSPACE:
             # this is just in case we reloged
             self.win.vAbstain.visible = 1
@@ -165,65 +157,73 @@ class DiplomacyDlg:
         else:
             self.win.vAbstain.visible = 0
             self.win.vVoteFor.visible = 0
-        # pacts
+
+    def _getPactsEntry(self, pactID, dipl):
+        pactSpec = Rules.pactDescrs[pactID]
+
+        if pactID in dipl.pacts:
+            pactState1 = dipl.pacts[pactID][0]
+            if self.partyDipl:
+                pactState2 = self.partyDipl.pacts.get(pactID, [Const.PACT_OFF])[0]
+                pactState2Text = _(gdata.pactStates[pactState2])
+            else:
+                pactState2 = Const.PACT_OFF
+                pactState2Text = _("N/A")
+            item = ui.Item(_(gdata.pactNames[pactID]),
+                           tState1=_(gdata.pactStates[pactState1]),
+                           tState2=pactState2Text,
+                           tPactState=pactState1,
+                           foreground=gdata.sevColors[(gdata.DISABLED, gdata.INFO, gdata.MIN)[min(pactState1, pactState2)]])
+        else:
+            if self.partyDipl:
+                pactState2 = self.partyDipl.pacts.get(pactID, [Const.PACT_OFF])[0]
+                pactState2Text = _(gdata.pactStates[pactState2])
+            else:
+                pactState2 = Const.PACT_OFF
+                pactState2Text = _("N/A")
+            item = ui.Item(_(gdata.pactNames[pactID]),
+                           tState1=_(gdata.pactStates[Const.PACT_OFF]),
+                           tState2=pactState2Text,
+                           tPactState=Const.PACT_OFF,
+                           foreground=gdata.sevColors[gdata.DISABLED])
+        item.tPactID = pactID
+        return item
+
+    def _processPacts(self):
+        player = client.getPlayer()
+
         items = []
         selected = None
         if self.selectedPartyID and self.selectedPartyID != player.oid:
-            dipl, self.partyDipl = client.cmdProxy.getPartyDiplomacyRels(player.oid, self.selectedPartyID)
+            dipl = client.cmdProxy.getPartyDiplomacyRels(player.oid, self.selectedPartyID)[0]
             if not dipl:
                 dipl = client.getDiplomacyWith(self.selectedPartyID)
             for pactID in gdata.pacts:
                 pactSpec = Rules.pactDescrs[pactID]
-                if dipl.relation < pactSpec.validityInterval[0] or \
-                    dipl.relation > pactSpec.validityInterval[1]:
+                if not pactSpec.validityInterval[0] < dipl.relation < pactSpec.validityInterval[1]:
                     continue
-                if pactID in dipl.pacts:
-                    pactState1 = dipl.pacts[pactID][0]
-                    if self.partyDipl:
-                        pactState2 = self.partyDipl.pacts.get(pactID, [Const.PACT_OFF])[0]
-                        pactState2Text = _(gdata.pactStates[pactState2])
-                    else:
-                        pactState2 = Const.PACT_OFF
-                        pactState2Text = _("N/A")
-                    item = ui.Item(
-                        _(gdata.pactNames[pactID]),
-                        tState1 = _(gdata.pactStates[pactState1]),
-                        tState2 = pactState2Text,
-                        tPactState = pactState1,
-                        foreground = gdata.sevColors[(gdata.DISABLED, gdata.INFO, gdata.MIN)[min(pactState1, pactState2)]]
-                    )
-                else:
-                    if self.partyDipl:
-                        pactState2 = self.partyDipl.pacts.get(pactID, [Const.PACT_OFF])[0]
-                        pactState2Text = _(gdata.pactStates[pactState2])
-                    else:
-                        pactState2 = Const.PACT_OFF
-                        pactState2Text = _("N/A")
-                    item = ui.Item(
-                        _(gdata.pactNames[pactID]),
-                        tState1 = _(gdata.pactStates[Const.PACT_OFF]),
-                        tState2 = pactState2Text,
-                        tPactState = Const.PACT_OFF,
-                        foreground = gdata.sevColors[gdata.DISABLED]
-                    )
-                item.tPactID = pactID
-                if pactID == self.selectedPactID:
-                    selected = item
-                items.append(item)
+                items.append(self._getPactsEntry(pactID, dipl))
         self.win.vPacts.items = items
         self.win.vPacts.selectItem(selected)
         self.win.vPacts.itemsChanged()
-        # Higlight buttons
-        if gdata.config.defaults.highlights == 'yes':
-            self.win.vHighlight.enabled = 0
-            self.win.vUHighlight.enabled = 1
-        else:
-            self.win.vHighlight.enabled = 1
-            self.win.vUHighlight.enabled = 0
-        self.onPactSelected(None, None, None)
+
+    def show(self):
+        selected = self._buildContactList()
+        self._processVoting(selected)
+        self._processPacts()
+
+        # Highlight buttons
+        self.win.vHighlight.enabled = 1 - int(gdata.config.defaults.highlights == 'yes')
+        self.win.vUHighlight.enabled = int(gdata.config.defaults.highlights == 'yes')
 
     def onContactSelected(self, widget, action, data):
+        if self.win.vContacts.selection:
+            self.selectedPartyID = self.win.vContacts.selection[0].tContactID
+        else:
+            self.selectedPartyID = None
+        self.partyDipl = client.cmdProxy.getPartyDiplomacyRels(client.getPlayerID(), self.selectedPartyID)[1]
         self.update()
+        self.onPactSelected(None, None, None)
 
     def onPactSelected(self, widget, action, data):
         if self.win.vPacts.selection:
@@ -258,14 +258,11 @@ class DiplomacyDlg:
         states = (_(" "), _("Required"))
         self.win.vCondTitle.text = _('Conditions for pact: %s') % _(gdata.pactNames[item.tPactID])
         for pactID in gdata.pacts:
-            item = ui.Item(
-                _(gdata.pactNames[pactID]),
-                tState1 = states[pactID in conditions],
-                tState2 = states[pactID in partnerConditions],
-                tPactID = pactID,
-                foreground = gdata.sevColors[(gdata.NONE, gdata.MAJ, gdata.MIN)\
-                    [(pactID in conditions) + (pactID in partnerConditions)]],
-            )
+            item = ui.Item(_(gdata.pactNames[pactID]),
+                           tState1=states[pactID in conditions],
+                           tState2=states[pactID in partnerConditions],
+                           tPactID=pactID,
+                           foreground=gdata.sevColors[(gdata.NONE, gdata.MAJ, gdata.MIN)[(pactID in conditions) + (pactID in partnerConditions)]])
             items.append(item)
             if pactID in conditions:
                 selected.append(item)
@@ -368,79 +365,66 @@ class DiplomacyDlg:
     def createUI(self):
         w, h = gdata.scrnSize
         self.win = ui.Window(self.app,
-            modal = 1,
-            escKeyClose = 1,
-            titleOnly = w == 800 and h == 600,
-            movable = 0,
-            title = _('Diplomacy'),
-            rect = ui.Rect((w - 800 - 4 * (w != 800)) / 2, (h - 600 - 4 * (h != 600)) / 2, 800 + 4 * (w != 800), 580 + 4 * (h != 600)),
-            layoutManager = ui.SimpleGridLM(),
-        )
+                             modal=1,
+                             escKeyClose=1,
+                             titleOnly=(w == 800 and h == 600),
+                             movable=0,
+                             title=_('Diplomacy'),
+                             rect=ui.Rect((w - 800 - 4 * (w != 800)) / 2,
+                                          (h - 600 - 4 * (h != 600)) / 2,
+                                          800 + 4 * (w != 800),
+                                          580 + 4 * (h != 600)),
+                             layoutManager=ui.SimpleGridLM())
         self.win.subscribeAction('*', self)
         # player listing
-        #ui.Title(self.win, layout = (0, 0, 40, 1), text = _('Contacts'),
-        #    font = 'normal-bold', align = ui.ALIGN_W)
-        ui.Listbox(self.win, layout = (0, 0, 40, 14), id = 'vContacts',
-            columns = (
-                (_('Name'), 'text', 8, ui.ALIGN_W),
-                (_('Relation'), 'tRelation', 4, ui.ALIGN_E),
-                (_('Population'), 'tPopulation', 4, ui.ALIGN_E),
-                (_('Planets'), 'tPlanets', 4, ui.ALIGN_E),
-                (_('Structures'), 'tStructures', 4, ui.ALIGN_E),
-                (_('Production'), 'tProduction', 4, ui.ALIGN_E),
-                (_('Research'), 'tScience', 4, ui.ALIGN_E),
-                (_('Military pwr'), 'tFleetPwr', 4, ui.ALIGN_E),
-                (_("Contact"), "tContact", 4, ui.ALIGN_E),
-            ),
-            columnLabels = 1, action = "onContactSelected", rmbAction = "onHighlightMenu"
-        )
+        ui.Listbox(self.win, layout=(0, 0, 40, 14), id='vContacts',
+                   columns=((_('Name'), 'text', 8, ui.ALIGN_W),
+                            (_('Relation'), 'tRelation', 4, ui.ALIGN_E),
+                            (_('Population'), 'tPopulation', 4, ui.ALIGN_E),
+                            (_('Planets'), 'tPlanets', 4, ui.ALIGN_E),
+                            (_('Structures'), 'tStructures', 4, ui.ALIGN_E),
+                            (_('Production'), 'tProduction', 4, ui.ALIGN_E),
+                            (_('Research'), 'tScience', 4, ui.ALIGN_E),
+                            (_('Military pwr'), 'tFleetPwr', 4, ui.ALIGN_E),
+                            (_("Contact"), "tContact", 4, ui.ALIGN_E)),
+                   columnLabels=1, action="onContactSelected", rmbAction="onHighlightMenu")
         # Voting
-        ui.Button(self.win, layout = (0, 14, 5, 1), text = _("Elect"),
-            id = "vVoteFor", action = "onVoteFor")
-        ui.Button(self.win, layout = (5, 14, 5, 1), text = _("Abstain"),
-            id = "vAbstain", action = "onAbstain")
+        ui.Button(self.win, layout=(0, 14, 5, 1), text=_("Elect"),
+                  id="vVoteFor", action="onVoteFor")
+        ui.Button(self.win, layout=(5, 14, 5, 1), text=_("Abstain"),
+                  id="vAbstain", action="onAbstain")
         # Highlights
-        ui.Button(self.win, layout = (24, 14, 8, 1), text = _("Highlights On"),
-            id = "vHighlight", action = "onHighlight")
-        ui.Button(self.win, layout = (32, 14, 8, 1), text = _("Highligh Off"),
-            id = "vUHighlight", action = "onUHighlight")
+        ui.Button(self.win, layout=(24, 14, 8, 1), text=_("Highlights On"),
+                  id="vHighlight", action="onHighlight")
+        ui.Button(self.win, layout=(32, 14, 8, 1), text=_("Highligh Off"),
+                  id="vUHighlight", action="onUHighlight")
         # pacts
-        ui.Title(self.win, layout = (0, 15, 20, 1), text = _('Pacts'),
-            font = 'normal-bold', align = ui.ALIGN_W)
-        ui.Listbox(self.win, layout = (0, 16, 20, 10), id = 'vPacts',
-            columns = (
-                (_('I'), 'tState1', 3, ui.ALIGN_W),
-                (_('Partner'), 'tState2', 3, ui.ALIGN_W),
-                (_('Pact'), 'text', 13, ui.ALIGN_W),
-            ),
-            columnLabels = 1, action = "onPactSelected"
-        )
-        ui.Button(self.win, layout = (0, 26, 20, 1), text = _("On"),
-            id = "vChangePactState", action = "onPactChange", enabled = 0)
+        ui.Title(self.win, layout=(0, 15, 20, 1), text=_('Pacts'),
+                 font='normal-bold', align=ui.ALIGN_W)
+        ui.Listbox(self.win, layout=(0, 16, 20, 10), id='vPacts',
+                   columns=((_('I'), 'tState1', 3, ui.ALIGN_W),
+                            (_('Partner'), 'tState2', 3, ui.ALIGN_W),
+                            (_('Pact'), 'text', 13, ui.ALIGN_W)),
+                   columnLabels=1, action="onPactSelected")
+        ui.Button(self.win, layout=(0, 26, 20, 1), text=_("On"),
+                  id="vChangePactState", action="onPactChange", enabled=0)
         # conditions
-        ui.Title(self.win, layout = (20, 15, 20, 1), text = _('Conditions'),
-            id = "vCondTitle", font = 'normal-bold', align = ui.ALIGN_W)
-        ui.Listbox(self.win, layout = (20, 16, 20, 10), id = 'vConditions',
-            columns = (
-                (_('I'), 'tState1', 3, ui.ALIGN_W),
-                (_('Partner'), 'tState2', 3, ui.ALIGN_W),
-                (_('Pact'), 'text', 13, ui.ALIGN_W),
-            ),
-            columnLabels = 1, multiselection = 1
-        )
-        ui.Button(self.win, layout = (20, 26, 15, 1), text = _("Change"),
-            id = "vPactConditions", action = "onPactChange", enabled = 0, data = "CONDS")
-        ui.Button(self.win, layout = (35, 26, 5, 1), text = _("Reset"),
-            id = "vPactCondReset", action = "onPactChange", enabled = 0, data = "CONDSRESET")
+        ui.Title(self.win, layout=(20, 15, 20, 1), text=_('Conditions'),
+                 id="vCondTitle", font='normal-bold', align=ui.ALIGN_W)
+        ui.Listbox(self.win, layout=(20, 16, 20, 10), id='vConditions',
+                   columns=((_('I'), 'tState1', 3, ui.ALIGN_W),
+                            (_('Partner'), 'tState2', 3, ui.ALIGN_W),
+                            (_('Pact'), 'text', 13, ui.ALIGN_W)),
+                   columnLabels=1, multiselection=1)
+        ui.Button(self.win, layout=(20, 26, 15, 1), text=_("Change"),
+                  id="vPactConditions", action="onPactChange", enabled=0, data="CONDS")
+        ui.Button(self.win, layout=(35, 26, 5, 1), text=_("Reset"),
+                  id="vPactCondReset", action="onPactChange", enabled=0, data="CONDSRESET")
         # status bar + submit/cancel
-        ui.TitleButton(self.win, layout = (35, 27, 5, 1), text = _('Close'), action = 'onClose')
-        ui.Title(self.win, id = 'vStatusBar', layout = (0, 27, 35, 1), align = ui.ALIGN_W)
-        #self.win.statusBar = self.win.vStatusBar
+        ui.TitleButton(self.win, layout=(35, 27, 5, 1), text=_('Close'), action='onClose')
+        ui.Title(self.win, id='vStatusBar', layout=(0, 27, 35, 1), align=ui.ALIGN_W)
         # highlight menu
-        self.eventPopup = ui.Menu(self.app, title = _("Highligh actions"),
-            items = [
-                ui.Item(_("Define color"), action = "onColorDefinition"),
-                ui.Item(_("Disable highlight"), action = "onDeleteHighlight"),
-            ]
-        )
+        self.eventPopup = ui.Menu(self.app, title=_("Highligh actions"),
+                                  items=[ui.Item(_("Define color"), action="onColorDefinition"),
+                                         ui.Item(_("Disable highlight"), action="onDeleteHighlight")])
         self.eventPopup.subscribeAction("*", self)

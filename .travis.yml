@@ -1,7 +1,10 @@
 language: python
+python:
+  - "2.7"
 
 install:
-  - pip install -q passlib
+  - pip install -q passlib pygame
 
 script:
+  - ./tests/unittest.sh
   - ./tests/smoke_test.py --travis

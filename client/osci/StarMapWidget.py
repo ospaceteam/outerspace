@@ -18,6 +18,7 @@
 #  along with Outer Space; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
+import bisect
 
 from pygameui.Widget import Widget, registerWidget
 import pygameui as ui
@@ -236,6 +237,70 @@ class StarMapWidget(Widget):
                         tmpY += textSrfc.get_height()
                     x += width + 2
 
+    def _drawApproachingFleetLine(self, surface, activeObjID):
+        maxY = self._mapSurf.get_rect().height
+        centerX, centerY = self._mapSurf.get_rect().center
+        x, y, x1, y1 = self.star_map._fleetTarget[activeObjID]
+        sx = int((x - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
+        sy = maxY - (int((y - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
+        dx = int((x1 - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
+        dy = maxY - (int((y1 - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
+        pygame.draw.line(surface, (0xff, 0xff, 0x00), (sx, sy), (dx, dy), 2)
+
+    def _drawThickeningFleetOrderLines(self, surface, activeObjID):
+        maxY = self._mapSurf.get_rect().height
+        centerX, centerY = self._mapSurf.get_rect().center
+        for x, y, x1, y1, color in self.star_map._fordersTarget[activeObjID]:
+            sx = int((x - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
+            sy = maxY - (int((y - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
+            dx = int((x1 - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
+            dy = maxY - (int((y1 - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
+            pygame.draw.line(surface, color, (sx, sy), (dx, dy), 2)
+
+    def _drawFleetRangesTime(self, surface, activeObjID):
+        maxY = self._mapSurf.get_rect().height
+        centerX, centerY = self._mapSurf.get_rect().center
+        x, y, maxRange, operRange, halfRange, speed, turns = self.star_map._fleetRanges[activeObjID]
+        sx = int((x - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
+        sy = maxY - (int((y - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
+
+        for i in xrange(1, turns / 6):
+            rng = int(i * speed * self.star_map.scale)
+            if rng > 1:
+                pygame.draw.circle(surface, (0x70, 0x70, 0x80), (sx, sy), rng, 1)
+                textSrfc = Fonts.renderText(self.star_map.textSize, res.formatTime(i * 6), 1, (0x70, 0x70, 0x80), (0x00, 0x00, 0x00))
+                surface.blit(textSrfc, (sx - rng, sy - textSrfc.get_height() / 2))
+                surface.blit(textSrfc, (sx + rng, sy - textSrfc.get_height() / 2))
+                surface.blit(textSrfc, (sx - textSrfc.get_width() / 2, sy - rng))
+                surface.blit(textSrfc, (sx - textSrfc.get_width() / 2, sy + rng - textSrfc.get_height()))
+        rng = int(max(maxRange * self.star_map.scale, 0.2 * self.star_map.scale))
+        if rng > 1:
+            pygame.draw.circle(surface, (0xc0, 0x20, 0x20), (sx, sy), rng, 1)
+
+    def _drawFleetRangesFuel(self, surface, activeObjID):
+        maxY = self._mapSurf.get_rect().height
+        centerX, centerY = self._mapSurf.get_rect().center
+        x, y, maxRange, operRange, halfRange, speed, turns = self.star_map._fleetRanges[activeObjID]
+        sx = int((x - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
+        sy = maxY - (int((y - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
+
+        # fleet range based on fuel
+        rng = int(max(maxRange * self.star_map.scale, 0.2 * self.star_map.scale))
+        if rng > 1:
+            pygame.draw.circle(surface, (0xc0, 0x20, 0x20), (sx, sy), rng, 1)
+        rng = int(operRange * self.star_map.scale)
+        if rng > 1:
+            pygame.draw.circle(surface, (0x20, 0x80, 0x20), (sx, sy), rng, 1)
+        rng = int(halfRange * self.star_map.scale)
+        if rng > 1:
+            pygame.draw.circle(surface, (0x20, 0x20, 0x80), (sx, sy), rng, 1)
+
+    def _drawFleetRanges(self, surface, activeObjID):
+        if pygame.key.get_mods() & pygame.KMOD_SHIFT:
+            self._drawFleetRangesTime(surface, activeObjID)
+        else:
+            self._drawFleetRangesFuel(surface, activeObjID)
+
     def drawAdditions(self, surface):
         oldClip = surface.get_clip()
         surface.set_clip(self.rect)
@@ -248,64 +313,14 @@ class StarMapWidget(Widget):
             pygame.draw.circle(surface, (0xff, 0xff, 0xff), (sx, sy), 13, 2)
         # fleet range in case of selecting fleet orders
         if self.alwaysShowRangeFor and self.star_map._fleetRanges.has_key(self.alwaysShowRangeFor):
-            x, y, maxRange, operRange, halfRange, speed, turns = self.star_map._fleetRanges[self.alwaysShowRangeFor]
-            sx = int((x - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
-            sy = maxY - (int((y - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
-            rng = max(maxRange * self.star_map.scale, 0.2 * self.star_map.scale)
-            if rng > 1:
-                pygame.draw.circle(surface, (0xc0, 0x20, 0x20), (sx, sy), int(rng), 1)
-            rng = operRange * self.star_map.scale
-            if rng > 1:
-                pygame.draw.circle(surface, (0x20, 0x80, 0x20), (sx, sy), int(rng), 1)
-            rng = halfRange * self.star_map.scale
-            if rng > 1:
-                pygame.draw.circle(surface, (0x20, 0x20, 0x80), (sx, sy), int(rng), 1)
+            self._drawFleetRangesFuel(surface, self.alwaysShowRangeFor)
         for activeObjID in self.activeObjIDs:
             if activeObjID and activeObjID in self.star_map._fleetTarget:
-                # approaching fleet line
-                x, y, x1, y1 = self.star_map._fleetTarget[activeObjID]
-                sx = int((x - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
-                sy = maxY - (int((y - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
-                dx = int((x1 - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
-                dy = maxY - (int((y1 - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
-                pygame.draw.line(surface, (0xff, 0xff, 0x00), (sx, sy), (dx, dy), 2)
+                self._drawApproachingFleetLine(surface, activeObjID)
             if activeObjID and activeObjID in self.star_map._fordersTarget:
-                # thickening fleet order lines
-                for x, y, x1, y1, color in self.star_map._fordersTarget[activeObjID]:
-                    sx = int((x - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
-                    sy = maxY - (int((y - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
-                    dx = int((x1 - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
-                    dy = maxY - (int((y1 - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
-                    pygame.draw.line(surface, color, (sx, sy), (dx, dy), 2)
+                self._drawThickeningFleetOrderLines(surface, activeObjID)
             if activeObjID and activeObjID in self.star_map._fleetRanges:
-                x, y, maxRange, operRange, halfRange, speed, turns = self.star_map._fleetRanges[activeObjID]
-                sx = int((x - self.star_map.currX) * self.star_map.scale) + centerX + self.rect.left
-                sy = maxY - (int((y - self.star_map.currY) * self.star_map.scale) + centerY) + self.rect.top
-                if pygame.key.get_mods() & pygame.KMOD_SHIFT:
-                    # fleet ranges stepped by 6 turns
-                    for i in xrange(1, turns / 6):
-                        rng = int(i * speed * self.star_map.scale)
-                        if rng > 1:
-                            pygame.draw.circle(surface, (0x70, 0x70, 0x80), (sx, sy), rng, 1)
-                            textSrfc = Fonts.renderText(self.star_map.textSize, res.formatTime(i * 6), 1, (0x70, 0x70, 0x80), (0x00, 0x00, 0x00))
-                            surface.blit(textSrfc, (sx - rng, sy - textSrfc.get_height() / 2))
-                            surface.blit(textSrfc, (sx + rng, sy - textSrfc.get_height() / 2))
-                            surface.blit(textSrfc, (sx - textSrfc.get_width() / 2, sy - rng))
-                            surface.blit(textSrfc, (sx - textSrfc.get_width() / 2, sy + rng - textSrfc.get_height()))
-                    rng = int(max(maxRange * self.star_map.scale, 0.2 * self.star_map.scale))
-                    if rng > 1:
-                        pygame.draw.circle(surface, (0xc0, 0x20, 0x20), (sx, sy), rng, 1)
-                else:
-                    # fleet range based on fuel
-                    rng = int(max(maxRange * self.star_map.scale, 0.2 * self.star_map.scale))
-                    if rng > 1:
-                        pygame.draw.circle(surface, (0xc0, 0x20, 0x20), (sx, sy), rng, 1)
-                    rng = int(operRange * self.star_map.scale)
-                    if rng > 1:
-                        pygame.draw.circle(surface, (0x20, 0x80, 0x20), (sx, sy), rng, 1)
-                    rng = int(halfRange * self.star_map.scale)
-                    if rng > 1:
-                        pygame.draw.circle(surface, (0x20, 0x20, 0x80), (sx, sy), rng, 1)
+                self._drawFleetRanges(surface, activeObjID)
         # restore clipping
         surface.set_clip(oldClip)
 
@@ -335,7 +350,7 @@ class StarMapWidget(Widget):
         self._tempOverlayHotbutton = False;
         self._hotbuttonRects = {}
 
-    def toggleHotbuttons(self,button):
+    def toggleHotButtons(self, button):
         self.toggleTempButton(False)
         if (button[:3] == 'ov_'): #overlay
             if self._oldOverlayHotbutton == button:
@@ -353,20 +368,15 @@ class StarMapWidget(Widget):
                 self._hotbuttons[button][1] = 0
             else:
                 self._hotbuttons[button][1] = self._hotbuttons[button][6] # set standard value
-            if button == 'pzone':
-                self.control_modes['control_areas'] = self._hotbuttons[button][1]
-            elif button == 'civ':
-                self.control_modes['civilian_fleets'] = self._hotbuttons[button][1]
-            elif button == 'lines':
-                self.control_modes['fleet_lines'] = self._hotbuttons[button][1]
-            elif button == 'redir':
-                self.control_modes['redirects'] = self._hotbuttons[button][1]
-            elif button == 'scanner':
-                self.control_modes['scanners'] = self._hotbuttons[button][1]
-            elif button == 'grid':
-                self.control_modes['map_grid'] = self._hotbuttons[button][1]
-            elif button == 'alternate':
-                self.control_modes['alternative_mode'] = self._hotbuttons[button][1]
+            translation = {'pzone': 'control_areas',
+                           'civ': 'civilian_fleets',
+                           'lines': 'fleet_lines',
+                           'redir': 'redirects',
+                           'scanner': 'scanners',
+                           'grid': 'map_grid',
+                           'alternate': 'alternative_mode'}
+            if button in translation:
+                self.control_modes[translation[button]] = self._hotbuttons[button][1]
         self.repaintHotbuttons = 1
         self.repaint_map = 1
 
@@ -439,7 +449,7 @@ class StarMapWidget(Widget):
         if self.control_modes['hotbuttons'] and self._hotbuttonsZone.collidepoint(pos):
             button = self.detectButtonOverpass(pos)
             if button:
-                self.toggleHotbuttons(button)
+                self.toggleHotButtons(button)
             return ui.NoEvent
         objIDs = []
         for objID in self._actAreas.keys():
@@ -495,9 +505,6 @@ class StarMapWidget(Widget):
                     else:
                         name = getattr(obj, "name", None)
                     name = _("Fleet: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
-                elif obj.type == Const.T_ASTEROID:
-                    name = getattr(obj, "name", None)
-                    name = _("Asteroid: %s [ID: %d]") % (name or res.getUnknownName(), obj.oid)
                 else:
                     name = _("Unknown object [ID: %d]") % obj.oid
                 item = ui.Item(name, action = "onObjectSelected", data = objID)
@@ -548,39 +555,28 @@ class StarMapWidget(Widget):
             rect = self._mapSurf.get_rect()
             self.miniMap.moveRect(self.star_map.currX, self.star_map.currY, rect.width / self.star_map.scale, rect.height / self.star_map.scale)
 
-    def processMWUp(self, evt):
-        if self.star_map.scale < 80:
+    def _rescaleMap(self, evt, delta):
+        if not 10 < self.star_map.scale + delta < 80:
+            return ui.NoEvent
+        try:
             x, y = evt.pos
-            centerX, centerY = self._mapSurf.get_rect().center
-            self.star_map.currX -= float(centerX - x) * (1/ self.star_map.scale - 1 / (self.star_map.scale+5))
-            self.star_map.currY += float(centerY - y) * (1/ self.star_map.scale - 1 / (self.star_map.scale+5))
-            self.star_map.scale += 5
-            if self.star_map.scale > 60:
-                self.star_map.textSize = 'large'
-            elif self.star_map.scale > 40:
-                self.star_map.textSize = 'normal'
-            else:
-                self.star_map.textSize = 'small'
-            self.repaint_map = 1
-            self.processMiniMapRect()
-        return ui.NoEvent
+        except AttributeError:
+            # keyboard rescale
+            x, y = pygame.mouse.get_pos()
+        centerX, centerY = self._mapSurf.get_rect().center
+        sign = cmp(delta, 0)
+        self.star_map.currX -= sign * float(centerX - x) * (1 / self.star_map.scale - 1 / (self.star_map.scale + delta))
+        self.star_map.currY += sign * float(centerY - y) * (1 / self.star_map.scale - 1 / (self.star_map.scale + delta))
+        self.star_map.scale += delta
+        self.star_map.textSize = ['small', 'normal', 'large'][bisect.bisect([40, 60], self.star_map.scale)]
+        self.repaint_map = 1
+        self.processMiniMapRect()
+
+    def processMWUp(self, evt):
+        return self._rescaleMap(evt, 5)
 
     def processMWDown(self, evt):
-        if self.star_map.scale > 10:
-            x, y = evt.pos
-            centerX, centerY = self._mapSurf.get_rect().center
-            self.star_map.currX += float(centerX - x) * (1/ self.star_map.scale - 1 / (self.star_map.scale+5))
-            self.star_map.currY -= float(centerY - y) * (1/ self.star_map.scale - 1 / (self.star_map.scale+5))
-            self.star_map.scale -= 5
-            if self.star_map.scale > 60:
-                self.star_map.textSize = 'large'
-            elif self.star_map.scale > 40:
-                self.star_map.textSize = 'normal'
-            else:
-                self.star_map.textSize = 'small'
-            self.repaint_map = 1
-            self.processMiniMapRect()
-        return ui.NoEvent
+        return self._rescaleMap(evt, -5)
 
     def processMMotion(self, evt):
         pos = evt.pos
@@ -611,7 +607,23 @@ class StarMapWidget(Widget):
             self.callEventHandler.processKeyDown(evt)
         return ui.NoEvent
 
-    def processKeyUp(self,evt2):
+    def _processObjectHotkeys(self, evt):
+        if pygame.key.get_mods() & pygame.KMOD_CTRL:
+            log.debug('Set Key:', evt.key)
+            if gdata.config.defaults.displayhelp != 'no':
+                self.KeyModHelp.show()
+            self.selectobject = True
+            self.setKey = evt.key
+            self.app.setStatus(_("Select object to hotkey. ESC to cancel."))
+        elif pygame.key.get_mods() & pygame.KMOD_SHIFT:
+            log.debug('Focus Key:', evt.key)
+            self.focusOnKeyObject(evt.key)
+        else:
+            log.debug('Goto Key:', evt.key)
+            self.gotoKeyObject(evt.key)
+        return ui.NoEvent
+
+    def processKeyUp(self, evt2):
         if self.callEventHandler:
             self.callEventHandler.processKeyUp(evt2)
         evt = self.keyPress
@@ -620,20 +632,7 @@ class StarMapWidget(Widget):
         # ==== Object Hotkeys ====
         #I have not found unicode escape characters for Ctrl-0 through Ctrl-9, so using direct key reference (less preferred due to international keyboards)
         if evt.key in [49,50,51,52,53,54,55,56,57,48]:
-            if pygame.key.get_mods() & pygame.KMOD_CTRL:
-                log.debug('Set Key:',evt.key)
-                if gdata.config.defaults.displayhelp != 'no':
-                    self.KeyModHelp.show()
-                self.selectobject = True
-                self.setKey = evt.key
-                self.app.setStatus(_("Select object to hotkey. ESC to cancel."))
-            elif pygame.key.get_mods() & pygame.KMOD_SHIFT:
-                log.debug('Focus Key:',evt.key)
-                self.focusOnKeyObject(evt.key)
-            else:
-                log.debug('Goto Key:',evt.key)
-                self.gotoKeyObject(evt.key)
-            return ui.NoEvent
+            self._processObjectHotkeys(evt)
         # ==== Map and Dialog Hotkeys ====
         elif evt.key == pygame.K_ESCAPE and self.selectobject:
             log.debug('Canceled Key')
@@ -647,12 +646,9 @@ class StarMapWidget(Widget):
             self.star_map.scale -= 1
             return ui.NoEvent
         if evt.unicode in u'+=':
-            self.star_map.scale += 5
-            self.repaint_map = 1
+            self._rescaleMap(evt, 5)
         elif evt.unicode == u'-':
-            if self.star_map.scale > 10:
-                self.star_map.scale -= 5
-                self.repaint_map = 1
+            self._rescaleMap(evt, -5)
         # Space Bar - Recenter
         elif evt.unicode == u' ':
             x, y = pygame.mouse.get_pos()
@@ -662,31 +658,20 @@ class StarMapWidget(Widget):
             self.repaint_map = 1
             self._newCurrXY = 0
         # ==== Standard Hotkeys ====
-        # Ctrl+A - Alternative system info [production instead of buoys]
-        elif evt.unicode == u'\x01':
-            self.toggleHotbuttons('alternate')
         # Reserve CTRL-C for copy (future editor support)
         # Ctrl+F
+        toggleMapping = {u'\x01': 'alternate',  # Alternative system info
+                         u'\x07': 'grid',       # Grid
+                         u'\x08': 'civ',        # Civilian ships
+                         u'\x0C': 'lines',      # Fleet lines
+                         u'\x10': 'pzone',      # Control areas
+                         u'\x12': 'redir',      # Redirections
+                         u'\x13': 'scanner'}    # Scanner circles
+        if evt.unicode in toggleMapping and pygame.key.get_mods() & pygame.KMOD_CTRL:
+            self.toggleHotButtons(toggleMapping[evt.unicode])
+        # Ctrl+F to open the search (find) dialog
         elif evt.unicode == u'\x06' and pygame.key.get_mods() & pygame.KMOD_CTRL:
             self.searchDlg.display()
-        # Ctrl+G - Toggle grid
-        elif evt.unicode == u'\x07' and pygame.key.get_mods() & pygame.KMOD_CTRL:
-            self.toggleHotbuttons('grid')
-        # Ctrl-H - Toggle visibility of civilian ships
-        elif evt.unicode == u'\x08' and pygame.key.get_mods() & pygame.KMOD_CTRL:
-            self.toggleHotbuttons('civ')
-        # Ctrl+L - Toggle drawing fleet lines
-        elif evt.unicode == u'\x0C' and pygame.key.get_mods() & pygame.KMOD_CTRL:
-            self.toggleHotbuttons('lines')
-        # Ctrl+P - Toggle viewing of control areas (turns off scanner circles)
-        elif evt.unicode == u'\x10' and pygame.key.get_mods() & pygame.KMOD_CTRL:
-            self.toggleHotbuttons('pzone')
-        # Ctrl+R - Toggle drawing redirects
-        elif evt.unicode == u'\x12' and pygame.key.get_mods() & pygame.KMOD_CTRL:
-            self.toggleHotbuttons('redir')
-        # Ctrl+S - Toggle drawing scanners
-        elif evt.unicode == u'\x13' and pygame.key.get_mods() & pygame.KMOD_CTRL:
-            self.toggleHotbuttons('scanner')
         # Reserve CTRL-V,X,and Z for paste, cut, and undo (future editor support)
         # ==== Else ====
         else:
