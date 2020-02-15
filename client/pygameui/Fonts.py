@@ -22,6 +22,8 @@ import pygame
 from pygame.ftfont import Font
 from types import StringType, UnicodeType
 
+pygame.ftfont.init()
+
 __all__ = ['initFont', 'renderText', 'getTextSize', 'getLineSize']
 
 fontFaces = {}

@@ -51,5 +51,12 @@ from Item import Item
 # Themes
 import SkinableTheme
 
-# Other usefull goodies
+# Other useful goodies
 from pygame.locals import Rect
+
+import logging
+
+
+logger = logging.getLogger('pygameui')
+logger.setLevel(logging.INFO)
+logger.addHandler(logging.NullHandler())
