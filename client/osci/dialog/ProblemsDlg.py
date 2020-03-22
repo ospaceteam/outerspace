@@ -198,14 +198,12 @@ class ProblemsDlg:
 
     def _addProblemsResearch(self, problems):
         player = client.getPlayer()
-        sciProd = max(sum(task.changeSci for task in player.rsrchQueue),
-                      player.effSciPoints)
-        if sciProd < 0:
+        if player.effSciPoints < 0:
             problems.append(gdata.CRI,
                             ui.Item(_('Research'), tType=Const.T_TECHNOLOGY,
-                                    vDescription=_('We are losing our researched knowledge by %d pts per turn!') % (sciProd,)))
+                                    vDescription=_('We are losing our researched knowledge by %d pts per turn!') % (player.effSciPoints,)))
             return
-        elif sciProd == 0:
+        elif player.effSciPoints == 0:
             return
         elif len(player.rsrchQueue) == 0:
             problems.append(gdata.CRI,
@@ -214,7 +212,7 @@ class ProblemsDlg:
             return
 
         queueValue = sum(self._getTaskSciValue(task) for task in player.rsrchQueue)
-        totalEtc = math.ceil(float(queueValue) / sciProd)
+        totalEtc = math.ceil(float(queueValue) / player.effSciPoints)
 
         # check short reseach queue
         if totalEtc < Rules.turnsPerDay * 2:
@@ -291,9 +289,9 @@ class ProblemsDlg:
             assert quantity != 0
 
             try:
-                targets[task.targetID] += task.quantity
+                targets[task.targetID] += quantity
             except KeyError:
-                targets[task.targetID] = task.quantity
+                targets[task.targetID] = quantity
         return targets
 
     def _addProblemsSlots(self, problems, system):
