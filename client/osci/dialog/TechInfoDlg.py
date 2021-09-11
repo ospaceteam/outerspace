@@ -326,13 +326,14 @@ class TechInfoDlg:
 
     def _getPlayerRace(self):
         player = client.getPlayer()
-        raceChoosen = None
-        if player.techLevel == 1:
-            techID = set(player.techs).intersection(set([1990, 1991, 1992])).pop()  # these are the race-selecting techs
-            raceChoosen = client.getTechInfo(techID).data
+        if player.techLevel > 1:
+            return player.race
+
+        tech = set(player.techs).intersection(set([1990, 1991, 1992]))
+        if len(tech):
+            return client.getTechInfo(tech.pop()).data
         else:
-            raceChoosen = player.race
-        return raceChoosen
+            return None
 
     def _researchEnablement(self, tech):
         descr = []
