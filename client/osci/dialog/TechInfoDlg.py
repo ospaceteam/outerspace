@@ -326,7 +326,6 @@ class TechInfoDlg:
 
     def _getPlayerRace(self):
         player = client.getPlayer()
-        raceChoosen = None
         if player.techLevel > 1:
             return player.race
 
