@@ -23,16 +23,18 @@ import pygame
 import Const
 import Fonts
 import os, os.path, sys, ConfigParser
-from ige import log
 import time
 import resources
+import logging
+
+log = logging.getLogger('pygameui')
 
 try:
     import _winreg
 except ImportError:
     pass
 
-skinDir = file = os.path.join(os.path.dirname(sys.modules[__name__].__file__), "DefaultSkin")
+skinDir = None
 config = None
 boxes = {}
 sounds = {}
@@ -54,7 +56,6 @@ def init():
     except ConfigParser.Error:
         themeMusic = None
     pass
-    # setSkin(skinDir)
 
 def initMixer():
     global soundEnabled
@@ -105,7 +106,7 @@ def setMusicVolume(volume):
     except:
         log.warning("Cannot set music volume")
 
-def setSkin(directory = skinDir):
+def setSkin(directory):
     global skinDir, config, gridParams
     skinDir = directory
     # load skin specification

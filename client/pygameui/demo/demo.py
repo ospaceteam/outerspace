@@ -1,3 +1,4 @@
+#!/usr/bin/python2
 #
 #  Copyright 2001 - 2016 Ludek Smid [http://www.ospace.net/]
 #
@@ -26,7 +27,8 @@ import pygame
 
 #initialize SDL and prepare screen
 def update():
-    screen.fill(colorBlack)
+    global screen
+
     rects = app.draw(screen)
     pygame.display.update(rects)
 
@@ -35,16 +37,19 @@ pygame.init()
 screen = pygame.display.set_mode((800, 600), pygame.SWSURFACE, 32)
 pygame.mouse.set_visible(1)
 pygame.display.set_caption('PYGAME.UI 0.4 Test Client')
-
 colorBlack = screen.map_rgb((0x00, 0x00, 0x00))
 pygame.display.flip()
 
 # create UI
 import pygameui as ui
 
-ui.SkinableTheme.setSkin("../OSSkin")
+ui.SkinableTheme.setSkin("./OSSkin")
 app = ui.Application(update, theme = ui.SkinableTheme)
+app.background = pygame.Surface((800, 600))
+app.background.fill(colorBlack)
 app.windowSurfaceFlags = pygame.SWSURFACE
+
+pygame.event.clear()
 
 def echoHandler(widget, action, data):
     print 'ACTION', widget, action, data
@@ -66,7 +71,7 @@ progBars = []
 
 for i in xrange(0, 2):
     win = ui.Window(app, font = 'large-bold')
-    win.title = 'Test WINDOW 1X'
+    win.title = 'Test WINDOW {0}X'.format(i+1)
     #win.alwaysInBackground = 1
     win.rect = pygame.Rect(100 + 10 * i, 100 + 10 * i, 600, 500)
     win.layoutManager = ui.SimpleGridLM()
@@ -201,7 +206,8 @@ for i in xrange(0, 2):
             'And another one.',
             'And another one.',
             'And another one.',
-            'And another one.'
+            'And another one.',
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
         ]
     )
     text.attachVScrollbar(scrlbar)
@@ -222,16 +228,16 @@ running = 1
 while running:
     evt = pygame.event.wait()
     evts = pygame.event.get()
-    evts.append(evt)
+    evts.insert(0, evt)
 
     for evt in evts:
-        evt = app.processEvent(evt)
         if evt.type == pygame.QUIT:
             running = 0
             break
         if evt.type == pygame.KEYUP and evt.key == pygame.K_ESCAPE:
             running = 0
             break
+        evt = app.processEvent(evt)
 
     if app.needsUpdate():
         update()

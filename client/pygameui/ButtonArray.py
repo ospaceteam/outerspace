@@ -46,14 +46,14 @@ class ButtonArray(MetaWidget):
         self.processKWArguments(kwargs)
         parent.registerWidget(self)
         # create widgets
-        self.bar = Scrollbar(self, action = 'onScroll')
-        self.bar.subscribeAction('*', self)
+        self.vertScrollbar = Scrollbar(self, action = 'onScroll')
+        self.vertScrollbar.subscribeAction('*', self)
 
     def layoutWidgets(self):
         gx, gy = self.theme.getGridParams()
         r = self.rect
-        self.bar.rect = pygame.Rect(r.width - gx, 0, gx, r.height)
-        self.bar.visible = self.showSlider
+        self.vertScrollbar.rect = pygame.Rect(r.width - gx, 0, gx, r.height)
+        self.vertScrollbar.visible = self.showSlider
         self.labels = []
         bwidth, bheight = self.buttonSize
         self.rows = r.height / gy / bheight
@@ -69,9 +69,9 @@ class ButtonArray(MetaWidget):
                 button.subscribeAction('*', self)
                 button.rect = pygame.Rect(x, y, bwidth * gx, bheight * gy)
                 self.buttons.append(button)
-        self.bar.slider.position = 0
-        self.bar.slider.min = 0
-        self.bar.slider.shown = self.rows
+        self.vertScrollbar.slider.position = 0
+        self.vertScrollbar.slider.min = 0
+        self.vertScrollbar.slider.shown = self.rows
         self.itemsChanged()
 
     def onScroll(self, widget, action, data):
@@ -106,16 +106,25 @@ class ButtonArray(MetaWidget):
         self.highlighted = widget.data
         self.processAction(self.hoverAction, self.highlighted if data else None)
 
+    # redirect mouse wheel events to the scrollbar
+    def processMWUp(self, evt):
+        if self.vertScrollbar:
+            return self.vertScrollbar.processMWUp(evt)
+
+    def processMWDown(self, evt):
+        if self.vertScrollbar:
+            return self.vertScrollbar.processMWDown(evt)
+
     def itemsChanged(self):
         if self.columns == 0 or self.rows == 0:
             return
         if self.items:
-            self.bar.slider.max = len(self.items) / self.columns + 1
+            self.vertScrollbar.slider.max = len(self.items) / self.columns + 1
         else:
-            self.bar.slider.max = 1
+            self.vertScrollbar.slider.max = 1
 
         index = 0
-        pos = int(self.bar.slider.position) * self.columns
+        pos = int(self.vertScrollbar.slider.position) * self.columns
         # TODO should be changed
         if pos >= len(self.items): pos = len(self.items) - 1
         for item in self.items[pos:]:

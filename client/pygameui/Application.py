@@ -116,6 +116,9 @@ class Application:
     def _processMouseButtonDown(self, evt):
         # mouse wheel
         if evt.button in (4, 5):
+            # workaround for weird behavior (evt.pos for mousewheel was (0, 0))
+            # possibly combination of old PyGame and new Gnome?
+            evt.pos = self.cursorPos
             return self._processMouseWheel(evt)
         # TODO double click
         # check if focused window is top level one
