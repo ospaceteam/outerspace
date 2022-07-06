@@ -83,13 +83,14 @@ class Text(Widget):
         return self.rect
 
     def attachVScrollbar(self, scrollbar):
+
         self.vertScrollbar = scrollbar
         scrollbar.subscribeAction("*", self)
         scrollbar.action = "onScroll"
         scrollbar.slider.min = 0
-        scrollbar.slider.max = len(self.text) + 100
+        scrollbar.slider.max = len(self.text) + self.layout[3] - 1 # workaround - text is split to paragraphs not lines
         scrollbar.slider.position = self.offsetRow
-        scrollbar.slider.shown = 1
+        scrollbar.slider.shown = self.layout[3]
 
     def onScroll(self, widget, action, data):
         self.offsetRow = self.vertScrollbar.slider.position
@@ -315,7 +316,7 @@ class Text(Widget):
         Widget.onFocusLost(self)
         self.processAction(self.action)
 
-    # redirect mouse wheel events to the scollbar
+    # redirect mouse wheel events to the scrollbar
     def processMWUp(self, evt):
         if self.vertScrollbar:
             return self.vertScrollbar.processMWUp(evt)
@@ -460,6 +461,7 @@ class TextTestCase(unittest.TestCase):
         self.txt.cursorRow = 1
         Text.processKeyDown(self.txt, evt)
         self.assertEqual(self.txt.cursorColumn, 3)
+        self.assertEqual(self.txt.cursorRow, 2)
         for x in range(3):
             Text.processKeyDown(self.txt, evt)
         self.assertEqual(self.txt.cursorColumn, 0)
@@ -471,6 +473,7 @@ class TextTestCase(unittest.TestCase):
         self.txt.cursorRow = 2
         Text.processKeyDown(self.txt, evt)
         self.assertEqual(self.txt.cursorColumn, 2)
+        self.assertEqual(self.txt.cursorRow, 2)
         for x in range(12):
             Text.processKeyDown(self.txt, evt)
         self.assertEqual(self.txt.cursorColumn, 9)
@@ -482,6 +485,7 @@ class TextTestCase(unittest.TestCase):
         self.txt.cursorRow = 2
         Text.processKeyDown(self.txt, evt)
         self.assertEqual(self.txt.cursorColumn, 4)
+        self.assertEqual(self.txt.cursorRow, 2)
         for x in range(12):
             Text.processKeyDown(self.txt, evt)
         self.assertEqual(self.txt.cursorColumn, 5)

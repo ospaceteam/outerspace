@@ -71,7 +71,7 @@ progBars = []
 
 for i in xrange(0, 2):
     win = ui.Window(app, font = 'large-bold')
-    win.title = 'Test WINDOW 1X'
+    win.title = 'Test WINDOW {0}X'.format(i+1)
     #win.alwaysInBackground = 1
     win.rect = pygame.Rect(100 + 10 * i, 100 + 10 * i, 600, 500)
     win.layoutManager = ui.SimpleGridLM()
@@ -206,7 +206,8 @@ for i in xrange(0, 2):
             'And another one.',
             'And another one.',
             'And another one.',
-            'And another one.'
+            'And another one.',
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
         ]
     )
     text.attachVScrollbar(scrlbar)
